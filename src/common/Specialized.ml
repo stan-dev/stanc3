@@ -1,15 +1,9 @@
 open Core_kernel
 
 module type S = sig
-  type t [@@deriving compare, sexp, hash]
-
-  include Pretty.S with type t := t
-end
-
-module type Specialized = sig
   type t [@@deriving compare, sexp]
 
-  module Meta : S
+  module Meta : Meta.S
   include Pretty.S with type t := t
   include Comparator.S with type t := t
 
@@ -19,10 +13,8 @@ module type Specialized = sig
      and type comparator_witness := comparator_witness
 end
 
-module Specialize (Fixed : Fix.S) (Meta : S) :
-  Specialized with type t = Meta.t Fixed.t and module Meta = Meta = struct
-  module Meta = Meta
-
+module Make (Fixed : Fix.S) (Meta : Meta.S) :
+  S with type t = Meta.t Fixed.t and module Meta := Meta = struct
   module Basic = struct
     type t = Meta.t Fixed.t
 
@@ -43,12 +35,9 @@ module Specialize (Fixed : Fix.S) (Meta : S) :
   include Comparable.Make_using_comparator (Basic)
 end
 
-module Specialize2 (Fixed : Fix.S2) (First : Specialized) (Meta : S) :
-  Specialized
-  with type t = (First.Meta.t, Meta.t) Fixed.t
-   and module Meta = Meta = struct
-  module Meta = Meta
-
+module Make2 (Fixed : Fix.S2) (First : S) (Meta : Meta.S) :
+  S with type t = (First.Meta.t, Meta.t) Fixed.t and module Meta := Meta =
+struct
   module Basic = struct
     type t = (First.Meta.t, Meta.t) Fixed.t
 

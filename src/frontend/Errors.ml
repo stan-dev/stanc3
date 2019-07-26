@@ -5,16 +5,16 @@ open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * location
-  | Include of string * location
-  | Parsing of string * location_span
+  | Lexing of string * Location_span.location
+  | Include of string * Location_span.location
+  | Parsing of string * Location_span.t
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring in location [loc]. *)
-exception SemanticError of (string * location_span)
+exception SemanticError of (string * Location_span.t)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
@@ -27,48 +27,6 @@ let fatal_error ?(msg = "") _ =
 let trim_quotes s =
   let s = String.drop_prefix s 1 in
   String.drop_suffix s 1
-
-(** Parse a string into a location *)
-let rec parse_location str =
-  let split_str =
-    Str.bounded_split
-      (Str.regexp ", line \\|, column \\|, included from\n")
-      str 4
-  in
-  match split_str with
-  | [fname; linenum_str; colnum_str] ->
-      { filename= trim_quotes fname
-      ; line_num= int_of_string linenum_str
-      ; col_num= int_of_string colnum_str
-      ; included_from= None }
-  | [fname; linenum_str; colnum_str; included_from_str] ->
-      { filename= trim_quotes fname
-      ; line_num= int_of_string linenum_str
-      ; col_num= int_of_string colnum_str
-      ; included_from= Some (parse_location included_from_str) }
-  | _ -> fatal_error ()
-
-(** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position = function
-  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
-      let split_fname =
-        Str.bounded_split (Str.regexp ", included from\n") pos_fname 2
-      in
-      match split_fname with
-      | [] -> fatal_error ()
-      | fname1 :: fnames ->
-          { filename= fname1
-          ; line_num= pos_lnum
-          ; col_num= pos_cnum - pos_bol
-          ; included_from=
-              ( match fnames with
-              | [] -> None
-              | fnames :: _ -> Some (parse_location fnames) ) } )
-
-(** Take the Middle.location_span corresponding to a pair of Lexing.position's *)
-let loc_span_of_pos start_pos end_pos =
-  { begin_loc= location_of_position start_pos
-  ; end_loc= location_of_position end_pos }
 
 (** Return two lines before and after the specified location. *)
 let print_context {filename; line_num; col_num; _} =

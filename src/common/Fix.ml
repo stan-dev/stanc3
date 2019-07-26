@@ -45,19 +45,14 @@ module Make (Pattern : Pattern.S) : S with module Pattern = Pattern = struct
 
   module Basic = struct
     type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
-    [@@deriving compare,hash, sexp]
-    
-    let rec map f { pattern; meta } =
-      { pattern = Pattern.map (map f) pattern; meta = f meta }
-  
-    let rec fold f init { pattern; meta } =
-      Pattern.fold_left
-        ~f:(fold f)
-        ~init:(f init meta)
-        pattern
+    [@@deriving compare, hash, sexp]
+
+    let rec map f {pattern; meta} =
+      {pattern= Pattern.map (map f) pattern; meta= f meta}
+
+    let rec fold f init {pattern; meta} =
+      Pattern.fold_left ~f:(fold f) ~init:(f init meta) pattern
   end
-
-
 
   include Basic
   include Foldable.Make (Basic)
@@ -187,18 +182,13 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, hash, sexp]
 
-  let rec map f g { pattern; meta } =
-      { pattern = Pattern.map (First.map f) (map f g) pattern
-      ; meta = g meta
-      }
+  let rec map f g {pattern; meta} =
+    {pattern= Pattern.map (First.map f) (map f g) pattern; meta= g meta}
 
-  let rec fold f g init { pattern; meta } =
-      Pattern.fold_left
-        ~f:(fun accu x -> First.fold_left ~f ~init:accu x)
-        ~g:(fold f g )
-        ~init:(g init meta)
-        pattern
-  
+  let rec fold f g init {pattern; meta} =
+    Pattern.fold_left
+      ~f:(fun accu x -> First.fold_left ~f ~init:accu x)
+      ~g:(fold f g) ~init:(g init meta) pattern
 
   include Bifoldable.Make (struct
     type nonrec ('a, 'b) t = ('a, 'b) t

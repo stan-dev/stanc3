@@ -1,246 +1,17 @@
 open Core_kernel
-open State.Cps
-
-
-(* == Types of meta data we special MIR nodes with ========================== *)
-module NoMeta = struct
-  type t = unit [@@deriving compare, sexp, hash]
-
-  let pp _ _ = ()
-end
-
-module TypedMeta = struct
-  type t =
-    { mtype: Mir_pattern.unsizedtype
-    ; mloc: Location_span.t sexp_opaque [@compare.ignore]
-    ; madlevel: Mir_pattern.autodifftype }
-  [@@deriving compare, create, sexp, hash]
-
-  let adlevel {madlevel; _} = madlevel
-  let type_ {mtype; _} = mtype
-  let loc {mloc; _} = mloc
-  let pp _ _ = ()
-end
-
-module LabelledMeta = struct
-  type t =
-    { mtype: Mir_pattern.unsizedtype
-    ; mloc: Location_span.t sexp_opaque [@compare.ignore]
-    ; madlevel: Mir_pattern.autodifftype
-    ; mlabel: Label.t [@compare.ignore] }
-  [@@deriving compare, create, sexp, hash]
-
-  let label {mlabel; _} = mlabel
-  let adlevel {madlevel; _} = madlevel
-  let type_ {mtype; _} = mtype
-  let loc {mloc; _} = mloc
-  let pp _ _ = ()
-end
-
-(* == Fixed-point MIR data-types and their specializations ================== *)
-
-module Operator = struct 
-  type t = Mir_pattern.operator 
-  let sexp_of_t = Mir_pattern.sexp_of_operator
-  let t_of_sexp = Mir_pattern.operator_of_sexp
-  
-  let hash_fold_t = Mir_pattern.hash_fold_operator
-
-  let compare x y = Mir_pattern.compare_operator x y
-end 
-
-module Expr = struct
-  (** Fixed-point of `expr` *)
-  module Fixed = Fix.Make (struct
-    type 'a t = 'a Mir_pattern.expr
-
-    let map f x = Mir_pattern.map_expr f x
-    let fold f init x = Mir_pattern.fold_expr f init x
-    let compare f x y = Mir_pattern.compare_expr f x y
-    let hash_fold_t = Mir_pattern.hash_fold_expr
-    let sexp_of_t = Mir_pattern.sexp_of_expr
-    let t_of_sexp = Mir_pattern.expr_of_sexp
-    let pp pp_e ppf = Mir_pretty_printer.pp_expr pp_e ppf
-
-    include Foldable.Make (struct type nonrec 'a t = 'a t
-
-                                  let fold = fold
-    end)
-
-    module Make_traversable = Mir_pattern.Make_traversable_expr
-    module Make_traversable2 = Mir_pattern.Make_traversable_expr2
-  end)
-
-  (** Fixed-point expressions specialized to have no meta data *)
-  module NoMeta = struct 
-    include Meta.Specialize (Fixed) (NoMeta)
-    let remove_meta x = 
-      Fixed.map (fun _ -> ())  x
-  end
-
-  module Typed = struct
-    include Meta.Specialize (Fixed) (TypedMeta)
-
-    let type_of x = TypedMeta.type_ @@ Fixed.meta x
-    let loc_of x = TypedMeta.loc @@ Fixed.meta x
-    let adlevel_of x = TypedMeta.adlevel @@ Fixed.meta x
-  end
-
-  module Labelled = struct
-    include Meta.Specialize (Fixed) (LabelledMeta)
-
-    let label_of x = LabelledMeta.label @@ Fixed.meta x
-    let type_of x = LabelledMeta.type_ @@ Fixed.meta x
-    let loc_of x = LabelledMeta.loc @@ Fixed.meta x
-    let adlevel_of x = LabelledMeta.adlevel @@ Fixed.meta x
-
-    module Traversable_state = Fixed.Make_traversable2 (State)
-
-    let label ?(init = 0) (expr : Typed.t) : t =
-      let f {TypedMeta.madlevel; mtype; mloc} =
-        State.(
-          get
-          >>= fun mlabel ->
-          put (mlabel + 1)
-          >>= fun _ ->
-          return @@ LabelledMeta.create ~mlabel ~madlevel ~mtype ~mloc ())
-      in
-      Traversable_state.traverse ~f expr |> State.run_state ~init |> fst
-
-    let rec associate ?init:(assocs = Label.Map.empty) (expr : t) =
-      Label.Map.add_exn
-        (associate_pattern assocs @@ Fixed.pattern expr)
-        ~key:(label_of expr) ~data:expr
-
-    and associate_pattern assocs = function
-      | Mir_pattern.Lit _ | Var _ -> assocs
-      | FunApp (_, _, args) ->
-          List.fold args ~init:assocs ~f:(fun accu x -> associate ~init:accu x)
-      | EAnd (e1, e2) | EOr (e1, e2) ->
-          associate ~init:(associate ~init:assocs e2) e1
-      | TernaryIf (e1, e2, e3) ->
-          associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
-      | Indexed (e, idxs) ->
-          List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
-
-    and associate_index assocs = function
-      | Mir_pattern.All -> assocs
-      | Single e | Upfrom e | MultiIndex e -> associate ~init:assocs e
-      | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
-  end
-
-  (* == Helpers ============================================================= *)
-
-  let var meta name = Fixed.fix meta @@ Mir_pattern.Var name
-
-  let lit_int meta value =
-    Fixed.fix meta @@ Mir_pattern.Lit (Mir_pattern.Int, string_of_int value)
-
-  let lit_real meta value =
-    Fixed.fix meta @@ Mir_pattern.Lit (Mir_pattern.Real, string_of_float value)
-
-  let lit_string meta value =
-    Fixed.fix meta @@ Mir_pattern.Lit (Mir_pattern.Str, value)
-
-  let if_ meta pred true_expr false_expr =
-    Fixed.fix meta @@ Mir_pattern.TernaryIf (pred, true_expr, false_expr)
-
-  let and_ meta e1 e2 = Fixed.fix meta @@ Mir_pattern.EAnd (e1, e2)
-  let or_ meta e1 e2 = Fixed.fix meta @@ Mir_pattern.EOr (e1, e2)
-  let all = Mir_pattern.All
-  let single e = Mir_pattern.Single e
-  let multi e = Mir_pattern.MultiIndex e
-  let upfrom e = Mir_pattern.Upfrom e
-  let between e1 e2 = Mir_pattern.Between (e1, e2)
-  let indexed meta e idxs = Fixed.fix meta @@ Mir_pattern.Indexed (e, idxs)
-
-  let indexed_bounds = function
-    | Mir_pattern.All -> []
-    | Single e | MultiIndex e | Upfrom e -> [e]
-    | Between (e1, e2) -> [e1; e2]
-
-  let compiler_fun meta name args =
-    Fixed.fix meta @@ Mir_pattern.(FunApp (CompilerInternal, name, args))
-
-  let user_fun meta name args =
-    Fixed.fix meta @@ Mir_pattern.(FunApp (UserDefined, name, args))
-
-  let stanlib_fun meta name args =
-    Fixed.fix meta @@ Mir_pattern.(FunApp (StanLib, name, args))
-
-  (* TODO: use operators instead?*)
-  let plus meta a b = stanlib_fun meta "plus" [a; b]
-  let gt meta a b = stanlib_fun meta "gt" [a; b]
-end
-
-
-module UnsizedType = struct
-  type t = Mir_pattern.unsizedtype 
-  type nonrec autodifftype = Mir_pattern.autodifftype
-  type nonrec returntype = Mir_pattern.returntype
-
-  let sexp_of_t = Mir_pattern.sexp_of_unsizedtype 
-  let t_of_sexp = Mir_pattern.unsizedtype_of_sexp
-  let hash_fold_t = Mir_pattern.hash_fold_unsizedtype
-  let pp ppf x = Mir_pretty_printer.pp_unsizedtype ppf x
-end
-
-module SizedType = struct
-
-  module Fixed  = struct
-    type 'a t = 'a Expr.Fixed.t Mir_pattern.sizedtype
-    let sexp_of_t f x = Mir_pattern.sexp_of_sizedtype f x
-    let t_of_sexp f x = Mir_pattern.sizedtype_of_sexp f x 
-    let compare f x y = Mir_pattern.compare_sizedtype f x y
-    let hash_fold_t = Mir_pattern.hash_fold_sizedtype 
-    let pp f ppf x = Mir_pretty_printer.pp_sizedtype f ppf x
-  end 
-
-  module NoMeta = struct
-    type t = NoMeta.t Fixed.t 
-    let sexp_of_t x = Fixed.sexp_of_t NoMeta.sexp_of_t x
-    let t_of_sexp x = Fixed.t_of_sexp NoMeta.t_of_sexp x
-    let compare x y = Fixed.compare NoMeta.compare x y
-    let hash_fold_t st x= Fixed.hash_fold_t NoMeta.hash_fold_t st x
-    let pp ppf x = Fixed.pp NoMeta.pp ppf x
-  end 
-
-  module Typed = struct
-    type t = TypedMeta.t Fixed.t 
-    let sexp_of_t x = Fixed.sexp_of_t TypedMeta.sexp_of_t x
-    let t_of_sexp x = Fixed.t_of_sexp TypedMeta.t_of_sexp x
-    let compare x y = Fixed.compare TypedMeta.compare x y
-    let hash_fold_t st x= Fixed.hash_fold_t TypedMeta.hash_fold_t st x
-    let pp ppf x = Fixed.pp TypedMeta.pp ppf x
-  end 
-
-
-  module Labelled = struct
-    type t = LabelledMeta.t Fixed.t 
-    let sexp_of_t x = Fixed.sexp_of_t LabelledMeta.sexp_of_t x
-    let t_of_sexp x = Fixed.t_of_sexp LabelledMeta.t_of_sexp x
-    let compare x y = Fixed.compare LabelledMeta.compare x y
-    let hash_fold_t st x= Fixed.hash_fold_t LabelledMeta.hash_fold_t st x
-    let pp ppf x = Fixed.pp LabelledMeta.pp ppf x
-  end 
-end
-
+module Operator = Operator
+module Expr = Expr
+module UnsizedType = UnsizedType
+module SizedType = SizedType
 
 module IO_Block = struct
   type t = Mir_pattern.io_block
+
   let sexp_of_t = Mir_pattern.sexp_of_io_block
   let t_of_sexp = Mir_pattern.io_block_of_sexp
   let hash_fold_t = Mir_pattern.hash_fold_io_block
   let pp ppf x = Mir_pretty_printer.pp_io_block ppf x
-end 
-
-
-
-
-
-
-
-
+end
 
 module Stmt = struct
   module Fixed =
@@ -267,11 +38,10 @@ module Stmt = struct
         module Make_traversable2 = Mir_pattern.Make_traversable_statement2
       end)
 
-  
   module NoMeta = struct
     include Meta.Specialize2 (Fixed) (Expr.NoMeta) (NoMeta)
-    let remove_meta x = 
-      Fixed.map (fun _ -> ()) (fun _ -> ()) x
+
+    let remove_meta x = Fixed.map (fun _ -> ()) (fun _ -> ()) x
   end
 
   module Typed = struct
@@ -395,7 +165,6 @@ module Stmt = struct
   let for_ meta loopvar lower upper body =
     Fixed.fix meta @@ Mir_pattern.For {loopvar; lower; upper; body}
 
-  
   let declare_sized meta adtype name ty =
     Fixed.fix meta
     @@ Mir_pattern.Decl
@@ -444,19 +213,24 @@ module Stmt = struct
   let return_ty ty = Mir_pattern.ReturnType ty
 end
 
-
 module Program = struct
-
   module NoMeta = struct
-    type t = (Expr.NoMeta.t,Stmt.NoMeta.t) Mir_pattern.prog
-    let sexp_of_t x = Mir_pattern.sexp_of_prog Expr.NoMeta.sexp_of_t Stmt.NoMeta.sexp_of_t x
-    let t_of_sexp x = Mir_pattern.prog_of_sexp Expr.NoMeta.t_of_sexp Stmt.NoMeta.t_of_sexp x
-  end 
+    type t = (Expr.NoMeta.t, Stmt.NoMeta.t) Mir_pattern.prog
+
+    let sexp_of_t x =
+      Mir_pattern.sexp_of_prog Expr.NoMeta.sexp_of_t Stmt.NoMeta.sexp_of_t x
+
+    let t_of_sexp x =
+      Mir_pattern.prog_of_sexp Expr.NoMeta.t_of_sexp Stmt.NoMeta.t_of_sexp x
+  end
 
   module Typed = struct
-    type t = (Expr.Typed.t,Stmt.Typed.t) Mir_pattern.prog
-    let sexp_of_t x = Mir_pattern.sexp_of_prog Expr.Typed.sexp_of_t Stmt.Typed.sexp_of_t x
+    type t = (Expr.Typed.t, Stmt.Typed.t) Mir_pattern.prog
 
-    let t_of_sexp x = Mir_pattern.prog_of_sexp Expr.Typed.t_of_sexp Stmt.Typed.t_of_sexp x
-  end 
+    let sexp_of_t x =
+      Mir_pattern.sexp_of_prog Expr.Typed.sexp_of_t Stmt.Typed.sexp_of_t x
+
+    let t_of_sexp x =
+      Mir_pattern.prog_of_sexp Expr.Typed.t_of_sexp Stmt.Typed.t_of_sexp x
+  end
 end

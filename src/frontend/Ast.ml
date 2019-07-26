@@ -23,7 +23,7 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
 type 'e expression =
   | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * Middle.Operator.t * 'e
-  | PrefixOp of Middle.Operator.t* 'e
+  | PrefixOp of Middle.Operator.t * 'e
   | PostfixOp of 'e * Middle.Operator.t
   | Variable of identifier
   | IntNumeral of string

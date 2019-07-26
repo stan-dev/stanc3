@@ -2,7 +2,7 @@
     operate on *)
 
 open Core_kernel
-
+open Common
 (** Arithmetic and logical operators *)
 type operator =
   | Plus

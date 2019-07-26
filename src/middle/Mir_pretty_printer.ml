@@ -232,8 +232,7 @@ let rec pp_stmt_loc ppf {stmt; _} =
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog *)
 
 (** Return two lines before and after the specified location. *)
-let pp_context ppf ({filename; line_num; col_num; _} : Location_span.location)
-    =
+let pp_context ppf ({filename; line_num; col_num; _} : Location.t) =
   try
     let open In_channel in
     let input = create filename in
