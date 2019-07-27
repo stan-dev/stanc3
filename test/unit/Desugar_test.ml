@@ -143,3 +143,27 @@ transformed data {
         matrix[3, 4] mat[5, 6];
         print(FnMatrixElement__(mat[1, 2], 3, 4));
       } |}]
+
+let%expect_test "desugar matrixelement arr" =
+  Frontend_utils.typed_ast_of_string_exn
+    {|
+transformed data {
+  int arr[3] = {2, 3, 1};
+  matrix[3,4] mat[5];
+  int i = 1;
+  int j = 2;
+  for (k in 1:size(arr))
+    mat[i, j, k] = mat[arr[i], j, arr[k]];
+} |}
+  |> Desugar.desugar_prog
+  |> Fmt.pr "@[<v>%a@]\n" Pretty_printing.pp_program ;
+  [%expect
+    {|
+    transformed data {
+         int arr[3] = {2, 3, 1};
+         matrix[3, 4] mat[5];
+         int i = 1;
+         int j = 2;
+         for (k in 1 : size(arr| ))
+           mat[i, j, k] = FnMatrixElement__(mat[arr[i]], j, arr[k]);
+       } |}]

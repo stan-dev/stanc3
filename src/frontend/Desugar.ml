@@ -161,13 +161,16 @@ let rec split_single_index_lists = function
     | _ -> e )
   | e -> {e with expr= map_expression split_single_index_lists e.expr}
 
-let desugar_stmt {stmt; smeta} =
+let rec map_statement_all_exprs expr_f {stmt; smeta} =
+  { stmt= map_statement expr_f (map_statement_all_exprs expr_f) Fn.id stmt
+  ; smeta }
+
+let desugar_stmt s =
   let new_stmts = ref [] in
   let desugar_expr e =
     e |> split_single_index_lists |> desugar_index_expr
     |> pull_new_multi_indices_expr new_stmts
   in
-  let stmt = map_statement desugar_expr Fn.id Fn.id stmt in
-  !new_stmts @ [{stmt; smeta}]
+  !new_stmts @ [map_statement_all_exprs desugar_expr s]
 
 let desugar_prog = stmt_concat_map_prog desugar_stmt

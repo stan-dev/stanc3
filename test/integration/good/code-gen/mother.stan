@@ -462,9 +462,9 @@ generated quantities {
   cholesky_factor_cov[3] gq_cfcov_33_ar[K];
   int indices[3] = {2, 3, 1};
   matrix[3, 4] indexing_mat[5];
-  matrix[3, 4] sym1[3];
-  matrix[3, 4] sym2[5];
-  matrix[3, 3] sym3[3];
+  matrix[3, 4] idx_res1[3];
+  matrix[3, 4] idx_res2[5];
+  matrix[3, 3] idx_res3[3];
 
   gq_real_1d_ar = p_1d_simplex[,1];
   gq_real_3d_ar = p_real_3d_ar;
@@ -497,22 +497,22 @@ generated quantities {
   // 2nd, 3rd, 1st indexing_matrix, 2nd, 3rd, 1st rows of each
   for (i in 1:size(indices))
     for (j in 1:size(indices))
-      sym1[i, j] = indexing_mat[indices[i], indices[j]];
+      idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
   //broken in stanc3
-  //if (indexing_mat[indices, indices][2,1,1] != sym1[2,1,1]) reject("indexing test 1 failed");
+  //if (indexing_mat[indices, indices][2,1,1] != idx_res1[2,1,1]) reject("indexing test 1 failed");
 
   //2nd, 3rd, 1st rows of every indexing_matrix
   for (i in 1:5)
     for (j in 1:size(indices))
-      sym2[i, j] = indexing_mat[i, indices[j]];
+      idx_res2[i, j] = indexing_mat[i, indices[j]];
   //broken in stanc3
-  //if (indexing_mat[:, indices][2,1,1] != sym2[2,1,1]) reject("indexing test 2 failed");
+  //if (indexing_mat[:, indices][2,1,1] != idx_res2[2,1,1]) reject("indexing test 2 failed");
 
   // (2nd, 3rd, 1st) indexing_matrices, all rows, 2nd, 3rd, 1st columns
   for (i in 1:size(indices))
     for (j in 1:3)
       for (k in 1:size(indices))
-        sym3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
+        idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
   // broken in stanc3:
   // if (indexing_mat[indices, :, indices][2,1,1] != sym3[2,1,1]) reject("indexing test 3 failed");
 }

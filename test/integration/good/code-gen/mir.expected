@@ -12030,7 +12030,7 @@
                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
            (smeta <opaque>))
           ((stmt
-            (Decl (decl_adtype DataOnly) (decl_id sym1)
+            (Decl (decl_adtype DataOnly) (decl_id idx_res1)
              (decl_type
               (Sized
                (SArray
@@ -12043,7 +12043,7 @@
                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
            (smeta <opaque>))
           ((stmt
-            (Decl (decl_adtype DataOnly) (decl_id sym2)
+            (Decl (decl_adtype DataOnly) (decl_id idx_res2)
              (decl_type
               (Sized
                (SArray
@@ -12056,7 +12056,7 @@
                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
            (smeta <opaque>))
           ((stmt
-            (Decl (decl_adtype DataOnly) (decl_id sym3)
+            (Decl (decl_adtype DataOnly) (decl_id idx_res3)
              (decl_type
               (Sized
                (SArray
@@ -12413,7 +12413,7 @@
                         (Block
                          (((stmt
                             (Assignment
-                             (sym1
+                             (idx_res1
                               ((Single
                                 ((expr (Var i))
                                  (emeta
@@ -12499,7 +12499,7 @@
                         (Block
                          (((stmt
                             (Assignment
-                             (sym2
+                             (idx_res2
                               ((Single
                                 ((expr (Var i))
                                  (emeta
@@ -12595,7 +12595,7 @@
                                 (Block
                                  (((stmt
                                     (Assignment
-                                     (sym3
+                                     (idx_res3
                                       ((Single
                                         ((expr (Var i))
                                          (emeta
@@ -13711,7 +13711,7 @@
                                 (FunApp CompilerInternal FnMatrixElement__
                                  (((expr
                                     (Indexed
-                                     ((expr (Var sym1))
+                                     ((expr (Var idx_res1))
                                       (emeta
                                        ((mtype (UArray UMatrix))
                                         (mloc <opaque>) (madlevel DataOnly))))
@@ -13780,7 +13780,7 @@
                                 (FunApp CompilerInternal FnMatrixElement__
                                  (((expr
                                     (Indexed
-                                     ((expr (Var sym2))
+                                     ((expr (Var idx_res2))
                                       (emeta
                                        ((mtype (UArray UMatrix))
                                         (mloc <opaque>) (madlevel DataOnly))))
@@ -13849,7 +13849,7 @@
                                 (FunApp CompilerInternal FnMatrixElement__
                                  (((expr
                                     (Indexed
-                                     ((expr (Var sym3))
+                                     ((expr (Var idx_res3))
                                       (emeta
                                        ((mtype (UArray UMatrix))
                                         (mloc <opaque>) (madlevel DataOnly))))
@@ -18324,7 +18324,7 @@
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block GeneratedQuantities)))
-   (sym1
+   (idx_res1
     ((out_unconstrained_st
       (SArray
        (SMatrix
@@ -18344,7 +18344,7 @@
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block GeneratedQuantities)))
-   (sym2
+   (idx_res2
     ((out_unconstrained_st
       (SArray
        (SMatrix
@@ -18364,7 +18364,7 @@
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block GeneratedQuantities)))
-   (sym3
+   (idx_res3
     ((out_unconstrained_st
       (SArray
        (SMatrix
