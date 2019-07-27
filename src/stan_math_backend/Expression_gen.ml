@@ -292,8 +292,11 @@ and pp_indexed_simple ppf (obj, idcs) =
             "No non-Single indices allowed" ~obj
               (idcs : expr_typed_located index list)]
   in
-  pf ppf "%s[%a]" obj
-    (list ~sep:(const string "][") pp_expr)
+  pf ppf "%s%a" obj
+    (fun ppf idcs ->
+      match idcs with
+      | [] -> ()
+      | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
 and pp_expr ppf e =

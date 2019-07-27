@@ -4236,7 +4236,7 @@ class mother_model : public model_base_crtp<mother_model> {
         indices = std::vector<int>(3, 0);
         
         current_statement__ = 75;
-        indices[] = {2, 3, 1};
+        indices = {2, 3, 1};
         std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
         indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
         
