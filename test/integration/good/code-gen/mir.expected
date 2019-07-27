@@ -2807,7 +2807,28 @@
                               (madlevel DataOnly)))))
                           (body
                            ((stmt
-                             (Assignment (d_ar_mat ())
+                             (Assignment
+                              (d_ar_mat
+                               ((Single
+                                 ((expr (Var sym4__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym5__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym6__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym7__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
                               ((expr
                                 (FunApp CompilerInternal FnReadData__
                                  (((expr (Lit Str d_ar_mat))
@@ -3134,7 +3155,14 @@
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
           (body
            ((stmt
-             (Assignment (d_cfcov_54 ())
+             (Assignment
+              (d_cfcov_54
+               ((Single
+                 ((expr (Var sym4__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (Single
+                 ((expr (Var sym5__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnReadData__
                  (((expr (Lit Str d_cfcov_54))
@@ -3180,7 +3208,14 @@
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
           (body
            ((stmt
-             (Assignment (d_cfcov_33 ())
+             (Assignment
+              (d_cfcov_33
+               ((Single
+                 ((expr (Var sym4__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (Single
+                 ((expr (Var sym5__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnReadData__
                  (((expr (Lit Str d_cfcov_33))
@@ -3242,7 +3277,20 @@
                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                   (body
                    ((stmt
-                     (Assignment (d_cfcov_33_ar ())
+                     (Assignment
+                      (d_cfcov_33_ar
+                       ((Single
+                         ((expr (Var sym4__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym5__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym6__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                       ((expr
                         (FunApp CompilerInternal FnReadData__
                          (((expr (Lit Str d_cfcov_33_ar))
@@ -5289,7 +5337,28 @@
                               (madlevel DataOnly)))))
                           (body
                            ((stmt
-                             (Assignment (p_ar_mat ())
+                             (Assignment
+                              (p_ar_mat
+                               ((Single
+                                 ((expr (Var sym6__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym7__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym8__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel AutoDiffable)))))
+                                (Single
+                                 ((expr (Var sym9__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel AutoDiffable)))))))
                               ((expr
                                 (FunApp CompilerInternal FnConstrain__
                                  (((expr
@@ -8544,7 +8613,28 @@
                               (madlevel DataOnly)))))
                           (body
                            ((stmt
-                             (Assignment (p_ar_mat ())
+                             (Assignment
+                              (p_ar_mat
+                               ((Single
+                                 ((expr (Var sym15__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym16__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym17__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym18__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
                               ((expr
                                 (FunApp CompilerInternal FnConstrain__
                                  (((expr
@@ -14684,7 +14774,28 @@
                               (madlevel DataOnly)))))
                           (body
                            ((stmt
-                             (Assignment (p_ar_mat ())
+                             (Assignment
+                              (p_ar_mat
+                               ((Single
+                                 ((expr (Var sym21__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym22__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym23__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym24__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
                               ((expr
                                 (FunApp CompilerInternal FnReadData__
                                  (((expr (Lit Str p_ar_mat))
@@ -14760,7 +14871,28 @@
                               (madlevel DataOnly)))))
                           (body
                            ((stmt
-                             (Assignment (p_ar_mat ())
+                             (Assignment
+                              (p_ar_mat
+                               ((Single
+                                 ((expr (Var sym21__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym22__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym23__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym24__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
                               ((expr
                                 (FunApp CompilerInternal FnUnconstrain__
                                  (((expr
@@ -15259,7 +15391,14 @@
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
           (body
            ((stmt
-             (Assignment (p_cfcov_54 ())
+             (Assignment
+              (p_cfcov_54
+               ((Single
+                 ((expr (Var sym21__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (Single
+                 ((expr (Var sym22__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnReadData__
                  (((expr (Lit Str p_cfcov_54))
@@ -15315,7 +15454,14 @@
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
           (body
            ((stmt
-             (Assignment (p_cfcov_33 ())
+             (Assignment
+              (p_cfcov_33
+               ((Single
+                 ((expr (Var sym21__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (Single
+                 ((expr (Var sym22__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnReadData__
                  (((expr (Lit Str p_cfcov_33))
@@ -15387,7 +15533,20 @@
                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                   (body
                    ((stmt
-                     (Assignment (p_cfcov_33_ar ())
+                     (Assignment
+                      (p_cfcov_33_ar
+                       ((Single
+                         ((expr (Var sym21__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym22__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym23__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                       ((expr
                         (FunApp CompilerInternal FnReadData__
                          (((expr (Lit Str p_cfcov_33_ar))

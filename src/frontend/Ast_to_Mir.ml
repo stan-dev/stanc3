@@ -162,16 +162,24 @@ let rec for_scalar st bodyfn var smeta =
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
-    let lv_outer, reset = gensym_enter () in
-    let lower = loop_bottom in
-    let lv_inner = gensym () in
-    let int i = {expr=Var i; emeta={var.emeta with mtype=UInt}} in
-    let body_inner = bodyfn (internal_funapp FnMatrixElement
-                               [var; int lv_outer; int lv_inner] var.emeta) in
-    let body_outer =
-      {stmt=For {loopvar=lv_inner; lower; upper= d2; body=body_inner}; smeta}
-    in
-    let f = {stmt=For {loopvar=lv_outer; lower; upper= d1; body=body_outer}; smeta} in
+      let lv_outer, reset = gensym_enter () in
+      let lower = loop_bottom in
+      let lv_inner = gensym () in
+      let int i = {expr= Var i; emeta= {var.emeta with mtype= UInt}} in
+      let body_inner =
+        bodyfn
+          (internal_funapp FnMatrixElement
+             [var; int lv_outer; int lv_inner]
+             var.emeta)
+      in
+      let body_outer =
+        { stmt= For {loopvar= lv_inner; lower; upper= d2; body= body_inner}
+        ; smeta }
+      in
+      let f =
+        { stmt= For {loopvar= lv_outer; lower; upper= d1; body= body_outer}
+        ; smeta }
+      in
       reset () ; f
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
@@ -284,10 +292,16 @@ let internal_of_dread = function
   | ReadParam -> FnReadParam
   | ReadData -> FnReadData
 
+let rec pull_indices {expr; _} =
+  match expr with
+  | Indexed (obj, indices) -> pull_indices obj @ indices
+  | FunApp (CompilerInternal, f, [obj; r; c])
+    when internal_fn_of_string f = Some FnMatrixElement ->
+      pull_indices obj @ [Single r; Single c]
+  | _ -> []
+
 let assign_indexed vident smeta varfn var =
-  let indices =
-    match var.expr with Indexed (_, indices) -> indices | _ -> []
-  in
+  let indices = pull_indices var in
   {stmt= Assignment ((vident, indices), varfn var); smeta}
 
 let param_size transform sizedtype =

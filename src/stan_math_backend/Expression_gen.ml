@@ -245,12 +245,14 @@ and pp_compiler_internal_fn ut f ppf es =
     pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   in
   match internal_fn_of_string f with
-  | Some FnMatrixElement ->
-    (match es with
-     | obj :: rows :: cols :: [] ->
-       pf ppf "%a.coeffRef(%a, %a)" pp_expr obj pp_expr rows pp_expr cols
-     | _ -> raise_s [%message "Can't have FnMatrixElement with "
-                (es: expr_typed_located list)]
+  | Some FnMatrixElement -> (
+    match es with
+    | [obj; rows; cols] ->
+        pf ppf "%a.coeffRef(%a, %a)" pp_expr obj pp_expr rows pp_expr cols
+    | _ ->
+        raise_s
+          [%message
+            "Can't have FnMatrixElement with " (es : expr_typed_located list)]
     )
   | Some FnMakeArray -> array_literal ppf es
   | Some FnMakeRowVec ->
