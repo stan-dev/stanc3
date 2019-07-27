@@ -15,9 +15,6 @@ type 'e index =
   | Between of 'e * 'e
 [@@deriving sexp, hash, compare, map]
 
-(** Front-end function kinds *)
-type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
-
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
@@ -28,8 +25,8 @@ type 'e expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of fun_kind * identifier * 'e list
-  | CondDistApp of fun_kind * identifier * 'e list
+  | FunApp of Middle.fun_kind * identifier * 'e list
+  | CondDistApp of Middle.fun_kind * identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -144,7 +141,7 @@ type ('e, 's, 'l) statement =
       { assign_lhs: 'l
       ; assign_op: assignmentoperator
       ; assign_rhs: 'e }
-  | NRFunApp of fun_kind * identifier * 'e list
+  | NRFunApp of Middle.fun_kind * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
   | IncrementLogProb of 'e
@@ -277,11 +274,10 @@ let untyped_program_of_typed_program =
 
 let stmt_concat_map_prog f p =
   let stmt_concat_map = Option.map ~f:(List.concat_map ~f) in
-  {functionblock = stmt_concat_map p.functionblock;
-  datablock = stmt_concat_map p.datablock;
-  transformeddatablock = stmt_concat_map p.transformeddatablock;
-  parametersblock = stmt_concat_map p.parametersblock;
-  transformedparametersblock = stmt_concat_map p.transformedparametersblock;
-   modelblock = stmt_concat_map p.modelblock;
-   generatedquantitiesblock= stmt_concat_map p.generatedquantitiesblock
-  }
+  { functionblock= stmt_concat_map p.functionblock
+  ; datablock= stmt_concat_map p.datablock
+  ; transformeddatablock= stmt_concat_map p.transformeddatablock
+  ; parametersblock= stmt_concat_map p.parametersblock
+  ; transformedparametersblock= stmt_concat_map p.transformedparametersblock
+  ; modelblock= stmt_concat_map p.modelblock
+  ; generatedquantitiesblock= stmt_concat_map p.generatedquantitiesblock }

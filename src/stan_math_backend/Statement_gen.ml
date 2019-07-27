@@ -100,7 +100,9 @@ let rec pp_statement (ppf : Format.formatter)
       in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
-        (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
+        (strf "assigning variable %s"
+           assignee
+           (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, args)
     when fname = string_of_internal_fn FnPrint ->

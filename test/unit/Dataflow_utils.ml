@@ -182,28 +182,27 @@ let%expect_test "Statement label map example" =
         : (label, (expr_typed_located, label) statement) Map.Poly.t )] ;
   [%expect
     {|
-      ((1 (Block (2))) (2 (Block (3 4 5)))
+      ((1 (Block (2))) (2 (Block (3 4)))
        (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
-       (4 (Assignment (i ()) (Lit Int 0)))
-       (5 (IfElse (FunApp StanLib Less__ ((Var i) (Lit Int 0))) 6 (8)))
-       (6 (Block (7))) (7 (NRFunApp CompilerInternal FnPrint__ ((Var i))))
-       (8 (Block (9)))
-       (9 (For (loopvar j) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 10)))
-       (10 (Block (11 14 17 22)))
-       (11 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 9))) 12 ()))
-       (12 (Block (13))) (13 Break)
-       (14
+       (4 (IfElse (FunApp StanLib Less__ ((Var i) (Lit Int 0))) 5 (7)))
+       (5 (Block (6))) (6 (NRFunApp CompilerInternal FnPrint__ ((Var i))))
+       (7 (Block (8)))
+       (8 (For (loopvar j) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 9)))
+       (9 (Block (10 13 16 21)))
+       (10 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 9))) 11 ()))
+       (11 (Block (12))) (12 Break)
+       (13
         (IfElse
          (EAnd (FunApp StanLib Greater__ ((Var j) (Lit Int 8)))
           (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1))))))
-         15 ()))
-       (15 (Block (16))) (16 Continue)
-       (17 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 5))) 18 (20)))
-       (18 (Block (19))) (19 Continue) (20 (Block (21)))
-       (21
+         14 ()))
+       (14 (Block (15))) (15 Continue)
+       (16 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 5))) 17 (19)))
+       (17 (Block (18))) (18 Continue) (19 (Block (20)))
+       (20
         (NRFunApp CompilerInternal FnPrint__
          ((Lit Str Badger) (FunApp StanLib Plus__ ((Var i) (Var j))))))
-       (22 (NRFunApp CompilerInternal FnPrint__ ((Lit Str Fin)))))
+       (21 (NRFunApp CompilerInternal FnPrint__ ((Lit Str Fin)))))
     |}]
 
 let%expect_test "Predecessor graph example" =
@@ -213,10 +212,10 @@ let%expect_test "Predecessor graph example" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((7 9 13)
-       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5))
-        (9 (8 16 19 22)) (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))
-        (16 (15)) (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
+      ((6 8 12)
+       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (4)) (8 (7 15 18 21))
+        (9 (8)) (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))
+        (16 (15)) (17 (16)) (18 (17)) (19 (16)) (20 (19)) (21 (18 20))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -224,10 +223,9 @@ let%expect_test "Controlflow graph example" =
   print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 ()) (2 ()) (3 ()) (4 ()) (5 ()) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
-       (10 (9)) (11 (9)) (12 (11)) (13 (11)) (14 (9)) (15 (14)) (16 (14))
-       (17 (9 16)) (18 (16 17)) (19 (16 17)) (20 (16 17)) (21 (16 17))
-       (22 (9 16 19)))
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4)) (7 (4)) (8 (4 12)) (9 (8))
+       (10 (8)) (11 (10)) (12 (10)) (13 (8)) (14 (13)) (15 (13)) (16 (8 15))
+       (17 (15 16)) (18 (15 16)) (19 (15 16)) (20 (15 16)) (21 (8 15 18)))
     |}]
 
 let%test "Reconstructed recursive statement" =

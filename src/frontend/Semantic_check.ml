@@ -324,6 +324,8 @@ let semantic_check_fn ~loc id es =
   match fn_kind_from_application id es with
   | StanLib -> semantic_check_fn_stan_math ~loc id es
   | UserDefined -> semantic_check_fn_normal ~loc id es
+  | CompilerInternal ->
+      raise_s [%message "Not equipped to semantic check CompilerInternal fns"]
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -835,6 +837,8 @@ let semantic_check_nr_fnkind ~loc id es =
   match fn_kind_from_application id es with
   | StanLib -> semantic_check_nrfn_stan_math ~loc id es
   | UserDefined -> semantic_check_nrfn_normal ~loc id es
+  | CompilerInternal ->
+      raise_s [%message "Not equipped to semantic check CompilerInternal fns"]
 
 let semantic_check_nr_fn_app ~loc ~cf id es =
   Validate.(

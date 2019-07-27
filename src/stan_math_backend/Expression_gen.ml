@@ -83,6 +83,7 @@ let suffix_args f =
   else []
 
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
+let is_simple_index = function Single _ -> true | _ -> false
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -244,6 +245,13 @@ and pp_compiler_internal_fn ut f ppf es =
     pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   in
   match internal_fn_of_string f with
+  | Some FnMatrixElement ->
+    (match es with
+     | obj :: rows :: cols :: [] ->
+       pf ppf "%a.coeffRef(%a, %a)" pp_expr obj pp_expr rows pp_expr cols
+     | _ -> raise_s [%message "Can't have FnMatrixElement with "
+                (es: expr_typed_located list)]
+    )
   | Some FnMakeArray -> array_literal ppf es
   | Some FnMakeRowVec ->
       pf ppf "stan::math::to_row_vector(%a)" array_literal es
@@ -263,15 +271,28 @@ and pp_compiler_internal_fn ut f ppf es =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
-and pp_indexed_simple ppf (vident, idcs) =
+and pp_indexed_simple ppf (obj, idcs) =
   let minus_one e =
     { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
     ; emeta= e.emeta }
   in
-  let idx_minus_one = map_index minus_one in
-  (Middle.Pretty.pp_indexed pp_expr)
-    ppf
-    (vident, List.map ~f:idx_minus_one idcs)
+  let idx_minus_one = function
+    | Single e -> minus_one e
+    | MultiIndex e | Between (e, _) | Upfrom e ->
+        raise_s
+          [%message
+            "No non-Single indices allowed" ~obj
+              (idcs : expr_typed_located index list)
+              (e.emeta.mloc : location_span)]
+    | All ->
+        raise_s
+          [%message
+            "No non-Single indices allowed" ~obj
+              (idcs : expr_typed_located index list)]
+  in
+  pf ppf "%s[%a]" obj
+    (list ~sep:(const string "][") pp_expr)
+    (List.map ~f:idx_minus_one idcs)
 
 and pp_expr ppf e =
   match e.expr with
@@ -291,6 +312,7 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+  | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.expr with
     | FunApp (CompilerInternal, f, _)
@@ -298,6 +320,8 @@ and pp_expr ppf e =
         pp_expr ppf e
     | FunApp (CompilerInternal, f, _)
       when Some FnReadData = internal_fn_of_string f ->
+        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
+    | _ when List.for_all ~f:is_simple_index idx ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
