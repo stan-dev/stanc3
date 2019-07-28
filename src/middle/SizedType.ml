@@ -12,10 +12,22 @@ module Make_traversable2 = Mir_pattern.Make_traversable_sizedtype2
 
 let pp f ppf x = Mir_pretty_printer.pp_sizedtype f ppf x
 
-let rec remove_size = function
+
+let sint = SInt
+let sreal = SReal
+let svector e = SVector e
+
+let srowvector e = SRowVector e
+
+let smatrix erow ecol = SMatrix (erow, ecol)
+let sarray sty e = SArray (sty, e)
+
+let rec to_unsizedtype = function
   | SInt -> UnsizedType.UInt
   | SReal -> UReal
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
-  | SArray (t, _) -> UArray (remove_size t)
+  | SArray (t, _) -> UArray (to_unsizedtype t)
+
+    

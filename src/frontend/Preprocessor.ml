@@ -14,21 +14,26 @@ let include_paths : string list ref = ref []
 let rec try_open_in paths fname pos =
   match paths with
   | [] ->
+    let pos = lexeme_start_p (Stack.top_exn include_stack) in 
+    let loc = Middle.Location.of_position_opt pos |> Option.value_exn
+    in 
       raise
         (Errors.SyntaxError
            (Include
               ( "Could not find include file " ^ fname
                 ^ " in specified include paths.\n"
-              , Errors.location_of_position
-                  (lexeme_start_p (Stack.top_exn include_stack)) )))
+              , loc)
+          )
+        )
   | path :: rest_of_paths -> (
     try
+      let pos = (Stack.top_exn include_stack).lex_start_p in 
+      let loc = Middle.Location.of_position_opt pos |> Option.value_exn in
+      let loc_str = Middle.Location.to_string loc in
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
-      , sprintf "%s, included from\n%s" full_path
-          (Middle.string_of_location
-             (Errors.location_of_position
-                (Stack.top_exn include_stack).lex_start_p)) )
+      , sprintf "%s, included from\n%s" full_path loc_str
+      )
     with _ -> try_open_in rest_of_paths fname pos )
 
 let maybe_remove_quotes str =
@@ -50,7 +55,8 @@ let try_get_new_lexbuf fname pos =
       (Errors.SyntaxError
          (Include
             ( Printf.sprintf "File %s recursively included itself.\n" fname
-            , Errors.location_of_position
-                (lexeme_start_p (Stack.top_exn include_stack)) ))) ;
+            , Option.value_exn ( Middle.Location.of_position_opt
+                (lexeme_start_p (Stack.top_exn include_stack)) )))) ;
+                
   Stack.push include_stack new_lexbuf ;
   new_lexbuf

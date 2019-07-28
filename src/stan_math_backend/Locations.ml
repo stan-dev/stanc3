@@ -6,7 +6,7 @@ type loc_t = int
 type stmt_num = (mtype_loc_ad, (loc_t sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
-type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) prog [@@deriving sexp]
+type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) Program. [@@deriving sexp]
 type state_t = location_span List.t
 
 let no_span_num = 0

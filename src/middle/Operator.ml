@@ -24,6 +24,7 @@ type t = Mir_pattern.operator =
   | Transpose
 [@@deriving sexp, hash, compare]
 
+let pp ppf x = Mir_pretty_printer.pp_operator ppf x
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
 
 let of_string_opt x =

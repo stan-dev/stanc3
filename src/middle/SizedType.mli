@@ -18,4 +18,11 @@ module Make_traversable (A : Applicative.S) :
 module Make_traversable2 (A : Applicative.S2) :
   Traversable.S2 with module A := A and type 'a t := 'a t
 
-val remove_size : 'a t -> UnsizedType.t
+
+val sint : 'a t 
+val sreal : 'a t 
+val svector : 'a  -> 'a t
+val srowvector : 'a  -> 'a  t
+val smatrix : 'a  -> 'a  ->'a  t
+val sarray : 'a t -> 'a  -> 'a t
+val to_unsizedtype : 'a t -> UnsizedType.t

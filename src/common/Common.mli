@@ -20,3 +20,4 @@ module Specialized : module type of Specialized
 
 (* General helpers *)
 module Helpers : module type of Helpers
+module Gensym : module type of Gensym

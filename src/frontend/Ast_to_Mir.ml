@@ -1,88 +1,89 @@
 open Core_kernel
 open Middle
 
+
+let loop_bottom = Expr.(lit_int Typed.Meta.empty 1)
+  
 (* XXX fix exn *)
 let unwrap_return_exn = function
-  | Some (ReturnType ut) -> ut
+  | Some (UnsizedType.ReturnType ut) -> ut
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let trans_fn_kind = function
-  | Ast.StanLib -> StanLib
+  | Ast.StanLib -> Fun_kind.StanLib
   | UserDefined -> UserDefined
 
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
   in
-  { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
-  ; emeta=
-      { mtype= operator_return_type op argtypes |> unwrap_return_exn
-      ; mloc= Ast.expr_loc_lub args
-      ; madlevel= Ast.expr_ad_lub args } }
+  let type_ = operator_return_type op argtypes |> unwrap_return_exn
+  and loc = Ast.expr_loc_lub args
+  and adlevel = Ast.expr_ad_lub args in 
+  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in 
+  Expr.stanlib_fun meta  (Operator.to_string op) @@ trans_exprs args
+
 
 and trans_expr {Ast.expr; Ast.emeta} =
-  let mtype = emeta.Ast.type_
-  and mloc = emeta.loc
-  and madlevel = emeta.ad_level in
+  let type_ = emeta.Ast.type_
+  and loc = emeta.loc
+  and adlevel = emeta.ad_level in
+  let meta = Expr.Typed.create ~type_ ~loc ~adlevel () in 
   match expr with
   | Ast.Paren x -> trans_expr x
   | BinOp (lhs, And, rhs) ->
-      { expr= EAnd (trans_expr lhs, trans_expr rhs)
-      ; emeta= {madlevel; mloc; mtype} }
+      Expr.and_ meta (trans_expr lhs) (trans_expr rhs)
   | BinOp (lhs, Or, rhs) ->
-      { expr= EOr (trans_expr lhs, trans_expr rhs)
-      ; emeta= {madlevel; mloc; mtype} }
+      Expr.or_ meta (trans_expr lhs) (trans_expr rhs)
+      
   | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
   | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
-  | _ ->
-      let expr =
-        match expr with
-        | Ast.TernaryIf (cond, ifb, elseb) ->
-            TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
-        | Variable {name; _} -> Var name
-        | IntNumeral x -> Lit (Int, x)
-        | RealNumeral x -> Lit (Real, x)
-        | FunApp (fn_kind, {name; _}, args)
-         |CondDistApp (fn_kind, {name; _}, args) ->
-            FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
-        | GetLP | GetTarget -> FunApp (StanLib, "target", [])
-        | ArrayExpr eles ->
-            FunApp
-              ( CompilerInternal
-              , string_of_internal_fn FnMakeArray
-              , trans_exprs eles )
-        | RowVectorExpr eles ->
-            FunApp
-              ( CompilerInternal
-              , string_of_internal_fn FnMakeRowVec
-              , trans_exprs eles )
-        | Indexed (lhs, indices) ->
-            Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
-        | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
+  | TernaryIf (cond, ifb, elseb) ->
+      Expr.if_ meta (trans_expr cond) (trans_expr ifb) (trans_expr elseb)
+            
+  | Variable {name; _} -> Expr.var meta name
+  | IntNumeral x -> Expr.lit meta Int x
+  | RealNumeral x -> Expr.lit Real x
+  | FunApp (fn_kind, {name; _}, args)
+  | CondDistApp (fn_kind, {name; _}, args) ->
+    Expr.fun_app  meta (trans_fn_kind fn_kind) name (trans_exprs args)
+
+  | GetLP | GetTarget -> 
+    Expr.stanlib_fun meta "target" []
+  | ArrayExpr eles ->
+      Expr.compiler_fun meta (Internal_fun.to_string FnMakeArray) (trans_exprs eles)
+
+  | RowVectorExpr eles ->
+      Expr.compiler_fun meta (Internal_fun.to_string FnMakeRowVec) (trans_exprs eles)
+
+  | Indexed (lhs, indices) ->
+      Expr.indexed meta (trans_expr lhs) (List.map ~f:trans_idx indices)
+            
+  | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
             raise_s [%message "Impossible!"]
-      in
-      {expr; emeta= {mtype; mloc; madlevel}}
+      
 
 and trans_idx = function
-  | Ast.All -> All
-  | Ast.Upfrom e -> Upfrom (trans_expr e)
-  | Ast.Downfrom e -> Between (loop_bottom, trans_expr e)
-  | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
+  | Ast.All -> Expr.index_all
+  | Ast.Upfrom e -> Expr.index_upfrom @@ trans_expr e
+  | Ast.Downfrom e -> Expr.index_between loop_bottom (trans_expr e)
+  | Ast.Between (lb, ub) -> Expr.index_between (trans_expr lb) (trans_expr ub)
   | Ast.Single e -> (
     match e.emeta.type_ with
-    | UInt -> Single (trans_expr e)
-    | UArray _ -> MultiIndex (trans_expr e)
+    | UInt -> Expr.index_single @@ trans_expr e
+    | UArray _ -> Expr.index_multi @@ trans_expr e
     | _ ->
         raise_s
-          [%message "Expecting int or array" (e.emeta.type_ : unsizedtype)] )
+          [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
 
 and trans_exprs = List.map ~f:trans_expr
 
-let trans_sizedtype = map_sizedtype trans_expr
+let trans_sizedtype = SizedType.map trans_expr
 
 let neg_inf =
-  { expr= FunApp (StanLib, string_of_internal_fn FnNegInf, [])
-  ; emeta= {mtype= UReal; mloc= no_span; madlevel= DataOnly} }
+  let meta = Expr.Typed.Meta.create ~type_:UnsizedType.UReal ~loc:Location_span.empty ~adlevel:UnsizedType.DataOnly () in 
+  Expr.stanlib_fun meta (Internal_fun.to_string FnNegInf) []
+  
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
@@ -111,7 +112,9 @@ let unquote s =
    XXX add UString to MIR and maybe AST.
 *)
 let mkstring mloc s =
-  {expr= Lit (Str, s); emeta= {mtype= UReal; mloc; madlevel= DataOnly}}
+  let meta = Expr.Typed.Meta.create ~type_:UReal ~loc:Location_span.empty ~adlevel:UnsizedType.DataOnly in 
+  Expr.lit_string meta s 
+  
 
 let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
@@ -123,17 +126,18 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
-  let mtype =
+  let type_ =
     Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
       e.emeta.mtype [(i, UInt)]
+  and loc = e.emeta.mloc 
+  and adlevel = e.emeta.madlevel 
   and mir_i = trans_idx i in
-  let expr =
-    match e.expr with
-    | Var _ -> Indexed (e, [mir_i])
-    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  in
-  {expr; emeta= {e.emeta with mtype}}
+  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in 
+  match e.expr with
+  | Var _ ->  Expr.indexed meta e [mir_i]
+  | Indexed (e, indices) -> Expr.indexed meta e @@ indices @ [mir_i]
+  | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+  
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -144,11 +148,12 @@ let mkfor upper bodyfn iteratee smeta =
          ~expr:(Ast.Variable {name= s; id_loc= smeta})
          ~loc:smeta ~type_:UInt ~ad_level:DataOnly)
   in
-  let loopvar, reset = gensym_enter () in
+  let loopvar, reset = Common.Gensym.enter () in
   let lower = loop_bottom in
-  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
-  reset () ;
-  {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
+  let body = bodyfn (add_int_index iteratee (idx loopvar)) in
+  Common.GenSym.reset () ;
+  Stmt.(for_ smeta loopvar lower upper @@ block smeta [body])
+  
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -208,7 +213,7 @@ let rec unsizedtype_to_string = function
   | UArray t -> unsizedtype_to_string t
   | t ->
       raise_s
-        [%message "Another place where it's weird to get " (t : unsizedtype)]
+        [%message "Another place where it's weird to get " (t : UnsizedType.t)]
 
 let constraint_to_string t (c : constrainaction) =
   match t with

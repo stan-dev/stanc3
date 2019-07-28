@@ -5,8 +5,8 @@ open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * Location_span.location
-  | Include of string * Location_span.location
+  | Lexing of string * Location.t
+  | Include of string * Location.t
   | Parsing of string * Location_span.t
 
 (** Exception for Syntax Errors *)
@@ -29,7 +29,7 @@ let trim_quotes s =
   String.drop_suffix s 1
 
 (** Return two lines before and after the specified location. *)
-let print_context {filename; line_num; col_num; _} =
+let print_context {Location.filename; line_num; col_num; _} =
   try
     let open In_channel in
     let input = create filename in
@@ -69,35 +69,36 @@ let print_context_and_message message loc =
 let report_syntax_error = function
   | Parsing (message, loc_span) ->
       Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-        (string_of_location_span loc_span) ;
+        (Location_span.to_string loc_span) ;
       print_context_and_message message loc_span.end_loc
   | Lexing (_, loc) ->
       Printf.eprintf "\nSyntax error in %s, lexing error:\n"
-        (string_of_location {loc with col_num= loc.col_num - 1}) ;
+        (Location.to_string {loc with col_num= loc.col_num - 1}) ;
       print_context_and_message "Invalid character found." loc
   | Include (message, loc) ->
       Printf.eprintf "\nSyntax error in %s, include error:\n"
-        (string_of_location loc) ;
+        (Location.to_string loc) ;
       print_context_and_message message loc
 
 let report_parsing_error (message, loc_span) =
   Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-    (string_of_location_span loc_span) ;
+    (Location_span.to_string loc_span) ;
   print_context_and_message message loc_span.end_loc
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s in %s:\n" "Semantic error"
-    (string_of_location_span loc_span) ;
+    (Location_span.to_string loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, message) =
   let loc =
-    location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
+    Location.of_position_opt {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
+    |> Option.value_exn
   in
   Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
-    (string_of_location loc) ;
+    (Location.to_string loc) ;
   print_context_and_message message loc
 
 (* TESTS *)
@@ -107,7 +108,7 @@ let%expect_test "location string equivalence 1" =
      'yyy.stan', line 666, column 42, included from\n\
      'zzz.stan', line 24, column 77"
   in
-  print_endline (string_of_location (parse_location str)) ;
+  print_endline (Location.to_string (Option.value_exn (Location.of_string_opt str))) ;
   [%expect
     {|
       'xxx.stan', line 245, column 13, included from
@@ -115,7 +116,7 @@ let%expect_test "location string equivalence 1" =
       'zzz.stan', line 24, column 77 |}]
 
 let%expect_test "location string equivalence 2" =
-  let loc : location =
+  let loc : Location.t =
     { filename= "xxx.stan"
     ; line_num= 35
     ; col_num= 24
@@ -126,14 +127,14 @@ let%expect_test "location string equivalence 2" =
           ; col_num= 214
           ; included_from= None } }
   in
-  print_endline (string_of_location (parse_location (string_of_location loc))) ;
+  print_endline (Location.to_string ( Option.value_exn (Location.of_string_opt (Location.to_string loc)))) ;
   [%expect
     {|
       'xxx.stan', line 35, column 24, included from
       'yyy.stan', line 345, column 214 |}]
 
 let%expect_test "parse location from string" =
-  let loc = parse_location "'xxx.stan', line 245, column 13" in
+  let loc = Option.value_exn (Location.of_string_opt "'xxx.stan', line 245, column 13") in
   print_endline loc.filename ;
   print_endline (string_of_int loc.line_num) ;
   print_endline (string_of_int loc.col_num) ;

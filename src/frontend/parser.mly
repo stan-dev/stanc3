@@ -9,7 +9,7 @@ open Errors
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
-  List.fold_right l ~f:(fun z y -> SArray (y, z)) ~init:sbt
+  List.fold_right l ~f:(fun z y -> SizedType.sarray y z) ~init:sbt
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -142,13 +142,13 @@ return_type:
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
+       match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (UnsizedType.DataOnly, ut, id)  }
 
 unsized_type:
   | bt=basic_type ud=option(unsized_dims)
     {  grammar_logger "unsized_type" ;
        let rec reparray n x =
-           if n <= 0 then x else reparray (n-1) (UArray x) in
+           if n <= 0 then x else reparray (n-1) (UnsizedType.UArray x) in
        let size =
          match ud with Some d -> 1 + d | None -> 0
        in
@@ -156,15 +156,15 @@ unsized_type:
 
 basic_type:
   | INT
-    {  grammar_logger "basic_type INT" ; UInt  }
+    {  grammar_logger "basic_type INT" ; UnsizedType.UInt  }
   | REAL
-    {  grammar_logger "basic_type REAL"  ; UReal }
+    {  grammar_logger "basic_type REAL"  ; UnsizedType.UReal }
   | VECTOR
-    {  grammar_logger "basic_type VECTOR" ; UVector }
+    {  grammar_logger "basic_type VECTOR" ; UnsizedType.UVector }
   | ROWVECTOR
-    {  grammar_logger "basic_type ROWVECTOR" ; URowVector }
+    {  grammar_logger "basic_type ROWVECTOR" ; UnsizedType.URowVector }
   | MATRIX
-    {  grammar_logger "basic_type MATRIX" ; UMatrix }
+    {  grammar_logger "basic_type MATRIX" ; UnsizedType.UMatrix }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -187,15 +187,15 @@ var_decl:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; SInt }
+    { grammar_logger "INT_var_type" ; SizedType.SInt }
   | REAL
-    { grammar_logger "REAL_var_type" ; SReal }
+    { grammar_logger "REAL_var_type" ; SizedType.SReal }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; SVector e }
+    { grammar_logger "VECTOR_var_type" ; SizedType.SVector e }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; SRowVector e  }
+    { grammar_logger "ROWVECTOR_var_type" ; SizedType.SRowVector e  }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; SMatrix (e1, e2) }
+    { grammar_logger "MATRIX_var_type" ; SizedType.SMatrix (e1, e2) }
 
 top_var_decl_no_assign:
   | tvt=top_var_type id=identifier d=option(dims) SEMICOLON
@@ -401,15 +401,15 @@ common_expression:
 
 %inline prefixOp:
   | BANG
-    {   grammar_logger "prefix_bang" ; PNot }
+    {   grammar_logger "prefix_bang" ; Operator.PNot }
   | MINUS
-    {  grammar_logger "prefix_minus" ; PMinus }
+    {  grammar_logger "prefix_minus" ; Operator.PMinus }
   | PLUS
-    {   grammar_logger "prefix_plus" ; PPlus }
+    {   grammar_logger "prefix_plus" ; Operator.PPlus }
 
 %inline postfixOp:
   | TRANSPOSE
-    {  grammar_logger "postfix_transpose" ; Transpose }
+    {  grammar_logger "postfix_transpose" ; Operator.Transpose }
 
 %inline infixOp:
   | a=arithmeticBinOp
@@ -419,41 +419,41 @@ common_expression:
 
 %inline arithmeticBinOp:
   | PLUS
-    {  grammar_logger "infix_plus" ; Plus }
+    {  grammar_logger "infix_plus" ; Operator.Plus }
   | MINUS
-    {   grammar_logger "infix_minus" ; Minus }
+    {   grammar_logger "infix_minus" ; Operator.Minus }
   | TIMES
-    {  grammar_logger "infix_times" ; Times }
+    {  grammar_logger "infix_times" ; Operator.Times }
   | DIVIDE
-    {  grammar_logger "infix_divide" ; Divide }
+    {  grammar_logger "infix_divide" ; Operator.Divide }
   | MODULO
-    {  grammar_logger "infix_modulo" ; Modulo }
+    {  grammar_logger "infix_modulo" ; Operator.Modulo }
   | LDIVIDE
-    {  grammar_logger "infix_ldivide" ; LDivide }
+    {  grammar_logger "infix_ldivide" ; Operator.LDivide }
   | ELTTIMES
-    {  grammar_logger "infix_elttimes" ; EltTimes }
+    {  grammar_logger "infix_elttimes" ; Operator.EltTimes }
   | ELTDIVIDE
-    {   grammar_logger "infix_eltdivide" ; EltDivide }
+    {   grammar_logger "infix_eltdivide" ; Operator.EltDivide }
   | HAT
-    {  grammar_logger "infix_hat" ; Pow }
+    {  grammar_logger "infix_hat" ; Operator.Pow }
 
 %inline logicalBinOp:
   | OR
-    {   grammar_logger "infix_or" ; Or }
+    {   grammar_logger "infix_or" ; Operator.Or }
   | AND
-    {   grammar_logger "infix_and" ; And }
+    {   grammar_logger "infix_and" ; Operator.And }
   | EQUALS
-    {   grammar_logger "infix_equals" ; Equals }
+    {   grammar_logger "infix_equals" ; Operator.Equals }
   | NEQUALS
-    {   grammar_logger "infix_nequals" ; NEquals}
+    {   grammar_logger "infix_nequals" ; Operator.NEquals}
   | LABRACK
-    {   grammar_logger "infix_less" ; Less }
+    {   grammar_logger "infix_less" ; Operator.Less }
   | LEQ
-    {   grammar_logger "infix_leq" ; Leq }
+    {   grammar_logger "infix_leq" ; Operator.Leq }
   | RABRACK
-    {   grammar_logger "infix_greater" ; Greater }
+    {   grammar_logger "infix_greater" ; Operator.Greater }
   | GEQ
-    {   grammar_logger "infix_geq" ; Geq }
+    {   grammar_logger "infix_geq" ; Operator.Geq }
 
 
 indexes:

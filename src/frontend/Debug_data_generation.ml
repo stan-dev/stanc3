@@ -10,7 +10,6 @@ let unwrap_num_exn m e =
   match e.expr with
   | Lit (_, s) -> Float.of_string s
   | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
-
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
 let gen_num_int m t =

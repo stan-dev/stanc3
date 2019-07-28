@@ -2,6 +2,7 @@
 
 {
   module Stack = Core_kernel.Stack
+  module Option = Core_kernel.Option
   open Lexing
   open Debugging
   open Preprocessor
@@ -189,9 +190,9 @@ rule token = parse
 
   | _                         { raise (Errors.SyntaxError
                                 (Lexing (lexeme (Stack.top_exn include_stack),
-                                        Errors.location_of_position
+                                        Option.value_exn (Middle.Location.of_position_opt
                                         (lexeme_start_p
-                                          (Stack.top_exn include_stack))))) }
+                                          (Stack.top_exn include_stack)))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment = parse

@@ -43,7 +43,7 @@ type 'm expr_with = {expr: 'm expr_with expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-type located_meta = {loc: Middle.location_span sexp_opaque [@compare.ignore]}
+type located_meta = {loc: Middle.Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
 
 type untyped_expression = located_meta expr_with
@@ -82,7 +82,7 @@ type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
-  | OperatorAssign of Middle.operator
+  | OperatorAssign of Middle.Operator.t
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -126,11 +126,11 @@ type 'e untyped_lhs = ('e, located_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
 type typed_lhs_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
-  ; id_ad_level: Middle.autodifftype
-  ; id_type_: Middle.unsizedtype
-  ; lhs_ad_level: Middle.autodifftype
-  ; lhs_type_: Middle.unsizedtype }
+  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
+  ; id_ad_level: Middle.UnsizedType.autodifftype
+  ; id_type_: Middle.UnsizedType.t
+  ; lhs_ad_level: Middle.UnsizedType.autodifftype
+  ; lhs_type_: Middle.UnsizedType.t }
 [@@deriving sexp, compare, map, hash]
 
 type 'e typed_lhs = ('e, typed_lhs_meta) lhs_with
@@ -170,15 +170,15 @@ type ('e, 's, 'l) statement =
   | ForEach of identifier * 'e * 's
   | Block of 's list
   | VarDecl of
-      { sizedtype: 'e Middle.sizedtype
+      { sizedtype: 'e Middle.SizedType.t
       ; transformation: 'e transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
   | FunDef of
-      { returntype: Middle.returntype
+      { returntype: Middle.UnsizedType.returntype
       ; funname: identifier
-      ; arguments: (Middle.autodifftype * Middle.unsizedtype * identifier) list
+      ; arguments: (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier) list
       ; body: 's }
 [@@deriving sexp, hash, compare, map]
 
@@ -192,8 +192,8 @@ type ('e, 's, 'l) statement =
     AnyReturnType corresponds to statements which have an error in every branch  *)
 type statement_returntype =
   | NoReturnType
-  | Incomplete of Middle.returntype
-  | Complete of Middle.returntype
+  | Incomplete of Middle.UnsizedType.returntype
+  | Complete of Middle.UnsizedType.returntype
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
@@ -212,7 +212,7 @@ type untyped_statement =
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
+  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 

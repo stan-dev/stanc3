@@ -13,44 +13,44 @@ type 'a index = 'a Mir_pattern.index =
   | MultiIndex of 'a
 [@@deriving sexp, hash, map, compare, fold]
 
-module Pattern = struct
-  type 'a t = 'a Mir_pattern.expr =
-    | Var of string
-    | Lit of litType * string
-    | FunApp of Fun_kind.t * string * 'a list
-    | TernaryIf of 'a * 'a * 'a
-    | EAnd of 'a * 'a
-    | EOr of 'a * 'a
-    | Indexed of 'a * 'a index list
-  [@@deriving sexp, hash, map, compare, fold]
+let pp_index pp_e ppf x = Mir_pretty_printer.pp_index pp_e ppf x
 
-  let map f x = Mir_pattern.map_expr f x
-  let fold f init x = Mir_pattern.fold_expr f init x
-  let compare f x y = Mir_pattern.compare_expr f x y
-  let hash_fold_t = Mir_pattern.hash_fold_expr
-  let sexp_of_t = Mir_pattern.sexp_of_expr
-  let t_of_sexp = Mir_pattern.expr_of_sexp
-  let pp pp_e ppf = Mir_pretty_printer.pp_expr pp_e ppf
+let pp_indexed pp_e ppf (ident, indices) =
+  Fmt.pf ppf {|@[%s%a@]|} ident
+    ( if List.is_empty indices then fun _ _ -> ()
+    else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
+    indices
 
-  include Foldable.Make (struct type nonrec 'a t = 'a t
+module Fixed = struct
+  module Pattern = struct
+    type 'a t = 'a Mir_pattern.expr =
+      | Var of string
+      | Lit of litType * string
+      | FunApp of Fun_kind.t * string * 'a list
+      | TernaryIf of 'a * 'a * 'a
+      | EAnd of 'a * 'a
+      | EOr of 'a * 'a
+      | Indexed of 'a * 'a index list
+    [@@deriving sexp, hash, map, compare, fold]
 
-                                let fold = fold
-  end)
+    let pp pp_e ppf = Mir_pretty_printer.pp_expr pp_e ppf
 
-  module Make_traversable = Mir_pattern.Make_traversable_expr
-  module Make_traversable2 = Mir_pattern.Make_traversable_expr2
-end
+    include Foldable.Make (struct type nonrec 'a t = 'a t
 
-(** Fixed-point of `expr` *)
-module Fixed = Fix.Make (Pattern)
+                                  let fold = fold
+    end)
+
+    module Make_traversable = Mir_pattern.Make_traversable_expr
+    module Make_traversable2 = Mir_pattern.Make_traversable_expr2
+  end
+
+  (** Fixed-point of `expr` *)
+  include Fix.Make (Pattern)
+end 
 
 (** Fixed-point expressions specialized to have no meta data *)
 module NoMeta = struct
-  module Meta = struct
-    type t = unit [@@deriving compare, sexp, hash]
-
-    let pp _ _ = ()
-  end
+  module Meta = Mir_meta.NoMeta
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -58,18 +58,7 @@ module NoMeta = struct
 end
 
 module Typed = struct
-  module Meta = struct
-    type t =
-      { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; adlevel: UnsizedType.autodifftype }
-    [@@deriving compare, create, sexp, hash]
-
-    let adlevel {adlevel; _} = adlevel
-    let type_ {type_; _} = type_
-    let loc {loc; _} = loc
-    let pp _ _ = ()
-  end
+  module Meta = Mir_meta.Typed
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -79,20 +68,7 @@ module Typed = struct
 end
 
 module Labelled = struct
-  module Meta = struct
-    type t =
-      { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; adlevel: UnsizedType.autodifftype
-      ; label: Label.t [@compare.ignore] }
-    [@@deriving compare, create, sexp, hash]
-
-    let label {label; _} = label
-    let adlevel {adlevel; _} = adlevel
-    let type_ {type_; _} = type_
-    let loc {loc; _} = loc
-    let pp _ _ = ()
-  end
+  module Meta = Mir_meta.Labelled
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -135,41 +111,45 @@ module Labelled = struct
     | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
 end
 
-include Fixed
 
 (* == Helpers ============================================================= *)
 
-let var meta name = fix meta @@ Pattern.Var name
-let lit_int meta value = fix meta @@ Pattern.Lit (Int, string_of_int value)
-let lit_real meta value = fix meta @@ Pattern.Lit (Real, string_of_float value)
-let lit_string meta value = fix meta @@ Pattern.Lit (Str, value)
+let var meta name = Fixed.fix meta @@ Var name
+let lit meta lit_type str_value = Fixed.fix meta @@ Lit(lit_type,str_value)
+let lit_int meta value = lit meta Int @@ string_of_int value
+  
+let lit_real meta value = lit meta Real @@ string_of_float value
+let lit_string meta value = lit meta Str value
 
 let if_ meta pred true_expr false_expr =
-  fix meta @@ Pattern.TernaryIf (pred, true_expr, false_expr)
+  Fixed.fix meta @@ TernaryIf (pred, true_expr, false_expr)
 
-let and_ meta e1 e2 = fix meta @@ Pattern.EAnd (e1, e2)
-let or_ meta e1 e2 = fix meta @@ Pattern.EOr (e1, e2)
-let all = All
-let single e = Single e
-let multi e = MultiIndex e
-let upfrom e = Upfrom e
-let between e1 e2 = Between (e1, e2)
-let indexed meta e idxs = fix meta @@ Pattern.Indexed (e, idxs)
+let and_ meta e1 e2 = Fixed.fix meta @@ EAnd (e1, e2)
+let or_ meta e1 e2 = Fixed.fix meta @@ EOr (e1, e2)
+let index_all = All
+let index_single e = Single e
+let index_multi e = MultiIndex e
+let index_upfrom e = Upfrom e
+let index_between e1 e2 = Between (e1, e2)
+let indexed meta e idxs = Fixed.fix meta @@ Indexed (e, idxs)
 
-let indexed_bounds = function
+let index_bounds = function
   | All -> []
   | Single e | MultiIndex e | Upfrom e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
+let fun_app meta fun_kind name args = 
+  Fixed.fix meta @@ FunApp (fun_kind, name, args)
+
 let compiler_fun meta name args =
-  fix meta @@ Pattern.(FunApp (CompilerInternal, name, args))
+  Fixed.fix meta @@ FunApp (CompilerInternal, name, args)
 
 let user_fun meta name args =
-  fix meta @@ Pattern.(FunApp (UserDefined, name, args))
+  Fixed.fix meta @@ FunApp (UserDefined, name, args)
 
 let stanlib_fun meta name args =
-  fix meta @@ Pattern.(FunApp (StanLib, name, args))
+  Fixed.fix meta @@ FunApp (StanLib, name, args)
 
-(* TODO: use operators instead?*)
-let plus meta a b = stanlib_fun meta "plus" [a; b]
-let gt meta a b = stanlib_fun meta "gt" [a; b]
+let binop meta  op  a b = stanlib_fun meta (Operator.to_string op) [a;b]
+
+ 

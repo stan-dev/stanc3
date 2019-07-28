@@ -1,8 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
 open Core_kernel
-open Type_conversion
-open Mir_pattern
+
 
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
@@ -13,7 +12,7 @@ let stan_math_returntype name args =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
-      ~f:(fun x -> check_compatible_arguments_mod_conv name (snd x) args)
+      ~f:(fun x -> UnsizedType.check_compatible_arguments_mod_conv name (snd x) args)
       namematches
   in
   if List.length filteredmatches = 0 then None
@@ -21,12 +20,16 @@ let stan_math_returntype name args =
   else
     Some
       (List.hd_exn
-         (List.sort ~compare:compare_returntype
+         (List.sort ~compare:UnsizedType.compare_returntype
             (List.map ~f:fst filteredmatches)))
+
+let return_type = stan_math_returntype
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
+
+let is_function_name = is_stan_math_function_name
 
 let stan_distribution_name_suffix name =
   Utils.distribution_suffices
@@ -34,7 +37,7 @@ let stan_distribution_name_suffix name =
   |> List.hd_exn
 
 let assignmentoperator_to_stan_math_fn = function
-  | Plus -> Some "assign_add"
+  | Operator.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"
   | Times -> Some "assign_multiply"
   | Divide -> Some "assign_divide"
@@ -46,8 +49,10 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
   assignmentoperator_to_stan_math_fn assop
   |> Option.bind ~f:(fun name -> stan_math_returntype name arg_tys)
 
+let assignmentop_return_type = assignmentoperator_stan_math_return_type
+
 let operator_to_stan_math_fns = function
-  | Plus -> ["add"]
+  | Operator.Plus -> ["add"]
   | PPlus -> ["plus"]
   | Minus -> ["subtract"]
   | PMinus -> ["minus"]
@@ -74,6 +79,7 @@ let operator_stan_math_return_type op arg_tys =
   |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
   |> List.hd
 
+let op_return_type = operator_stan_math_return_type
 let pretty_print_all_math_lib_fn_sigs name =
   let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
@@ -96,10 +102,10 @@ let pretty_print_math_lib_assignmentoperator_sigs op =
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =
-  match i with 0 -> t | j -> UArray (bare_array_type (t, j - 1))
+  match i with 0 -> t | j -> UnsizedType.UArray (bare_array_type (t, j - 1))
 
 let bare_types = function
-  | 0 -> UInt
+  | 0 -> UnsizedType.UInt
   | 1 -> UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -109,7 +115,7 @@ let bare_types = function
 let bare_types_size = 5
 
 let vector_types = function
-  | 0 -> UReal
+  | 0 -> UnsizedType.UReal
   | 1 -> UArray UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -118,21 +124,21 @@ let vector_types = function
 let vector_types_size = 4
 
 let int_vector_types = function
-  | 0 -> UInt
+  | 0 -> UnsizedType.UInt
   | 1 -> UArray UInt
   | i -> raise_s [%sexp (i : int)]
 
 let int_vector_types_size = 2
 
 let primitive_types = function
-  | 0 -> UInt
+  | 0 -> UnsizedType.UInt
   | 1 -> UReal
   | i -> raise_s [%sexp (i : int)]
 
 let primitive_types_size = 2
 
 let all_vector_types = function
-  | 0 -> UReal
+  | 0 -> UnsizedType.UReal
   | 1 -> UArray UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -143,21 +149,21 @@ let all_vector_types = function
 let all_vector_types_size = 6
 
 let eigen_vector_types = function
-  | 0 -> UVector
+  | 0 -> UnsizedType.UVector
   | 1 -> UArray UVector
   | 2 -> URowVector
   | 3 -> UArray URowVector
   | i -> raise_s [%sexp (i : int)]
 
 let eigen_vector_types_size = 4
-let is_primitive = function UReal -> true | UInt -> true | _ -> false
+let is_primitive = function UnsizedType.UReal -> true | UInt -> true | _ -> false
 
 let rng_return_type t lt =
-  if List.for_all ~f:is_primitive lt then t else UArray t
+  if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
 
 let add_unqualified (name, rt, uqargts) =
   Hashtbl.add_multi stan_math_signatures ~key:name
-    ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
+    ~data:(rt, List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)

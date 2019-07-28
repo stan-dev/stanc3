@@ -1,26 +1,19 @@
-include Mir
-include Stan_math_signatures
-include Type_conversion
-include Mir_utils
-open Core_kernel
+module Location = Location
 module Location_span = Location_span
-module Validation = Validation
-module Pretty = Mir_pretty_printer
+module Label = Label 
+module Operator = Operator
+module Fun_kind = Fun_kind
+module Internal_fun = Internal_fun
+module Expr = Expr
+module UnsizedType = UnsizedType
+module SizedType = SizedType
+module Stmt = Stmt
+module Program = Program
+module Stan_math = Stan_math
 module Utils = Utils
-module Foldable = Foldable
 
 (*-- mutable counter for symbol names --*)
-let _counter = ref 0
 
-let gensym () =
-  _counter := !_counter + 1 ;
-  sprintf "sym%d__" !_counter
-
-let gensym_enter () =
-  let old_counter = !_counter in
-  (gensym (), fun () -> _counter := old_counter)
-
-let gensym_reset_danger_use_cautiously () = _counter := 0
 
 (** Querying stan_math_signatures for operator signatures by string name *)
 

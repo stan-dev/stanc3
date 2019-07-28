@@ -40,8 +40,8 @@ module type S = sig
     pred:('a -> 'a t Pattern.t -> bool) -> ?init:bool -> 'a t -> bool
 end
 
-module Make (Pattern : Pattern.S) : S with module Pattern = Pattern = struct
-  module Pattern = Pattern
+module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
+  
 
   module Basic = struct
     type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
@@ -175,9 +175,9 @@ module type S2 = sig
 end
 
 module Make2 (First : S) (Pattern : Pattern.S2) :
-  S2 with module First = First and module Pattern = Pattern = struct
-  module Pattern = Pattern
-  module First = First
+  S2 with module First := First and module Pattern := Pattern = struct
+  
+  
 
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, hash, sexp]

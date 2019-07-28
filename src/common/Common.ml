@@ -19,4 +19,5 @@ module Meta = Meta
 module Specialized = Specialized
 
 (* General helpers *)
+module Gensym = Gensym
 module Helpers = Helpers

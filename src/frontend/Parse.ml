@@ -4,7 +4,7 @@
 open Core_kernel
 open Middle
 
-type syntax_error = Parsing of string * location_span
+type syntax_error = Parsing of string * Location_span.t
 
 let syntax_error_message = function Parsing (msg, _) -> msg
 let syntax_error_location = function Parsing (_, loc) -> loc
@@ -12,8 +12,8 @@ let syntax_error_location = function Parsing (_, loc) -> loc
 let pp_syntax_error ppf = function
   | Parsing (msg, loc_span) ->
       Fmt.pf ppf "\nSyntax error in %s, parsing error:\n%a"
-        (string_of_location_span loc_span)
-        Pretty.pp_message_with_location (msg, loc_span.end_loc)
+        (Location_span.to_string loc_span)
+        Location.pp_with_message (msg, loc_span.end_loc)
 
 let render_syntax_error = Fmt.to_to_string pp_syntax_error
 

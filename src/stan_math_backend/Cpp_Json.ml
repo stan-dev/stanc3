@@ -1,11 +1,11 @@
 open Core_kernel
 open Middle
 
-let rec sizedtype_to_json (st : mtype_loc_ad with_expr sizedtype) :
+let rec sizedtype_to_json st :
     Yojson.Basic.t =
   let emit_cpp_expr e = Fmt.strf "<< %a >>" Expression_gen.pp_expr e in
   match st with
-  | SInt -> `Assoc [("name", `String "int")]
+  | SizedType.SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
   | SVector d | SRowVector d ->
       `Assoc [("name", `String "vector"); ("length", `String (emit_cpp_expr d))]
@@ -24,16 +24,16 @@ let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
     [ ("name", `String name)
     ; ("type", sizedtype_to_json st)
-    ; ("block", `String (Fmt.strf "%a" Pretty.pp_io_block block)) ]
+    ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
 
 let%expect_test "outvar to json pretty" =
-  let var x = {expr= Var x; emeta= internal_meta} in
+  let var x = Expr.(var Typed.Meta.empty x) in
   (* the following is equivalent to:
      parameters {
        vector[N] var_one[K];
      }
   *)
-  ("var_one", SArray (SVector (var "N"), var "K"), Parameters)
+  ("var_one", SArray (SVector (var "N"), var "K"), Program.Parameters)
   |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline ;
   [%expect
     {|
@@ -60,8 +60,8 @@ let out_var_interpolated_json_str vars =
   |> Yojson.Basic.to_string |> replace_cpp_expr |> wrap_in_quotes
 
 let%expect_test "outvar to json" =
-  let var x = {expr= Var x; emeta= internal_meta} in
-  [("var_one", SArray (SVector (var "N"), var "K"), Parameters)]
+  let var x = Expr.(var Typed.Meta.empty x) in
+  [("var_one", SArray (SVector (var "N"), var "K"), Program.Parameters)]
   |> out_var_interpolated_json_str |> print_endline ;
   [%expect
     {|

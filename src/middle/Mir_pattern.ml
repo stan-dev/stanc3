@@ -209,13 +209,12 @@ module Make_traversable_expr2 (A : Applicative.S2) :
         |> A.map2 ~f:(fun e idxs -> Indexed (e, idxs)) (f e)
 end
 
-type fun_arg_decl = (autodifftype * string * unsizedtype) list
-[@@deriving sexp, hash, map]
+
 
 type 's fun_def =
   { fdrt: unsizedtype option
   ; fdname: string
-  ; fdargs: fun_arg_decl
+  ; fdargs: (autodifftype * string * unsizedtype) list
   ; fdbody: 's
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]

@@ -1,9 +1,16 @@
-include module type of Mir
+module Location : module type of Location
 module Location_span : module type of Location_span
-module Pretty : module type of Mir_pretty_printer
-module Validation : module type of Validation
+module Label : module type of Label 
+module Operator : module type of Operator
+module Fun_kind : module type of Fun_kind
+module Internal_fun : module type of Internal_fun
+module Expr : module type of Expr
+module UnsizedType : module type of UnsizedType
+module SizedType : module type of SizedType
+module Stmt : module type of Stmt
+module Program : module type of Program
+module Stan_math : module type of Stan_math
 module Utils : module type of Utils
-module Foldable : module type of Foldable
 
 (* val string_of_location :
   ?print_file:bool -> ?print_line:bool -> location -> string *)
@@ -27,9 +34,9 @@ val zero : Mir.mtype_loc_ad Mir.with_expr
 val remove_possible_size : 'a possiblysizedtype -> unsizedtype
 val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
 val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t *)
-val gensym : unit -> string
+(* val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
-val gensym_reset_danger_use_cautiously : unit -> unit
+val gensym_reset_danger_use_cautiously : unit -> unit *)
 
 (* val check_compatible_arguments_mod_conv :
      string

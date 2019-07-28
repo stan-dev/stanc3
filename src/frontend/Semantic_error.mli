@@ -3,77 +3,77 @@ open Middle
 type t
 
 val pp : Format.formatter -> t -> unit
-val location : t -> location_span
-val mismatched_return_types : location_span -> returntype -> returntype -> t
-val mismatched_array_types : location_span -> t
-val invalid_row_vector_types : location_span -> t
-val int_expected : location_span -> string -> unsizedtype -> t
-val int_or_real_expected : location_span -> string -> unsizedtype -> t
-val int_intarray_or_range_expected : location_span -> unsizedtype -> t
-val int_or_real_container_expected : location_span -> unsizedtype -> t
-val array_vector_rowvector_matrix_expected : location_span -> unsizedtype -> t
+val location : t -> Location_span.t
+val mismatched_return_types : Location_span.t -> UnsizedType.returntype -> UnsizedType.returntype -> t
+val mismatched_array_types : Location_span.t -> t
+val invalid_row_vector_types : Location_span.t -> t
+val int_expected : Location_span.t -> string -> UnsizedType.t -> t
+val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
+val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
+val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
+val array_vector_rowvector_matrix_expected : Location_span.t -> UnsizedType.t -> t
 
 val illtyped_assignment :
-  location_span -> Ast.assignmentoperator -> unsizedtype -> unsizedtype -> t
+  Location_span.t -> Ast.assignmentoperator -> UnsizedType.t -> UnsizedType.t -> t
 
 val illtyped_ternary_if :
-  location_span -> unsizedtype -> unsizedtype -> unsizedtype -> t
+  Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
 
-val returning_fn_expected_nonreturning_found : location_span -> string -> t
-val returning_fn_expected_nonfn_found : location_span -> string -> t
-val returning_fn_expected_undeclaredident_found : location_span -> string -> t
-val nonreturning_fn_expected_returning_found : location_span -> string -> t
-val nonreturning_fn_expected_nonfn_found : location_span -> string -> t
+val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
+val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
+val returning_fn_expected_undeclaredident_found : Location_span.t -> string -> t
+val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
+val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
 val nonreturning_fn_expected_undeclaredident_found :
-  location_span -> string -> t
+  Location_span.t -> string -> t
 
-val illtyped_stanlib_fn_app : location_span -> string -> unsizedtype list -> t
+val illtyped_stanlib_fn_app : Location_span.t -> string -> UnsizedType.t list -> t
 
 val illtyped_userdefined_fn_app :
-     location_span
+     Location_span.t
   -> string
-  -> (autodifftype * unsizedtype) list
-  -> returntype
-  -> unsizedtype list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.returntype
+  -> UnsizedType.t list
   -> t
 
 val illtyped_binary_op :
-  location_span -> operator -> unsizedtype -> unsizedtype -> t
+  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
 
-val illtyped_prefix_op : location_span -> operator -> unsizedtype -> t
-val illtyped_postfix_op : location_span -> operator -> unsizedtype -> t
-val not_indexable : location_span -> unsizedtype -> t
-val ident_is_keyword : location_span -> string -> t
-val ident_is_model_name : location_span -> string -> t
-val ident_is_stanmath_name : location_span -> string -> t
-val ident_in_use : location_span -> string -> t
-val ident_not_in_scope : location_span -> string -> t
-val invalid_map_rect_fn : location_span -> string -> t
-val invalid_rng_fn : location_span -> t
-val conditional_notation_not_allowed : location_span -> t
-val conditioning_required : location_span -> t
-val not_printable : location_span -> t
-val empty_array : location_span -> t
-val cannot_assign_to_read_only : location_span -> string -> t
-val cannot_assign_to_global : location_span -> string -> t
-val invalid_sampling_pdf_or_pmf : location_span -> t
-val invalid_sampling_cdf_or_ccdf : location_span -> string -> t
-val invalid_sampling_no_such_dist : location_span -> string -> t
-val target_plusequals_outisde_model_or_logprob : location_span -> t
-val invalid_truncation_cdf_or_ccdf : location_span -> t
-val break_outside_loop : location_span -> t
-val continue_outside_loop : location_span -> t
-val expression_return_outside_returning_fn : location_span -> t
-val void_ouside_nonreturning_fn : location_span -> t
-val non_data_variable_size_decl : location_span -> t
-val non_int_bounds : location_span -> t
-val transformed_params_int : location_span -> t
-val mismatched_fn_def_decl : location_span -> string -> unsizedtype option -> t
-val fn_decl_exists : location_span -> string -> t
-val fn_decl_without_def : location_span -> t
-val non_real_prob_fn_def : location_span -> t
-val prob_density_non_real_variate : location_span -> unsizedtype option -> t
-val prob_mass_non_int_variate : location_span -> unsizedtype option -> t
-val duplicate_arg_names : location_span -> t
-val incompatible_return_types : location_span -> t
+val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
+val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
+val not_indexable : Location_span.t -> UnsizedType.t -> t
+val ident_is_keyword : Location_span.t -> string -> t
+val ident_is_model_name : Location_span.t -> string -> t
+val ident_is_stanmath_name : Location_span.t -> string -> t
+val ident_in_use : Location_span.t -> string -> t
+val ident_not_in_scope : Location_span.t -> string -> t
+val invalid_map_rect_fn : Location_span.t -> string -> t
+val invalid_rng_fn : Location_span.t -> t
+val conditional_notation_not_allowed : Location_span.t -> t
+val conditioning_required : Location_span.t -> t
+val not_printable : Location_span.t -> t
+val empty_array : Location_span.t -> t
+val cannot_assign_to_read_only : Location_span.t -> string -> t
+val cannot_assign_to_global : Location_span.t -> string -> t
+val invalid_sampling_pdf_or_pmf : Location_span.t -> t
+val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
+val invalid_sampling_no_such_dist : Location_span.t -> string -> t
+val target_plusequals_outisde_model_or_logprob : Location_span.t -> t
+val invalid_truncation_cdf_or_ccdf : Location_span.t -> t
+val break_outside_loop : Location_span.t -> t
+val continue_outside_loop : Location_span.t -> t
+val expression_return_outside_returning_fn : Location_span.t -> t
+val void_ouside_nonreturning_fn : Location_span.t -> t
+val non_data_variable_size_decl : Location_span.t -> t
+val non_int_bounds : Location_span.t -> t
+val transformed_params_int : Location_span.t -> t
+val mismatched_fn_def_decl : Location_span.t -> string -> UnsizedType.t option -> t
+val fn_decl_exists : Location_span.t -> string -> t
+val fn_decl_without_def : Location_span.t -> t
+val non_real_prob_fn_def : Location_span.t -> t
+val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t
+val prob_mass_non_int_variate : Location_span.t -> UnsizedType.t option -> t
+val duplicate_arg_names : Location_span.t -> t
+val incompatible_return_types : Location_span.t -> t

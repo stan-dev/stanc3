@@ -105,7 +105,7 @@ module type S2 = sig
     -> bool
 end
 
-module Make (Pattern : Pattern.S) : S with module Pattern = Pattern
+module Make (Pattern : Pattern.S) : S with module Pattern := Pattern
 
 module Make2 (First : S) (Pattern : Pattern.S2) :
-  S2 with module First = First and module Pattern = Pattern
+  S2 with module First := First and module Pattern := Pattern
