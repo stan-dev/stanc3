@@ -104,3 +104,4 @@ val user_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val stanlib_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val is_fun : ?name:string -> 'a Fixed.t -> bool 
 val binop : 'a -> Operator.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val loop_bottom : Typed.t

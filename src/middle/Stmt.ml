@@ -246,3 +246,9 @@ let is_fun ?name {Fixed.pattern;_} =
   match pattern with 
   | Fixed.Pattern.NRFunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
   | _ -> false 
+
+let contains_fun ?name stmt =   
+  Stmt.Fixed.any_pattern
+    ~pred_first:(fun meta pattern -> Expr.(is_fun ?name @@ Fixed.fix meta pattern ))
+    ~pred_second:(fun meta pattern -> Stmt.(is_fun ?name @@ Fixed.fix meta pattern ))
+    stmt 

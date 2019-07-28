@@ -89,4 +89,5 @@ val lift_to_block : ('a,'b) Fixed.t -> ('a,'b) Fixed.t
 val block_statements : ('a,'b) Fixed.t -> ('a,'b) Fixed.t list
 val is_block : ('a,'b) Fixed.t -> bool
 val is_decl : ('a,'b) Fixed.t -> bool
-val is_fun : ?name:string -> ('a,'b) Fixed.t -> bool 
+val is_fun : ?name:string -> ('a,'b) Fixed.t -> bool
+val contains_fun : ?name:string -> ('a,'b) Fixed.t -> bool  

@@ -3,31 +3,50 @@ open Middle
 
 let pos = "pos__"
 
-let add_pos_reset ({stmt; smeta} as s) =
-  match stmt with
-  | For {body; _} when contains_fn (string_of_internal_fn FnReadData) body ->
-      [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
-  | _ -> [s]
+let contains_readdata stmt = 
+  Stmt.contains_fun ~name:(Internal_fun.to_string FnReadData) stmt
 
-let rec invert_read_fors ({stmt; smeta} as s) =
-  let rec unwind s =
-    match s.stmt with
-    | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
-        let final, args = unwind body in
-        (final, (loopvar, lower, upper) :: args)
-    | _ -> (s, [])
-  in
-  match stmt with
-  | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) body
-         || contains_fn (string_of_internal_fn FnWriteParam) body ->
+let contains_writeparam stmt = 
+  Stmt.contains_fun ~name:(Internal_fun.to_string FnWriteParam) stmt
+  
+let add_pos_reset stmt = 
+  match Stmt.Fixed.pattern stmt with 
+  | For {body;_} when contains_readdata body -> 
+    [ Stmt.(assign (Fixed.meta stmt) pos Expr.loop_bottom)
+    ; stmt
+    ]
+  | _ -> [stmt]
+
+
+
+let rec unwind stmt =
+  match Stmt.Fixed.pattern stmt with
+  | For {loopvar; lower; upper; body} when Stmt.is_block body ->
+      (match Stmt.block_statements body with 
+        | body::[] -> 
+            let final, args = unwind body in
+            (final, (loopvar, lower, upper) :: args)
+        | _ -> (stmt, [])
+      ) 
+  | _ -> (stmt, [])
+
+
+let rec invert_read_fors stmt =  
+  match Stmt.Fixed.pattern stmt with
+  | For {body; _} when contains_readdata body || contains_writeparam body -> 
       let final, args = unwind s in
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
-          let sw stmt = {smeta; stmt} in
-          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
+          let meta  = Stmt.Fixed.meta stmt in 
+          let body = Stmt.block meta [accum] in 
+          Stmt.for_  meta loopvar lower upper body          
+          )
         args
-  | _ -> {stmt= map_statement Fn.id invert_read_fors stmt; smeta}
+  | _ -> 
+    Stmt.Fixed.map_pattern stmt
+      ~f:(fun _ expr -> expr ) 
+      ~g:(fun meta pattern -> Stmt.Fixed.fix meta pattern |> invert_read_fors |> Stmt.Fixed.pattern) 
+      
 
 let%expect_test "invert write fors" =
   mock_for 8

@@ -196,3 +196,6 @@ let binop meta  op  a b = stanlib_fun meta (Operator.to_string op) [a;b]
   match pattern with 
   | Fixed.Pattern.FunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
   | _ -> false 
+
+let loop_bottom = 
+  lit_int Expr.Typed.Meta.empty 1
