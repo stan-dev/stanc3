@@ -176,8 +176,9 @@ let rec for_scalar st bodyfn var smeta =
         { stmt= For {loopvar= lv_inner; lower; upper= d2; body= body_inner}
         ; smeta }
       in
+      let blocked b = {stmt=Block [b]; smeta} in
       let f =
-        { stmt= For {loopvar= lv_outer; lower; upper= d1; body= body_outer}
+        { stmt= For {loopvar= lv_outer; lower; upper= d1; body= blocked body_outer}
         ; smeta }
       in
       reset () ; f
@@ -443,7 +444,11 @@ let trans_decl {dread; dconstrain; dadlevel; dglobals} smeta decl_type
     }
   in
   let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= dt}; smeta} in
-  if not (Set.mem dglobals decl_id) then [decl]
+  let rhs_assignment =
+    Option.map ~f:(fun e -> {stmt= Assignment ((decl_id, []), e); smeta}) rhs
+    |> Option.to_list
+  in
+  if not (Set.mem dglobals decl_id) then decl :: rhs_assignment
   else
     let checks =
       match dconstrain with
@@ -483,7 +488,7 @@ let trans_decl {dread; dconstrain; dadlevel; dglobals} smeta decl_type
       match (dread, rhs) with
       | Some dread, _ ->
           [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
-      | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
+      | None, Some _ -> rhs_assignment
       | None, None -> []
     in
     (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
