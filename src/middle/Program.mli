@@ -37,11 +37,11 @@ module Fixed : sig
         include Pretty.S2 with type ('a,'b) t := ('a,'b) t
     end
 
-    type 'a t = ('a Expr.Fixed.t, ('a,'a) Stmt.Fixed.t) Pattern.t
-    include Pretty.S1 with type 'a t := 'a t
+    type ('a,'b) t = ('a Expr.Fixed.t, ('a,'b) Stmt.Fixed.t) Pattern.t
+    include Pretty.S2 with type ('a,'b) t := ('a,'b) t
 end 
 
 module Typed : sig
-    type t = Mir_meta.Typed.t Fixed.t
+    type t = (Expr.Typed.Meta.t,Stmt.Located.Meta.t) Fixed.t
     include Pretty.S with type t := t
 end

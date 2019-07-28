@@ -50,7 +50,10 @@ end
 
 (** Fixed-point expressions specialized to have no meta data *)
 module NoMeta = struct
-  module Meta = Mir_meta.NoMeta
+  module Meta = struct
+    type t = unit [@@deriving compare, sexp, hash]
+    let pp _ _ = ()
+  end
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -58,7 +61,23 @@ module NoMeta = struct
 end
 
 module Typed = struct
-  module Meta = Mir_meta.Typed
+  module Meta = struct 
+    type t =
+      { type_: UnsizedType.t
+      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel: UnsizedType.autodifftype }
+    [@@deriving compare, create, sexp, hash]
+
+    let empty = 
+      create ~type_:UnsizedType.uint ~adlevel:UnsizedType.DataOnly ~loc:Location_span.empty ()
+
+    let adlevel {adlevel; _} = adlevel
+    let type_ {type_; _} = type_
+    let loc {loc; _} = loc
+    let pp _ _ = ()
+
+    let with_type ty meta = { meta with type_ = ty}
+end     
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -68,7 +87,20 @@ module Typed = struct
 end
 
 module Labelled = struct
-  module Meta = Mir_meta.Labelled
+  module Meta = struct 
+    type t =
+      { type_: UnsizedType.t
+      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel: UnsizedType.autodifftype
+      ; label: Label.t [@compare.ignore] }
+    [@@deriving compare, create, sexp, hash]
+
+    let label {label; _} = label
+    let adlevel {adlevel; _} = adlevel
+    let type_ {type_; _} = type_
+    let loc {loc; _} = loc
+    let pp _ _ = ()
+  end
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -138,11 +170,19 @@ let index_bounds = function
   | Single e | MultiIndex e | Upfrom e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
+let indices_of expr = 
+  match Fixed.pattern expr with 
+  | Indexed (_, indices) -> indices 
+  | _ -> []
+
 let fun_app meta fun_kind name args = 
   Fixed.fix meta @@ FunApp (fun_kind, name, args)
 
 let compiler_fun meta name args =
   Fixed.fix meta @@ FunApp (CompilerInternal, name, args)
+
+let internal_fun meta fn args = 
+  compiler_fun meta (Internal_fun.to_string fn) args
 
 let user_fun meta name args =
   Fixed.fix meta @@ FunApp (UserDefined, name, args)
@@ -152,4 +192,7 @@ let stanlib_fun meta name args =
 
 let binop meta  op  a b = stanlib_fun meta (Operator.to_string op) [a;b]
 
- 
+ let is_fun ?name {Fixed.pattern;_} = 
+  match pattern with 
+  | Fixed.Pattern.FunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
+  | _ -> false 

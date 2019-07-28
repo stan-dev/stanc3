@@ -40,36 +40,36 @@ let with_indented_box ppf indentation offset f =
   ()
 
 let rec unwind_sized_array_type = function
-  | Middle.SArray (st, e) -> (
+  | Middle.SizedType.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
 let rec unwind_array_type = function
-  | Middle.UArray ut -> (
+  | Middle.UnsizedType.UArray ut -> (
     match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
 (** XXX this should use the MIR pretty printers after AST pretty printers
     are updated to use `Fmt`. *)
 let rec pp_autodifftype ppf = function
-  | Middle.DataOnly -> Fmt.pf ppf "data "
-  | Middle.AutoDiffable -> Fmt.pf ppf ""
+  | Middle.UnsizedType.DataOnly -> Fmt.pf ppf "data "
+  | Middle.UnsizedType.AutoDiffable -> Fmt.pf ppf ""
 
 and pp_unsizedtype ppf = function
-  | Middle.UInt -> Fmt.pf ppf "int"
-  | Middle.UReal -> Fmt.pf ppf "real"
-  | Middle.UVector -> Fmt.pf ppf "vector"
-  | Middle.URowVector -> Fmt.pf ppf "row_vector"
-  | Middle.UMatrix -> Fmt.pf ppf "matrix"
-  | Middle.UArray ut ->
+  | Middle.UnsizedType.UInt -> Fmt.pf ppf "int"
+  | Middle.UnsizedType.UReal -> Fmt.pf ppf "real"
+  | Middle.UnsizedType.UVector -> Fmt.pf ppf "vector"
+  | Middle.UnsizedType.URowVector -> Fmt.pf ppf "row_vector"
+  | Middle.UnsizedType.UMatrix -> Fmt.pf ppf "matrix"
+  | Middle.UnsizedType.UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
-  | Middle.UFun (argtypes, rt) ->
+  | Middle.UnsizedType.UFun (argtypes, rt) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
         Fmt.(list ~sep:comma_no_break pp_argtype)
         argtypes pp_returntype rt
-  | Middle.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
+  | Middle.UnsizedType.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
 
 and pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 
@@ -83,7 +83,7 @@ and pp_returntype ppf = function
 and pp_identifier ppf id = Fmt.pf ppf "%s" id.name
 
 and pp_operator ppf = function
-  | Middle.Plus | PPlus -> Fmt.pf ppf "+"
+  | Middle.Operator.Plus | PPlus -> Fmt.pf ppf "+"
   | Minus | PMinus -> Fmt.pf ppf "-"
   | Times -> Fmt.pf ppf "*"
   | Divide -> Fmt.pf ppf "/"
@@ -183,13 +183,13 @@ and pp_list_of_printables ppf l =
   Fmt.(list ~sep:comma_no_break pp_printable) ppf l
 
 and pp_sizedtype ppf = function
-  | Middle.SInt -> Fmt.pf ppf "int"
-  | Middle.SReal -> Fmt.pf ppf "real"
-  | Middle.SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
-  | Middle.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
-  | Middle.SMatrix (e1, e2) ->
+  | Middle.SizedType.SInt -> Fmt.pf ppf "int"
+  | Middle.SizedType.SReal -> Fmt.pf ppf "real"
+  | Middle.SizedType.SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
+  | Middle.SizedType.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
+  | Middle.SizedType.SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | Middle.SizedType.SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
   | Identity -> Fmt.pf ppf ""
@@ -213,7 +213,7 @@ and pp_transformation ppf = function
 and pp_transformed_type ppf (st, trans) =
   let unsizedtype_fmt, sizes_fmt =
     match st with
-    | Middle.SInt -> (Fmt.const pp_unsizedtype UInt, Fmt.nop)
+    | Middle.SizedType.SInt -> (Fmt.const pp_unsizedtype UInt, Fmt.nop)
     | SReal -> (Fmt.const pp_unsizedtype UReal, Fmt.nop)
     | SVector e ->
         ( Fmt.const pp_unsizedtype UVector

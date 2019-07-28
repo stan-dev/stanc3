@@ -5,7 +5,7 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
-open Errors
+
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
@@ -114,12 +114,12 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger ("identifier " ^ id) ;
-      {name=id; id_loc=loc_span_of_pos $startpos $endpos}
+      {name=id; id_loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
     }
   | TRUNCATE
     {
       grammar_logger "identifier T" ;
-      {name="T"; id_loc=loc_span_of_pos $startpos $endpos}
+      {name="T"; id_loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
     }
 
 function_def:
@@ -129,7 +129,7 @@ function_def:
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       smeta={loc=loc_span_of_pos $startpos $endpos}
+       smeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
       }
     }
 
@@ -182,7 +182,7 @@ var_decl:
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
                   is_global= false};
-       smeta= {loc = loc_span_of_pos $startpos $endpos}}
+       smeta= {loc = Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
 
 sized_basic_type:
@@ -208,7 +208,7 @@ top_var_decl_no_assign:
                    identifier= id;
                    initial_value= None;
                    is_global= true};
-       smeta={loc= loc_span_of_pos $startpos $endpos}
+       smeta={loc= Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
       }
     }
 
@@ -223,7 +223,7 @@ top_var_decl:
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
                        is_global= true};
-       smeta= {loc=loc_span_of_pos $startpos $endpos}}
+       smeta= {loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
 
 top_var_type:
@@ -305,21 +305,21 @@ dims:
       let l = fst l in
       match snd l with
         | [] -> {expr=Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
+                 emeta = { loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
                 }
         | i ->
           {expr =
              Indexed
                ({expr =Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
+                 emeta = { loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
                }, i);
-           emeta = { loc=loc_span_of_pos $startpos $endpos}
+           emeta = { loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
           }
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
       {expr=e;
-       emeta={loc= loc_span_of_pos $startpos $endpos}}}
+       emeta={loc= Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -333,8 +333,7 @@ non_lhs:
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr=ue;
-                 emeta={loc= loc_span_of_pos $startpos(ue)
-                                             $endpos(ue)}}, i)}
+                 emeta={loc= Option.value_exn (Location_span.of_positions_opt $startpos(ue) $endpos(ue))}}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -344,38 +343,38 @@ constr_expression:
     {
       grammar_logger "constr_expression_arithmetic" ;
       {expr=BinOp (e1, op, e2);
-       emeta={loc=loc_span_of_pos $startpos $endpos}
+       emeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}
       }
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
       {expr=PrefixOp (op, e);
-       emeta={loc=loc_span_of_pos $startpos $endpos}}
+       emeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
       {expr=PostfixOp (e, op);
-       emeta={loc=loc_span_of_pos $startpos $endpos}}
+       emeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
       {expr=Indexed (e, i);
-       emeta={loc=loc_span_of_pos $startpos $endpos}}
+       emeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
       {expr=e;
-       emeta={loc= loc_span_of_pos $startpos $endpos}}
+       emeta={loc= Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
       {expr=Variable id;
-       emeta={loc=loc_span_of_pos $startpos $endpos}}
+       emeta={loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)}}
     }
 
 common_expression:
@@ -483,21 +482,21 @@ printables:
 (* L-values *)
 lhs:
   | id=identifier
-    {  grammar_logger "lhs_identifier" ; ((id, []), loc_span_of_pos $startpos $endpos) }
+    {  grammar_logger "lhs_identifier" ; ((id, []), Option.value_exn (Location_span.of_positions_opt $startpos $endpos)) }
   | l=lhs LBRACK id=indexes RBRACK
-    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), loc_span_of_pos $startpos $endpos) }
+    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), Option.value_exn (Location_span.of_positions_opt $startpos $endpos)) }
 
 (* statements *)
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=loc_span_of_pos $startpos $endpos} }
+        smeta= { loc=Option.value_exn (Location_span.of_positions_opt $startpos $endpos)} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = loc_span_of_pos $startpos $endpos} }
+        smeta={loc = Option.value_exn (Location_span.of_positions_opt $startpos $endpos)} }
     }
 
 atomic_statement:

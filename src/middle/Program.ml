@@ -38,11 +38,11 @@ module Fixed = struct
         let pp pp_expr pp_stmt ppf x = Mir_pretty_printer.pp_prog pp_expr pp_stmt ppf x
     end
 
-    type 'a t = ('a Expr.Fixed.t, ('a,'a) Stmt.Fixed.t) Pattern.t
-    let pp pp_meta ppf x = Pattern.pp (Expr.Fixed.pp pp_meta) (Stmt.Fixed.pp pp_meta pp_meta) ppf x
+    type ('a,'b) t = ('a Expr.Fixed.t, ('a,'b) Stmt.Fixed.t) Pattern.t
+    let pp pp_expr_meta pp_stmt_meta ppf x = Pattern.pp (Expr.Fixed.pp pp_expr_meta) (Stmt.Fixed.pp pp_expr_meta pp_stmt_meta) ppf x
 end 
 
 module Typed = struct
-    type t = Mir_meta.Typed.t Fixed.t
-    let pp ppf x = Fixed.pp Mir_meta.Typed.pp  ppf x
+    type t = (Expr.Typed.Meta.t,Stmt.Located.Meta.t) Fixed.t
+    let pp ppf x = Fixed.pp Expr.Typed.Meta.pp Stmt.Located.Meta.pp  ppf x
 end

@@ -46,31 +46,49 @@ module Fixed = struct
 end
 
 module NoMeta = struct  
-  module Meta = Mir_meta.NoMeta
+  module Meta = struct
+    type t = unit [@@deriving compare, sexp, hash]
+    let pp _ _ = ()
+  end
   include Specialized.Make2 (Fixed) (Expr.NoMeta) (Meta)
   let remove_meta x = Fixed.map (fun _ -> ()) (fun _ -> ()) x
 end
 
-module Typed = struct 
-  module Meta = Mir_meta.Typed   
+
+module Located = struct 
+  module Meta = struct 
+    type t = Location_span.t sexp_opaque [@compare.ignore] [@@deriving compare, sexp, hash]
+    let pp _ _ = ()
+  end   
+
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
-  let type_of x = Mir_meta.Typed.type_ @@ Fixed.meta x
-  let loc_of x = Mir_meta.Typed.loc @@ Fixed.meta x
-  let adlevel_of x = Mir_meta.Typed.adlevel @@ Fixed.meta x
+  
+  let loc_of x = Fixed.meta x
+  
 end
 
 module Labelled = struct
-  module Meta = Mir_meta.Labelled
+  module Meta = struct 
+    type t =
+      { loc: Location_span.t sexp_opaque [@compare.ignore]      
+      ; label: Label.t [@compare.ignore] }
+    [@@deriving compare, create, sexp, hash]
+
+    let label {label; _} = label
+    
+    let loc {loc; _} = loc
+    let pp _ _ = ()
+  end
+
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of x = Mir_meta.Labelled.label @@ Fixed.meta x
-  let type_of x = Mir_meta.Labelled.type_ @@ Fixed.meta x
-  let loc_of x = Mir_meta.Labelled.loc @@ Fixed.meta x
-  let adlevel_of x = Mir_meta.Labelled.adlevel @@ Fixed.meta x
+  let label_of x = Meta.label @@ Fixed.meta x
+  
+  let loc_of x = Meta.loc @@ Fixed.meta x  
 
   module Traversable_state = Fixed.Make_traversable2 (State)
 
-  let label ?(init = 0) (stmt : Typed.t) : t =
+  let label ?(init = 0) (stmt : Located.t) : t =
     let incr_label =
       State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
     in
@@ -78,10 +96,10 @@ module Labelled = struct
       incr_label
       |> State.map ~f:(fun label ->
               Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label () )
-    and g {Mir_meta.Typed.adlevel; type_; loc} =
+    and g  loc =
       incr_label
       |> State.map ~f:(fun label ->
-              Mir_meta.Labelled.create ~type_ ~loc ~adlevel ~label () )
+              Meta.create ~loc ~label () )
     in
     Traversable_state.traverse ~f ~g stmt |> State.run_state ~init |> fst
 
@@ -167,8 +185,8 @@ let block meta xs = Fixed.fix meta @@ Block xs
 let slist meta xs = Fixed.fix meta @@ SList xs
 let while_ meta pred body = Fixed.fix meta @@ While (pred, body)
 
-let if_ meta pred ?when_false ~when_true =
-  Fixed.fix meta @@ IfElse (pred, when_true, when_false)
+let if_ meta pred s_true s_false_opt =
+  Fixed.fix meta @@ IfElse (pred, s_true, s_false_opt)
 
 let for_ meta loopvar lower upper body =
   Fixed.fix meta @@ For {loopvar; lower; upper; body}
@@ -188,13 +206,43 @@ let declare_unsized meta adtype name ty =
   @@ Decl
         {decl_adtype= adtype; decl_id= name; decl_type= unsized ty}
 
+
+let fun_app meta fun_kind name args =
+  Fixed.fix meta @@ NRFunApp (fun_kind, name, args)
+
 let stanlib_fun meta name args =
   Fixed.fix meta @@ NRFunApp (Fun_kind.StanLib, name, args)
 
 let compiler_fun meta name args =
   Fixed.fix meta @@ NRFunApp (Fun_kind.CompilerInternal, name, args)
 
+let internal_fun meta fn args = 
+  compiler_fun meta (Internal_fun.to_string fn) args
+
 let user_fun meta name args =
   Fixed.fix meta @@ NRFunApp (Fun_kind.UserDefined, name, args)
 
+let is_block {Fixed.pattern;_} = 
+  match pattern with 
+  | Block _ -> true 
+  | _ -> false
 
+let is_decl  {Fixed.pattern;_} = 
+  match pattern with 
+  | Decl _ -> true 
+  | _ -> false
+
+let lift_to_block ({Fixed.pattern;_} as stmt) = 
+  match pattern with 
+  | Block _ -> stmt 
+  | _ -> { stmt with pattern = Block [stmt]}
+
+let block_statements  ({Fixed.pattern;_} as stmt) = 
+  match pattern with 
+  | Block xs -> xs 
+  | _ -> [stmt]
+
+let is_fun ?name {Fixed.pattern;_} = 
+  match pattern with 
+  | Fixed.Pattern.NRFunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
+  | _ -> false 

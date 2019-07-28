@@ -1,4 +1,4 @@
-
+open Core_kernel
 open Common
 
 type litType = Mir_pattern.litType = Int | Real | Str
@@ -20,7 +20,12 @@ module Fixed  : sig
 end
 
 module NoMeta : sig
-  module Meta : Mir_meta_intf.NoMeta
+  module Meta : sig
+    type t = 
+      unit 
+      [@@deriving compare, sexp, hash]
+    include Meta.S with type t := unit
+  end
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
@@ -28,7 +33,19 @@ module NoMeta : sig
 end
 
 module Typed : sig
-  module Meta : Mir_meta_intf.Typed
+  module Meta : sig 
+    type t =
+      { type_: UnsizedType.t
+      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel: UnsizedType.autodifftype }
+    [@@deriving compare, create, sexp, hash]
+    include Meta.S with type t := t
+    val empty : t
+    val adlevel : t -> UnsizedType.autodifftype
+    val type_ : t -> UnsizedType.t 
+    val loc : t -> Location_span.t
+    val with_type : UnsizedType.t -> t -> t
+  end 
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
@@ -38,7 +55,19 @@ module Typed : sig
 end
 
 module Labelled : sig
-  module Meta : Mir_meta_intf.Labelled
+  module Meta : sig 
+    type t =
+      { type_: UnsizedType.t
+      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel: UnsizedType.autodifftype 
+      ; label : Label.t}
+    [@@deriving compare, create, sexp, hash]
+    include Meta.S with type t := t
+    val adlevel : t -> UnsizedType.autodifftype
+    val type_ : t -> UnsizedType.t 
+    val loc : t -> Location_span.t
+    val label : t -> Label.t
+  end
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
@@ -67,8 +96,11 @@ val index_upfrom : 'a Fixed.t -> 'a Fixed.t index
 val index_between : 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t index
 val indexed : 'a -> 'a Fixed.t -> 'a Fixed.t index list -> 'a Fixed.t
 val index_bounds : 'a Fixed.t index -> 'a Fixed.t list 
+val indices_of : 'a Fixed.t -> 'a Fixed.t index list 
 val fun_app  : 'a -> Fun_kind.t -> string -> 'a Fixed.t list -> 'a Fixed.t 
 val compiler_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t 
+val internal_fun : 'a -> Internal_fun.t -> 'a Fixed.t list -> 'a Fixed.t 
 val user_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t 
 val stanlib_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
+val is_fun : ?name:string -> 'a Fixed.t -> bool 
 val binop : 'a -> Operator.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t

@@ -36,6 +36,8 @@ let stan_distribution_name_suffix name =
   |> List.filter ~f:(fun sfx -> is_stan_math_function_name (name ^ sfx))
   |> List.hd_exn
 
+let distribution_name_suffix = stan_distribution_name_suffix
+
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"

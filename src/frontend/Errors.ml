@@ -24,9 +24,6 @@ exception FatalError of string
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
-let trim_quotes s =
-  let s = String.drop_prefix s 1 in
-  String.drop_suffix s 1
 
 (** Return two lines before and after the specified location. *)
 let print_context {Location.filename; line_num; col_num; _} =
