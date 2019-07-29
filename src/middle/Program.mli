@@ -20,28 +20,28 @@ type 'a outvar = 'a Mir_pattern.outvar =
     [@@deriving sexp, map, hash]
 
 
-module Fixed : sig 
-    module Pattern : sig
-        type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
-        { functions_block: 'b fun_def list
-        ; input_vars: (string * 'a SizedType.t) list
-        ; prepare_data: 'b list (* data & transformed data decls and statements *)
-        ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-        ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
-        ; transform_inits: 'b list
-        ; output_vars: (string * 'a outvar) list
-        ; prog_name: string
-        ; prog_path: string }
-        [@@deriving sexp, map]
+type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
+    { functions_block: 'b fun_def list
+    ; input_vars: (string * 'a SizedType.t) list
+    ; prepare_data: 'b list (* data & transformed data decls and statements *)
+    ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+    ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+    ; transform_inits: 'b list
+    ; output_vars: (string * 'a outvar) list
+    ; prog_name: string
+    ; prog_path: string }
+    [@@deriving sexp, map]
 
-        include Pretty.S2 with type ('a,'b) t := ('a,'b) t
-    end
-
-    type ('a,'b) t = ('a Expr.Fixed.t, ('a,'b) Stmt.Fixed.t) Pattern.t
-    include Pretty.S2 with type ('a,'b) t := ('a,'b) t
-end 
+include Pretty.S2 with type ('a,'b) t := ('a,'b) t
 
 module Typed : sig
-    type t = (Expr.Typed.Meta.t,Stmt.Located.Meta.t) Fixed.t
+    type nonrec t = (Expr.Typed.t,Stmt.Located.t) t
     include Pretty.S with type t := t
+end
+
+module Labelled : sig
+    type nonrec t = (Expr.Labelled.t,Stmt.Labelled.t) t
+    include Pretty.S with type t := t
+    val label : ?init:int -> Typed.t -> t
+    val associate : ?init:Stmt.Labelled.associations -> t -> Stmt.Labelled.associations
 end

@@ -219,6 +219,22 @@ type 's fun_def =
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
+module Make_traversable_fun_def(A:Applicative.S) 
+  : Traversable.S with module A := A and type 'a t := 'a fun_def 
+= struct
+  let traverse ({fdbody;_} as fun_def) ~f = 
+    A.map ~f:(fun fdbody -> {fun_def with fdbody }) @@ f fdbody
+end
+
+
+module Make_traversable_fun_def2(A:Applicative.S2) 
+  : Traversable.S2 with module A := A and type 'a t := 'a fun_def 
+= struct
+  let traverse ({fdbody;_} as fun_def) ~f = 
+    A.map ~f:(fun fdbody -> {fun_def with fdbody }) @@ f fdbody
+end
+
+
 type ('e, 's) statement =
   | Assignment of (string * 'e index list) * 'e
   | TargetPE of 'e
@@ -332,6 +348,41 @@ type 'e outvar =
   ; out_block: io_block }
 [@@deriving sexp, map, hash]
 
+
+module Make_traversable_outvar(A:Applicative.S) 
+  : Traversable.S with module A := A and type 'a t := 'a outvar 
+= struct
+  module Traversable_sizedtype = Make_traversable_sizedtype(A)
+
+  let traverse ({out_constrained_st;out_unconstrained_st;_} as outvar) ~f = 
+    A.map2 
+      ~f:(fun out_constrained_st out_unconstrained_st -> 
+          {outvar with 
+            out_constrained_st = out_constrained_st
+            ; out_unconstrained_st = out_unconstrained_st
+           }
+      ) 
+      (Traversable_sizedtype.traverse ~f out_constrained_st)
+      (Traversable_sizedtype.traverse ~f out_unconstrained_st)
+end
+
+module Make_traversable_outvar2(A:Applicative.S2) 
+  : Traversable.S2 with module A := A and type 'a t := 'a outvar 
+= struct
+  module Traversable_sizedtype = Make_traversable_sizedtype2(A)
+
+  let traverse ({out_constrained_st;out_unconstrained_st;_} as outvar) ~f = 
+    A.map2 
+      ~f:(fun out_constrained_st out_unconstrained_st -> 
+          {outvar with 
+            out_constrained_st = out_constrained_st
+            ; out_unconstrained_st = out_unconstrained_st
+           }
+      ) 
+      (Traversable_sizedtype.traverse ~f out_constrained_st)
+      (Traversable_sizedtype.traverse ~f out_unconstrained_st)
+end
+
 type ('e, 's) prog =
   { functions_block: 's fun_def list
   ; input_vars: (string * 'e sizedtype) list
@@ -343,6 +394,133 @@ type ('e, 's) prog =
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map]
+
+
+module Make_traversable_prog(A:Applicative.S) 
+  : Bitraversable.S with module A := A and type ('a,'b) t := ('a,'b) prog
+= struct
+
+  module Traversable_fun_def = Make_traversable_fun_def(A)
+  module Traversable_sizedtype = Make_traversable_sizedtype(A)
+  module Traversable_outvar = Make_traversable_outvar(A)
+
+  let traverse prog ~f ~g = 
+    let functions_block = 
+      prog.functions_block
+      |> List.map ~f:(Traversable_fun_def.traverse ~f:g)   
+      |> A.all
+    and input_vars = 
+      prog.input_vars
+      |> List.map ~f:(fun (str,st) -> 
+          Traversable_sizedtype.traverse ~f st 
+          |> A.map ~f:(fun st -> (str,st))
+          ) 
+      |> A.all
+    and prepare_data = 
+      List.map prog.prepare_data ~f:g
+      |> A.all 
+    and log_prob = 
+      List.map prog.log_prob ~f:g
+      |> A.all 
+    and transform_inits = 
+      List.map prog.transform_inits ~f:g
+      |> A.all 
+    and generate_quantities = 
+      List.map prog.generate_quantities ~f:g
+      |> A.all 
+    and output_vars = 
+      List.map prog.output_vars 
+        ~f:(fun (str,outvar) -> 
+          Traversable_outvar.traverse ~f outvar 
+          |> A.map ~f:(fun st -> (str,st))) 
+      |> A.all
+    in
+
+    A.(return (fun functions_block input_vars prepare_data log_prob generate_quantities transform_inits output_vars  ->
+      { prog with 
+        functions_block = functions_block
+      ; input_vars = input_vars
+      ; prepare_data = prepare_data 
+      ; log_prob = log_prob 
+      ; generate_quantities = generate_quantities 
+      ; transform_inits = transform_inits
+      ; output_vars = output_vars  
+      }
+    )
+    <*> functions_block
+    <*> input_vars
+    <*> prepare_data
+    <*> log_prob
+    <*> generate_quantities
+    <*> transform_inits
+    <*> output_vars
+  )
+
+
+end
+
+
+
+module Make_traversable_prog2(A:Applicative.S2) 
+  : Bitraversable.S2 with module A := A and type ('a,'b) t := ('a,'b) prog
+= struct
+
+  module Traversable_fun_def = Make_traversable_fun_def2(A)
+  module Traversable_sizedtype = Make_traversable_sizedtype2(A)
+  module Traversable_outvar = Make_traversable_outvar2(A)
+
+  let traverse prog ~f ~g = 
+    let functions_block = 
+      prog.functions_block
+      |> List.map ~f:(Traversable_fun_def.traverse ~f:g)   
+      |> A.all
+    and input_vars = 
+      prog.input_vars
+      |> List.map ~f:(fun (str,st) -> 
+          Traversable_sizedtype.traverse ~f st 
+          |> A.map ~f:(fun st -> (str,st))
+          ) 
+      |> A.all
+    and prepare_data = 
+      List.map prog.prepare_data ~f:g
+      |> A.all 
+    and log_prob = 
+      List.map prog.log_prob ~f:g
+      |> A.all 
+    and transform_inits = 
+      List.map prog.transform_inits ~f:g
+      |> A.all 
+    and generate_quantities = 
+      List.map prog.generate_quantities ~f:g
+      |> A.all 
+    and output_vars = 
+      List.map prog.output_vars 
+        ~f:(fun (str,outvar) -> 
+          Traversable_outvar.traverse ~f outvar 
+          |> A.map ~f:(fun st -> (str,st))) 
+      |> A.all
+    in
+
+    A.(return (fun functions_block input_vars prepare_data log_prob generate_quantities transform_inits output_vars  ->
+      { prog with 
+        functions_block = functions_block
+      ; input_vars = input_vars
+      ; prepare_data = prepare_data 
+      ; log_prob = log_prob 
+      ; generate_quantities = generate_quantities 
+      ; transform_inits = transform_inits
+      ; output_vars = output_vars  
+      }
+    )
+    <*> functions_block
+    <*> input_vars
+    <*> prepare_data
+    <*> log_prob
+    <*> generate_quantities
+    <*> transform_inits
+    <*> output_vars
+  )
+end
 
 type internal_fn =
   | FnLength

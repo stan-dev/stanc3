@@ -26,3 +26,4 @@ val srowvector : 'a  -> 'a  t
 val smatrix : 'a  -> 'a  ->'a  t
 val sarray : 'a t -> 'a  -> 'a t
 val to_unsizedtype : 'a t -> UnsizedType.t
+val associate : ?init:Expr.Labelled.t Label.Map.t -> Expr.Labelled.t t -> Expr.Labelled.t Label.Map.t

@@ -201,5 +201,10 @@ let incr expr =
   | Fixed.Pattern.FunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
   | _ -> false 
 
+let is_lit_string {Fixed.pattern;_} = 
+  match pattern with 
+  | Fixed.Pattern.Lit(Str,_) -> true 
+  | _ -> false
+  
 let loop_bottom = 
   lit_int Typed.Meta.empty 1

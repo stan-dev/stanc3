@@ -150,24 +150,10 @@ module Labelled = struct
         List.fold ~f:(fun accu x -> associate ~init:accu x) ~init:assocs xs
 
   and associate_possibly_sized_type assocs = function
-    | Mir_pattern.Sized st -> associate_sized_type assocs st
+    | Mir_pattern.Sized st -> { assocs with exprs = SizedType.associate ~init:assocs.exprs st }
     | Mir_pattern.Unsized _ -> assocs
 
-  and associate_sized_type assocs = function
-    | Mir_pattern.SInt | SReal -> assocs
-    | SVector e | SRowVector e ->
-        let exprs = Expr.Labelled.associate ~init:assocs.exprs e in
-        {assocs with exprs}
-    | SMatrix (e1, e2) ->
-        let exprs =
-          Expr.Labelled.(
-            associate ~init:(associate ~init:assocs.exprs e1) e2)
-        in
-        {assocs with exprs}
-    | SArray (st, e) ->
-        let exprs = Expr.Labelled.associate ~init:assocs.exprs e in
-        let assocs' = {assocs with exprs} in
-        associate_sized_type assocs' st
+  
 end
 
 (* == Helpers ============================================================= *)

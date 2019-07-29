@@ -1,9 +1,10 @@
 open Core_kernel
 
 (** Delimited locations *)
+
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]
-
+  
 let empty = {begin_loc= Location.empty; end_loc= Location.empty}
 let merge left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
@@ -28,3 +29,17 @@ let of_positions_opt start_pos end_pos =
     >>= fun begin_loc ->
     Location.of_position_opt end_pos
     |> map ~f:(fun end_loc -> {begin_loc; end_loc}))
+
+module Comparator =  Comparator.Make(struct 
+    type nonrec t = t 
+    let compare = compare 
+    let sexp_of_t = sexp_of_t
+end) 
+
+include Comparator
+include Comparable.Make_using_comparator(struct 
+    type nonrec t = t 
+    let sexp_of_t = sexp_of_t
+    let t_of_sexp  = t_of_sexp
+    include Comparator
+end )

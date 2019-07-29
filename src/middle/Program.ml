@@ -1,5 +1,6 @@
 open Core_kernel
-
+open Common 
+open State.Cps
 
 type 'a fun_def = 'a Mir_pattern.fun_def =
   { fdrt: UnsizedType.t option
@@ -21,29 +22,87 @@ type 'a outvar = 'a Mir_pattern.outvar =
     ; out_block: io_block }
     [@@deriving sexp, map, hash]
 
-module Fixed = struct 
-    module Pattern = struct
-        type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
-        { functions_block: 'b fun_def list
-        ; input_vars: (string * 'a SizedType.t) list
-        ; prepare_data: 'b list (* data & transformed data decls and statements *)
-        ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-        ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
-        ; transform_inits: 'b list
-        ; output_vars: (string * 'a outvar) list
-        ; prog_name: string
-        ; prog_path: string }
-        [@@deriving sexp, map]
 
-        let pp pp_expr pp_stmt ppf x = Mir_pretty_printer.pp_prog pp_expr pp_stmt ppf x
-    end
+type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
+    { functions_block: 'b fun_def list
+    ; input_vars: (string * 'a SizedType.t) list
+    ; prepare_data: 'b list (* data & transformed data decls and statements *)
+    ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+    ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+    ; transform_inits: 'b list
+    ; output_vars: (string * 'a outvar) list
+    ; prog_name: string
+    ; prog_path: string }
+    [@@deriving sexp, map]
 
-    type ('a,'b) t = ('a Expr.Fixed.t, ('a,'b) Stmt.Fixed.t) Pattern.t
+let pp pp_expr pp_stmt ppf x = Mir_pretty_printer.pp_prog pp_expr pp_stmt ppf x
     
-    let pp pp_expr_meta pp_stmt_meta ppf x = Pattern.pp (Expr.Fixed.pp pp_expr_meta) (Stmt.Fixed.pp pp_expr_meta pp_stmt_meta) ppf x
-end 
+module Make_traversable = Mir_pattern.Make_traversable_prog
+module Make_traversable2 = Mir_pattern.Make_traversable_prog2
 
 module Typed = struct
-    type t = (Expr.Typed.Meta.t,Stmt.Located.Meta.t) Fixed.t
-    let pp ppf x = Fixed.pp Expr.Typed.Meta.pp Stmt.Located.Meta.pp  ppf x
+    type nonrec t = (Expr.Typed.t,Stmt.Located.t) t
+    let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp  ppf x
+end
+
+module Labelled = struct
+    type nonrec t = (Expr.Labelled.t,Stmt.Labelled.t) t
+    let pp ppf x = pp Expr.Labelled.pp Stmt.Labelled.pp  ppf x
+
+    module Traversable_state = Make_traversable2(State)
+    module Traversable_stmt_state = Stmt.Fixed.Make_traversable2(State)
+    module Traversable_expr_state = Expr.Fixed.Make_traversable2(State)
+    let label ?init:(init=0) (prog: Typed.t) : t = 
+        let incr_label =
+            State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
+        in
+        let f {Expr.Typed.Meta.adlevel; type_; loc} =
+            incr_label
+            |> State.map ~f:(fun label ->
+                Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label () )
+        and g  loc =
+            incr_label
+            |> State.map ~f:(fun label ->
+                Stmt.Labelled.Meta.create ~loc ~label () )
+        in
+        Traversable_state.traverse prog
+            ~f:(Traversable_expr_state.traverse ~f) 
+            ~g:(Traversable_stmt_state.traverse ~f ~g)  
+        |> State.run_state ~init 
+        |> fst
+
+
+    let empty = {Stmt.Labelled.exprs= Label.Map.empty; stmts= Label.Map.empty}
+    let rec associate ?init:(assocs = empty) prog =
+        let assoc_fundef = 
+            List.fold_left prog.functions_block ~init:assocs ~f:associate_fun_def in 
+        let assoc_input_vars = 
+            List.fold_left prog.input_vars ~init:assoc_fundef 
+                ~f:(fun assocs (_,st) -> 
+                    { assocs with 
+                        exprs = SizedType.associate ~init:assocs.exprs st
+                    }) in
+        let assoc_prepare_data = 
+            List.fold_left prog.prepare_data ~init:assoc_input_vars
+                ~f:(fun assocs stmt -> Stmt.Labelled.associate  ~init:assocs stmt) in
+        let assoc_log_prog = 
+            List.fold_left prog.log_prob ~init:assoc_prepare_data
+                ~f:(fun assocs stmt -> Stmt.Labelled.associate  ~init:assocs stmt) in
+        let assoc_generate_quants = 
+            List.fold_left prog.generate_quantities ~init:assoc_log_prog
+                ~f:(fun assocs stmt -> Stmt.Labelled.associate  ~init:assocs stmt) in
+        let assoc_transform_inits = 
+            List.fold_left prog.transform_inits ~init:assoc_generate_quants
+                ~f:(fun assocs stmt -> Stmt.Labelled.associate  ~init:assocs stmt) in
+        List.fold_left prog.output_vars ~init:assoc_transform_inits ~f:associate_outvar
+
+    and associate_fun_def assocs {fdbody;_} = 
+        Stmt.Labelled.associate ~init:assocs fdbody
+    and associate_outvar assocs (_,{out_constrained_st;out_unconstrained_st;_}) = 
+        let exprs = 
+            SizedType.(
+                associate ~init:(associate ~init:assocs.exprs  out_unconstrained_st) out_constrained_st
+            ) in 
+        { assocs with exprs }
+
 end

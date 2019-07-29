@@ -261,7 +261,7 @@ let fix_data_reads = function
   | [] -> []
 
 let trans_prog (p: Program.Typed.t)  = 
-  Program.Fixed.Pattern.map 
+  Program.map 
     Fn.id 
     ensure_body_in_block
     { p with
