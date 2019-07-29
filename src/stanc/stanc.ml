@@ -55,7 +55,8 @@ let options =
          step." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
-      , " For debugging purposes: print the MIR after the backend has transformed it." )
+      , " For debugging purposes: print the MIR after the backend has \
+         transformed it." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )

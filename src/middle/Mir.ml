@@ -203,6 +203,7 @@ type internal_fn =
   | FnPrint
   | FnReject
   | FnMatrixElement
+  | FnResizeToMatch
 [@@deriving sexp]
 
 (**  A custom comparator which ignores locations on expressions *)

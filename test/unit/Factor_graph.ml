@@ -53,7 +53,7 @@ let%expect_test "Variable dependency example" =
   print_s [%sexp (deps : (label * factor * vexpr Set.Poly.t) list)] ;
   [%expect
     {|
-      ((18 Reject ((VVar i) (VVar j)))
-       (20 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j)))
-       (20 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j))))
+      ((19 Reject ((VVar i) (VVar j)))
+       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j)))
+       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j))))
     |}]

@@ -2809,49 +2809,78 @@
                                   (madlevel DataOnly)))))
                               (body
                                ((stmt
-                                 (Assignment
-                                  (d_ar_mat
-                                   ((Single
-                                     ((expr (Var sym2__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym3__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym4__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym5__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))))
-                                  ((expr
-                                    (FunApp CompilerInternal FnReadData__
-                                     (((expr (Lit Str d_ar_mat))
+                                 (Block
+                                  (((stmt
+                                     (Assignment
+                                      (d_ar_mat
+                                       ((Single
+                                         ((expr (Var sym2__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym3__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym4__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym5__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))))
+                                      ((expr
+                                        (Indexed
+                                         ((expr
+                                           (FunApp CompilerInternal
+                                            FnReadData__
+                                            (((expr (Lit Str d_ar_mat))
+                                              (emeta
+                                               ((mtype UReal) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Str matrix))
+                                              (emeta
+                                               ((mtype UReal) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Int 2))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Int 3))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly)))))))
+                                          (emeta
+                                           ((mtype UReal) (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var sym2__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym3__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym4__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym5__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
                                         ((mtype UReal) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Str matrix))
-                                       (emeta
-                                        ((mtype UReal) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Int 2))
-                                       (emeta
-                                        ((mtype UInt) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Int 3))
-                                       (emeta
-                                        ((mtype UInt) (mloc <opaque>)
-                                         (madlevel DataOnly)))))))
-                                   (emeta
-                                    ((mtype UReal) (mloc <opaque>)
-                                     (madlevel DataOnly))))))
+                                         (madlevel DataOnly))))))
+                                    (smeta <opaque>)))))
                                 (smeta <opaque>)))))
                             (smeta <opaque>)))))
                         (smeta <opaque>)))))
@@ -3160,32 +3189,54 @@
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
               (body
                ((stmt
-                 (Assignment
-                  (d_cfcov_54
-                   ((Single
-                     ((expr (Var sym2__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (Single
-                     ((expr (Var sym3__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  ((expr
-                    (FunApp CompilerInternal FnReadData__
-                     (((expr (Lit Str d_cfcov_54))
+                 (Block
+                  (((stmt
+                     (Assignment
+                      (d_cfcov_54
+                       ((Single
+                         ((expr (Var sym2__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym3__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                      ((expr
+                        (Indexed
+                         ((expr
+                           (FunApp CompilerInternal FnReadData__
+                            (((expr (Lit Str d_cfcov_54))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Str matrix))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 5))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 4))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly)))))))
+                          (emeta
+                           ((mtype UReal) (mloc <opaque>)
+                            (madlevel DataOnly))))
+                         ((Single
+                           ((expr (Var sym2__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly)))))
+                          (Single
+                           ((expr (Var sym3__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly))))))))
                        (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Str matrix))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 5))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 4))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                   (emeta
-                    ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>)))))
                 (smeta <opaque>)))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
@@ -3221,32 +3272,54 @@
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
               (body
                ((stmt
-                 (Assignment
-                  (d_cfcov_33
-                   ((Single
-                     ((expr (Var sym2__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (Single
-                     ((expr (Var sym3__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  ((expr
-                    (FunApp CompilerInternal FnReadData__
-                     (((expr (Lit Str d_cfcov_33))
+                 (Block
+                  (((stmt
+                     (Assignment
+                      (d_cfcov_33
+                       ((Single
+                         ((expr (Var sym2__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym3__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                      ((expr
+                        (Indexed
+                         ((expr
+                           (FunApp CompilerInternal FnReadData__
+                            (((expr (Lit Str d_cfcov_33))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Str matrix))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 3))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 3))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly)))))))
+                          (emeta
+                           ((mtype UReal) (mloc <opaque>)
+                            (madlevel DataOnly))))
+                         ((Single
+                           ((expr (Var sym2__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly)))))
+                          (Single
+                           ((expr (Var sym3__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly))))))))
                        (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Str matrix))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 3))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 3))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                   (emeta
-                    ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>)))))
                 (smeta <opaque>)))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
@@ -3298,44 +3371,67 @@
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                       (body
                        ((stmt
-                         (Assignment
-                          (d_cfcov_33_ar
-                           ((Single
-                             ((expr (Var sym2__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))
-                            (Single
-                             ((expr (Var sym3__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))
-                            (Single
-                             ((expr (Var sym4__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))))
-                          ((expr
-                            (FunApp CompilerInternal FnReadData__
-                             (((expr (Lit Str d_cfcov_33_ar))
+                         (Block
+                          (((stmt
+                             (Assignment
+                              (d_cfcov_33_ar
+                               ((Single
+                                 ((expr (Var sym2__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym3__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym4__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
+                              ((expr
+                                (Indexed
+                                 ((expr
+                                   (FunApp CompilerInternal FnReadData__
+                                    (((expr (Lit Str d_cfcov_33_ar))
+                                      (emeta
+                                       ((mtype UReal) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Str matrix))
+                                      (emeta
+                                       ((mtype UReal) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Int 3))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Int 3))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly)))))))
+                                  (emeta
+                                   ((mtype UReal) (mloc <opaque>)
+                                    (madlevel DataOnly))))
+                                 ((Single
+                                   ((expr (Var sym2__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym3__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym4__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly))))))))
                                (emeta
                                 ((mtype UReal) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Str matrix))
-                               (emeta
-                                ((mtype UReal) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Int 3))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Int 3))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly)))))))
-                           (emeta
-                            ((mtype UReal) (mloc <opaque>)
-                             (madlevel DataOnly))))))
+                                 (madlevel DataOnly))))))
+                            (smeta <opaque>)))))
                         (smeta <opaque>)))))
                     (smeta <opaque>)))))
                 (smeta <opaque>)))))
@@ -3891,15 +3987,24 @@
     (smeta <opaque>))
    ((stmt
      (Decl (decl_adtype DataOnly) (decl_id sym1__)
-      (decl_type
-       (Sized
-        (SArray SInt
-         ((expr
-           (FunApp CompilerInternal FnLength__
-            (((expr (Var td_1dk))
+      (decl_type (Unsized (UArray UInt)))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (sym1__ ())
+      ((expr
+        (FunApp CompilerInternal FnResizeToMatch__
+         (((expr
+            (Indexed
+             ((expr (Var sym1__))
               (emeta
-               ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
-          (emeta ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))))
+               ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+             ()))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var td_1dk))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
      (For (loopvar sym3__)
@@ -15636,49 +15741,78 @@
                                   (madlevel DataOnly)))))
                               (body
                                ((stmt
-                                 (Assignment
-                                  (p_ar_mat
-                                   ((Single
-                                     ((expr (Var sym16__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym17__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym18__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))
-                                    (Single
-                                     ((expr (Var sym19__))
-                                      (emeta
-                                       ((mtype UInt) (mloc <opaque>)
-                                        (madlevel DataOnly)))))))
-                                  ((expr
-                                    (FunApp CompilerInternal FnReadData__
-                                     (((expr (Lit Str p_ar_mat))
+                                 (Block
+                                  (((stmt
+                                     (Assignment
+                                      (p_ar_mat
+                                       ((Single
+                                         ((expr (Var sym16__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym17__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym18__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym19__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))))
+                                      ((expr
+                                        (Indexed
+                                         ((expr
+                                           (FunApp CompilerInternal
+                                            FnReadData__
+                                            (((expr (Lit Str p_ar_mat))
+                                              (emeta
+                                               ((mtype UReal) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Str matrix))
+                                              (emeta
+                                               ((mtype UReal) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Int 2))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly))))
+                                             ((expr (Lit Int 3))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly)))))))
+                                          (emeta
+                                           ((mtype UReal) (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var sym16__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym17__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym18__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym19__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
                                         ((mtype UReal) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Str matrix))
-                                       (emeta
-                                        ((mtype UReal) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Int 2))
-                                       (emeta
-                                        ((mtype UInt) (mloc <opaque>)
-                                         (madlevel DataOnly))))
-                                      ((expr (Lit Int 3))
-                                       (emeta
-                                        ((mtype UInt) (mloc <opaque>)
-                                         (madlevel DataOnly)))))))
-                                   (emeta
-                                    ((mtype UReal) (mloc <opaque>)
-                                     (madlevel DataOnly))))))
+                                         (madlevel DataOnly))))))
+                                    (smeta <opaque>)))))
                                 (smeta <opaque>)))))
                             (smeta <opaque>)))))
                         (smeta <opaque>)))))
@@ -16262,32 +16396,54 @@
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
               (body
                ((stmt
-                 (Assignment
-                  (p_cfcov_54
-                   ((Single
-                     ((expr (Var sym16__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (Single
-                     ((expr (Var sym17__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  ((expr
-                    (FunApp CompilerInternal FnReadData__
-                     (((expr (Lit Str p_cfcov_54))
+                 (Block
+                  (((stmt
+                     (Assignment
+                      (p_cfcov_54
+                       ((Single
+                         ((expr (Var sym16__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym17__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                      ((expr
+                        (Indexed
+                         ((expr
+                           (FunApp CompilerInternal FnReadData__
+                            (((expr (Lit Str p_cfcov_54))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Str matrix))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 5))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 4))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly)))))))
+                          (emeta
+                           ((mtype UReal) (mloc <opaque>)
+                            (madlevel DataOnly))))
+                         ((Single
+                           ((expr (Var sym16__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly)))))
+                          (Single
+                           ((expr (Var sym17__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly))))))))
                        (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Str matrix))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 5))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 4))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                   (emeta
-                    ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>)))))
                 (smeta <opaque>)))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
@@ -16333,32 +16489,54 @@
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
               (body
                ((stmt
-                 (Assignment
-                  (p_cfcov_33
-                   ((Single
-                     ((expr (Var sym16__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (Single
-                     ((expr (Var sym17__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  ((expr
-                    (FunApp CompilerInternal FnReadData__
-                     (((expr (Lit Str p_cfcov_33))
+                 (Block
+                  (((stmt
+                     (Assignment
+                      (p_cfcov_33
+                       ((Single
+                         ((expr (Var sym16__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Var sym17__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                      ((expr
+                        (Indexed
+                         ((expr
+                           (FunApp CompilerInternal FnReadData__
+                            (((expr (Lit Str p_cfcov_33))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Str matrix))
+                              (emeta
+                               ((mtype UReal) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 3))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly))))
+                             ((expr (Lit Int 3))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly)))))))
+                          (emeta
+                           ((mtype UReal) (mloc <opaque>)
+                            (madlevel DataOnly))))
+                         ((Single
+                           ((expr (Var sym16__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly)))))
+                          (Single
+                           ((expr (Var sym17__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly))))))))
                        (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Str matrix))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 3))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                      ((expr (Lit Int 3))
-                       (emeta
-                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                   (emeta
-                    ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>)))))
                 (smeta <opaque>)))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
@@ -16420,44 +16598,67 @@
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                       (body
                        ((stmt
-                         (Assignment
-                          (p_cfcov_33_ar
-                           ((Single
-                             ((expr (Var sym16__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))
-                            (Single
-                             ((expr (Var sym17__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))
-                            (Single
-                             ((expr (Var sym18__))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>)
-                                (madlevel DataOnly)))))))
-                          ((expr
-                            (FunApp CompilerInternal FnReadData__
-                             (((expr (Lit Str p_cfcov_33_ar))
+                         (Block
+                          (((stmt
+                             (Assignment
+                              (p_cfcov_33_ar
+                               ((Single
+                                 ((expr (Var sym16__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym17__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
+                                 ((expr (Var sym18__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))))
+                              ((expr
+                                (Indexed
+                                 ((expr
+                                   (FunApp CompilerInternal FnReadData__
+                                    (((expr (Lit Str p_cfcov_33_ar))
+                                      (emeta
+                                       ((mtype UReal) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Str matrix))
+                                      (emeta
+                                       ((mtype UReal) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Int 3))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly))))
+                                     ((expr (Lit Int 3))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly)))))))
+                                  (emeta
+                                   ((mtype UReal) (mloc <opaque>)
+                                    (madlevel DataOnly))))
+                                 ((Single
+                                   ((expr (Var sym16__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym17__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym18__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly))))))))
                                (emeta
                                 ((mtype UReal) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Str matrix))
-                               (emeta
-                                ((mtype UReal) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Int 3))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((expr (Lit Int 3))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly)))))))
-                           (emeta
-                            ((mtype UReal) (mloc <opaque>)
-                             (madlevel DataOnly))))))
+                                 (madlevel DataOnly))))))
+                            (smeta <opaque>)))))
                         (smeta <opaque>)))))
                     (smeta <opaque>)))))
                 (smeta <opaque>)))))

@@ -30,7 +30,9 @@ let%expect_test "pull out multi indices" =
     replacement expr: sym1__
     AST statements:
      matrix sym1__;
+     sym1__ = FnResizeToMatch__(sym1__, indices);
      for (sym2__ in indices) {
+       sym1__[sym2__] = FnResizeToMatch__(sym1__[sym2__], indices);
        for (sym3__ in indices) {
          sym1__[sym2__, sym3__] = mat[indices[sym2__], indices[sym3__]];
        }
@@ -57,12 +59,37 @@ transformed data {
       int indices[3] = {2, 1, 3};
       vector[3] vec[5];
       vector sym2__;
+      sym2__ = FnResizeToMatch__(sym2__, indices);
       for (sym3__ in indices) {
         sym2__[sym3__] = vec[indices[sym3__]];
       }
       print(sym2__);
     }
 
+    ((stmt
+      (Assignment
+       (assign_lhs
+        ((assign_identifier ((name sym2__) (id_loc <opaque>)))
+         (assign_indices ())
+         (assign_meta
+          ((loc <opaque>) (id_ad_level DataOnly) (id_type_ (UArray UVector))
+           (lhs_ad_level DataOnly) (lhs_type_ (UArray UVector))))))
+       (assign_op Assign)
+       (assign_rhs
+        ((expr
+          (FunApp CompilerInternal ((name FnResizeToMatch__) (id_loc <opaque>))
+           (((expr
+              (Indexed
+               ((expr (Variable ((name sym2__) (id_loc <opaque>))))
+                (emeta
+                 ((loc <opaque>) (ad_level DataOnly) (type_ (UArray UVector)))))
+               ()))
+             (emeta
+              ((loc <opaque>) (ad_level DataOnly) (type_ (UArray UVector)))))
+            ((expr (Variable ((name indices) (id_loc <opaque>))))
+             (emeta ((loc <opaque>) (ad_level DataOnly) (type_ (UArray UInt))))))))
+         (emeta ((loc <opaque>) (ad_level DataOnly) (type_ (UArray UVector))))))))
+     (smeta ((loc <opaque>) (return_type NoReturnType))))
     ((stmt
       (ForEach ((name sym3__) (id_loc <opaque>))
        ((expr (Variable ((name indices) (id_loc <opaque>))))

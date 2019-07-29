@@ -53,12 +53,12 @@ let%expect_test "Dependency graph example" =
   print_s [%sexp (deps : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 ()) (2 ()) (3 ()) (4 (3)) (5 (3 4)) (6 (3 4)) (7 (3 4)) (8 (3 4 10 12))
-       (9 (3 4 8 10 12)) (10 (3 4 8 12)) (11 (3 4 8 10 12)) (12 (3 4 8 10))
-       (13 (3 4 8 10 12)) (14 (3 4 8 10 12 13)) (15 (3 4 8 10 12 13))
-       (16 (3 4 8 10 12 13 15)) (17 (3 4 8 10 12 13 15 16))
-       (18 (3 4 8 10 12 13 15 16)) (19 (3 4 8 10 12 13 15 16))
-       (20 (3 4 8 10 12 13 15 16)) (21 (3 4 8 10 12 13 15 16 18)))
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4 5)) (7 (4 5)) (8 (4 5))
+       (9 (4 5 11 13)) (10 (4 5 9 11 13)) (11 (4 5 9 13)) (12 (4 5 9 11 13))
+       (13 (4 5 9 11)) (14 (4 5 9 11 13)) (15 (4 5 9 11 13 14))
+       (16 (4 5 9 11 13 14)) (17 (4 5 9 11 13 14 16)) (18 (4 5 9 11 13 14 16 17))
+       (19 (4 5 9 11 13 14 16 17)) (20 (4 5 9 11 13 14 16 17))
+       (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
     |}]
 
 let%expect_test "Reaching defns example" =
@@ -74,9 +74,10 @@ let%expect_test "Reaching defns example" =
   [%expect
     {|
       ((1 (() ())) (2 (() ())) (3 (() ())) (4 (() ())) (5 (() ())) (6 (() ()))
-       (7 (() ())) (8 ((8) (8))) (9 ((8) (8))) (10 ((8) (8))) (11 ((8) (8)))
-       (12 ((8) (8))) (13 ((8) (8))) (14 ((8) (8))) (15 ((8) (8))) (16 ((8) (8)))
-       (17 ((8) (8))) (18 ((8) (8))) (19 ((8) (8))) (20 ((8) (8))) (21 ((8) (8))))
+       (7 (() ())) (8 (() ())) (9 ((9) (9))) (10 ((9) (9))) (11 ((9) (9)))
+       (12 ((9) (9))) (13 ((9) (9))) (14 ((9) (9))) (15 ((9) (9))) (16 ((9) (9)))
+       (17 ((9) (9))) (18 ((9) (9))) (19 ((9) (9))) (20 ((9) (9))) (21 ((9) (9)))
+       (22 ((9) (9))))
     |}]
 
 let%expect_test "Reaching defns example" =
@@ -94,22 +95,23 @@ let%expect_test "Reaching defns example" =
   [%expect
     {|
       ((1 (() ())) (2 (() ())) (3 (() (((VVar i) 3))))
-       (4 ((((VVar i) 3)) (((VVar i) 3)))) (5 ((((VVar i) 3)) (((VVar i) 3))))
-       (6 ((((VVar i) 3)) (((VVar i) 3)))) (7 ((((VVar i) 3)) (((VVar i) 3))))
-       (8 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (9 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (10 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (11 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (12 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (13 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (14 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (15 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (16 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (17 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (18 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (19 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (20 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8))))
-       (21 ((((VVar i) 3) ((VVar j) 8)) (((VVar i) 3) ((VVar j) 8)))))
+       (4 ((((VVar i) 3)) (((VVar i) 4)))) (5 ((((VVar i) 4)) (((VVar i) 4))))
+       (6 ((((VVar i) 4)) (((VVar i) 4)))) (7 ((((VVar i) 4)) (((VVar i) 4))))
+       (8 ((((VVar i) 4)) (((VVar i) 4))))
+       (9 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (10 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (11 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (12 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (13 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (14 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (15 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (16 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (17 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (18 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (19 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (20 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (21 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (22 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9)))))
     |}]
 
 let%expect_test "Variable dependency example" =
@@ -122,5 +124,5 @@ let%expect_test "Variable dependency example" =
   in
   print_s [%sexp (deps : label Set.Poly.t)] ;
   [%expect {|
-      (3 4 8 10 12 13 15 16)
+      (4 5 9 11 13 14 16)
     |}]

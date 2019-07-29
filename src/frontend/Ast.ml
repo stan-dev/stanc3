@@ -88,11 +88,11 @@ type 'e truncation =
   | TruncateUpFrom of 'e
   | TruncateDownFrom of 'e
   | TruncateBetween of 'e * 'e
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Things that can be printed *)
 type 'e printable = PString of string | PExpr of 'e
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 (** Transformations (constraints) for global variable declarations *)
 type 'e transformation =
@@ -111,7 +111,7 @@ type 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type ('e, 'm) lhs_with =
   { assign_identifier: identifier
@@ -177,7 +177,7 @@ type ('e, 's, 'l) statement =
       ; funname: identifier
       ; arguments: (Middle.autodifftype * Middle.unsizedtype * identifier) list
       ; body: 's }
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
     checking: the purpose is to check that function bodies have the correct

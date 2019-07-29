@@ -81,13 +81,14 @@ let rec pp_statement (ppf : Format.formatter)
     when internal_fn_of_string f = Some FnMakeArray ->
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-    (* XXX I think in general we don't need to do a deepcopy if e is nested
+      (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
        (in all cases???) *)
       let rec maybe_deep_copy e =
         let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
         match e with
         | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} -> e
+        | {expr= FunApp (CompilerInternal, _, _); _} -> e
         | {expr= Var v; _} when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }

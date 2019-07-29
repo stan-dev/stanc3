@@ -144,7 +144,6 @@ let mkfor upper bodyfn iteratee smeta =
   let loopvar, reset = gensym_enter () in
   let lower = loop_bottom in
   let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
-  (* XXX make this deal with body lists ; don't autoblock*)
   reset () ;
   {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
 
@@ -176,9 +175,10 @@ let rec for_scalar st bodyfn var smeta =
         { stmt= For {loopvar= lv_inner; lower; upper= d2; body= body_inner}
         ; smeta }
       in
-      let blocked b = {stmt=Block [b]; smeta} in
+      let blocked b = {stmt= Block [b]; smeta} in
       let f =
-        { stmt= For {loopvar= lv_outer; lower; upper= d1; body= blocked body_outer}
+        { stmt=
+            For {loopvar= lv_outer; lower; upper= d1; body= blocked body_outer}
         ; smeta }
       in
       reset () ; f
@@ -357,6 +357,14 @@ let remove_possibly_exn pst action loc =
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : location_span)]
 
+(* mat_to_arr is used whenever we have a Stan matrix but we're dealing with
+   an underlying array. This is a code smell - not sure how to fix it short of
+   complete refactoring of data input.*)
+let rec mat_to_arr = function
+  | SMatrix (d1, d2) -> SArray (SRowVector d2, d1)
+  | SArray (t, d) -> SArray (mat_to_arr t, d)
+  | st -> st
+
 let read_decl dread decl_id decl_type smeta decl_var =
   let sizedtype = remove_possibly_exn decl_type "read" smeta in
   let args =
@@ -368,17 +376,17 @@ let read_decl dread decl_id decl_type smeta decl_var =
   let readfn var =
     internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
   in
-  let readvar var =
+  let rec readvar var =
     match var.expr with
-    | Indexed (_, indices) -> {var with expr= Indexed (readfn var, indices)}
-    | _ -> readfn var
+    | Var id when id = decl_id -> readfn var
+    | e -> {var with expr= map_expr readvar e}
   in
-  let forl, st =
+  let forl =
     match dread with
-    | ReadData -> (for_scalar, sizedtype)
-    | ReadParam -> (for_eigen, sizedtype)
+    | ReadData -> for_scalar (mat_to_arr sizedtype)
+    | ReadParam -> for_eigen sizedtype
   in
-  forl st (assign_indexed decl_id smeta readvar) decl_var smeta
+  forl (assign_indexed decl_id smeta readvar) decl_var smeta
 
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in

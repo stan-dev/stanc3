@@ -40,6 +40,10 @@ let rec local_scalar ut ad =
   | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
+let minus_one e =
+  { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
+  ; emeta= e.emeta }
+
 (* stub *)
 let rec pp_return_type ppf = function
   | Void -> pf ppf "void"
@@ -176,6 +180,8 @@ and gen_misc_special_math_app f =
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | f when f = string_of_internal_fn FnLength ->
       Some (fun ppf -> gen_fun_app ppf "stan::length")
+  | f when f = string_of_internal_fn FnResizeToMatch ->
+      Some (fun ppf -> gen_fun_app ppf "resize_to_match")
   | f when f = string_of_internal_fn FnNegInf ->
       Some (fun ppf -> gen_fun_app ppf "stan::math::negative_infinity")
   | _ -> None
@@ -248,7 +254,8 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnMatrixElement -> (
     match es with
     | [obj; rows; cols] ->
-        pf ppf "%a.coeffRef(%a, %a)" pp_expr obj pp_expr rows pp_expr cols
+        pf ppf "%a.coeff(%a, %a)" pp_expr obj pp_expr (minus_one rows) pp_expr
+          (minus_one cols)
     | _ ->
         raise_s
           [%message
@@ -274,10 +281,6 @@ and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
 and pp_indexed_simple ppf (obj, idcs) =
-  let minus_one e =
-    { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
-    ; emeta= e.emeta }
-  in
   let idx_minus_one = function
     | Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->

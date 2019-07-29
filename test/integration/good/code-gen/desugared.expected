@@ -316,7 +316,8 @@ transformed data {
       z = 0;
     }
   }
-  int sym1__[FnLength__(td_1dk)];
+  int sym1__;
+  sym1__ = FnResizeToMatch__(sym1__, td_1dk);
   for (sym2__ in td_1dk) {
     sym1__[sym2__] = td_1d[td_1dk[sym2__]];
   }
