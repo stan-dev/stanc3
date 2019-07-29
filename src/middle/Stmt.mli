@@ -6,7 +6,27 @@ type 'a possiblysizedtype = 'a Mir_pattern.possiblysizedtype =
 [@@deriving sexp, compare, map, hash, fold]
 
 module Fixed : sig 
-    module Pattern : Pattern.S2 with type ('a,'b) t = ('a,'b) Mir_pattern.statement    
+    module Pattern : sig 
+      type ('a, 'b) t = ('a, 'b) Mir_pattern.statement = 
+      | Assignment of (string * 'a Expr.index list) * 'a
+      | TargetPE of 'a
+      | NRFunApp of Fun_kind.t * string * 'a list
+      | Break
+      | Continue
+      | Return of 'a option
+      | Skip
+      | IfElse of 'a * 'b * 'b option
+      | While of 'a * 'b
+      | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
+      | Block of 'b list
+      | SList of 'b list
+      | Decl of
+              { decl_adtype: UnsizedType.autodifftype
+              ; decl_id: string
+              ; decl_type: 'a possiblysizedtype }
+      [@@deriving sexp, hash, compare]
+      include Pattern.S2 with type ('a,'b) t := ('a,'b) t
+    end 
     include Fix.S2 with module First = Expr.Fixed and module Pattern := Pattern
 end 
 
@@ -76,6 +96,7 @@ val slist : 'b -> ('a,'b) Fixed.t list -> ('a,'b) Fixed.t
 val while_ : 'b -> 'a Expr.Fixed.t -> ('a,'b) Fixed.t -> ('a,'b) Fixed.t
 val if_ : 'b -> 'a Expr.Fixed.t -> ('a,'b) Fixed.t -> ('a,'b) Fixed.t option -> ('a,'b) Fixed.t
 val for_ : 'b -> string -> 'a Expr.Fixed.t -> 'a Expr.Fixed.t -> ('a,'b) Fixed.t -> ('a,'b) Fixed.t
+val mock_for : int -> Located.t -> Located.t
 val sized : 'a SizedType.t -> 'a possiblysizedtype
 val unsized : UnsizedType.t -> 'a possiblysizedtype
 val declare_sized : 'b  -> UnsizedType.autodifftype -> string -> 'a Expr.Fixed.t SizedType.t -> ('a,'b) Fixed.t

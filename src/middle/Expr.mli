@@ -14,8 +14,22 @@ type 'a index = 'a Mir_pattern.index =
 
 val pp_index : 'a Fmt.t -> Format.formatter -> 'a index -> unit
 val pp_indexed : 'a Fmt.t ->Format.formatter -> string * 'a index list -> unit
+
 module Fixed  : sig 
-  module Pattern : Pattern.S with type 'a t = 'a Mir_pattern.expr  
+
+  module Pattern : sig
+    type 'a t = 'a Mir_pattern.expr  =
+      | Var of string
+      | Lit of litType * string
+      | FunApp of Fun_kind.t * string * 'a list
+      | TernaryIf of 'a * 'a * 'a
+      | EAnd of 'a * 'a
+      | EOr of 'a * 'a
+      | Indexed of 'a * 'a index list
+    [@@deriving sexp, hash, compare]
+    include Pattern.S with type 'a t := 'a t
+  end
+  
   include Fix.S with module Pattern := Pattern
 end
 
@@ -104,4 +118,5 @@ val user_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val stanlib_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val is_fun : ?name:string -> 'a Fixed.t -> bool 
 val binop : 'a -> Operator.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val incr : 'a Fixed.t -> 'a Fixed.t
 val loop_bottom : Typed.t

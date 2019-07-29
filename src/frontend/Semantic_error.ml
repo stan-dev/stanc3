@@ -70,7 +70,7 @@ module TypeError = struct
            has type %a and rhs has type %a. Available signatures:@]%s"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           UnsizedType.pp lt UnsizedType.pp rt
-          ( pretty_print_math_lib_assignmentoperator_sigs op
+          ( Stan_math.pretty_print_math_lib_assignmentoperator_sigs op
           |> Option.value ~default:"no matching signatures" )
     | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
@@ -83,7 +83,7 @@ module TypeError = struct
           "Ill-typed arguments supplied to ? : operator. Available \
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %a, %a, %a."
-          (pretty_print_all_math_lib_fn_sigs "if_else")
+          (Stan_math.pretty_print_all_math_lib_fn_sigs "if_else")
           UnsizedType.pp ut1 UnsizedType.pp ut2 UnsizedType.pp ut3
     | NotIndexable ut ->
         Fmt.pf ppf
@@ -126,7 +126,7 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a.@]"
           name
-          (pretty_print_all_math_lib_fn_sigs name)
+          (Stan_math.pretty_print_all_math_lib_fn_sigs name)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
@@ -144,7 +144,7 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a, %a.@]"
           Operator.pp op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
@@ -152,7 +152,7 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
           Operator.pp op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
@@ -160,7 +160,7 @@ module TypeError = struct
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a."
           Operator.pp op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
           UnsizedType.pp ut
 end
 

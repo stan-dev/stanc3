@@ -19,7 +19,7 @@ module type S = sig
   val meta : 'a t -> 'a
   val fix : 'a -> 'a t Pattern.t -> 'a t
   val with_meta : 'a -> 'a t -> 'a t 
-  val map_pattern : f:('a -> 'a t Pattern.t -> 'a t Pattern.t) -> 'a t -> 'a t
+  val map_pattern : f:('a -> 'a t Pattern.t -> 'a t ) -> 'a t -> 'a t
 
   val fold_left_pattern :
     f:('a -> 'b -> 'b t Pattern.t -> 'a) -> init:'a -> 'b t -> 'a
@@ -62,10 +62,10 @@ module type S2 = sig
   val fix : 'b -> ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
   val with_meta : 'b -> ('a,'b) t -> ('a,'b) t
   val map_pattern :
-       f:('a -> 'a First.t First.Pattern.t -> 'a First.t First.Pattern.t)
+       f:('a -> 'a First.t First.Pattern.t -> 'a First.t )
     -> g:(   'b
           -> ('a First.t, ('a, 'b) t) Pattern.t
-          -> ('a First.t, ('a, 'b) t) Pattern.t)
+          -> ('a, 'b) t)
     -> ('a, 'b) t
     -> ('a, 'b) t
 

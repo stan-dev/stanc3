@@ -191,6 +191,10 @@ let if_ meta pred s_true s_false_opt =
 let for_ meta loopvar lower upper body =
   Fixed.fix meta @@ For {loopvar; lower; upper; body}
 
+let mock_for n body = 
+  let meta = Location_span.empty in
+  let emeta = Expr.Typed.Meta.empty in 
+  for_ meta "lv" (Expr.lit_int emeta 0) (Expr.lit_int emeta n) body
 
 let sized ty = Sized ty 
 
@@ -248,7 +252,7 @@ let is_fun ?name {Fixed.pattern;_} =
   | _ -> false 
 
 let contains_fun ?name stmt =   
-  Stmt.Fixed.any_pattern
+  Fixed.any_pattern
     ~pred_first:(fun meta pattern -> Expr.(is_fun ?name @@ Fixed.fix meta pattern ))
-    ~pred_second:(fun meta pattern -> Stmt.(is_fun ?name @@ Fixed.fix meta pattern ))
+    ~pred_second:(fun meta pattern -> is_fun ?name @@ Fixed.fix meta pattern)
     stmt 
