@@ -132,11 +132,25 @@ let rec pull_new_multi_indices_expr new_stmts
   | _ ->
       {expr= map_expression (pull_new_multi_indices_expr new_stmts) expr; emeta}
 
+let is_single_index = function
+  | Single {Ast.emeta= {Ast.type_= UArray _; _}; _} -> false
+  | Single _ -> true
+  | _ -> false
+
 let rec reduce_indices = function
   (* v[arr][2] -> v[arr[2]] *)
-  | Single ({emeta= {type_= UArray UInt; _}; _} as obj)
-    :: Single ({emeta= {type_= UInt; _} as emeta; _} as idc) :: tl ->
-      Single {expr= Indexed (obj, [Single idc]); emeta} :: reduce_indices tl
+  (* foo [arr1, ..., arrN] [i1, ..., iN] -> foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+  | Single ({emeta= {type_= UArray UInt; _} as emeta; _} as first_multi) :: tl
+    when List.exists ~f:is_single_index tl -> (
+      let multis, single_plus = List.split_while ~f:is_multi_index tl in
+      match single_plus with
+      | single :: tl ->
+          Single
+            { expr= Indexed (first_multi, [single])
+            ; emeta= {emeta with type_= UInt} }
+          :: reduce_indices (multis @ tl)
+      | _ -> raise_s [%message "checked that we had a single coming already!"]
+      )
   (* v[2:3][2] = v[3:2][1] -> v[3] *)
   (* | Between (lower, upper) :: Single {emeta={type_=UArray UInt; _}; _} :: tl ->
    *   Single (BinOp ) *)
@@ -147,11 +161,6 @@ let rec desugar_index_expr (e : typed_expression) =
   let ast_expr expr = {e with expr} in
   match e.expr with
   (* mat[2] -> row(m, 2)*)
-  | Ast.Indexed
-      ( ({emeta= {type_= UMatrix; _}; _} as obj)
-      , [Single ({emeta= {type_= UInt; _}; _} as i)] ) ->
-      Ast.FunApp (StanLib, {name= "row"; id_loc= e.emeta.loc}, [obj; i])
-      |> ast_expr
   | Indexed (obj, indices) ->
       {e with expr= Indexed (obj, reduce_indices indices)}
   (*
@@ -172,11 +181,6 @@ m[2:4][1:2] -> m[2:3]
 m[2:3, 2] -> (declare newsym, fill with rows 2-3 and column 2 via for loop); newsym
    *)
   | _ -> map_expression desugar_index_expr e.expr |> ast_expr
-
-let is_single_index = function
-  | Single {Ast.emeta= {Ast.type_= UArray _; _}; _} -> false
-  | Single _ -> true
-  | _ -> false
 
 let infer_type_of_indexed (base_emeta : typed_expr_meta) indices =
   Semantic_check.inferred_unsizedtype_of_indexed_exn base_emeta.type_
@@ -206,6 +210,16 @@ let rec split_single_index_lists = function
     | _ -> e )
   | e -> {e with expr= map_expression split_single_index_lists e.expr}
 
+let single_mat_idx_to_row = function
+  | { expr=
+        Indexed
+          ( ({emeta= {type_= UMatrix; _}; _} as obj)
+          , [Single ({emeta= {type_= UInt; _}; _} as i)] )
+    ; emeta } ->
+      { expr= FunApp (StanLib, {name= "row"; id_loc= emeta.loc}, [obj; i])
+      ; emeta }
+  | e -> {e with expr= map_expression split_single_index_lists e.expr}
+
 let rec map_statement_all_exprs expr_f {stmt; smeta} =
   { stmt= map_statement expr_f (map_statement_all_exprs expr_f) Fn.id stmt
   ; smeta }
@@ -213,7 +227,8 @@ let rec map_statement_all_exprs expr_f {stmt; smeta} =
 let desugar_stmt s =
   let new_stmts = ref [] in
   let desugar_expr e =
-    e |> split_single_index_lists |> desugar_index_expr
+    e |> desugar_index_expr |> split_single_index_lists
+    |> single_mat_idx_to_row
     |> pull_new_multi_indices_expr new_stmts
   in
   !new_stmts @ [map_statement_all_exprs desugar_expr s]
