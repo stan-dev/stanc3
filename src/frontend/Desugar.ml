@@ -191,7 +191,9 @@ let rec split_single_index_lists = function
         let obj =
           {expr= Indexed (obj, List.rev hd); emeta= {emeta with type_= UMatrix}}
         in
-        internal_funapp FnMatrixElement [obj; r; c] emeta
+        internal_funapp FnMatrixElement
+          [split_single_index_lists obj; r; c]
+          emeta
     | _ when List.length indices > 1 && List.for_all ~f:is_single_index indices
       ->
         List.fold
@@ -199,7 +201,8 @@ let rec split_single_index_lists = function
             { expr= Indexed (accum, [idx])
             ; emeta= {emeta with type_= infer_type_of_indexed accum.emeta [idx]}
             } )
-          ~init:obj indices
+          ~init:(split_single_index_lists obj)
+          indices
     | _ -> e )
   | e -> {e with expr= map_expression split_single_index_lists e.expr}
 

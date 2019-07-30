@@ -168,7 +168,7 @@ transformed data {
     {|
     transformed data {
         matrix[3, 4] mat[5, 6];
-        print(FnMatrixElement__(mat[1, 2], 3, 4));
+        print(FnMatrixElement__(mat[1][2], 3, 4));
       } |}]
 
 let%expect_test "desugar matrixelement arr" =
