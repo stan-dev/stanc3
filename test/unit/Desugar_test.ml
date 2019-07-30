@@ -143,16 +143,16 @@ let%expect_test "desugar row" =
   Frontend_utils.typed_ast_of_string_exn
     {|
 transformed data {
-  matrix[3,4] matarr[5];
-  print(matarr[1, 2]);
+  matrix[3,4] mat[5];
+  print(mat[1, 2]);
 } |}
   |> Desugar.desugar_prog
   |> Fmt.pr "@[<v>%a@]\n" Pretty_printing.pp_program ;
   [%expect
     {|
     transformed data {
-       matrix[3, 4] matarr[5];
-       print(row(matarr[1], 2));
+       matrix[3, 4] mat[5];
+       print(row(mat[1], 2));
      } |}]
 
 let%expect_test "desugar matrixelement" =
@@ -194,3 +194,57 @@ transformed data {
          for (k in 1 : size(arr| ))
            mat[i, j, k] = FnMatrixElement__(mat[arr[i]], j, arr[k]);
        } |}]
+
+let%expect_test "matrix array multi indexing " =
+  Frontend_utils.typed_ast_of_string_exn
+    {|
+transformed data {
+  int arr[3] = {2, 3, 1};
+  matrix[3,4] mat;
+  print(mat[arr, 2]);
+} |}
+  |> Desugar.desugar_prog
+  |> Fmt.pr "@[<v>%a@]\n" Pretty_printing.pp_program ;
+  [%expect
+    {|
+    transformed data {
+          int arr[3] = {2, 3, 1};
+          matrix[3, 4] mat;
+          print(mat[arr[2]]);
+        } |}]
+
+let%expect_test "matrix array multi indexing " =
+  Frontend_utils.typed_ast_of_string_exn
+    {|
+transformed data {
+  int arr[3] = {2, 3, 1};
+  matrix[3,4] mat[5];
+  print(mat[2, arr, 2]);
+} |}
+  |> Desugar.desugar_prog
+  |> Fmt.pr "@[<v>%a@]\n" Pretty_printing.pp_program ;
+  [%expect
+    {|
+    transformed data {
+           int arr[3] = {2, 3, 1};
+           matrix[3, 4] mat[5];
+           print(mat[2, arr[2]]);
+         } |}]
+
+let%expect_test "matrix array multi indexing " =
+  Frontend_utils.typed_ast_of_string_exn
+    {|
+transformed data {
+  int arr[3] = {2, 3, 1};
+  matrix[3,4] mat[5];
+  print(mat[2, arr, 2]);
+} |}
+  |> Desugar.desugar_prog
+  |> Fmt.pr "@[<v>%a@]\n" Pretty_printing.pp_program ;
+  [%expect
+    {|
+    transformed data {
+            int arr[3] = {2, 3, 1};
+            matrix[3, 4] mat[5];
+            print(mat[2, arr[2]]);
+          } |}]

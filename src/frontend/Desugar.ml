@@ -10,6 +10,8 @@ let internal_funapp ifn args emeta =
   let id = {name= string_of_internal_fn ifn; id_loc= no_span} in
   {Ast.expr= Ast.FunApp (CompilerInternal, id, args); emeta}
 
+let len_expr e = internal_funapp Middle.FnLength [e] e.emeta
+
 let rec multi_indices_to_new_var decl_id indices assign_indices rhs_indices
     (emeta : Ast.typed_expr_meta) (obj : Ast.typed_expression) =
   (* Deal with indexing by int idx array and indexing by range *)
@@ -130,6 +132,17 @@ let rec pull_new_multi_indices_expr new_stmts
   | _ ->
       {expr= map_expression (pull_new_multi_indices_expr new_stmts) expr; emeta}
 
+let rec reduce_indices = function
+  (* v[arr][2] -> v[arr[2]] *)
+  | Single ({emeta= {type_= UArray UInt; _}; _} as obj)
+    :: Single ({emeta= {type_= UInt; _} as emeta; _} as idc) :: tl ->
+      Single {expr= Indexed (obj, [Single idc]); emeta} :: reduce_indices tl
+  (* v[2:3][2] = v[3:2][1] -> v[3] *)
+  (* | Between (lower, upper) :: Single {emeta={type_=UArray UInt; _}; _} :: tl ->
+   *   Single (BinOp ) *)
+  | x :: tl -> x :: reduce_indices tl
+  | [] -> []
+
 let rec desugar_index_expr (e : typed_expression) =
   let ast_expr expr = {e with expr} in
   match e.expr with
@@ -139,15 +152,15 @@ let rec desugar_index_expr (e : typed_expression) =
       , [Single ({emeta= {type_= UInt; _}; _} as i)] ) ->
       Ast.FunApp (StanLib, {name= "row"; id_loc= e.emeta.loc}, [obj; i])
       |> ast_expr
+  | Indexed (obj, indices) ->
+      {e with expr= Indexed (obj, reduce_indices indices)}
   (*
 https://github.com/stan-dev/stanc3/pull/212
 
-v[2:3][2] = v[3:2][1] -> v[3]
 v[2][4] -> v[2, 4]
 v[:][x] -> v[x]
 v[x][:] -> v[x]
 v[2][2:3] -> segment(v[2], 2, 3)
-v[arr][2] -> v[arr[2]]
 v[2][arr] -> (declare new_sym, fill with v[2][arr] via for loop); new_sym
 v[x][3:2] -> v[x][{3, 2}]
 v[2][arr][3] -> v[2, arr[3]]
