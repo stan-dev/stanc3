@@ -18,6 +18,8 @@ type 'e index =
 (** Front-end function kinds *)
 type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
 
+let compare_fun_kind _ _ = 0
+
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
@@ -250,13 +252,14 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression {expr; emeta} :
-    untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
 let untyped_lhs_of_typed_lhs
-    {assign_identifier; assign_indices; assign_meta= {loc; _}} =
+    ({assign_identifier; assign_indices; assign_meta= {loc; _}} :
+      typed_expression typed_lhs) : untyped_expression untyped_lhs =
   { assign_identifier
   ; assign_indices=
       List.map
@@ -272,5 +275,5 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
-let untyped_program_of_typed_program =
+let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement

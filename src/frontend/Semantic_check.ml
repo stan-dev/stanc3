@@ -669,9 +669,10 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     ok
       { e with
         expr=
-          ( match e.expr with
-          | FunApp (fun_kind, id, ues) -> CondDistApp (fun_kind, id, ues)
-          | _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
+          ( match (e.expr, is_cond_dist) with
+          | FunApp (fun_kind, id, ues), true -> CondDistApp (fun_kind, id, ues)
+          | FunApp (fun_kind, id, ues), false -> FunApp (fun_kind, id, ues)
+          | _, _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
@@ -1696,9 +1697,33 @@ let semantic_check_program
     ; generatedquantitiesblock= ugb }
   in
   let apply_to x f = Validate.apply ~f x in
+  let check_correctness_invariant (decorated_ast : typed_program) :
+      typed_program =
+    if
+      compare_untyped_program
+        { functionblock= fb
+        ; datablock= db
+        ; transformeddatablock= tdb
+        ; parametersblock= pb
+        ; transformedparametersblock= tpb
+        ; modelblock= mb
+        ; generatedquantitiesblock= gb }
+        (untyped_program_of_typed_program decorated_ast)
+      = 0
+    then decorated_ast
+    else
+      raise_s
+        [%message
+          "Type checked AST does not match original AST. Please file a bug!"
+            (decorated_ast : typed_program)]
+  in
+  let check_correctness_invariant_validate =
+    Validate.map ~f:check_correctness_invariant
+  in
   Validate.(
     ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
     |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
+    |> check_correctness_invariant_validate
     |> get_with
          ~with_ok:(fun ok -> Result.Ok ok)
          ~with_errors:(fun errs -> Result.Error errs))
