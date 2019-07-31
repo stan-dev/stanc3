@@ -3423,9 +3423,9 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 12;
         for (size_t sym5__ = 1; sym5__ <= 5; ++sym5__) {
           current_statement__ = 12;
-          for (size_t sym6__ = 1; sym6__ <= 2; ++sym6__) {
+          for (size_t sym6__ = 1; sym6__ <= 3; ++sym6__) {
             current_statement__ = 12;
-            for (size_t sym7__ = 1; sym7__ <= 3; ++sym7__) {
+            for (size_t sym7__ = 1; sym7__ <= 2; ++sym7__) {
               current_statement__ = 12;
               if (jacobian__) {
                 current_statement__ = 12;
@@ -3929,9 +3929,9 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 12;
         for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
           current_statement__ = 12;
-          for (size_t sym12__ = 1; sym12__ <= 2; ++sym12__) {
+          for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
             current_statement__ = 12;
-            for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+            for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
               current_statement__ = 12;
               assign(p_ar_mat, cons_list(index_uni(sym10__), cons_list(index_uni(sym11__), cons_list(index_uni(sym12__), cons_list(index_uni(sym13__), nil_index_list())))), lub_constrain(
                      p_ar_mat[(sym10__ - 1)][(sym11__ - 1)].coeff((sym12__ - 1), (sym13__ - 1)),
@@ -4057,10 +4057,10 @@ class mother_model : public model_base_crtp<mother_model> {
             for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
               vars__.push_back(p_3d_row_vec[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
             }}}}
-      for (size_t sym12__ = 1; sym12__ <= 2; ++sym12__) {
-        for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
-            for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
               vars__.push_back(p_ar_mat[(sym10__ - 1)][(sym11__ - 1)].coeff((sym12__ - 1), (sym13__ - 1)));
             }}}}
       for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
@@ -4074,15 +4074,15 @@ class mother_model : public model_base_crtp<mother_model> {
             for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
               vars__.push_back(p_3d_simplex[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
             }}}}
-      for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
-        for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+      for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+        for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
           vars__.push_back(p_cfcov_54.coeff((sym10__ - 1), (sym11__ - 1)));}}
-      for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          vars__.push_back(p_cfcov_33.coeff((sym10__ - 1), (sym11__ - 1)));}}
       for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-        for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
-          for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+        for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
+          vars__.push_back(p_cfcov_33.coeff((sym10__ - 1), (sym11__ - 1)));}}
+      for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+          for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
             vars__.push_back(p_cfcov_33_ar[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
           }}}
       std::vector<double> tp_real_1d_ar;
@@ -4201,10 +4201,10 @@ class mother_model : public model_base_crtp<mother_model> {
               for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
                 vars__.push_back(tp_3d_row_vec[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
               }}}}
-        for (size_t sym12__ = 1; sym12__ <= 2; ++sym12__) {
-          for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
-            for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
-              for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+          for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+            for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+              for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
                 vars__.push_back(tp_ar_mat[(sym10__ - 1)][(sym11__ - 1)].coeff((sym12__ - 1), (sym13__ - 1)));
               }}}}
         for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
@@ -4218,17 +4218,17 @@ class mother_model : public model_base_crtp<mother_model> {
               for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
                 vars__.push_back(tp_3d_simplex[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
               }}}}
-        for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
-          for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+        for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+          for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
             vars__.push_back(tp_cfcov_54.coeff((sym10__ - 1), (sym11__ - 1)));
           }}
-        for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-          for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+          for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
             vars__.push_back(tp_cfcov_33.coeff((sym10__ - 1), (sym11__ - 1)));
           }}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
               vars__.push_back(tp_cfcov_33_ar[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
       } 
@@ -4404,10 +4404,10 @@ class mother_model : public model_base_crtp<mother_model> {
               for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
                 vars__.push_back(gq_3d_row_vec[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
               }}}}
-        for (size_t sym12__ = 1; sym12__ <= 2; ++sym12__) {
-          for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
-            for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
-              for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+          for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+            for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+              for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
                 vars__.push_back(gq_ar_mat[(sym10__ - 1)][(sym11__ - 1)].coeff((sym12__ - 1), (sym13__ - 1)));
               }}}}
         for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
@@ -4421,39 +4421,39 @@ class mother_model : public model_base_crtp<mother_model> {
               for (size_t sym10__ = 1; sym10__ <= N; ++sym10__) {
                 vars__.push_back(gq_3d_simplex[(sym10__ - 1)][(sym11__ - 1)][(sym12__ - 1)][(sym13__ - 1)]);
               }}}}
-        for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
-          for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+        for (size_t sym11__ = 1; sym11__ <= 5; ++sym11__) {
+          for (size_t sym10__ = 1; sym10__ <= 4; ++sym10__) {
             vars__.push_back(gq_cfcov_54.coeff((sym10__ - 1), (sym11__ - 1)));
           }}
-        for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-          for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+          for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
             vars__.push_back(gq_cfcov_33.coeff((sym10__ - 1), (sym11__ - 1)));
           }}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= K; ++sym10__) {
               vars__.push_back(gq_cfcov_33_ar[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
         for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
           vars__.push_back(indices[(sym10__ - 1)]);}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 4; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
               vars__.push_back(indexing_mat[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 4; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
               vars__.push_back(idx_res1[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 4; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 4; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= 5; ++sym10__) {
               vars__.push_back(idx_res2[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
-        for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
-          for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-            for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= 3; ++sym12__) {
+          for (size_t sym11__ = 1; sym11__ <= 3; ++sym11__) {
+            for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
               vars__.push_back(idx_res3[(sym10__ - 1)].coeff((sym11__ - 1), (sym12__ - 1)));
             }}}
         current_statement__ = 60;
@@ -4715,9 +4715,9 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 12;
         for (size_t sym17__ = 1; sym17__ <= 5; ++sym17__) {
           current_statement__ = 12;
-          for (size_t sym18__ = 1; sym18__ <= 2; ++sym18__) {
+          for (size_t sym18__ = 1; sym18__ <= 3; ++sym18__) {
             current_statement__ = 12;
-            for (size_t sym19__ = 1; sym19__ <= 3; ++sym19__) {
+            for (size_t sym19__ = 1; sym19__ <= 2; ++sym19__) {
               current_statement__ = 12;
               assign(p_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym17__), cons_list(index_uni(sym18__), cons_list(index_uni(sym19__), nil_index_list())))), lub_free(
                      p_ar_mat[(sym16__ - 1)][(sym17__ - 1)].coeff((sym18__ - 1), (sym19__ - 1)),
@@ -4862,10 +4862,10 @@ class mother_model : public model_base_crtp<mother_model> {
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               vars__.push_back(p_3d_row_vec[(sym16__ - 1)][(sym17__ - 1)][(sym18__ - 1)][(sym19__ - 1)]);
             }}}}
-      for (size_t sym18__ = 1; sym18__ <= 2; ++sym18__) {
-        for (size_t sym17__ = 1; sym17__ <= 5; ++sym17__) {
-          for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
-            for (size_t sym19__ = 1; sym19__ <= 3; ++sym19__) {
+      for (size_t sym19__ = 1; sym19__ <= 2; ++sym19__) {
+        for (size_t sym18__ = 1; sym18__ <= 3; ++sym18__) {
+          for (size_t sym17__ = 1; sym17__ <= 5; ++sym17__) {
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
               vars__.push_back(p_ar_mat[(sym16__ - 1)][(sym17__ - 1)].coeff((sym18__ - 1), (sym19__ - 1)));
             }}}}
       for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
@@ -4879,15 +4879,15 @@ class mother_model : public model_base_crtp<mother_model> {
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               vars__.push_back(p_3d_simplex[(sym16__ - 1)][(sym17__ - 1)][(sym18__ - 1)][(sym19__ - 1)]);
             }}}}
-      for (size_t sym16__ = 1; sym16__ <= 5; ++sym16__) {
-        for (size_t sym17__ = 1; sym17__ <= 4; ++sym17__) {
+      for (size_t sym17__ = 1; sym17__ <= 5; ++sym17__) {
+        for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
           vars__.push_back(p_cfcov_54.coeff((sym16__ - 1), (sym17__ - 1)));}}
-      for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
-        for (size_t sym17__ = 1; sym17__ <= 3; ++sym17__) {
-          vars__.push_back(p_cfcov_33.coeff((sym16__ - 1), (sym17__ - 1)));}}
       for (size_t sym17__ = 1; sym17__ <= 3; ++sym17__) {
-        for (size_t sym16__ = 1; sym16__ <= K; ++sym16__) {
-          for (size_t sym18__ = 1; sym18__ <= 3; ++sym18__) {
+        for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
+          vars__.push_back(p_cfcov_33.coeff((sym16__ - 1), (sym17__ - 1)));}}
+      for (size_t sym18__ = 1; sym18__ <= 3; ++sym18__) {
+        for (size_t sym17__ = 1; sym17__ <= 3; ++sym17__) {
+          for (size_t sym16__ = 1; sym16__ <= K; ++sym16__) {
             vars__.push_back(p_cfcov_33_ar[(sym16__ - 1)].coeff((sym17__ - 1), (sym18__ - 1)));
           }}}
     } catch (const std::exception& e) {

@@ -100,15 +100,16 @@ let%expect_test "read param" =
            (Block
             ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
               (body
-               (Assignment
-                (mat (UArray UMatrix)
-                 ((Single (Var sym1__)) (Single (Var sym2__))
-                  (Single (Var sym3__))))
-                (FunApp CompilerInternal FnConstrain__
-                 ((FunApp CompilerInternal FnMatrixElement__
-                   ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
-                    (Var sym3__)))
-                  (Lit Str lb) (Lit Int 0))))))))))))))) |}]
+               (Block
+                ((Assignment
+                  (mat (UArray UMatrix)
+                   ((Single (Var sym1__)) (Single (Var sym2__))
+                    (Single (Var sym3__))))
+                  (FunApp CompilerInternal FnConstrain__
+                   ((FunApp CompilerInternal FnMatrixElement__
+                     ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
+                      (Var sym3__)))
+                    (Lit Str lb) (Lit Int 0))))))))))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =
@@ -130,10 +131,11 @@ let%expect_test "gen quant" =
               (Block
                ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
                  (body
-                  (NRFunApp CompilerInternal FnWriteParam__
-                   ((FunApp CompilerInternal FnMatrixElement__
-                     ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
-                      (Var sym3__)))))))))))))))
+                  (Block
+                   ((NRFunApp CompilerInternal FnWriteParam__
+                     ((FunApp CompilerInternal FnMatrixElement__
+                       ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
+                        (Var sym3__)))))))))))))))))
         (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block

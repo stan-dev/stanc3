@@ -157,6 +157,7 @@ let mkfor upper bodyfn iteratee smeta =
     the outermost layers first.
 *)
 let rec for_scalar st bodyfn var smeta =
+  let blocked b = {stmt= Block [b]; smeta} in
   match st with
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
@@ -172,10 +173,10 @@ let rec for_scalar st bodyfn var smeta =
              var.emeta)
       in
       let body_outer =
-        { stmt= For {loopvar= lv_inner; lower; upper= d2; body= body_inner}
+        { stmt=
+            For {loopvar= lv_inner; lower; upper= d2; body= blocked body_inner}
         ; smeta }
       in
-      let blocked b = {stmt= Block [b]; smeta} in
       let f =
         { stmt=
             For {loopvar= lv_outer; lower; upper= d1; body= blocked body_outer}
