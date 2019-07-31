@@ -74,13 +74,26 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
-  | Assignment ((vident, []), ({emeta= {mtype= UInt; _}; _} as rhs))
-   |Assignment ((vident, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
+  | Assignment ((vident, _, []), ({emeta= {mtype= UInt; _}; _} as rhs))
+   |Assignment ((vident, _, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
       pf ppf "%s = %a;" vident pp_expr rhs
-  | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
+  | Assignment
+      ((id, _, idcs), ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->
-      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
-  | Assignment ((assignee, idcs), rhs) ->
+      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
+  | Assignment ((assignee, UInt, idcs), rhs)
+   |Assignment ((assignee, UReal, idcs), rhs)
+    when List.for_all ~f:is_single_index idcs ->
+      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
+  (* (* XXX When we have a Matrix being indexed we have to be careful.
+     Probably best to unwind the type and pair it up with the indices and pattern match
+     on the last two elements being either (UMatrix, [Single]) or
+     (UMatrix, [Single; Single])
+   *)
+ | Assignment ((assignee, ut, idcs), rhs)
+   *   when List.for_all ~f:is_single_index idcs ->
+   *   pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs *)
+  | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
        (in all cases???) *)

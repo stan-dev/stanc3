@@ -87,7 +87,11 @@ let suffix_args f =
   else []
 
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
-let is_simple_index = function Single _ -> true | _ -> false
+
+let is_single_index = function
+  | Single {emeta= {mtype= UArray _; _}; _} -> false
+  | Single _ -> true
+  | _ -> false
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -329,7 +333,7 @@ and pp_expr ppf e =
     | FunApp (CompilerInternal, f, _)
       when Some FnReadData = internal_fn_of_string f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
-    | _ when List.for_all ~f:is_simple_index idx ->
+    | _ when List.for_all ~f:is_single_index idx ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 

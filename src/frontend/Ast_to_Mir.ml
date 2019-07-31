@@ -301,9 +301,9 @@ let rec pull_indices {expr; _} =
       pull_indices obj @ [Single r; Single c]
   | _ -> []
 
-let assign_indexed vident smeta varfn var =
+let assign_indexed decl_type vident smeta varfn var =
   let indices = pull_indices var in
-  {stmt= Assignment ((vident, indices), varfn var); smeta}
+  {stmt= Assignment ((vident, decl_type, indices), varfn var); smeta}
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -386,7 +386,9 @@ let read_decl dread decl_id decl_type smeta decl_var =
     | ReadData -> for_scalar (mat_to_arr sizedtype)
     | ReadParam -> for_eigen sizedtype
   in
-  forl (assign_indexed decl_id smeta readvar) decl_var smeta
+  forl
+    (assign_indexed (remove_size sizedtype) decl_id smeta readvar)
+    decl_var smeta
 
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in
@@ -409,7 +411,7 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
         {expr= FunApp (CompilerInternal, fname, args var); emeta= var.emeta}
       in
       [ (constraint_forl t) st
-          (assign_indexed decl_id smeta constrainvar)
+          (assign_indexed (remove_size st) decl_id smeta constrainvar)
           decl_var smeta ]
 
 let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
@@ -453,7 +455,9 @@ let trans_decl {dread; dconstrain; dadlevel; dglobals} smeta decl_type
   in
   let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= dt}; smeta} in
   let rhs_assignment =
-    Option.map ~f:(fun e -> {stmt= Assignment ((decl_id, []), e); smeta}) rhs
+    Option.map
+      ~f:(fun e -> {stmt= Assignment ((decl_id, e.emeta.mtype, []), e); smeta})
+      rhs
     |> Option.to_list
   in
   if not (Set.mem dglobals decl_id) then decl :: rhs_assignment
@@ -541,7 +545,10 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
       Assignment
-        ((assign_identifier.name, List.map ~f:trans_idx assign_indices), rhs)
+        ( ( assign_identifier.name
+          , id_type_
+          , List.map ~f:trans_idx assign_indices )
+        , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (fn_kind, name, trans_exprs args) |> swrap
@@ -618,7 +625,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let decl_loopvar = {stmt= decl_loopvar; smeta} in
       let assign_loopvar =
         Assignment
-          ( (loopvar.name, [])
+          ( (loopvar.name, UInt, [])
           , Indexed (iteratee', [Single indexing_var]) |> wrap )
       in
       let assign_loopvar = {stmt= assign_loopvar; smeta} in

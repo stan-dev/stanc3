@@ -106,7 +106,8 @@ let%test "contains fn" =
     mock_for 8
       (mock_for 9
          (mock_stmt
-            (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
+            (Assignment
+               (("v", UInt, []), internal_funapp FnReadData [] internal_meta))))
   in
   contains_fn
     (string_of_internal_fn FnReadData)

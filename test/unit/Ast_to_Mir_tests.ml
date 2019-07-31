@@ -67,7 +67,7 @@ let%expect_test "read data" =
               (body
                (Block
                 ((Assignment
-                  (mat
+                  (mat (UArray UMatrix)
                    ((Single (Var sym1__)) (Single (Var sym2__))
                     (Single (Var sym3__))))
                   (Indexed
@@ -87,7 +87,7 @@ let%expect_test "read param" =
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
-        ((Assignment (mat ((Single (Var sym1__))))
+        ((Assignment (mat (UArray UMatrix) ((Single (Var sym1__))))
           (Indexed
            (FunApp CompilerInternal FnReadParam__
             ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
@@ -101,7 +101,7 @@ let%expect_test "read param" =
             ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
               (body
                (Assignment
-                (mat
+                (mat (UArray UMatrix)
                  ((Single (Var sym1__)) (Single (Var sym2__))
                   (Single (Var sym3__))))
                 (FunApp CompilerInternal FnConstrain__

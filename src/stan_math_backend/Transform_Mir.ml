@@ -6,7 +6,7 @@ let pos = "pos__"
 let add_pos_reset ({stmt; smeta} as s) =
   match stmt with
   | For {body; _} when contains_fn (string_of_internal_fn FnReadData) body ->
-      [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
+      [{stmt= Assignment ((pos, UInt, []), loop_bottom); smeta}; s]
   | _ -> [s]
 
 let rec invert_read_fors ({stmt; smeta} as s) =
@@ -60,7 +60,7 @@ let rec use_pos_in_readdata {stmt; smeta} =
     when internal_fn_of_string f = Some FnReadData ->
       let pos_var = {expr= Var pos; emeta= internal_meta} in
       [ Assignment (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
-      ; Assignment ((pos, []), binop pos_var Plus (mir_int 1)) ]
+      ; Assignment ((pos, UInt, []), binop pos_var Plus (mir_int 1)) ]
       |> List.map ~f:swrap |> Block |> swrap
   | x -> {stmt= map_statement Fn.id use_pos_in_readdata x; smeta}
 
@@ -71,7 +71,8 @@ let%expect_test "xform_readdata" =
   let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
   mock_for 7
     (mock_for 8
-       (mock_for 9 {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
+       (mock_for 9
+          {stmt= Assignment (("v", UArray UInt, idcs), indexed); smeta= no_span}))
   |> use_pos_in_readdata
   |> Fmt.strf "@[<h>%a@]" Pretty.pp_stmt_loc
   |> print_endline ;

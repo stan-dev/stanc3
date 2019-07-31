@@ -137,7 +137,7 @@ let pp_fun_def pp_s ppf = function
           fdargs pp_s fdbody )
 
 let pp_statement pp_e pp_s ppf = function
-  | Assignment ((assignee, idcs), rhs) ->
+  | Assignment ((assignee, _, idcs), rhs) ->
       Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
         rhs
   | TargetPE expr ->

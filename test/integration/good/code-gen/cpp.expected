@@ -3,11 +3,6 @@
 #include <vector>
 #include <Eigen/Dense>
 
-template <typename T>
-T resize_to_match(T& dst, const T& /*src*/) {
-  return dst;
-}
-
 template <typename T, typename S>
 std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -456,11 +451,6 @@ stan::model::model_base& new_model(
 
 #include <vector>
 #include <Eigen/Dense>
-
-template <typename T>
-T resize_to_match(T& dst, const T& /*src*/) {
-  return dst;
-}
 
 template <typename T, typename S>
 std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {

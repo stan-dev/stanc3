@@ -220,12 +220,12 @@ let constant_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Assignment ((s, []), e) -> (
+            | Middle.Assignment ((s, _, []), e) -> (
               match Partial_evaluator.eval_expr (subst_expr m e) with
               | {expr= Middle.Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -257,10 +257,10 @@ let expression_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Assignment ((s, []), e) ->
+            | Middle.Assignment ((s, _, []), e) ->
                 Map.set m ~key:s ~data:(subst_expr m e)
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -289,10 +289,10 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
           Some
             ( match mir_node with
-            | Middle.Assignment ((s, []), {expr= Middle.Var t; emeta}) ->
+            | Middle.Assignment ((s, _, []), {expr= Middle.Var t; emeta}) ->
                 Map.set m ~key:s ~data:{Middle.expr= Middle.Var t; emeta}
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.Assignment (_, _)
              |Middle.TargetPE _
@@ -317,7 +317,7 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 let assigned_or_declared_vars_stmt
     (s : (Middle.expr_typed_located, 'a) Middle.statement) =
   match s with
-  | Middle.Assignment ((x, _), _) | Middle.Decl {decl_id= x; _} ->
+  | Middle.Assignment ((x, _, _), _) | Middle.Decl {decl_id= x; _} ->
       Set.Poly.singleton x
   | Middle.TargetPE _ -> Set.Poly.singleton "target"
   | Middle.NRFunApp (_, s, _) when String.suffix s 3 = "_lp" ->
@@ -347,7 +347,7 @@ let reaching_definitions_transfer
       let kill =
         match mir_node with
         | Middle.Decl {decl_id= x; _}
-         |Middle.Assignment ((x, []), _)
+         |Middle.Assignment ((x, _, []), _)
          |Middle.For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | Middle.TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
@@ -392,10 +392,11 @@ and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
 let rec free_vars_stmt
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.Return (Some e) | Middle.TargetPE e
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.Return (Some e)
+   |Middle.TargetPE e ->
       free_vars_expr e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | Middle.NRFunApp (_, f, l) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
@@ -442,7 +443,7 @@ let live_variables_transfer
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Middle.Assignment ((x, []), _) | Middle.Decl {decl_id= x; _} ->
+        | Middle.Assignment ((x, _, []), _) | Middle.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | Middle.TargetPE _
          |Middle.NRFunApp (_, _, _)
@@ -450,7 +451,7 @@ let live_variables_transfer
          |Middle.IfElse (_, _, _)
          |Middle.While (_, _)
          |Middle.For _ | Middle.Block _ | Middle.SList _
-         |Middle.Assignment ((_, _ :: _), _) ->
+         |Middle.Assignment ((_, _, _ :: _), _) ->
             Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -492,10 +493,11 @@ let used_expressions_expr e = Middle.ExprSet.singleton e
 let rec used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.TargetPE e
+   |Middle.Return (Some e) ->
       f e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Middle.ExprSet.union (f e)
         (Middle.ExprSet.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
@@ -533,10 +535,11 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, int) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.TargetPE e
+   |Middle.Return (Some e) ->
       f e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Middle.ExprSet.union (f e)
         (Middle.ExprSet.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
@@ -700,7 +703,7 @@ let autodiff_level_fwd1_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen =
         match mir_node with
-        | Middle.Assignment ((x, _), e)
+        | Middle.Assignment ((x, _, _), e)
           when (update_expr_ad_levels p e).emeta.madlevel = Middle.AutoDiffable
           ->
             Set.Poly.singleton x
