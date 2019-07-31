@@ -84,8 +84,7 @@ let rec pp_statement (ppf : Format.formatter)
       let rec maybe_deep_copy e =
         let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
         match e with
-        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
-            recurse e
+        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} -> e
         | {expr= Var v; _} when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }

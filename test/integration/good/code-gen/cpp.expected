@@ -3059,13 +3059,11 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 185;
       assign(td_cfcov_54, nil_index_list(), diag_matrix(rep_vector(1,
                                                                    rows(
-                                                                   stan::model::deep_copy(
-                                                                   td_cfcov_54)))), "assigning variable td_cfcov_54");
+                                                                   td_cfcov_54))), "assigning variable td_cfcov_54");
       current_statement__ = 186;
       assign(td_cfcov_33, nil_index_list(), diag_matrix(rep_vector(1,
                                                                    rows(
-                                                                   stan::model::deep_copy(
-                                                                   td_cfcov_33)))), "assigning variable td_cfcov_33");
+                                                                   td_cfcov_33))), "assigning variable td_cfcov_33");
       {
         double z;
         
