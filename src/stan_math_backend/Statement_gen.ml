@@ -67,6 +67,12 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
+let rec is_indexing_matrix = function
+  | UArray t, idc :: idcs when is_single_index idc ->
+      is_indexing_matrix (t, idcs)
+  | UMatrix, _ -> true
+  | _ -> false
+
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
@@ -85,14 +91,10 @@ let rec pp_statement (ppf : Format.formatter)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
       pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
-  (* (* XXX When we have a Matrix being indexed we have to be careful.
-     Probably best to unwind the type and pair it up with the indices and pattern match
-     on the last two elements being either (UMatrix, [Single]) or
-     (UMatrix, [Single; Single])
-   *)
- | Assignment ((assignee, ut, idcs), rhs)
-   *   when List.for_all ~f:is_single_index idcs ->
-   *   pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs *)
+  | Assignment ((assignee, ut, idcs), rhs)
+    when List.for_all ~f:is_single_index idcs
+         && not (is_indexing_matrix (ut, idcs)) ->
+      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
