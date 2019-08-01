@@ -9,6 +9,12 @@ val inferred_unsizedtype_of_indexed_exn :
   -> Middle.unsizedtype
 (** Infers unsized type of an `Indexed` expression  *)
 
+val semantic_check_binop_exn :
+     Middle.location_span
+  -> Middle.operator
+  -> Ast.typed_expr_meta Ast.expr_with * Ast.typed_expr_meta Ast.expr_with
+  -> Ast.typed_expr_meta Ast.expr_with
+
 val semantic_check_program :
   Ast.untyped_program -> (Ast.typed_program, Semantic_error.t list) result
 (** Performs semantic check on AST and returns original AST embellished with type decorations *)

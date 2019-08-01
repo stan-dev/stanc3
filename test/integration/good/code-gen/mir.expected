@@ -4005,8 +4005,7 @@
            ((mtype (UArray UVector)) (mloc <opaque>) (madlevel DataOnly))))
          ((Single
            ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-          All)))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
        (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
@@ -4018,8 +4017,7 @@
            ((mtype (UArray UVector)) (mloc <opaque>) (madlevel DataOnly))))
          ((Single
            ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-          All)))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
        (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
@@ -12296,6 +12294,45 @@
                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
            (smeta <opaque>))
           ((stmt
+            (Decl (decl_adtype DataOnly) (decl_id idx_res11)
+             (decl_type
+              (Sized
+               (SArray
+                (SMatrix
+                 ((expr (Lit Int 3))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Lit Int 4))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                ((expr (Lit Int 3))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+           (smeta <opaque>))
+          ((stmt
+            (Decl (decl_adtype DataOnly) (decl_id idx_res21)
+             (decl_type
+              (Sized
+               (SArray
+                (SMatrix
+                 ((expr (Lit Int 3))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Lit Int 4))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                ((expr (Lit Int 5))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+           (smeta <opaque>))
+          ((stmt
+            (Decl (decl_adtype DataOnly) (decl_id idx_res31)
+             (decl_type
+              (Sized
+               (SArray
+                (SMatrix
+                 ((expr (Lit Int 3))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Lit Int 3))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                ((expr (Lit Int 3))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+           (smeta <opaque>))
+          ((stmt
             (Assignment (gq_real_1d_ar (UArray UReal) ())
              ((expr
                (Indexed
@@ -12330,6 +12367,27 @@
              ((expr (Var p_3d_vec))
               (emeta
                ((mtype (UArray (UArray (UArray UVector)))) (mloc <opaque>)
+                (madlevel AutoDiffable))))))
+           (smeta <opaque>))
+          ((stmt
+            (Assignment (gq_row_vec URowVector ())
+             ((expr (Var p_row_vec))
+              (emeta
+               ((mtype URowVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+           (smeta <opaque>))
+          ((stmt
+            (Assignment (gq_1d_row_vec (UArray URowVector) ())
+             ((expr (Var p_1d_row_vec))
+              (emeta
+               ((mtype (UArray URowVector)) (mloc <opaque>)
+                (madlevel AutoDiffable))))))
+           (smeta <opaque>))
+          ((stmt
+            (Assignment
+             (gq_3d_row_vec (UArray (UArray (UArray URowVector))) ())
+             ((expr (Var p_3d_row_vec))
+              (emeta
+               ((mtype (UArray (UArray (UArray URowVector)))) (mloc <opaque>)
                 (madlevel AutoDiffable))))))
            (smeta <opaque>))
           ((stmt
@@ -12697,6 +12755,27 @@
                (smeta <opaque>)))))
            (smeta <opaque>))
           ((stmt
+            (Assignment (idx_res11 (UArray UMatrix) ())
+             ((expr
+               (Indexed
+                ((expr (Var indexing_mat))
+                 (emeta
+                  ((mtype (UArray UMatrix)) (mloc <opaque>)
+                   (madlevel DataOnly))))
+                ((MultiIndex
+                  ((expr (Var indices))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly)))))
+                 (MultiIndex
+                  ((expr (Var indices))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly))))))))
+              (emeta
+               ((mtype (UArray UMatrix)) (mloc <opaque>) (madlevel DataOnly))))))
+           (smeta <opaque>))
+          ((stmt
             (For (loopvar i)
              (lower
               ((expr (Lit Int 1))
@@ -12771,6 +12850,23 @@
                        (smeta <opaque>)))))
                    (smeta <opaque>)))))
                (smeta <opaque>)))))
+           (smeta <opaque>))
+          ((stmt
+            (Assignment (idx_res21 (UArray UMatrix) ())
+             ((expr
+               (Indexed
+                ((expr (Var indexing_mat))
+                 (emeta
+                  ((mtype (UArray UMatrix)) (mloc <opaque>)
+                   (madlevel DataOnly))))
+                (All
+                 (MultiIndex
+                  ((expr (Var indices))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly))))))))
+              (emeta
+               ((mtype (UArray UMatrix)) (mloc <opaque>) (madlevel DataOnly))))))
            (smeta <opaque>))
           ((stmt
             (For (loopvar i)
@@ -12894,6 +12990,28 @@
                        (smeta <opaque>)))))
                    (smeta <opaque>)))))
                (smeta <opaque>)))))
+           (smeta <opaque>))
+          ((stmt
+            (Assignment (idx_res31 (UArray UMatrix) ())
+             ((expr
+               (Indexed
+                ((expr (Var indexing_mat))
+                 (emeta
+                  ((mtype (UArray UMatrix)) (mloc <opaque>)
+                   (madlevel DataOnly))))
+                ((MultiIndex
+                  ((expr (Var indices))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly)))))
+                 All
+                 (MultiIndex
+                  ((expr (Var indices))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly))))))))
+              (emeta
+               ((mtype (UArray UMatrix)) (mloc <opaque>) (madlevel DataOnly))))))
            (smeta <opaque>))
           ((stmt
             (NRFunApp CompilerInternal FnWriteParam__
@@ -14125,6 +14243,225 @@
                                      (((expr
                                         (Indexed
                                          ((expr (Var idx_res3))
+                                          (emeta
+                                           ((mtype (UArray UMatrix))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var sym8__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym9__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym10__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
+                                       (emeta
+                                        ((mtype UReal) (mloc <opaque>)
+                                         (madlevel DataOnly)))))))
+                                   (smeta <opaque>)))))
+                               (smeta <opaque>)))))
+                           (smeta <opaque>)))))
+                       (smeta <opaque>)))))
+                   (smeta <opaque>)))))
+               (smeta <opaque>)))))
+           (smeta <opaque>))
+          ((stmt
+            (For (loopvar sym8__)
+             (lower
+              ((expr (Lit Int 1))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (upper
+              ((expr (Lit Int 3))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (body
+              ((stmt
+                (Block
+                 (((stmt
+                    (For (loopvar sym9__)
+                     (lower
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (upper
+                      ((expr (Lit Int 3))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (body
+                      ((stmt
+                        (Block
+                         (((stmt
+                            (For (loopvar sym10__)
+                             (lower
+                              ((expr (Lit Int 1))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (upper
+                              ((expr (Lit Int 4))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (body
+                              ((stmt
+                                (Block
+                                 (((stmt
+                                    (NRFunApp CompilerInternal FnWriteParam__
+                                     (((expr
+                                        (Indexed
+                                         ((expr (Var idx_res11))
+                                          (emeta
+                                           ((mtype (UArray UMatrix))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var sym8__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym9__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym10__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
+                                       (emeta
+                                        ((mtype UReal) (mloc <opaque>)
+                                         (madlevel DataOnly)))))))
+                                   (smeta <opaque>)))))
+                               (smeta <opaque>)))))
+                           (smeta <opaque>)))))
+                       (smeta <opaque>)))))
+                   (smeta <opaque>)))))
+               (smeta <opaque>)))))
+           (smeta <opaque>))
+          ((stmt
+            (For (loopvar sym8__)
+             (lower
+              ((expr (Lit Int 1))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (upper
+              ((expr (Lit Int 5))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (body
+              ((stmt
+                (Block
+                 (((stmt
+                    (For (loopvar sym9__)
+                     (lower
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (upper
+                      ((expr (Lit Int 3))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (body
+                      ((stmt
+                        (Block
+                         (((stmt
+                            (For (loopvar sym10__)
+                             (lower
+                              ((expr (Lit Int 1))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (upper
+                              ((expr (Lit Int 4))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (body
+                              ((stmt
+                                (Block
+                                 (((stmt
+                                    (NRFunApp CompilerInternal FnWriteParam__
+                                     (((expr
+                                        (Indexed
+                                         ((expr (Var idx_res21))
+                                          (emeta
+                                           ((mtype (UArray UMatrix))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var sym8__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym9__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var sym10__))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
+                                       (emeta
+                                        ((mtype UReal) (mloc <opaque>)
+                                         (madlevel DataOnly)))))))
+                                   (smeta <opaque>)))))
+                               (smeta <opaque>)))))
+                           (smeta <opaque>)))))
+                       (smeta <opaque>)))))
+                   (smeta <opaque>)))))
+               (smeta <opaque>)))))
+           (smeta <opaque>))
+          ((stmt
+            (For (loopvar sym8__)
+             (lower
+              ((expr (Lit Int 1))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (upper
+              ((expr (Lit Int 3))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             (body
+              ((stmt
+                (Block
+                 (((stmt
+                    (For (loopvar sym9__)
+                     (lower
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (upper
+                      ((expr (Lit Int 3))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (body
+                      ((stmt
+                        (Block
+                         (((stmt
+                            (For (loopvar sym10__)
+                             (lower
+                              ((expr (Lit Int 1))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (upper
+                              ((expr (Lit Int 3))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly)))))
+                             (body
+                              ((stmt
+                                (Block
+                                 (((stmt
+                                    (NRFunApp CompilerInternal FnWriteParam__
+                                     (((expr
+                                        (Indexed
+                                         ((expr (Var idx_res31))
                                           (emeta
                                            ((mtype (UArray UMatrix))
                                             (mloc <opaque>)
@@ -18809,6 +19146,66 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block GeneratedQuantities)))
    (idx_res3
+    ((out_unconstrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 3))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 3))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block GeneratedQuantities)))
+   (idx_res11
+    ((out_unconstrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 4))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 3))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 4))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 3))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block GeneratedQuantities)))
+   (idx_res21
+    ((out_unconstrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 4))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 5))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SMatrix
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((expr (Lit Int 4))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       ((expr (Lit Int 5))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block GeneratedQuantities)))
+   (idx_res31
     ((out_unconstrained_st
       (SArray
        (SMatrix

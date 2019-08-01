@@ -7,7 +7,7 @@ open Ast
 
 let is_multi_index = function
   | Single {Ast.emeta= {Ast.type_= UArray _; _}; _}
-  (* | Downfrom _ | Upfrom _ | Between _ | All  *) ->
+   |Downfrom _ | Upfrom _ | Between _ | All ->
       true
   | _ -> false
 
@@ -16,31 +16,59 @@ let is_single_index = function
   | Single _ -> true
   | _ -> false
 
-let rec reduce_indices = function
+let remove_trailing_alls_expr = function
+  | Indexed (obj, indices) ->
+      let rec remove_trailing_alls indices =
+        match List.rev indices with
+        | All :: tl -> remove_trailing_alls (List.rev tl)
+        | _ -> indices
+      in
+      Indexed (obj, remove_trailing_alls indices)
+  | e -> e
+
+let rec desugar_index_expr = function
+  | Indexed
+      ( { expr=
+            Indexed
+              ( obj
+              , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
+                :: inner_tl ); _ }
+      , (Single {emeta= {type_= UInt; _}; _} as single) :: outer_tl ) ->
+      desugar_index_expr
+        (Indexed
+           ( { expr=
+                 Indexed
+                   ( obj
+                   , Single
+                       { expr= Indexed (multi, [single])
+                       ; emeta= {emeta with type_= UInt} }
+                     :: inner_tl )
+             ; emeta }
+           , outer_tl ))
   (* v[arr, 2] -> v[arr[2]] *)
   (* foo [arr1, ..., arrN] [i1, ..., iN] -> foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
-  | Single ({emeta= {type_= UArray UInt; _} as emeta; _} as first_multi) :: tl
-    when List.exists ~f:is_single_index tl -> (
-      let multis, single_plus = List.split_while ~f:is_multi_index tl in
-      match single_plus with
-      | single :: tl ->
-          Single
-            { expr= Indexed (first_multi, [single])
-            ; emeta= {emeta with type_= UInt} }
-          :: reduce_indices (multis @ tl)
-      | _ -> raise_s [%message "checked that we had a single coming already!"]
-      )
   (* v[2:3][2] = v[3:2][1] -> v[3] *)
-  (* | Between (lower, upper) :: Single {emeta={type_=UArray UInt; _}; _} :: tl ->
-   *   Single (BinOp ) *)
+  (* v[x:y][z] -> v[x+z-1] *)
+  (* | Between (bot, _) :: tl
+   * | Upfrom (bot) :: tl
+   *   when List.exists ~f:is_single_index tl -> (
+   *     let multis, single_plus = List.split_while ~f:is_multi_index tl in
+   *     match single_plus with
+   *     | Single e :: tl ->
+   *       (\* XXX Need to emit check here that bot + e < top *\)
+   *       Single (binop bot Middle.Plus e)
+   *       :: reduce_indices (multis @ tl)
+   *     | _ -> raise_s [%message "checked that we had a single coming already!"]
+   *   )
+   * | Downfrom _ :: tl
+   *   when List.exists ~f:is_single_index tl -> (
+   *     let multis, single_plus = List.split_while ~f:is_multi_index tl in
+   *     match single_plus with
+   *     | single :: tl -> single
+   *       :: reduce_indices (multis @ tl)
+   *     | _ -> raise_s [%message "checked that we had a single coming already!"]
+   *   ) *)
   
-  (* v[arr][2] -> v[arr[2]] *)
-  | x :: tl -> x :: reduce_indices tl
-  | [] -> []
-
-let desugar_index_expr = function
-  (* mat[2] -> row(m, 2)*)
-  | Indexed (obj, indices) -> Indexed (obj, reduce_indices indices)
   (*
 https://github.com/stan-dev/stanc3/pull/212
 
@@ -65,7 +93,10 @@ let rec map_statement_all_exprs expr_f {stmt; smeta} =
   ; smeta }
 
 let rec desugar_expr {expr; emeta} =
-  let expr = expr |> desugar_index_expr |> map_expression desugar_expr in
+  let expr =
+    expr |> remove_trailing_alls_expr |> desugar_index_expr
+    |> map_expression desugar_expr
+  in
   {expr; emeta}
 
 let rec is_indexing_matrix = function

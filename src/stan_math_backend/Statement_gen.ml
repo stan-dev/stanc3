@@ -67,12 +67,6 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
-let rec is_indexing_matrix = function
-  | UArray t, idc :: idcs when is_single_index idc ->
-      is_indexing_matrix (t, idcs)
-  | UMatrix, _ -> true
-  | _ -> false
-
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
