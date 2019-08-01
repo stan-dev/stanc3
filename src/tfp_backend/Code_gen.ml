@@ -2,6 +2,10 @@ open Core_kernel
 open Middle
 open Fmt
 
+let is_multi_index = function
+  | MultiIndex _ -> true
+  | _ -> false
+
 let rec pp_expr ppf {expr; _} = match expr with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
@@ -11,8 +15,20 @@ let rec pp_expr ppf {expr; _} = match expr with
   | TernaryIf (cond, iftrue, iffalse) ->
     pf ppf "%a if %a else %a" pp_expr cond pp_expr iftrue pp_expr iffalse
   | EAnd (a, b) -> pf ppf "%a and %a" pp_expr a pp_expr b
-  | EOr (a, b) -> pf ppf "%a and %a" pp_expr a pp_expr b
-  | Indexed (lhs, indices) -> (??)
+  | EOr (a, b) -> pf ppf "%a or %a" pp_expr a pp_expr b
+  | Indexed (_, indices)
+    when List.exists ~f:is_multi_index indices ->
+    (*
+       TF indexing options:
+       * tf.slice
+       * tf.gather
+       * tf.gather_nd
+       * tf.strided_slice
+*)
+    raise_s [%message "Multi-indices not supported yet"]
+  | Indexed (obj, indices) ->
+    pf ppf "%a[%a]" pp_expr obj
+      (list ~sep:comma (Middle.Pretty.pp_index pp_expr)) indices
 
 let dist_prefix = "tfd.distributions."
 let pass_through_fnames = String.Set.of_list ["normal"]
