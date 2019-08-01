@@ -642,13 +642,13 @@ generated quantities {
   for (t in 1 : n_occasions_minus_1) {
     expmarr[t] = r[t] * pr[t];
     for (j in 1 : n_occasions) {
-      E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t, j])));
+      E_org[t, j] = square((sqrt(marr[t][j]) - sqrt(expmarr[t][j])));
     }
   }
   for (t in 1 : n_occasions_minus_1) {
     marr_new[t] = multinomial_rng(pr[t], r[t]);
     for (j in 1 : n_occasions) {
-      E_new[t, j] = square((sqrt(marr_new[t, j]) - sqrt(expmarr[t, j])));
+      E_new[t, j] = square((sqrt(marr_new[t][j]) - sqrt(expmarr[t][j])));
     }
   }
   fit = sum(E_org);
@@ -758,12 +758,12 @@ generated quantities {
   for (t in 1 : n_occ_minus_1) {
     expmarr[t] = r[t] * pr[t];
     for (j in 1 : n_occasions) 
-      E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t, j])));
+      E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t][j])));
   }
   for (t in 1 : n_occ_minus_1) {
     marr_new[t] = multinomial_rng(pr[t], r[t]);
     for (j in 1 : n_occasions) 
-      E_new[t, j] = square((sqrt(marr_new[t, j]) - sqrt(expmarr[t, j])));
+      E_new[t, j] = square((sqrt(marr_new[t, j]) - sqrt(expmarr[t][j])));
   }
   fit = sum(E_org);
   fit_new = sum(E_new);
