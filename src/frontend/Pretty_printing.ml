@@ -404,4 +404,15 @@ and pp_program ppf = function
       pp_opt_block ppf "generated quantities" bgq ;
       Format.pp_close_box ppf ()
 
-and pretty_print_program p = wrap_fmt pp_program p
+and pretty_print_program p =
+  let result = wrap_fmt pp_program p in
+  let check_correctness () =
+    let result_ast =
+      Errors.without_warnings
+        (Parse.parse_string Parser.Incremental.program)
+        result
+    in
+    if compare_untyped_program p (Option.value_exn (Result.ok result_ast)) <> 0
+    then failwith "Pretty printing failed. Please file a bug."
+  in
+  check_correctness () ; result
