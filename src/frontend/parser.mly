@@ -10,6 +10,15 @@ open Errors
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SArray (y, z)) ~init:sbt
+
+let rec pull_indices_and_vident {expr; _} =
+  match expr with
+  | Indexed (obj, indices) ->
+     (match pull_indices_and_vident obj with
+      | id, indices' -> id, indices' @ indices)
+  | Variable id -> id, []
+  | _ -> raise_s [%message "Shouldn't be looking for lhs here."]
+
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -302,19 +311,7 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
-      let l = fst l in
-      match snd l with
-        | [] -> {expr=Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-                }
-        | i ->
-          {expr =
-             Indexed
-               ({expr =Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-               }, i);
-           emeta = { loc=loc_span_of_pos $startpos $endpos}
-          }
+      l
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
@@ -483,9 +480,14 @@ printables:
 (* L-values *)
 lhs:
   | id=identifier
-    {  grammar_logger "lhs_identifier" ; ((id, []), loc_span_of_pos $startpos $endpos) }
-  | l=lhs LBRACK id=indexes RBRACK
-    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), loc_span_of_pos $startpos $endpos) }
+    {  grammar_logger "lhs_identifier" ;
+       {expr=Variable id
+       ;emeta = { loc=loc_span_of_pos $startpos $endpos}}
+    }
+  | l=lhs LBRACK indices=indexes RBRACK
+    {  grammar_logger "lhs_index" ;
+      {expr=Indexed (l, indices)
+      ;emeta = { loc=loc_span_of_pos $startpos $endpos}}}
 
 (* statements *)
 statement:
@@ -502,10 +504,11 @@ statement:
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
-    {  grammar_logger "assignment_statement" ; match fst l with (id, indices) ->
+    {  grammar_logger "assignment_statement" ;
+      let id, indices = pull_indices_and_vident l in
        Assignment {assign_lhs={assign_identifier=id;
                                assign_indices=indices;
-                               assign_meta={loc=snd l}};
+                               assign_meta=l.emeta};
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
