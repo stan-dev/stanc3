@@ -108,4 +108,5 @@ let rec is_indexing_matrix = function
 let rec desugar_stmt {stmt; smeta} =
   {stmt= map_statement desugar_expr desugar_stmt Fn.id stmt; smeta}
 
-let desugar_prog p = map_program desugar_stmt p
+let desugar_prog (p : typed_program) : typed_program =
+  map_program desugar_stmt p

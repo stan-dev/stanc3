@@ -34,7 +34,7 @@ transformed data {
     transformed data {
        int arr[3] = {2, 3, 1};
        matrix[3, 4] mat[5];
-       print(mat[2, arr, 2]);
+       print(mat[2][arr[2]]);
      }
  |}]
 
@@ -53,7 +53,7 @@ transformed data {
     transformed data {
         int arr[3] = {2, 3, 1};
         matrix[3, 4] mat[5];
-        print(mat[2, arr, arr, 2, 2]);
+        print(mat[2, arr, arr][2, 2]);
       }
  |}]
 
@@ -72,7 +72,7 @@ transformed data {
     transformed data {
          int arr[3] = {2, 3, 1};
          matrix[3, 4] mat[5];
-         print(mat[3 : , 2 : 3, 2, 1]);
+         print(mat[3 : , 2 : 3][2, 1]);
        }
  |}]
 
