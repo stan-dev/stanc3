@@ -104,7 +104,8 @@ let rec pp_statement (ppf : Format.formatter)
         match e with
         | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} -> e
         | {expr= FunApp (CompilerInternal, _, _); _} -> e
-        | {expr= Var v; _} when v = assignee ->
+        | ({expr= Indexed ({expr= Var v; _}, _); _} | {expr= Var v; _})
+          when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
         | e -> recurse e

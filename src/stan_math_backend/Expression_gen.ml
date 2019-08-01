@@ -44,6 +44,17 @@ let minus_one e =
   { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
   ; emeta= e.emeta }
 
+let is_single_index = function
+  | Single {emeta= {mtype= UArray _; _}; _} -> false
+  | Single _ -> true
+  | _ -> false
+
+let rec is_indexing_matrix = function
+  | UArray t, idc :: idcs when is_single_index idc ->
+      is_indexing_matrix (t, idcs)
+  | UMatrix, _ -> true
+  | _ -> false
+
 (* stub *)
 let rec pp_return_type ppf = function
   | Void -> pf ppf "void"
@@ -87,11 +98,6 @@ let suffix_args f =
   else []
 
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
-
-let is_single_index = function
-  | Single {emeta= {mtype= UArray _; _}; _} -> false
-  | Single _ -> true
-  | _ -> false
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -255,16 +261,6 @@ and pp_compiler_internal_fn ut f ppf es =
     pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   in
   match internal_fn_of_string f with
-  | Some FnMatrixElement -> (
-    match es with
-    | [obj; rows; cols] ->
-        pf ppf "%a.coeff(%a, %a)" pp_expr obj pp_expr (minus_one rows) pp_expr
-          (minus_one cols)
-    | _ ->
-        raise_s
-          [%message
-            "Can't have FnMatrixElement with " (es : expr_typed_located list)]
-    )
   | Some FnMakeArray -> array_literal ppf es
   | Some FnMakeRowVec ->
       pf ppf "stan::math::to_row_vector(%a)" array_literal es
@@ -333,7 +329,9 @@ and pp_expr ppf e =
     | FunApp (CompilerInternal, f, _)
       when Some FnReadData = internal_fn_of_string f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
-    | _ when List.for_all ~f:is_single_index idx ->
+    | _
+      when List.for_all ~f:is_single_index idx
+           && not (is_indexing_matrix (e.emeta.mtype, idx)) ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 

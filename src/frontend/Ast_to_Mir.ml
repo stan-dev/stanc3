@@ -6,6 +6,10 @@ let unwrap_return_exn = function
   | Some (ReturnType ut) -> ut
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
+let trans_fn_kind = function
+  | Ast.StanLib -> StanLib
+  | UserDefined -> UserDefined
+
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
@@ -40,7 +44,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | RealNumeral x -> Lit (Real, x)
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
-            FunApp (fn_kind, name, trans_exprs args)
+            FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | GetLP | GetTarget -> FunApp (StanLib, "target", [])
         | ArrayExpr eles ->
             FunApp
@@ -157,32 +161,11 @@ let mkfor upper bodyfn iteratee smeta =
     the outermost layers first.
 *)
 let rec for_scalar st bodyfn var smeta =
-  let blocked b = {stmt= Block [b]; smeta} in
   match st with
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
-      let lv_outer, reset = gensym_enter () in
-      let lower = loop_bottom in
-      let lv_inner = gensym () in
-      let int i = {expr= Var i; emeta= {var.emeta with mtype= UInt}} in
-      let body_inner =
-        bodyfn
-          (internal_funapp FnMatrixElement
-             [var; int lv_outer; int lv_inner]
-             var.emeta)
-      in
-      let body_outer =
-        { stmt=
-            For {loopvar= lv_inner; lower; upper= d2; body= blocked body_inner}
-        ; smeta }
-      in
-      let f =
-        { stmt=
-            For {loopvar= lv_outer; lower; upper= d1; body= blocked body_outer}
-        ; smeta }
-      in
-      reset () ; f
+      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -297,9 +280,6 @@ let internal_of_dread = function
 let rec pull_indices {expr; _} =
   match expr with
   | Indexed (obj, indices) -> pull_indices obj @ indices
-  | FunApp (CompilerInternal, f, [obj; r; c])
-    when internal_fn_of_string f = Some FnMatrixElement ->
-      pull_indices obj @ [Single r; Single c]
   | _ -> []
 
 let assign_indexed decl_type vident smeta varfn var =
@@ -552,7 +532,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
-      NRFunApp (fn_kind, name, trans_exprs args) |> swrap
+      NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = stan_distribution_name_suffix distribution.name in

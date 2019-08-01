@@ -203,7 +203,6 @@ type internal_fn =
   | FnCheck
   | FnPrint
   | FnReject
-  | FnMatrixElement
   | FnResizeToMatch
 [@@deriving sexp]
 

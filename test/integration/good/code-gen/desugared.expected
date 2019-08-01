@@ -166,7 +166,7 @@ functions {
   matrix covsqrt2corsqrt(matrix mat, int invert) {
     matrix[rows(mat| ), cols(mat| )] o;
     o = mat;
-    o[1] = row(o, 2);
+    o[1] = o[2];
     o[3 : 4] = o[1 : 2];
     return o;
   }
@@ -303,7 +303,7 @@ transformed data {
   }
   for (i in 1 : 4) {
     for (j in 1 : 5) {
-      matrix[2, 3] l_mat = d_ar_mat[i][j];
+      matrix[2, 3] l_mat = d_ar_mat[i, j];
       print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
     }
   }
@@ -316,12 +316,7 @@ transformed data {
       z = 0;
     }
   }
-  int sym1__;
-  sym1__ = FnResizeToMatch__(sym1__, td_1dk);
-  for (sym2__ in td_1dk) {
-    sym1__[sym2__] = td_1d[td_1dk[sym2__]];
-  }
-  td_1dk = sym1__;
+  td_1dk = td_1d[td_1dk];
   td_simplex = td_1d_simplex[1,  : ];
   td_simplex = td_1d_simplex[1,  : ];
   td_simplex = td_1d_simplex[1, 1 : N];
@@ -398,16 +393,16 @@ model {
     to_vector(p_1d_simplex[n]| ) ~ normal(0, 1);
     for (m in 1 : M) {
       for (k in 1 : K) {
-        to_vector(p_3d_vec[n][m][k]| ) ~ normal(0, 1);
-        to_vector(p_3d_row_vec[n][m][k]| ) ~ normal(0, 1);
-        to_vector(p_3d_simplex[n][m][k]| ) ~ normal(0, 1);
-        p_real_3d_ar[n][m][k] ~ normal(0, 1);
+        to_vector(p_3d_vec[n, m, k]| ) ~ normal(0, 1);
+        to_vector(p_3d_row_vec[n, m, k]| ) ~ normal(0, 1);
+        to_vector(p_3d_simplex[n, m, k]| ) ~ normal(0, 1);
+        p_real_3d_ar[n, m, k] ~ normal(0, 1);
       }
     }
   }
   for (i in 1 : 4) {
     for (j in 1 : 5) {
-      to_vector(p_ar_mat[i][j]| ) ~ normal(0, 1);
+      to_vector(p_ar_mat[i, j]| ) ~ normal(0, 1);
     }
   }
   for (k in 1 : K) {
@@ -469,15 +464,14 @@ generated quantities {
         indexing_mat[k, i, j] = normal_rng(0| 1);
   for (i in 1 : size(indices| )) 
     for (j in 1 : size(indices| )) 
-      idx_res1[i, j] = row(indexing_mat[indices[i]], indices[j]);
+      idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
   for (i in 1 : 5) 
     for (j in 1 : size(indices| )) 
-      idx_res2[i, j] = row(indexing_mat[i], indices[j]);
+      idx_res2[i, j] = indexing_mat[i, indices[j]];
   for (i in 1 : size(indices| )) 
     for (j in 1 : 3) 
       for (k in 1 : size(indices| )) 
-        idx_res3[i, j, k] = FnMatrixElement__(indexing_mat[indices[i]], j,
-                                              indices[k]);
+        idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
 }
 
 Warning: deprecated language construct used in 'mother.stan', line 60, column 21:

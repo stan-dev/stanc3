@@ -106,9 +106,9 @@ let%expect_test "read param" =
                    ((Single (Var sym1__)) (Single (Var sym2__))
                     (Single (Var sym3__))))
                   (FunApp CompilerInternal FnConstrain__
-                   ((FunApp CompilerInternal FnMatrixElement__
-                     ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
-                      (Var sym3__)))
+                   ((Indexed (Var mat)
+                     ((Single (Var sym1__)) (Single (Var sym2__))
+                      (Single (Var sym3__))))
                     (Lit Str lb) (Lit Int 0))))))))))))))))) |}]
 
 let%expect_test "gen quant" =
@@ -133,9 +133,9 @@ let%expect_test "gen quant" =
                  (body
                   (Block
                    ((NRFunApp CompilerInternal FnWriteParam__
-                     ((FunApp CompilerInternal FnMatrixElement__
-                       ((Indexed (Var mat) ((Single (Var sym1__)))) (Var sym2__)
-                        (Var sym3__)))))))))))))))))
+                     ((Indexed (Var mat)
+                       ((Single (Var sym1__)) (Single (Var sym2__))
+                        (Single (Var sym3__))))))))))))))))))
         (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block
