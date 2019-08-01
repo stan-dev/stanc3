@@ -29,66 +29,71 @@ let remove_trailing_alls_expr = function
 let rec desugar_index_expr = function
   | Indexed
       ( { expr=
-            Indexed
-              ( obj
-              , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
-                :: inner_tl ); _ }
-      , (Single {emeta= {type_= UInt; _}; _} as single) :: outer_tl ) ->
-      desugar_index_expr
-        (Indexed
-           ( { expr=
-                 Indexed
-                   ( obj
-                   , Single
-                       { expr= Indexed (multi, [single])
-                       ; emeta= {emeta with type_= UInt} }
-                     :: inner_tl )
-             ; emeta }
-           , outer_tl ))
+            Indexed (obj, inner_indices)
+            (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
+               *   :: inner_tl ) *)
+        ; emeta }
+      , (Single ({emeta= {type_= UInt; _}; _} as single_e) as single)
+        :: outer_tl )
+    when List.exists ~f:is_multi_index inner_indices -> (
+    match List.split_while ~f:is_single_index inner_indices with
+    | inner_singles, Single first_multi :: inner_tl ->
+        desugar_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             { expr= Indexed (first_multi, [single])
+                             ; emeta= {emeta with type_= UInt} } ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | inner_singles, Downfrom _ :: inner_tl ->
+        (* XXX generate check *)
+        desugar_index_expr
+          (Indexed
+             ( {expr= Indexed (obj, inner_singles @ [single] @ inner_tl); emeta}
+             , outer_tl ))
+    | inner_singles, Between (bot, _) :: inner_tl
+     |inner_singles, Upfrom bot :: inner_tl ->
+        (* XXX generate check *)
+        desugar_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             Frontend_utils.(
+                               binop (binop bot Plus single_e) Minus
+                                 (loop_bottom bot.emeta)) ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | _ -> raise_s [%message "We already checked for a multi"] )
   (* v[arr, 2] -> v[arr[2]] *)
   (* foo [arr1, ..., arrN] [i1, ..., iN] -> foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
   (* v[2:3][2] = v[3:2][1] -> v[3] *)
   (* v[x:y][z] -> v[x+z-1] *)
-  (* | Between (bot, _) :: tl
-   * | Upfrom (bot) :: tl
-   *   when List.exists ~f:is_single_index tl -> (
-   *     let multis, single_plus = List.split_while ~f:is_multi_index tl in
-   *     match single_plus with
-   *     | Single e :: tl ->
-   *       (\* XXX Need to emit check here that bot + e < top *\)
-   *       Single (binop bot Middle.Plus e)
-   *       :: reduce_indices (multis @ tl)
-   *     | _ -> raise_s [%message "checked that we had a single coming already!"]
-   *   )
-   * | Downfrom _ :: tl
-   *   when List.exists ~f:is_single_index tl -> (
-   *     let multis, single_plus = List.split_while ~f:is_multi_index tl in
-   *     match single_plus with
-   *     | single :: tl -> single
-   *       :: reduce_indices (multis @ tl)
-   *     | _ -> raise_s [%message "checked that we had a single coming already!"]
-   *   ) *)
   
   (*
 https://github.com/stan-dev/stanc3/pull/212
 
 v[2][4] -> v[2, 4]
-v[:][x] -> v[x]
-v[x][:] -> v[x]
-v[2][2:3] -> segment(v[2], 2, 3)
-v[2][arr] -> (declare new_sym, fill with v[2][arr] via for loop); new_sym
 v[x][3:2] -> v[x][{3, 2}]
-v[2][arr][3] -> v[2, arr[3]]
 
 m[2][3] -> m[2, 3]
-m[2:3] = m[2:3, :] -> block(m, 2, 1, 2, cols(m))
-m[:, 2:3] -> block(m, 1, 2, rows(m), 2)
 m[2:4][1:2] -> m[2:3]
-m[2:3, 2] -> (declare newsym, fill with rows 2-3 and column 2 via for loop); newsym
+
+And then don't forget to do some of these for assignment
    *)
   | e -> e
 
 let rec map_statement_all_exprs expr_f {stmt; smeta} =
+  (* v[:][x] -> v[x]
+   * v[x][:] -> v[x] *)
   { stmt= map_statement expr_f (map_statement_all_exprs expr_f) Fn.id stmt
   ; smeta }
 

@@ -133,7 +133,7 @@ let use_file filename =
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
-    let typed_ast = Desugar.desugar_prog typed_ast in
+    (* let typed_ast = Desugar.desugar_prog typed_ast in *)
     if !dump_desugared then Pretty_printing.pp_program Fmt.stdout typed_ast ;
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
