@@ -12966,6 +12966,71 @@
                ((mtype (UArray UMatrix)) (mloc <opaque>) (madlevel DataOnly))))))
            (smeta <opaque>))
           ((stmt
+            (IfElse
+             ((expr
+               (FunApp StanLib NEquals__
+                (((expr
+                   (Indexed
+                    ((expr
+                      (Indexed
+                       ((expr (Var indexing_mat))
+                        (emeta
+                         ((mtype (UArray UMatrix)) (mloc <opaque>)
+                          (madlevel DataOnly))))
+                       ((Single
+                         ((expr (Lit Int 2))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr
+                           (Indexed
+                            ((expr (Var indices))
+                             (emeta
+                              ((mtype (UArray UInt)) (mloc <opaque>)
+                               (madlevel DataOnly))))
+                            ((Single
+                              ((expr (Lit Int 1))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly))))))))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                     (emeta
+                      ((mtype (UArray UMatrix)) (mloc <opaque>)
+                       (madlevel DataOnly))))
+                    ((Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr
+                   (Indexed
+                    ((expr (Var idx_res2))
+                     (emeta
+                      ((mtype (UArray UMatrix)) (mloc <opaque>)
+                       (madlevel DataOnly))))
+                    ((Single
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+             ((stmt
+               (NRFunApp CompilerInternal FnReject__
+                (((expr (Lit Str "indexing test 2 failed"))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>))
+             ()))
+           (smeta <opaque>))
+          ((stmt
             (For (loopvar i)
              (lower
               ((expr (Lit Int 1))
@@ -13109,6 +13174,82 @@
                      (madlevel DataOnly))))))))
               (emeta
                ((mtype (UArray UMatrix)) (mloc <opaque>) (madlevel DataOnly))))))
+           (smeta <opaque>))
+          ((stmt
+            (IfElse
+             ((expr
+               (FunApp StanLib NEquals__
+                (((expr
+                   (Indexed
+                    ((expr
+                      (Indexed
+                       ((expr (Var indexing_mat))
+                        (emeta
+                         ((mtype (UArray UMatrix)) (mloc <opaque>)
+                          (madlevel DataOnly))))
+                       ((Single
+                         ((expr
+                           (Indexed
+                            ((expr (Var indices))
+                             (emeta
+                              ((mtype (UArray UInt)) (mloc <opaque>)
+                               (madlevel DataOnly))))
+                            ((Single
+                              ((expr (Lit Int 2))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly))))))))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr (Lit Int 1))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (Single
+                         ((expr
+                           (Indexed
+                            ((expr (Var indices))
+                             (emeta
+                              ((mtype (UArray UInt)) (mloc <opaque>)
+                               (madlevel DataOnly))))
+                            ((Single
+                              ((expr (Lit Int 1))
+                               (emeta
+                                ((mtype UInt) (mloc <opaque>)
+                                 (madlevel DataOnly))))))))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                     (emeta
+                      ((mtype (UArray UMatrix)) (mloc <opaque>)
+                       (madlevel DataOnly))))
+                    ()))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr
+                   (Indexed
+                    ((expr (Var idx_res3))
+                     (emeta
+                      ((mtype (UArray UMatrix)) (mloc <opaque>)
+                       (madlevel DataOnly))))
+                    ((Single
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+             ((stmt
+               (NRFunApp CompilerInternal FnReject__
+                (((expr (Lit Str "indexing test 3 failed"))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>))
+             ()))
            (smeta <opaque>))
           ((stmt
             (Assignment (idx_res4 (UArray URowVector) ())

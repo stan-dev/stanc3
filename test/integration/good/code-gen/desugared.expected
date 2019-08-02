@@ -480,11 +480,15 @@ generated quantities {
     for (j in 1 : size(indices| )) 
       idx_res2[i, j] = indexing_mat[i, indices[j]];
   idx_res21 = indexing_mat[ : , indices];
+  if (indexing_mat[2, indices[1]][1] != idx_res2[2, 1, 1]) 
+    reject("indexing test 2 failed");
   for (i in 1 : size(indices| )) 
     for (j in 1 : 3) 
       for (k in 1 : size(indices| )) 
         idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
   idx_res31 = indexing_mat[indices,  : , indices];
+  if (indexing_mat[indices[2], 1, indices[1]] != idx_res3[2, 1, 1]) 
+    reject("indexing test 3 failed");
   idx_res4 = indexing_mat[ : 3, 1];
   idx_res5 = indexing_mat[4 : , 2 : 3, 1];
 }
