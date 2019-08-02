@@ -440,6 +440,8 @@ generated quantities {
   matrix[3, 4] idx_res11[3];
   matrix[3, 4] idx_res21[5];
   matrix[3, 3] idx_res31[3];
+  row_vector[4] idx_res4[3];
+  vector[2] idx_res5[2];
   gq_real_1d_ar = p_1d_simplex[ : , 1];
   gq_real_3d_ar = p_real_3d_ar;
   gq_1d_vec = p_1d_vec;
@@ -472,6 +474,8 @@ generated quantities {
     for (j in 1 : size(indices| )) 
       idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
   idx_res11 = indexing_mat[indices, indices];
+  if (indexing_mat[indices[2], indices[1]][1] != idx_res1[2, 1, 1]) 
+    reject("indexing test 1 failed");
   for (i in 1 : 5) 
     for (j in 1 : size(indices| )) 
       idx_res2[i, j] = indexing_mat[i, indices[j]];
@@ -481,6 +485,8 @@ generated quantities {
       for (k in 1 : size(indices| )) 
         idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
   idx_res31 = indexing_mat[indices,  : , indices];
+  idx_res4 = indexing_mat[ : 3, 1];
+  idx_res5 = indexing_mat[4 : , 2 : 3, 1];
 }
 
 Warning: deprecated language construct used in 'mother.stan', line 60, column 21:

@@ -277,6 +277,11 @@ functions {
     matrix[40,50] ar_mat[60,70];
     ar_mat[1,1,1,1] = b;
   }
+  /* matrix foo_return_mat() { */
+  /*   return [ [1,2,3,4,5,6,7,8,9,10] */
+  /*            , [1,2,3,4,5,6,7,8,9,10] */
+  /*            , [1,2,3,4,5,6,7,8,9,10] ]; */
+  /* } */
 }
 data {
   int<lower=0> N;
@@ -468,6 +473,8 @@ generated quantities {
   matrix[3, 4] idx_res11[3];
   matrix[3, 4] idx_res21[5];
   matrix[3, 3] idx_res31[3];
+  row_vector[4] idx_res4[3];
+  vector[2] idx_res5[2];
 
   gq_real_1d_ar = p_1d_simplex[,1];
   gq_real_3d_ar = p_real_3d_ar;
@@ -491,21 +498,23 @@ generated quantities {
         for (n in 1:5) {
           gq_ar_mat[m, n, i, j] = 0.4;}}}}
 
-
   for (i in 1:N) gq_vec[i] = -1.0 * p_vec[i];
+
 
   // A fun thing about Stan is that we can test syntactic sugar in Stan itself:
   for (i in 1:3)
     for (j in 1:4)
       for (k in 1:5)
         indexing_mat[k, i, j] = normal_rng(0, 1);
+
   // 2nd, 3rd, 1st indexing_matrix, 2nd, 3rd, 1st rows of each
   for (i in 1:size(indices))
     for (j in 1:size(indices))
       idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
+
   idx_res11 = indexing_mat[indices, indices];
   //broken in stanc3
-  //if (indexing_mat[indices, indices][2,1,1] != idx_res1[2,1,1]) reject("indexing test 1 failed");
+  if (indexing_mat[indices, indices][2,1,1] != idx_res1[2,1,1]) reject("indexing test 1 failed");
 
   //2nd, 3rd, 1st rows of every indexing_matrix
   for (i in 1:5)
@@ -523,4 +532,7 @@ generated quantities {
   idx_res31 = indexing_mat[indices, :, indices];
   // broken in stanc3:
   // if (indexing_mat[indices, :, indices][2,1,1] != sym3[2,1,1]) reject("indexing test 3 failed");
+
+  idx_res4 = indexing_mat[:3, 1, :];
+  idx_res5 = indexing_mat[4:, 2:3, 1];
 }
