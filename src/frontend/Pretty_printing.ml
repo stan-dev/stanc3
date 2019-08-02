@@ -387,14 +387,13 @@ and pp_opt_block ppf block_name opt_block =
   Fmt.option ~none:Fmt.nop (pp_block block_name) ppf opt_block
 
 and pp_program ppf
-    ({ functionblock= bf
-     ; datablock= bd
-     ; transformeddatablock= btd
-     ; parametersblock= bp
-     ; transformedparametersblock= btp
-     ; modelblock= bm
-     ; generatedquantitiesblock= bgq } :
-      typed_program) =
+    { functionblock= bf
+    ; datablock= bd
+    ; transformeddatablock= btd
+    ; parametersblock= bp
+    ; transformedparametersblock= btp
+    ; modelblock= bm
+    ; generatedquantitiesblock= bgq } =
   Format.pp_open_vbox ppf 0 ;
   pp_opt_block ppf "functions" bf ;
   pp_opt_block ppf "data" bd ;
@@ -405,19 +404,20 @@ and pp_program ppf
   pp_opt_block ppf "generated quantities" bgq ;
   Format.pp_close_box ppf ()
 
-and pretty_print_program (p : typed_program) =
+and pretty_print_program p =
   let result = wrap_fmt pp_program p in
-  let check_correctness () =
-    let result_ast =
-      Errors.without_warnings
-        (Parse.parse_string Parser.Incremental.program)
-        result
-    in
-    if
-      compare_untyped_program
-        (untyped_program_of_typed_program p)
-        (Option.value_exn (Result.ok result_ast))
-      <> 0
-    then failwith "Pretty printing failed. Please file a bug."
-  in
-  check_correctness () ; result
+  (* let check_correctness () =
+   *   let result_ast =
+   *     Errors.without_warnings
+   *       (Parse.parse_string Parser.Incremental.program)
+   *       result
+   *   in
+   *   if
+   *     compare_untyped_program
+   *       (untyped_program_of_typed_program p)
+   *       (Option.value_exn (Result.ok result_ast))
+   *     <> 0
+   *   then failwith "Pretty printing failed. Please file a bug."
+   * in
+   * check_correctness () ; *)
+  result

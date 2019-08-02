@@ -111,6 +111,8 @@ let use_file filename =
       exit 1
   in
   Debugging.ast_logger ast ;
+  if !pretty_print_program then
+    print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
     try
       match Semantic_check.semantic_check_program ast with
@@ -127,8 +129,6 @@ let use_file filename =
       Errors.report_semantic_error err ;
       exit 1
   in
-  if !pretty_print_program then
-    print_endline (Pretty_printing.pretty_print_program typed_ast) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
