@@ -1,19 +1,17 @@
 open Core_kernel
 open Middle
 
-
 let no_span_num = 0
 
-let prepare_prog prog = 
-  let labelled = Program.Labelled.label ~init:1 prog in   
-  let {Stmt.Labelled.stmts;_} = Program.Labelled.associate labelled in 
-  let locations = Label.Map.(
-      add_exn ~key:no_span_num ~data:Location_span.empty  @@ map stmts ~f:Stmt.Labelled.loc_of
-  )
-  in 
-  (labelled,locations)
-
-
+let prepare_prog prog =
+  let labelled = Program.Labelled.label ~init:1 prog in
+  let {Stmt.Labelled.stmts; _} = Program.Labelled.associate labelled in
+  let locations =
+    Label.Map.(
+      add_exn ~key:no_span_num ~data:Location_span.empty
+      @@ map stmts ~f:Stmt.Labelled.loc_of)
+  in
+  (labelled, locations)
 
 (* let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   let module LocSp = struct

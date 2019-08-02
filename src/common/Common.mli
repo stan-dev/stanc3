@@ -4,6 +4,8 @@ module Validation : module type of Validation
 
 (* Type-class like signatures *)
 module Monoid : module type of Monoid
+module Functor : module type of Functor
+module Bifunctor : module type of Bifunctor
 module Foldable : module type of Foldable
 module Bifoldable : module type of Bifoldable
 module Traversable : module type of Traversable
@@ -13,6 +15,7 @@ module Bitraversable : module type of Bitraversable
 module Pretty : module type of Pretty
 
 (* 'Two-level type' signatures and functors *)
+module Recursive : module type of Recursive
 module Pattern : module type of Pattern
 module Fix : module type of Fix
 module Meta : module type of Meta

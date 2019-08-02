@@ -46,12 +46,13 @@ module Fixed = struct
 
   (** Fixed-point of `expr` *)
   include Fix.Make (Pattern)
-end 
+end
 
 (** Fixed-point expressions specialized to have no meta data *)
 module NoMeta = struct
   module Meta = struct
     type t = unit [@@deriving compare, sexp, hash]
+
     let pp _ _ = ()
   end
 
@@ -61,23 +62,23 @@ module NoMeta = struct
 end
 
 module Typed = struct
-  module Meta = struct 
+  module Meta = struct
     type t =
       { type_: UnsizedType.t
       ; loc: Location_span.t sexp_opaque [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
-    let empty = 
-      create ~type_:UnsizedType.uint ~adlevel:UnsizedType.DataOnly ~loc:Location_span.empty ()
+    let empty =
+      create ~type_:UnsizedType.uint ~adlevel:UnsizedType.DataOnly
+        ~loc:Location_span.empty ()
 
     let adlevel {adlevel; _} = adlevel
     let type_ {type_; _} = type_
     let loc {loc; _} = loc
     let pp _ _ = ()
-
-    let with_type ty meta = { meta with type_ = ty}
-end     
+    let with_type ty meta = {meta with type_= ty}
+  end
 
   include Specialized.Make (Fixed) (Meta)
 
@@ -87,7 +88,7 @@ end
 end
 
 module Labelled = struct
-  module Meta = struct 
+  module Meta = struct
     type t =
       { type_: UnsizedType.t
       ; loc: Location_span.t sexp_opaque [@compare.ignore]
@@ -143,13 +144,11 @@ module Labelled = struct
     | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
 end
 
-
 (* == Helpers ============================================================= *)
 
 let var meta name = Fixed.fix meta @@ Var name
-let lit meta lit_type str_value = Fixed.fix meta @@ Lit(lit_type,str_value)
+let lit meta lit_type str_value = Fixed.fix meta @@ Lit (lit_type, str_value)
 let lit_int meta value = lit meta Int @@ string_of_int value
-  
 let lit_real meta value = lit meta Real @@ string_of_float value
 let lit_string meta value = lit meta Str value
 
@@ -170,41 +169,34 @@ let index_bounds = function
   | Single e | MultiIndex e | Upfrom e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
-let indices_of expr = 
-  match Fixed.pattern expr with 
-  | Indexed (_, indices) -> indices 
-  | _ -> []
+let indices_of expr =
+  match Fixed.pattern expr with Indexed (_, indices) -> indices | _ -> []
 
-let fun_app meta fun_kind name args = 
+let fun_app meta fun_kind name args =
   Fixed.fix meta @@ FunApp (fun_kind, name, args)
 
 let compiler_fun meta name args =
   Fixed.fix meta @@ FunApp (CompilerInternal, name, args)
 
-let internal_fun meta fn args = 
+let internal_fun meta fn args =
   compiler_fun meta (Internal_fun.to_string fn) args
 
-let user_fun meta name args =
-  Fixed.fix meta @@ FunApp (UserDefined, name, args)
+let user_fun meta name args = Fixed.fix meta @@ FunApp (UserDefined, name, args)
+let stanlib_fun meta name args = Fixed.fix meta @@ FunApp (StanLib, name, args)
+let binop meta op a b = stanlib_fun meta (Operator.to_string op) [a; b]
 
-let stanlib_fun meta name args =
-  Fixed.fix meta @@ FunApp (StanLib, name, args)
-
-let binop meta  op  a b = stanlib_fun meta (Operator.to_string op) [a;b]
-
-let incr expr = 
-  let meta = Fixed.meta expr in 
+let incr expr =
+  let meta = Fixed.meta expr in
   binop meta Operator.Plus expr @@ lit_int meta 1
-  
- let is_fun ?name {Fixed.pattern;_} = 
-  match pattern with 
-  | Fixed.Pattern.FunApp(_,fun_name,_) -> Option.map ~f:(fun name -> name = fun_name ) name |> Option.value ~default:true
-  | _ -> false 
 
-let is_lit_string {Fixed.pattern;_} = 
-  match pattern with 
-  | Fixed.Pattern.Lit(Str,_) -> true 
+let is_fun ?name {Fixed.pattern; _} =
+  match pattern with
+  | Fixed.Pattern.FunApp (_, fun_name, _) ->
+      Option.map ~f:(fun name -> name = fun_name) name
+      |> Option.value ~default:true
   | _ -> false
-  
-let loop_bottom = 
-  lit_int Typed.Meta.empty 1
+
+let is_lit_string {Fixed.pattern; _} =
+  match pattern with Fixed.Pattern.Lit (Str, _) -> true | _ -> false
+
+let loop_bottom = lit_int Typed.Meta.empty 1

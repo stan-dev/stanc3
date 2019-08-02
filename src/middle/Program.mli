@@ -7,41 +7,49 @@ type 'a fun_def = 'a Mir_pattern.fun_def =
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
   ; fdbody: 'a
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
-[@@deriving compare, hash, map, sexp,  map]
+[@@deriving compare, hash, map, sexp, map]
 
-type io_block = Mir_pattern.io_block = Parameters | TransformedParameters | GeneratedQuantities
+type io_block = Mir_pattern.io_block =
+  | Parameters
+  | TransformedParameters
+  | GeneratedQuantities
 [@@deriving sexp, hash]
 
 val pp_io_block : Format.formatter -> io_block -> unit
-type 'a outvar = 'a Mir_pattern.outvar = 
-    { out_unconstrained_st: 'a SizedType.t
-    ; out_constrained_st: 'a SizedType.t
-    ; out_block: io_block }
-    [@@deriving sexp, map, hash]
 
+type 'a outvar = 'a Mir_pattern.outvar =
+  { out_unconstrained_st: 'a SizedType.t
+  ; out_constrained_st: 'a SizedType.t
+  ; out_block: io_block }
+[@@deriving sexp, map, hash]
 
 type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
-    { functions_block: 'b fun_def list
-    ; input_vars: (string * 'a SizedType.t) list
-    ; prepare_data: 'b list (* data & transformed data decls and statements *)
-    ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-    ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
-    ; transform_inits: 'b list
-    ; output_vars: (string * 'a outvar) list
-    ; prog_name: string
-    ; prog_path: string }
-    [@@deriving sexp, map]
+  { functions_block: 'b fun_def list
+  ; input_vars: (string * 'a SizedType.t) list
+  ; prepare_data: 'b list (* data & transformed data decls and statements *)
+  ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+  ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+  ; transform_inits: 'b list
+  ; output_vars: (string * 'a outvar) list
+  ; prog_name: string
+  ; prog_path: string }
+[@@deriving sexp, map]
 
-include Pretty.S2 with type ('a,'b) t := ('a,'b) t
+include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
 
 module Typed : sig
-    type nonrec t = (Expr.Typed.t,Stmt.Located.t) t
-    include Pretty.S with type t := t
+  type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
+
+  include Pretty.S with type t := t
 end
 
 module Labelled : sig
-    type nonrec t = (Expr.Labelled.t,Stmt.Labelled.t) t
-    include Pretty.S with type t := t
-    val label : ?init:int -> Typed.t -> t
-    val associate : ?init:Stmt.Labelled.associations -> t -> Stmt.Labelled.associations
+  type nonrec t = (Expr.Labelled.t, Stmt.Labelled.t) t
+
+  include Pretty.S with type t := t
+
+  val label : ?init:int -> Typed.t -> t
+
+  val associate :
+    ?init:Stmt.Labelled.associations -> t -> Stmt.Labelled.associations
 end

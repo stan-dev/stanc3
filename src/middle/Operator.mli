@@ -24,5 +24,6 @@ type t =
 [@@deriving sexp, hash, compare]
 
 include Common.Pretty.S with type t := t
-val to_string : t -> string 
+
+val to_string : t -> string
 val of_string_opt : string -> t option

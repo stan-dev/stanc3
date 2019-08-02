@@ -2,7 +2,6 @@
 
 open Core_kernel
 
-
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
 
@@ -12,7 +11,8 @@ let stan_math_returntype name args =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
-      ~f:(fun x -> UnsizedType.check_compatible_arguments_mod_conv name (snd x) args)
+      ~f:(fun x ->
+        UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
       namematches
   in
   if List.length filteredmatches = 0 then None
@@ -82,6 +82,7 @@ let operator_stan_math_return_type op arg_tys =
   |> List.hd
 
 let op_return_type = operator_stan_math_return_type
+
 let pretty_print_all_math_lib_fn_sigs name =
   let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
@@ -158,7 +159,11 @@ let eigen_vector_types = function
   | i -> raise_s [%sexp (i : int)]
 
 let eigen_vector_types_size = 4
-let is_primitive = function UnsizedType.UReal -> true | UInt -> true | _ -> false
+
+let is_primitive = function
+  | UnsizedType.UReal -> true
+  | UInt -> true
+  | _ -> false
 
 let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t

@@ -178,7 +178,9 @@ type ('e, 's, 'l) statement =
   | FunDef of
       { returntype: Middle.UnsizedType.returntype
       ; funname: identifier
-      ; arguments: (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier) list
+      ; arguments:
+          (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
+          list
       ; body: 's }
 [@@deriving sexp, hash, compare, map]
 

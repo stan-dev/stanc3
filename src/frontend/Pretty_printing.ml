@@ -186,10 +186,12 @@ and pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> Fmt.pf ppf "int"
   | Middle.SizedType.SReal -> Fmt.pf ppf "real"
   | Middle.SizedType.SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
-  | Middle.SizedType.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
+  | Middle.SizedType.SRowVector e ->
+      Fmt.pf ppf "row_vector[%a]" pp_expression e
   | Middle.SizedType.SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | Middle.SizedType.SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | Middle.SizedType.SArray _ ->
+      raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
   | Identity -> Fmt.pf ppf ""

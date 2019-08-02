@@ -1,7 +1,6 @@
 open Core_kernel
 open Middle
 
-
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
   type t =
@@ -13,7 +12,8 @@ module TypeError = struct
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
-    | IllTypedAssignment of Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
+    | IllTypedAssignment of
+        Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -144,7 +144,8 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a, %a.@]"
           Operator.pp op
-          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          ( Stan_math.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
@@ -152,7 +153,8 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
           Operator.pp op
-          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          ( Stan_math.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
@@ -160,7 +162,8 @@ module TypeError = struct
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a."
           Operator.pp op
-          (Stan_math.pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
+          ( Stan_math.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
           UnsizedType.pp ut
 end
 

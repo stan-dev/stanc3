@@ -1,4 +1,3 @@
-
 type t = Mir_pattern.internal_fn =
   | FnLength
   | FnMakeArray
@@ -14,5 +13,5 @@ type t = Mir_pattern.internal_fn =
   | FnReject
 [@@deriving sexp]
 
-val to_string : t -> string 
+val to_string : t -> string
 val of_string_opt : string -> t option

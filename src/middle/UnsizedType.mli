@@ -19,12 +19,12 @@ include Pretty.S with type t := t
 
 val pp_returntype : Format.formatter -> returntype -> unit
 val pp_autodifftype : Format.formatter -> autodifftype -> unit
-val uint : t 
-val ureal : t 
-val uvector : t 
-val urowvector: t 
-val umatrix : t 
-val uarray : t -> t 
+val uint : t
+val ureal : t
+val uvector : t
+val urowvector : t
+val umatrix : t
+val uarray : t -> t
 val ufun : (autodifftype * t) list -> t -> t
 val ufun_void : (autodifftype * t) list -> t
 val umathlibfun : t

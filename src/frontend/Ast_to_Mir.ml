@@ -1,13 +1,15 @@
 open Core_kernel
 open Middle
 
-
 let loop_bottom = Expr.(lit_int Typed.Meta.empty 1)
-  
+
 (* XXX fix exn *)
 let unwrap_return_exn = function
   | Some (UnsizedType.ReturnType ut) -> ut
-  | x -> raise_s [%message "Unexpected return type " (x : UnsizedType.returntype option)]
+  | x ->
+      raise_s
+        [%message
+          "Unexpected return type " (x : UnsizedType.returntype option)]
 
 let trans_fn_kind = function
   | Ast.StanLib -> Fun_kind.StanLib
@@ -19,48 +21,40 @@ let rec op_to_funapp op args =
   in
   let type_ = Stan_math.op_return_type op argtypes |> unwrap_return_exn
   and loc = Ast.expr_loc_lub args
-  and adlevel = Ast.expr_ad_lub args in 
-  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in 
-  Expr.stanlib_fun meta  (Operator.to_string op) @@ trans_exprs args
-
+  and adlevel = Ast.expr_ad_lub args in
+  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in
+  Expr.stanlib_fun meta (Operator.to_string op) @@ trans_exprs args
 
 and trans_expr {Ast.expr; Ast.emeta} =
   let type_ = emeta.Ast.type_
   and loc = emeta.loc
   and adlevel = emeta.ad_level in
-  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in 
+  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in
   match expr with
   | Ast.Paren x -> trans_expr x
-  | BinOp (lhs, And, rhs) ->
-      Expr.and_ meta (trans_expr lhs) (trans_expr rhs)
-  | BinOp (lhs, Or, rhs) ->
-      Expr.or_ meta (trans_expr lhs) (trans_expr rhs)
-      
+  | BinOp (lhs, And, rhs) -> Expr.and_ meta (trans_expr lhs) (trans_expr rhs)
+  | BinOp (lhs, Or, rhs) -> Expr.or_ meta (trans_expr lhs) (trans_expr rhs)
   | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
   | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
   | TernaryIf (cond, ifb, elseb) ->
       Expr.if_ meta (trans_expr cond) (trans_expr ifb) (trans_expr elseb)
-            
   | Variable {name; _} -> Expr.var meta name
   | IntNumeral x -> Expr.lit meta Int x
   | RealNumeral x -> Expr.lit meta Real x
-  | FunApp (fn_kind, {name; _}, args)
-  | CondDistApp (fn_kind, {name; _}, args) ->
-    Expr.fun_app  meta (trans_fn_kind fn_kind) name (trans_exprs args)
-
-  | GetLP | GetTarget -> 
-    Expr.stanlib_fun meta "target" []
+  | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
+    ->
+      Expr.fun_app meta (trans_fn_kind fn_kind) name (trans_exprs args)
+  | GetLP | GetTarget -> Expr.stanlib_fun meta "target" []
   | ArrayExpr eles ->
-      Expr.compiler_fun meta (Internal_fun.to_string FnMakeArray) (trans_exprs eles)
-
+      Expr.compiler_fun meta
+        (Internal_fun.to_string FnMakeArray)
+        (trans_exprs eles)
   | RowVectorExpr eles ->
-      Expr.compiler_fun meta (Internal_fun.to_string FnMakeRowVec) (trans_exprs eles)
-
+      Expr.compiler_fun meta
+        (Internal_fun.to_string FnMakeRowVec)
+        (trans_exprs eles)
   | Indexed (lhs, indices) ->
       Expr.indexed meta (trans_expr lhs) (List.map ~f:trans_idx indices)
-            
-  
-      
 
 and trans_idx = function
   | Ast.All -> Expr.index_all
@@ -80,23 +74,19 @@ and trans_exprs = List.map ~f:trans_expr
 let trans_sizedtype = SizedType.map trans_expr
 
 let neg_inf =
-  let meta = Expr.Typed.Meta.create ~type_:UnsizedType.UReal ~loc:Location_span.empty ~adlevel:UnsizedType.DataOnly () in 
+  let meta =
+    Expr.Typed.Meta.create ~type_:UnsizedType.UReal ~loc:Location_span.empty
+      ~adlevel:UnsizedType.DataOnly ()
+  in
   Expr.stanlib_fun meta (Internal_fun.to_string FnNegInf) []
-  
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
   let trunc cond_op (x : Ast.typed_expression) y =
-    let meta = x.Ast.emeta.loc in        
+    let meta = x.Ast.emeta.loc in
     Stmt.(
-        if_ meta 
-          ( op_to_funapp cond_op [ast_obs; x])
-          (target_pe meta neg_inf)
-          y
-    )
-    
-    
+      if_ meta (op_to_funapp cond_op [ast_obs; x]) (target_pe meta neg_inf) y)
   in
   match t with
   | Ast.NoTruncate -> []
@@ -113,9 +103,10 @@ let unquote s =
    XXX add UString to MIR and maybe AST.
 *)
 let mkstring loc s =
-  let meta = Expr.Typed.Meta.create ~type_:UReal ~loc ~adlevel:UnsizedType.DataOnly () in 
-  Expr.lit_string meta s 
-  
+  let meta =
+    Expr.Typed.Meta.create ~type_:UReal ~loc ~adlevel:UnsizedType.DataOnly ()
+  in
+  Expr.lit_string meta s
 
 let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
@@ -127,17 +118,17 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
-  let loc = Expr.Typed.loc_of e in 
+  let loc = Expr.Typed.loc_of e in
   let type_ =
-    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc  (Expr.Typed.type_of e) [(i, UInt)]  
+    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc
+      (Expr.Typed.type_of e) [(i, UInt)]
   and adlevel = Expr.Typed.adlevel_of e
   and mir_i = trans_idx i in
-  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in 
+  let meta = Expr.Typed.Meta.create ~type_ ~loc ~adlevel () in
   match Expr.Fixed.pattern e with
-  | Var _ ->  Expr.indexed meta e [mir_i]
+  | Var _ -> Expr.indexed meta e [mir_i]
   | Indexed (e, indices) -> Expr.indexed meta e @@ indices @ [mir_i]
   | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -153,7 +144,6 @@ let mkfor upper bodyfn iteratee smeta =
   let body = bodyfn (add_int_index iteratee (idx loopvar)) in
   reset () ;
   Stmt.(for_ smeta loopvar lower upper @@ block smeta [body])
-  
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -193,7 +183,7 @@ type ioaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constrainaction_fname c =
-  Internal_fun.to_string  
+  Internal_fun.to_string
     ( match c with
     | Check -> FnCheck
     | Constrain -> FnConstrain
@@ -281,9 +271,8 @@ let internal_of_dread = function
   | ReadData -> FnReadData
 
 let assign_indexed vident meta varfn var =
-  let idxs = Expr.indices_of var in       
+  let idxs = Expr.indices_of var in
   Stmt.assign meta vident ~idxs @@ varfn var
-  
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -293,8 +282,7 @@ let param_size transform sizedtype =
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
-            "Expecting SVector or SMatrix, got "
-              (st : Expr.Typed.t SizedType.t)]
+            "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let rec shrink_eigen_mat f st =
     match st with
@@ -302,20 +290,15 @@ let param_size transform sizedtype =
     | SMatrix (d1, d2) -> SVector (f d1 d2)
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
-          [%message
-            "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+          [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
-  let int num = 
-    Expr.(lit_int Typed.Meta.empty num) in 
+  let int num = Expr.(lit_int Typed.Meta.empty num) in
   let k_choose_2 k =
     Expr.(
       binop Typed.Meta.empty Divide
         (binop Typed.Meta.empty Times k
-          (binop Typed.Meta.empty Minus k (int 1))
-        )
-        (int 2)
-    )
-    
+           (binop Typed.Meta.empty Minus k (int 1)))
+        (int 2))
   in
   match transform with
   | Ast.Identity | Lower _ | Upper _
@@ -324,23 +307,26 @@ let param_size transform sizedtype =
    |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
-  | Simplex -> shrink_eigen (fun d -> Expr.(binop Typed.Meta.empty Minus d (int 1))) sizedtype
+  | Simplex ->
+      shrink_eigen
+        (fun d -> Expr.(binop Typed.Meta.empty Minus d (int 1)))
+        sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
         (fun m n ->
           Expr.(
-            binop Typed.Meta.empty Plus 
+            binop Typed.Meta.empty Plus
               (binop Typed.Meta.empty Plus (k_choose_2 n) n)
-              (binop Typed.Meta.empty Times 
-                (binop Typed.Meta.empty Minus m n)
-                n
-              )
-          )
-        )
+              (binop Typed.Meta.empty Times
+                 (binop Typed.Meta.empty Minus m n)
+                 n)) )
         sizedtype
-  | Covariance -> shrink_eigen (fun k -> Expr.(binop Typed.Meta.empty Plus k (k_choose_2 k))) sizedtype
+  | Covariance ->
+      shrink_eigen
+        (fun k -> Expr.(binop Typed.Meta.empty Plus k (k_choose_2 k)))
+        sizedtype
 
 let read_decl dread decl_id sizedtype smeta decl_var =
   let args =
@@ -350,18 +336,16 @@ let read_decl dread decl_id sizedtype smeta decl_var =
   in
   let readfname = internal_of_dread dread in
   let readfn var =
-    let meta = 
-      Expr.Fixed.meta var 
-      |> Expr.Typed.Meta.with_type  (base_type sizedtype) in 
-    
-    Expr.internal_fun meta readfname args 
+    let meta =
+      Expr.Fixed.meta var |> Expr.Typed.Meta.with_type (base_type sizedtype)
+    in
+    Expr.internal_fun meta readfname args
   in
   let readvar var =
     match Expr.Fixed.pattern var with
-    | Indexed (_, idxs) -> 
+    | Indexed (_, idxs) ->
         let meta = Expr.Fixed.meta var in
-        Expr.indexed  meta (readfn var) idxs
-        
+        Expr.indexed meta (readfn var) idxs
     | _ -> readfn var
   in
   let forl, st =
@@ -388,8 +372,8 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
         @ extra_args
       in
       let constrainvar var =
-        let meta = Expr.Fixed.meta var in 
-        Expr.compiler_fun meta fname @@ args var         
+        let meta = Expr.Fixed.meta var in
+        Expr.compiler_fun meta fname @@ args var
       in
       [ (constraint_forl t) st
           (assign_indexed decl_id smeta constrainvar)
@@ -399,17 +383,14 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
   let chk fn args =
     let check_id id =
       let id_str =
-        Expr.lit_string Expr.Typed.Meta.empty @@ 
-          Fmt.strf "%a" Expr.Typed.pp id
-        
+        Expr.lit_string Expr.Typed.Meta.empty @@ Fmt.strf "%a" Expr.Typed.pp id
       in
       let fname = Internal_fun.to_string FnCheck in
-      Stmt.compiler_fun smeta fname @@ fn :: id_str :: id ::args 
-
+      Stmt.compiler_fun smeta fname @@ (fn :: id_str :: id :: args)
     in
     let type_ = SizedType.to_unsizedtype decl_type in
     for_eigen decl_type check_id
-      Expr.(var  (Typed.Meta.create ~type_ ~loc:smeta ~adlevel ())  decl_id)       
+      Expr.(var (Typed.Meta.create ~type_ ~loc:smeta ~adlevel ()) decl_id)
       smeta
   in
   let args = extract_transform_args decl_trans in
@@ -427,9 +408,12 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   let dt = trans_sizedtype sizedtype in
   let decl_adtype = dadlevel in
   let decl_var =
-    let meta = Expr.Typed.Meta.create ~type_:(SizedType.to_unsizedtype sizedtype) ~adlevel:dadlevel ~loc:smeta () in 
+    let meta =
+      Expr.Typed.Meta.create
+        ~type_:(SizedType.to_unsizedtype sizedtype)
+        ~adlevel:dadlevel ~loc:smeta ()
+    in
     Expr.var meta decl_id
-    
   in
   let decl = Stmt.declare_sized smeta decl_adtype decl_id dt in
   let checks =
@@ -450,16 +434,12 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
        |Ast.Correlation | Ast.Covariance ->
           let decl_id = decl_id ^ "_" ^ Common.Gensym.generate () in
           let st = param_size transform dt in
-          let emeta = 
-            Expr.Fixed.meta decl_var 
-            |> Expr.Typed.Meta.with_type (SizedType.to_unsizedtype st) 
-            
-            
-            in
-          let stmt = 
-            Stmt.declare_sized smeta decl_adtype decl_id st
-          and expr = 
-            Expr.var emeta decl_id  in 
+          let emeta =
+            Expr.Fixed.meta decl_var
+            |> Expr.Typed.Meta.with_type (SizedType.to_unsizedtype st)
+          in
+          let stmt = Stmt.declare_sized smeta decl_adtype decl_id st
+          and expr = Expr.var emeta decl_id in
           Some ((decl_id, expr, st), [stmt])
     in
     match (dconstrain, unconstrained_decl) with
@@ -476,29 +456,29 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     match (dread, rhs) with
     | Some dread, _ ->
         [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
-    | None, Some e -> 
-      [ Stmt.assign smeta decl_id e ]
+    | None, Some e -> [Stmt.assign smeta decl_id e]
     | None, None -> []
   in
   (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
 
-let unwrap_block_or_skip (stmts : Stmt.Located.t  list)=
-  match stmts with 
+let unwrap_block_or_skip (stmts : Stmt.Located.t list) =
+  match stmts with
   | [b] -> (
-    match Stmt.Fixed.pattern b with 
-    | Block _ |  Skip -> b 
-    | _ -> raise_s [%message "Expecting a block or skip, not" (stmts : Stmt.Located.t list)]
-  )
-  | _-> raise_s [%message "Expecting a block or skip, not" (stmts : Stmt.Located.t list)]
-
-  
-      
+    match Stmt.Fixed.pattern b with
+    | Block _ | Skip -> b
+    | _ ->
+        raise_s
+          [%message
+            "Expecting a block or skip, not" (stmts : Stmt.Located.t list)] )
+  | _ ->
+      raise_s
+        [%message
+          "Expecting a block or skip, not" (stmts : Stmt.Located.t list)]
 
 let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
-  
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment
@@ -528,70 +508,47 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
-        [ Stmt.assign smeta 
-          assign_identifier.name  
+      [ Stmt.assign smeta assign_identifier.name
           ~idxs:(List.map ~f:trans_idx assign_indices)
-          rhs 
-        ]
-      
+          rhs ]
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
-    [ Stmt.fun_app smeta (trans_fn_kind fn_kind) name  (trans_exprs args)]
-      
-  | Ast.IncrementLogProb e | Ast.TargetPE e -> 
-    [ Stmt.target_pe smeta @@ trans_expr e]
-      
-
+      [Stmt.fun_app smeta (trans_fn_kind fn_kind) name (trans_exprs args)]
+  | Ast.IncrementLogProb e | Ast.TargetPE e ->
+      [Stmt.target_pe smeta @@ trans_expr e]
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = Stan_math.distribution_name_suffix distribution.name in
       let name =
         distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
       in
       let add_dist : Stmt.Located.t =
-        Stmt.target_pe smeta 
-          Expr.(stanlib_fun 
-            (Typed.Meta.create ~loc:mloc ~adlevel:(Ast.expr_ad_lub (arg::args)) ~type_:UnsizedType.ureal ())
-            name  @@ trans_exprs (arg::args)
-          )
-        
+        Stmt.target_pe smeta
+          Expr.(
+            stanlib_fun
+              (Typed.Meta.create ~loc:mloc
+                 ~adlevel:(Ast.expr_ad_lub (arg :: args))
+                 ~type_:UnsizedType.ureal ())
+              name
+            @@ trans_exprs (arg :: args))
       in
       truncate_dist arg truncation @ [add_dist]
   | Ast.Print ps ->
-      [ Stmt.internal_fun smeta FnPrint @@ trans_printables smeta ps]
-
+      [Stmt.internal_fun smeta FnPrint @@ trans_printables smeta ps]
   | Ast.Reject ps ->
-      [ Stmt.internal_fun smeta FnReject @@ trans_printables smeta ps]
-      
+      [Stmt.internal_fun smeta FnReject @@ trans_printables smeta ps]
   | Ast.IfThenElse (cond, ifb, elseb) ->
-    [ Stmt.if_
-        smeta 
-        (trans_expr cond)
-        (trans_single_stmt ifb)
-        (Option.map ~f:trans_single_stmt elseb)
-    ]
+      [ Stmt.if_ smeta (trans_expr cond) (trans_single_stmt ifb)
+          (Option.map ~f:trans_single_stmt elseb) ]
   | Ast.While (cond, body) ->
-    [ Stmt.while_  smeta 
-        (trans_expr cond)
-        (trans_single_stmt body)
-    ]
-      
+      [Stmt.while_ smeta (trans_expr cond) (trans_single_stmt body)]
   | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
-      let body =
-        trans_single_stmt loop_body 
-        |> Stmt.lift_to_block
-      in
-      [ Stmt.for_ smeta 
-        (loop_variable.Ast.name)
-        (trans_expr lower_bound)
-        (trans_expr upper_bound)
-        body 
-      ]
-      
-
+      let body = trans_single_stmt loop_body |> Stmt.lift_to_block in
+      [ Stmt.for_ smeta loop_variable.Ast.name (trans_expr lower_bound)
+          (trans_expr upper_bound) body ]
   | Ast.ForEach (loopvar, iteratee, body) ->
       let newsym = Common.Gensym.generate () in
-      let emeta = 
-        Expr.Typed.Meta.create ~loc:mloc ~type_:UInt ~adlevel:DataOnly () in 
-      
+      let emeta =
+        Expr.Typed.Meta.create ~loc:mloc ~type_:UInt ~adlevel:DataOnly ()
+      in
       let iteratee = trans_expr iteratee
       and indexing_var = Expr.var emeta newsym in
       let indices =
@@ -602,31 +559,25 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       in
       let decl_type =
         Semantic_check.inferred_unsizedtype_of_indexed_exn
-          ~loc:(Expr.Typed.loc_of iteratee) (Expr.Typed.type_of iteratee) indices
+          ~loc:(Expr.Typed.loc_of iteratee)
+          (Expr.Typed.type_of iteratee)
+          indices
       in
       let decl_loopvar =
-        Stmt.declare_unsized smeta 
+        Stmt.declare_unsized smeta
           (Expr.Typed.adlevel_of iteratee)
-          loopvar.name 
-          decl_type
+          loopvar.name decl_type
       in
       let assign_loopvar =
-        Stmt.assign smeta loopvar.name @@ Expr.indexed emeta iteratee [Expr.index_single indexing_var]
-      in      
-      let body_stmts =
-        trans_single_stmt body |> Stmt.block_statements
-        
-        
+        Stmt.assign smeta loopvar.name
+        @@ Expr.indexed emeta iteratee [Expr.index_single indexing_var]
       in
+      let body_stmts = trans_single_stmt body |> Stmt.block_statements in
       let body =
-        Stmt.block smeta  (decl_loopvar :: assign_loopvar :: body_stmts)
-        
+        Stmt.block smeta (decl_loopvar :: assign_loopvar :: body_stmts)
       in
-      let upper = 
-        Expr.internal_fun emeta FnLength [iteratee]
-      in 
-      [ Stmt.for_ smeta newsym loop_bottom upper body ]
-      
+      let upper = Expr.internal_fun emeta FnLength [iteratee] in
+      [Stmt.for_ smeta newsym loop_bottom upper body]
   | Ast.FunDef _ ->
       raise_s
         [%message
@@ -637,20 +588,18 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       trans_decl declc smeta sizedtype
         (Ast.map_transformation trans_expr transformation)
         identifier initial_value
-  | Ast.Block stmts -> 
-    [ Stmt.block smeta @@  List.concat_map ~f:trans_stmt stmts ]
-
-  | Ast.Return e -> 
-    [ Stmt.return_ smeta @@ trans_expr e]
-  | Ast.ReturnVoid -> [ Stmt.return_void smeta ]
-  | Ast.Break -> [ Stmt.break smeta ]
-  | Ast.Continue -> [Stmt.continue smeta ]
+  | Ast.Block stmts -> [Stmt.block smeta @@ List.concat_map ~f:trans_stmt stmts]
+  | Ast.Return e -> [Stmt.return_ smeta @@ trans_expr e]
+  | Ast.ReturnVoid -> [Stmt.return_void smeta]
+  | Ast.Break -> [Stmt.break smeta]
+  | Ast.Continue -> [Stmt.continue smeta]
   | Ast.Skip -> [Stmt.skip smeta]
 
 let trans_fun_def (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef {returntype; funname; arguments; body} ->
-      { Program.fdrt= (match returntype with Void -> None | ReturnType ut -> Some ut)
+      { Program.fdrt=
+          (match returntype with Void -> None | ReturnType ut -> Some ut)
       ; fdname= funname.name
       ; fdargs= List.map ~f:trans_arg arguments
       ; fdbody=
@@ -664,13 +613,12 @@ let trans_fun_def (ts : Ast.typed_statement) =
         [%message "Found non-function definition statement in function block"]
 
 let gen_write decl_id sizedtype =
-  let bodyfn var =
-    Stmt.internal_fun Location_span.empty FnWriteParam [var] in 
-  let meta = 
-    Expr.Typed.Meta.(empty |> with_type (SizedType.to_unsizedtype sizedtype)) in
-  let expr = 
-    Expr.var meta decl_id in 
-  for_scalar sizedtype bodyfn expr  Location_span.empty
+  let bodyfn var = Stmt.internal_fun Location_span.empty FnWriteParam [var] in
+  let meta =
+    Expr.Typed.Meta.(empty |> with_type (SizedType.to_unsizedtype sizedtype))
+  in
+  let expr = Expr.var meta decl_id in
+  for_scalar sizedtype bodyfn expr Location_span.empty
 
 let gen_writes block_filter vars =
   List.filter_map
@@ -682,19 +630,15 @@ let gen_writes block_filter vars =
     vars
 
 let compiler_if compiler_internal_var stmts =
-  let body = 
+  let body =
     match stmts with
-    | x::[] when Stmt.is_block x -> x 
+    | [x] when Stmt.is_block x -> x
     | _ -> Stmt.block Location_span.empty stmts
   in
-  let cond =
-    Expr.var Expr.Typed.Meta.empty compiler_internal_var in 
-     
+  let cond = Expr.var Expr.Typed.Meta.empty compiler_internal_var in
   match stmts with
   | [] -> []
-  | _ -> 
-    [ Stmt.if_ Location_span.empty cond body None ]
-  
+  | _ -> [Stmt.if_ Location_span.empty cond body None]
 
 let get_block block prog =
   match block with
@@ -703,11 +647,13 @@ let get_block block prog =
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
 let migrate_checks_to_end_of_block stmts =
-  let fn_name = Internal_fun.to_string FnCheck in 
-  let is_check = 
-    Stmt.Fixed.any_pattern 
-      ~pred_first:(fun meta pattern -> Expr.is_fun ~name:fn_name @@ Expr.Fixed.fix meta pattern)
-      ~pred_second:(fun meta pattern -> Stmt.is_fun ~name:fn_name @@ Stmt.Fixed.fix meta pattern)
+  let fn_name = Internal_fun.to_string FnCheck in
+  let is_check =
+    Stmt.Fixed.any_pattern
+      ~pred_first:(fun meta pattern ->
+        Expr.is_fun ~name:fn_name @@ Expr.Fixed.fix meta pattern )
+      ~pred_second:(fun meta pattern ->
+        Stmt.is_fun ~name:fn_name @@ Stmt.Fixed.fix meta pattern )
   in
   let checks, not_checks = List.partition_tf ~f:is_check stmts in
   not_checks @ checks
@@ -798,11 +744,9 @@ let trans_prog filename p : Program.Typed.t =
     @
     match modelb with
     | [] -> []
-    | hd :: _ -> 
-      let meta = Stmt.Fixed.meta hd in 
-      [ Stmt.block meta modelb]
-        
-
+    | hd :: _ ->
+        let meta = Stmt.Fixed.meta hd in
+        [Stmt.block meta modelb]
   in
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars

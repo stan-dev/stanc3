@@ -1,6 +1,6 @@
 module Location = Location
 module Location_span = Location_span
-module Label = Label 
+module Label = Label
 module Operator = Operator
 module Fun_kind = Fun_kind
 module Internal_fun = Internal_fun
@@ -13,7 +13,6 @@ module Stan_math = Stan_math
 module Utils = Utils
 
 (*-- mutable counter for symbol names --*)
-
 
 (** Querying stan_math_signatures for operator signatures by string name *)
 

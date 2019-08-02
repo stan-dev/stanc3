@@ -1,8 +1,7 @@
 open Core_kernel
 open Middle
 
-let rec sizedtype_to_json st :
-    Yojson.Basic.t =
+let rec sizedtype_to_json st : Yojson.Basic.t =
   let emit_cpp_expr e = Fmt.strf "<< %a >>" Expression_gen.pp_expr e in
   match st with
   | SizedType.SInt -> `Assoc [("name", `String "int")]

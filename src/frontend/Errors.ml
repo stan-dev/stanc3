@@ -24,7 +24,6 @@ exception FatalError of string
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
-
 (** Return two lines before and after the specified location. *)
 let print_context {Location.filename; line_num; col_num; _} =
   try
@@ -105,7 +104,8 @@ let%expect_test "location string equivalence 1" =
      'yyy.stan', line 666, column 42, included from\n\
      'zzz.stan', line 24, column 77"
   in
-  print_endline (Location.to_string (Option.value_exn (Location.of_string_opt str))) ;
+  print_endline
+    (Location.to_string (Option.value_exn (Location.of_string_opt str))) ;
   [%expect
     {|
       'xxx.stan', line 245, column 13, included from
@@ -124,14 +124,18 @@ let%expect_test "location string equivalence 2" =
           ; col_num= 214
           ; included_from= None } }
   in
-  print_endline (Location.to_string ( Option.value_exn (Location.of_string_opt (Location.to_string loc)))) ;
+  print_endline
+    (Location.to_string
+       (Option.value_exn (Location.of_string_opt (Location.to_string loc)))) ;
   [%expect
     {|
       'xxx.stan', line 35, column 24, included from
       'yyy.stan', line 345, column 214 |}]
 
 let%expect_test "parse location from string" =
-  let loc = Option.value_exn (Location.of_string_opt "'xxx.stan', line 245, column 13") in
+  let loc =
+    Option.value_exn (Location.of_string_opt "'xxx.stan', line 245, column 13")
+  in
   print_endline loc.filename ;
   print_endline (string_of_int loc.line_num) ;
   print_endline (string_of_int loc.col_num) ;

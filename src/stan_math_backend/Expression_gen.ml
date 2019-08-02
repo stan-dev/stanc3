@@ -18,17 +18,17 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = Expr.Typed.type_of e1  = Expr.Typed.type_of e2
+let types_match e1 e2 = Expr.Typed.type_of e1 = Expr.Typed.type_of e2
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = 
-  match Expr.Typed.type_of e with 
-  | UInt | UReal -> true | _ -> false
-let is_matrix e = 
-  match Expr.Typed.type_of e with UMatrix -> true | _ -> false 
+let is_scalar e =
+  match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
 
-let is_row_vector e = 
+let is_matrix e =
+  match Expr.Typed.type_of e with UMatrix -> true | _ -> false
+
+let is_row_vector e =
   match Expr.Typed.type_of e with URowVector -> true | _ -> false
 
 (* stub *)
@@ -121,7 +121,8 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
     es
 
 and gen_operator_app = function
-  | Operator.Plus -> fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
+  | Operator.Plus ->
+      fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
   | PMinus ->
       fun ppf es ->
         pp_unary ppf
@@ -212,8 +213,9 @@ and gen_distribution_app f =
 and gen_fun_app ppf f es =
   let default ppf es =
     let convert_hof_vars = function
-      | Expr.{Fixed.pattern = Var name; meta= {Typed.Meta.type_= UFun _; _}} as e ->
-          {e with pattern = FunApp (StanLib, name ^ "_functor__", [])}
+      | Expr.({Fixed.pattern= Var name; meta= {Typed.Meta.type_= UFun _; _}})
+        as e ->
+          {e with pattern= FunApp (StanLib, name ^ "_functor__", [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -257,12 +259,9 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | _ :: {Expr.Fixed.pattern = Lit (Str, base_type); _} :: dims ->
+    | _ :: {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
         pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
-    | _ ->
-        raise_s
-          [%message "emit ReadParam with " (es : Expr.Typed.t list)]
-    )
+    | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
@@ -273,9 +272,7 @@ and pp_indexed_simple ppf (vident, idcs) =
     Expr.(binop (Fixed.meta e) Operator.Minus e (lit_int Typed.Meta.empty 1))
   in
   let idx_minus_one = Expr.map_index minus_one in
-  (Expr.pp_indexed pp_expr)
-    ppf
-    (vident, List.map ~f:idx_minus_one idcs)
+  (Expr.pp_indexed pp_expr) ppf (vident, List.map ~f:idx_minus_one idcs)
 
 and pp_expr ppf e =
   match Expr.Fixed.pattern e with
@@ -284,7 +281,8 @@ and pp_expr ppf e =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn (Expr.Typed.type_of e) (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn (Expr.Typed.type_of e) (stan_namespace_qualify f)
+        ppf es
   | FunApp (UserDefined, f, es) -> pp_ordinary_fn ppf f es
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
@@ -298,17 +296,15 @@ and pp_expr ppf e =
   | Indexed (e, idx) -> (
     match Expr.Fixed.pattern e with
     | FunApp (CompilerInternal, f, _)
-      when Internal_fun.of_string_opt f = Some FnReadParam->
+      when Internal_fun.of_string_opt f = Some FnReadParam ->
         pp_expr ppf e
     | FunApp (CompilerInternal, f, _)
-      when Internal_fun.of_string_opt f = Some FnReadData->
+      when Internal_fun.of_string_opt f = Some FnReadData ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
 let dummy_locate e = Expr.(Fixed.fix Typed.Meta.empty e)
-  
-
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 
 let%expect_test "pp_expr1" =

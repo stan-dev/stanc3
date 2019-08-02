@@ -121,7 +121,8 @@ let probability_distribution_name_variants id =
 
 let lub_rt loc rt1 rt2 =
   match (rt1, rt2) with
-  | UnsizedType.ReturnType UReal, UnsizedType.ReturnType UInt | ReturnType UInt, ReturnType UReal ->
+  | UnsizedType.ReturnType UReal, UnsizedType.ReturnType UInt
+   |ReturnType UInt, ReturnType UReal ->
       Validate.ok (UnsizedType.ReturnType UReal)
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
@@ -162,7 +163,8 @@ let semantic_check_assignmentoperator op = Validate.ok op
 let semantic_check_autodifftype at = Validate.ok at
 
 (* Probably nothing to do here *)
-let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t = function
+let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
+  function
   | UFun (l, rt) ->
       (* fold over argument types accumulating errors with initial state
         given by validating the return type *)
@@ -177,7 +179,8 @@ let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t = function
   | UArray ut -> semantic_check_unsizedtype ut
   | _ -> Validate.ok ()
 
-and semantic_check_returntype : UnsizedType.returntype -> unit Validate.t = function
+and semantic_check_returntype : UnsizedType.returntype -> unit Validate.t =
+  function
   | Void -> Validate.ok ()
   | ReturnType ut -> semantic_check_unsizedtype ut
 
@@ -268,8 +271,8 @@ let semantic_check_fn_normal ~loc id es =
         |> error
     | Some (_, UFun (listedtypes, rt))
       when not
-             (UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
-                (get_arg_types es)) ->
+             (UnsizedType.check_compatible_arguments_mod_conv id.name
+                listedtypes (get_arg_types es)) ->
         es
         |> List.map ~f:type_of_expr_typed
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
@@ -432,8 +435,10 @@ let semantic_check_array_expr_type ~loc es =
           List.exists
             ~f:(fun x ->
               not
-                ( UnsizedType.check_of_same_type_mod_array_conv "" x.emeta.type_ ty
-                || UnsizedType.check_of_same_type_mod_array_conv "" ty x.emeta.type_ ) )
+                ( UnsizedType.check_of_same_type_mod_array_conv ""
+                    x.emeta.type_ ty
+                || UnsizedType.check_of_same_type_mod_array_conv "" ty
+                     x.emeta.type_ ) )
             es
         then Semantic_error.mismatched_array_types loc |> error
         else ok ()
@@ -445,7 +450,8 @@ let semantic_check_array_expr ~loc es =
     | [] -> Semantic_error.empty_array loc |> error
     | ty :: _ as elementtypes ->
         let type_ =
-          if List.exists ~f:(fun x -> ty <> x) elementtypes then UnsizedType.UArray UReal
+          if List.exists ~f:(fun x -> ty <> x) elementtypes then
+            UnsizedType.UArray UReal
           else UArray ty
         and ad_level = lub_ad_e es in
         mk_typed_expression ~expr:(ArrayExpr es) ~ad_level ~type_ ~loc |> ok)
@@ -890,7 +896,9 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
     in
     match assop with
     | Assign | ArrowAssign ->
-        if UnsizedType.check_of_same_type_mod_array_conv "" lhs.emeta.type_ rhs.emeta.type_
+        if
+          UnsizedType.check_of_same_type_mod_array_conv "" lhs.emeta.type_
+            rhs.emeta.type_
         then
           mk_typed_statement ~return_type:NoReturnType ~loc
             ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
@@ -999,14 +1007,18 @@ let semantic_check_valid_sampling_pos ~loc ~cf =
 let semantic_check_sampling_distribution ~loc id arguments =
   let name = id.name
   and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function UnsizedType.ReturnType UReal -> true | _ -> false in
+  and is_real_rt = function
+    | UnsizedType.ReturnType UReal -> true
+    | _ -> false
+  in
   let is_reat_rt_for_suffix suffix =
     Stan_math.return_type (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
     | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
-        UnsizedType.check_compatible_arguments_mod_conv name listedtypes argumenttypes
+        UnsizedType.check_compatible_arguments_mod_conv name listedtypes
+          argumenttypes
     | _ -> false
   in
   Validate.(
@@ -1025,14 +1037,18 @@ let semantic_check_sampling_distribution ~loc id arguments =
 let cumulative_density_is_defined id arguments =
   let name = id.name
   and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function UnsizedType.ReturnType UReal -> true | _ -> false in
+  and is_real_rt = function
+    | UnsizedType.ReturnType UReal -> true
+    | _ -> false
+  in
   let is_reat_rt_for_suffix suffix =
     Stan_math.return_type (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
     | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
-        UnsizedType.check_compatible_arguments_mod_conv name listedtypes argumenttypes
+        UnsizedType.check_compatible_arguments_mod_conv name listedtypes
+          argumenttypes
     | _ -> false
   in
   ( is_reat_rt_for_suffix "_lcdf"
@@ -1479,7 +1495,7 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
 
 and semantic_check_pmf_fundef_first_arg_ty ~loc id arg_tys =
   Validate.(
-    (* TODO: I think these kind of functions belong with the type definition *)    
+    (* TODO: I think these kind of functions belong with the type definition *)
     if String.is_suffix id.name ~suffix:"_lpmf" then
       List.hd arg_tys
       |> Option.value_map
