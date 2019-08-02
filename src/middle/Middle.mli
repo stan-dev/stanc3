@@ -7,6 +7,7 @@ module Internal_fun : module type of Internal_fun
 module Expr : module type of Expr
 module UnsizedType : module type of UnsizedType
 module SizedType : module type of SizedType
+module Type : module type of Type
 module Stmt : module type of Stmt
 module Program : module type of Program
 module Stan_math : module type of Stan_math

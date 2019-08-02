@@ -5,22 +5,21 @@ module type S = sig
 
   type 'a t [@@deriving compare, map, fold, hash, sexp]
 
+  include Foldable.S with type 'a t := 'a t
+  include Pretty.S1 with type 'a t := 'a t
+  include Recursive.S1 with type 'a t := 'a t and module Pattern := Pattern
+  include Projectable.S1 with type 'a t := 'a t and module Pattern := Pattern
+
+  (* TODO : move to `Injectable` *)
+  val inj : 'a * 'a t Pattern.t -> 'a t
+  val fix : 'a -> 'a t Pattern.t -> 'a t
+  
   (* TODO : derive *)
   module Make_traversable (A : Applicative.S) :
     Traversable.S with module A := A and type 'a t := 'a t
 
   module Make_traversable2 (A : Applicative.S2) :
     Traversable.S2 with module A := A and type 'a t := 'a t
-
-  include Foldable.S with type 'a t := 'a t
-  include Pretty.S1 with type 'a t := 'a t
-  include Recursive.S1 with type 'a t := 'a t and module Pattern := Pattern
-
-  val proj : 'a t -> 'a * 'a t Pattern.t
-  val pattern : 'a t -> 'a t Pattern.t
-  val meta : 'a t -> 'a
-  val inj : 'a * 'a t Pattern.t -> 'a t
-  val fix : 'a -> 'a t Pattern.t -> 'a t
 end
 
 module type S2 = sig
@@ -28,13 +27,6 @@ module type S2 = sig
   module Pattern : Pattern.S2
 
   type ('a, 'b) t [@@deriving compare, map, fold, hash, sexp]
-
-  (* TODO : derive *)
-  module Make_traversable (A : Applicative.S) :
-    Bitraversable.S with module A := A and type ('a, 'b) t := ('a, 'b) t
-
-  module Make_traversable2 (A : Applicative.S2) :
-    Bitraversable.S2 with module A := A and type ('a, 'b) t := ('a, 'b) t
 
   include Bifoldable.S with type ('a, 'b) t := ('a, 'b) t
   include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -45,11 +37,21 @@ module type S2 = sig
      and module First := First
      and module Pattern := Pattern
 
-  val proj : ('a, 'b) t -> 'b * ('a First.t, ('a, 'b) t) Pattern.t
-  val pattern : ('a, 'b) t -> ('a First.t, ('a, 'b) t) Pattern.t
-  val meta : ('a, 'b) t -> 'b
+  include Projectable.S2 
+    with type ('a, 'b) t := ('a, 'b) t
+     and module First := First
+     and module Pattern := Pattern
+
+  (* TODO : move to `Injectable` *)
   val inj : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
   val fix : 'b -> ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
+
+  (* TODO : derive *)
+  module Make_traversable (A : Applicative.S) :
+    Bitraversable.S with module A := A and type ('a, 'b) t := ('a, 'b) t
+
+  module Make_traversable2 (A : Applicative.S2) :
+    Bitraversable.S2 with module A := A and type ('a, 'b) t := ('a, 'b) t
 end
 
 module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
@@ -66,8 +68,6 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
     Pattern.fold_left ~f:(fold f) ~init:(f init meta) pattern
 
   let proj {meta; pattern} = (meta, pattern)
-  let pattern {pattern; _} = pattern
-  let meta {meta; _} = meta
   let inj (meta, pattern) = {meta; pattern}
   let fix meta pattern = {meta; pattern}
 
@@ -76,14 +76,17 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
                                 let fold = fold
   end)
 
-  include Recursive.Make1 (struct
+  module Basic = struct
     module Pattern = Pattern
 
     type nonrec 'a t = 'a t
 
     let inj = inj
     let proj = proj
-  end)
+  end
+
+  include Recursive.Make1 (Basic)
+  include Projectable.Make1(Basic)
 
   (* TODO : derive *)
   module Make_traversable (A : Applicative.S) :
@@ -122,12 +125,10 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
     Fmt.pf ppf {|%a%a|} g meta (Pattern.pp (First.pp f) (pp f g)) pattern
 
   let proj {meta; pattern} = (meta, pattern)
-  let pattern {pattern; _} = pattern
-  let meta {meta; _} = meta
   let inj (meta, pattern) = {meta; pattern}
   let fix meta pattern = {meta; pattern}
 
-  include Recursive.Make2 (struct
+  module Basic = struct
     type nonrec ('a, 'b) t = ('a, 'b) t
 
     module First = First
@@ -135,7 +136,10 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
 
     let inj = inj
     let proj = proj
-  end)
+  end
+
+  include Recursive.Make2 (Basic)
+  include Projectable.Make2(Basic)
 
   include Bifoldable.Make (struct
     type nonrec ('a, 'b) t = ('a, 'b) t

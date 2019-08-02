@@ -3,6 +3,8 @@ open Core_kernel
 module Basic = struct
   type t = int [@@deriving compare, hash, sexp]
 
+  let init = 0
+  let next label = label + 1
   let pp ppf x = Fmt.int ppf x
 
   include Comparator.Make (struct

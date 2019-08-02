@@ -1,10 +1,6 @@
 open Core_kernel
 open Common
 
-type 'a possiblysizedtype = 'a Mir_pattern.possiblysizedtype =
-  | Sized of 'a SizedType.t
-  | Unsized of UnsizedType.t
-[@@deriving sexp, compare, map, hash, fold]
 
 module Fixed : sig
   module Pattern : sig
@@ -24,7 +20,7 @@ module Fixed : sig
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a possiblysizedtype }
+          ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, compare]
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -91,6 +87,23 @@ module Labelled : sig
   val associate : ?init:associations -> t -> associations
 end
 
+
+val proj : ('a,'b) Fixed.t -> 'b * ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t
+val meta : ('a,'b) Fixed.t -> 'b
+val pattern : ('a,'b) Fixed.t -> ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t
+val inj : 'b * ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t ->('a,'b) Fixed.t 
+val fix : 'b -> ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t ->('a,'b) Fixed.t 
+
+
+val break : 'b -> ('a, 'b) Fixed.t
+val continue : 'b -> ('a, 'b) Fixed.t
+val skip : 'b -> ('a, 'b) Fixed.t
+val target_pe : 'b -> 'a Expr.Fixed.t -> ('a, 'b) Fixed.t
+val return_ : 'b -> 'a Expr.Fixed.t -> ('a, 'b) Fixed.t
+val return_void : 'b -> ('a, 'b) Fixed.t
+val is_return : ('a, 'b) Fixed.t -> bool
+val return_value_opt : ('a, 'b) Fixed.t -> 'a Expr.Fixed.t option
+
 val assign :
      'b
   -> string
@@ -98,22 +111,14 @@ val assign :
   -> 'a Expr.Fixed.t
   -> ('a, 'b) Fixed.t
 
-val target_pe : 'b -> 'a Expr.Fixed.t -> ('a, 'b) Fixed.t
-val break : 'b -> ('a, 'b) Fixed.t
-val continue : 'b -> ('a, 'b) Fixed.t
-val skip : 'b -> ('a, 'b) Fixed.t
-val return_ : 'b -> 'a Expr.Fixed.t -> ('a, 'b) Fixed.t
-val return_void : 'b -> ('a, 'b) Fixed.t
+val is_assignment : ('a, 'b) Fixed.t -> bool
 val block : 'b -> ('a, 'b) Fixed.t list -> ('a, 'b) Fixed.t
+val is_block : ('a, 'b) Fixed.t -> bool
+val lift_to_block : ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t
+val block_statements : ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t list
 val slist : 'b -> ('a, 'b) Fixed.t list -> ('a, 'b) Fixed.t
 val while_ : 'b -> 'a Expr.Fixed.t -> ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t
-
-val if_ :
-     'b
-  -> 'a Expr.Fixed.t
-  -> ('a, 'b) Fixed.t
-  -> ('a, 'b) Fixed.t option
-  -> ('a, 'b) Fixed.t
+val is_while : ('a, 'b) Fixed.t -> bool
 
 val for_ :
      'b
@@ -123,9 +128,18 @@ val for_ :
   -> ('a, 'b) Fixed.t
   -> ('a, 'b) Fixed.t
 
-val mock_for : int -> Located.t -> Located.t
-val sized : 'a SizedType.t -> 'a possiblysizedtype
-val unsized : UnsizedType.t -> 'a possiblysizedtype
+val is_for : ('a, 'b) Fixed.t -> bool
+val body_opt : ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t option
+
+val if_ :
+     'b
+  -> 'a Expr.Fixed.t
+  -> ('a, 'b) Fixed.t
+  -> ('a, 'b) Fixed.t option
+  -> ('a, 'b) Fixed.t
+
+val is_if_else : ('a, 'b) Fixed.t -> bool
+
 
 val declare_sized :
      'b
@@ -137,19 +151,20 @@ val declare_sized :
 val declare_unsized :
   'b -> UnsizedType.autodifftype -> string -> UnsizedType.t -> ('a, 'b) Fixed.t
 
-val fun_app :
+val is_decl : ('a, 'b) Fixed.t -> bool
+
+val nrfun_app :
   'b -> Fun_kind.t -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
 
-val stanlib_fun : 'b -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
-val compiler_fun : 'b -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
+val stanlib_nrfun : 'b -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
 
-val internal_fun :
+val internal_nrfun :
   'b -> Internal_fun.t -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
 
-val user_fun : 'b -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
-val lift_to_block : ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t
-val block_statements : ('a, 'b) Fixed.t -> ('a, 'b) Fixed.t list
-val is_block : ('a, 'b) Fixed.t -> bool
-val is_decl : ('a, 'b) Fixed.t -> bool
-val is_fun : ?name:string -> ('a, 'b) Fixed.t -> bool
-val contains_fun : ?name:string -> ('a, 'b) Fixed.t -> bool
+val user_nrfun : 'b -> string -> 'a Expr.Fixed.t list -> ('a, 'b) Fixed.t
+val is_nrfun : ?kind:Fun_kind.t -> ?name:string -> ('a, 'b) Fixed.t -> bool
+val is_internal_nrfun : ?fn:Internal_fun.t -> ('a, 'b) Fixed.t -> bool
+val contains_fun : ?kind:Fun_kind.t -> ?name:string -> ('a, 'b) Fixed.t -> bool
+val contains_operator : ?op:Operator.t -> ('a, 'b) Fixed.t -> bool
+val contains_internal_fun : ?fn:Internal_fun.t -> ('a, 'b) Fixed.t -> bool
+

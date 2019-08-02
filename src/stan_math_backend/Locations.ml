@@ -1,51 +1,73 @@
 open Core_kernel
 open Middle
+open Common
+open State.Cps
+
+
+module Numbered = struct
+  module Meta = struct
+    type t = int [@@deriving sexp, hash, compare]    
+
+    let pp _ _ = ()
+
+    let init = 0
+    let next meta = meta + 1
+  end
+  include Specialized.Make2 (Stmt.Fixed) (Expr.Typed) (Meta)
+end
+
+
+type typed_prog_num =  
+  (Expr.Typed.t, Numbered.t) Program.t [@@deriving sexp]
+
+type state_t = Location_span.t list
 
 let no_span_num = 0
 
-let prepare_prog prog =
-  let labelled = Program.Labelled.label ~init:1 prog in
-  let {Stmt.Labelled.stmts; _} = Program.Labelled.associate labelled in
-  let locations =
-    Label.Map.(
-      add_exn ~key:no_span_num ~data:Location_span.empty
-      @@ map stmts ~f:Stmt.Labelled.loc_of)
-  in
-  (labelled, locations)
+module Traversable_state = Program.Make_traversable2 (State)
+module Traversable_stmt_state = Stmt.Fixed.Make_traversable2 (State)
+module Traversable_expr_state = Expr.Fixed.Make_traversable2 (State)
 
-(* let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
-  let module LocSp = struct
-    type t = location_span
 
-    let compare = compare_location_span
-    let hash = hash_location_span
-    let sexp_of_t = sexp_of_location_span
-  end in
-  let label_to_location = Int.Table.create () in
-  let location_to_label = Hashtbl.create (module LocSp) in
 
-  Hashtbl.set label_to_location ~key:no_span_num ~data:no_span ;
-  Hashtbl.set location_to_label ~key:no_span ~data:no_span_num ;
+let number ~init (prog: Program.Typed.t)   =    
+    
+    let g loc = State.( 
+      get >>= fun (label,label_to_loc,loc_to_label) ->
+      match Location_span.Map.find loc_to_label loc with 
+      | Some lbl -> 
+          return lbl 
+      | _ -> 
+          let loc_to_label' = Location_span.Map.add_exn loc_to_label ~key:loc ~data:label 
+          and label_to_loc' = Int.Map.add_exn label_to_loc ~key:label ~data:loc 
+          and next_label = Numbered.Meta.next label in 
+          put (next_label,label_to_loc',loc_to_label') >>= fun _ -> 
+          return label
+    )
+      
+    in
+    Traversable_state.traverse prog
+      ~f:(Traversable_expr_state.traverse ~f:State.return)
+      ~g:(Traversable_stmt_state.traverse ~f:State.return ~g)
+      |> State.run_state ~init 
+
+let prepare_prog (mir: Program.Typed.t ) = 
+  let label_to_loc = 
+    Int.(Map.add_exn ~key:Numbered.Meta.init ~data:Location_span.empty Map.empty)
+  and loc_to_label = 
+    Location_span.(Map.add_exn ~key:empty ~data:Numbered.Meta.init Map.empty) in
   
-  let rec number_locations_stmt ({stmt; smeta} : stmt_loc) : stmt_num =
-    let stmt = map_statement (fun x -> x) number_locations_stmt stmt in
-    match Hashtbl.find location_to_label smeta with
-    | Some i -> {stmt; smeta= i}
-    | None ->
-        let new_label = Hashtbl.length label_to_location + 1 in
-        Hashtbl.set label_to_location ~key:new_label ~data:smeta ;
-        Hashtbl.set location_to_label ~key:smeta ~data:new_label ;
-        {stmt; smeta= new_label}
-  in
-
-  let mir = map_prog (fun x -> x) number_locations_stmt mir in
+  let (prog,(_,label_to_loc,_)) = 
+    number ~init:(no_span_num + 1,label_to_loc,loc_to_label) mir
+  in 
   let location_list =
-    List.map ~f:snd
-      (List.sort
-         ~compare:(fun x y -> compare_int (fst x) (fst y))
-         (Hashtbl.to_alist label_to_location))
+    Map.to_alist label_to_loc
+    |> List.sort ~compare:(fun x y -> compare_int (fst x) (fst y))
+    |> List.map ~f:snd
   in
-  (mir, location_list) *)
+  (prog , location_list)
+
+
 
 let pp_globals ppf location_list =
   let location_list =
@@ -62,3 +84,6 @@ let pp_globals ppf location_list =
 let pp_smeta ppf location_num =
   if location_num = no_span_num then ()
   else Fmt.pf ppf "current_statement__ = %d;@;" location_num
+
+
+

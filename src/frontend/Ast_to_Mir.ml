@@ -46,25 +46,21 @@ and trans_expr {Ast.expr; Ast.emeta} =
       Expr.fun_app meta (trans_fn_kind fn_kind) name (trans_exprs args)
   | GetLP | GetTarget -> Expr.stanlib_fun meta "target" []
   | ArrayExpr eles ->
-      Expr.compiler_fun meta
-        (Internal_fun.to_string FnMakeArray)
-        (trans_exprs eles)
+      Expr.internal_fun meta  FnMakeArray @@ trans_exprs eles
   | RowVectorExpr eles ->
-      Expr.compiler_fun meta
-        (Internal_fun.to_string FnMakeRowVec)
-        (trans_exprs eles)
+      Expr.internal_fun meta FnMakeRowVec @@ trans_exprs eles
   | Indexed (lhs, indices) ->
       Expr.indexed meta (trans_expr lhs) (List.map ~f:trans_idx indices)
 
 and trans_idx = function
-  | Ast.All -> Expr.index_all
-  | Ast.Upfrom e -> Expr.index_upfrom @@ trans_expr e
-  | Ast.Downfrom e -> Expr.index_between loop_bottom (trans_expr e)
-  | Ast.Between (lb, ub) -> Expr.index_between (trans_expr lb) (trans_expr ub)
+  | Ast.All -> Expr.All
+  | Ast.Upfrom e -> Expr.Upfrom ( trans_expr e )
+  | Ast.Downfrom e -> Expr.Between (loop_bottom , trans_expr e)
+  | Ast.Between (lb, ub) -> Expr.Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.emeta.type_ with
-    | UInt -> Expr.index_single @@ trans_expr e
-    | UArray _ -> Expr.index_multi @@ trans_expr e
+    | UInt -> Expr.Single(trans_expr e)
+    | UArray _ -> Expr.MultiIndex ( trans_expr e )
     | _ ->
         raise_s
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
@@ -84,9 +80,9 @@ let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
   let trunc cond_op (x : Ast.typed_expression) y =
-    let meta = x.Ast.emeta.loc in
+    let emeta = x.Ast.emeta.loc in
     Stmt.(
-      if_ meta (op_to_funapp cond_op [ast_obs; x]) (target_pe meta neg_inf) y)
+      if_ emeta (op_to_funapp cond_op [ast_obs; x]) (target_pe emeta neg_inf) y)
   in
   match t with
   | Ast.NoTruncate -> []
@@ -182,12 +178,10 @@ let rec for_eigen st bodyfn var smeta =
 type ioaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
-let constrainaction_fname c =
-  Internal_fun.to_string
-    ( match c with
-    | Check -> FnCheck
-    | Constrain -> FnConstrain
-    | Unconstrain -> FnUnconstrain )
+let constrainaction_fn = function
+  | Check -> Internal_fun.FnCheck
+  | Constrain -> FnConstrain
+  | Unconstrain -> FnUnconstrain
 
 type decl_context =
   { dread: ioaction option
@@ -361,7 +355,7 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
   | None | Some "" -> []
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
-      let fname = constrainaction_fname dc in
+      let fn = constrainaction_fn dc in
       let extra_args =
         match dconstrain with
         | Some Constrain -> extra_constraint_args st t
@@ -373,7 +367,7 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
       in
       let constrainvar var =
         let meta = Expr.Fixed.meta var in
-        Expr.compiler_fun meta fname @@ args var
+        Expr.internal_fun meta fn @@ args var
       in
       [ (constraint_forl t) st
           (assign_indexed decl_id smeta constrainvar)
@@ -385,8 +379,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       let id_str =
         Expr.lit_string Expr.Typed.Meta.empty @@ Fmt.strf "%a" Expr.Typed.pp id
       in
-      let fname = Internal_fun.to_string FnCheck in
-      Stmt.compiler_fun smeta fname @@ (fn :: id_str :: id :: args)
+      Stmt.internal_nrfun smeta FnCheck @@ (fn :: id_str :: id :: args)
     in
     let type_ = SizedType.to_unsizedtype decl_type in
     for_eigen decl_type check_id
@@ -512,7 +505,8 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
           ~idxs:(List.map ~f:trans_idx assign_indices)
           rhs ]
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
-      [Stmt.fun_app smeta (trans_fn_kind fn_kind) name (trans_exprs args)]
+      [Stmt.nrfun_app smeta (trans_fn_kind fn_kind) name (trans_exprs args)]
+
   | Ast.IncrementLogProb e | Ast.TargetPE e ->
       [Stmt.target_pe smeta @@ trans_expr e]
   | Ast.Tilde {arg; distribution; args; truncation} ->
@@ -532,9 +526,9 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       in
       truncate_dist arg truncation @ [add_dist]
   | Ast.Print ps ->
-      [Stmt.internal_fun smeta FnPrint @@ trans_printables smeta ps]
+      [Stmt.internal_nrfun smeta FnPrint @@ trans_printables smeta ps]
   | Ast.Reject ps ->
-      [Stmt.internal_fun smeta FnReject @@ trans_printables smeta ps]
+      [Stmt.internal_nrfun smeta FnReject @@ trans_printables smeta ps]
   | Ast.IfThenElse (cond, ifb, elseb) ->
       [ Stmt.if_ smeta (trans_expr cond) (trans_single_stmt ifb)
           (Option.map ~f:trans_single_stmt elseb) ]
@@ -570,7 +564,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       in
       let assign_loopvar =
         Stmt.assign smeta loopvar.name
-        @@ Expr.indexed emeta iteratee [Expr.index_single indexing_var]
+        @@ Expr.index_single emeta iteratee ~idx:indexing_var
       in
       let body_stmts = trans_single_stmt body |> Stmt.block_statements in
       let body =
@@ -613,7 +607,7 @@ let trans_fun_def (ts : Ast.typed_statement) =
         [%message "Found non-function definition statement in function block"]
 
 let gen_write decl_id sizedtype =
-  let bodyfn var = Stmt.internal_fun Location_span.empty FnWriteParam [var] in
+  let bodyfn var = Stmt.internal_nrfun Location_span.empty FnWriteParam [var] in
   let meta =
     Expr.Typed.Meta.(empty |> with_type (SizedType.to_unsizedtype sizedtype))
   in
@@ -646,16 +640,10 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
-let migrate_checks_to_end_of_block stmts =
-  let fn_name = Internal_fun.to_string FnCheck in
-  let is_check =
-    Stmt.Fixed.any_pattern
-      ~pred_first:(fun meta pattern ->
-        Expr.is_fun ~name:fn_name @@ Expr.Fixed.fix meta pattern )
-      ~pred_second:(fun meta pattern ->
-        Stmt.is_fun ~name:fn_name @@ Stmt.Fixed.fix meta pattern )
-  in
-  let checks, not_checks = List.partition_tf ~f:is_check stmts in
+let migrate_checks_to_end_of_block stmts =    
+  let checks, not_checks = 
+    List.partition_tf stmts 
+      ~f:(Stmt.contains_internal_fun ~fn:FnCheck) in
   not_checks @ checks
 
 let trans_prog filename p : Program.Typed.t =

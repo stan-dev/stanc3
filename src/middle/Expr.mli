@@ -97,29 +97,69 @@ module Labelled : sig
   val associate_index : t Label.Map.t -> t index -> t Label.Map.t
 end
 
+val proj : 'a Fixed.t -> 'a * 'a Fixed.t Fixed.Pattern.t 
+val meta : 'a Fixed.t -> 'a
+val pattern : 'a Fixed.t -> 'a Fixed.t Fixed.Pattern.t 
+val inj : 'a * 'a Fixed.t Fixed.Pattern.t  -> 'a Fixed.t 
+val fix : 'a -> 'a Fixed.t Fixed.Pattern.t  -> 'a Fixed.t 
+
+
+
 val var : 'a -> string -> 'a Fixed.t
 val lit : 'a -> litType -> string -> 'a Fixed.t
 val lit_int : 'a -> int -> 'a Fixed.t
 val lit_real : 'a -> float -> 'a Fixed.t
 val lit_string : 'a -> string -> 'a Fixed.t
-val if_ : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val is_lit : ?type_:litType -> 'a Fixed.t -> bool
 val and_ : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
 val or_ : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
-val index_all : 'a Fixed.t index
-val index_single : 'a Fixed.t -> 'a Fixed.t index
-val index_multi : 'a Fixed.t -> 'a Fixed.t index
-val index_upfrom : 'a Fixed.t -> 'a Fixed.t index
-val index_between : 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t index
 val indexed : 'a -> 'a Fixed.t -> 'a Fixed.t index list -> 'a Fixed.t
-val index_bounds : 'a Fixed.t index -> 'a Fixed.t list
+val index_all : 'a -> 'a Fixed.t -> 'a Fixed.t
+val index_single : 'a -> 'a Fixed.t -> idx:'a Fixed.t -> 'a Fixed.t
+val index_multi : 'a -> 'a Fixed.t -> idx:'a Fixed.t -> 'a Fixed.t
+val index_upfrom : 'a -> 'a Fixed.t -> idx:'a Fixed.t -> 'a Fixed.t
+
+val index_between :
+  'a -> 'a Fixed.t -> lower:'a Fixed.t -> upper:'a Fixed.t -> 'a Fixed.t
+
+val index_bounds : 'a index -> 'a list
 val indices_of : 'a Fixed.t -> 'a Fixed.t index list
+val if_ : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
 val fun_app : 'a -> Fun_kind.t -> string -> 'a Fixed.t list -> 'a Fixed.t
-val compiler_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val internal_fun : 'a -> Internal_fun.t -> 'a Fixed.t list -> 'a Fixed.t
 val user_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val stanlib_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
-val is_fun : ?name:string -> 'a Fixed.t -> bool
-val is_lit_string : 'a Fixed.t -> bool
+val is_fun : ?kind:Fun_kind.t -> ?name:string -> 'a Fixed.t -> bool
+val is_internal_fun : ?fn:Internal_fun.t -> 'a Fixed.t -> bool
+val is_operator : ?op:Operator.t -> 'a Fixed.t -> bool
+
+val contains_fun_algebra :
+  ?kind:Fun_kind.t -> ?name:string -> ('a, bool) Fixed.algebra
+
+val contains_fun : ?kind:Fun_kind.t -> ?name:string -> 'a Fixed.t -> bool
+val contains_operator : ?op:Operator.t -> 'a Fixed.t -> bool
+val contains_internal_fun : ?fn:Internal_fun.t -> 'a Fixed.t -> bool
 val binop : 'a -> Operator.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val plus : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val minus : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val times : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val divide : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val pow : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val modulo : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val eq : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val neq : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val gt : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val gteq : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val lt : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val lteq : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val l_and : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val l_or : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val unop : 'a -> Operator.t -> 'a Fixed.t -> 'a Fixed.t
+val transpose : 'a -> 'a Fixed.t -> 'a Fixed.t
+val l_not : 'a -> 'a Fixed.t -> 'a Fixed.t
+val negate : 'a -> 'a Fixed.t -> 'a Fixed.t
 val incr : 'a Fixed.t -> 'a Fixed.t
+val decr : 'a Fixed.t -> 'a Fixed.t
+val zero : Typed.t
 val loop_bottom : Typed.t
+

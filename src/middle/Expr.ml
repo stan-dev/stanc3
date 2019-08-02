@@ -48,7 +48,7 @@ module Fixed = struct
   include Fix.Make (Pattern)
 end
 
-(** Fixed-point expressions specialized to have no meta data *)
+(** Expressions without meta data *)
 module NoMeta = struct
   module Meta = struct
     type t = unit [@@deriving compare, sexp, hash]
@@ -58,9 +58,10 @@ module NoMeta = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let remove_meta x = Fixed.map (fun _ -> ()) x
+  let remove_meta x = Fixed.map (Fn.const ()) x
 end
 
+(** Expressions with associated location and type *)
 module Typed = struct
   module Meta = struct
     type t =
@@ -87,6 +88,7 @@ module Typed = struct
   let adlevel_of x = Meta.adlevel @@ Fixed.meta x
 end
 
+(** Expressions with associated location, type and label *)
 module Labelled = struct
   module Meta = struct
     type t =
@@ -112,20 +114,24 @@ module Labelled = struct
 
   module Traversable_state = Fixed.Make_traversable2 (State)
 
-  let label ?(init = 0) (expr : Typed.t) : t =
+  (** Statefully traverse a typed expression adding unique labels *)
+  let label ?(init = Label.init) (expr : Typed.t) : t =
     let f {Typed.Meta.adlevel; type_; loc} =
       State.(
         get
         >>= fun label ->
-        put (label + 1)
+        put (Label.next label)
         >>= fun _ -> return @@ Meta.create ~label ~adlevel ~type_ ~loc ())
     in
     Traversable_state.traverse ~f expr |> State.run_state ~init |> fst
 
+  (** Build a map from expression labels to expressions *)
   let rec associate ?init:(assocs = Label.Map.empty) (expr : t) =
-    Label.Map.add_exn
-      (associate_pattern assocs @@ Fixed.pattern expr)
-      ~key:(label_of expr) ~data:expr
+    let assocs_result : t Label.Map.t Map_intf.Or_duplicate.t =
+      Label.Map.add ~key:(label_of expr) ~data:expr
+        (associate_pattern assocs @@ Fixed.pattern expr)
+    in
+    match assocs_result with `Ok x -> x | _ -> assocs
 
   and associate_pattern assocs = function
     | Mir_pattern.Lit _ | Var _ -> assocs
@@ -144,25 +150,40 @@ module Labelled = struct
     | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
 end
 
-(* == Helpers ============================================================= *)
+(* == Helpers =============================================================== *)
+let fix = Fixed.fix 
+let inj = Fixed.inj
+let proj = Fixed.proj 
+let meta = Fixed.meta 
+let pattern = Fixed.pattern
 
 let var meta name = Fixed.fix meta @@ Var name
+
+(* == Literals ============================================================== *)
+
 let lit meta lit_type str_value = Fixed.fix meta @@ Lit (lit_type, str_value)
 let lit_int meta value = lit meta Int @@ string_of_int value
 let lit_real meta value = lit meta Real @@ string_of_float value
 let lit_string meta value = lit meta Str value
 
-let if_ meta pred true_expr false_expr =
-  Fixed.fix meta @@ TernaryIf (pred, true_expr, false_expr)
+let is_lit ?type_ expr =
+  match Fixed.pattern expr with
+  | Lit (lit_ty, _) ->
+      Option.value_map ~default:true ~f:(fun ty -> ty = lit_ty) type_
+  | _ -> false
+
+(* == Logical =============================================================== *)
 
 let and_ meta e1 e2 = Fixed.fix meta @@ EAnd (e1, e2)
 let or_ meta e1 e2 = Fixed.fix meta @@ EOr (e1, e2)
-let index_all = All
-let index_single e = Single e
-let index_multi e = MultiIndex e
-let index_upfrom e = Upfrom e
-let index_between e1 e2 = Between (e1, e2)
+
+(* == Indexed expressions =================================================== *)
 let indexed meta e idxs = Fixed.fix meta @@ Indexed (e, idxs)
+let index_all meta e = indexed meta e [All]
+let index_single meta e ~idx = indexed meta e [Single idx]
+let index_multi meta e ~idx = indexed meta e [MultiIndex idx]
+let index_upfrom meta e ~idx = indexed meta e [Upfrom idx]
+let index_between meta e ~lower ~upper = indexed meta e [Between (lower, upper)]
 
 let index_bounds = function
   | All -> []
@@ -172,31 +193,99 @@ let index_bounds = function
 let indices_of expr =
   match Fixed.pattern expr with Indexed (_, indices) -> indices | _ -> []
 
+(* == Ternary If ============================================================ *)
+let if_ meta pred e_true e_false =
+  Fixed.fix meta @@ TernaryIf (pred, e_true, e_false)
+
+(* == Function application ================================================== *)
+
 let fun_app meta fun_kind name args =
   Fixed.fix meta @@ FunApp (fun_kind, name, args)
 
-let compiler_fun meta name args =
-  Fixed.fix meta @@ FunApp (CompilerInternal, name, args)
-
 let internal_fun meta fn args =
-  compiler_fun meta (Internal_fun.to_string fn) args
+  fun_app meta CompilerInternal (Internal_fun.to_string fn) args
 
-let user_fun meta name args = Fixed.fix meta @@ FunApp (UserDefined, name, args)
 let stanlib_fun meta name args = Fixed.fix meta @@ FunApp (StanLib, name, args)
+let user_fun meta name args = Fixed.fix meta @@ FunApp (UserDefined, name, args)
+
+let is_fun ?kind ?name expr =
+  match Fixed.pattern expr with
+  | FunApp (fun_kind, fun_name, _) ->
+      let same_name =
+        Option.value_map ~default:true ~f:(fun name -> name = fun_name) name
+      and same_kind =
+        Option.value_map ~default:true ~f:(fun kind -> kind = fun_kind) kind
+      in
+      same_name && same_kind
+  | _ -> false
+
+let is_internal_fun ?fn expr =
+  is_fun expr ~kind:CompilerInternal
+    ?name:(Option.map ~f:Internal_fun.to_string fn)
+
+let is_operator ?op expr =
+  is_fun expr ~kind:StanLib ?name:(Option.map ~f:Operator.to_string op)
+
+let contains_fun_algebra ?kind ?name = function
+  | _, Fixed.Pattern.FunApp (fun_kind, fun_name, args) ->
+      Option.(
+        value_map ~default:true ~f:(fun name -> name = fun_name) name
+        && value_map ~default:true ~f:(fun kind -> kind = fun_kind) kind)
+      || List.exists ~f:Fn.id args
+  | _, Var _ | _, Lit _ -> false
+  | _, TernaryIf (e1, e2, e3) -> e1 || e2 || e3
+  | _, EAnd (e1, e2) | _, EOr (e1, e2) -> e1 || e2
+  | _, Indexed (e, idxs) ->
+      e
+      || List.exists idxs ~f:(fun idx ->
+             List.exists ~f:Fn.id @@ index_bounds idx )
+
+let contains_fun ?kind ?name expr =
+  Fixed.cata (contains_fun_algebra ?kind ?name) expr
+
+let contains_operator ?op expr =
+  contains_fun ~kind:StanLib ?name:(Option.map ~f:Operator.to_string op) expr
+
+let contains_internal_fun ?fn expr =
+  contains_fun ~kind:StanLib
+    ?name:(Option.map ~f:Internal_fun.to_string fn)
+    expr
+
+(* == Binary operations ===================================================== *)
 let binop meta op a b = stanlib_fun meta (Operator.to_string op) [a; b]
+let plus meta a b = binop meta Operator.Plus a b
+let minus meta a b = binop meta Operator.Minus a b
+let times meta a b = binop meta Operator.Times a b
+let divide meta a b = binop meta Operator.Divide a b
+let pow meta a b = binop meta Operator.Pow a b
+let modulo meta a b = binop meta Operator.Modulo a b
+let eq meta a b = binop meta Operator.Equals a b
+let neq meta a b = binop meta Operator.NEquals a b
+let gt meta a b = binop meta Operator.Greater a b
+let gteq meta a b = binop meta Operator.Geq a b
+let lt meta a b = binop meta Operator.Less a b
+let lteq meta a b = binop meta Operator.Leq a b
+let l_and meta a b = binop meta Operator.And a b
+let l_or meta a b = binop meta Operator.Or a b
+
+(* == Unary operations ====================================================== *)
+
+let unop meta op e = stanlib_fun meta (Operator.to_string op) [e]
+let transpose meta e = unop meta Operator.Transpose e
+let l_not meta e = unop meta Operator.PNot e
+let negate meta e = unop meta Operator.PMinus e
+
+(* == General derived helpers =============================================== *)
 
 let incr expr =
   let meta = Fixed.meta expr in
   binop meta Operator.Plus expr @@ lit_int meta 1
 
-let is_fun ?name {Fixed.pattern; _} =
-  match pattern with
-  | Fixed.Pattern.FunApp (_, fun_name, _) ->
-      Option.map ~f:(fun name -> name = fun_name) name
-      |> Option.value ~default:true
-  | _ -> false
+let decr expr =
+  let meta = Fixed.meta expr in
+  binop meta Operator.Minus expr @@ lit_int meta 1
 
-let is_lit_string {Fixed.pattern; _} =
-  match pattern with Fixed.Pattern.Lit (Str, _) -> true | _ -> false
+(* == Constants ============================================================= *)
 
+let zero = lit_int Typed.Meta.empty 0
 let loop_bottom = lit_int Typed.Meta.empty 1

@@ -37,3 +37,4 @@ val check_compatible_arguments_mod_conv :
 
 val is_real_type : t -> bool
 val is_int_type : t -> bool
+val is_fun_type  : t -> bool

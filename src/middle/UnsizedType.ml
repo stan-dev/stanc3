@@ -72,3 +72,5 @@ let is_real_type = function
   | _ -> false
 
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
+
+let is_fun_type = function UFun _ -> true | _ -> false

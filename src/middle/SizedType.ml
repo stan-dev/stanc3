@@ -18,6 +18,15 @@ let srowvector e = SRowVector e
 let smatrix erow ecol = SMatrix (erow, ecol)
 let sarray sty e = SArray (sty, e)
 
+let collect_exprs st =
+  let rec aux accu = function
+    | SInt | SReal -> List.rev accu
+    | SVector e | SRowVector e -> List.rev @@ (e :: accu)
+    | SMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
+    | SArray (inner, e) -> aux (e :: accu) inner
+  in
+  aux [] st
+
 let rec to_unsizedtype = function
   | SInt -> UnsizedType.UInt
   | SReal -> UReal
