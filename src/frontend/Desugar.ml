@@ -1,10 +1,6 @@
 open Core_kernel
 open Ast
 
-(* XXX Add a section that collapses nested Indexed nodes.
-       See https://github.com/stan-dev/stanc3/pull/212#issuecomment-514522092
-*)
-
 let is_multi_index = function
   | Single {Ast.emeta= {Ast.type_= UArray _; _}; _}
    |Downfrom _ | Upfrom _ | Between _ | All ->
@@ -26,6 +22,7 @@ let remove_trailing_alls_expr = function
       Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
+(* TODO: same thing for Assignments *)
 let rec desugar_index_expr = function
   | Indexed
       ( { expr=
@@ -38,6 +35,8 @@ let rec desugar_index_expr = function
     when List.exists ~f:is_multi_index inner_indices -> (
     match List.split_while ~f:is_single_index inner_indices with
     | inner_singles, Single first_multi :: inner_tl ->
+        (* foo [arr1, ..., arrN] [i1, ..., iN] ->
+         foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
         desugar_index_expr
           (Indexed
              ( { expr=
@@ -51,6 +50,8 @@ let rec desugar_index_expr = function
                ; emeta }
              , outer_tl ))
     | inner_singles, Downfrom _ :: inner_tl | inner_singles, All :: inner_tl ->
+        (* v[:x][i] -> v[i] *)
+        (* v[:][i] -> v[i] *)
         (* XXX generate check *)
         desugar_index_expr
           (Indexed
@@ -58,6 +59,7 @@ let rec desugar_index_expr = function
              , outer_tl ))
     | inner_singles, Between (bot, _) :: inner_tl
      |inner_singles, Upfrom bot :: inner_tl ->
+        (* v[x:y][z] -> v[x+z-1] *)
         (* XXX generate check *)
         desugar_index_expr
           (Indexed
@@ -78,22 +80,6 @@ let rec desugar_index_expr = function
             "We already checked for a multi"
               (inner_singles : typed_expression index list)
               (multis : typed_expression index list)] )
-  (* v[arr, 2] -> v[arr[2]] *)
-  (* foo [arr1, ..., arrN] [i1, ..., iN] -> foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
-  (* v[2:3][2] = v[3:2][1] -> v[3] *)
-  (* v[x:y][z] -> v[x+z-1] *)
-  
-  (*
-https://github.com/stan-dev/stanc3/pull/212
-
-v[2][4] -> v[2, 4]
-v[x][3:2] -> v[x][{3, 2}]
-
-m[2][3] -> m[2, 3]
-m[2:4][1:2] -> m[2:3]
-
-And then don't forget to do some of these for assignment
-   *)
   | e -> e
 
 let rec map_statement_all_exprs expr_f {stmt; smeta} =
