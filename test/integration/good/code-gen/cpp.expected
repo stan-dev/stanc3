@@ -3250,6 +3250,51 @@ class mother_model : public model_base_crtp<mother_model> {
         check_cholesky_factor(function__, "d_cfcov_33_ar[sym1__]",
                               rvalue(d_cfcov_33_ar, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
       }
+      current_statement__ = 192;
+      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 192;
+        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 192;
+          current_statement__ = 192;
+          check_greater_or_equal(function__, "td_ar_mat[sym1__, sym2__]",
+                                 rvalue(td_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                                 0);}}
+      current_statement__ = 192;
+      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 192;
+        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 192;
+          current_statement__ = 192;
+          check_less_or_equal(function__, "td_ar_mat[sym1__, sym2__]",
+                              rvalue(td_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                              1);}}
+      current_statement__ = 193;
+      current_statement__ = 193;
+      check_simplex(function__, "td_simplex", td_simplex);
+      current_statement__ = 194;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 194;
+        current_statement__ = 194;
+        check_simplex(function__, "td_1d_simplex[sym1__]",
+                      td_1d_simplex[(sym1__ - 1)]);}
+      current_statement__ = 195;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 195;
+        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
+          current_statement__ = 195;
+          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+            current_statement__ = 195;
+            current_statement__ = 195;
+            check_simplex(function__,
+                          "td_3d_simplex[sym1__, sym2__, sym3__]",
+                          td_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);
+          }}}
+      current_statement__ = 196;
+      current_statement__ = 196;
+      check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
+      current_statement__ = 197;
+      current_statement__ = 197;
+      check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);

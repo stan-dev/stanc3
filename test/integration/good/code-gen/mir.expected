@@ -4507,6 +4507,257 @@
                 (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (For (loopvar sym1__)
+      (lower
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (upper
+       ((expr (Lit Int 4))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (body
+       ((stmt
+         (Block
+          (((stmt
+             (For (loopvar sym2__)
+              (lower
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (upper
+               ((expr (Lit Int 5))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (body
+               ((stmt
+                 (Block
+                  (((stmt
+                     (NRFunApp CompilerInternal FnCheck__
+                      (((expr (Lit Str greater_or_equal))
+                        (emeta
+                         ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                       ((expr (Lit Str "td_ar_mat[sym1__, sym2__]"))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                       ((expr
+                         (Indexed
+                          ((expr (Var td_ar_mat))
+                           (emeta
+                            ((mtype (UArray (UArray UMatrix)))
+                             (mloc <opaque>) (madlevel DataOnly))))
+                          ((Single
+                            ((expr (Var sym1__))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (Single
+                            ((expr (Var sym2__))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly))))))))
+                        (emeta
+                         ((mtype UMatrix) (mloc <opaque>)
+                          (madlevel DataOnly))))
+                       ((expr (Lit Int 0))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                    (smeta <opaque>)))))
+                (smeta <opaque>)))))
+            (smeta <opaque>)))))
+        (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (For (loopvar sym1__)
+      (lower
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (upper
+       ((expr (Lit Int 4))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (body
+       ((stmt
+         (Block
+          (((stmt
+             (For (loopvar sym2__)
+              (lower
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (upper
+               ((expr (Lit Int 5))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (body
+               ((stmt
+                 (Block
+                  (((stmt
+                     (NRFunApp CompilerInternal FnCheck__
+                      (((expr (Lit Str less_or_equal))
+                        (emeta
+                         ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                       ((expr (Lit Str "td_ar_mat[sym1__, sym2__]"))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                       ((expr
+                         (Indexed
+                          ((expr (Var td_ar_mat))
+                           (emeta
+                            ((mtype (UArray (UArray UMatrix)))
+                             (mloc <opaque>) (madlevel DataOnly))))
+                          ((Single
+                            ((expr (Var sym1__))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (Single
+                            ((expr (Var sym2__))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly))))))))
+                        (emeta
+                         ((mtype UMatrix) (mloc <opaque>)
+                          (madlevel DataOnly))))
+                       ((expr (Lit Int 1))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                    (smeta <opaque>)))))
+                (smeta <opaque>)))))
+            (smeta <opaque>)))))
+        (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (NRFunApp CompilerInternal FnCheck__
+      (((expr (Lit Str simplex))
+        (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Str td_simplex))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Var td_simplex))
+        (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+    (smeta <opaque>))
+   ((stmt
+     (For (loopvar sym1__)
+      (lower
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (upper
+       ((expr (Var N))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (body
+       ((stmt
+         (Block
+          (((stmt
+             (NRFunApp CompilerInternal FnCheck__
+              (((expr (Lit Str simplex))
+                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+               ((expr (Lit Str td_1d_simplex[sym1__]))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+               ((expr
+                 (Indexed
+                  ((expr (Var td_1d_simplex))
+                   (emeta
+                    ((mtype (UArray UVector)) (mloc <opaque>)
+                     (madlevel DataOnly))))
+                  ((Single
+                    ((expr (Var sym1__))
+                     (emeta
+                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+            (smeta <opaque>)))))
+        (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (For (loopvar sym1__)
+      (lower
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (upper
+       ((expr (Var N))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+      (body
+       ((stmt
+         (Block
+          (((stmt
+             (For (loopvar sym2__)
+              (lower
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (upper
+               ((expr (Var M))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+              (body
+               ((stmt
+                 (Block
+                  (((stmt
+                     (For (loopvar sym3__)
+                      (lower
+                       ((expr (Lit Int 1))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                      (upper
+                       ((expr (Var K))
+                        (emeta
+                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                      (body
+                       ((stmt
+                         (Block
+                          (((stmt
+                             (NRFunApp CompilerInternal FnCheck__
+                              (((expr (Lit Str simplex))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))
+                               ((expr
+                                 (Lit Str
+                                  "td_3d_simplex[sym1__, sym2__, sym3__]"))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var td_3d_simplex))
+                                   (emeta
+                                    ((mtype
+                                      (UArray (UArray (UArray UVector))))
+                                     (mloc <opaque>) (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
+                                    ((expr (Var sym2__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
+                                    ((expr (Var sym3__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype UVector) (mloc <opaque>)
+                                  (madlevel DataOnly)))))))
+                            (smeta <opaque>)))))
+                        (smeta <opaque>)))))
+                    (smeta <opaque>)))))
+                (smeta <opaque>)))))
+            (smeta <opaque>)))))
+        (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (NRFunApp CompilerInternal FnCheck__
+      (((expr (Lit Str cholesky_factor))
+        (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Str td_cfcov_54))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Var td_cfcov_54))
+        (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
+    (smeta <opaque>))
+   ((stmt
+     (NRFunApp CompilerInternal FnCheck__
+      (((expr (Lit Str cholesky_factor))
+        (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Str td_cfcov_33))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Var td_cfcov_33))
+        (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
     (smeta <opaque>))))
  (log_prob
   (((stmt

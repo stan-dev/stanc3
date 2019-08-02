@@ -198,8 +198,7 @@ let constrainaction_fname c =
 type decl_context =
   { dread: ioaction option
   ; dconstrain: constrainaction option
-  ; dadlevel: autodifftype
-  ; dglobals: String.Set.t }
+  ; dadlevel: autodifftype }
 
 let rec unsizedtype_to_string = function
   | UMatrix -> "matrix"
@@ -422,8 +421,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
       @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
-let trans_decl {dread; dconstrain; dadlevel; dglobals} smeta decl_type
-    transform identifier initial_value =
+let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
+    identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let dt = trans_possiblysizedtype decl_type in
@@ -441,7 +440,7 @@ let trans_decl {dread; dconstrain; dadlevel; dglobals} smeta decl_type
       rhs
     |> Option.to_list
   in
-  if not (Set.mem dglobals decl_id) then decl :: rhs_assignment
+  if String.is_suffix ~suffix:"__" decl_id then decl :: rhs_assignment
   else
     let checks =
       match dconstrain with
@@ -651,10 +650,7 @@ let trans_fun_def (ts : Ast.typed_statement) =
       ; fdargs= List.map ~f:trans_arg arguments
       ; fdbody=
           trans_stmt
-            { dread= None
-            ; dconstrain= None
-            ; dadlevel= AutoDiffable
-            ; dglobals= String.Set.empty }
+            {dread= None; dconstrain= None; dadlevel= AutoDiffable}
             body
           |> unwrap_block_or_skip
       ; fdloc= ts.smeta.loc }
@@ -738,11 +734,7 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   and input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
-  let dglobals =
-    List.map ~f:fst output_vars @ List.map ~f:fst input_vars
-    |> String.Set.of_list
-  in
-  let declc = {dread= None; dconstrain= None; dadlevel= DataOnly; dglobals} in
+  let declc = {dread= None; dconstrain= None; dadlevel= DataOnly} in
   let datab =
     map
       (trans_stmt {declc with dread= Some ReadData; dconstrain= Some Check})
@@ -762,8 +754,7 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
       (trans_stmt
          { dread= Some ReadParam
          ; dconstrain= Some Constrain
-         ; dadlevel= AutoDiffable
-         ; dglobals })
+         ; dadlevel= AutoDiffable })
       parametersblock
     @ ( map
           (trans_stmt
