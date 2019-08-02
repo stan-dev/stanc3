@@ -50,7 +50,7 @@ let rec desugar_index_expr = function
                        @ inner_tl )
                ; emeta }
              , outer_tl ))
-    | inner_singles, Downfrom _ :: inner_tl ->
+    | inner_singles, Downfrom _ :: inner_tl | inner_singles, All :: inner_tl ->
         (* XXX generate check *)
         desugar_index_expr
           (Indexed
@@ -72,7 +72,12 @@ let rec desugar_index_expr = function
                        @ inner_tl )
                ; emeta }
              , outer_tl ))
-    | _ -> raise_s [%message "We already checked for a multi"] )
+    | inner_singles, multis ->
+        raise_s
+          [%message
+            "We already checked for a multi"
+              (inner_singles : typed_expression index list)
+              (multis : typed_expression index list)] )
   (* v[arr, 2] -> v[arr[2]] *)
   (* foo [arr1, ..., arrN] [i1, ..., iN] -> foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
   (* v[2:3][2] = v[3:2][1] -> v[3] *)
