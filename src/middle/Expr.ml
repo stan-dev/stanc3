@@ -151,12 +151,11 @@ module Labelled = struct
 end
 
 (* == Helpers =============================================================== *)
-let fix = Fixed.fix 
+let fix = Fixed.fix
 let inj = Fixed.inj
-let proj = Fixed.proj 
-let meta = Fixed.meta 
+let proj = Fixed.proj
+let meta = Fixed.meta
 let pattern = Fixed.pattern
-
 let var meta name = Fixed.fix meta @@ Var name
 
 (* == Literals ============================================================== *)
@@ -289,3 +288,120 @@ let decr expr =
 
 let zero = lit_int Typed.Meta.empty 0
 let loop_bottom = lit_int Typed.Meta.empty 1
+
+
+(* == StanLib smart constructors ============================================ *)
+
+
+module Bernoulli = struct 
+  
+  (* == Bernoulli-Logit Generalised Linear Model (Logistic Regression) ====== *)
+
+  let logit_glm_lpmf meta y x alpha beta = 
+    stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
+
+  let logit_glm_lpmf_checked meta y x alpha beta = 
+    match Typed.(type_of y , type_of x , type_of alpha , type_of beta) with 
+    | UArray UInt , UMatrix , UReal ,UVector 
+    | UArray UInt , UMatrix , UVector ,UVector -> 
+          Some (logit_glm_lpmf meta y x alpha beta)
+    | _ -> None
+
+  (* = Bernoulli Distribution, Logit Parameterization ======================= *)
+  let logit_rng meta theta = 
+    stanlib_fun meta "bernoulli_logit_rng" [theta]
+
+  let logit_lpmf meta y alpha = 
+    match Fixed.proj2 alpha with 
+    | _,FunApp(StanLib,"Plus__"
+                          ,[alpha
+                          ;(_,FunApp(StanLib,"Times__",[x;beta]))
+                          ]) when Typed.type_of x = UMatrix -> 
+      logit_glm_lpmf meta y x (inj alpha) beta        
+    
+    | _,FunApp(StanLib,"Plus__"
+                          ,[(_,FunApp(StanLib,"Times__",[x;beta]))
+                          ;alpha
+                          ]) when Typed.type_of x = UMatrix -> 
+      logit_glm_lpmf meta y x (inj alpha) beta        
+    | _ -> 
+      stanlib_fun meta "bernoulli_logit_lpmf" [y;alpha]
+
+  let logit_lpmf_checked meta y alpha = 
+    match Typed.type_of alpha with
+    | UReal -> Some (logit_lpmf meta y alpha)
+    | _ -> None
+
+  (* == Bernoulli Distribution ============================================== *)
+
+  let lpmf meta y theta = 
+    match Fixed.proj3 theta with 
+    (* bernoulli_lpmf(y | inv_logit(alpha + x*beta)) 
+        === bernoulli_logit_glm_lpmf(y | x , alpha, beta) 
+    *)
+    | _ , FunApp(StanLib,"inv_logit"
+                      ,[(_,FunApp(StanLib,"Plus__"
+                          ,[alpha
+                          ;(_,FunApp(StanLib,"Times__",[x;beta]))
+                          ]))
+                        ]
+                      )
+        when Typed.type_of x = UMatrix ->
+      
+      logit_glm_lpmf meta y x (inj alpha) beta
+
+    (* bernoulli_lpmf(y | inv_logit(x*beta + alpha)) 
+        === bernoulli_logit_glm_lpmf(y | x , alpha, beta) 
+    *)
+    | _ , FunApp(StanLib,"inv_logit"
+                      ,[(_,FunApp(StanLib,"Plus__"
+                          ,[(_,FunApp(StanLib,"Times__",[x;beta]))
+                          ;alpha
+                          ]))
+                        ]
+                      ) 
+        when Typed.type_of x = UMatrix ->
+    
+          logit_glm_lpmf meta y x (inj alpha) beta
+
+    (* bernoulli_lpmf(y | inv_logit(x*beta)) 
+        === bernoulli_logit_glm_lpmf(y | x , 0, beta) 
+    *)
+    | _ , FunApp(StanLib,"inv_logit",[(_,FunApp(StanLib,"Times__",[x;beta]))])
+        when Typed.Meta.type_ (fst x) = UMatrix ->
+    
+          logit_glm_lpmf meta y (inj x) zero (inj beta)
+
+
+    (* bernoulli_lpmf(y | inv_logit(alpha)) 
+        === bernoulli_logit_glm_lpmf(y | x , 0, beta) 
+    *)
+    | _ , FunApp(StanLib,"inv_logit",[alpha])  ->
+    
+          fun_app meta StanLib "bernoulli_logit_lpmf" [y;Fixed.inj2 alpha]
+
+    | _ -> 
+      fun_app meta StanLib "bernoulli_lpmf" [y;theta]
+  let cdf meta y theta = 
+    stanlib_fun meta "bernoulli_cdf" [y;theta]
+    
+  let lcdf meta y theta = 
+    stanlib_fun meta "bernoulli_lcdf" [y;theta]
+
+  let lccdf meta y theta = 
+    stanlib_fun meta "bernoulli_lcdf" [y;theta]
+
+  let rng meta theta = 
+    match pattern theta with 
+    | FunApp(StanLib,"inv_logit",[alpha]) -> 
+      logit_rng meta alpha
+    | _ -> 
+      stanlib_fun meta "bernoulli_rng" [theta]
+
+
+
+
+end
+
+
+

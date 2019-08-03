@@ -44,28 +44,28 @@ let rec repeat_th n f =
 
 let wrap_int n =
   { expr= IntNumeral (Int.to_string n)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UInt} }
+  ; emeta= {loc= Location_span.empty ; ad_level= DataOnly; type_= UInt} }
 
 let int_two = wrap_int 2
 
 let wrap_real r =
   { expr= RealNumeral (Float.to_string r)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UReal} }
+  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UReal} }
 
 let wrap_row_vector l =
   { expr= RowVectorExpr l
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= URowVector} }
+  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= URowVector} }
 
 let wrap_vector l =
   { expr= PostfixOp (wrap_row_vector l, Transpose)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UVector} }
+  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UVector} }
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
   { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UMatrix} }
+  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UMatrix} }
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -131,7 +131,7 @@ let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
 
 let rec generate_value m st t =
   match st with
-  | SInt -> gen_int m t
+  | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
   | SVector e -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t

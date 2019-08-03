@@ -117,20 +117,12 @@ module Labelled = struct
     {assocs with exprs}
 end
 
-
-let functions_block {functions_block;_} = functions_block
-let input_vars {input_vars;_} = input_vars
-
-let prepare_data {prepare_data;_} = prepare_data
-
-let log_prob {log_prob;_} = log_prob
-
-let generate_quantities {generate_quantities;_} = generate_quantities
-
-let transform_inits {transform_inits;_} = transform_inits
-
-let output_vars {output_vars ;_} = output_vars 
-
-let prog_name  {prog_name ;_} = prog_name 
-
-let prog_path {prog_path;_ } = prog_path
+let functions_block {functions_block; _} = functions_block
+let input_vars {input_vars; _} = input_vars
+let prepare_data {prepare_data; _} = prepare_data
+let log_prob {log_prob; _} = log_prob
+let generate_quantities {generate_quantities; _} = generate_quantities
+let transform_inits {transform_inits; _} = transform_inits
+let output_vars {output_vars; _} = output_vars
+let prog_name {prog_name; _} = prog_name
+let prog_path {prog_path; _} = prog_path

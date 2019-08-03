@@ -1,11 +1,9 @@
 open Middle
-open Common 
-
+open Common
 
 module Numbered : sig
   module Meta : sig
-    type t = int
-    [@@deriving compare, sexp, hash]
+    type t = int [@@deriving compare, sexp, hash]
 
     include Meta.S with type t := t
   end
@@ -14,10 +12,9 @@ module Numbered : sig
     Specialized.S
     with module Meta := Meta
      and type t = (Expr.Typed.Meta.t, Meta.t) Stmt.Fixed.t
-
 end
 
-type typed_prog_num =  (Expr.Typed.t, Numbered.t) Program.t [@@deriving sexp]
+type typed_prog_num = (Expr.Typed.t, Numbered.t) Program.t [@@deriving sexp]
 type state_t
 
 val prepare_prog : Program.Typed.t -> typed_prog_num * state_t

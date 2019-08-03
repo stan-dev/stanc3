@@ -212,12 +212,12 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
-    let convert_hof_vars expr = 
-      match Expr.Fixed.proj expr with 
-      | meta , Var name when UnsizedType.is_fun_type @@ Expr.Typed.type_of expr ->
-        Expr.fun_app meta StanLib (name ^ "_functor__") []
+    let convert_hof_vars expr =
+      match Expr.Fixed.proj expr with
+      | meta, Var name when UnsizedType.is_fun_type @@ Expr.Typed.type_of expr
+        ->
+          Expr.fun_app meta StanLib (name ^ "_functor__") []
       | _ -> expr
-
     in
     let converted_es = List.map ~f:convert_hof_vars es in
     let extra =
@@ -235,15 +235,14 @@ and gen_fun_app ppf f es =
   in
   pp ppf es
 
-and pp_constrain_funapp constrain_or_un_str ppf es = 
+and pp_constrain_funapp constrain_or_un_str ppf es =
   match es with
   | var :: constrain :: args -> (
-      match Expr.Fixed.pattern constrain with 
-      | Lit (Str, constraint_flavor) ->
-          pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
-            (list ~sep:comma pp_expr) (var :: args)
-      | _ -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
-  )
+    match Expr.Fixed.pattern constrain with
+    | Lit (Str, constraint_flavor) ->
+        pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
+          (list ~sep:comma pp_expr) (var :: args)
+    | _ -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)] )
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_ordinary_fn ppf f es =
@@ -265,13 +264,13 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | _ :: base_type :: dims  -> (
-      match Expr.Fixed.pattern base_type with 
-      | Lit(Str,base_type_name) -> 
-        pf ppf "in__.%s(@[<hov>%a@])" base_type_name (list ~sep:comma pp_expr) dims
-      | _ -> 
-        raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)]
-    )
+    | _ :: base_type :: dims -> (
+      match Expr.Fixed.pattern base_type with
+      | Lit (Str, base_type_name) ->
+          pf ppf "in__.%s(@[<hov>%a@])" base_type_name
+            (list ~sep:comma pp_expr) dims
+      | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)]
+      )
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 

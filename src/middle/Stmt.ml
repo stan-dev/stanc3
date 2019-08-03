@@ -2,8 +2,6 @@ open Core_kernel
 open Common
 open State.Cps
 
-
-
 (** Fixed-point of statements *)
 module Fixed = struct
   module First = Expr.Fixed
@@ -158,12 +156,11 @@ end
 
 (* == Helpers =============================================================== *)
 
-let fix = Fixed.fix 
+let fix = Fixed.fix
 let inj = Fixed.inj
-let proj = Fixed.proj 
-let meta = Fixed.meta 
+let proj = Fixed.proj
+let meta = Fixed.meta
 let pattern = Fixed.pattern
-
 let break meta = Fixed.fix meta Break
 let continue meta = Fixed.fix meta Continue
 let skip meta = Fixed.fix meta Skip
@@ -234,7 +231,6 @@ let is_if_else stmt =
 
 (* == Declarations ========================================================== *)
 
-
 let declare_sized meta adtype name ty =
   Fixed.fix meta
   @@ Decl {decl_adtype= adtype; decl_id= name; decl_type= Type.Sized ty}
@@ -286,7 +282,8 @@ let contains_fun ?kind ?name stmt =
         pred || t || Option.value ~default:false f_opt
     | _, For {lower; upper; body; _} -> lower || upper || body
     | _, Block xs | _, SList xs -> List.exists ~f:Fn.id xs
-    | _, Decl {decl_type; _} -> List.exists ~f:Fn.id @@ Type.collect_exprs decl_type
+    | _, Decl {decl_type; _} ->
+        List.exists ~f:Fn.id @@ Type.collect_exprs decl_type
     | _, NRFunApp (fun_kind, fun_name, args) ->
         Option.(
           value_map ~default:true ~f:(fun name -> name = fun_name) name
@@ -304,5 +301,3 @@ let contains_internal_fun ?fn expr =
     expr
 
 (* == General helpers ======================================================= *)
-
-

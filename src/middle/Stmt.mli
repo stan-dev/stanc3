@@ -1,7 +1,6 @@
 open Core_kernel
 open Common
 
-
 module Fixed : sig
   module Pattern : sig
     type ('a, 'b) t = ('a, 'b) Mir_pattern.statement =
@@ -87,13 +86,19 @@ module Labelled : sig
   val associate : ?init:associations -> t -> associations
 end
 
+val proj :
+  ('a, 'b) Fixed.t -> 'b * ('a Expr.Fixed.t, ('a, 'b) Fixed.t) Fixed.Pattern.t
 
-val proj : ('a,'b) Fixed.t -> 'b * ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t
-val meta : ('a,'b) Fixed.t -> 'b
-val pattern : ('a,'b) Fixed.t -> ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t
-val inj : 'b * ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t ->('a,'b) Fixed.t 
-val fix : 'b -> ('a Expr.Fixed.t , ('a,'b) Fixed.t) Fixed.Pattern.t ->('a,'b) Fixed.t 
+val meta : ('a, 'b) Fixed.t -> 'b
 
+val pattern :
+  ('a, 'b) Fixed.t -> ('a Expr.Fixed.t, ('a, 'b) Fixed.t) Fixed.Pattern.t
+
+val inj :
+  'b * ('a Expr.Fixed.t, ('a, 'b) Fixed.t) Fixed.Pattern.t -> ('a, 'b) Fixed.t
+
+val fix :
+  'b -> ('a Expr.Fixed.t, ('a, 'b) Fixed.t) Fixed.Pattern.t -> ('a, 'b) Fixed.t
 
 val break : 'b -> ('a, 'b) Fixed.t
 val continue : 'b -> ('a, 'b) Fixed.t
@@ -140,7 +145,6 @@ val if_ :
 
 val is_if_else : ('a, 'b) Fixed.t -> bool
 
-
 val declare_sized :
      'b
   -> UnsizedType.autodifftype
@@ -167,4 +171,3 @@ val is_internal_nrfun : ?fn:Internal_fun.t -> ('a, 'b) Fixed.t -> bool
 val contains_fun : ?kind:Fun_kind.t -> ?name:string -> ('a, 'b) Fixed.t -> bool
 val contains_operator : ?op:Operator.t -> ('a, 'b) Fixed.t -> bool
 val contains_internal_fun : ?fn:Internal_fun.t -> ('a, 'b) Fixed.t -> bool
-

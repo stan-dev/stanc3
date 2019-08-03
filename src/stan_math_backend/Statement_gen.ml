@@ -164,8 +164,9 @@ and pp_internal_fun ppf meta fname args =
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | Some FnCheck
-    when Option.value_map ~default:false ~f:Expr.(is_lit ~type_:Str) (List.hd args)
-    ->
+    when Option.value_map ~default:false
+           ~f:Expr.(is_lit ~type_:Str)
+           (List.hd args) ->
       (* Both of these are safe since we have checked that the arguments list is 
         non-empty and that the first element is a string literal *)
       let first_arg = List.hd_exn args in
@@ -177,7 +178,9 @@ and pp_internal_fun ppf meta fname args =
       let rest_args = List.tl args |> Option.value ~default:[] in
       let new_arg = Expr.(var Typed.Meta.empty "function__") in
       let new_args = new_arg :: rest_args in
-      let stmt = Stmt.nrfun_app meta CompilerInternal  ("check_" ^ check_name) new_args in
+      let stmt =
+        Stmt.nrfun_app meta CompilerInternal ("check_" ^ check_name) new_args
+      in
       pp_statement ppf stmt
   | Some FnWriteParam when List.length args = 1 ->
       let var = List.hd_exn args in

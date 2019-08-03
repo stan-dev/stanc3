@@ -36,10 +36,10 @@ type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
 [@@deriving sexp, map]
 
 module Make_traversable (A : Applicative.S) :
-    Bitraversable.S with module A := A and type ('a, 'b) t := ('a, 'b) t
+  Bitraversable.S with module A := A and type ('a, 'b) t := ('a, 'b) t
 
 module Make_traversable2 (A : Applicative.S2) :
-    Bitraversable.S2 with module A := A and type ('a, 'b) t := ('a, 'b) t
+  Bitraversable.S2 with module A := A and type ('a, 'b) t := ('a, 'b) t
 
 include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
 
@@ -60,13 +60,18 @@ module Labelled : sig
     ?init:Stmt.Labelled.associations -> t -> Stmt.Labelled.associations
 end
 
+val functions_block : ('a, 'b) t -> 'b fun_def list
+val input_vars : ('a, 'b) t -> (string * 'a SizedType.t) list
+val prepare_data : ('a, 'b) t -> 'b list
 
-val functions_block: ('a,'b) t -> 'b fun_def list
-val input_vars: ('a,'b) t -> (string * 'a SizedType.t) list
-val prepare_data: ('a,'b) t ->'b list (* data & transformed data decls and statements *)
-val log_prob: ('a,'b) t -> 'b list (*assumes data & params are in scope and ready*)
-val generate_quantities: ('a,'b) t -> 'b list (* assumes data & params ready & in scope*)
-val transform_inits: ('a,'b) t -> 'b list
-val output_vars: ('a,'b) t -> (string * 'a outvar) list
-val prog_name:('a,'b) t -> string
-val prog_path:('a,'b) t ->  string 
+(* data & transformed data decls and statements *)
+val log_prob : ('a, 'b) t -> 'b list
+
+(*assumes data & params are in scope and ready*)
+val generate_quantities : ('a, 'b) t -> 'b list
+
+(* assumes data & params ready & in scope*)
+val transform_inits : ('a, 'b) t -> 'b list
+val output_vars : ('a, 'b) t -> (string * 'a outvar) list
+val prog_name : ('a, 'b) t -> string
+val prog_path : ('a, 'b) t -> string

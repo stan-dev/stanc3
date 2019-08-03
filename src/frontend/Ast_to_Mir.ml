@@ -45,8 +45,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
     ->
       Expr.fun_app meta (trans_fn_kind fn_kind) name (trans_exprs args)
   | GetLP | GetTarget -> Expr.stanlib_fun meta "target" []
-  | ArrayExpr eles ->
-      Expr.internal_fun meta  FnMakeArray @@ trans_exprs eles
+  | ArrayExpr eles -> Expr.internal_fun meta FnMakeArray @@ trans_exprs eles
   | RowVectorExpr eles ->
       Expr.internal_fun meta FnMakeRowVec @@ trans_exprs eles
   | Indexed (lhs, indices) ->
@@ -54,13 +53,13 @@ and trans_expr {Ast.expr; Ast.emeta} =
 
 and trans_idx = function
   | Ast.All -> Expr.All
-  | Ast.Upfrom e -> Expr.Upfrom ( trans_expr e )
-  | Ast.Downfrom e -> Expr.Between (loop_bottom , trans_expr e)
+  | Ast.Upfrom e -> Expr.Upfrom (trans_expr e)
+  | Ast.Downfrom e -> Expr.Between (loop_bottom, trans_expr e)
   | Ast.Between (lb, ub) -> Expr.Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.emeta.type_ with
-    | UInt -> Expr.Single(trans_expr e)
-    | UArray _ -> Expr.MultiIndex ( trans_expr e )
+    | UInt -> Expr.Single (trans_expr e)
+    | UArray _ -> Expr.MultiIndex (trans_expr e)
     | _ ->
         raise_s
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
@@ -506,7 +505,6 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
           rhs ]
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       [Stmt.nrfun_app smeta (trans_fn_kind fn_kind) name (trans_exprs args)]
-
   | Ast.IncrementLogProb e | Ast.TargetPE e ->
       [Stmt.target_pe smeta @@ trans_expr e]
   | Ast.Tilde {arg; distribution; args; truncation} ->
@@ -607,7 +605,9 @@ let trans_fun_def (ts : Ast.typed_statement) =
         [%message "Found non-function definition statement in function block"]
 
 let gen_write decl_id sizedtype =
-  let bodyfn var = Stmt.internal_nrfun Location_span.empty FnWriteParam [var] in
+  let bodyfn var =
+    Stmt.internal_nrfun Location_span.empty FnWriteParam [var]
+  in
   let meta =
     Expr.Typed.Meta.(empty |> with_type (SizedType.to_unsizedtype sizedtype))
   in
@@ -640,10 +640,10 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
-let migrate_checks_to_end_of_block stmts =    
-  let checks, not_checks = 
-    List.partition_tf stmts 
-      ~f:(Stmt.contains_internal_fun ~fn:FnCheck) in
+let migrate_checks_to_end_of_block stmts =
+  let checks, not_checks =
+    List.partition_tf stmts ~f:(Stmt.contains_internal_fun ~fn:FnCheck)
+  in
   not_checks @ checks
 
 let trans_prog filename p : Program.Typed.t =

@@ -15,6 +15,8 @@ module Bitraversable : module type of Bitraversable
 module Pretty : module type of Pretty
 
 (* 'Two-level type' signatures and functors *)
+module Projectable : module type of Projectable
+module Injectable : module type of Injectable
 module Recursive : module type of Recursive
 module Pattern : module type of Pattern
 module Fix : module type of Fix

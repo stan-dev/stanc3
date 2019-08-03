@@ -9,11 +9,9 @@ module type S = sig
   include Pretty.S1 with type 'a t := 'a t
   include Recursive.S1 with type 'a t := 'a t and module Pattern := Pattern
   include Projectable.S1 with type 'a t := 'a t and module Pattern := Pattern
-
-  (* TODO : move to `Injectable` *)
-  val inj : 'a * 'a t Pattern.t -> 'a t
-  val fix : 'a -> 'a t Pattern.t -> 'a t
+  include Injectable.S1 with type 'a t := 'a t and module Pattern := Pattern
   
+
   (* TODO : derive *)
   module Make_traversable (A : Applicative.S) :
     Traversable.S with module A := A and type 'a t := 'a t
@@ -37,14 +35,17 @@ module type S2 = sig
      and module First := First
      and module Pattern := Pattern
 
-  include Projectable.S2 
+  include
+    Projectable.S2
     with type ('a, 'b) t := ('a, 'b) t
      and module First := First
      and module Pattern := Pattern
 
-  (* TODO : move to `Injectable` *)
-  val inj : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
-  val fix : 'b -> ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
+  include
+    Injectable.S2
+    with type ('a, 'b) t := ('a, 'b) t
+     and module First := First
+     and module Pattern := Pattern
 
   (* TODO : derive *)
   module Make_traversable (A : Applicative.S) :

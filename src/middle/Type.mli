@@ -14,9 +14,7 @@ module Make_traversable (A : Applicative.S) :
 module Make_traversable2 (A : Applicative.S2) :
   Traversable.S2 with module A := A and type 'a t := 'a t
 
-
 val to_unsizedtype : 'a t -> UnsizedType.t
-
 val collect_exprs : 'a t -> 'a list
 
 val associate :

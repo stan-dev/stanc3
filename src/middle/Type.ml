@@ -3,7 +3,7 @@ type 'a t = 'a Mir_pattern.possiblysizedtype =
   | Unsized of UnsizedType.t
 [@@deriving sexp, compare, map, hash, fold]
 
-let pp pp_e ppf x = Mir_pretty_printer.pp_possiblysizedtype pp_e ppf x 
+let pp pp_e ppf x = Mir_pretty_printer.pp_possiblysizedtype pp_e ppf x
 
 module Make_traversable = Mir_pattern.Make_traversable_possiblysizedtype
 module Make_traversable2 = Mir_pattern.Make_traversable_possiblysizedtype2
@@ -16,5 +16,5 @@ let to_unsizedtype = function
   | Unsized ut -> ut
 
 let associate ?init:(assocs = Label.Map.empty) = function
-  | Sized st -> SizedType.associate ~init:assocs st 
-  | _ -> assocs 
+  | Sized st -> SizedType.associate ~init:assocs st
+  | _ -> assocs

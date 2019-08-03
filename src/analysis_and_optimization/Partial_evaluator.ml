@@ -65,35 +65,33 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s -> raise_s [%sexp (s : string)] ) )
 
-let rec eval_expr (e : Middle.expr_typed_located) =
-  { e with
-    expr=
-      ( match e.expr with
-      | Var _ | Lit (_, _) -> e.expr
-      | FunApp (t, f, l) ->
-          let l = List.map ~f:eval_expr l in
-          let get_fun_or_op_rt_opt name l' =
-            let argument_types =
-              List.map ~f:(fun x -> (x.emeta.madlevel, x.emeta.mtype)) l'
-            in
-            try
-              let op = Middle.operator_of_sexp (Sexp.of_string name) in
-              operator_return_type op argument_types
-            with _ -> Middle.stan_math_returntype name argument_types
-          in
-          let try_partially_evaluate_to e =
-            match e with
-            | FunApp (StanLib, f', l') -> (
-              match get_fun_or_op_rt_opt f' l' with
-              | Some _ -> FunApp (StanLib, f', l')
-              | None -> FunApp (StanLib, f, l) )
-            | e -> e
-          in
-          try_partially_evaluate_to
-            ( match (f, l) with
-            (* TODO: deal with tilde statements and unnormalized distributions properly here *)
-            | ( "bernoulli_lpmf"
-              , [ y
+let get_fun_or_op_rt_opt name expr =
+  let argument_types =
+    List.map ~f:(fun x -> Expr.Typed.(adlevel_of x,type_of x)) expr
+  in
+  match Operator.of_string_opt name with 
+  | Some op -> Stan_math.op_return_type op argument_types
+  | _ -> Stan_math.return_type name argument_types
+            
+let try_partially_evaluate_to f l e =
+  match e with
+  | Expr.Fixed.Pattern.FunApp (StanLib, fn_name, args) -> (
+    match get_fun_or_op_rt_opt fn_name args with
+    | Some _ -> Expr.Fixed.Pattern.FunApp (StanLib, fn_name, args)
+    | None -> FunApp (StanLib, f, l) )
+  | e -> e
+
+
+
+
+(* TODO: deal with tilde statements and unnormalized distributions properly here *)
+let simplify_dist meta name args = 
+  match name , args with 
+  | "bernoulli_lpmf", [y;theta] -> Some (Expr.Bernoulli.lpmf meta y theta)
+  | _ -> None
+  
+
+              (* , [ y
                 ; { expr=
                       FunApp
                         ( StanLib
@@ -108,8 +106,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                       } ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
-            | ( "bernoulli_lpmf"
+                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta]) *)
+            (* | ( "bernoulli_lpmf"
               , [ y
                 ; { expr=
                       FunApp
@@ -125,8 +123,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                     ; alpha ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
-            | ( "bernoulli_lpmf"
+                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta]) *)
+            (* | ( "bernoulli_lpmf"
               , [ y
                 ; { expr=
                       FunApp
@@ -135,8 +133,17 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}] ); _
                   } ] )
               when x.emeta.mtype = UMatrix ->
-                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; zero; beta])
-            | ( "bernoulli_logit_lpmf"
+                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; zero; beta]) *)
+
+            (* | ( "bernoulli_lpmf"
+              , [y; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
+                FunApp (StanLib, "bernoulli_logit_lpmf", [y; alpha]) *)
+
+
+
+
+
+            (* | ( "bernoulli_logit_lpmf"
               , [ y
                 ; { expr=
                       FunApp
@@ -159,28 +166,39 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+
             | ( "bernoulli_logit_lpmf"
               , [y; {expr= FunApp (StanLib, "Times__", [x; beta]); _}] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; zero; beta])
-            | ( "bernoulli_lpmf"
-              , [y; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
-                FunApp (StanLib, "bernoulli_logit_lpmf", [y; alpha])
+
+            
+
             | ( "bernoulli_rng"
               , [{expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "bernoulli_logit_rng", [alpha])
+ *)
+
+
+
+
             | ( "binomial_lpmf"
               , [y; {expr= FunApp (StanLib, "inv_logit", [n; alpha]); _}] ) ->
                 FunApp (StanLib, "binomial_logit_lpmf", [y; n; alpha])
+
             | ( "categorical_lpmf"
               , [y; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "categorical_logit_lpmf", [y; alpha])
+
             | ( "categorical_rng"
               , [{expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "categorical_logit_rng", [alpha])
+
             | "columns_dot_product", [x; y]
               when compare_expr_typed_located x y = 0 ->
                 FunApp (StanLib, "columns_dot_self", [x])
+
+
             | "dot_product", [x; y] when compare_expr_typed_located x y = 0 ->
                 FunApp (StanLib, "dot_self", [x])
             | "inv", [{expr= FunApp (StanLib, "sqrt", l); _}] ->
@@ -245,12 +263,16 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             (* TODO: log_mix?*)
             | "log", [{expr= FunApp (StanLib, "falling_factorial", l); _}] ->
                 FunApp (StanLib, "log_falling_factorial", l)
+
             | "log", [{expr= FunApp (StanLib, "rising_factorial", l); _}] ->
                 FunApp (StanLib, "log_rising_factorial", l)
+
             | "log", [{expr= FunApp (StanLib, "inv_logit", l); _}] ->
                 FunApp (StanLib, "log_inv_logit", l)
+
             | "log", [{expr= FunApp (StanLib, "softmax", l); _}] ->
                 FunApp (StanLib, "log_softmax", l)
+
             | ( "log"
               , [ { expr=
                       FunApp
@@ -486,8 +508,10 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "sqrt", [x])
             | "square", [{expr= FunApp (StanLib, "sd", [x]); _}] ->
                 FunApp (StanLib, "variance", [x])
+
             | "sqrt", [{expr= Lit (Int, "2"); _}] ->
                 FunApp (StanLib, "sqrt2", [])
+
             | ( "sum"
               , [ { expr=
                       FunApp
@@ -496,8 +520,10 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , [{expr= FunApp (StanLib, "Minus__", [x; y]); _}] ); _
                   } ] ) ->
                 FunApp (StanLib, "squared_distance", [x; y])
+
             | "sum", [{expr= FunApp (StanLib, "diagonal", l); _}] ->
                 FunApp (StanLib, "trace", l)
+
             | ( "trace"
               , [ { expr=
                       FunApp
@@ -653,6 +679,24 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                     (Float.of_string i2)
               | _ -> FunApp (StanLib, op, l) )
             | _ -> FunApp (t, f, l) )
+
+let rec eval_expr expr =
+  match Expr.proj expr with 
+  | _ , Var _ | _ , Lit _ -> expr 
+  | _ , FunApp(t,f,l) -> 
+      let l = List.map ~f:eval_expr l in
+          
+          try_partially_evaluate_to f l
+
+  { e with
+    expr=
+      ( match e.expr with
+      | Var _ | Lit (_, _) -> e.expr
+      | FunApp (t, f, l) ->
+          let l = List.map ~f:eval_expr l in
+          
+          try_partially_evaluate_to f l
+            
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with
         | {expr= Lit (Int, "0"); _}, _, e3' -> e3'.expr

@@ -97,14 +97,11 @@ module Labelled : sig
   val associate_index : t Label.Map.t -> t index -> t Label.Map.t
 end
 
-val proj : 'a Fixed.t -> 'a * 'a Fixed.t Fixed.Pattern.t 
+val proj : 'a Fixed.t -> 'a * 'a Fixed.t Fixed.Pattern.t
 val meta : 'a Fixed.t -> 'a
-val pattern : 'a Fixed.t -> 'a Fixed.t Fixed.Pattern.t 
-val inj : 'a * 'a Fixed.t Fixed.Pattern.t  -> 'a Fixed.t 
-val fix : 'a -> 'a Fixed.t Fixed.Pattern.t  -> 'a Fixed.t 
-
-
-
+val pattern : 'a Fixed.t -> 'a Fixed.t Fixed.Pattern.t
+val inj : 'a * 'a Fixed.t Fixed.Pattern.t -> 'a Fixed.t
+val fix : 'a -> 'a Fixed.t Fixed.Pattern.t -> 'a Fixed.t
 val var : 'a -> string -> 'a Fixed.t
 val lit : 'a -> litType -> string -> 'a Fixed.t
 val lit_int : 'a -> int -> 'a Fixed.t
@@ -163,3 +160,20 @@ val decr : 'a Fixed.t -> 'a Fixed.t
 val zero : Typed.t
 val loop_bottom : Typed.t
 
+module Bernoulli : sig 
+  val logit_glm_lpmf : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t  
+  val logit_glm_lpmf_checked : Typed.Meta.t -> Typed.t -> Typed.t -> Typed.t -> Typed.t -> Typed.t option
+  
+  
+  val logit_lpmf : Typed.Meta.t -> Typed.t -> Typed.t -> Typed.t
+  val logit_lpmf_checked : Typed.Meta.t -> Typed.t -> Typed.t -> Typed.t option
+  val logit_rng : 'a -> 'a Fixed.t -> 'a Fixed.t
+
+  val lpmf : Typed.Meta.t -> Typed.t -> Typed.t -> Typed.t
+  val cdf : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+  val lcdf : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+  val lccdf : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+  val rng : 'a -> 'a Fixed.t -> 'a Fixed.t 
+
+
+end 

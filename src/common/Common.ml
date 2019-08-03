@@ -15,6 +15,8 @@ module Bitraversable = Bitraversable
 module Pretty = Pretty
 
 (* 'Two-level type' signatures and functors *)
+module Projectable = Projectable
+module Injectable = Injectable
 module Recursive = Recursive
 module Pattern = Pattern
 module Fix = Fix
