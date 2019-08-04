@@ -5,12 +5,7 @@ let is_multi_index = function
   | Single {Ast.emeta= {Ast.type_= UArray _; _}; _}
    |Downfrom _ | Upfrom _ | Between _ | All ->
       true
-  | _ -> false
-
-let is_single_index = function
-  | Single {Ast.emeta= {Ast.type_= UArray _; _}; _} -> false
-  | Single _ -> true
-  | _ -> false
+  | Single _ -> false
 
 let remove_trailing_alls_expr = function
   | Indexed (obj, indices) ->
@@ -33,7 +28,7 @@ let rec desugar_index_expr = function
       , (Single ({emeta= {type_= UInt; _}; _} as single_e) as single)
         :: outer_tl )
     when List.exists ~f:is_multi_index inner_indices -> (
-    match List.split_while ~f:is_single_index inner_indices with
+    match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
     | inner_singles, Single first_multi :: inner_tl ->
         (* foo [arr1, ..., arrN] [i1, ..., iN] ->
          foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
@@ -94,12 +89,6 @@ let rec desugar_expr {expr; emeta} =
     |> map_expression desugar_expr
   in
   {expr; emeta}
-
-let rec is_indexing_matrix = function
-  | Middle.UArray t, idc :: idcs when is_single_index idc ->
-      is_indexing_matrix (t, idcs)
-  | UMatrix, _ -> true
-  | _ -> false
 
 let rec desugar_stmt {stmt; smeta} =
   {stmt= map_statement desugar_expr desugar_stmt Fn.id stmt; smeta}

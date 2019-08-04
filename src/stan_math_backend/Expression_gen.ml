@@ -44,16 +44,7 @@ let minus_one e =
   { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
   ; emeta= e.emeta }
 
-let is_single_index = function
-  | Single {emeta= {mtype= UArray _; _}; _} -> false
-  | Single _ -> true
-  | _ -> false
-
-let rec is_indexing_matrix = function
-  | UArray t, idc :: idcs when is_single_index idc ->
-      is_indexing_matrix (t, idcs)
-  | UMatrix, _ -> true
-  | _ -> false
+let is_single_index = function Single _ -> true | _ -> false
 
 let promote_adtype =
   List.fold
