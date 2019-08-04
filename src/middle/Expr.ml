@@ -645,6 +645,20 @@ module Poisson_log = struct
   let distribution_prefix suffix = "poisson_log_" ^ suffix
 
   let lpmf meta n alpha =
+    match Fixed.proj2 alpha with 
+    | _ , FunApp(StanLib,"Plus__",[alpha ; (_, FunApp(StanLib,"Times__",[x;beta]))]) when 
+      Typed.type_of x = UMatrix -> 
+          Poisson_log_glm.lpmf meta n x (inj alpha) beta
+
+    | _ , FunApp(StanLib,"Plus__",[(_, FunApp(StanLib,"Times__",[x;beta]));alpha]) when 
+      Typed.type_of x = UMatrix -> 
+          Poisson_log_glm.lpmf meta n x (inj alpha) beta
+
+    | _ , FunApp(StanLib,"Times__",[x;beta]) when 
+      Typed.type_of (inj x) = UMatrix -> 
+          Poisson_log_glm.lpmf meta n (inj x) zero (inj beta)
+
+    | _ ->
     stanlib_fun meta (distribution_prefix "lpmf") [n;alpha]
 
   let rng meta alpha = 
@@ -656,7 +670,24 @@ module Poisson = struct
   let distribution_prefix suffix = "poisson_" ^ suffix
 
   let lpmf meta n lambda =
-    stanlib_fun meta (distribution_prefix "lpmf") [n;lambda]
+    match Fixed.proj3 lambda with 
+    | _ , FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Plus__",[alpha;(_,FunApp(StanLib,"Times__",[x;beta]))]))])
+      when Typed.type_of x = UMatrix -> 
+        Poisson_log_glm.lpmf meta n x (inj alpha) beta  
+
+    | _ , FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Plus__",[(_,FunApp(StanLib,"Times__",[x;beta]));alpha]))])
+      when Typed.type_of x = UMatrix -> 
+        Poisson_log_glm.lpmf meta n x (inj alpha) beta 
+
+    | _, FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Times__",[x;beta]))])
+      when Typed.type_of (inj x) = UMatrix -> 
+        Poisson_log_glm.lpmf meta n (inj x) zero (inj beta) 
+
+    | _, FunApp(StanLib,"exp",[eta]) ->
+        Poisson_log.lpmf meta n (Fixed.inj2 eta) 
+
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "lpmf") [n;lambda]
 
   let cdf meta n lambda =
     stanlib_fun meta (distribution_prefix "cdf") [n;lambda]
