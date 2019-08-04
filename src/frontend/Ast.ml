@@ -91,11 +91,11 @@ type 'e truncation =
   | TruncateUpFrom of 'e
   | TruncateDownFrom of 'e
   | TruncateBetween of 'e * 'e
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp, hash, compare, map]
 
 (** Things that can be printed *)
 type 'e printable = PString of string | PExpr of 'e
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, map, hash]
 
 (** Transformations (constraints) for global variable declarations *)
 type 'e transformation =
@@ -114,7 +114,7 @@ type 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, map, hash]
 
 type ('e, 'm) lhs_with =
   { assign_identifier: identifier
@@ -180,7 +180,7 @@ type ('e, 's, 'l) statement =
       ; funname: identifier
       ; arguments: (Middle.autodifftype * Middle.unsizedtype * identifier) list
       ; body: 's }
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp, hash, compare, map]
 
 (** Statement return types which we will decorate statements with during type
     checking: the purpose is to check that function bodies have the correct
@@ -238,7 +238,7 @@ type 's program =
   ; transformedparametersblock: 's list option
   ; modelblock: 's list option
   ; generatedquantitiesblock: 's list option }
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp, hash, compare, map]
 
 (** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program
@@ -250,14 +250,13 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression
-    ({expr; emeta} : typed_expression) : untyped_expression =
+let rec untyped_expression_of_typed_expression {expr; emeta} :
+    untyped_expression =
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
 let untyped_lhs_of_typed_lhs
-    ({assign_identifier; assign_indices; assign_meta= {loc; _}} : 'e typed_lhs)
-    =
+    {assign_identifier; assign_indices; assign_meta= {loc; _}} =
   { assign_identifier
   ; assign_indices=
       List.map
@@ -266,13 +265,12 @@ let untyped_lhs_of_typed_lhs
   ; assign_meta= {loc} }
 
 (** Forgetful function from typed to untyped statements *)
-let rec untyped_statement_of_typed_statement ({stmt; smeta} : typed_statement)
-    =
+let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lhs_of_typed_lhs stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
-let untyped_program_of_typed_program (p : typed_program) =
-  map_program untyped_statement_of_typed_statement p
+let untyped_program_of_typed_program =
+  map_program untyped_statement_of_typed_statement
