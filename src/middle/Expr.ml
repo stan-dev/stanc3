@@ -631,3 +631,202 @@ module Poisson = struct
     stanlib_fun meta (distribution_prefix "rng") [lambda]    
 end 
 
+
+module Multinomial = struct 
+  let distribution_prefix suffix = "multinomial_" ^ suffix
+
+  let lpmf meta y theta =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;theta]
+
+  let rng meta theta total_count = 
+    stanlib_fun meta (distribution_prefix "rng") [theta;total_count]
+end
+
+(* == Unbounded continuous == *)
+
+(** Normal-Id Generalised Linear Model (Linear Regression) *)
+module Normal_id_glm = struct 
+  let distribution_prefix suffix = "normal_id_glm_" ^ suffix
+
+  let lpmf meta y x alpha beta sigma  =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;x;alpha;beta;sigma]
+end
+
+(** Standard Normal Distribution *)
+module Std_normal = struct 
+  let distribution_prefix suffix = "std_normal_" ^ suffix
+
+  let lpmf meta y  =
+    stanlib_fun meta (distribution_prefix "lpmf") [y]
+end
+
+
+(** Normal Distribution *)
+module Normal = struct 
+  let distribution_prefix suffix = "normal_" ^ suffix
+
+  let lpmf meta y mu sigma =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;mu;sigma]
+
+  let cdf meta y mu sigma =
+    stanlib_fun meta (distribution_prefix "cdf") [y;mu;sigma]
+    
+  let lcdf meta y mu sigma =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;mu;sigma]
+
+  let lccdf meta y mu sigma =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;mu;sigma]
+
+  let rng meta mu sigma = 
+    stanlib_fun meta (distribution_prefix "rng") [mu;sigma]    
+end 
+
+
+
+(** Exponentially Modified Normal Distribution *)
+module Exp_mod_normal = struct 
+  let distribution_prefix suffix = "exp_mod_normal_" ^ suffix
+
+  let lpmf meta y mu sigma lambda =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;mu;sigma;lambda]
+
+  let cdf meta y mu sigma lambda =
+    stanlib_fun meta (distribution_prefix "cdf") [y;mu;sigma;lambda]
+    
+  let lcdf meta y mu sigma lambda =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;mu;sigma;lambda]
+
+  let lccdf meta y mu sigma lambda =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;mu;sigma;lambda]
+
+  let rng meta mu sigma lambda = 
+    stanlib_fun meta (distribution_prefix "rng") [mu;sigma;lambda]    
+end 
+
+
+(** Skew Normal Distribution *)
+module Skew_normal = struct 
+  let distribution_prefix suffix = "skew_normal_" ^ suffix
+
+  let lpmf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale;shape]
+
+  let cdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale;shape]
+    
+  let lcdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale;shape]
+
+  let lccdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale;shape]
+
+  let rng meta location scale shape =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale;shape]    
+end 
+
+(** Student-T Distribution *)
+module Student_t = struct 
+  let distribution_prefix suffix = "student_t_" ^ suffix
+
+  let lpmf meta y dof location scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;dof;location;scale]
+
+  let cdf meta y  dof  location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;dof;location;scale]
+    
+  let lcdf meta y  dof location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;dof;location;scale]
+
+  let lccdf meta y  dof location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;dof;location;scale]
+
+  let rng meta  dof location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [dof;location;scale]    
+end 
+
+
+(** Cauchy Distribution *)
+module Cauchy = struct 
+  let distribution_prefix suffix = "cauchy_" ^ suffix
+
+  let lpmf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+
+  let cdf meta y    location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
+    
+  let lcdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale]
+
+  let lccdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale]
+
+  let rng meta   location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale]    
+end 
+
+
+(** Double Exponential (Laplace) Distribution *)
+module Double_exponential = struct 
+  let distribution_prefix suffix = "double_exponential_" ^ suffix
+
+  let lpmf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+
+  let cdf meta y    location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
+    
+  let lcdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale]
+
+  let lccdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale]
+
+  let rng meta   location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale]    
+end 
+
+
+(** Logistic Distribution *)
+module Logistic = struct 
+  let distribution_prefix suffix = "logistic_" ^ suffix
+
+  let lpmf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+
+  let cdf meta y    location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
+    
+  let lcdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale]
+
+  let lccdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale]
+
+  let rng meta   location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale]    
+end 
+
+
+
+(** Gumbel Distribution *)
+module Gumbel = struct 
+  let distribution_prefix suffix = "gumbel_" ^ suffix
+
+  let lpmf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+
+  let cdf meta y    location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
+    
+  let lcdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale]
+
+  let lccdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale]
+
+  let rng meta   location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale]    
+end 
+
+
