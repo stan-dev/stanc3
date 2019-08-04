@@ -648,16 +648,16 @@ end
 module Normal_id_glm = struct 
   let distribution_prefix suffix = "normal_id_glm_" ^ suffix
 
-  let lpmf meta y x alpha beta sigma  =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;x;alpha;beta;sigma]
+  let ldmf meta y x alpha beta sigma  =
+    stanlib_fun meta (distribution_prefix "ldmf") [y;x;alpha;beta;sigma]
 end
 
 (** Standard Normal Distribution *)
 module Std_normal = struct 
   let distribution_prefix suffix = "std_normal_" ^ suffix
 
-  let lpmf meta y  =
-    stanlib_fun meta (distribution_prefix "lpmf") [y]
+  let ldmf meta y  =
+    stanlib_fun meta (distribution_prefix "ldmf") [y]
 end
 
 
@@ -665,8 +665,8 @@ end
 module Normal = struct 
   let distribution_prefix suffix = "normal_" ^ suffix
 
-  let lpmf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;mu;sigma]
+  let ldmf meta y mu sigma =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;mu;sigma]
 
   let cdf meta y mu sigma =
     stanlib_fun meta (distribution_prefix "cdf") [y;mu;sigma]
@@ -687,8 +687,8 @@ end
 module Exp_mod_normal = struct 
   let distribution_prefix suffix = "exp_mod_normal_" ^ suffix
 
-  let lpmf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;mu;sigma;lambda]
+  let lpdf meta y mu sigma lambda =
+    stanlib_fun meta (distribution_prefix "ldmf") [y;mu;sigma;lambda]
 
   let cdf meta y mu sigma lambda =
     stanlib_fun meta (distribution_prefix "cdf") [y;mu;sigma;lambda]
@@ -708,8 +708,8 @@ end
 module Skew_normal = struct 
   let distribution_prefix suffix = "skew_normal_" ^ suffix
 
-  let lpmf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale;shape]
+  let ldmf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "ldmf") [y;location;scale;shape]
 
   let cdf meta y location scale shape =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale;shape]
@@ -728,8 +728,8 @@ end
 module Student_t = struct 
   let distribution_prefix suffix = "student_t_" ^ suffix
 
-  let lpmf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;dof;location;scale]
+  let ldmf meta y dof location scale =
+    stanlib_fun meta (distribution_prefix "ldmf") [y;dof;location;scale]
 
   let cdf meta y  dof  location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;dof;location;scale]
@@ -749,8 +749,8 @@ end
 module Cauchy = struct 
   let distribution_prefix suffix = "cauchy_" ^ suffix
 
-  let lpmf meta y  location scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+  let lpdf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
 
   let cdf meta y    location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
@@ -770,8 +770,8 @@ end
 module Double_exponential = struct 
   let distribution_prefix suffix = "double_exponential_" ^ suffix
 
-  let lpmf meta y  location scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+  let lpdf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
 
   let cdf meta y    location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
@@ -791,8 +791,8 @@ end
 module Logistic = struct 
   let distribution_prefix suffix = "logistic_" ^ suffix
 
-  let lpmf meta y  location scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+  let ldmf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
 
   let cdf meta y    location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
@@ -806,15 +806,14 @@ module Logistic = struct
   let rng meta   location scale  =  
     stanlib_fun meta (distribution_prefix "rng") [location;scale]    
 end 
-
 
 
 (** Gumbel Distribution *)
 module Gumbel = struct 
   let distribution_prefix suffix = "gumbel_" ^ suffix
 
-  let lpmf meta y  location scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [y;location;scale]
+  let lpdf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
 
   let cdf meta y    location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
@@ -830,3 +829,193 @@ module Gumbel = struct
 end 
 
 
+(* == Positive Continuous Distributions ===================================== *)
+
+(** Lognormal Distribution *)
+module Lognormal = struct 
+  let distribution_prefix suffix = "log_normal_" ^ suffix
+
+  let lpdf meta y  location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
+
+  let cdf meta y    location scale  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale]
+    
+  let lcdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale]
+
+  let lccdf meta y   location scale  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale]
+
+  let rng meta   location scale  =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale]    
+end 
+
+
+(** Chi-Square Distribution *)
+module Chi_square = struct 
+  let distribution_prefix suffix = "chi_square_" ^ suffix
+
+  let lpdf meta y dof =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;dof]
+
+  let cdf meta y dof  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;dof]
+    
+  let lcdf meta y dof =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;dof]
+
+  let lccdf meta y  dof=
+    stanlib_fun meta (distribution_prefix "lccdf") [y;dof]
+
+  let rng meta dof  =  
+    stanlib_fun meta (distribution_prefix "rng") [dof]    
+end 
+
+(** Inverse Chi-Square Distribution *)
+module Inv_chi_square = struct 
+  let distribution_prefix suffix = "inv_chi_square_" ^ suffix
+
+  let lpdf meta y dof =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;dof]
+
+  let cdf meta y dof  =
+    stanlib_fun meta (distribution_prefix "cdf") [y;dof]
+    
+  let lcdf meta y dof =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;dof]
+
+  let lccdf meta y  dof=
+    stanlib_fun meta (distribution_prefix "lccdf") [y;dof]
+
+  let rng meta dof  =  
+    stanlib_fun meta (distribution_prefix "rng") [dof]    
+end 
+
+
+(** Inverse Chi-Square Distribution *)
+module Scaled_inv_chi_square = struct 
+  let distribution_prefix suffix = "scaled_inv_chi_square_" ^ suffix
+
+  let lpdf meta y dof scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;dof;scale ]
+
+  let cdf meta y dof  scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;dof;scale ]
+    
+  let lcdf meta y dof scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;dof;scale ]
+
+  let lccdf meta y  dof scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;dof;scale ]
+
+  let rng meta dof scale =  
+    stanlib_fun meta (distribution_prefix "rng") [dof;scale ]    
+end
+
+
+
+(** Exponential Distribution *)
+module Exponential = struct 
+  let distribution_prefix suffix = "exponential_" ^ suffix
+
+  let lpdf meta y inv_scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;inv_scale ]
+
+  let cdf meta y inv_scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;inv_scale ]
+    
+  let lcdf meta y inv_scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;inv_scale ]
+
+  let lccdf meta y inv_scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;inv_scale ]
+
+  let rng meta inv_scale =  
+    stanlib_fun meta (distribution_prefix "rng") [inv_scale ]    
+end
+
+
+(** Gamma Distribution *)
+module Gamma = struct 
+  let distribution_prefix suffix = "gamma_" ^ suffix
+
+  let lpdf meta y shape inv_scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;shape;inv_scale ]
+
+  let cdf meta y shape inv_scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;shape;inv_scale ]
+    
+  let lcdf meta y shape inv_scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;shape;inv_scale ]
+
+  let lccdf meta y shape inv_scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;shape;inv_scale ]
+
+  let rng meta shape inv_scale =  
+    stanlib_fun meta (distribution_prefix "rng") [shape;inv_scale ]    
+end
+
+
+(** Inverse Gamma Distribution *)
+module Inv_gamma = struct 
+  let distribution_prefix suffix = "inv_gamma_" ^ suffix
+
+  let lpdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;shape;scale ]
+
+  let cdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;shape;scale ]
+    
+  let lcdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;shape;scale ]
+
+  let lccdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;shape;scale ]
+
+  let rng meta shape scale =  
+    stanlib_fun meta (distribution_prefix "rng") [shape;scale ]    
+end
+
+
+
+(** Weibull Distribution *)
+module Weibull = struct 
+  let distribution_prefix suffix = "weibull_" ^ suffix
+
+  let lpdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;shape;scale ]
+
+  let cdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;shape;scale ]
+    
+  let lcdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;shape;scale ]
+
+  let lccdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;shape;scale ]
+
+  let rng meta shape scale =  
+    stanlib_fun meta (distribution_prefix "rng") [shape;scale ]    
+end
+
+
+(** Frechet Distribution *)
+module Frechet = struct 
+  let distribution_prefix suffix = "frechet_" ^ suffix
+
+  let lpdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;shape;scale ]
+
+  let cdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;shape;scale ]
+    
+  let lcdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;shape;scale ]
+
+  let lccdf meta y shape scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;shape;scale ]
+
+  let rng meta shape scale =  
+    stanlib_fun meta (distribution_prefix "rng") [shape;scale ]    
+end
