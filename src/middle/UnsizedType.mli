@@ -1,3 +1,4 @@
+open Core_kernel
 open Common
 
 type t = Mir_pattern.unsizedtype =
@@ -16,6 +17,8 @@ and returntype = Mir_pattern.returntype = Void | ReturnType of t
 [@@deriving compare, hash, sexp]
 
 include Pretty.S with type t := t
+include Comparator.S with type t := t
+include Comparable.S with type t := t and type comparator_witness := comparator_witness
 
 val pp_returntype : Format.formatter -> returntype -> unit
 val pp_autodifftype : Format.formatter -> autodifftype -> unit

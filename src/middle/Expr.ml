@@ -292,48 +292,53 @@ let loop_bottom = lit_int Typed.Meta.empty 1
 
 (* == StanLib smart constructors ============================================ *)
 
+(* == Binary distributions ================================================== *)
 
-module Bernoulli = struct 
+(** Bernoulli-Logit Generalised Linear Model (Logistic Regression) *)
+module Bernoulli_logit_glm = struct 
   
-  (* == Bernoulli-Logit Generalised Linear Model (Logistic Regression) ====== *)
-
-  let logit_glm_lpmf meta y x alpha beta = 
+  let lpmf meta y x alpha beta = 
     stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
 
-  let logit_glm_lpmf_checked meta y x alpha beta = 
+  let lpmf_checked meta y x alpha beta = 
     match Typed.(type_of y , type_of x , type_of alpha , type_of beta) with 
     | UArray UInt , UMatrix , UReal ,UVector 
     | UArray UInt , UMatrix , UVector ,UVector -> 
-          Some (logit_glm_lpmf meta y x alpha beta)
+          Some (lpmf meta y x alpha beta)
     | _ -> None
 
-  (* = Bernoulli Distribution, Logit Parameterization ======================= *)
-  let logit_rng meta theta = 
+end 
+
+(** Bernoulli Distribution, Logit Parameterization *)
+module Bernoulli_logit = struct
+
+  let rng meta theta = 
     stanlib_fun meta "bernoulli_logit_rng" [theta]
 
-  let logit_lpmf meta y alpha = 
+  let lpmf meta y alpha = 
     match Fixed.proj2 alpha with 
     | _,FunApp(StanLib,"Plus__"
                           ,[alpha
                           ;(_,FunApp(StanLib,"Times__",[x;beta]))
                           ]) when Typed.type_of x = UMatrix -> 
-      logit_glm_lpmf meta y x (inj alpha) beta        
+      Bernoulli_logit_glm.lpmf meta y x (inj alpha) beta        
     
     | _,FunApp(StanLib,"Plus__"
                           ,[(_,FunApp(StanLib,"Times__",[x;beta]))
                           ;alpha
                           ]) when Typed.type_of x = UMatrix -> 
-      logit_glm_lpmf meta y x (inj alpha) beta        
+      Bernoulli_logit_glm.lpmf meta y x (inj alpha) beta        
     | _ -> 
       stanlib_fun meta "bernoulli_logit_lpmf" [y;alpha]
 
-  let logit_lpmf_checked meta y alpha = 
+  let lpmf_checked meta y alpha = 
     match Typed.type_of alpha with
-    | UReal -> Some (logit_lpmf meta y alpha)
+    | UReal -> Some (lpmf meta y alpha)
     | _ -> None
+end 
 
-  (* == Bernoulli Distribution ============================================== *)
-
+(** Bernoulli Distribution  *)
+module Bernoulli = struct
   let lpmf meta y theta = 
     match Fixed.proj3 theta with 
     (* bernoulli_lpmf(y | inv_logit(alpha + x*beta)) 
@@ -348,7 +353,7 @@ module Bernoulli = struct
                       )
         when Typed.type_of x = UMatrix ->
       
-      logit_glm_lpmf meta y x (inj alpha) beta
+      Bernoulli_logit_glm.lpmf meta y x (inj alpha) beta
 
     (* bernoulli_lpmf(y | inv_logit(x*beta + alpha)) 
         === bernoulli_logit_glm_lpmf(y | x , alpha, beta) 
@@ -362,7 +367,7 @@ module Bernoulli = struct
                       ) 
         when Typed.type_of x = UMatrix ->
     
-          logit_glm_lpmf meta y x (inj alpha) beta
+          Bernoulli_logit_glm.lpmf meta y x (inj alpha) beta
 
     (* bernoulli_lpmf(y | inv_logit(x*beta)) 
         === bernoulli_logit_glm_lpmf(y | x , 0, beta) 
@@ -370,15 +375,14 @@ module Bernoulli = struct
     | _ , FunApp(StanLib,"inv_logit",[(_,FunApp(StanLib,"Times__",[x;beta]))])
         when Typed.Meta.type_ (fst x) = UMatrix ->
     
-          logit_glm_lpmf meta y (inj x) zero (inj beta)
+          Bernoulli_logit_glm.lpmf meta y (inj x) zero (inj beta)
 
 
     (* bernoulli_lpmf(y | inv_logit(alpha)) 
-        === bernoulli_logit_glm_lpmf(y | x , 0, beta) 
+        === bernoulli_logit_lpmf(y | alpha) 
     *)
-    | _ , FunApp(StanLib,"inv_logit",[alpha])  ->
-    
-          fun_app meta StanLib "bernoulli_logit_lpmf" [y;Fixed.inj2 alpha]
+    | _ , FunApp(StanLib,"inv_logit",[alpha])  ->    
+          Bernoulli_logit.lpmf meta y (Fixed.inj2 alpha)
 
     | _ -> 
       fun_app meta StanLib "bernoulli_lpmf" [y;theta]
@@ -394,14 +398,236 @@ module Bernoulli = struct
   let rng meta theta = 
     match pattern theta with 
     | FunApp(StanLib,"inv_logit",[alpha]) -> 
-      logit_rng meta alpha
+      Bernoulli_logit.rng meta alpha
     | _ -> 
       stanlib_fun meta "bernoulli_rng" [theta]
 
+end
+
+(* == Bounded discrete distributions ======================================== *)
+
+(** Binomial Distribution, Logit Parameterization *)
+module Binomial_logit = struct 
+  let lpmf meta successes trials alpha =
+    stanlib_fun meta "binomial_logit_lpmf" [successes;trials;alpha]
+
+end 
+
+(** Binomial Distribution *)
+module Binomial = struct 
+
+  let lpmf meta successes trials theta =
+    match pattern theta with     
+    | FunApp(StanLib,"inv_logit",[alpha])  ->    
+          Binomial_logit.lpmf meta successes trials alpha
+
+    | _ -> 
+      stanlib_fun meta "binomial_lpmf" [successes;trials;theta]
+
+  let cdf meta y theta = 
+    stanlib_fun meta "binomial_cdf" [y;theta]
+    
+  let lcdf meta y theta = 
+    stanlib_fun meta "binomial_lcdf" [y;theta]
+
+  let lccdf meta y theta = 
+    stanlib_fun meta "binomial_lcdf" [y;theta]
+
+  let rng meta theta = 
+    stanlib_fun meta "binomial_rng" [theta]
+
+end 
 
 
+(** Beta-Binomial Distribution *)
+module Beta_binomial = struct 
+  let distribution_prefix suffix = "beta_binomial_" ^ suffix
+
+  let lpmf meta successes trials alpha beta =
+    stanlib_fun meta (distribution_prefix "lpmf") [successes;trials;alpha;beta]
+
+  let cdf meta successes trials alpha beta =
+    stanlib_fun meta (distribution_prefix "cdf") [successes;trials;alpha;beta]
+    
+  let lcdf meta successes trials alpha beta =
+    stanlib_fun meta (distribution_prefix "lcdf") [successes;trials;alpha;beta]
+
+  let lccdf meta successes trials alpha beta =
+    stanlib_fun meta (distribution_prefix "lccdf") [successes;trials;alpha;beta]
+
+  let rng meta trials alpha beta = 
+    stanlib_fun meta (distribution_prefix "rng") [trials;alpha;beta]    
+end 
+
+
+(** Hypergeometric Distribution *)
+module Hypergeometric = struct 
+  let distribution_prefix suffix = "hypergeometric_" ^ suffix
+
+  let lpmf meta successes trials a b  =
+    stanlib_fun meta (distribution_prefix "lpmf") [successes;trials;a;b]  
+
+  let rng meta trials a b = 
+    stanlib_fun meta (distribution_prefix "rng") [trials;a;b]    
+end 
+
+(** Categorical Distribution, Logit Parameterization *)
+module Categorical_logit = struct 
+  let distribution_prefix suffix = "categorical_logit_" ^ suffix
+
+  let lpmf meta y beta   =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;beta]  
+
+  let rng meta beta = 
+    stanlib_fun meta (distribution_prefix "rng") [beta]    
+end 
+
+
+(** Categorical Distribution *)
+module Categorical = struct 
+  let distribution_prefix suffix = "categorical_" ^ suffix
+
+  let lpmf meta y theta   =
+    match pattern theta with     
+    | FunApp(StanLib,"inv_logit",[alpha])  ->    
+      Categorical_logit.lpmf meta y alpha
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "lpmf") [y;theta]  
+
+  let rng meta theta = 
+    stanlib_fun meta (distribution_prefix "rng") [theta]    
+end 
+
+
+(** Ordered Logistic Distribution *)
+module Ordered_logistic = struct 
+  let distribution_prefix suffix = "ordered_logistic_" ^ suffix
+
+  let lpmf meta k eta c  =
+    stanlib_fun meta (distribution_prefix "lpmf") [k;eta;c]  
+
+  let rng meta eta c = 
+    stanlib_fun meta (distribution_prefix "rng") [eta;c]    
+end 
+
+
+
+
+(** Ordered Probit Distribution *)
+module Ordered_probit = struct 
+  let distribution_prefix suffix = "ordered_probit_" ^ suffix
+
+  let lpmf meta k eta c  =
+    stanlib_fun meta (distribution_prefix "lpmf") [k;eta;c]  
+
+  let rng meta eta c = 
+    stanlib_fun meta (distribution_prefix "rng") [eta;c]    
+end 
+
+(* == Unbounded discrete distributions ====================================== *)
+
+ 
+(** Negative Binomial Distribution (log alternative parameterization) *)
+module Neg_binomial_2_log_glm = struct 
+  let distribution_prefix suffix = "neg_binomial_2_log_glm_" ^ suffix
+
+  let lpmf meta n x alpha beta inv_overdispersion =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;x;alpha;beta;inv_overdispersion]
+
+  let rng meta x alpha beta inv_overdispersion = 
+    stanlib_fun meta (distribution_prefix "rng") [x;alpha;beta;inv_overdispersion]
 
 end
 
+(** Negative Binomial Distribution (log alternative parameterization) *)
+module Neg_binomial_2_log = struct 
+  let distribution_prefix suffix = "neg_binomial_2_log_" ^ suffix
 
+  let lpmf meta n log_location inv_overdispersion =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;log_location;inv_overdispersion]
+
+  let rng meta log_location inv_overdispersion = 
+    stanlib_fun meta (distribution_prefix "rng") [log_location;inv_overdispersion]
+end
+
+(** Negative Binomial Distribution (alternative parameterization) *)
+module Neg_binomial_2 = struct 
+  let distribution_prefix suffix = "neg_binomial_2_" ^ suffix
+
+  let lpmf meta n location precision =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;location;precision]
+
+  let cdf meta n location precision =
+    stanlib_fun meta (distribution_prefix "cdf") [n;location;precision]
+    
+  let lcdf meta n location precision =
+    stanlib_fun meta (distribution_prefix "lcdf") [n;location;precision]
+
+  let lccdf meta n location precision =
+    stanlib_fun meta (distribution_prefix "lccdf") [n;location;precision]
+
+  let rng meta location precision = 
+    stanlib_fun meta (distribution_prefix "rng") [location;precision]
+end 
+
+
+(** Negative Binomial Distribution *)
+module Neg_binomial = struct 
+  let distribution_prefix suffix = "neg_binomial_" ^ suffix
+
+  let lpmf meta n shape inverse_scale =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;shape;inverse_scale]
+
+  let cdf meta n shape inverse_scale =
+    stanlib_fun meta (distribution_prefix "cdf") [n;shape;inverse_scale]
+    
+  let lcdf meta n shape inverse_scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [n;shape;inverse_scale]
+
+  let lccdf meta n shape inverse_scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [n;shape;inverse_scale]
+
+  let rng meta shape inverse_scale = 
+    stanlib_fun meta (distribution_prefix "rng") [shape;inverse_scale]
+end
+
+module Poisson_log_glm = struct 
+  let distribution_prefix suffix = "poisson_log_glm_" ^ suffix
+
+  let lpmf meta y x alpha beta =
+    stanlib_fun meta (distribution_prefix "lpmf") [y;x;alpha;beta]
+
+  let rng meta x alpha beta = 
+    stanlib_fun meta (distribution_prefix "rng") [x;alpha;beta]
+end
+
+module Poisson_log = struct 
+  let distribution_prefix suffix = "poisson_log_" ^ suffix
+
+  let lpmf meta n alpha =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;alpha]
+
+  let rng meta alpha = 
+    stanlib_fun meta (distribution_prefix "rng") [alpha]
+end
+
+(** Poisson Distribution *)
+module Poisson = struct 
+  let distribution_prefix suffix = "poisson_" ^ suffix
+
+  let lpmf meta n lambda =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;lambda]
+
+  let cdf meta n lambda =
+    stanlib_fun meta (distribution_prefix "cdf") [n;lambda]
+    
+  let lcdf meta n lambda=
+    stanlib_fun meta (distribution_prefix "lcdf") [n;lambda]
+
+  let lccdf meta n lambda =
+    stanlib_fun meta (distribution_prefix "lccdf") [n;lambda]
+
+  let rng meta lambda = 
+    stanlib_fun meta (distribution_prefix "rng") [lambda]    
+end 
 

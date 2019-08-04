@@ -15,6 +15,10 @@ and autodifftype = Mir_pattern.autodifftype = DataOnly | AutoDiffable
 and returntype = Mir_pattern.returntype = Void | ReturnType of t
 [@@deriving compare, hash, sexp]
 
+
+
+
+
 let pp ppf x = Mir_pretty_printer.pp_unsizedtype ppf x
 let pp_returntype ppf x = Mir_pretty_printer.pp_returntype ppf x
 let pp_autodifftype ppf x = Mir_pretty_printer.pp_autodifftype ppf x
@@ -73,3 +77,20 @@ let is_real_type = function
 
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
 let is_fun_type = function UFun _ -> true | _ -> false
+
+
+
+
+module Comparator = Comparator.Make(struct 
+  type nonrec t = t 
+  let compare = compare
+  let sexp_of_t = sexp_of_t 
+end)
+
+include Comparator
+include Comparable.Make_using_comparator(struct
+  type nonrec t = t
+  let sexp_of_t = sexp_of_t 
+  let t_of_sexp = t_of_sexp
+  include Comparator
+end)
