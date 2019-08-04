@@ -495,7 +495,12 @@ module Categorical = struct
       stanlib_fun meta (distribution_prefix "lpmf") [y;theta]  
 
   let rng meta theta = 
-    stanlib_fun meta (distribution_prefix "rng") [theta]    
+    match pattern theta with     
+    | FunApp(StanLib,"inv_logit",[alpha])  ->    
+        Categorical_logit.rng meta alpha
+
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "rng") [theta]    
 end 
 
 
@@ -544,7 +549,21 @@ module Neg_binomial_2_log = struct
   let distribution_prefix suffix = "neg_binomial_2_log_" ^ suffix
 
   let lpmf meta n log_location inv_overdispersion =
-    stanlib_fun meta (distribution_prefix "lpmf") [n;log_location;inv_overdispersion]
+    match Fixed.proj2 log_location with 
+    | _,FunApp(StanLib,"Plus__",[alpha;(_,FunApp(StanLib,"Times__",[x;beta]))]) 
+      when Typed.type_of x = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n x (inj alpha) beta inv_overdispersion 
+
+    | _,FunApp(StanLib,"Plus__",[(_,FunApp(StanLib,"Times__",[x;beta]));alpha]) 
+      when Typed.type_of x = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n x (inj alpha) beta inv_overdispersion
+
+    | _,FunApp(StanLib,"Times__",[x;beta])
+      when Typed.type_of (inj x) = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n (inj x) zero (inj beta) inv_overdispersion
+
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "lpmf") [n;log_location;inv_overdispersion]
 
   let rng meta log_location inv_overdispersion = 
     stanlib_fun meta (distribution_prefix "rng") [log_location;inv_overdispersion]
@@ -555,7 +574,24 @@ module Neg_binomial_2 = struct
   let distribution_prefix suffix = "neg_binomial_2_" ^ suffix
 
   let lpmf meta n location precision =
-    stanlib_fun meta (distribution_prefix "lpmf") [n;location;precision]
+    match Fixed.proj3 location with 
+    | _ , FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Plus__",[alpha;(_,FunApp(StanLib,"Times__",[x;beta]))]))])
+      when Typed.type_of x = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n x (inj alpha) beta precision 
+
+    | _ , FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Plus__",[(_,FunApp(StanLib,"Times__",[x;beta]));alpha]))])
+      when Typed.type_of x = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n x (inj alpha) beta precision
+
+    | _, FunApp(StanLib,"exp",[(_,FunApp(StanLib,"Times__",[x;beta]))])
+      when Typed.type_of (inj x) = UMatrix -> 
+        Neg_binomial_2_log_glm.lpmf meta n (inj x) zero (inj beta) precision
+
+    | _, FunApp(StanLib,"exp",[eta]) ->
+        Neg_binomial_2_log.lpmf meta n (Fixed.inj2 eta) precision
+
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "lpmf") [n;location;precision]
 
   let cdf meta n location precision =
     stanlib_fun meta (distribution_prefix "cdf") [n;location;precision]
@@ -567,7 +603,11 @@ module Neg_binomial_2 = struct
     stanlib_fun meta (distribution_prefix "lccdf") [n;location;precision]
 
   let rng meta location precision = 
-    stanlib_fun meta (distribution_prefix "rng") [location;precision]
+    match pattern location with 
+    | FunApp(StanLib,"exp",[eta]) ->
+        Neg_binomial_2_log.rng meta eta precision
+    | _ -> 
+      stanlib_fun meta (distribution_prefix "rng") [location;precision]
 end 
 
 
