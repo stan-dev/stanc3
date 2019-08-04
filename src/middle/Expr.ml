@@ -1019,3 +1019,153 @@ module Frechet = struct
   let rng meta shape scale =  
     stanlib_fun meta (distribution_prefix "rng") [shape;scale ]    
 end
+
+
+(* == Non-negative continuous distributions ================================= *)
+
+(** Rayleigh Distribution *)
+module Rayleigh = struct 
+  let distribution_prefix suffix = "rayleigh_" ^ suffix
+
+  let lpdf meta y scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;scale ]
+
+  let cdf meta y scale =
+    stanlib_fun meta (distribution_prefix "cdf") [y;scale ]
+    
+  let lcdf meta y scale =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;scale ]
+
+  let lccdf meta y scale =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;scale ]
+
+  let rng meta  scale =  
+    stanlib_fun meta (distribution_prefix "rng") [scale ]    
+end
+
+
+(** Wiener First Passage Time Distribution *)
+module Wiener = struct 
+  let distribution_prefix suffix = "wiener_" ^ suffix
+
+  let lpdf meta y alpha tau beta delta =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;alpha;tau;beta;delta]
+end
+
+(* == Positive lower-bounded ================================================ *)
+
+(** Pareto Distribution *)
+module Pareto = struct 
+  let distribution_prefix suffix = "pareto_" ^ suffix
+
+  let lpdf meta y y_min shape =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;y_min;shape ]
+
+  let cdf meta y y_min shape =
+    stanlib_fun meta (distribution_prefix "cdf") [y;y_min;shape ]
+    
+  let lcdf meta y y_min shape =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;y_min;shape ]
+
+  let lccdf meta y y_min shape =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;y_min;shape ]
+
+  let rng meta  y_min shape =  
+    stanlib_fun meta (distribution_prefix "rng") [y_min;shape ]    
+end
+
+
+(** Pareto Type 2 Distribution *)
+module Pareto_type_2 = struct 
+  let distribution_prefix suffix = "pareto_type_2_" ^ suffix
+
+  let lpdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale;shape ]
+
+  let cdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "cdf") [y;location;scale;shape ]
+    
+  let lcdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;location;scale;shape ]
+
+  let lccdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;location;scale;shape ]
+
+  let rng meta  location scale shape =  
+    stanlib_fun meta (distribution_prefix "rng") [location;scale;shape ]    
+end
+
+(* == Continuous on [0,1] =================================================== *)
+
+(** Beta Distribution *)
+module Beta = struct 
+  let distribution_prefix suffix = "beta_" ^ suffix
+
+  let lpdf meta theta alpha beta =
+    stanlib_fun meta (distribution_prefix "lpdf") [theta;alpha;beta]
+
+  let cdf meta theta alpha beta =
+    stanlib_fun meta (distribution_prefix "cdf") [theta;alpha;beta]
+    
+  let lcdf meta theta alpha beta =
+    stanlib_fun meta (distribution_prefix "lcdf") [theta;alpha;beta]
+
+  let lccdf meta theta alpha beta =
+    stanlib_fun meta (distribution_prefix "lccdf") [theta;alpha;beta]
+
+  let rng meta alpha beta =  
+    stanlib_fun meta (distribution_prefix "rng") [alpha;beta]    
+end
+
+
+(** Beta Proportion Distribution *)
+module Beta_proportion = struct 
+  let distribution_prefix suffix = "beta_proportion_" ^ suffix
+
+  let lpdf meta theta mean precision =
+    stanlib_fun meta (distribution_prefix "lpdf") [theta;mean;precision]
+
+  let cdf meta theta mean precision  =
+    stanlib_fun meta (distribution_prefix "cdf") [theta;mean;precision]
+    
+  let lcdf meta theta mean precision  =
+    stanlib_fun meta (distribution_prefix "lcdf") [theta;mean;precision]
+  let lccdf meta theta mean precision  =
+    stanlib_fun meta (distribution_prefix "lccdf") [theta;mean;precision]
+
+  let rng meta mean precision  =  
+    stanlib_fun meta (distribution_prefix "rng") [mean;precision ]    
+end
+
+
+(* == Circular ============================================================== *)
+
+(** Von Mises Distribution *)
+module Von_mises = struct 
+  let distribution_prefix suffix = "von_mises_" ^ suffix
+
+  let lpdf meta y location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
+
+end
+
+(* == Bounded continuous ==================================================== *)
+
+(** Beta Proportion Distribution *)
+module Uniform = struct 
+  let distribution_prefix suffix = "uniform_" ^ suffix
+
+  let lpdf meta y lower upper =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;lower;upper]
+
+  let cdf meta y lower upper =
+    stanlib_fun meta (distribution_prefix "cdf")  [y;lower;upper]
+    
+  let lcdf meta y lower upper  =
+    stanlib_fun meta (distribution_prefix "lcdf") [y;lower;upper]
+  let lccdf meta y lower upper  =
+    stanlib_fun meta (distribution_prefix "lccdf") [y;lower;upper]
+
+  let rng meta lower upper  =  
+    stanlib_fun meta (distribution_prefix "rng")  [lower;upper]
+end
