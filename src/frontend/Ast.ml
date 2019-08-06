@@ -172,7 +172,7 @@ type ('e, 's, 'l) statement =
   | ForEach of identifier * 'e * 's
   | Block of 's list
   | VarDecl of
-      { sizedtype: 'e Middle.sizedtype
+      { decl_type: 'e Middle.possiblysizedtype
       ; transformation: 'e transformation
       ; identifier: identifier
       ; initial_value: 'e option

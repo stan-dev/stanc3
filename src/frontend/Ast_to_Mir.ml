@@ -79,6 +79,7 @@ and trans_idx = function
 and trans_exprs = List.map ~f:trans_expr
 
 let trans_sizedtype = map_sizedtype trans_expr
+let trans_possiblysizedtype pst = map_possiblysizedtype trans_expr pst
 
 let neg_inf =
   { expr= FunApp (StanLib, string_of_internal_fn FnNegInf, [])
@@ -325,7 +326,13 @@ let param_size transform sizedtype =
         sizedtype
   | Covariance -> shrink_eigen (fun k -> binop k Plus (k_choose_2 k)) sizedtype
 
-let read_decl dread decl_id sizedtype smeta decl_var =
+let remove_possibly_exn pst action =
+  match pst with
+  | Sized st -> st
+  | Unsized _ -> raise_s [%message "Error extracting sizedtype" ~action]
+
+let read_decl dread decl_id decl_type smeta decl_var =
+  let sizedtype = remove_possibly_exn decl_type "read" in
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
@@ -347,7 +354,8 @@ let read_decl dread decl_id sizedtype smeta decl_var =
   in
   forl st (assign_indexed decl_id smeta readvar) decl_var smeta
 
-let constrain_decl st dconstrain t decl_id decl_var smeta =
+let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
+  let st = remove_possibly_exn decl_type "constrain" in
   let mkstring = mkstring decl_var.emeta.mloc in
   match Option.map ~f:(constraint_to_string t) dconstrain with
   | None | Some "" -> []
@@ -370,7 +378,8 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
           (assign_indexed decl_id smeta constrainvar)
           decl_var smeta ]
 
-let rec check_decl decl_type decl_id decl_trans smeta adlevel =
+let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
+  let decl_type = remove_possibly_exn decl_type' "check" in
   let chk fn args =
     let check_id id =
       let id_str =
@@ -392,46 +401,49 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
-      check_decl decl_type decl_id (Ast.Lower lb) smeta adlevel
-      @ check_decl decl_type decl_id (Ast.Upper ub) smeta adlevel
+      check_decl decl_type' decl_id (Ast.Lower lb) smeta adlevel
+      @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
-let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
+let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
     identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let dt = trans_sizedtype sizedtype in
+  let dt = trans_possiblysizedtype decl_type in
   let decl_adtype = dadlevel in
   let decl_var =
     { expr= Var decl_id
-    ; emeta= {mtype= remove_size sizedtype; madlevel= dadlevel; mloc= smeta} }
+    ; emeta=
+        {mtype= remove_possible_size decl_type; madlevel= dadlevel; mloc= smeta}
+    }
   in
-  let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= Sized dt}; smeta} in
+  let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= dt}; smeta} in
   let checks =
     match dconstrain with
     | Some Check -> check_decl dt decl_id transform smeta dadlevel
     | _ -> []
   in
   let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
-    let unconstrained_decl =
+    let default = ((decl_id, decl_var, dt), []) in
+    match dconstrain with
+    | Some Constrain -> (
       match transform with
       | Ast.Identity | Ast.Lower _ | Ast.Upper _
        |Ast.LowerUpper (_, _)
        |Ast.Offset _ | Ast.Multiplier _
        |Ast.OffsetMultiplier (_, _)
        |Ast.Ordered | Ast.PositiveOrdered ->
-          None
+          default
       | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
        |Ast.Correlation | Ast.Covariance ->
+          let dt =
+            remove_possibly_exn dt "constrain" |> param_size transform
+          in
           let decl_id = decl_id ^ "_" ^ gensym () in
-          let st = param_size transform dt in
-          let emeta = {decl_var.emeta with mtype= remove_size st} in
-          let stmt = Decl {decl_adtype; decl_id; decl_type= Sized st} in
-          Some ((decl_id, {expr= Var decl_id; emeta}, st), [{stmt; smeta}])
-    in
-    match (dconstrain, unconstrained_decl) with
-    | Some Constrain, Some ud -> ud
-    | _ -> ((decl_id, decl_var, dt), [])
+          let emeta = {decl_var.emeta with mtype= remove_size dt} in
+          let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
+          ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}]) )
+    | _ -> default
   in
   let constrain_stmts =
     match dconstrain with
@@ -585,9 +597,9 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl
-      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      {decl_type; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
-      trans_decl declc smeta sizedtype
+      trans_decl declc smeta decl_type
         (Ast.map_transformation trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
@@ -685,8 +697,8 @@ let trans_prog filename p : typed_prog =
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
   let get_name_size s =
     match s.Ast.stmt with
-    | Ast.VarDecl {sizedtype; identifier; transformation; _} ->
-        [(identifier.name, trans_sizedtype sizedtype, transformation)]
+    | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
+        [(identifier.name, trans_sizedtype st, transformation)]
     | _ -> []
   in
   let grab_names_sizes block =

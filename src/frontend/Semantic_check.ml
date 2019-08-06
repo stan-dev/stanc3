@@ -1413,7 +1413,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     |> map ~f:(fun uinit ->
            let stmt =
              VarDecl
-               { sizedtype= ust
+               { decl_type= Sized ust
                ; transformation= utrans
                ; identifier= id
                ; initial_value= uinit
@@ -1619,9 +1619,15 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
         loop_body
   | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
   | Block vdsl -> semantic_check_block ~loc ~cf vdsl
-  | VarDecl {sizedtype; transformation; identifier; initial_value; is_global}
-    ->
-      semantic_check_var_decl ~loc ~cf sizedtype transformation identifier
+  | VarDecl {decl_type= Unsized _; _} ->
+      raise_s [%message "Don't support unsized declarations yet."]
+  | VarDecl
+      { decl_type= Sized st
+      ; transformation
+      ; identifier
+      ; initial_value
+      ; is_global } ->
+      semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
   | FunDef {returntype; funname; arguments; body} ->
       semantic_check_fundef ~loc ~cf returntype funname arguments body
