@@ -40,12 +40,15 @@ let rec local_scalar ut ad =
   | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
-(* stub *)
-let rec pp_return_type ppf = function
-  | Void -> pf ppf "void"
-  | ReturnType rt -> pp_unsizedtype ppf rt
+let promote_adtype =
+  List.fold
+    ~f:(fun accum expr ->
+      match (accum, expr) with
+      | _, {emeta= {madlevel= AutoDiffable; _}; _} -> AutoDiffable
+      | ad, _ -> ad )
+    ~init:DataOnly
 
-and pp_unsizedtype_custom_scalar ppf (scalar, ut) =
+let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | UInt | UReal -> string ppf scalar
   | UArray t ->
@@ -55,24 +58,9 @@ and pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
 
-and pp_unsizedtype_local ppf (adtype, ut) =
+let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
   pp_unsizedtype_custom_scalar ppf (s, ut)
-
-and pp_unsizedtype ppf ut =
-  match ut with
-  | UInt -> pf ppf "int"
-  | UReal -> pf ppf "local_scalar_t__"
-  | UVector -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | URowVector -> pf ppf "Eigen::Matrix<local_scalar_t, 1, -1>"
-  | UMatrix -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype t
-  | UFun (args_t, return_t) ->
-      let arg_types = List.map ~f:snd args_t in
-      pf ppf "std::function<%a(%a)>" pp_return_type return_t
-        (list ~sep:(const string ", ") pp_unsizedtype)
-        arg_types
-  | UMathLibraryFunction -> pf ppf "std::function<void()>"
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
@@ -235,7 +223,7 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
 
 and pp_ordinary_fn ppf f es =
   let extra_args = gen_extra_fun_args f in
-  let sep = if List.is_empty extra_args then "" else ", " in
+  let sep = if List.is_empty es then "" else ", " in
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
@@ -245,8 +233,17 @@ and pp_compiler_internal_fn ut f ppf es =
   in
   match internal_fn_of_string f with
   | Some FnMakeArray -> array_literal ppf es
-  | Some FnMakeRowVec ->
-      pf ppf "stan::math::to_row_vector(%a)" array_literal es
+  | Some FnMakeRowVec -> (
+    match ut with
+    | URowVector -> pf ppf "stan::math::to_row_vector(%a)" array_literal es
+    | UMatrix ->
+        pf ppf "stan::math::to_matrix<%s>(%a)"
+          (local_scalar ut (promote_adtype es))
+          array_literal es
+    | _ ->
+        raise_s
+          [%message
+            "Unexpected type for row vector literal" (ut : unsizedtype)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
