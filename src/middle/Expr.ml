@@ -1,7 +1,7 @@
 open Core_kernel
 open Common
 open Helpers 
-open State.Cps
+open State
 
 type litType = Mir_pattern.litType = Int | Real | Str
 [@@deriving sexp, hash, compare]
@@ -43,10 +43,26 @@ module Fixed = struct
 
     module Make_traversable = Mir_pattern.Make_traversable_expr
     module Make_traversable2 = Mir_pattern.Make_traversable_expr2
+
+
   end
 
   (** Fixed-point of `expr` *)
   include Fix.Make (Pattern)
+
+
+  module Traversable_state = Make_traversable2(Cps.State)
+  module Traversable_state_r = Make_traversable2(Right.Cps.State)
+
+  let map_accum_left ~f ~init x = Cps.State.(
+    Traversable_state.traverse ~f:(fun a -> state @@ Fn.flip f a) x
+    |> run_state ~init
+  )
+
+  let map_accum_right ~f ~init x = Right.Cps.State.(
+    Traversable_state_r.traverse ~f:(fun a -> state @@ Fn.flip f a) x 
+    |> run_state ~init
+  )
 end
 
 (** Expressions without meta data *)
@@ -151,12 +167,7 @@ module Labelled = struct
     | Between (e1, e2) -> associate ~init:(associate ~init:assocs e2) e1
 end
 
-(* == Helpers =============================================================== *)
-let fix = Fixed.fix
-let inj = Fixed.inj
-let proj = Fixed.proj
-let meta = Fixed.meta
-let pattern = Fixed.pattern
+
 let var meta name = Fixed.fix meta @@ Var name
 
 (* == Literals ============================================================== *)
@@ -171,6 +182,21 @@ let is_lit ?type_ expr =
   | Lit (lit_ty, _) ->
       Option.value_map ~default:true ~f:(fun ty -> ty = lit_ty) type_
   | _ -> false
+
+let int_of_lit expr = 
+  match Fixed.pattern expr with 
+  | Lit(Int,str) -> int_of_string_opt str 
+  | _ -> None
+
+let real_of_lit expr = 
+  match Fixed.pattern expr with 
+  | Lit(Real,str) -> float_of_string_opt str 
+  | _ -> None 
+
+let string_of_lit expr = 
+  match Fixed.pattern expr with 
+  | Lit(Str,str) -> Some str
+  | _ -> None 
 
 (* == Logical =============================================================== *)
 
@@ -253,11 +279,72 @@ let contains_internal_fun ?fn expr =
 
 
 (* == Binary operations ===================================================== *)
-let binop meta op a b = stanlib_fun meta (Operator.to_string op) [a; b]
+
+let lift_int_binop = function 
+  | Operator.Plus -> Some(+)
+  | Minus -> Some(-)
+  | Times -> Some( * )
+  | Divide -> Some (/)
+  | Modulo -> Some(%)
+  | Equals -> Some(fun x y -> if x = y then 1 else 0 )
+  | NEquals -> Some(fun x y -> if x = y then 0 else 1)
+  | Less -> Some(fun x y -> if x < y then 1 else 0 )
+  | Leq -> Some(fun x y -> if x <= y then 1 else 0 )
+  | Greater -> Some(fun x y -> if x > y then 1 else 0 )
+  | Geq -> Some(fun x y -> if x >= y then 1 else 0 )
+  | And -> Some(fun x y -> if x = 1 && y = 1 then 1 else 0)
+  | Or -> Some(fun x y -> if x = 1 || y = 1 then 1 else 0)
+  | _ -> None
+
+let lift_real_arith_binop = function 
+  | Operator.Plus -> Some(+.)
+  | Minus -> Some(-.)
+  | Times -> Some( *. )
+  | Divide -> Some (/.)  
+  | _ -> None 
+
+let lift_real_logical_binop = function
+  | Operator.Equals -> Some(fun x y -> if Float.equal x y then 1 else 0)
+  | NEquals -> Some(fun x y ->if x <> y then 1 else 0 )
+  | Less -> Some(fun x y -> if x < y then 1 else 0 )
+  | Leq -> Some(fun x y -> if x <= y then 1 else 0 )
+  | Greater -> Some(fun x y -> if x > y then 1 else 0 )
+  | Geq -> Some(fun x y -> if x >= y then 1 else 0 )
+  | And -> Some(fun x y -> if x = 1.0 && y = 1.0 then 1 else 0)
+  | Or -> Some(fun x y -> if x = 1.0 || y = 1.0 then 1 else 0)
+  | _ -> None
+
+let apply_int_binop meta op a b = 
+  lift_int_binop op 
+  |> Option.map2 ~f:(fun a f -> f a ) (int_of_lit a)
+  |> Option.map2 ~f:(fun b f -> f b ) (int_of_lit b)
+  |> Option.map ~f:(lit_int meta)
+
+let apply_real_arith_binop meta op a b = 
+  lift_real_arith_binop op 
+  |> Option.map2 ~f:(fun a f -> f a ) (real_of_lit a)
+  |> Option.map2 ~f:(fun b f -> f b ) (real_of_lit b)
+  |> Option.map ~f:(lit_real meta)
+
+let apply_real_logical_binop meta op a b = 
+  lift_real_logical_binop op 
+  |> Option.map2 ~f:(fun a f -> f a ) (real_of_lit a)
+  |> Option.map2 ~f:(fun b f -> f b ) (real_of_lit b)
+  |> Option.map ~f:(lit_int meta)
+  
+
+let apply_binop meta op a b = 
+    apply_int_binop meta op a b
+    |> option_or_else ~if_none:(apply_real_arith_binop meta op a b)
+    |> option_or_else ~if_none:(apply_real_logical_binop meta op a b)
+
+let binop meta op a b = 
+  apply_binop meta op a b 
+  |> Option.value ~default:(stanlib_fun meta (Operator.to_string op) [a; b])
 
 (* -- Plus ------------------------------------------------------------------ *)
 let plus meta a b = 
-  match pattern a , pattern b with 
+  match Fixed.(pattern a , pattern b) with 
   | FunApp(StanLib,"Times__",[c;d]) , _ -> 
       stanlib_fun meta "fma" [c;d;b]
   | _ ,  FunApp(StanLib,"Times__",[c;d]) ->
@@ -267,7 +354,7 @@ let plus meta a b =
 
 (* -- Minus ----------------------------------------------------------------- *)
 let minus meta a b = 
-  match pattern a , pattern b with 
+  match Fixed.(pattern a , pattern b) with 
   | Lit(Int,"1") , FunApp(StanLib,"erf",x) -> 
       stanlib_fun meta "erfc" x
 
@@ -321,40 +408,40 @@ let times_quad_form_diag meta a b =
   match Fixed.(proj3 a , proj2 b) with 
   | (_,FunApp(StanLib,"transpose",[_,FunApp(StanLib,"diag_matrix",[v])])), 
       (_,FunApp(StanLib,"Times__",[c ; (_,FunApp(StanLib,"diag_matrix",[w]))]))
-        when Typed.compare (inj v) w = 0 -> 
+        when Typed.equal (Fixed.inj v) w -> 
 
-          Some(stanlib_fun meta "quad_form_diag" [inj c;inj v])
+          Some(stanlib_fun meta "quad_form_diag" @@ List.map ~f:Fixed.inj [c;v])
 
   | (_,FunApp(StanLib,"Times__",[(_,FunApp(StanLib,"transpose",[_,FunApp(StanLib,"diag_matrix",[v])]));c])), 
       (_,FunApp(StanLib,"diag_matrix",[w])) 
-        when Typed.compare v (inj w) = 0 -> 
+        when Typed.equal v (Fixed.inj w) -> 
           Some(stanlib_fun meta "quad_form_diag" [Fixed.inj2 c;v]) 
 
   | _ -> None 
   
 
 let times_quad_form meta lhs rhs = 
-  match Fixed.proj2 lhs , pattern rhs with 
+  match Fixed.(proj2 lhs , pattern rhs) with 
   | (_,FunApp(StanLib,"transpose",[b])) , FunApp(StanLib,"Times__",[a;c]) 
-      when Typed.compare (inj b) c = 0 ->
-        Some(stanlib_fun meta "quad_form" [a;inj b])
+      when Typed.equal (Fixed.inj b) c  ->
+        Some(stanlib_fun meta "quad_form" [a;Fixed.inj b])
 
   | (_,FunApp(StanLib,"Times__",[_,FunApp(StanLib,"transpose",[b]);a])),_ 
-      when Typed.compare b rhs = 0 -> 
-        Some(stanlib_fun meta "quad_form" [inj a;b])
+      when Typed.equal b rhs -> 
+        Some(stanlib_fun meta "quad_form" [Fixed.inj a;b])
 
   | _ -> None
   
 
 let times_diag_post_multiply meta lhs rhs = 
-  match pattern rhs with 
+  match Fixed.pattern rhs with 
   | FunApp(StanLib,"diag_matrix",[v]) -> 
     Some(stanlib_fun meta "diag_post_multiply" [lhs;v])
   | _ -> 
     None
 
 let times_diag_pre_multiply meta lhs rhs = 
-  match pattern lhs with 
+  match Fixed.pattern lhs with 
   | FunApp(StanLib,"diag_matrix",[v]) -> 
     Some(stanlib_fun meta "diag_post_multiply" [v;rhs])
   | _ -> 
@@ -378,7 +465,7 @@ let times meta a b =
 
 let divide meta a b = binop meta Operator.Divide a b
 
-(* -- Times ----------------------------------------------------------------- *)
+(* -- Pow ------------------------------------------------------------------- *)
 
 let pow_exp2 meta a b = 
   match Fixed.pattern a with 
@@ -399,38 +486,72 @@ let pow_sqrt meta a b =
       Some (stanlib_fun meta "sqrt" [a])
   | _ -> None 
 
-let simplify_pow meta a b = 
+let simplify_pow_opt meta a b = 
   pow_exp2 meta a b
   |> option_or_else ~if_none:(pow_square meta a b)
   |> option_or_else ~if_none:(pow_sqrt meta a b)
 
+(** TODO: should the operator names be the same as the stan math function
+    names?
+*)
 let pow meta a b = 
-  simplify_pow meta a b
+  simplify_pow_opt meta a b
   |> Option.value ~default:(binop meta Operator.Pow a b)
-
-
 
 
 (* -- Modulo ---------------------------------------------------------------- *)
 let modulo meta a b = binop meta Operator.Modulo a b
+
+(* -- Comparison ------------------------------------------------------------ *)
 let eq meta a b = binop meta Operator.Equals a b
 let neq meta a b = binop meta Operator.NEquals a b
 let gt meta a b = binop meta Operator.Greater a b
 let gteq meta a b = binop meta Operator.Geq a b
 let lt meta a b = binop meta Operator.Less a b
 let lteq meta a b = binop meta Operator.Leq a b
+
+(* -- Logical --------------------------------------------------------------- *)
 let logical_and meta a b = binop meta Operator.And a b
 let logical_or meta a b = binop meta Operator.Or a b
 
 (* == Unary operations ====================================================== *)
 
-let unop meta op e = stanlib_fun meta (Operator.to_string op) [e]
+let lift_int_prefix_op = function 
+  | Operator.PPlus -> Some(fun x -> +x)
+  | PMinus -> Some(fun x -> -x)
+  | PNot -> Some(fun x -> if x = 0 then 1 else 0)
+  | _ -> None
+
+let lift_real_prefix_op = function 
+  | Operator.PPlus -> Some(fun x -> +.x)
+  | PMinus -> Some(fun x -> -.x)
+  | _ -> None 
+
+let unop_constant_int meta op e = 
+  let kf = lift_int_prefix_op op 
+  and kv = int_of_lit e in 
+  Option.map2 ~f:(fun f v -> lit_int meta @@ f v) kf kv
+
+let unop_constant_real meta op e = 
+  let kf = lift_real_prefix_op op 
+  and kv = real_of_lit e in 
+  Option.map2 ~f:(fun f v -> lit_real meta @@ f v) kf kv
+  
+let apply_unop meta op e = 
+  unop_constant_int meta op e 
+  |> option_or_else ~if_none:(unop_constant_real meta op e)
+
+let unop meta op e = 
+  apply_unop meta op e
+  |> Option.value ~default:(stanlib_fun meta (Operator.to_string op) [e])
+
+
 let transpose meta e = unop meta Operator.Transpose e
 
-
-
 let logical_not meta e = unop meta Operator.PNot e
+
 let negate meta e = unop meta Operator.PMinus e
+
 let positive meta e = unop meta Operator.PPlus e
 
 
@@ -446,8 +567,8 @@ let decr expr =
 
 (* == Constants ============================================================= *)
 
-let zero = lit_int Typed.Meta.empty 0
-let loop_bottom = lit_int Typed.Meta.empty 1
+let zero meta  = lit_int meta  0
+let loop_bottom meta = lit_int meta 1
 
 let sqrt2 meta = stanlib_fun meta "sqrt2" []
 
@@ -456,7 +577,7 @@ let sqrt2 meta = stanlib_fun meta "sqrt2" []
 (* == StanLib smart constructors ============================================ *)
 
 
-(* == Log =================================================================== *)
+(* -- Log ------------------------------------------------------------------- *)
 
 let log_log1m_exp meta a = 
   match Fixed.pattern2 a with 
@@ -473,7 +594,7 @@ let log_log1m_inv_logit meta a =
 let log_log1m meta a = 
   match Fixed.proj2 a with 
   | _,FunApp(StanLib,"Minus__",[_,Lit(Int,"1");x]) -> 
-    Some(stanlib_fun meta "log1m" [inj x])
+    Some(stanlib_fun meta "log1m" [Fixed.inj x])
   | _ -> None 
 
 let log_log1p_exp meta a = 
@@ -487,7 +608,7 @@ let log_log1p meta a =
   match Fixed.proj2 a with 
   | _,FunApp(StanLib,"Plus",[_,Lit(Int,"1");x]) 
   | _,FunApp(StanLib,"Plus",[x;_,Lit(Int,"1")]) -> 
-    Some(stanlib_fun meta "log1p" [inj x])
+    Some(stanlib_fun meta "log1p" [Fixed.inj x])
   | _ -> None
 
 
@@ -571,7 +692,7 @@ let log meta a =
 
 
 
-(* == Sum =================================================================== *)
+(* -- Sum ------------------------------------------------------------------- *)
 
 let sum_squared_distance meta a = 
   match Fixed.pattern2 a with 
@@ -586,44 +707,43 @@ let sum_trace meta a =
     Some(stanlib_fun meta "trace" x)
   | _ -> None 
 
-let simplify_sum meta a = 
+let simplify_sum_opt meta a = 
   sum_squared_distance meta a
   |> option_or_else ~if_none:(sum_trace meta a)
 
 let sum meta a = 
-  simplify_sum meta a 
+  simplify_sum_opt meta a 
   |> Option.value ~default:(stanlib_fun meta "sum" [a])
 
-(* == Square ================================================================ *)
+(* -- Square ---------------------------------------------------------------- *)
 
 let square_variance meta a = 
   match Fixed.pattern a with 
   | FunApp(StanLib,"sd",[x]) -> Some(stanlib_fun meta "variance" [x])
   | _ -> None 
 
-let simplify_square meta a = 
+let simplify_square_opt meta a = 
   square_variance meta a 
 
 let square meta  a = 
-  simplify_square meta a 
+  simplify_square_opt meta a 
   |> Option.value ~default:(stanlib_fun meta "square" [a])
 
-(* == Sqrt ================================================================== *)
+(* -- Sqrt ------------------------------------------------------------------ *)
 
 let sqrt_sqrt2 meta a = 
   match Fixed.pattern a with 
   | Lit(Int,"2") -> Some(stanlib_fun meta "sqrt2" [])
   | _ -> None 
 
-let simplify_sqrt meta a = 
+let simplify_sqrt_opt meta a = 
   sqrt_sqrt2 meta a 
 
 let sqrt meta  a = 
-  simplify_sqrt meta a 
+  simplify_sqrt_opt meta a 
   |> Option.value ~default:(stanlib_fun meta "sqrt" [a])
 
-
-(* == Inv =================================================================== *)
+(* -- Inv ------------------------------------------------------------------- *)
 
 let inv_inv_sqrt meta a = 
   match Fixed.pattern a with 
@@ -635,18 +755,18 @@ let inv_inv_square meta a =
   | FunApp(StanLib,"square",[x])  -> Some(stanlib_fun meta "inv_square" [x])
   | _ -> None 
 
-let simplify_inv meta a = 
+let simplify_inv_opt meta a = 
   inv_inv_sqrt meta a 
   |> option_or_else ~if_none:(inv_inv_square meta a)
 
 let inv meta  a = 
-  simplify_inv meta a 
+  simplify_inv_opt meta a 
   |> Option.value ~default:(stanlib_fun meta "inv" [a])
 
 
 (* == Matrix functions ====================================================== *)
 
-(* == Trace ================================================================= *)
+(* -- Trace ----------------------------------------------------------------- *)
 
 let trace_trace_gen_quad_form meta a  = 
   match Fixed.proj4 a with 
@@ -662,53 +782,53 @@ let trace_trace_quad_form meta a =
 
   | _ -> None 
 
-let simplify_trace meta a = 
+let simplify_trace_opt meta a = 
   trace_trace_gen_quad_form meta a 
   |> option_or_else ~if_none:(trace_trace_quad_form meta a)
 
 let trace meta a = 
-  simplify_trace meta a 
+  simplify_trace_opt meta a 
   |> Option.value ~default:(stanlib_fun meta "trace" [a])
 
-(* == Dot product =========================================================== *)
+(* -- Dot product ----------------------------------------------------------- *)
 
 let dot_product_dot_self meta x y = 
   if Typed.equal x y then Some(stanlib_fun meta "dot_self" [x])  
   else None 
 
-let simplify_dot_product meta a b = 
+let simplify_dot_product_opt meta a b = 
   dot_product_dot_self meta a b 
 
 let dot_product meta a b = 
-  simplify_dot_product meta a b
+  simplify_dot_product_opt meta a b
   |> Option.value ~default:(stanlib_fun meta "dot_product" [a;b])
 
 
-(* == Rows dot product ====================================================== *)
+(* -- Rows dot product ------------------------------------------------------ *)
 
 let rows_dot_product_rows_dot_self meta x y = 
   if Typed.equal x y then Some(stanlib_fun meta "rows_dot_self" [x])  
   else None 
 
-let simplify_rows_dot_product meta a b = 
+let simplify_rows_dot_product_opt meta a b = 
   rows_dot_product_rows_dot_self meta a b 
 
 let rows_dot_product meta a b = 
-  simplify_rows_dot_product meta a b
+  simplify_rows_dot_product_opt meta a b
   |> Option.value ~default:(stanlib_fun meta "rows_dot_product" [a;b])
 
 
-(* == Columns dot product =================================================== *)
+(* -- Columns dot product --------------------------------------------------- *)
 
 let columns_dot_product_columns_dot_self meta x y = 
   if Typed.equal x y then Some(stanlib_fun meta "columns_dot_self" [x])  
   else None 
 
-let simplify_columns_dot_product meta a b = 
+let simplify_columns_dot_product_opt meta a b = 
   columns_dot_product_columns_dot_self meta a b 
 
 let columns_dot_product meta a b = 
-  simplify_columns_dot_product meta a b
+  simplify_columns_dot_product_opt meta a b
   |> Option.value ~default:(stanlib_fun meta "columns_dot_product" [a;b])
 
 
@@ -722,13 +842,13 @@ let lpdf_glm_lpdf to_glm param =
                           ,[alpha
                           ;(_,FunApp(StanLib,"Times__",[x;beta]))
                           ]) when Typed.type_of x = UMatrix -> 
-      Some(to_glm  x (inj alpha) beta)
+      Some(to_glm  x (Fixed.inj alpha) beta)
     
     | _,FunApp(StanLib,"Plus__"
                           ,[(_,FunApp(StanLib,"Times__",[x;beta]))
                           ;alpha
                           ]) when Typed.type_of x = UMatrix -> 
-      Some(to_glm x (inj alpha) beta)
+      Some(to_glm x (Fixed.inj alpha) beta)
     | _ -> 
       None 
 
@@ -743,7 +863,7 @@ let lpdf_trans_glm_lpdf ~link to_glm param =
                         ]
                       )
         when link' = link && Typed.type_of x = UMatrix ->      
-      Some(to_glm x (inj alpha) beta)
+      Some(to_glm x (Fixed.inj alpha) beta)
   | _ , FunApp(StanLib,link'
                       ,[(_,FunApp(StanLib,"Plus__"
                           ,[(_,FunApp(StanLib,"Times__",[x;beta]))
@@ -752,11 +872,11 @@ let lpdf_trans_glm_lpdf ~link to_glm param =
                         ]
                       ) 
         when link' = link && Typed.type_of x = UMatrix ->
-      Some(to_glm x (inj alpha) beta)
+      Some(to_glm x (Fixed.inj alpha) beta)
 
   | _ , FunApp(StanLib,link',[(_,FunApp(StanLib,"Times__",[x;beta]))])
         when link' = link && Typed.Meta.type_ (fst x) = UMatrix ->
-          Some(to_glm (inj x) zero (inj beta))
+          Some(to_glm (Fixed.inj x) (zero @@ fst x) (Fixed.inj beta))
   | _ -> None 
 
 
@@ -784,13 +904,6 @@ module Bernoulli_logit_glm = struct
   let lpmf meta y x alpha beta = 
     stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
 
-  let lpmf_checked meta y x alpha beta = 
-    match Typed.(type_of y , type_of x , type_of alpha , type_of beta) with 
-    | UArray UInt , UMatrix , UReal ,UVector 
-    | UArray UInt , UMatrix , UVector ,UVector -> 
-          Some (lpmf meta y x alpha beta)
-    | _ -> None
-
 end 
 
 (** Bernoulli Distribution, Logit Parameterization *)
@@ -809,27 +922,29 @@ end
  
 (** Bernoulli Distribution  *)
 module Bernoulli = struct
+  let distribution_prefix suffix = "bernoulli_" ^ suffix
+
   let lpmf meta y theta = 
     let to_logit_glm = Bernoulli_logit_glm.lpmf meta y
     and to_logit = Bernoulli_logit.lpmf meta y
-    and default = stanlib_fun meta "bernoulli_lpmf" [y;theta]
+    and default = stanlib_fun meta (distribution_prefix "lpmf") [y;theta]
     in 
     lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm  theta
     |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
     |> Option.value ~default
 
   let cdf meta y theta = 
-    stanlib_fun meta "bernoulli_cdf" [y;theta]
+    stanlib_fun meta (distribution_prefix "cdf") [y;theta]
     
   let lcdf meta y theta = 
-    stanlib_fun meta "bernoulli_lcdf" [y;theta]
+    stanlib_fun meta (distribution_prefix "lcdf") [y;theta]
 
   let lccdf meta y theta = 
-    stanlib_fun meta "bernoulli_lcdf" [y;theta]
+    stanlib_fun meta (distribution_prefix "lccmf") [y;theta]
 
   let rng meta theta = 
     let to_logit = Bernoulli_logit.rng meta
-    and default = stanlib_fun meta "bernoulli_rng" [theta] in
+    and default = stanlib_fun meta (distribution_prefix "rng") [theta] in
     rng_trans_rng ~link:"inv_logit" to_logit theta 
     |> Option.value ~default
 
@@ -839,32 +954,33 @@ end
 
 (** Binomial Distribution, Logit Parameterization *)
 module Binomial_logit = struct 
+    let distribution_prefix suffix = "bernoulli_logit_" ^ suffix
   let lpmf meta successes trials alpha =
-    stanlib_fun meta "binomial_logit_lpmf" [successes;trials;alpha]
+    stanlib_fun meta (distribution_prefix "lpmf") [successes;trials;alpha]
 
 end 
 
 (** Binomial Distribution *)
 module Binomial = struct 
-
+  let distribution_prefix suffix = "binomial_" ^ suffix
   let lpmf meta successes trials theta =
     let to_logit = Binomial_logit.lpmf meta successes trials
-    and default = stanlib_fun meta "binomial_lpmf" [successes;trials;theta] in 
-    lpdf_trans_lpdf "inv_logit" to_logit theta
+    and default = stanlib_fun meta (distribution_prefix "lpmf") [successes;trials;theta] in 
+    lpdf_trans_lpdf ~link:"inv_logit" to_logit theta
     |> Option.value ~default
     
-  let cdf meta y theta = 
-    stanlib_fun meta "binomial_cdf" [y;theta]
+  let cdf meta successes trials theta = 
+    stanlib_fun meta (distribution_prefix "cdf") [successes;trials;theta]
     
-  let lcdf meta y theta = 
-    stanlib_fun meta "binomial_lcdf" [y;theta]
+  let lcdf meta successes trials theta = 
+    stanlib_fun meta (distribution_prefix "lcdf") [successes;trials;theta]
 
-  let lccdf meta y theta = 
-    stanlib_fun meta "binomial_lcdf" [y;theta]
+  let lccdf meta successes trials theta = 
+    stanlib_fun meta (distribution_prefix "lccdf") [successes;trials;theta]
 
   (** Log parameterization has no rng *)
-  let rng meta theta =     
-    stanlib_fun meta "binomial_rng" [theta]
+  let rng meta trials theta =     
+    stanlib_fun meta (distribution_prefix "rng") [trials;theta]
 
 end 
 
@@ -962,11 +1078,11 @@ end
 module Neg_binomial_2_log_glm = struct 
   let distribution_prefix suffix = "neg_binomial_2_log_glm_" ^ suffix
 
-  let lpmf meta n x alpha beta inv_overdispersion =
-    stanlib_fun meta (distribution_prefix "lpmf") [n;x;alpha;beta;inv_overdispersion]
+  let lpmf meta n x alpha beta precision =
+    stanlib_fun meta (distribution_prefix "lpmf") [n;x;alpha;beta;precision]
 
-  let rng meta x alpha beta inv_overdispersion = 
-    stanlib_fun meta (distribution_prefix "rng") [x;alpha;beta;inv_overdispersion]
+  let rng meta x alpha beta precision = 
+    stanlib_fun meta (distribution_prefix "rng") [x;alpha;beta;precision]
 
 end
 
@@ -1108,14 +1224,14 @@ module Multinomial = struct
     stanlib_fun meta (distribution_prefix "rng") [theta;total_count]
 end
 
-(* == Unbounded continuous == *)
+(* == Unbounded continuous ================================================== *)
 
 (** Normal-Id Generalised Linear Model (Linear Regression) *)
 module Normal_id_glm = struct 
   let distribution_prefix suffix = "normal_id_glm_" ^ suffix
 
   let lpdf meta y x alpha beta sigma  =
-    stanlib_fun meta (distribution_prefix "ldmf") [y;x;alpha;beta;sigma]
+    stanlib_fun meta (distribution_prefix "lpdf") [y;x;alpha;beta;sigma]
 end
 
 (** Standard Normal Distribution *)
@@ -1158,7 +1274,7 @@ module Exp_mod_normal = struct
   let distribution_prefix suffix = "exp_mod_normal_" ^ suffix
 
   let lpdf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "ldmf") [y;mu;sigma;lambda]
+    stanlib_fun meta (distribution_prefix "lpdf") [y;mu;sigma;lambda]
 
   let cdf meta y mu sigma lambda =
     stanlib_fun meta (distribution_prefix "cdf") [y;mu;sigma;lambda]
@@ -1178,8 +1294,8 @@ end
 module Skew_normal = struct 
   let distribution_prefix suffix = "skew_normal_" ^ suffix
 
-  let ldmf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "ldmf") [y;location;scale;shape]
+  let lpdf meta y location scale shape =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale;shape]
 
   let cdf meta y location scale shape =
     stanlib_fun meta (distribution_prefix "cdf") [y;location;scale;shape]
@@ -1198,8 +1314,8 @@ end
 module Student_t = struct 
   let distribution_prefix suffix = "student_t_" ^ suffix
 
-  let ldmf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "ldmf") [y;dof;location;scale]
+  let lpdf meta y dof location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;dof;location;scale]
 
   let cdf meta y  dof  location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;dof;location;scale]
@@ -1261,7 +1377,7 @@ end
 module Logistic = struct 
   let distribution_prefix suffix = "logistic_" ^ suffix
 
-  let ldmf meta y  location scale =
+  let lpdf meta y  location scale =
     stanlib_fun meta (distribution_prefix "lpdf") [y;location;scale]
 
   let cdf meta y    location scale  =
@@ -1672,7 +1788,7 @@ module Multi_normal = struct
   let lpdf meta y mu sigma =
     let to_trans tau = Multi_normal_prec.lpdf meta y mu tau
     and default = stanlib_fun meta (distribution_prefix "lpdf") [y;mu;sigma] in 
-    lpdf_trans_lpdf "inverse" to_trans sigma
+    lpdf_trans_lpdf ~link:"inverse" to_trans sigma
     |> Option.value ~default
 
   let cdf meta y mu sigma =
@@ -1693,8 +1809,8 @@ end
 module Multi_student_t = struct 
   let distribution_prefix suffix = "multi_student_t_" ^ suffix
 
-  let ldmf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "ldmf") [y;dof;location;scale]
+  let lpdf meta y dof location scale =
+    stanlib_fun meta (distribution_prefix "lpdf") [y;dof;location;scale]
 
   let cdf meta y  dof  location scale  =
     stanlib_fun meta (distribution_prefix "cdf") [y;dof;location;scale]

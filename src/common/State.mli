@@ -3,7 +3,7 @@ open Core_kernel
 module type S = sig
   include Applicative.S2
   include Monad.S2 with type ('a, 'state) t := ('a, 'state) t
-
+  val state : ('state -> 'a * 'state) -> ('a, 'state) t
   val get : ('state, 'state) t
   val put : 'state -> (unit, 'state) t
   val modify : ('state -> 'state) -> (unit, 'state) t
@@ -15,4 +15,13 @@ module State : S
 
 module Cps : sig
   module State : S
+end
+
+
+module Right : sig 
+  module State : S
+
+  module Cps : sig
+    module State : S
+  end
 end

@@ -300,7 +300,7 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
     let loopvar, gensym_exit = Common.Gensym.enter () in
     pp_for_loop ppf
       ( loopvar
-      , Expr.loop_bottom
+      , Expr.(loop_bottom Typed.Meta.empty)
       , d
       , pp_block
       , (pp_body, (iteratee, loopvar :: index_ids)) ) ;

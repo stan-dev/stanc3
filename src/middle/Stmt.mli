@@ -26,6 +26,9 @@ module Fixed : sig
   end
 
   include Fix.S2 with module First = Expr.Fixed and module Pattern := Pattern
+
+  val map_accum_left: f:('state -> 'a -> 'c * 'state) -> g:('state -> 'b -> 'd * 'state) -> init:'state -> ('a, 'b) t -> ('c, 'd) t * 'state
+  val map_accum_right: f:('state -> 'a -> 'c * 'state) -> g:('state -> 'b -> 'd * 'state) -> init:'state -> ('a, 'b) t -> ('c, 'd) t * 'state
 end
 
 module NoMeta : sig

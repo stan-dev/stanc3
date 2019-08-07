@@ -3,7 +3,7 @@ include Core_kernel
 module type S = sig
   include Applicative.S2
   include Monad.S2 with type ('a, 'state) t := ('a, 'state) t
-
+  val state : ('state -> 'a * 'state) -> ('a, 'state) t
   val get : ('state, 'state) t
   val put : 'state -> (unit, 'state) t
   val modify : ('state -> 'state) -> (unit, 'state) t
@@ -15,6 +15,7 @@ module State : S = struct
   module T = struct
     type ('a, 'state) t = 'state -> 'a * 'state
 
+    let state (f: 'state -> 'a * 'state)  : ('a,'state) t = f
     let return (x : 'a) : ('a, 'state) t = fun s -> (x, s)
 
     let map_ (x : ('a, 'state) t) ~(f : 'a -> 'b) : ('b, 'state) t =
@@ -53,18 +54,24 @@ module State : S = struct
 end
 
 module Cps = struct
-  module State = struct
+  module State : S = struct
     module T = struct
       type ('a, 'state) t = {apply: 'r. 'state -> ('a -> 'state -> 'r) -> 'r}
 
+      let state f : ('a,'state) t = 
+          { apply = fun s  k -> 
+              let (b,s') = f s in
+              k b s' 
+          }
       let unapply x st k = x.apply st k
       let run_state x ~init = unapply x init (fun a st -> (a, st))
       let return x = {apply= (fun e k -> k x e)}
       let map_ x ~f = {apply= (fun e k -> unapply x e (fun x -> k @@ f x))}
       let map = `Custom map_
 
+
       let bind x ~f =
-        {apply= (fun e k -> unapply x e @@ fun a e' -> unapply (f a) e' k)}
+        {apply= (fun s k -> unapply x s @@ fun a s' -> unapply (f a) s' k)}
 
       let apply f x =
         { apply=
@@ -91,7 +98,7 @@ module Right = struct
   module State : S = struct 
     module T = struct
       type ('a, 'state) t = 'state -> 'a * 'state
-
+      let state (f: 'state -> 'a * 'state)  : ('a,'state) t = f
       let return x = fun s -> (x, s)
 
       let map_ kv ~f = 
@@ -127,10 +134,16 @@ module Right = struct
     include Monad.Make2 (T)
   end 
   module Cps = struct 
-    module State = struct 
+
+    module State : S = struct 
       module T = struct
         type ('a, 'state) t = {apply: 'r. 'state -> ('a -> 'state -> 'r) -> 'r}
 
+        let state f : ('a,'state) t = 
+          { apply = fun s  k -> 
+              let (b,s') = f s in
+              k b s' 
+          }
         let unapply {apply} s k = apply s k
         let run_state x ~init = unapply x init (fun a s -> (a, s))
         let return x = {apply= (fun s k -> k x s)}

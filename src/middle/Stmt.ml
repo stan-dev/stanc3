@@ -1,6 +1,6 @@
 open Core_kernel
 open Common
-open State.Cps
+open State
 
 (** Fixed-point of statements *)
 module Fixed = struct
@@ -39,6 +39,23 @@ module Fixed = struct
   end
 
   include Fix.Make2 (First) (Pattern)
+
+  module Traversable_state = Make_traversable2(Cps.State)
+  module Traversable_state_r = Make_traversable2(Right.Cps.State)
+
+  let map_accum_left ~f ~g ~init x = Cps.State.(
+    Traversable_state.traverse x
+      ~f:(fun a -> state @@ Fn.flip f a)
+      ~g:(fun a -> state @@ Fn.flip g a)
+    |> run_state ~init
+  )
+
+  let map_accum_right ~f ~g ~init x = Right.Cps.State.(
+    Traversable_state_r.traverse x 
+      ~f:(fun a -> state @@ Fn.flip f a)
+      ~g:(fun a -> state @@ Fn.flip g a)
+    |> run_state ~init
+  )
 end
 
 (** Statements with no meta-data *)
