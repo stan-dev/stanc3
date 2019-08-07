@@ -238,18 +238,16 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression {expr; emeta} :
-    untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
-let untyped_lhs_of_typed_lhs =
-  { assign_identifier
-  ; assign_indices=
-      List.map
-        ~f:(map_index untyped_expression_of_typed_expression)
-        assign_indices
-  ; assign_meta= {loc} }
+let rec untyped_lhs_of_typed_lhs ({lhs; lmeta} : typed_lhs) : untyped_lhs =
+  { lhs=
+      map_lvalue untyped_lhs_of_typed_lhs
+        untyped_expression_of_typed_expression lhs
+  ; lmeta= {loc= lmeta.loc} }
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
