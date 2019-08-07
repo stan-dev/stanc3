@@ -124,10 +124,10 @@ type ('l, 'e) lvalue =
 type ('e, 'm) lhs_with = {lhs: (('e, 'm) lhs_with, 'e) lvalue; lmeta: 'm}
 [@@deriving sexp, hash, compare, map]
 
-type 'e untyped_lhs = ('e, located_meta) lhs_with
+type untyped_lhs = (untyped_expression, located_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
-type 'e typed_lhs = ('e, typed_expr_meta) lhs_with
+type typed_lhs = (typed_expression, typed_expr_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
@@ -197,10 +197,7 @@ type ('e, 'm, 'l) statement_with =
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
-  ( untyped_expression
-  , located_meta
-  , untyped_expression untyped_lhs )
-  statement_with
+  (untyped_expression, located_meta, untyped_lhs) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -213,10 +210,7 @@ type stmt_typed_located_meta =
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 type typed_statement =
-  ( typed_expression
-  , stmt_typed_located_meta
-  , typed_expression typed_lhs )
-  statement_with
+  (typed_expression, stmt_typed_located_meta, typed_lhs) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
@@ -249,8 +243,7 @@ let rec untyped_expression_of_typed_expression {expr; emeta} :
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
-let untyped_lhs_of_typed_lhs
-    {assign_identifier; assign_indices; assign_meta= {loc; _}} =
+let untyped_lhs_of_typed_lhs =
   { assign_identifier
   ; assign_indices=
       List.map
