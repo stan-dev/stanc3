@@ -259,3 +259,18 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
+
+let rec expr_of_lhs {lhs; lmeta} =
+  { expr=
+      ( match lhs with
+      | LVariable s -> Variable s
+      | LIndexed (l, i) -> Indexed (expr_of_lhs l, i) )
+  ; emeta= lmeta }
+
+let rec lhs_of_expr {expr; emeta} =
+  { lhs=
+      ( match expr with
+      | Variable s -> LVariable s
+      | Indexed (l, i) -> LIndexed (lhs_of_expr l, i)
+      | _ -> failwith "Trying to convert illegal expression to lhs." )
+  ; lmeta= emeta }
