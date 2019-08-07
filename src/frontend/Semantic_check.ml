@@ -865,22 +865,8 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
 let mk_assignment_from_indexed_expr assop lhs rhs =
-  match lhs with
-  | { expr=
-        Indexed
-          ( { expr= Variable id
-            ; emeta= {ad_level= id_ad_level; type_= id_type_; _} }
-          , idx )
-    ; emeta= {loc; ad_level= lhs_ad_level; type_= lhs_type_} } ->
-      Assignment
-        { assign_lhs=
-            { assign_identifier= id
-            ; assign_indices= idx
-            ; assign_meta= {loc; lhs_ad_level; lhs_type_; id_ad_level; id_type_}
-            }
-        ; assign_op= assop
-        ; assign_rhs= rhs }
-  | _ -> fatal_error ()
+  Assignment
+    {assign_lhs= Ast.lhs_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
   Validate.(
