@@ -45,12 +45,16 @@ module Typed = struct
   type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
+  let sexp_of_t = sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
+  let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Located.t_of_sexp
 end
 
 module Labelled = struct
   type nonrec t = (Expr.Labelled.t, Stmt.Labelled.t) t
 
   let pp ppf x = pp Expr.Labelled.pp Stmt.Labelled.pp ppf x
+  let sexp_of_t = sexp_of_t Expr.Labelled.sexp_of_t Stmt.Labelled.sexp_of_t
+  let t_of_sexp = t_of_sexp Expr.Labelled.t_of_sexp Stmt.Labelled.t_of_sexp
 
   module Traversable_state = Make_traversable2 (State)
   module Traversable_stmt_state = Stmt.Fixed.Make_traversable2 (State)

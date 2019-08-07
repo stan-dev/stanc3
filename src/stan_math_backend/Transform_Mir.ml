@@ -6,7 +6,8 @@ let pos = "pos__"
 let add_pos_reset stmt =
   match Stmt.Fixed.pattern stmt with
   | For {body; _} when Stmt.contains_internal_fun ~fn:FnReadData body ->
-      [Stmt.(assign (Fixed.meta stmt) pos Expr.(loop_bottom Typed.Meta.empty)  ); stmt]
+      [ Stmt.(assign (Fixed.meta stmt) pos Expr.(loop_bottom Typed.Meta.empty))
+      ; stmt ]
   | _ -> [stmt]
 
 let rec unwind stmt =
@@ -130,7 +131,8 @@ let add_read_data_vestigial_indices stmt =
       | emeta, FunApp (CompilerInternal, f, _)
         when f = Internal_fun.to_string FnReadData ->
           let with_vestigial_idx =
-            Expr.(index_single emeta rhs ~idx:Expr.(loop_bottom Typed.Meta.empty))
+            Expr.(
+              index_single emeta rhs ~idx:Expr.(loop_bottom Typed.Meta.empty))
           in
           Stmt.assign smeta ident ~idxs with_vestigial_idx
       | _ -> stmt )

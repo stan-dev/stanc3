@@ -44,13 +44,13 @@ module Make_traversable2 (A : Applicative.S2) :
 include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
 
 module Typed : sig
-  type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
+  type nonrec t = (Expr.Typed.t, Stmt.Located.t) t [@@deriving sexp]
 
   include Pretty.S with type t := t
 end
 
 module Labelled : sig
-  type nonrec t = (Expr.Labelled.t, Stmt.Labelled.t) t
+  type nonrec t = (Expr.Labelled.t, Stmt.Labelled.t) t [@@deriving sexp]
 
   include Pretty.S with type t := t
 

@@ -126,7 +126,6 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
 
   let proj {meta; pattern} = (meta, pattern)
   let inj (meta, pattern) = {meta; pattern}
-  
 
   module Basic = struct
     type nonrec ('a, 'b) t = ('a, 'b) t

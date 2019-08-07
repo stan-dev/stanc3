@@ -10,7 +10,6 @@ module type S = sig
   include Recursive.S1 with type 'a t := 'a t and module Pattern := Pattern
   include Projectable.S1 with type 'a t := 'a t and module Pattern := Pattern
   include Injectable.S1 with type 'a t := 'a t and module Pattern := Pattern
-  
 
   (* TODO : derive *)
   module Make_traversable (A : Applicative.S) :

@@ -4,10 +4,8 @@ open Ast
 
 let unwrap_num_exn m e =
   let e = Ast_to_Mir.trans_expr e in
-  let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
-  let e = Analysis_and_optimization.Mir_utils.subst_expr m e in
-  let e = Analysis_and_optimization.Partial_evaluator.eval_expr e in
-  match e.expr with
+  let m = String.Map.map m ~f:Ast_to_Mir.trans_expr in
+  match Expr.Fixed.pattern @@ Expr.eval ~env:m e with
   | Lit (_, s) -> Float.of_string s
   | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
 
@@ -44,28 +42,28 @@ let rec repeat_th n f =
 
 let wrap_int n =
   { expr= IntNumeral (Int.to_string n)
-  ; emeta= {loc= Location_span.empty ; ad_level= DataOnly; type_= UInt} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UInt} }
 
 let int_two = wrap_int 2
 
 let wrap_real r =
   { expr= RealNumeral (Float.to_string r)
-  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UReal} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UReal} }
 
 let wrap_row_vector l =
   { expr= RowVectorExpr l
-  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= URowVector} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= URowVector} }
 
 let wrap_vector l =
   { expr= PostfixOp (wrap_row_vector l, Transpose)
-  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UVector} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UVector} }
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
   { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
-  ; emeta= {loc=  Location_span.empty ; ad_level= DataOnly; type_= UMatrix} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UMatrix} }
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -200,7 +198,7 @@ let var_decl_gen_val m d =
 let print_data_prog s =
   let data = Option.value ~default:[] s.datablock in
   let l, _ =
-    List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
+    List.fold data ~init:([], String.Map.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in
         ( l @ [var_decl_id decl ^ " <- " ^ print_value_r value]
         , Map.set m ~key:(var_decl_id decl) ~data:value ) )
