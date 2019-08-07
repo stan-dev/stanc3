@@ -159,6 +159,7 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
+and pp_lhs ppf lhs = pp_expression ppf (expr_of_lhs lhs)
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
@@ -291,18 +292,10 @@ and pp_recursive_ifthenelse ppf s =
 
 and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
-  | Assignment
-      { assign_lhs= {assign_identifier= id; assign_indices= lindex; _}
-      ; assign_op= assop
-      ; assign_rhs= e } ->
-      let inds_fmt ppf lindex =
-        match lindex with
-        | [] -> Fmt.nop ppf ()
-        | l -> Fmt.pf ppf "[%a]" pp_list_of_indices l
-      in
+  | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a%a %a %a;" pp_identifier id inds_fmt lindex
-            pp_assignmentoperator assop pp_expression e )
+          Fmt.pf ppf "%a %a %a;" pp_lhs l pp_assignmentoperator assop
+            pp_expression e )
   | NRFunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a);" pp_list_of_expression es)
