@@ -10,15 +10,6 @@ open Errors
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SArray (y, z)) ~init:sbt
-
-let rec pull_indices_and_vident {expr; _} =
-  match expr with
-  | Indexed (obj, indices) ->
-     (match pull_indices_and_vident obj with
-      | id, indices' -> id, indices' @ indices)
-  | Variable id -> id, []
-  | _ -> raise_s [%message "Shouldn't be looking for lhs here."]
-
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -505,10 +496,7 @@ statement:
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
-      let id, indices = pull_indices_and_vident l in
-       Assignment {assign_lhs={assign_identifier=id;
-                               assign_indices=indices;
-                               assign_meta=l.emeta};
+       Assignment {assign_lhs=lhs_of_expr l;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
