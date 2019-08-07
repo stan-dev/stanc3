@@ -274,3 +274,6 @@ let rec lhs_of_expr {expr; emeta} =
       | Indexed (l, i) -> LIndexed (lhs_of_expr l, i)
       | _ -> failwith "Trying to convert illegal expression to lhs." )
   ; lmeta= emeta }
+
+let rec id_of_lhs {lhs; _} =
+  match lhs with LVariable s -> s | LIndexed (l, _) -> id_of_lhs l

@@ -892,16 +892,9 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
                    ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
                  |> ok ))
 
-let semantic_check_assignment ~loc ~cf assign_id assign_indices assign_op
-    assign_rhs =
-  let lhs =
-    Ast.mk_untyped_expression ~loc
-      ~expr:
-        (Indexed
-           ( Ast.mk_untyped_expression ~expr:(Variable assign_id)
-               ~loc:assign_id.id_loc
-           , assign_indices ))
-    |> semantic_check_expression cf
+let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
+  let assign_id = Ast.id_of_lhs assign_lhs in
+  let lhs = expr_of_lhs assign_lhs |> semantic_check_expression cf
   and assop = semantic_check_assignmentoperator assign_op
   and rhs = semantic_check_expression cf assign_rhs
   and block =
@@ -1359,8 +1352,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
   |> Option.value_map ~default:(Validate.ok None) ~f:(fun e ->
          let stmt =
            Assignment
-             { assign_lhs=
-                 {assign_identifier= id; assign_indices= []; assign_meta= {loc}}
+             { assign_lhs= {lhs= LVariable id; lmeta= {loc}}
              ; assign_op= Assign
              ; assign_rhs= e }
          in
@@ -1580,12 +1572,8 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
   let loc = s.smeta.loc in
   match s.stmt with
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
-  | Assignment
-      { assign_lhs= {assign_identifier; assign_indices; _}
-      ; assign_op
-      ; assign_rhs } ->
-      semantic_check_assignment ~loc ~cf assign_identifier assign_indices
-        assign_op assign_rhs
+  | Assignment {assign_lhs; assign_op; assign_rhs} ->
+      semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs
   | TargetPE e -> semantic_check_target_pe ~loc ~cf e
   | IncrementLogProb e -> semantic_check_incr_logprob ~loc ~cf e
   | Tilde {arg; distribution; args; truncation} ->
