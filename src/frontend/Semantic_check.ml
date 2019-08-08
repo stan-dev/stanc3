@@ -1352,7 +1352,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
   |> Option.value_map ~default:(Validate.ok None) ~f:(fun e ->
          let stmt =
            Assignment
-             { assign_lhs= {lhs= LVariable id; lmeta= {loc}}
+             { assign_lhs= {lval= LVariable id; lmeta= {loc}}
              ; assign_op= Assign
              ; assign_rhs= e }
          in

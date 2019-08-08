@@ -474,12 +474,12 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   match stmt_typed with
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
       let rec get_lhs_base = function
-        | {Ast.lhs= Ast.LIndexed (l, _); _} -> get_lhs_base l
+        | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
         | l -> l
       in
       let lhs_base = get_lhs_base assign_lhs in
       let assign_identifier =
-        match lhs_base.Ast.lhs with
+        match lhs_base.Ast.lval with
         | LVariable s -> s
         | _ -> failwith "This should never happen."
       in
@@ -488,7 +488,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
       let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
       let rec get_lhs_indices = function
-        | {Ast.lhs= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
+        | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
         | _ -> []
       in
       let assign_indices = get_lhs_indices assign_lhs in
