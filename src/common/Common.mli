@@ -21,6 +21,7 @@ module Injectable : module type of Injectable
 module Corecursive : module type of Corecursive
 module Pattern : module type of Pattern
 module Fix : module type of Fix
+module Label : module type of Label
 module Meta : module type of Meta
 module Specialized : module type of Specialized
 

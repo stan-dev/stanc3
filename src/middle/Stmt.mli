@@ -77,12 +77,12 @@ module Labelled : sig
   module Meta : sig
     type t =
       { loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; label: Label.t [@compare.ignore] }
+      ; label: Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
     include Meta.S with type t := t
 
-    val label : t -> Label.t
+    val label : t -> Int_label.t
     val loc : t -> Location_span.t
   end
 
@@ -92,10 +92,10 @@ module Labelled : sig
      and type t = (Expr.Labelled.Meta.t, Meta.t) Fixed.t
 
   val loc_of : t -> Location_span.t
-  val label_of : t -> Label.t
+  val label_of : t -> Int_label.t
   val label : ?init:int -> Located.t -> t
 
-  type associations = {exprs: Expr.Labelled.t Label.Map.t; stmts: t Label.Map.t}
+  type associations = {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
 
   val associate : ?init:associations -> t -> associations
 end

@@ -109,7 +109,7 @@ module Labelled = struct
       { type_: UnsizedType.t
       ; loc: Location_span.t sexp_opaque [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
-      ; label: Label.t [@compare.ignore] }
+      ; label: Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
     let label {label; _} = label
@@ -129,20 +129,20 @@ module Labelled = struct
   module Traversable_state = Fixed.Make_traversable2 (State)
 
   (** Statefully traverse a typed expression adding unique labels *)
-  let label ?(init = Label.init) (expr : Typed.t) : t =
+  let label ?(init = Int_label.init) (expr : Typed.t) : t =
     let f {Typed.Meta.adlevel; type_; loc} =
       State.(
         get
         >>= fun label ->
-        put (Label.next label)
+        put (Int_label.next label)
         >>= fun _ -> return @@ Meta.create ~label ~adlevel ~type_ ~loc ())
     in
     Traversable_state.traverse ~f expr |> State.run_state ~init |> fst
 
   (** Build a map from expression labels to expressions *)
-  let rec associate ?init:(assocs = Label.Map.empty) (expr : t) =
-    let assocs_result : t Label.Map.t Map_intf.Or_duplicate.t =
-      Label.Map.add ~key:(label_of expr) ~data:expr
+  let rec associate ?init:(assocs = Int_label.Map.empty) (expr : t) =
+    let assocs_result : t Int_label.Map.t Map_intf.Or_duplicate.t =
+      Int_label.Map.add ~key:(label_of expr) ~data:expr
         (associate_pattern assocs @@ Fixed.pattern expr)
     in
     match assocs_result with `Ok x -> x | _ -> assocs

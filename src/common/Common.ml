@@ -21,6 +21,7 @@ module Injectable = Injectable
 module Corecursive = Corecursive
 module Pattern = Pattern
 module Fix = Fix
+module Label = Label 
 module Meta = Meta
 module Specialized = Specialized
 

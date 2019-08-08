@@ -28,6 +28,6 @@ val to_unsizedtype : 'a t -> UnsizedType.t
 val collect_exprs : 'a t -> 'a list
 
 val associate :
-     ?init:Expr.Labelled.t Label.Map.t
+     ?init:Expr.Labelled.t Int_label.Map.t
   -> Expr.Labelled.t t
-  -> Expr.Labelled.t Label.Map.t
+  -> Expr.Labelled.t Int_label.Map.t

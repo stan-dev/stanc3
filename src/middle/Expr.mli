@@ -81,7 +81,7 @@ module Labelled : sig
       { type_: UnsizedType.t
       ; loc: Location_span.t sexp_opaque [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
-      ; label: Label.t }
+      ; label: Int_label.t }
     [@@deriving compare, create, sexp, hash]
 
     include Meta.S with type t := t
@@ -89,7 +89,7 @@ module Labelled : sig
     val adlevel : t -> UnsizedType.autodifftype
     val type_ : t -> UnsizedType.t
     val loc : t -> Location_span.t
-    val label : t -> Label.t
+    val label : t -> Int_label.t
   end
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
@@ -97,10 +97,10 @@ module Labelled : sig
   val type_of : t -> UnsizedType.t
   val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
-  val label_of : t -> Label.t
+  val label_of : t -> Int_label.t
   val label : ?init:int -> Typed.t -> t
-  val associate : ?init:t Label.Map.t -> t -> t Label.Map.t
-  val associate_index : t Label.Map.t -> t index -> t Label.Map.t
+  val associate : ?init:t Int_label.Map.t -> t -> t Int_label.Map.t
+  val associate_index : t Int_label.Map.t -> t index -> t Int_label.Map.t
 end
 
 val var : 'a -> string -> 'a Fixed.t

@@ -15,6 +15,6 @@ let to_unsizedtype = function
   | Sized st -> SizedType.to_unsizedtype st
   | Unsized ut -> ut
 
-let associate ?init:(assocs = Label.Map.empty) = function
+let associate ?init:(assocs = Int_label.Map.empty) = function
   | Sized st -> SizedType.associate ~init:assocs st
   | _ -> assocs

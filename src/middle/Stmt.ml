@@ -91,7 +91,7 @@ module Labelled = struct
   module Meta = struct
     type t =
       { loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; label: Label.t [@compare.ignore] }
+      ; label: Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
     let label {label; _} = label
@@ -119,14 +119,14 @@ module Labelled = struct
     in
     Traversable_state.traverse ~f ~g stmt |> State.run_state ~init |> fst
 
-  type associations = {exprs: Expr.Labelled.t Label.Map.t; stmts: t Label.Map.t}
+  type associations = {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
 
-  let empty = {exprs= Label.Map.empty; stmts= Label.Map.empty}
+  let empty = {exprs= Int_label.Map.empty; stmts= Int_label.Map.empty}
 
   let rec associate ?init:(assocs = empty) (stmt : t) =
     associate_pattern
       { assocs with
-        stmts= Label.Map.add_exn assocs.stmts ~key:(label_of stmt) ~data:stmt
+        stmts= Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt) ~data:stmt
       }
       (Fixed.pattern stmt)
 
