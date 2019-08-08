@@ -1,8 +1,7 @@
 type 'a entry_exit
 
-val entry : 'a entry_exit -> 'a 
-val exit : 'a entry_exit -> 'a 
-
+val entry : 'a entry_exit -> 'a
+val exit : 'a entry_exit -> 'a
 
 module type S = sig
   type t
