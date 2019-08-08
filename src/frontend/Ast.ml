@@ -116,24 +116,18 @@ type 'e transformation =
   | Covariance
 [@@deriving sexp, compare, map, hash]
 
-type ('e, 'm) lhs_with =
-  { assign_identifier: identifier
-  ; assign_indices: 'e index list
-  ; assign_meta: 'm }
+type ('l, 'e) lvalue =
+  | LVariable of identifier
+  | LIndexed of 'l * 'e index list
 [@@deriving sexp, hash, compare, map]
 
-type 'e untyped_lhs = ('e, located_meta) lhs_with
+type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
 [@@deriving sexp, hash, compare, map]
 
-type typed_lhs_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
-  ; id_ad_level: Middle.autodifftype
-  ; id_type_: Middle.unsizedtype
-  ; lhs_ad_level: Middle.autodifftype
-  ; lhs_type_: Middle.unsizedtype }
-[@@deriving sexp, compare, map, hash]
+type untyped_lval = (untyped_expression, located_meta) lval_with
+[@@deriving sexp, hash, compare, map]
 
-type 'e typed_lhs = ('e, typed_lhs_meta) lhs_with
+type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
@@ -203,10 +197,7 @@ type ('e, 'm, 'l) statement_with =
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
-  ( untyped_expression
-  , located_meta
-  , untyped_expression untyped_lhs )
-  statement_with
+  (untyped_expression, located_meta, untyped_lval) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -219,10 +210,7 @@ type stmt_typed_located_meta =
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 type typed_statement =
-  ( typed_expression
-  , stmt_typed_located_meta
-  , typed_expression typed_lhs )
-  statement_with
+  (typed_expression, stmt_typed_located_meta, typed_lval) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
@@ -250,27 +238,44 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression {expr; emeta} :
-    untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
-let untyped_lhs_of_typed_lhs
-    {assign_identifier; assign_indices; assign_meta= {loc; _}} =
-  { assign_identifier
-  ; assign_indices=
-      List.map
-        ~f:(map_index untyped_expression_of_typed_expression)
-        assign_indices
-  ; assign_meta= {loc} }
+let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
+    untyped_lval =
+  { lval=
+      map_lvalue untyped_lvalue_of_typed_lvalue
+        untyped_expression_of_typed_expression lval
+  ; lmeta= {loc= lmeta.loc} }
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
       map_statement untyped_expression_of_typed_expression
-        untyped_statement_of_typed_statement untyped_lhs_of_typed_lhs stmt
+        untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
+        stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
+
+let rec expr_of_lvalue {lval; lmeta} =
+  { expr=
+      ( match lval with
+      | LVariable s -> Variable s
+      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
+  ; emeta= lmeta }
+
+let rec lvalue_of_expr {expr; emeta} =
+  { lval=
+      ( match expr with
+      | Variable s -> LVariable s
+      | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
+      | _ -> failwith "Trying to convert illegal expression to lval." )
+  ; lmeta= emeta }
+
+let rec id_of_lvalue {lval; _} =
+  match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
