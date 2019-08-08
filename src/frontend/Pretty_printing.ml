@@ -159,7 +159,7 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
-and pp_lhs ppf lhs = pp_expression ppf (expr_of_lhs lhs)
+and pp_lhs ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="

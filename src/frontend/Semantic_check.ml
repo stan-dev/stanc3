@@ -866,7 +866,7 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
 
 let mk_assignment_from_indexed_expr assop lhs rhs =
   Assignment
-    {assign_lhs= Ast.lhs_of_expr lhs; assign_op= assop; assign_rhs= rhs}
+    {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
   Validate.(
@@ -893,8 +893,8 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
                  |> ok ))
 
 let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
-  let assign_id = Ast.id_of_lhs assign_lhs in
-  let lhs = expr_of_lhs assign_lhs |> semantic_check_expression cf
+  let assign_id = Ast.id_of_lvalue assign_lhs in
+  let lhs = expr_of_lvalue assign_lhs |> semantic_check_expression cf
   and assop = semantic_check_assignmentoperator assign_op
   and rhs = semantic_check_expression cf assign_rhs
   and block =

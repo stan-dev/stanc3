@@ -260,20 +260,20 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
 
-let rec expr_of_lhs {lhs; lmeta} =
+let rec expr_of_lvalue {lhs; lmeta} =
   { expr=
       ( match lhs with
       | LVariable s -> Variable s
-      | LIndexed (l, i) -> Indexed (expr_of_lhs l, i) )
+      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
-let rec lhs_of_expr {expr; emeta} =
+let rec lvalue_of_expr {expr; emeta} =
   { lhs=
       ( match expr with
       | Variable s -> LVariable s
-      | Indexed (l, i) -> LIndexed (lhs_of_expr l, i)
+      | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
       | _ -> failwith "Trying to convert illegal expression to lhs." )
   ; lmeta= emeta }
 
-let rec id_of_lhs {lhs; _} =
-  match lhs with LVariable s -> s | LIndexed (l, _) -> id_of_lhs l
+let rec id_of_lvalue {lhs; _} =
+  match lhs with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l

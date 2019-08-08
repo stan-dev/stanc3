@@ -496,7 +496,7 @@ statement:
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
-       Assignment {assign_lhs=lhs_of_expr l;
+       Assignment {assign_lhs=lvalue_of_expr l;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
