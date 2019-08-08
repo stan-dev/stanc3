@@ -25,6 +25,9 @@ module Label = Label
 module Meta = Meta
 module Specialized = Specialized
 
+(* Monotone framework signatures *)
+module Flowgraph = Flowgraph
+
 (* General helpers *)
 module Gensym = Gensym
 module Helpers = Helpers

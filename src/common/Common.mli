@@ -25,6 +25,9 @@ module Label : module type of Label
 module Meta : module type of Meta
 module Specialized : module type of Specialized
 
+(* Monotone framework signatures *)
+module Flowgraph : module type of Flowgraph
+
 (* General helpers *)
 module Helpers : module type of Helpers
 module Gensym : module type of Gensym
