@@ -173,7 +173,7 @@ let%expect_test "parse minus unary" =
           ((stmt
             (Assignment
              (assign_lhs
-              ((lhs (LVariable ((name x) (id_loc <opaque>))))
+              ((lval (LVariable ((name x) (id_loc <opaque>))))
                (lmeta ((loc <opaque>)))))
              (assign_op Assign)
              (assign_rhs

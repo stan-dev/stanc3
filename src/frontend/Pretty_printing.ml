@@ -159,7 +159,7 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
-and pp_lhs ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
+and pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
@@ -294,7 +294,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a %a %a;" pp_lhs l pp_assignmentoperator assop
+          Fmt.pf ppf "%a %a %a;" pp_lvalue l pp_assignmentoperator assop
             pp_expression e )
   | NRFunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
