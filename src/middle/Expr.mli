@@ -263,7 +263,6 @@ val lpdf_trans_lpdf :
 val rng_trans_rng :
   link:string -> ('a Fixed.t -> 'b) -> 'a Fixed.t -> 'b option
 
-
 (* == Partial evaluation  =================================================== *)
 
 val eval : ?env:Typed.t String.Map.t -> Typed.t -> Typed.t

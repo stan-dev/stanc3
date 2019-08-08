@@ -960,102 +960,93 @@ let eval_stanlib_fun_app meta fn_name args =
   | "dot_product", [x; y] -> dot_product meta x y
   | "rows_dot_product", [x; y] -> rows_dot_product meta x y
   | "columns_dot_product", [x; y] -> columns_dot_product meta x y
-  | "bernoulli_lpmf", [y; theta] -> 
-    let to_logit_glm x alpha beta = stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
-    and to_logit alpha = stanlib_fun meta "bernoulli_logit_lpmf"  [y;alpha]
-    and default = stanlib_fun meta "bernoulli_lpmf" [y; theta] in
-    lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm theta
-    |> option_or_else
-         ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
-    |> Option.value ~default
-
-
-  | "bernoulli_rng", [theta] -> 
-    let to_logit alpha = stanlib_fun meta "bernoulli_logit_rng" [alpha]
-    and default = stanlib_fun meta "bernoulli_rng" [theta] in
-    rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
-
-  | "bernoulli_logit_lpmf", [y; alpha] -> 
-      let to_logit_glm x alpha beta = 
-        stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
+  | "bernoulli_lpmf", [y; theta] ->
+      let to_logit_glm x alpha beta =
+        stanlib_fun meta "bernoulli_logit_glm_lpmf" [y; x; alpha; beta]
+      and to_logit alpha = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha]
+      and default = stanlib_fun meta "bernoulli_lpmf" [y; theta] in
+      lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm theta
+      |> option_or_else
+           ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
+      |> Option.value ~default
+  | "bernoulli_rng", [theta] ->
+      let to_logit alpha = stanlib_fun meta "bernoulli_logit_rng" [alpha]
+      and default = stanlib_fun meta "bernoulli_rng" [theta] in
+      rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
+  | "bernoulli_logit_lpmf", [y; alpha] ->
+      let to_logit_glm x alpha beta =
+        stanlib_fun meta "bernoulli_logit_glm_lpmf" [y; x; alpha; beta]
       and default = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha] in
       lpdf_glm_lpdf to_logit_glm alpha |> Option.value ~default
-  
-  | "binomial_lpmf", [successes;trials;theta] -> 
-      let to_logit alpha = stanlib_fun meta "binomial_logit_lpmf" [successes;trials;alpha]
-      and default = stanlib_fun meta "binomial_lpmf" [successes; trials; theta]
-    in
-    lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
+  | "binomial_lpmf", [successes; trials; theta] ->
+      let to_logit alpha =
+        stanlib_fun meta "binomial_logit_lpmf" [successes; trials; alpha]
+      and default =
+        stanlib_fun meta "binomial_lpmf" [successes; trials; theta]
+      in
+      lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
   | "categorical_lpmf", [y; theta] ->
-      let to_logit beta = stanlib_fun meta "categorical_logit_lpmf" [y;beta]
+      let to_logit beta = stanlib_fun meta "categorical_logit_lpmf" [y; beta]
       and default = stanlib_fun meta "categorical_lpmf" [y; theta] in
       lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
-
   | "categorical_rng", [theta] ->
-        let to_logit alpha = stanlib_fun meta "categorical_logit_rng" [alpha]
-        and default = stanlib_fun meta "categorical_rng" [theta] in
+      let to_logit alpha = stanlib_fun meta "categorical_logit_rng" [alpha]
+      and default = stanlib_fun meta "categorical_rng" [theta] in
       rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
-
   | "neg_binomial_2_lpmf", [n; location; precision] ->
       let to_logit_glm x alpha beta =
-        stanlib_fun meta "neg_binomial_2_log_glm_lpmf" [n;x;alpha;beta;precision]
-    and to_logit eta = stanlib_fun meta "neg_binomial_2_log_lpmf" [n;eta;precision]
-    and default = stanlib_fun meta "neg_binomial_2_lpmf" [n; location; precision]
-    in
-    lpdf_trans_glm_lpdf ~link:"exp" to_logit_glm location
-    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_logit location)
-    |> Option.value ~default
-
-
-  | "neg_binomial_2_log_lpmf", [n;log_location; precision] ->
-    let to_logit_glm x alpha beta =
-      stanlib_fun meta "neg_binomial_2_log_glm_lpmf"  [n;x;alpha;beta;precision]
-    and default =
-      stanlib_fun meta "neg_binomial_2_log_lpmf" [n; log_location; precision]
-    in
-    lpdf_glm_lpdf to_logit_glm log_location |> Option.value ~default
-
-
-  | "neg_binomial_2_rng",[location;precision] -> 
-    let to_logit eta = stanlib_fun meta "neg_binomial_2_log_rng" [eta;precision]
-    and default =
-      stanlib_fun meta "neg_binomial_2_rng" [location; precision]
-    in
-    rng_trans_rng ~link:"exp" to_logit location |> Option.value ~default
-  | "poisson_lpmf", [y; lambda] -> 
-      let to_log_glm x alpha beta = 
-        stanlib_fun meta "poisson_log_glm_lpmf"  [y;x;alpha;beta]
-    and to_log eta = 
-      stanlib_fun meta "poisson_log_lpmf"  [y;eta]
-    and default = 
-      stanlib_fun meta ("poisson_lpmf") [y; lambda] in
-
-    lpdf_trans_glm_lpdf ~link:"exp" to_log_glm lambda
-    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_log lambda)
-    |> Option.value ~default
-
-
-  | "poisson_rng", [lambda] -> 
-    let to_log eta = stanlib_fun meta "poisson_log_rng" [eta]
-    and default = stanlib_fun meta  "poisson_rng" [lambda] in
-    rng_trans_rng ~link:"exp" to_log lambda |> Option.value ~default
-
-  | "poisson_log_lpmf", [y; alpha] -> 
-    let to_log_glm x alpha beta = stanlib_fun meta "poisson_log_glm_lpmf" [y;x;alpha;beta]
-    and default = stanlib_fun meta "poisson_log_lpmf" [y; alpha] in
-    lpdf_glm_lpdf to_log_glm alpha |> Option.value ~default
-
-  | "normal_lpdf", [y; mu; sigma] -> 
-      let to_glm x alpha beta = 
-        stanlib_fun meta "normal_id_glm_lpdf"  [y;x;alpha;beta;sigma]
-      and default = stanlib_fun meta ("normal_lpdf") [y; mu; sigma] in
+        stanlib_fun meta "neg_binomial_2_log_glm_lpmf"
+          [n; x; alpha; beta; precision]
+      and to_logit eta =
+        stanlib_fun meta "neg_binomial_2_log_lpmf" [n; eta; precision]
+      and default =
+        stanlib_fun meta "neg_binomial_2_lpmf" [n; location; precision]
+      in
+      lpdf_trans_glm_lpdf ~link:"exp" to_logit_glm location
+      |> option_or_else
+           ~if_none:(lpdf_trans_lpdf ~link:"exp" to_logit location)
+      |> Option.value ~default
+  | "neg_binomial_2_log_lpmf", [n; log_location; precision] ->
+      let to_logit_glm x alpha beta =
+        stanlib_fun meta "neg_binomial_2_log_glm_lpmf"
+          [n; x; alpha; beta; precision]
+      and default =
+        stanlib_fun meta "neg_binomial_2_log_lpmf" [n; log_location; precision]
+      in
+      lpdf_glm_lpdf to_logit_glm log_location |> Option.value ~default
+  | "neg_binomial_2_rng", [location; precision] ->
+      let to_logit eta =
+        stanlib_fun meta "neg_binomial_2_log_rng" [eta; precision]
+      and default =
+        stanlib_fun meta "neg_binomial_2_rng" [location; precision]
+      in
+      rng_trans_rng ~link:"exp" to_logit location |> Option.value ~default
+  | "poisson_lpmf", [y; lambda] ->
+      let to_log_glm x alpha beta =
+        stanlib_fun meta "poisson_log_glm_lpmf" [y; x; alpha; beta]
+      and to_log eta = stanlib_fun meta "poisson_log_lpmf" [y; eta]
+      and default = stanlib_fun meta "poisson_lpmf" [y; lambda] in
+      lpdf_trans_glm_lpdf ~link:"exp" to_log_glm lambda
+      |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_log lambda)
+      |> Option.value ~default
+  | "poisson_rng", [lambda] ->
+      let to_log eta = stanlib_fun meta "poisson_log_rng" [eta]
+      and default = stanlib_fun meta "poisson_rng" [lambda] in
+      rng_trans_rng ~link:"exp" to_log lambda |> Option.value ~default
+  | "poisson_log_lpmf", [y; alpha] ->
+      let to_log_glm x alpha beta =
+        stanlib_fun meta "poisson_log_glm_lpmf" [y; x; alpha; beta]
+      and default = stanlib_fun meta "poisson_log_lpmf" [y; alpha] in
+      lpdf_glm_lpdf to_log_glm alpha |> Option.value ~default
+  | "normal_lpdf", [y; mu; sigma] ->
+      let to_glm x alpha beta =
+        stanlib_fun meta "normal_id_glm_lpdf" [y; x; alpha; beta; sigma]
+      and default = stanlib_fun meta "normal_lpdf" [y; mu; sigma] in
       lpdf_glm_lpdf to_glm mu |> Option.value ~default
-
   | "multi_normal_lpdf", [y; mu; sigma] ->
-    let to_trans tau =  stanlib_fun meta "multi_normal_prec_lpdf" [y;mu;tau]
-    and default = stanlib_fun meta "multi_normal_lpdf" [y; mu; sigma] in
-    lpdf_trans_lpdf ~link:"inverse" to_trans sigma |> Option.value ~default
-
+      let to_trans tau = stanlib_fun meta "multi_normal_prec_lpdf" [y; mu; tau]
+      and default = stanlib_fun meta "multi_normal_lpdf" [y; mu; sigma] in
+      lpdf_trans_lpdf ~link:"inverse" to_trans sigma |> Option.value ~default
   | _ -> stanlib_fun meta fn_name args
 
 let arg_types xs =
