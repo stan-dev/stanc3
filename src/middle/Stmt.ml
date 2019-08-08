@@ -340,7 +340,8 @@ let rec finals ?init:(accu = Int_label.Set.empty) stmt =
   match Fixed.pattern stmt with
   | Assignment _ 
   | Skip -> Int_label.Set.add accu cur_label
-  | IfElse (_, ts, fs) -> finals ~init:(finals ~init:accu fs) ts
+  | IfElse (_, ts, Some fs) -> finals ~init:(finals ~init:accu fs) ts
+  | IfElse (_, ts, _) -> finals ~init:accu ts
   | While (_, _) -> Int_label.Set.add accu cur_label
   | Block xs ->
     (match List.last xs with

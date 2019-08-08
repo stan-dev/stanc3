@@ -938,909 +938,6 @@ let rng_trans_rng ~link to_trans param =
   | FunApp (StanLib, link', [alpha]) when link' = link -> Some (to_trans alpha)
   | _ -> None
 
-(* == Binary distributions ================================================== *)
-
-(** Bernoulli-Logit Generalised Linear Model (Logistic Regression) *)
-module Bernoulli_logit_glm = struct
-  let lpmf meta y x alpha beta =
-    stanlib_fun meta "bernoulli_logit_glm_lpmf" [y; x; alpha; beta]
-end
-
-(** Bernoulli Distribution, Logit Parameterization *)
-module Bernoulli_logit = struct
-  let rng meta theta = stanlib_fun meta "bernoulli_logit_rng" [theta]
-
-  let lpmf meta y alpha =
-    let to_logit_glm = Bernoulli_logit_glm.lpmf meta y
-    and default = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha] in
-    lpdf_glm_lpdf to_logit_glm alpha |> Option.value ~default
-end
-
-(** Bernoulli Distribution  *)
-module Bernoulli = struct
-  let distribution_prefix suffix = "bernoulli_" ^ suffix
-
-  let lpmf meta y theta =
-    let to_logit_glm = Bernoulli_logit_glm.lpmf meta y
-    and to_logit = Bernoulli_logit.lpmf meta y
-    and default = stanlib_fun meta (distribution_prefix "lpmf") [y; theta] in
-    lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm theta
-    |> option_or_else
-         ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
-    |> Option.value ~default
-
-  let cdf meta y theta = stanlib_fun meta (distribution_prefix "cdf") [y; theta]
-
-  let lcdf meta y theta =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; theta]
-
-  let lccdf meta y theta =
-    stanlib_fun meta (distribution_prefix "lccmf") [y; theta]
-
-  let rng meta theta =
-    let to_logit = Bernoulli_logit.rng meta
-    and default = stanlib_fun meta (distribution_prefix "rng") [theta] in
-    rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
-end
-
-(* == Bounded discrete distributions ======================================== *)
-
-(** Binomial Distribution, Logit Parameterization *)
-module Binomial_logit = struct
-  let distribution_prefix suffix = "bernoulli_logit_" ^ suffix
-
-  let lpmf meta successes trials alpha =
-    stanlib_fun meta (distribution_prefix "lpmf") [successes; trials; alpha]
-end
-
-(** Binomial Distribution *)
-module Binomial = struct
-  let distribution_prefix suffix = "binomial_" ^ suffix
-
-  let lpmf meta successes trials theta =
-    let to_logit = Binomial_logit.lpmf meta successes trials
-    and default =
-      stanlib_fun meta (distribution_prefix "lpmf") [successes; trials; theta]
-    in
-    lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
-
-  let cdf meta successes trials theta =
-    stanlib_fun meta (distribution_prefix "cdf") [successes; trials; theta]
-
-  let lcdf meta successes trials theta =
-    stanlib_fun meta (distribution_prefix "lcdf") [successes; trials; theta]
-
-  let lccdf meta successes trials theta =
-    stanlib_fun meta (distribution_prefix "lccdf") [successes; trials; theta]
-
-  (** Log parameterization has no rng *)
-  let rng meta trials theta =
-    stanlib_fun meta (distribution_prefix "rng") [trials; theta]
-end
-
-(** Beta-Binomial Distribution *)
-module Beta_binomial = struct
-  let distribution_prefix suffix = "beta_binomial_" ^ suffix
-
-  let lpmf meta successes trials alpha beta =
-    stanlib_fun meta
-      (distribution_prefix "lpmf")
-      [successes; trials; alpha; beta]
-
-  let cdf meta successes trials alpha beta =
-    stanlib_fun meta
-      (distribution_prefix "cdf")
-      [successes; trials; alpha; beta]
-
-  let lcdf meta successes trials alpha beta =
-    stanlib_fun meta
-      (distribution_prefix "lcdf")
-      [successes; trials; alpha; beta]
-
-  let lccdf meta successes trials alpha beta =
-    stanlib_fun meta
-      (distribution_prefix "lccdf")
-      [successes; trials; alpha; beta]
-
-  let rng meta trials alpha beta =
-    stanlib_fun meta (distribution_prefix "rng") [trials; alpha; beta]
-end
-
-(** Hypergeometric Distribution *)
-module Hypergeometric = struct
-  let distribution_prefix suffix = "hypergeometric_" ^ suffix
-
-  let lpmf meta successes trials a b =
-    stanlib_fun meta (distribution_prefix "lpmf") [successes; trials; a; b]
-
-  let rng meta trials a b =
-    stanlib_fun meta (distribution_prefix "rng") [trials; a; b]
-end
-
-(** Categorical Distribution, Logit Parameterization *)
-module Categorical_logit = struct
-  let distribution_prefix suffix = "categorical_logit_" ^ suffix
-  let lpmf meta y beta = stanlib_fun meta (distribution_prefix "lpmf") [y; beta]
-  let rng meta beta = stanlib_fun meta (distribution_prefix "rng") [beta]
-end
-
-(** Categorical Distribution *)
-module Categorical = struct
-  let distribution_prefix suffix = "categorical_" ^ suffix
-
-  let lpmf meta y theta =
-    let to_logit = Categorical_logit.lpmf meta y
-    and default = stanlib_fun meta (distribution_prefix "lpmf") [y; theta] in
-    lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
-
-  let rng meta theta =
-    let to_logit = Categorical_logit.rng meta
-    and default = stanlib_fun meta (distribution_prefix "rng") [theta] in
-    rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
-end
-
-(** Ordered Logistic Distribution *)
-module Ordered_logistic = struct
-  let distribution_prefix suffix = "ordered_logistic_" ^ suffix
-
-  let lpmf meta k eta c =
-    stanlib_fun meta (distribution_prefix "lpmf") [k; eta; c]
-
-  let rng meta eta c = stanlib_fun meta (distribution_prefix "rng") [eta; c]
-end
-
-(** Ordered Probit Distribution *)
-module Ordered_probit = struct
-  let distribution_prefix suffix = "ordered_probit_" ^ suffix
-
-  let lpmf meta k eta c =
-    stanlib_fun meta (distribution_prefix "lpmf") [k; eta; c]
-
-  let rng meta eta c = stanlib_fun meta (distribution_prefix "rng") [eta; c]
-end
-
-(* == Unbounded discrete distributions ====================================== *)
-
-(** Negative Binomial Distribution (log alternative parameterization) *)
-module Neg_binomial_2_log_glm = struct
-  let distribution_prefix suffix = "neg_binomial_2_log_glm_" ^ suffix
-
-  let lpmf meta n x alpha beta precision =
-    stanlib_fun meta (distribution_prefix "lpmf") [n; x; alpha; beta; precision]
-
-  let rng meta x alpha beta precision =
-    stanlib_fun meta (distribution_prefix "rng") [x; alpha; beta; precision]
-end
-
-(** Negative Binomial Distribution (log alternative parameterization) *)
-module Neg_binomial_2_log = struct
-  let distribution_prefix suffix = "neg_binomial_2_log_" ^ suffix
-
-  let lpmf meta n log_location precision =
-    let to_logit_glm x alpha beta =
-      Neg_binomial_2_log_glm.lpmf meta n x alpha beta precision
-    and default =
-      stanlib_fun meta (distribution_prefix "lpmf") [n; log_location; precision]
-    in
-    lpdf_glm_lpdf to_logit_glm log_location |> Option.value ~default
-
-  let rng meta log_location inv_overdispersion =
-    stanlib_fun meta
-      (distribution_prefix "rng")
-      [log_location; inv_overdispersion]
-end
-
-(** Negative Binomial Distribution (alternative parameterization) *)
-module Neg_binomial_2 = struct
-  let distribution_prefix suffix = "neg_binomial_2_" ^ suffix
-
-  let lpmf meta n location precision =
-    let to_logit_glm x alpha beta =
-      Neg_binomial_2_log_glm.lpmf meta n x alpha beta precision
-    and to_logit eta = Neg_binomial_2_log.lpmf meta n eta precision
-    and default =
-      stanlib_fun meta (distribution_prefix "lpmf") [n; location; precision]
-    in
-    lpdf_trans_glm_lpdf ~link:"exp" to_logit_glm location
-    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_logit location)
-    |> Option.value ~default
-
-  let cdf meta n location precision =
-    stanlib_fun meta (distribution_prefix "cdf") [n; location; precision]
-
-  let lcdf meta n location precision =
-    stanlib_fun meta (distribution_prefix "lcdf") [n; location; precision]
-
-  let lccdf meta n location precision =
-    stanlib_fun meta (distribution_prefix "lccdf") [n; location; precision]
-
-  let rng meta location precision =
-    let to_logit eta = Neg_binomial_2_log.rng meta eta precision
-    and default =
-      stanlib_fun meta (distribution_prefix "rng") [location; precision]
-    in
-    rng_trans_rng ~link:"exp" to_logit location |> Option.value ~default
-end
-
-(** Negative Binomial Distribution *)
-module Neg_binomial = struct
-  let distribution_prefix suffix = "neg_binomial_" ^ suffix
-
-  let lpmf meta n shape inverse_scale =
-    stanlib_fun meta (distribution_prefix "lpmf") [n; shape; inverse_scale]
-
-  let cdf meta n shape inverse_scale =
-    stanlib_fun meta (distribution_prefix "cdf") [n; shape; inverse_scale]
-
-  let lcdf meta n shape inverse_scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [n; shape; inverse_scale]
-
-  let lccdf meta n shape inverse_scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [n; shape; inverse_scale]
-
-  let rng meta shape inverse_scale =
-    stanlib_fun meta (distribution_prefix "rng") [shape; inverse_scale]
-end
-
-module Poisson_log_glm = struct
-  let distribution_prefix suffix = "poisson_log_glm_" ^ suffix
-
-  let lpmf meta y x alpha beta =
-    stanlib_fun meta (distribution_prefix "lpmf") [y; x; alpha; beta]
-
-  let rng meta x alpha beta =
-    stanlib_fun meta (distribution_prefix "rng") [x; alpha; beta]
-end
-
-module Poisson_log = struct
-  let distribution_prefix suffix = "poisson_log_" ^ suffix
-
-  let lpmf meta n alpha =
-    let to_log_glm x alpha beta = Poisson_log_glm.lpmf meta n x alpha beta
-    and default = stanlib_fun meta (distribution_prefix "lpmf") [n; alpha] in
-    lpdf_glm_lpdf to_log_glm alpha |> Option.value ~default
-
-  let rng meta alpha = stanlib_fun meta (distribution_prefix "rng") [alpha]
-end
-
-(** Poisson Distribution *)
-module Poisson = struct
-  let distribution_prefix suffix = "poisson_" ^ suffix
-
-  let lpmf meta n lambda =
-    let to_log_glm x alpha beta = Poisson_log_glm.lpmf meta n x alpha beta
-    and to_log eta = Poisson_log.lpmf meta n eta
-    and default = stanlib_fun meta (distribution_prefix "lpmf") [n; lambda] in
-    lpdf_trans_glm_lpdf ~link:"exp" to_log_glm lambda
-    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_log lambda)
-    |> Option.value ~default
-
-  let cdf meta n lambda =
-    stanlib_fun meta (distribution_prefix "cdf") [n; lambda]
-
-  let lcdf meta n lambda =
-    stanlib_fun meta (distribution_prefix "lcdf") [n; lambda]
-
-  let lccdf meta n lambda =
-    stanlib_fun meta (distribution_prefix "lccdf") [n; lambda]
-
-  let rng meta lambda =
-    let to_log eta = Poisson_log.rng meta eta
-    and default = stanlib_fun meta (distribution_prefix "rng") [lambda] in
-    rng_trans_rng ~link:"exp" to_log lambda |> Option.value ~default
-end
-
-module Multinomial = struct
-  let distribution_prefix suffix = "multinomial_" ^ suffix
-
-  let lpmf meta y theta =
-    stanlib_fun meta (distribution_prefix "lpmf") [y; theta]
-
-  let rng meta theta total_count =
-    stanlib_fun meta (distribution_prefix "rng") [theta; total_count]
-end
-
-(* == Unbounded continuous ================================================== *)
-
-(** Normal-Id Generalised Linear Model (Linear Regression) *)
-module Normal_id_glm = struct
-  let distribution_prefix suffix = "normal_id_glm_" ^ suffix
-
-  let lpdf meta y x alpha beta sigma =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; x; alpha; beta; sigma]
-end
-
-(** Standard Normal Distribution *)
-module Std_normal = struct
-  let distribution_prefix suffix = "std_normal_" ^ suffix
-  let lpdf meta y = stanlib_fun meta (distribution_prefix "ldmf") [y]
-end
-
-(** Normal Distribution *)
-module Normal = struct
-  let distribution_prefix suffix = "normal_" ^ suffix
-
-  let lpdf meta y mu sigma =
-    let to_glm x alpha beta = Normal_id_glm.lpdf meta y x alpha beta sigma
-    and default =
-      stanlib_fun meta (distribution_prefix "lpdf") [y; mu; sigma]
-    in
-    lpdf_glm_lpdf to_glm mu |> Option.value ~default
-
-  let cdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "cdf") [y; mu; sigma]
-
-  let lcdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; mu; sigma]
-
-  let lccdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; mu; sigma]
-
-  let rng meta mu sigma =
-    stanlib_fun meta (distribution_prefix "rng") [mu; sigma]
-end
-
-(** Exponentially Modified Normal Distribution *)
-module Exp_mod_normal = struct
-  let distribution_prefix suffix = "exp_mod_normal_" ^ suffix
-
-  let lpdf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; mu; sigma; lambda]
-
-  let cdf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "cdf") [y; mu; sigma; lambda]
-
-  let lcdf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; mu; sigma; lambda]
-
-  let lccdf meta y mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; mu; sigma; lambda]
-
-  let rng meta mu sigma lambda =
-    stanlib_fun meta (distribution_prefix "rng") [mu; sigma; lambda]
-end
-
-(** Skew Normal Distribution *)
-module Skew_normal = struct
-  let distribution_prefix suffix = "skew_normal_" ^ suffix
-
-  let lpdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale; shape]
-
-  let cdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale; shape]
-
-  let lcdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale; shape]
-
-  let lccdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale; shape]
-
-  let rng meta location scale shape =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale; shape]
-end
-
-(** Student-T Distribution *)
-module Student_t = struct
-  let distribution_prefix suffix = "student_t_" ^ suffix
-
-  let lpdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; dof; location; scale]
-
-  let cdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; dof; location; scale]
-
-  let lcdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; dof; location; scale]
-
-  let lccdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; dof; location; scale]
-
-  let rng meta dof location scale =
-    stanlib_fun meta (distribution_prefix "rng") [dof; location; scale]
-end
-
-(** Cauchy Distribution *)
-module Cauchy = struct
-  let distribution_prefix suffix = "cauchy_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-
-  let cdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale]
-
-  let lcdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale]
-
-  let lccdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale]
-
-  let rng meta location scale =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale]
-end
-
-(** Double Exponential (Laplace) Distribution *)
-module Double_exponential = struct
-  let distribution_prefix suffix = "double_exponential_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-
-  let cdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale]
-
-  let lcdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale]
-
-  let lccdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale]
-
-  let rng meta location scale =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale]
-end
-
-(** Logistic Distribution *)
-module Logistic = struct
-  let distribution_prefix suffix = "logistic_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-
-  let cdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale]
-
-  let lcdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale]
-
-  let lccdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale]
-
-  let rng meta location scale =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale]
-end
-
-(** Gumbel Distribution *)
-module Gumbel = struct
-  let distribution_prefix suffix = "gumbel_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-
-  let cdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale]
-
-  let lcdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale]
-
-  let lccdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale]
-
-  let rng meta location scale =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale]
-end
-
-(* == Positive Continuous Distributions ===================================== *)
-
-(** Lognormal Distribution *)
-module Lognormal = struct
-  let distribution_prefix suffix = "log_normal_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-
-  let cdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale]
-
-  let lcdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale]
-
-  let lccdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale]
-
-  let rng meta location scale =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale]
-end
-
-(** Chi-Square Distribution *)
-module Chi_square = struct
-  let distribution_prefix suffix = "chi_square_" ^ suffix
-  let lpdf meta y dof = stanlib_fun meta (distribution_prefix "lpdf") [y; dof]
-  let cdf meta y dof = stanlib_fun meta (distribution_prefix "cdf") [y; dof]
-  let lcdf meta y dof = stanlib_fun meta (distribution_prefix "lcdf") [y; dof]
-  let lccdf meta y dof = stanlib_fun meta (distribution_prefix "lccdf") [y; dof]
-  let rng meta dof = stanlib_fun meta (distribution_prefix "rng") [dof]
-end
-
-(** Inverse Chi-Square Distribution *)
-module Inv_chi_square = struct
-  let distribution_prefix suffix = "inv_chi_square_" ^ suffix
-  let lpdf meta y dof = stanlib_fun meta (distribution_prefix "lpdf") [y; dof]
-  let cdf meta y dof = stanlib_fun meta (distribution_prefix "cdf") [y; dof]
-  let lcdf meta y dof = stanlib_fun meta (distribution_prefix "lcdf") [y; dof]
-  let lccdf meta y dof = stanlib_fun meta (distribution_prefix "lccdf") [y; dof]
-  let rng meta dof = stanlib_fun meta (distribution_prefix "rng") [dof]
-end
-
-(** Inverse Chi-Square Distribution *)
-module Scaled_inv_chi_square = struct
-  let distribution_prefix suffix = "scaled_inv_chi_square_" ^ suffix
-
-  let lpdf meta y dof scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; dof; scale]
-
-  let cdf meta y dof scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; dof; scale]
-
-  let lcdf meta y dof scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; dof; scale]
-
-  let lccdf meta y dof scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; dof; scale]
-
-  let rng meta dof scale =
-    stanlib_fun meta (distribution_prefix "rng") [dof; scale]
-end
-
-(** Exponential Distribution *)
-module Exponential = struct
-  let distribution_prefix suffix = "exponential_" ^ suffix
-
-  let lpdf meta y inv_scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; inv_scale]
-
-  let cdf meta y inv_scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; inv_scale]
-
-  let lcdf meta y inv_scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; inv_scale]
-
-  let lccdf meta y inv_scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; inv_scale]
-
-  let rng meta inv_scale =
-    stanlib_fun meta (distribution_prefix "rng") [inv_scale]
-end
-
-(** Gamma Distribution *)
-module Gamma = struct
-  let distribution_prefix suffix = "gamma_" ^ suffix
-
-  let lpdf meta y shape inv_scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; shape; inv_scale]
-
-  let cdf meta y shape inv_scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; shape; inv_scale]
-
-  let lcdf meta y shape inv_scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; shape; inv_scale]
-
-  let lccdf meta y shape inv_scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; shape; inv_scale]
-
-  let rng meta shape inv_scale =
-    stanlib_fun meta (distribution_prefix "rng") [shape; inv_scale]
-end
-
-(** Inverse Gamma Distribution *)
-module Inv_gamma = struct
-  let distribution_prefix suffix = "inv_gamma_" ^ suffix
-
-  let lpdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; shape; scale]
-
-  let cdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; shape; scale]
-
-  let lcdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; shape; scale]
-
-  let lccdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; shape; scale]
-
-  let rng meta shape scale =
-    stanlib_fun meta (distribution_prefix "rng") [shape; scale]
-end
-
-(** Weibull Distribution *)
-module Weibull = struct
-  let distribution_prefix suffix = "weibull_" ^ suffix
-
-  let lpdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; shape; scale]
-
-  let cdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; shape; scale]
-
-  let lcdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; shape; scale]
-
-  let lccdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; shape; scale]
-
-  let rng meta shape scale =
-    stanlib_fun meta (distribution_prefix "rng") [shape; scale]
-end
-
-(** Frechet Distribution *)
-module Frechet = struct
-  let distribution_prefix suffix = "frechet_" ^ suffix
-
-  let lpdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; shape; scale]
-
-  let cdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; shape; scale]
-
-  let lcdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; shape; scale]
-
-  let lccdf meta y shape scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; shape; scale]
-
-  let rng meta shape scale =
-    stanlib_fun meta (distribution_prefix "rng") [shape; scale]
-end
-
-(* == Non-negative continuous distributions ================================= *)
-
-(** Rayleigh Distribution *)
-module Rayleigh = struct
-  let distribution_prefix suffix = "rayleigh_" ^ suffix
-
-  let lpdf meta y scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; scale]
-
-  let cdf meta y scale = stanlib_fun meta (distribution_prefix "cdf") [y; scale]
-
-  let lcdf meta y scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; scale]
-
-  let lccdf meta y scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; scale]
-
-  let rng meta scale = stanlib_fun meta (distribution_prefix "rng") [scale]
-end
-
-(** Wiener First Passage Time Distribution *)
-module Wiener = struct
-  let distribution_prefix suffix = "wiener_" ^ suffix
-
-  let lpdf meta y alpha tau beta delta =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; alpha; tau; beta; delta]
-end
-
-(* == Positive lower-bounded ================================================ *)
-
-(** Pareto Distribution *)
-module Pareto = struct
-  let distribution_prefix suffix = "pareto_" ^ suffix
-
-  let lpdf meta y y_min shape =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; y_min; shape]
-
-  let cdf meta y y_min shape =
-    stanlib_fun meta (distribution_prefix "cdf") [y; y_min; shape]
-
-  let lcdf meta y y_min shape =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; y_min; shape]
-
-  let lccdf meta y y_min shape =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; y_min; shape]
-
-  let rng meta y_min shape =
-    stanlib_fun meta (distribution_prefix "rng") [y_min; shape]
-end
-
-(** Pareto Type 2 Distribution *)
-module Pareto_type_2 = struct
-  let distribution_prefix suffix = "pareto_type_2_" ^ suffix
-
-  let lpdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale; shape]
-
-  let cdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "cdf") [y; location; scale; shape]
-
-  let lcdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; location; scale; shape]
-
-  let lccdf meta y location scale shape =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; location; scale; shape]
-
-  let rng meta location scale shape =
-    stanlib_fun meta (distribution_prefix "rng") [location; scale; shape]
-end
-
-(* == Continuous on [0,1] =================================================== *)
-
-(** Beta Distribution *)
-module Beta = struct
-  let distribution_prefix suffix = "beta_" ^ suffix
-
-  let lpdf meta theta alpha beta =
-    stanlib_fun meta (distribution_prefix "lpdf") [theta; alpha; beta]
-
-  let cdf meta theta alpha beta =
-    stanlib_fun meta (distribution_prefix "cdf") [theta; alpha; beta]
-
-  let lcdf meta theta alpha beta =
-    stanlib_fun meta (distribution_prefix "lcdf") [theta; alpha; beta]
-
-  let lccdf meta theta alpha beta =
-    stanlib_fun meta (distribution_prefix "lccdf") [theta; alpha; beta]
-
-  let rng meta alpha beta =
-    stanlib_fun meta (distribution_prefix "rng") [alpha; beta]
-end
-
-(** Beta Proportion Distribution *)
-module Beta_proportion = struct
-  let distribution_prefix suffix = "beta_proportion_" ^ suffix
-
-  let lpdf meta theta mean precision =
-    stanlib_fun meta (distribution_prefix "lpdf") [theta; mean; precision]
-
-  let cdf meta theta mean precision =
-    stanlib_fun meta (distribution_prefix "cdf") [theta; mean; precision]
-
-  let lcdf meta theta mean precision =
-    stanlib_fun meta (distribution_prefix "lcdf") [theta; mean; precision]
-
-  let lccdf meta theta mean precision =
-    stanlib_fun meta (distribution_prefix "lccdf") [theta; mean; precision]
-
-  let rng meta mean precision =
-    stanlib_fun meta (distribution_prefix "rng") [mean; precision]
-end
-
-(* == Circular ============================================================== *)
-
-(** Von Mises Distribution *)
-module Von_mises = struct
-  let distribution_prefix suffix = "von_mises_" ^ suffix
-
-  let lpdf meta y location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; location; scale]
-end
-
-(* == Bounded continuous ==================================================== *)
-
-(** Uniform Distribution *)
-module Uniform = struct
-  let distribution_prefix suffix = "uniform_" ^ suffix
-
-  let lpdf meta y lower upper =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; lower; upper]
-
-  let cdf meta y lower upper =
-    stanlib_fun meta (distribution_prefix "cdf") [y; lower; upper]
-
-  let lcdf meta y lower upper =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; lower; upper]
-
-  let lccdf meta y lower upper =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; lower; upper]
-
-  let rng meta lower upper =
-    stanlib_fun meta (distribution_prefix "rng") [lower; upper]
-end
-
-(* == Distributions over unbounded vectors ================================== *)
-
-(** Multivariate Normal Distribution, Precision Parameterization *)
-module Multi_normal_prec = struct
-  let distribution_prefix suffix = "multi_normal_prec_" ^ suffix
-
-  let lpdf meta y mu omega =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; mu; omega]
-end
-
-(** Multivariate Normal Distribution, Cholesky Parameterization *)
-module Multi_normal_cholesky = struct
-  let distribution_prefix suffix = "multi_normal_cholesky_" ^ suffix
-
-  let lpdf meta y mu omega =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; mu; omega]
-
-  let rng meta mu omega =
-    stanlib_fun meta (distribution_prefix "rng") [mu; omega]
-end
-
-(** Multivariate Normal Distribution *)
-module Multi_normal = struct
-  let distribution_prefix suffix = "multi_normal_" ^ suffix
-
-  let lpdf meta y mu sigma =
-    let to_trans tau = Multi_normal_prec.lpdf meta y mu tau
-    and default =
-      stanlib_fun meta (distribution_prefix "lpdf") [y; mu; sigma]
-    in
-    lpdf_trans_lpdf ~link:"inverse" to_trans sigma |> Option.value ~default
-
-  let cdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "cdf") [y; mu; sigma]
-
-  let lcdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; mu; sigma]
-
-  let lccdf meta y mu sigma =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; mu; sigma]
-
-  let rng meta mu sigma =
-    stanlib_fun meta (distribution_prefix "rng") [mu; sigma]
-end
-
-(** Multivariate Student-T Distribution *)
-module Multi_student_t = struct
-  let distribution_prefix suffix = "multi_student_t_" ^ suffix
-
-  let lpdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lpdf") [y; dof; location; scale]
-
-  let cdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "cdf") [y; dof; location; scale]
-
-  let lcdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lcdf") [y; dof; location; scale]
-
-  let lccdf meta y dof location scale =
-    stanlib_fun meta (distribution_prefix "lccdf") [y; dof; location; scale]
-
-  let rng meta dof location scale =
-    stanlib_fun meta (distribution_prefix "rng") [dof; location; scale]
-end
-
-(* == Simplex distributions ================================================= *)
-
-(** Dirichlet Distribution *)
-module Dirichlet = struct
-  let distribution_prefix suffix = "dirichlet_" ^ suffix
-
-  let lpdf meta theta alpha =
-    stanlib_fun meta (distribution_prefix "lpdf") [theta; alpha]
-
-  let rng meta alpha = stanlib_fun meta (distribution_prefix "rng") [alpha]
-end
-
-(* == Correlation matrix distributions ====================================== *)
-
-(** LKJ Correlation Matrix Distribution, Cholesky PArameterization *)
-module LKJ_corr_cholesky = struct
-  let distribution_prefix suffix = "lkj_corr_cholesky_" ^ suffix
-  let lpdf meta l eta = stanlib_fun meta (distribution_prefix "lpdf") [l; eta]
-  let rng meta k eta = stanlib_fun meta (distribution_prefix "rng") [k; eta]
-end
-
-(** LKJ Correlation Matrix Distribution *)
-module LKJ_corr = struct
-  let distribution_prefix suffix = "lkj_corr_" ^ suffix
-  let lpdf meta y eta = stanlib_fun meta (distribution_prefix "lpdf") [y; eta]
-  let rng meta k eta = stanlib_fun meta (distribution_prefix "rng") [k; eta]
-end
-
-(* == Covariance Matrix Distributions ======================================= *)
-
-module Wishart = struct
-  let distribution_prefix suffix = "wishart_" ^ suffix
-
-  let lpdf meta w dof sigma =
-    stanlib_fun meta (distribution_prefix "lpdf") [w; dof; sigma]
-
-  let rng meta dof sigma =
-    stanlib_fun meta (distribution_prefix "rng") [dof; sigma]
-end
-
-module Inv_wishart = struct
-  let distribution_prefix suffix = "inv_wishart_" ^ suffix
-
-  let lpdf meta w dof sigma =
-    stanlib_fun meta (distribution_prefix "lpdf") [w; dof; sigma]
-
-  let rng meta dof sigma =
-    stanlib_fun meta (distribution_prefix "rng") [dof; sigma]
-end
-
 (* == Partial evaluation  =================================================== *)
 
 let eval_binop meta op e1 e2 =
@@ -1863,18 +960,102 @@ let eval_stanlib_fun_app meta fn_name args =
   | "dot_product", [x; y] -> dot_product meta x y
   | "rows_dot_product", [x; y] -> rows_dot_product meta x y
   | "columns_dot_product", [x; y] -> columns_dot_product meta x y
-  | "bernoulli_lpmf", [y; theta] -> Bernoulli.lpmf meta y theta
-  | "bernoulli_rng", [theta] -> Bernoulli.rng meta theta
-  | "bernoulli_logit_lpmf", [y; theta] -> Bernoulli_logit.lpmf meta y theta
-  | "categorical_lpmf", [y; theta] -> Categorical.lpmf meta y theta
-  | "categorical_rng", [theta] -> Categorical.rng meta theta
-  | "neg_binomial_2_lpmf", [a; b; c] -> Neg_binomial_2.lpmf meta a b c
-  | "neg_binomial_2_log_lpmf", [a; b; c] -> Neg_binomial_2_log.lpmf meta a b c
-  | "poisson_lpmf", [y; theta] -> Poisson.lpmf meta y theta
-  | "poisson_rng", [theta] -> Poisson.rng meta theta
-  | "poisson_log_lpmf", [y; theta] -> Poisson_log.lpmf meta y theta
-  | "normal_lpdf", [y; mu; sigma] -> Normal.lpdf meta y mu sigma
-  | "multi_normal_lpdf", [y; mu; sigma] -> Multi_normal.lpdf meta y mu sigma
+  | "bernoulli_lpmf", [y; theta] -> 
+    let to_logit_glm x alpha beta = stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
+    and to_logit alpha = stanlib_fun meta "bernoulli_logit_lpmf"  [y;alpha]
+    and default = stanlib_fun meta "bernoulli_lpmf" [y; theta] in
+    lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm theta
+    |> option_or_else
+         ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
+    |> Option.value ~default
+
+
+  | "bernoulli_rng", [theta] -> 
+    let to_logit alpha = stanlib_fun meta "bernoulli_logit_rng" [alpha]
+    and default = stanlib_fun meta "bernoulli_rng" [theta] in
+    rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
+
+  | "bernoulli_logit_lpmf", [y; alpha] -> 
+      let to_logit_glm x alpha beta = 
+        stanlib_fun meta "bernoulli_logit_glm_lpmf" [y;x;alpha;beta]
+      and default = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha] in
+      lpdf_glm_lpdf to_logit_glm alpha |> Option.value ~default
+  
+  | "binomial_lpmf", [successes;trials;theta] -> 
+      let to_logit alpha = stanlib_fun meta "binomial_logit_lpmf" [successes;trials;alpha]
+      and default = stanlib_fun meta "binomial_lpmf" [successes; trials; theta]
+    in
+    lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
+  | "categorical_lpmf", [y; theta] ->
+      let to_logit beta = stanlib_fun meta "categorical_logit_lpmf" [y;beta]
+      and default = stanlib_fun meta "categorical_lpmf" [y; theta] in
+      lpdf_trans_lpdf ~link:"inv_logit" to_logit theta |> Option.value ~default
+
+  | "categorical_rng", [theta] ->
+        let to_logit alpha = stanlib_fun meta "categorical_logit_rng" [alpha]
+        and default = stanlib_fun meta "categorical_rng" [theta] in
+      rng_trans_rng ~link:"inv_logit" to_logit theta |> Option.value ~default
+
+  | "neg_binomial_2_lpmf", [n; location; precision] ->
+      let to_logit_glm x alpha beta =
+        stanlib_fun meta "neg_binomial_2_log_glm_lpmf" [n;x;alpha;beta;precision]
+    and to_logit eta = stanlib_fun meta "neg_binomial_2_log_lpmf" [n;eta;precision]
+    and default = stanlib_fun meta "neg_binomial_2_lpmf" [n; location; precision]
+    in
+    lpdf_trans_glm_lpdf ~link:"exp" to_logit_glm location
+    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_logit location)
+    |> Option.value ~default
+
+
+  | "neg_binomial_2_log_lpmf", [n;log_location; precision] ->
+    let to_logit_glm x alpha beta =
+      stanlib_fun meta "neg_binomial_2_log_glm_lpmf"  [n;x;alpha;beta;precision]
+    and default =
+      stanlib_fun meta "neg_binomial_2_log_lpmf" [n; log_location; precision]
+    in
+    lpdf_glm_lpdf to_logit_glm log_location |> Option.value ~default
+
+
+  | "neg_binomial_2_rng",[location;precision] -> 
+    let to_logit eta = stanlib_fun meta "neg_binomial_2_log_rng" [eta;precision]
+    and default =
+      stanlib_fun meta "neg_binomial_2_rng" [location; precision]
+    in
+    rng_trans_rng ~link:"exp" to_logit location |> Option.value ~default
+  | "poisson_lpmf", [y; lambda] -> 
+      let to_log_glm x alpha beta = 
+        stanlib_fun meta "poisson_log_glm_lpmf"  [y;x;alpha;beta]
+    and to_log eta = 
+      stanlib_fun meta "poisson_log_lpmf"  [y;eta]
+    and default = 
+      stanlib_fun meta ("poisson_lpmf") [y; lambda] in
+
+    lpdf_trans_glm_lpdf ~link:"exp" to_log_glm lambda
+    |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_log lambda)
+    |> Option.value ~default
+
+
+  | "poisson_rng", [lambda] -> 
+    let to_log eta = stanlib_fun meta "poisson_log_rng" [eta]
+    and default = stanlib_fun meta  "poisson_rng" [lambda] in
+    rng_trans_rng ~link:"exp" to_log lambda |> Option.value ~default
+
+  | "poisson_log_lpmf", [y; alpha] -> 
+    let to_log_glm x alpha beta = stanlib_fun meta "poisson_log_glm_lpmf" [y;x;alpha;beta]
+    and default = stanlib_fun meta "poisson_log_lpmf" [y; alpha] in
+    lpdf_glm_lpdf to_log_glm alpha |> Option.value ~default
+
+  | "normal_lpdf", [y; mu; sigma] -> 
+      let to_glm x alpha beta = 
+        stanlib_fun meta "normal_id_glm_lpdf"  [y;x;alpha;beta;sigma]
+      and default = stanlib_fun meta ("normal_lpdf") [y; mu; sigma] in
+      lpdf_glm_lpdf to_glm mu |> Option.value ~default
+
+  | "multi_normal_lpdf", [y; mu; sigma] ->
+    let to_trans tau =  stanlib_fun meta "multi_normal_prec_lpdf" [y;mu;tau]
+    and default = stanlib_fun meta "multi_normal_lpdf" [y; mu; sigma] in
+    lpdf_trans_lpdf ~link:"inverse" to_trans sigma |> Option.value ~default
+
   | _ -> stanlib_fun meta fn_name args
 
 let arg_types xs =
