@@ -84,7 +84,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var7.stan
 
-Semantic error in 'assign_to_loop_var7.stan', line 4, column 4 to column 15:
+Semantic error in 'assign_to_loop_var7.stan', line 4, column 4 to column 8:
    -------------------------------------------------
      2:    matrix[2, 2] vs;
      3:    for (v in vs) {
@@ -112,7 +112,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices1.stan
 
-Semantic error in 'for_statements_bad_indices1.stan', line 5, column 20 to column 29:
+Semantic error in 'for_statements_bad_indices1.stan', line 5, column 20 to column 24:
    -------------------------------------------------
      3:      while (1) {
      4:        int vs[2];
