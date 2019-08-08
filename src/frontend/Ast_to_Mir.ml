@@ -475,16 +475,11 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
       let rec get_lhs_base = function
         | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
-        | l -> l
+        | {lval= LVariable s; lmeta} -> (s, lmeta)
       in
-      let lhs_base = get_lhs_base assign_lhs in
-      let assign_identifier =
-        match lhs_base.Ast.lval with
-        | LVariable s -> s
-        | _ -> failwith "This should never happen."
-      in
-      let id_ad_level = lhs_base.Ast.lmeta.Ast.ad_level in
-      let id_type_ = lhs_base.Ast.lmeta.Ast.type_ in
+      let assign_identifier, lmeta = get_lhs_base assign_lhs in
+      let id_ad_level = lmeta.Ast.ad_level in
+      let id_type_ = lmeta.Ast.type_ in
       let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
       let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
       let rec get_lhs_indices = function
