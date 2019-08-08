@@ -302,19 +302,7 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
-      let l = fst l in
-      match snd l with
-        | [] -> {expr=Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-                }
-        | i ->
-          {expr =
-             Indexed
-               ({expr =Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-               }, i);
-           emeta = { loc=loc_span_of_pos $startpos $endpos}
-          }
+      l
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
@@ -483,9 +471,14 @@ printables:
 (* L-values *)
 lhs:
   | id=identifier
-    {  grammar_logger "lhs_identifier" ; ((id, []), loc_span_of_pos $startpos $endpos) }
-  | l=lhs LBRACK id=indexes RBRACK
-    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), loc_span_of_pos $startpos $endpos) }
+    {  grammar_logger "lhs_identifier" ;
+       {expr=Variable id
+       ;emeta = { loc=loc_span_of_pos $startpos $endpos}}
+    }
+  | l=lhs LBRACK indices=indexes RBRACK
+    {  grammar_logger "lhs_index" ;
+      {expr=Indexed (l, indices)
+      ;emeta = { loc=loc_span_of_pos $startpos $endpos}}}
 
 (* statements *)
 statement:
@@ -502,10 +495,8 @@ statement:
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
-    {  grammar_logger "assignment_statement" ; match fst l with (id, indices) ->
-       Assignment {assign_lhs={assign_identifier=id;
-                               assign_indices=indices;
-                               assign_meta={loc=snd l}};
+    {  grammar_logger "assignment_statement" ;
+       Assignment {assign_lhs=lvalue_of_expr l;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON

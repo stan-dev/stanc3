@@ -209,10 +209,10 @@ transformed data {
   rho = 0.5;
   sigma1 = 1.0;
   sigma2 = 2.0;
-  Sigma[1, 1] = sigma1 * sigma1;
-  Sigma[1, 2] = rho * sigma1 * sigma2;
-  Sigma[2, 1] = rho * sigma1 * sigma2;
-  Sigma[2, 2] = sigma2 * sigma2;
+  Sigma[1][1] = sigma1 * sigma1;
+  Sigma[1][2] = rho * sigma1 * sigma2;
+  Sigma[2][1] = rho * sigma1 * sigma2;
+  Sigma[2][2] = sigma2 * sigma2;
 }
 parameters {
   vector[2] z;

@@ -381,8 +381,8 @@ transformed data {
   matrix[N, N] inv_sigma;
   for (n in 1 : N) 
     for (j in 1 : J) {
-      ry[j, n] <- y[j, n];
-      rz[j, n] <- z[j, n];
+      ry[j][n] <- y[j][n];
+      rz[j][n] <- z[j][n];
     }
   inv_sigma <- inverse_spd(sigma);
 }
