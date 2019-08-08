@@ -16,8 +16,9 @@ module Pretty = Pretty
 
 (* 'Two-level type' signatures and functors *)
 module Projectable = Projectable
-module Injectable = Injectable
 module Recursive = Recursive
+module Injectable = Injectable
+module Corecursive = Corecursive
 module Pattern = Pattern
 module Fix = Fix
 module Meta = Meta

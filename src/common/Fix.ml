@@ -9,6 +9,7 @@ module type S = sig
   include Pretty.S1 with type 'a t := 'a t
   include Recursive.S1 with type 'a t := 'a t and module Pattern := Pattern
   include Projectable.S1 with type 'a t := 'a t and module Pattern := Pattern
+  include Corecursive.S1 with type 'a t := 'a t and module Pattern := Pattern
   include Injectable.S1 with type 'a t := 'a t and module Pattern := Pattern
 
   (* TODO : derive *)
@@ -36,6 +37,12 @@ module type S2 = sig
 
   include
     Projectable.S2
+    with type ('a, 'b) t := ('a, 'b) t
+     and module First := First
+     and module Pattern := Pattern
+
+  include
+    Corecursive.S2
     with type ('a, 'b) t := ('a, 'b) t
      and module First := First
      and module Pattern := Pattern
@@ -86,6 +93,7 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
 
   include Recursive.Make1 (Basic)
   include Projectable.Make1 (Basic)
+  include Corecursive.Make1 (Basic)
   include Injectable.Make1 (Basic)
 
   (* TODO : derive *)
@@ -139,6 +147,7 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
 
   include Recursive.Make2 (Basic)
   include Projectable.Make2 (Basic)
+  include Corecursive.Make2 (Basic)
   include Injectable.Make2 (Basic)
 
   include Bifoldable.Make (struct
