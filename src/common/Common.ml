@@ -27,6 +27,7 @@ module Specialized = Specialized
 
 (* Monotone framework signatures *)
 module Flowgraph = Flowgraph
+module Transfer_function = Transfer_function
 
 (* General helpers *)
 module Gensym = Gensym
