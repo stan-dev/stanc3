@@ -119,15 +119,16 @@ module Labelled = struct
     in
     Traversable_state.traverse ~f ~g stmt |> State.run_state ~init |> fst
 
-  type associations = {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
+  type associations =
+    {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
 
   let empty = {exprs= Int_label.Map.empty; stmts= Int_label.Map.empty}
 
   let rec associate ?init:(assocs = empty) (stmt : t) =
     associate_pattern
       { assocs with
-        stmts= Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt) ~data:stmt
-      }
+        stmts=
+          Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt) ~data:stmt }
       (Fixed.pattern stmt)
 
   and associate_pattern assocs = function

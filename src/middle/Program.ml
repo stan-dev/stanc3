@@ -77,7 +77,8 @@ module Labelled = struct
       ~g:(Traversable_stmt_state.traverse ~f ~g)
     |> State.run_state ~init |> fst
 
-  let empty = {Stmt.Labelled.exprs= Int_label.Map.empty; stmts= Int_label.Map.empty}
+  let empty =
+    {Stmt.Labelled.exprs= Int_label.Map.empty; stmts= Int_label.Map.empty}
 
   let rec associate ?init:(assocs = empty) prog =
     let assoc_fundef =

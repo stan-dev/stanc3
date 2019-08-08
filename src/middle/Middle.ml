@@ -12,4 +12,3 @@ module Stmt = Stmt
 module Program = Program
 module Stan_math = Stan_math
 module Utils = Utils
-

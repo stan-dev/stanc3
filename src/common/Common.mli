@@ -28,6 +28,8 @@ module Specialized : module type of Specialized
 (* Monotone framework signatures *)
 module Flowgraph : module type of Flowgraph
 module Transfer_function : module type of Transfer_function
+module Lattice : module type of Lattice
+module Monotone_framework : module type of Monotone_framework
 
 (* General helpers *)
 module Helpers : module type of Helpers

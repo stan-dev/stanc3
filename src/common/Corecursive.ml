@@ -16,12 +16,10 @@ module type S = sig
   module Pattern : Functor.S
 
   type t
-
   type 'a coalgebra = 'a -> 'a Pattern.t
 
   val ana : ('a -> 'a Pattern.t) -> 'a -> t
   val transform_top_down : (t -> t) -> t -> t
-
 
   type 'a r_coalgebra = 'a -> (t, 'a) Either.t Pattern.t
 
@@ -33,7 +31,6 @@ module Make (X : Basic) :
   S with type t := X.t and module Pattern := X.Pattern = struct
   open X
 
-  
   type 'a coalgebra = 'a -> 'a Pattern.t
 
   let rec ana f x = f x |> Pattern.map (ana f) |> inj
@@ -63,13 +60,11 @@ module type S1 = sig
   module Pattern : Functor.S
 
   type 'a t
-  
   type ('a, 'r) coalgebra = 'r -> 'a * 'r Pattern.t
 
   val ana : ('a, 'r) coalgebra -> 'r -> 'a t
   val transform_top_down : ('a t -> 'a t) -> 'a t -> 'a t
 
-  
   type ('a, 'r) r_coalgebra = 'r -> 'a * ('a t, 'r) Either.t Pattern.t
 
   val apo : ('a, 'r) r_coalgebra -> 'r -> 'a t
@@ -118,7 +113,6 @@ module type S2 = sig
   module First : S1
   module Pattern : Bifunctor.S
 
-  
   type ('a, 'b, 'r) coalgebra = 'r -> 'b * ('a, 'r) Pattern.t
 
   val ana :
@@ -130,7 +124,6 @@ module type S2 = sig
     -> ('a, 'b) t
     -> ('a, 'b) t
 
-  
   type ('a, 'b, 'r1, 'r2) r_coalgebra =
        'r2
     -> 'b * (('a First.t, 'r1) Either.t, (('a, 'b) t, 'r2) Either.t) Pattern.t
@@ -155,7 +148,6 @@ module Make2 (X : Basic2) :
    and module First := X.First = struct
   open X
 
-  
   type ('a, 'b, 'r) coalgebra = 'r -> 'b * ('a, 'r) Pattern.t
 
   let rec ana f g x =
@@ -164,7 +156,6 @@ module Make2 (X : Basic2) :
   let transform_top_down f g x =
     ana (Fn.compose First.proj f) (Fn.compose proj g) x
 
-  
   type ('a, 'b, 'r1, 'r2) r_coalgebra =
        'r2
     -> 'b * (('a First.t, 'r1) Either.t, (('a, 'b) t, 'r2) Either.t) Pattern.t

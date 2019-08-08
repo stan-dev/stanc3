@@ -21,13 +21,15 @@ module Injectable = Injectable
 module Corecursive = Corecursive
 module Pattern = Pattern
 module Fix = Fix
-module Label = Label 
+module Label = Label
 module Meta = Meta
 module Specialized = Specialized
 
 (* Monotone framework signatures *)
 module Flowgraph = Flowgraph
 module Transfer_function = Transfer_function
+module Lattice = Lattice
+module Monotone_framework = Monotone_framework
 
 (* General helpers *)
 module Gensym = Gensym

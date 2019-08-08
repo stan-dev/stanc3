@@ -95,7 +95,8 @@ module Labelled : sig
   val label_of : t -> Int_label.t
   val label : ?init:int -> Located.t -> t
 
-  type associations = {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
+  type associations =
+    {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
 
   val associate : ?init:associations -> t -> associations
 end

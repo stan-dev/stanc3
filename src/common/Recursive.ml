@@ -20,12 +20,10 @@ module type S = sig
   val cata : ('a Pattern.t -> 'a) -> t -> 'a
   val transform_bottom_up : (t -> t) -> t -> t
 
-  
   type 'a r_algebra = t -> 'a Pattern.t -> 'a
 
   val para : (t -> 'a Pattern.t -> 'a) -> t -> 'a
   val transform_with_context : (t -> t -> t) -> t -> t
-  
 end
 
 module Make (X : Basic) :
@@ -43,8 +41,6 @@ module Make (X : Basic) :
 
   let transform_with_context f x =
     para (fun ctxt projected -> f ctxt @@ inj projected) x
-
-
 end
 
 module type Basic1 = sig
@@ -65,13 +61,10 @@ module type S1 = sig
   val cata : ('a, 'r) algebra -> 'a t -> 'r
   val transform_bottom_up : ('a t -> 'a t) -> 'a t -> 'a t
 
-
   type ('a, 'r) r_algebra = 'a t -> 'a * 'r Pattern.t -> 'r
 
   val para : ('a, 'r) r_algebra -> 'a t -> 'r
   val transform_with_context : ('a t -> 'a t -> 'a t) -> 'a t -> 'a t
-
-
 end
 
 module Make1 (X : Basic1) :
@@ -87,7 +80,6 @@ module Make1 (X : Basic1) :
 
   let rec para f t = proj t |> on_snd (Pattern.map (para f)) |> f t
   let transform_with_context f = para (fun ctxt proj -> f ctxt @@ inj proj)
-
 end
 
 module type Basic2 = sig
@@ -121,8 +113,6 @@ module type S2 = sig
     -> ('a, 'b) t
     -> ('a, 'b) t
 
- 
-
   type ('a, 'b, 'r1, 'r2) r_algebra =
     ('a, 'b) t -> 'b * ('r1, 'r2) Pattern.t -> 'r2
 
@@ -137,8 +127,6 @@ module type S2 = sig
     -> (('a, 'b) t -> ('a, 'b) t -> ('a, 'b) t)
     -> ('a, 'b) t
     -> ('a, 'b) t
-
- 
 end
 
 module Make2 (X : Basic2) :
@@ -156,7 +144,6 @@ module Make2 (X : Basic2) :
   let transform_bottom_up f g x =
     cata (Fn.compose f First.inj) (Fn.compose g inj) x
 
- 
   type ('a, 'b, 'r1, 'r2) r_algebra =
     ('a, 'b) t -> 'b * ('r1, 'r2) Pattern.t -> 'r2
 
@@ -167,5 +154,4 @@ module Make2 (X : Basic2) :
     para
       (fun ctxt proj -> f ctxt @@ First.inj proj)
       (fun ctxt proj -> g ctxt @@ inj proj)
- 
 end

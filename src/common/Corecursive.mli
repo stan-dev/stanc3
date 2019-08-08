@@ -15,12 +15,10 @@ module type S = sig
   module Pattern : Functor.S
 
   type t
-
   type 'a coalgebra = 'a -> 'a Pattern.t
 
   val ana : ('a -> 'a Pattern.t) -> 'a -> t
   val transform_top_down : (t -> t) -> t -> t
-
 
   type 'a r_coalgebra = 'a -> (t, 'a) Either.t Pattern.t
 
@@ -43,12 +41,10 @@ module type S1 = sig
   module Pattern : Functor.S
 
   type 'a t
-
   type ('a, 'r) coalgebra = 'r -> 'a * 'r Pattern.t
 
   val ana : ('a, 'r) coalgebra -> 'r -> 'a t
   val transform_top_down : ('a t -> 'a t) -> 'a t -> 'a t
-
 
   type ('a, 'r) r_coalgebra = 'r -> 'a * ('a t, 'r) Either.t Pattern.t
 
@@ -79,7 +75,6 @@ module type S2 = sig
   module First : S1
   module Pattern : Bifunctor.S
 
-
   type ('a, 'b, 'r) coalgebra = 'r -> 'b * ('a, 'r) Pattern.t
 
   val ana :
@@ -90,7 +85,6 @@ module type S2 = sig
     -> (('a, 'b) t -> ('a, 'b) t)
     -> ('a, 'b) t
     -> ('a, 'b) t
-
 
   type ('a, 'b, 'r1, 'r2) r_coalgebra =
        'r2
