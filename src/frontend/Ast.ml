@@ -20,7 +20,7 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
-type 'e expression =
+type ('e, 'f) expression =
   | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * Middle.operator * 'e
   | PrefixOp of Middle.operator * 'e
@@ -28,8 +28,8 @@ type 'e expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of fun_kind * identifier * 'e list
-  | CondDistApp of fun_kind * identifier * 'e list
+  | FunApp of 'f * identifier * 'e list
+  | CondDistApp of 'f * identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -39,14 +39,14 @@ type 'e expression =
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, compare, map]
 
-type 'm expr_with = {expr: 'm expr_with expression; emeta: 'm}
+type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: Middle.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
 
-type untyped_expression = located_meta expr_with
+type untyped_expression = (located_meta, unit) expr_with
 [@@deriving sexp, compare, map, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
@@ -57,7 +57,7 @@ type typed_expr_meta =
   ; type_: Middle.unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
-type typed_expression = typed_expr_meta expr_with
+type typed_expression = (typed_expr_meta, fun_kind) expr_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
@@ -133,12 +133,12 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
-type ('e, 's, 'l) statement =
+type ('e, 's, 'l, 'f) statement =
   | Assignment of
       { assign_lhs: 'l
       ; assign_op: assignmentoperator
       ; assign_rhs: 'e }
-  | NRFunApp of fun_kind * identifier * 'e list
+  | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
   | IncrementLogProb of 'e
@@ -191,13 +191,13 @@ type statement_returntype =
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
-type ('e, 'm, 'l) statement_with =
-  {stmt: ('e, ('e, 'm, 'l) statement_with, 'l) statement; smeta: 'm}
+type ('e, 'm, 'l, 'f) statement_with =
+  {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
-  (untyped_expression, located_meta, untyped_lval) statement_with
+  (untyped_expression, located_meta, untyped_lval, unit) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -210,7 +210,11 @@ type stmt_typed_located_meta =
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 type typed_statement =
-  (typed_expression, stmt_typed_located_meta, typed_lval) statement_with
+  ( typed_expression
+  , stmt_typed_located_meta
+  , typed_lval
+  , fun_kind )
+  statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
@@ -240,7 +244,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression
     ({expr; emeta} : typed_expression) : untyped_expression =
-  { expr= map_expression untyped_expression_of_typed_expression expr
+  { expr=
+      map_expression untyped_expression_of_typed_expression (fun _ -> ()) expr
   ; emeta= {loc= emeta.loc} }
 
 let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
@@ -255,11 +260,12 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
+        (fun _ -> ())
         stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
-let untyped_program_of_typed_program =
+let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
 
 let rec expr_of_lvalue {lval; lmeta} =
