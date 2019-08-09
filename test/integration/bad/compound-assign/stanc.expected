@@ -52,7 +52,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 12 to column 19, par
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 
-Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 14:
+Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[3] x;
      3:    real y;

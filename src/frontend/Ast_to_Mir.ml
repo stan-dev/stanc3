@@ -472,14 +472,21 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment
-      { assign_lhs=
-          { assign_identifier
-          ; assign_indices
-          ; assign_meta= {id_ad_level; id_type_; lhs_ad_level; lhs_type_; loc}
-          }
-      ; assign_rhs
-      ; assign_op } ->
+  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
+      let rec get_lhs_base = function
+        | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
+        | {lval= LVariable s; lmeta} -> (s, lmeta)
+      in
+      let assign_identifier, lmeta = get_lhs_base assign_lhs in
+      let id_ad_level = lmeta.Ast.ad_level in
+      let id_type_ = lmeta.Ast.type_ in
+      let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
+      let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
+      let rec get_lhs_indices = function
+        | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
+        | _ -> []
+      in
+      let assign_indices = get_lhs_indices assign_lhs in
       let assignee =
         { Ast.expr=
             ( match assign_indices with
@@ -492,7 +499,10 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
                         ; ad_level= id_ad_level
                         ; type_= id_type_ } }
                   , assign_indices ) )
-        ; emeta= {Ast.loc; ad_level= lhs_ad_level; type_= lhs_type_} }
+        ; emeta=
+            { Ast.loc= assign_lhs.lmeta.loc
+            ; ad_level= lhs_ad_level
+            ; type_= lhs_type_ } }
       in
       let rhs =
         match assign_op with
