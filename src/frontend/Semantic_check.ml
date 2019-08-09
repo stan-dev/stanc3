@@ -259,8 +259,11 @@ let semantic_check_fn_rng cf ~loc id =
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
+let mk_fun_app ~is_cond_dist (x, y, z) =
+  if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
+
 (* Regular function application *)
-let semantic_check_fn_normal ~loc id es =
+let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
     | Some (_, UFun (_, Void)) ->
@@ -277,7 +280,7 @@ let semantic_check_fn_normal ~loc id es =
         |> error
     | Some (_, UFun (_, ReturnType ut)) ->
         mk_typed_expression
-          ~expr:(FunApp (UserDefined, id, es))
+          ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
           ~ad_level:(lub_ad_e es) ~type_:ut ~loc
         |> ok
     | Some _ ->
@@ -288,14 +291,14 @@ let semantic_check_fn_normal ~loc id es =
         |> error)
 
 (* Stan-Math function application *)
-let semantic_check_fn_stan_math ~loc id es =
+let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
   match stan_math_returntype id.name (get_arg_types es) with
   | Some Void ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
   | Some (ReturnType ut) ->
       mk_typed_expression
-        ~expr:(FunApp (StanLib, id, es))
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
         ~ad_level:(lub_ad_e es) ~type_:ut ~loc
       |> Validate.ok
   | _ ->
@@ -320,10 +323,10 @@ let fn_kind_from_application id es =
 (** Determines the function kind based on the identifier and performs the
     corresponding semantic check
 *)
-let semantic_check_fn ~loc id es =
+let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib -> semantic_check_fn_stan_math ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~loc id es
+  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -662,19 +665,12 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> List.map ~f:(semantic_check_expression cf)
     |> sequence
     >>= fun ues ->
-    semantic_check_fn ~loc:emeta.loc id ues
+    semantic_check_fn ~is_cond_dist ~loc:emeta.loc id ues
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
-    >>= fun e ->
-    ok
-      { e with
-        expr=
-          ( match e.expr with
-          | FunApp (fun_kind, id, ues) -> CondDistApp (fun_kind, id, ues)
-          | _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
@@ -1679,9 +1675,33 @@ let semantic_check_program
     ; generatedquantitiesblock= ugb }
   in
   let apply_to x f = Validate.apply ~f x in
+  let check_correctness_invariant (decorated_ast : typed_program) :
+      typed_program =
+    if
+      compare_untyped_program
+        { functionblock= fb
+        ; datablock= db
+        ; transformeddatablock= tdb
+        ; parametersblock= pb
+        ; transformedparametersblock= tpb
+        ; modelblock= mb
+        ; generatedquantitiesblock= gb }
+        (untyped_program_of_typed_program decorated_ast)
+      = 0
+    then decorated_ast
+    else
+      raise_s
+        [%message
+          "Type checked AST does not match original AST. Please file a bug!"
+            (decorated_ast : typed_program)]
+  in
+  let check_correctness_invariant_validate =
+    Validate.map ~f:check_correctness_invariant
+  in
   Validate.(
     ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
     |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
+    |> check_correctness_invariant_validate
     |> get_with
          ~with_ok:(fun ok -> Result.Ok ok)
          ~with_errors:(fun errs -> Result.Error errs))

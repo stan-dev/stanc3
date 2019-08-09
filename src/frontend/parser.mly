@@ -376,14 +376,14 @@ common_expression:
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ; FunApp (UserDefined, id, args) }
+    {  grammar_logger "fun_app" ; FunApp ((), id, args) }
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondDistApp (UserDefined, id, e :: args) }
+    {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 
@@ -500,7 +500,7 @@ atomic_statement:
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
-    {  grammar_logger "funapp_statement" ; NRFunApp (UserDefined,id, args)  }
+    {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
