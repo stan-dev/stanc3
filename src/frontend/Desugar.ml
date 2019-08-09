@@ -80,18 +80,18 @@ let rec desugar_index_expr = function
 let rec map_statement_all_exprs expr_f {stmt; smeta} =
   (* v[:][x] -> v[x]
    * v[x][:] -> v[x] *)
-  { stmt= map_statement expr_f (map_statement_all_exprs expr_f) Fn.id stmt
+  { stmt= map_statement expr_f (map_statement_all_exprs expr_f) Fn.id Fn.id stmt
   ; smeta }
 
 let rec desugar_expr {expr; emeta} =
   let expr =
     expr |> remove_trailing_alls_expr |> desugar_index_expr
-    |> map_expression desugar_expr
+    |> map_expression desugar_expr Fn.id
   in
   {expr; emeta}
 
 let rec desugar_stmt {stmt; smeta} =
-  {stmt= map_statement desugar_expr desugar_stmt Fn.id stmt; smeta}
+  {stmt= map_statement desugar_expr desugar_stmt Fn.id Fn.id stmt; smeta}
 
 let desugar_prog (p : typed_program) : typed_program =
   map_program desugar_stmt p

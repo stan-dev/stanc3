@@ -4,7 +4,7 @@ functions {
   int foo(int n) {
     if (n == 0) 
       return 1;
-    return n * foo(n - 1| );
+    return n * foo(n - 1);
   }
   real[] sho(real t, real[] y, real[] theta, data real[] x, data int[] x_int);
   real[] sho(real t, real[] y, real[] theta, data real[] x, data int[] x_int) {
@@ -32,7 +32,7 @@ functions {
     return 1.0;
   }
   void unit_normal_lp(real u) {
-    increment_log_prob(normal_log(u| 0, 1));
+    increment_log_prob(normal_log(u, 0, 1));
     u ~ uniform(-100, 100);
   }
   int foo_1(int a) {
@@ -134,7 +134,7 @@ functions {
     return 0;
   }
   real[] foo_3(real t, int n) {
-    return rep_array(t| n);
+    return rep_array(t, n);
   }
   real foo_lp(real x) {
     return x + get_lp();
@@ -145,8 +145,8 @@ functions {
   real relative_diff(real x, real y, real max_, real min_) {
     real abs_diff;
     real avg_scale;
-    abs_diff = fabs(x - y| );
-    avg_scale = (fabs(x| ) + fabs(y| )) / 2;
+    abs_diff = fabs(x - y);
+    avg_scale = (fabs(x) + fabs(y)) / 2;
     if ((abs_diff / avg_scale) > max_) 
       reject("user-specified rejection, difference above ", max_, " x:", x, " y:", y);
     if ((abs_diff / avg_scale) < min_) 
@@ -164,7 +164,7 @@ functions {
     return x1;
   }
   matrix covsqrt2corsqrt(matrix mat, int invert) {
-    matrix[rows(mat| ), cols(mat| )] o;
+    matrix[rows(mat), cols(mat)] o;
     o = mat;
     o[1] = o[2];
     o[3 : 4] = o[1 : 2];
@@ -269,10 +269,10 @@ data {
 transformed data {
   int td_int;
   int td_1d[N];
-  int td_1dk[M] = rep_array(1| M);
+  int td_1dk[M] = rep_array(1, M);
   int td_a = N;
   real td_b = N * J;
-  real td_c = foo_bar1(td_b| );
+  real td_c = foo_bar1(td_b);
   matrix<lower=0, upper=1>[2, 3] td_ar_mat[4, 5];
   simplex[N] td_simplex;
   simplex[N] td_1d_simplex[N];
@@ -307,8 +307,8 @@ transformed data {
       print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
     }
   }
-  td_cfcov_54 = diag_matrix(rep_vector(1| rows(td_cfcov_54| ))| );
-  td_cfcov_33 = diag_matrix(rep_vector(1| rows(td_cfcov_33| ))| );
+  td_cfcov_54 = diag_matrix(rep_vector(1, rows(td_cfcov_54)));
+  td_cfcov_33 = diag_matrix(rep_vector(1, rows(td_cfcov_33)));
   {
     real z;
     row_vector[2] blocked_tdata_vs;
@@ -382,41 +382,41 @@ transformed parameters {
   tp_3d_row_vec = p_3d_row_vec;
 }
 model {
-  real r1 = foo_bar1(p_real| );
-  real r2 = foo_bar1(J| );
+  real r1 = foo_bar1(p_real);
+  real r2 = foo_bar1(J);
   p_real ~ normal(0, 1);
   offset_multiplier ~ normal(0, 1);
-  to_vector(p_real_1d_ar| ) ~ normal(0, 1);
+  to_vector(p_real_1d_ar) ~ normal(0, 1);
   for (n in 1 : N) {
-    to_vector(p_1d_vec[n]| ) ~ normal(0, 1);
-    to_vector(p_1d_row_vec[n]| ) ~ normal(0, 1);
-    to_vector(p_1d_simplex[n]| ) ~ normal(0, 1);
+    to_vector(p_1d_vec[n]) ~ normal(0, 1);
+    to_vector(p_1d_row_vec[n]) ~ normal(0, 1);
+    to_vector(p_1d_simplex[n]) ~ normal(0, 1);
     for (m in 1 : M) {
       for (k in 1 : K) {
-        to_vector(p_3d_vec[n, m, k]| ) ~ normal(0, 1);
-        to_vector(p_3d_row_vec[n, m, k]| ) ~ normal(0, 1);
-        to_vector(p_3d_simplex[n, m, k]| ) ~ normal(0, 1);
+        to_vector(p_3d_vec[n, m, k]) ~ normal(0, 1);
+        to_vector(p_3d_row_vec[n, m, k]) ~ normal(0, 1);
+        to_vector(p_3d_simplex[n, m, k]) ~ normal(0, 1);
         p_real_3d_ar[n, m, k] ~ normal(0, 1);
       }
     }
   }
   for (i in 1 : 4) {
     for (j in 1 : 5) {
-      to_vector(p_ar_mat[i, j]| ) ~ normal(0, 1);
+      to_vector(p_ar_mat[i, j]) ~ normal(0, 1);
     }
   }
   for (k in 1 : K) {
-    to_vector(p_cfcov_33_ar[k]| ) ~ normal(0, 1);
+    to_vector(p_cfcov_33_ar[k]) ~ normal(0, 1);
   }
-  to_vector(p_vec| ) ~ normal(0, 1);
-  to_vector(p_row_vec| ) ~ normal(0, 1);
-  to_vector(p_simplex| ) ~ normal(0, 1);
-  to_vector(p_cfcov_54| ) ~ normal(0, 1);
-  to_vector(p_cfcov_33| ) ~ normal(0, 1);
+  to_vector(p_vec) ~ normal(0, 1);
+  to_vector(p_row_vec) ~ normal(0, 1);
+  to_vector(p_simplex) ~ normal(0, 1);
+  to_vector(p_cfcov_54) ~ normal(0, 1);
+  to_vector(p_cfcov_33) ~ normal(0, 1);
 }
 generated quantities {
-  real gq_r1 = foo_bar1(p_real| );
-  real gq_r2 = foo_bar1(J| );
+  real gq_r1 = foo_bar1(p_real);
+  real gq_r2 = foo_bar1(J);
   real<lower=0> gq_real_1d_ar[N];
   real<lower=0> gq_real_3d_ar[N, M, K];
   vector<upper=1>[N] gq_vec;
@@ -469,22 +469,22 @@ generated quantities {
   for (i in 1 : 3) 
     for (j in 1 : 4) 
       for (k in 1 : 5) 
-        indexing_mat[k, i, j] = normal_rng(0| 1);
-  for (i in 1 : size(indices| )) 
-    for (j in 1 : size(indices| )) 
+        indexing_mat[k, i, j] = normal_rng(0, 1);
+  for (i in 1 : size(indices)) 
+    for (j in 1 : size(indices)) 
       idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
   idx_res11 = indexing_mat[indices, indices];
   if (indexing_mat[indices[2], indices[1]][1] != idx_res1[2, 1, 1]) 
     reject("indexing test 1 failed");
   for (i in 1 : 5) 
-    for (j in 1 : size(indices| )) 
+    for (j in 1 : size(indices)) 
       idx_res2[i, j] = indexing_mat[i, indices[j]];
   idx_res21 = indexing_mat[ : , indices];
   if (indexing_mat[2, indices[1]][1] != idx_res2[2, 1, 1]) 
     reject("indexing test 2 failed");
-  for (i in 1 : size(indices| )) 
+  for (i in 1 : size(indices)) 
     for (j in 1 : 3) 
-      for (k in 1 : size(indices| )) 
+      for (k in 1 : size(indices)) 
         idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
   idx_res31 = indexing_mat[indices,  : , indices];
   if (indexing_mat[indices[2], 1, indices[1]] != idx_res3[2, 1, 1]) 
