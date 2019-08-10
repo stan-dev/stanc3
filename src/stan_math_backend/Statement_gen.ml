@@ -2,6 +2,8 @@ open Core_kernel
 open Middle
 open Fmt
 open Expression_gen
+open Expr_helpers
+
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
@@ -26,7 +28,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
   | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =
-  let int i = Expr.(lit_int Typed.Meta.empty i) in
+  let int i = lit_int Expr.Typed.Meta.empty i in
   strf "@[<v>%a@]" pp_set_size
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
@@ -70,7 +72,7 @@ let trans_math_fn fname =
 let body_is_read_param stmt =
   match Stmt.Fixed.pattern stmt with
   | Assignment (_, rhs)
-    when Expr.is_fun ~name:(Internal_fun.to_string FnReadParam) rhs ->
+    when is_fun ~name:(Internal_fun.to_string FnReadParam) rhs ->
       true
   | _ -> false
 
@@ -84,7 +86,7 @@ let rec maybe_deep_copy assignee e =
   | _, UInt | _, UReal -> recurse e
   | Var v, _ when v = assignee ->
       let meta = Expr.Fixed.meta e in
-      Expr.fun_app meta CompilerInternal "stan::model::deep_copy" [e]
+      Expr_helpers.fun_app meta CompilerInternal "stan::model::deep_copy" [e]
   | _ -> recurse e
 
 let rec pp_statement (ppf : Format.formatter) stmt =
@@ -154,7 +156,7 @@ and pp_internal_fun ppf meta fname args =
   match Internal_fun.of_string_opt fname with
   | Some FnPrint ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
-      let new_arg = Expr.(lit_string Typed.Meta.empty "\n") in
+      let new_arg = lit_string Expr.Typed.Meta.empty "\n" in
       let args = args @ [new_arg] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | Some FnReject ->
@@ -165,7 +167,7 @@ and pp_internal_fun ppf meta fname args =
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | Some FnCheck
     when Option.value_map ~default:false
-           ~f:Expr.(is_lit ~type_:Str)
+           ~f:(is_lit ~type_:Str)
            (List.hd args) ->
       (* Both of these are safe since we have checked that the arguments list is 
         non-empty and that the first element is a string literal *)
@@ -176,10 +178,10 @@ and pp_internal_fun ppf meta fname args =
         | _ -> failwith "Can't happen"
       in
       let rest_args = List.tl args |> Option.value ~default:[] in
-      let new_arg = Expr.(var Typed.Meta.empty "function__") in
+      let new_arg = var Expr.Typed.Meta.empty "function__" in
       let new_args = new_arg :: rest_args in
       let stmt =
-        Stmt.nrfun_app meta CompilerInternal ("check_" ^ check_name) new_args
+        Stmt_helpers.nrfun_app meta CompilerInternal ("check_" ^ check_name) new_args
       in
       pp_statement ppf stmt
   | Some FnWriteParam when List.length args = 1 ->

@@ -10,6 +10,7 @@ module UnsizedType : module type of UnsizedType
 module SizedType : module type of SizedType
 module Type : module type of Type
 module Stmt : module type of Stmt
+module Stmt_helpers : module type of Stmt_helpers
 module Program : module type of Program
 module Stan_math : module type of Stan_math
 module Utils : module type of Utils

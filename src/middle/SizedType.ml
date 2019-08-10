@@ -10,7 +10,21 @@ type 'a t = 'a Mir_pattern.sizedtype =
 module Make_traversable = Mir_pattern.Make_traversable_sizedtype
 module Make_traversable2 = Mir_pattern.Make_traversable_sizedtype2
 
-let pp f ppf x = Mir_pretty_printer.pp_sizedtype f ppf x
+let rec pp pp_e ppf = function 
+  | SInt -> Fmt.string ppf "int"
+  | SReal -> Fmt.string ppf "real"
+  | SVector expr -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
+  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SMatrix (d1_expr, d2_expr) ->
+      Fmt.pf ppf {|matrix%a|}
+        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+        (d1_expr, d2_expr)
+  | SArray (st, expr) ->
+      Fmt.pf ppf {|array%a|}
+        Fmt.(
+          pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e
+          |> brackets)
+        (st, expr)
 let sint = SInt
 let sreal = SReal
 let svector e = SVector e

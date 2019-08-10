@@ -26,7 +26,7 @@ let out_var_json (name, st, block) : Yojson.Basic.t =
     ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
 
 let%expect_test "outvar to json pretty" =
-  let var x = Expr.(var Typed.Meta.empty x) in
+  let var x = Expr_helpers.var Expr.Typed.Meta.empty x in
   (* the following is equivalent to:
      parameters {
        vector[N] var_one[K];
@@ -59,7 +59,7 @@ let out_var_interpolated_json_str vars =
   |> Yojson.Basic.to_string |> replace_cpp_expr |> wrap_in_quotes
 
 let%expect_test "outvar to json" =
-  let var x = Expr.(var Typed.Meta.empty x) in
+  let var x = Expr_helpers.var Expr.Typed.Meta.empty x in
   [("var_one", SArray (SVector (var "N"), var "K"), Program.Parameters)]
   |> out_var_interpolated_json_str |> print_endline ;
   [%expect

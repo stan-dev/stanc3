@@ -1,5 +1,6 @@
 open Core_kernel
 open Common
+open Helpers
 open State.Cps
 
 type 'a fun_def = 'a Mir_pattern.fun_def =
@@ -10,19 +11,43 @@ type 'a fun_def = 'a Mir_pattern.fun_def =
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map]
 
+let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
+  Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp unsizedtype
+    name
+
+let pp_fun_def pp_s ppf = function
+  | {fdrt; fdname; fdargs; fdbody; _} -> (
+    match fdrt with
+    | Some rt ->
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody
+    | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody )
+
+
+
 type io_block = Mir_pattern.io_block =
   | Parameters
   | TransformedParameters
   | GeneratedQuantities
 [@@deriving sexp, hash]
 
-let pp_io_block = Mir_pretty_printer.pp_io_block
+let pp_io_block ppf = function
+  | Parameters -> Fmt.string ppf "parameters"
+  | TransformedParameters -> Fmt.string ppf "transformed_parameters"
+  | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
+
 
 type 'a outvar = 'a Mir_pattern.outvar =
   { out_unconstrained_st: 'a SizedType.t
   ; out_constrained_st: 'a SizedType.t
   ; out_block: io_block }
 [@@deriving sexp, map, hash]
+
+
 
 type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
   { functions_block: 'b fun_def list
@@ -36,7 +61,59 @@ type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
   ; prog_path: string }
 [@@deriving sexp, map]
 
-let pp pp_expr pp_stmt ppf x = Mir_pretty_printer.pp_prog pp_expr pp_stmt ppf x
+
+let pp_block label pp_elem ppf elems =
+  Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
+    Fmt.(list ~sep:cut pp_elem)
+    elems ;
+  Format.pp_force_newline ppf ()
+
+let pp_functions_block pp_s ppf {functions_block; _} =
+  pp_block "functions" pp_s ppf functions_block
+
+let pp_prepare_data pp_s ppf {prepare_data; _} =
+  pp_block "prepare_data" pp_s ppf prepare_data
+
+let pp_log_prob pp_s ppf {log_prob; _} = pp_block "log_prob" pp_s ppf log_prob
+
+let pp_generate_quantities pp_s ppf {generate_quantities; _} =
+  pp_block "generate_quantities" pp_s ppf generate_quantities
+
+let pp_transform_inits pp_s ppf {transform_inits; _} =
+  pp_block "transform_inits" pp_s ppf transform_inits
+
+
+let pp_output_var pp_e ppf
+    (name, {out_unconstrained_st; out_constrained_st; out_block}) =
+  Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (SizedType.pp pp_e)
+    out_constrained_st name (SizedType.pp pp_e) out_unconstrained_st
+
+let pp_input_var pp_e ppf (name, sized_ty) =
+  Fmt.pf ppf "@[<h>%a %s;@]" (SizedType.pp pp_e) sized_ty name
+
+let pp_input_vars pp_e ppf {input_vars; _} =
+  pp_block "input_vars" (pp_input_var pp_e) ppf input_vars
+
+let pp_output_vars pp_e ppf {output_vars; _} =
+  pp_block "output_vars" (pp_output_var pp_e) ppf output_vars
+
+let pp pp_e pp_s ppf prog =
+  Format.open_vbox 0 ;
+  pp_functions_block (pp_fun_def pp_s) ppf prog ;
+  Fmt.cut ppf () ;
+  pp_input_vars pp_e ppf prog ;
+  Fmt.cut ppf () ;
+  pp_prepare_data pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_log_prob pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_generate_quantities pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_transform_inits pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_output_vars pp_e ppf prog ;
+  Format.close_box ()
+
 
 module Make_traversable = Mir_pattern.Make_traversable_prog
 module Make_traversable2 = Mir_pattern.Make_traversable_prog2

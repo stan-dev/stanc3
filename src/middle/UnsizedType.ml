@@ -1,4 +1,5 @@
 open Core_kernel
+open Common.Helpers
 
 type t = Mir_pattern.unsizedtype =
   | UInt
@@ -15,9 +16,43 @@ and autodifftype = Mir_pattern.autodifftype = DataOnly | AutoDiffable
 and returntype = Mir_pattern.returntype = Void | ReturnType of t
 [@@deriving compare, hash, sexp]
 
-let pp ppf x = Mir_pretty_printer.pp_unsizedtype ppf x
-let pp_returntype ppf x = Mir_pretty_printer.pp_returntype ppf x
-let pp_autodifftype ppf x = Mir_pretty_printer.pp_autodifftype ppf x
+let pp_autodifftype ppf = function
+  | DataOnly -> pp_keyword ppf "data "
+  | AutoDiffable -> ()
+
+let unsized_array_depth unsized_ty =
+  let rec aux depth = function
+    | UArray ut -> aux (depth + 1) ut
+    | ut -> (ut, depth)
+  in
+  aux 0 unsized_ty
+
+let rec pp ppf = function
+  | UInt -> pp_keyword ppf "int"
+  | UReal -> pp_keyword ppf "real"
+  | UVector -> pp_keyword ppf "vector"
+  | URowVector -> pp_keyword ppf "row_vector"
+  | UMatrix -> pp_keyword ppf "matrix"
+  | UArray ut ->
+      let ty, depth = unsized_array_depth ut in
+      let commas = String.make depth ',' in
+      Fmt.pf ppf "%a[%s]" pp ty commas
+  | UFun (argtypes, rt) ->
+      Fmt.pf ppf {|@[<h>(%a) => %a@]|}
+        Fmt.(list pp_fun_arg ~sep:comma)
+        argtypes pp_returntype rt
+  | UMathLibraryFunction ->
+      (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+
+and pp_fun_arg ppf (ad_ty, unsized_ty) =
+  match ad_ty with
+  | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
+  | _ -> pp ppf unsized_ty
+
+and pp_returntype ppf = function
+  | Void -> Fmt.string ppf "void"
+  | ReturnType ut -> pp ppf ut
+
 let uint = UInt
 let ureal = UReal
 let uvector = UVector

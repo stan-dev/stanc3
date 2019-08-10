@@ -3,7 +3,9 @@ type 'a t = 'a Mir_pattern.possiblysizedtype =
   | Unsized of UnsizedType.t
 [@@deriving sexp, compare, map, hash, fold]
 
-let pp pp_e ppf x = Mir_pretty_printer.pp_possiblysizedtype pp_e ppf x
+let pp pp_e ppf = function 
+  | Sized st -> SizedType.pp pp_e ppf st
+  | Unsized ust -> UnsizedType.pp ppf ust
 
 module Make_traversable = Mir_pattern.Make_traversable_possiblysizedtype
 module Make_traversable2 = Mir_pattern.Make_traversable_possiblysizedtype2

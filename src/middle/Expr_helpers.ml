@@ -72,7 +72,7 @@ let indices_of expr =
 let simplify_ternary_if_opt pred e_true e_false =
   int_of_lit pred |> Option.map ~f:(fun x -> if x = 1 then e_true else e_false)
 
-let if_ meta pred e_true e_false =
+let ternary_if meta pred e_true e_false =
   simplify_ternary_if_opt pred e_true e_false
   |> Option.value ~default:(Fixed.fix meta @@ TernaryIf (pred, e_true, e_false))
 
@@ -909,7 +909,7 @@ let eval ?(env = String.Map.empty) expr =
     match Fixed.proj expr with
     | _, Var n -> String.Map.find env n |> Option.value ~default:expr
     | _, Lit _ -> expr
-    | meta, TernaryIf (pred, e1, e2) -> if_ meta pred e1 e2
+    | meta, TernaryIf (pred, e1, e2) -> ternary_if meta pred e1 e2
     | meta, EAnd (e1, e2) -> and_ meta e1 e2
     | meta, EOr (e1, e2) -> or_ meta e1 e2
     | _, Indexed _ -> expr

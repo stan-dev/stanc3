@@ -21,6 +21,8 @@ open Middle
 open Fmt
 open Expression_gen
 open Statement_gen
+open Expr_helpers
+open Stmt_helpers
 
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
@@ -87,12 +89,12 @@ let pp_arg ppf (custom_scalar, (_, name, ut)) =
 
 let to_indexed assignee idxs =
   let emeta = Expr.Typed.Meta.empty in
-  Expr.indexed emeta (Expr.var emeta assignee) idxs
+  indexed emeta (var emeta assignee) idxs
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf (body_stmts, err_msg) =
   pp_located_error ppf
-    (pp_statement, Stmt.block Locations.no_span_num body_stmts, err_msg)
+    (pp_statement, block Locations.no_span_num body_stmts, err_msg)
 
 let pp_fun_def ppf {Program.fdrt; fdname; fdargs; fdbody; _} =
   let extra =
@@ -170,7 +172,7 @@ let rec get_dims = function
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
-  let v s = Expr.var Expr.Typed.Meta.empty s in
+  let v s = var Expr.Typed.Meta.empty s in
   strf "@[%a@]" (list ~sep:comma pp_expr)
     (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
   |> print_endline ;
@@ -197,7 +199,7 @@ let pp_ctor ppf (p : (_, _) Program.t) =
   let get_param_st = function
     | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
       match get_dims st with
-      | [] -> Some [Expr.lit_int Expr.Typed.Meta.empty 1]
+      | [] -> Some [lit_int Expr.Typed.Meta.empty 1]
       | ls -> Some ls )
     | _ -> None
   in
@@ -229,7 +231,7 @@ let pp_ctor ppf (p : (_, _) Program.t) =
 
 let pp_model_private ppf {Program.prepare_data; _} =
   let decl s =
-    match Stmt.pattern s with
+    match Stmt.Fixed.pattern s with
     | Decl d ->
         Some (d.decl_id, Type.to_unsizedtype d.decl_type, UnsizedType.DataOnly)
     | _ -> None

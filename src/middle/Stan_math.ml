@@ -92,7 +92,7 @@ let pretty_print_all_math_lib_fn_sigs name =
     ^ String.concat ~sep:"\n"
         (List.map
            ~f:(fun (x, y) ->
-             (Fmt.to_to_string Mir_pretty_printer.pp_unsizedtype) (UFun (y, x))
+             (Fmt.to_to_string UnsizedType.pp) (UFun (y, x))
              )
            namematches)
 

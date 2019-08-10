@@ -1,3 +1,4 @@
+open Core_kernel
 open Expr 
 
 val var : 'a -> string -> 'a Fixed.t
@@ -30,7 +31,7 @@ val index_bounds : 'a index -> 'a list
 val indices_of : 'a Fixed.t -> 'a Fixed.t index list
 
 (* == Ternary If ============================================================ *)
-val if_ : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
+val ternary_if : 'a -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t -> 'a Fixed.t
 
 (* == Function application ================================================== *)
 val fun_app : 'a -> Fun_kind.t -> string -> 'a Fixed.t list -> 'a Fixed.t

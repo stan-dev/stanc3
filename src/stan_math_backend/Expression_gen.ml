@@ -216,13 +216,13 @@ and gen_fun_app ppf f es =
       match Expr.Fixed.proj expr with
       | meta, Var name when UnsizedType.is_fun_type @@ Expr.Typed.type_of expr
         ->
-          Expr.fun_app meta StanLib (name ^ "_functor__") []
+          Expr_helpers.fun_app meta StanLib (name ^ "_functor__") []
       | _ -> expr
     in
     let converted_es = List.map ~f:convert_hof_vars es in
     let extra =
       (suffix_args f @ if es = converted_es then [] else ["pstream__"])
-      |> List.map ~f:(fun s -> Expr.(var Typed.Meta.empty s))
+      |> List.map ~f:(fun s -> Expr_helpers.var Expr.Typed.Meta.empty s)
     in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
       (list ~sep:comma pp_expr) (converted_es @ extra)
@@ -279,7 +279,7 @@ and pp_indexed ppf (vident, indices, pretty) =
 
 and pp_indexed_simple ppf (vident, idcs) =
   let minus_one e =
-    Expr.(binop (Fixed.meta e) Operator.Minus e (lit_int Typed.Meta.empty 1))
+    Expr_helpers.(binop (Expr.Fixed.meta e) Operator.Minus e (lit_int Expr.Typed.Meta.empty 1))
   in
   let idx_minus_one = Expr.map_index minus_one in
   (Expr.pp_indexed pp_expr) ppf (vident, List.map ~f:idx_minus_one idcs)

@@ -10,6 +10,7 @@ module UnsizedType = UnsizedType
 module SizedType = SizedType
 module Type = Type
 module Stmt = Stmt
+module Stmt_helpers = Stmt_helpers
 module Program = Program
 module Stan_math = Stan_math
 module Utils = Utils
