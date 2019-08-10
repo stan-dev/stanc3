@@ -133,7 +133,7 @@ let contains_internal_fun ?fn expr =
 (* == Binary operations ===================================================== *)
 
 let lift_int_binop = function
-  | Operator.Plus -> Some ( + )
+  | Mir_pattern.Plus -> Some ( + )
   | Minus -> Some ( - )
   | Times -> Some ( * )
   | Divide -> Some ( / )
@@ -149,14 +149,14 @@ let lift_int_binop = function
   | _ -> None
 
 let lift_real_arith_binop = function
-  | Operator.Plus -> Some ( +. )
+  | Mir_pattern.Plus -> Some ( +. )
   | Minus -> Some ( -. )
   | Times -> Some ( *. )
   | Divide -> Some ( /. )
   | _ -> None
 
 let lift_real_logical_binop = function
-  | Operator.Equals -> Some (fun x y -> if Float.equal x y then 1 else 0)
+  | Mir_pattern.Equals -> Some (fun x y -> if Float.equal x y then 1 else 0)
   | NEquals -> Some (fun x y -> if x <> y then 1 else 0)
   | Less -> Some (fun x y -> if x < y then 1 else 0)
   | Leq -> Some (fun x y -> if x <= y then 1 else 0)
@@ -207,7 +207,7 @@ let simplify_plus_opt meta a b = plus_fma meta a b
 
 let plus meta a b =
   simplify_plus_opt meta a b
-  |> Option.value ~default:(binop meta Operator.Plus a b)
+  |> Option.value ~default:(binop meta Mir_pattern.Plus a b)
 
 (* -- Minus ----------------------------------------------------------------- *)
 

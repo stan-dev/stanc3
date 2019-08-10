@@ -39,7 +39,7 @@ let stan_distribution_name_suffix name =
 let distribution_name_suffix = stan_distribution_name_suffix
 
 let assignmentoperator_to_stan_math_fn = function
-  | Operator.Plus -> Some "assign_add"
+  | Mir_pattern.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"
   | Times -> Some "assign_multiply"
   | Divide -> Some "assign_divide"
@@ -54,7 +54,7 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
 let assignmentop_return_type = assignmentoperator_stan_math_return_type
 
 let operator_to_stan_math_fns = function
-  | Operator.Plus -> ["add"]
+  | Mir_pattern.Plus -> ["add"]
   | PPlus -> ["plus"]
   | Minus -> ["subtract"]
   | PMinus -> ["minus"]

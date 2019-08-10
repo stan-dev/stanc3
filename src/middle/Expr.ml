@@ -3,13 +3,19 @@ open Common
 open Helpers
 open State
 
-type litType = Mir_pattern.litType [@@deriving sexp, hash, compare]
+type litType = Mir_pattern.litType = Int | Real | Str
+[@@deriving sexp, hash, compare]
 
-type 'a index = 'a Mir_pattern.index
+type 'a index = 'a Mir_pattern.index =
+  | All
+  | Single of 'a
+  | Upfrom of 'a
+  | Between of 'a * 'a
+  | MultiIndex of 'a
 [@@deriving sexp, hash, map, compare, fold]
 
 let pp_index pp_e ppf = function
-  | Mir_pattern.All -> Fmt.char ppf ':'
+  | All -> Fmt.char ppf ':'
   | Single index -> pp_e ppf index
   | Upfrom index -> Fmt.pf ppf {|%a:|} pp_e index
   | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
@@ -23,10 +29,18 @@ let pp_indexed pp_e ppf (ident, indices) =
 
 module Fixed = struct
   module Pattern = struct
-    type 'a t = 'a Mir_pattern.expr [@@deriving sexp, hash, map, compare, fold]
+    type 'a t = 'a Mir_pattern.expr =
+      | Var of string
+      | Lit of litType * string
+      | FunApp of Fun_kind.t * string * 'a list
+      | TernaryIf of 'a * 'a * 'a
+      | EAnd of 'a * 'a
+      | EOr of 'a * 'a
+      | Indexed of 'a * 'a index list
+    [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
-      | Mir_pattern.Var varname -> Fmt.string ppf varname
+      | Var varname -> Fmt.string ppf varname
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
       | FunApp (StanLib, name, [lhs; rhs])

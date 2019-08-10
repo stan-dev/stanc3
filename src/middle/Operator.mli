@@ -1,5 +1,5 @@
 (** Arithmetic and logical operators *)
-type t =
+type t = Mir_pattern.operator = 
   | Plus
   | PPlus
   | Minus
