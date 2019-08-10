@@ -100,6 +100,3 @@ module Labelled : sig
 
   val associate : ?init:associations -> t -> associations
 end
-
-
-

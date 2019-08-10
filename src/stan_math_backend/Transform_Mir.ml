@@ -26,7 +26,7 @@ let transform_for stmt =
   match Stmt.Fixed.proj stmt with
   | meta, For {body; _}
     when contains_internal_fun ~fn:FnReadData body
-           || contains_internal_fun ~fn:FnWriteParam body ->
+         || contains_internal_fun ~fn:FnWriteParam body ->
       let final, args = unwind stmt in
       let stmt =
         List.fold ~init:final
@@ -42,13 +42,10 @@ let transform_for stmt =
 let invert_read_fors stmt =
   Stmt.Fixed.transform_partial Either.first transform_for stmt
 
-let mock_for n body =
-  for_ () "lv" (lit_int () 1) (lit_int () n) body
+let mock_for n body = for_ () "lv" (lit_int () 1) (lit_int () n) body
 
 let%expect_test "invert write fors" =
-  let stmt =
-    mock_for 8 (mock_for 9 (internal_nrfun () FnWriteParam []))
-  in
+  let stmt = mock_for 8 (mock_for 9 (internal_nrfun () FnWriteParam [])) in
   invert_read_fors stmt |> Fmt.strf "%a" Stmt.NoMeta.pp |> print_endline ;
   [%expect
     {|
@@ -71,8 +68,7 @@ let use_pos_in_readdata stmt =
             index_single index_meta (Expr.Fixed.inj fun_app) ~idx:pos_var
           and rhs2 = incr pos_var in
           let stmts =
-            [ assign assign_meta ident ~idxs rhs1
-            ; assign assign_meta pos rhs2 ]
+            [assign assign_meta ident ~idxs rhs1; assign assign_meta pos rhs2]
           in
           block block_meta stmts
       | _ -> stmt )
@@ -112,13 +108,10 @@ let add_jacobians stmt =
       | fun_meta, FunApp (CompilerInternal, fn_name, args)
         when fn_name = Internal_fun.to_string FnConstrain ->
           let new_rhs =
-            internal_fun fun_meta FnConstrain
-              (args @ [var fun_meta "lp__"])
+            internal_fun fun_meta FnConstrain (args @ [var fun_meta "lp__"])
           in
           let new_stmt = assign assign_meta ident ~idxs new_rhs in
-          if_ assign_meta
-            (var fun_meta "jacobian__")
-            new_stmt (Some stmt)
+          if_ assign_meta (var fun_meta "jacobian__") new_stmt (Some stmt)
       | _ -> stmt )
     | _ -> stmt
   in
@@ -132,8 +125,7 @@ let add_read_data_vestigial_indices stmt =
       | emeta, FunApp (CompilerInternal, f, _)
         when f = Internal_fun.to_string FnReadData ->
           let with_vestigial_idx =
-            
-              index_single emeta rhs ~idx:(loop_bottom Expr.Typed.Meta.empty)
+            index_single emeta rhs ~idx:(loop_bottom Expr.Typed.Meta.empty)
           in
           assign smeta ident ~idxs with_vestigial_idx
       | _ -> stmt )

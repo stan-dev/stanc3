@@ -12,8 +12,8 @@ type 'a fun_def = 'a Mir_pattern.fun_def =
 [@@deriving compare, hash, map, sexp, map]
 
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
-  Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp unsizedtype
-    name
+  Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp
+    unsizedtype name
 
 let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
@@ -27,8 +27,6 @@ let pp_fun_def pp_s ppf = function
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
-
-
 type io_block = Mir_pattern.io_block =
   | Parameters
   | TransformedParameters
@@ -40,14 +38,11 @@ let pp_io_block ppf = function
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-
 type 'a outvar = 'a Mir_pattern.outvar =
   { out_unconstrained_st: 'a SizedType.t
   ; out_constrained_st: 'a SizedType.t
   ; out_block: io_block }
 [@@deriving sexp, map, hash]
-
-
 
 type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
   { functions_block: 'b fun_def list
@@ -60,7 +55,6 @@ type ('a, 'b) t = ('a, 'b) Mir_pattern.prog =
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map]
-
 
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
@@ -81,7 +75,6 @@ let pp_generate_quantities pp_s ppf {generate_quantities; _} =
 
 let pp_transform_inits pp_s ppf {transform_inits; _} =
   pp_block "transform_inits" pp_s ppf transform_inits
-
 
 let pp_output_var pp_e ppf
     (name, {out_unconstrained_st; out_constrained_st; out_block}) =
@@ -113,7 +106,6 @@ let pp pp_e pp_s ppf prog =
   Fmt.cut ppf () ;
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
-
 
 module Make_traversable = Mir_pattern.Make_traversable_prog
 module Make_traversable2 = Mir_pattern.Make_traversable_prog2

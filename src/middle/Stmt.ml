@@ -27,21 +27,21 @@ module Fixed = struct
           ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, map, fold, compare]
 
-
-
-
     let pp pp_e pp_s ppf = function
       | Assignment ((assignee, idcs), rhs) ->
-          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Expr.pp_indexed pp_e) (assignee, idcs) pp_e
-            rhs
+          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Expr.pp_indexed pp_e)
+            (assignee, idcs) pp_e rhs
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
       | NRFunApp (_, name, args) ->
-          Fmt.pf ppf {|@[%s%a;@]|} name Fmt.(list pp_e ~sep:comma |> parens) args
+          Fmt.pf ppf {|@[%s%a;@]|} name
+            Fmt.(list pp_e ~sep:comma |> parens)
+            args
       | Break -> pp_keyword ppf "break;"
       | Continue -> pp_keyword ppf "continue;"
       | Skip -> pp_keyword ppf ";"
-      | Return (Some expr) -> Fmt.pf ppf {|%a %a;|} pp_keyword "return" pp_e expr
+      | Return (Some expr) ->
+          Fmt.pf ppf {|%a %a;|} pp_keyword "return" pp_e expr
       | Return _ -> pp_keyword ppf "return;"
       | IfElse (pred, s_true, Some s_false) ->
           Fmt.pf ppf {|%a(%a) %a %a %a|} pp_builtin_syntax "if" pp_e pred pp_s
@@ -49,18 +49,19 @@ module Fixed = struct
       | IfElse (pred, s_true, _) ->
           Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "if" pp_e pred pp_s s_true
       | While (pred, stmt) ->
-          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s stmt
+          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s
+            stmt
       | For {loopvar; lower; upper; body} ->
-          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar pp_e
-            lower pp_e upper pp_s body
+          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar
+            pp_e lower pp_e upper pp_s body
       | Block stmts ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
+          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
+            Fmt.(list pp_s ~sep:Fmt.cut)
+            stmts
       | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type} ->
           Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
-            (Type.pp pp_e)
-            decl_type decl_id
-
+            (Type.pp pp_e) decl_type decl_id
 
     include Bifoldable.Make (struct
       type nonrec ('a, 'b) t = ('a, 'b) t
@@ -140,20 +141,12 @@ module Labelled = struct
 
   module Traversable_state = Fixed.Make_traversable2 (State)
 
-  let label ?(init = Int_label.init) (stmt : Located.t) : t  =
-    let f label Expr.Typed.Meta.{adlevel; type_; loc} =
+  let label ?(init = Int_label.init) (stmt : Located.t) : t =
+    let f label Expr.Typed.Meta.({adlevel; type_; loc}) =
       ( Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label ()
-      , Int_label.next label 
-      )
-    and g label loc =
-      ( Meta.create ~loc ~label ()
-      , Int_label.next label
-      )
-    in 
-    Fixed.map_accum_left stmt ~init ~f ~g      
-    |> fst
-
-
+      , Int_label.next label )
+    and g label loc = (Meta.create ~loc ~label (), Int_label.next label) in
+    Fixed.map_accum_left stmt ~init ~f ~g |> fst
 
   type associations =
     {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
@@ -206,4 +199,3 @@ module Labelled = struct
         {assocs with exprs= SizedType.associate ~init:assocs.exprs st}
     | Mir_pattern.Unsized _ -> assocs
 end
-

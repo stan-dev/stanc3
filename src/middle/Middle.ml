@@ -11,6 +11,7 @@ module SizedType = SizedType
 module Type = Type
 module Stmt = Stmt
 module Stmt_helpers = Stmt_helpers
+module Stmt_flowgraph = Stmt_flowgraph
 module Program = Program
 module Stan_math = Stan_math
 module Utils = Utils

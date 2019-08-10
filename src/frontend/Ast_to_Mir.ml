@@ -2,6 +2,7 @@ open Core_kernel
 open Middle
 open Expr_helpers
 open Stmt_helpers
+
 let loop_bottom = loop_bottom Expr.Typed.Meta.empty
 
 (* XXX fix exn *)
@@ -47,8 +48,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
       fun_app meta (trans_fn_kind fn_kind) name (trans_exprs args)
   | GetLP | GetTarget -> stanlib_fun meta "target" []
   | ArrayExpr eles -> internal_fun meta FnMakeArray @@ trans_exprs eles
-  | RowVectorExpr eles ->
-      internal_fun meta FnMakeRowVec @@ trans_exprs eles
+  | RowVectorExpr eles -> internal_fun meta FnMakeRowVec @@ trans_exprs eles
   | Indexed (lhs, indices) ->
       indexed meta (trans_expr lhs) (List.map ~f:trans_idx indices)
 
@@ -81,8 +81,7 @@ let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 let truncate_dist ast_obs t =
   let trunc cond_op (x : Ast.typed_expression) y =
     let emeta = x.Ast.emeta.loc in
-
-      if_ emeta (op_to_funapp cond_op [ast_obs; x]) (target_pe emeta neg_inf) y
+    if_ emeta (op_to_funapp cond_op [ast_obs; x]) (target_pe emeta neg_inf) y
   in
   match t with
   | Ast.NoTruncate -> []
@@ -506,8 +505,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
           rhs ]
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       [nrfun_app smeta (trans_fn_kind fn_kind) name (trans_exprs args)]
-  | Ast.IncrementLogProb e | Ast.TargetPE e ->
-      [target_pe smeta @@ trans_expr e]
+  | Ast.IncrementLogProb e | Ast.TargetPE e -> [target_pe smeta @@ trans_expr e]
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = Stan_math.distribution_name_suffix distribution.name in
       let name =
@@ -524,12 +522,11 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
             @@ trans_exprs (arg :: args))
       in
       truncate_dist arg truncation @ [add_dist]
-  | Ast.Print ps ->
-      [internal_nrfun smeta FnPrint @@ trans_printables smeta ps]
+  | Ast.Print ps -> [internal_nrfun smeta FnPrint @@ trans_printables smeta ps]
   | Ast.Reject ps ->
       [internal_nrfun smeta FnReject @@ trans_printables smeta ps]
   | Ast.IfThenElse (cond, ifb, elseb) ->
-      [if_ smeta (trans_expr cond) (trans_single_stmt ifb)
+      [ if_ smeta (trans_expr cond) (trans_single_stmt ifb)
           (Option.map ~f:trans_single_stmt elseb) ]
   | Ast.While (cond, body) ->
       [while_ smeta (trans_expr cond) (trans_single_stmt body)]
@@ -542,8 +539,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let emeta =
         Expr.Typed.Meta.create ~loc:mloc ~type_:UInt ~adlevel:DataOnly ()
       in
-      let iteratee = trans_expr iteratee
-      and indexing_var = var emeta newsym in
+      let iteratee = trans_expr iteratee and indexing_var = var emeta newsym in
       let indices =
         let single_one = (Ast.Single (Ast.IntNumeral "1"), UnsizedType.UInt) in
         match Expr.Typed.type_of iteratee with
@@ -566,9 +562,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         @@ index_single emeta iteratee ~idx:indexing_var
       in
       let body_stmts = trans_single_stmt body |> block_statements in
-      let body =
-        block smeta (decl_loopvar :: assign_loopvar :: body_stmts)
-      in
+      let body = block smeta (decl_loopvar :: assign_loopvar :: body_stmts) in
       let upper = internal_fun emeta FnLength [iteratee] in
       [for_ smeta newsym loop_bottom upper body]
   | Ast.FunDef _ ->
@@ -606,9 +600,7 @@ let trans_fun_def (ts : Ast.typed_statement) =
         [%message "Found non-function definition statement in function block"]
 
 let gen_write decl_id sizedtype =
-  let bodyfn var =
-    internal_nrfun Location_span.empty FnWriteParam [var]
-  in
+  let bodyfn var = internal_nrfun Location_span.empty FnWriteParam [var] in
   let meta =
     Expr.Typed.Meta.(empty |> with_type (SizedType.to_unsizedtype sizedtype))
   in
@@ -631,9 +623,7 @@ let compiler_if compiler_internal_var stmts =
     | _ -> block Location_span.empty stmts
   in
   let cond = var Expr.Typed.Meta.empty compiler_internal_var in
-  match stmts with
-  | [] -> []
-  | _ -> [if_ Location_span.empty cond body None]
+  match stmts with [] -> [] | _ -> [if_ Location_span.empty cond body None]
 
 let get_block block prog =
   match block with

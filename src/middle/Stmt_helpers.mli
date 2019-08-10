@@ -1,4 +1,4 @@
-open Stmt 
+open Stmt
 
 val break : 'b -> ('a, 'b) Fixed.t
 val continue : 'b -> ('a, 'b) Fixed.t

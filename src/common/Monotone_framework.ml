@@ -16,13 +16,8 @@ module type S = sig
   module TF :
     Transfer_function.S with type t := t and type property := property
 
-  type flowgraph_info =
-    { flowgraph: (Label.t * Label.t) list
-    ; initials: Label.Set.t
-    ; associations: t Label.Map.t }
-
   val solve :
-    flowgraph_info -> t -> t Label.Map.t * property entry_exit Label.Map.t
+    F.flowgraph_info -> t -> t Label.Map.t * property entry_exit Label.Map.t
 
   val solve_t : t -> t Label.Map.t * property entry_exit Label.Map.t
 end
@@ -40,11 +35,6 @@ module Make
    and type property := L.property
    and module L := L
    and module TF := TF = struct
-  type flowgraph_info =
-    { flowgraph: (F.Label.t * F.Label.t) list
-    ; initials: F.Label.Set.t
-    ; associations: F.t F.Label.Map.t }
-
   (** Add elements to the worklist (see Step 2, page 75, Nielsen et al.) *)
   let rec enqueue label accu = function
     | [] -> accu
@@ -97,7 +87,7 @@ module Make
         | `Ok accu' -> accu' )
       all_labels
 
-  let solve {flowgraph; initials; associations} x =
+  let solve {F.flowgraph; initials; associations} x =
     let extremal_value = L.extremal_value_of x
     and least_value = L.least_element_of x
     and all_props = TF.all_properties_of x in
@@ -109,10 +99,5 @@ module Make
     ( associations
     , result_of_analysis all_props initials flowgraph associations analysis )
 
-  let solve_t x =
-    solve
-      { flowgraph= F.flow_of_t x
-      ; initials= F.extremal_labels_of_t x
-      ; associations= F.associations_of_t x }
-      x
+  let solve_t x = solve (F.flowgraph_info_of_t x) x
 end

@@ -14,13 +14,8 @@ module type S = sig
   module TF :
     Transfer_function.S with type t := t and type property := property
 
-  type flowgraph_info =
-    { flowgraph: (Label.t * Label.t) list
-    ; initials: Label.Set.t
-    ; associations: t Label.Map.t }
-
   val solve :
-    flowgraph_info -> t -> t Label.Map.t * property entry_exit Label.Map.t
+    F.flowgraph_info -> t -> t Label.Map.t * property entry_exit Label.Map.t
 
   val solve_t : t -> t Label.Map.t * property entry_exit Label.Map.t
 end

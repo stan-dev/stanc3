@@ -91,9 +91,7 @@ let pretty_print_all_math_lib_fn_sigs name =
     "\n"
     ^ String.concat ~sep:"\n"
         (List.map
-           ~f:(fun (x, y) ->
-             (Fmt.to_to_string UnsizedType.pp) (UFun (y, x))
-             )
+           ~f:(fun (x, y) -> (Fmt.to_to_string UnsizedType.pp) (UFun (y, x)))
            namematches)
 
 let pretty_print_math_lib_operator_sigs op =

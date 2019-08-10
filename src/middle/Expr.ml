@@ -22,11 +22,10 @@ let pp_index pp_e ppf = function
   | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
 
 let pp_indexed pp_e ppf (ident, indices) =
-      Fmt.pf ppf {|@[%s%a@]|} ident
-        (if List.is_empty indices then fun _ _ -> ()
-        else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
-        indices
-
+  Fmt.pf ppf {|@[%s%a@]|} ident
+    ( if List.is_empty indices then fun _ _ -> ()
+    else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
+    indices
 
 module Fixed = struct
   module Pattern = struct
@@ -45,29 +44,24 @@ module Fixed = struct
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
       | FunApp (StanLib, name, [lhs; rhs])
-          when Option.is_some (Operator.of_string_opt name) ->
-        Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
-        (Option.value_exn (Operator.of_string_opt name))
-        pp_e rhs
-
+        when Option.is_some (Operator.of_string_opt name) ->
+          Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
+            (Option.value_exn (Operator.of_string_opt name))
+            pp_e rhs
       | FunApp (_, name, args) ->
-        Fmt.string ppf name ;
-        Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
+          Fmt.string ppf name ;
+          Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
       | TernaryIf (pred, texpr, fexpr) ->
-        Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
-          pp_e texpr pp_builtin_syntax ":" pp_e fexpr
+          Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
+            pp_e texpr pp_builtin_syntax ":" pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf {|@[%a%a@]|} 
-            pp_e expr
-            (if List.is_empty indices then fun _ _ -> ()
+          Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+            ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
             indices
-
-        (* pp_indexed pp_e ppf (Fmt.strf "%a" pp_e expr, indices) *)
+      (* pp_indexed pp_e ppf (Fmt.strf "%a" pp_e expr, indices) *)
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
-
-      
 
     include Foldable.Make (struct type nonrec 'a t = 'a t
 
@@ -163,12 +157,10 @@ module Labelled = struct
 
   (** Statefully traverse a typed expression adding unique labels *)
   let label ?(init = Int_label.init) (expr : Typed.t) : t =
-    Fixed.map_accum_left expr ~init 
-      ~f:(fun label Typed.Meta.{adlevel; type_; loc} -> 
-          (Meta.create ~label ~adlevel ~type_ ~loc () , Int_label.next label)
-      )
+    Fixed.map_accum_left expr ~init
+      ~f:(fun label Typed.Meta.({adlevel; type_; loc}) ->
+        (Meta.create ~label ~adlevel ~type_ ~loc (), Int_label.next label) )
     |> fst
-
 
   (** Build a map from expression labels to expressions *)
   let rec associate ?init:(assocs = Int_label.Map.empty) (expr : t) =

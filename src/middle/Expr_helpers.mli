@@ -1,5 +1,5 @@
 open Core_kernel
-open Expr 
+open Expr
 
 val var : 'a -> string -> 'a Fixed.t
 

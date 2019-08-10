@@ -279,7 +279,9 @@ and pp_indexed ppf (vident, indices, pretty) =
 
 and pp_indexed_simple ppf (vident, idcs) =
   let minus_one e =
-    Expr_helpers.(binop (Expr.Fixed.meta e) Operator.Minus e (lit_int Expr.Typed.Meta.empty 1))
+    Expr_helpers.(
+      binop (Expr.Fixed.meta e) Operator.Minus e
+        (lit_int Expr.Typed.Meta.empty 1))
   in
   let idx_minus_one = Expr.map_index minus_one in
   (Expr.pp_indexed pp_expr) ppf (vident, List.map ~f:idx_minus_one idcs)

@@ -44,7 +44,7 @@ let pp ppf = function
   | Geq -> Fmt.pf ppf ">="
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
-  
+
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
 
 let of_string_opt x =
