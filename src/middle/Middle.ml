@@ -5,6 +5,7 @@ module Operator = Operator
 module Fun_kind = Fun_kind
 module Internal_fun = Internal_fun
 module Expr = Expr
+module Expr_helpers = Expr_helpers
 module UnsizedType = UnsizedType
 module SizedType = SizedType
 module Type = Type
