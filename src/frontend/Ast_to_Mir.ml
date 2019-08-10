@@ -53,14 +53,14 @@ and trans_expr {Ast.expr; Ast.emeta} =
       indexed meta (trans_expr lhs) (List.map ~f:trans_idx indices)
 
 and trans_idx = function
-  | Ast.All -> Expr.All
-  | Ast.Upfrom e -> Expr.Upfrom (trans_expr e)
-  | Ast.Downfrom e -> Expr.Between (loop_bottom, trans_expr e)
-  | Ast.Between (lb, ub) -> Expr.Between (trans_expr lb, trans_expr ub)
+  | Ast.All -> Mir_pattern.All
+  | Ast.Upfrom e -> Upfrom (trans_expr e)
+  | Ast.Downfrom e -> Between (loop_bottom, trans_expr e)
+  | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.emeta.type_ with
-    | UInt -> Expr.Single (trans_expr e)
-    | UArray _ -> Expr.MultiIndex (trans_expr e)
+    | UInt -> Single (trans_expr e)
+    | UArray _ -> MultiIndex (trans_expr e)
     | _ ->
         raise_s
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )

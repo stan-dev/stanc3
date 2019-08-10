@@ -1,15 +1,9 @@
 open Core_kernel
 open Common
 
-type litType = Mir_pattern.litType = Int | Real | Str
-[@@deriving sexp, hash, compare]
+type litType = Mir_pattern.litType [@@deriving sexp, hash, compare]
 
-type 'a index = 'a Mir_pattern.index =
-  | All
-  | Single of 'a
-  | Upfrom of 'a
-  | Between of 'a * 'a
-  | MultiIndex of 'a
+type 'a index = 'a Mir_pattern.index
 [@@deriving sexp, hash, map, compare, fold]
 
 val pp_index : 'a Fmt.t -> Format.formatter -> 'a index -> unit
@@ -17,15 +11,7 @@ val pp_indexed : 'a Fmt.t -> Format.formatter -> string * 'a index list -> unit
 
 module Fixed : sig
   module Pattern : sig
-    type 'a t = 'a Mir_pattern.expr =
-      | Var of string
-      | Lit of litType * string
-      | FunApp of Fun_kind.t * string * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a index list
-    [@@deriving sexp, hash, compare]
+    type 'a t = 'a Mir_pattern.expr [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
   end

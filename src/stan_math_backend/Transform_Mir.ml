@@ -77,7 +77,7 @@ let use_pos_in_readdata stmt =
   Stmt.Fixed.transform_bottom_up Fn.id transform stmt
 
 let%expect_test "xform_readdata" =
-  let idx v = Expr.Single (var () v)
+  let idx v = Mir_pattern.Single (var () v)
   and read = internal_fun () FnReadData [] in
   let idxs = [idx "i"; idx "j"; idx "k"] in
   let indexed = indexed () read idxs in

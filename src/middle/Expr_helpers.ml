@@ -61,7 +61,7 @@ let index_upfrom meta e ~idx = indexed meta e [Upfrom idx]
 let index_between meta e ~lower ~upper = indexed meta e [Between (lower, upper)]
 
 let index_bounds = function
-  | All -> []
+  | Mir_pattern.All -> []
   | Single e | MultiIndex e | Upfrom e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
@@ -106,7 +106,7 @@ let is_operator ?op expr =
   is_fun expr ~kind:StanLib ?name:(Option.map ~f:Operator.to_string op)
 
 let contains_fun_algebra ?kind ?name = function
-  | _, Fixed.Pattern.FunApp (fun_kind, fun_name, args) ->
+  | _, Mir_pattern.FunApp (fun_kind, fun_name, args) ->
       Option.(
         value_map ~default:true ~f:(fun name -> name = fun_name) name
         && value_map ~default:true ~f:(fun kind -> kind = fun_kind) kind)

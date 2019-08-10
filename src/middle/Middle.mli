@@ -1,6 +1,7 @@
 module Location : module type of Location
 module Location_span : module type of Location_span
 module Int_label : module type of Int_label
+module Mir_pattern : module type of Mir_pattern
 module Operator : module type of Operator
 module Fun_kind : module type of Fun_kind
 module Internal_fun : module type of Internal_fun

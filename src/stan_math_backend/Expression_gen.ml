@@ -90,7 +90,7 @@ let suffix_args f =
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
 
 let rec pp_index ppf = function
-  | Expr.All -> pf ppf "index_omni()"
+  | Mir_pattern.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
   | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->

@@ -1,6 +1,7 @@
 module Location = Location
 module Location_span = Location_span
 module Int_label = Int_label
+module Mir_pattern = Mir_pattern
 module Operator = Operator
 module Fun_kind = Fun_kind
 module Internal_fun = Internal_fun
