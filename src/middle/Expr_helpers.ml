@@ -61,7 +61,7 @@ let index_upfrom meta e ~idx = indexed meta e [Upfrom idx]
 let index_between meta e ~lower ~upper = indexed meta e [Between (lower, upper)]
 
 let index_bounds = function
-  | Mir_pattern.All -> []
+  | Expr.All -> []
   | Single e | MultiIndex e | Upfrom e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
@@ -106,7 +106,7 @@ let is_operator ?op expr =
   is_fun expr ~kind:StanLib ?name:(Option.map ~f:Operator.to_string op)
 
 let contains_fun_algebra ?kind ?name = function
-  | _, Mir_pattern.FunApp (fun_kind, fun_name, args) ->
+  | _, Expr.Fixed.Pattern.FunApp (fun_kind, fun_name, args) ->
       Option.(
         value_map ~default:true ~f:(fun name -> name = fun_name) name
         && value_map ~default:true ~f:(fun kind -> kind = fun_kind) kind)
@@ -133,7 +133,7 @@ let contains_internal_fun ?fn expr =
 (* == Binary operations ===================================================== *)
 
 let lift_int_binop = function
-  | Mir_pattern.Plus -> Some ( + )
+  | Operator.Plus -> Some ( + )
   | Minus -> Some ( - )
   | Times -> Some ( * )
   | Divide -> Some ( / )
@@ -149,14 +149,14 @@ let lift_int_binop = function
   | _ -> None
 
 let lift_real_arith_binop = function
-  | Mir_pattern.Plus -> Some ( +. )
+  | Operator.Plus -> Some ( +. )
   | Minus -> Some ( -. )
   | Times -> Some ( *. )
   | Divide -> Some ( /. )
   | _ -> None
 
 let lift_real_logical_binop = function
-  | Mir_pattern.Equals -> Some (fun x y -> if Float.equal x y then 1 else 0)
+  | Operator.Equals -> Some (fun x y -> if Float.equal x y then 1 else 0)
   | NEquals -> Some (fun x y -> if x <> y then 1 else 0)
   | Less -> Some (fun x y -> if x < y then 1 else 0)
   | Leq -> Some (fun x y -> if x <= y then 1 else 0)
@@ -207,7 +207,7 @@ let simplify_plus_opt meta a b = plus_fma meta a b
 
 let plus meta a b =
   simplify_plus_opt meta a b
-  |> Option.value ~default:(binop meta Mir_pattern.Plus a b)
+  |> Option.value ~default:(binop meta Operator.Plus a b)
 
 (* -- Minus ----------------------------------------------------------------- *)
 
@@ -254,13 +254,13 @@ let minus meta a b =
 
 (* -- Times ----------------------------------------------------------------- *)
 
-let times_scale_matrix_exp_multiply meta a b =
+let times_scale_matrix_exp_multiply ~type_of meta a b =
   match (Fixed.pattern2 a, Fixed.pattern2 b) with
   | FunApp (StanLib, "matrix_exp", [FunApp (StanLib, "Times__", [x; y])]), _
-    when Typed.type_of x = UInt || Typed.type_of x = UReal ->
+    when type_of x = UnsizedType.UInt || type_of x = UReal ->
       Some (stanlib_fun meta "scale_matrix_exp_multiply" [x; y; b])
   | _, FunApp (StanLib, "matrix_exp", [FunApp (StanLib, "Times__", [x; y])])
-    when Typed.type_of x = UInt || Typed.type_of x = UReal ->
+    when type_of x = UInt || type_of x = UReal ->
       Some (stanlib_fun meta "scale_matrix_exp_multiply" [x; y; a])
   | _ -> None
 
@@ -276,7 +276,7 @@ let times_multiply_log meta a b =
       Some (stanlib_fun meta "multiply_log" [x; b])
   | _ -> None
 
-let times_quad_form_diag meta a b =
+let times_quad_form_diag ~equal meta a b =
   match Fixed.(proj3 a, proj2 b) with
   | ( ( _
       , FunApp
@@ -285,7 +285,7 @@ let times_quad_form_diag meta a b =
       , FunApp
           (StanLib, "Times__", [c; (_, FunApp (StanLib, "diag_matrix", [w]))])
       ) )
-    when Typed.equal (Fixed.inj v) w ->
+    when equal (Fixed.inj v) w ->
       Some (stanlib_fun meta "quad_form_diag" @@ List.map ~f:Fixed.inj [c; v])
   | ( ( _
       , FunApp
@@ -298,20 +298,20 @@ let times_quad_form_diag meta a b =
                   , [(_, FunApp (StanLib, "diag_matrix", [v]))] ) )
             ; c ] ) )
     , (_, FunApp (StanLib, "diag_matrix", [w])) )
-    when Typed.equal v (Fixed.inj w) ->
+    when equal v (Fixed.inj w) ->
       Some (stanlib_fun meta "quad_form_diag" [Fixed.inj2 c; v])
   | _ -> None
 
-let times_quad_form meta lhs rhs =
+let times_quad_form ~equal meta lhs rhs =
   match Fixed.(proj2 lhs, pattern rhs) with
   | (_, FunApp (StanLib, "transpose", [b])), FunApp (StanLib, "Times__", [a; c])
-    when Typed.equal (Fixed.inj b) c ->
+    when equal (Fixed.inj b) c ->
       Some (stanlib_fun meta "quad_form" [a; Fixed.inj b])
   | ( ( _
       , FunApp
           (StanLib, "Times__", [(_, FunApp (StanLib, "transpose", [b])); a]) )
     , _ )
-    when Typed.equal b rhs ->
+    when equal b rhs ->
       Some (stanlib_fun meta "quad_form" [Fixed.inj a; b])
   | _ -> None
 
@@ -327,17 +327,17 @@ let times_diag_pre_multiply meta lhs rhs =
       Some (stanlib_fun meta "diag_post_multiply" [v; rhs])
   | _ -> None
 
-let simplify_times_opt meta a b =
-  times_scale_matrix_exp_multiply meta a b
+let simplify_times_opt ~type_of ~equal meta a b =
+  times_scale_matrix_exp_multiply ~type_of meta a b
+  |> option_or_else ~if_none:(times_quad_form_diag ~equal meta a b)
+  |> option_or_else ~if_none:(times_quad_form ~equal meta a b)
   |> option_or_else ~if_none:(times_matrix_exp_multiply meta a b)
   |> option_or_else ~if_none:(times_multiply_log meta a b)
-  |> option_or_else ~if_none:(times_quad_form_diag meta a b)
-  |> option_or_else ~if_none:(times_quad_form meta a b)
   |> option_or_else ~if_none:(times_diag_post_multiply meta a b)
   |> option_or_else ~if_none:(times_diag_pre_multiply meta a b)
 
 let times meta a b =
-  simplify_times_opt meta a b
+  simplify_times_opt ~type_of:Typed.type_of ~equal:Typed.equal meta a b
   |> Option.value ~default:(binop meta Operator.Times a b)
 
 (* -- Divide ---------------------------------------------------------------- *)
@@ -506,7 +506,7 @@ let log_log_sum_exp meta a =
       Some (stanlib_fun meta "log_sum_exp" xs)
   | _ -> None
 
-let log_log_mix meta a =
+let log_log_mix ~equal meta a =
   match Fixed.proj4 a with
   | ( _
     , FunApp
@@ -525,7 +525,7 @@ let log_log_mix meta a =
                     , FunApp (StanLib, "Minus__", [(_, Lit (Int, "1")); theta'])
                     )
                   ; (_, FunApp (StanLib, "exp", [lambda2])) ] ) ) ] ) )
-    when Typed.equal (Fixed.inj2 theta) (Fixed.inj theta') ->
+    when equal (Fixed.inj2 theta) (Fixed.inj theta') ->
       Some
         ( stanlib_fun meta "log_mix"
         @@ List.map ~f:Fixed.inj [theta'; lambda1; lambda2] )
@@ -554,7 +554,7 @@ let log_log_softmax meta a =
   | FunApp (StanLib, "softmax", x) -> Some (stanlib_fun meta "log_softmax" x)
   | _ -> None
 
-let simplify_log_opt meta a =
+let simplify_log_opt ~equal meta a =
   log_log1m_exp meta a
   |> option_or_else ~if_none:(log_log1m_inv_logit meta a)
   |> option_or_else ~if_none:(log_log1m meta a)
@@ -563,14 +563,15 @@ let simplify_log_opt meta a =
   |> option_or_else ~if_none:(log_log_determinant meta a)
   |> option_or_else ~if_none:(log_log_diff_exp meta a)
   |> option_or_else ~if_none:(log_log_sum_exp meta a)
-  |> option_or_else ~if_none:(log_log_mix meta a)
+  |> option_or_else ~if_none:(log_log_mix ~equal meta a)
   |> option_or_else ~if_none:(log_log_falling_factorial meta a)
   |> option_or_else ~if_none:(log_log_rising_factorial meta a)
   |> option_or_else ~if_none:(log_log_inv_logit meta a)
   |> option_or_else ~if_none:(log_log_softmax meta a)
 
 let log meta a =
-  simplify_log_opt meta a |> Option.value ~default:(stanlib_fun meta "log" [a])
+  simplify_log_opt ~equal:Typed.equal meta a
+  |> Option.value ~default:(stanlib_fun meta "log" [a])
 
 (* -- Sum ------------------------------------------------------------------- *)
 
@@ -639,7 +640,7 @@ let inv meta a =
 
 (* -- Trace ----------------------------------------------------------------- *)
 
-let trace_trace_gen_quad_form meta a =
+let trace_trace_gen_quad_form ~equal meta a =
   match Fixed.proj4 a with
   | ( _
     , FunApp
@@ -656,7 +657,7 @@ let trace_trace_gen_quad_form meta a =
                         , [d; (_, FunApp (StanLib, "transpose", [b]))] ) )
                   ; a ] ) )
           ; c ] ) )
-    when Typed.equal b (Fixed.inj3 c) ->
+    when equal b (Fixed.inj3 c) ->
       Some
         (stanlib_fun meta "trace_gen_quad_form" [Fixed.inj d; Fixed.inj2 a; b])
   | _ -> None
@@ -667,74 +668,74 @@ let trace_trace_quad_form meta a =
       Some (stanlib_fun meta "trace_quad_form" [x; y])
   | _ -> None
 
-let simplify_trace_opt meta a =
-  trace_trace_gen_quad_form meta a
+let simplify_trace_opt ~equal meta a =
+  trace_trace_gen_quad_form ~equal meta a
   |> option_or_else ~if_none:(trace_trace_quad_form meta a)
 
 let trace meta a =
-  simplify_trace_opt meta a
+  simplify_trace_opt ~equal:Typed.equal meta a
   |> Option.value ~default:(stanlib_fun meta "trace" [a])
 
 (* -- Dot product ----------------------------------------------------------- *)
 
-let dot_product_dot_self meta x y =
-  if Typed.equal x y then Some (stanlib_fun meta "dot_self" [x]) else None
+let dot_product_dot_self ~equal meta x y =
+  if equal x y then Some (stanlib_fun meta "dot_self" [x]) else None
 
-let simplify_dot_product_opt meta a b = dot_product_dot_self meta a b
+let simplify_dot_product_opt ~equal meta a b =
+  dot_product_dot_self ~equal meta a b
 
 let dot_product meta a b =
-  simplify_dot_product_opt meta a b
+  simplify_dot_product_opt ~equal:Typed.equal meta a b
   |> Option.value ~default:(stanlib_fun meta "dot_product" [a; b])
 
 (* -- Rows dot product ------------------------------------------------------ *)
 
-let rows_dot_product_rows_dot_self meta x y =
-  if Typed.equal x y then Some (stanlib_fun meta "rows_dot_self" [x]) else None
+let rows_dot_product_rows_dot_self ~equal meta x y =
+  if equal x y then Some (stanlib_fun meta "rows_dot_self" [x]) else None
 
-let simplify_rows_dot_product_opt meta a b =
-  rows_dot_product_rows_dot_self meta a b
+let simplify_rows_dot_product_opt ~equal meta a b =
+  rows_dot_product_rows_dot_self ~equal meta a b
 
 let rows_dot_product meta a b =
-  simplify_rows_dot_product_opt meta a b
+  simplify_rows_dot_product_opt ~equal:Typed.equal meta a b
   |> Option.value ~default:(stanlib_fun meta "rows_dot_product" [a; b])
 
 (* -- Columns dot product --------------------------------------------------- *)
 
-let columns_dot_product_columns_dot_self meta x y =
-  if Typed.equal x y then Some (stanlib_fun meta "columns_dot_self" [x])
-  else None
+let columns_dot_product_columns_dot_self ~equal meta x y =
+  if equal x y then Some (stanlib_fun meta "columns_dot_self" [x]) else None
 
-let simplify_columns_dot_product_opt meta a b =
-  columns_dot_product_columns_dot_self meta a b
+let simplify_columns_dot_product_opt ~equal meta a b =
+  columns_dot_product_columns_dot_self ~equal meta a b
 
 let columns_dot_product meta a b =
-  simplify_columns_dot_product_opt meta a b
+  simplify_columns_dot_product_opt ~equal:Typed.equal meta a b
   |> Option.value ~default:(stanlib_fun meta "columns_dot_product" [a; b])
 
 (* == Transformations for distributions ===================================== *)
 
 (** Rewrite a distribution which is implicitly a linear model as an linear model
 *)
-let lpdf_glm_lpdf to_glm param =
+let lpdf_glm_lpdf ~type_of to_glm param =
   match Fixed.proj2 param with
   | ( _
     , FunApp
         ( StanLib
         , "Plus__"
         , [alpha; (_, FunApp (StanLib, "Times__", [x; beta]))] ) )
-    when Typed.type_of x = UMatrix ->
+    when type_of x = UnsizedType.UMatrix ->
       Some (to_glm x (Fixed.inj alpha) beta)
   | ( _
     , FunApp
         ( StanLib
         , "Plus__"
         , [(_, FunApp (StanLib, "Times__", [x; beta])); alpha] ) )
-    when Typed.type_of x = UMatrix ->
+    when type_of x = UMatrix ->
       Some (to_glm x (Fixed.inj alpha) beta)
   | _ -> None
 
 (** Rewrite a distribution which is implicitly a GLM as a GLM *)
-let lpdf_trans_glm_lpdf ~link to_glm param =
+let lpdf_trans_glm_lpdf ~type_of ~link to_glm param =
   match Fixed.proj3 param with
   | ( _
     , FunApp
@@ -746,7 +747,7 @@ let lpdf_trans_glm_lpdf ~link to_glm param =
                 , "Plus__"
                 , [alpha; (_, FunApp (StanLib, "Times__", [x; beta]))] ) ) ] )
     )
-    when link' = link && Typed.type_of x = UMatrix ->
+    when link' = link && type_of x = UnsizedType.UMatrix ->
       Some (to_glm x (Fixed.inj alpha) beta)
   | ( _
     , FunApp
@@ -758,10 +759,10 @@ let lpdf_trans_glm_lpdf ~link to_glm param =
                 , "Plus__"
                 , [(_, FunApp (StanLib, "Times__", [x; beta])); alpha] ) ) ] )
     )
-    when link' = link && Typed.type_of x = UMatrix ->
+    when link' = link && type_of x = UMatrix ->
       Some (to_glm x (Fixed.inj alpha) beta)
   | _, FunApp (StanLib, link', [(_, FunApp (StanLib, "Times__", [x; beta]))])
-    when link' = link && Typed.Meta.type_ (fst x) = UMatrix ->
+    when link' = link && type_of (Fixed.inj x) = UMatrix ->
       Some (to_glm (Fixed.inj x) (zero @@ fst x) (Fixed.inj beta))
   | _ -> None
 
@@ -778,32 +779,44 @@ let rng_trans_rng ~link to_trans param =
 
 (* == Partial evaluation  =================================================== *)
 
-let eval_binop meta op e1 e2 =
+let eval_binop ~type_of ~equal meta op e1 e2 =
   match op with
   | Operator.Pow -> pow meta e1 e2
-  | Times -> times meta e1 e2
+  | Times ->
+      simplify_times_opt ~type_of ~equal meta e1 e2
+      |> Option.value ~default:(binop meta Operator.Times e1 e2)
   | Plus -> plus meta e1 e2
   | Minus -> minus meta e1 e2
   | _ -> binop meta op e1 e2
 
-let eval_stanlib_fun_app meta fn_name args =
+let eval_stanlib_fun_app ~type_of ~equal meta fn_name args =
   match (fn_name, args) with
-  | "log", [x] -> sum meta x
+  | "log", [x] ->
+      simplify_log_opt ~equal meta x
+      |> Option.value ~default:(stanlib_fun meta "log" [x])
   | "pow", [x; y] -> pow meta x y
   | "sum", [x] -> sum meta x
   | "square", [x] -> square meta x
   | "sqrt", [x] -> sqrt meta x
   | "inv", [x] -> inv meta x
-  | "trace", [x] -> trace meta x
-  | "dot_product", [x; y] -> dot_product meta x y
-  | "rows_dot_product", [x; y] -> rows_dot_product meta x y
-  | "columns_dot_product", [x; y] -> columns_dot_product meta x y
+  | "trace", [x] ->
+      simplify_trace_opt ~equal meta x
+      |> Option.value ~default:(stanlib_fun meta "trace" [x])
+  | "dot_product", [x; y] ->
+      simplify_dot_product_opt ~equal meta x y
+      |> Option.value ~default:(stanlib_fun meta "dot_product" [x; y])
+  | "rows_dot_product", [x; y] ->
+      simplify_rows_dot_product_opt ~equal meta x y
+      |> Option.value ~default:(stanlib_fun meta "rows_dot_product" [x; y])
+  | "columns_dot_product", [x; y] ->
+      simplify_columns_dot_product_opt ~equal meta x y
+      |> Option.value ~default:(stanlib_fun meta "columns_dot_product" [x; y])
   | "bernoulli_lpmf", [y; theta] ->
       let to_logit_glm x alpha beta =
         stanlib_fun meta "bernoulli_logit_glm_lpmf" [y; x; alpha; beta]
       and to_logit alpha = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha]
       and default = stanlib_fun meta "bernoulli_lpmf" [y; theta] in
-      lpdf_trans_glm_lpdf ~link:"inv_logit" to_logit_glm theta
+      lpdf_trans_glm_lpdf ~type_of ~link:"inv_logit" to_logit_glm theta
       |> option_or_else
            ~if_none:(lpdf_trans_lpdf ~link:"inv_logit" to_logit theta)
       |> Option.value ~default
@@ -815,7 +828,7 @@ let eval_stanlib_fun_app meta fn_name args =
       let to_logit_glm x alpha beta =
         stanlib_fun meta "bernoulli_logit_glm_lpmf" [y; x; alpha; beta]
       and default = stanlib_fun meta "bernoulli_logit_lpmf" [y; alpha] in
-      lpdf_glm_lpdf to_logit_glm alpha |> Option.value ~default
+      lpdf_glm_lpdf to_logit_glm ~type_of alpha |> Option.value ~default
   | "binomial_lpmf", [successes; trials; theta] ->
       let to_logit alpha =
         stanlib_fun meta "binomial_logit_lpmf" [successes; trials; alpha]
@@ -840,7 +853,7 @@ let eval_stanlib_fun_app meta fn_name args =
       and default =
         stanlib_fun meta "neg_binomial_2_lpmf" [n; location; precision]
       in
-      lpdf_trans_glm_lpdf ~link:"exp" to_logit_glm location
+      lpdf_trans_glm_lpdf ~type_of ~link:"exp" to_logit_glm location
       |> option_or_else
            ~if_none:(lpdf_trans_lpdf ~link:"exp" to_logit location)
       |> Option.value ~default
@@ -851,7 +864,7 @@ let eval_stanlib_fun_app meta fn_name args =
       and default =
         stanlib_fun meta "neg_binomial_2_log_lpmf" [n; log_location; precision]
       in
-      lpdf_glm_lpdf to_logit_glm log_location |> Option.value ~default
+      lpdf_glm_lpdf to_logit_glm ~type_of log_location |> Option.value ~default
   | "neg_binomial_2_rng", [location; precision] ->
       let to_logit eta =
         stanlib_fun meta "neg_binomial_2_log_rng" [eta; precision]
@@ -864,7 +877,7 @@ let eval_stanlib_fun_app meta fn_name args =
         stanlib_fun meta "poisson_log_glm_lpmf" [y; x; alpha; beta]
       and to_log eta = stanlib_fun meta "poisson_log_lpmf" [y; eta]
       and default = stanlib_fun meta "poisson_lpmf" [y; lambda] in
-      lpdf_trans_glm_lpdf ~link:"exp" to_log_glm lambda
+      lpdf_trans_glm_lpdf ~type_of ~link:"exp" to_log_glm lambda
       |> option_or_else ~if_none:(lpdf_trans_lpdf ~link:"exp" to_log lambda)
       |> Option.value ~default
   | "poisson_rng", [lambda] ->
@@ -875,36 +888,46 @@ let eval_stanlib_fun_app meta fn_name args =
       let to_log_glm x alpha beta =
         stanlib_fun meta "poisson_log_glm_lpmf" [y; x; alpha; beta]
       and default = stanlib_fun meta "poisson_log_lpmf" [y; alpha] in
-      lpdf_glm_lpdf to_log_glm alpha |> Option.value ~default
+      lpdf_glm_lpdf ~type_of to_log_glm alpha |> Option.value ~default
   | "normal_lpdf", [y; mu; sigma] ->
       let to_glm x alpha beta =
         stanlib_fun meta "normal_id_glm_lpdf" [y; x; alpha; beta; sigma]
       and default = stanlib_fun meta "normal_lpdf" [y; mu; sigma] in
-      lpdf_glm_lpdf to_glm mu |> Option.value ~default
+      lpdf_glm_lpdf ~type_of to_glm mu |> Option.value ~default
   | "multi_normal_lpdf", [y; mu; sigma] ->
       let to_trans tau = stanlib_fun meta "multi_normal_prec_lpdf" [y; mu; tau]
       and default = stanlib_fun meta "multi_normal_lpdf" [y; mu; sigma] in
       lpdf_trans_lpdf ~link:"inverse" to_trans sigma |> Option.value ~default
   | _ -> stanlib_fun meta fn_name args
 
-let arg_types xs =
-  List.map ~f:(fun expr -> Typed.(adlevel_of expr, type_of expr)) xs
+let arg_types ~adlevel_of ~type_of xs =
+  List.map ~f:(fun expr -> (adlevel_of expr, type_of expr)) xs
 
-let return_type expr =
+let return_type ~adlevel_of ~type_of expr =
   match Fixed.pattern expr with
   | FunApp (StanLib, name, args)
     when Option.is_some (Operator.of_string_opt name) ->
       let op = Option.value_exn (Operator.of_string_opt name)
-      and arg_tys = arg_types args in
+      and arg_tys = arg_types ~adlevel_of ~type_of args in
       Stan_math.op_return_type op arg_tys
   | FunApp (StanLib, name, args) ->
-      Stan_math.return_type name @@ arg_types args
+      Stan_math.return_type name @@ arg_types ~adlevel_of ~type_of args
   | _ -> None
 
-let check_return_type e_orig e_simple =
-  match return_type e_simple with None -> e_orig | _ -> e_simple
+let check_return_type ~adlevel_of ~type_of e_orig e_simple =
+  match return_type ~adlevel_of ~type_of e_simple with
+  | None -> e_orig
+  | _ -> e_simple
 
-let eval ?(env = String.Map.empty) expr =
+module type Evaluable = sig
+  module Meta : Common.Meta.S
+
+  val type_of : Meta.t Fixed.t -> UnsizedType.t
+  val adlevel_of : Meta.t Fixed.t -> UnsizedType.autodifftype
+  val equal : Meta.t Fixed.t -> Meta.t Fixed.t -> bool
+end
+
+let eval ~type_of ~adlevel_of ~equal ?(env = String.Map.empty) expr =
   let f expr =
     match Fixed.proj expr with
     | _, Var n -> String.Map.find env n |> Option.value ~default:expr
@@ -916,13 +939,16 @@ let eval ?(env = String.Map.empty) expr =
     | meta, FunApp (StanLib, fn_name, [x])
       when Option.is_some (Operator.of_string_opt fn_name) ->
         unop meta (Option.value_exn (Operator.of_string_opt fn_name)) x
-        |> check_return_type expr
+        |> check_return_type ~adlevel_of ~type_of expr
     | meta, FunApp (StanLib, fn_name, [x; y])
       when Option.is_some (Operator.of_string_opt fn_name) ->
-        eval_binop meta (Option.value_exn (Operator.of_string_opt fn_name)) x y
-        |> check_return_type expr
+        eval_binop meta ~type_of ~equal
+          (Option.value_exn (Operator.of_string_opt fn_name))
+          x y
+        |> check_return_type ~adlevel_of ~type_of expr
     | meta, FunApp (StanLib, fn_name, args) ->
-        eval_stanlib_fun_app meta fn_name args |> check_return_type expr
+        eval_stanlib_fun_app ~type_of ~equal meta fn_name args
+        |> check_return_type ~adlevel_of ~type_of expr
     | _, FunApp _ -> expr
   in
   Fixed.transform_bottom_up f expr

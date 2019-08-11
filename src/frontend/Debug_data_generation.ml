@@ -3,9 +3,13 @@ open Middle
 open Ast
 
 let unwrap_num_exn m e =
+  let open Expr.Typed in
   let e = Ast_to_Mir.trans_expr e in
   let m = String.Map.map m ~f:Ast_to_Mir.trans_expr in
-  match Expr.Fixed.pattern @@ Expr_helpers.eval ~env:m e with
+  match
+    Expr.Fixed.pattern
+    @@ Expr_helpers.eval ~type_of ~adlevel_of ~equal ~env:m e
+  with
   | Lit (_, s) -> Float.of_string s
   | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
 
