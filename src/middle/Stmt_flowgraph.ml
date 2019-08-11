@@ -4,49 +4,169 @@ open Stmt
 
 (* -- Helpers --------------------------------------------------------------- *)
 
-(** Get the lables of the initial statement in a statement *)
+(** Get the lables of the initial statement in a statement 
+initial ( [Assignment ((id,index), rhs)]^l ) = l 
+initial ( [TargetPE(e)]^l)                   = l
+initial ( [NRFunApp(kind,name,args)]^l )     = l
+initial ( [Break]^l )                        = l
+initial ( [Continue]^l )                     = l 
+initial ( [Skip]^l )                         = l
+initial ( [Return (e?) ]^l )                 = l 
+initial ( [IfElse (b, S1 , S2?)]^l )         = l
+initial ( [While (b, S)]^l                   = l
+initial ( [Block (S::_)]^l )                 = l
+initial ( [SList (S::_)]^l )                 = l
+initial ( [For { v ; lb; ub ; S }]^l )       = l
+
+*)
 let rec initial stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
-  | Assignment _ | Skip | IfElse (_, _, _) | While (_, _) -> cur_label
-  | Block xs -> initial @@ List.hd_exn xs
-  | _ -> cur_label
+  | Assignment _ | TargetPE _ | NRFunApp _ | Break | Continue | Return _
+   |Decl _ | Skip | IfElse _ | While _ | For _ ->
+      cur_label
+  | SList xs | Block xs -> initial @@ List.hd_exn xs
 
-(** Get the labels of the possible final statements in a statement *)
+(** 
+Get the labels of the possible final statements in a statement 
+
+Using the Nielsen et al notation, we have:
+
+final ( [Assignment ((id,index), rhs)]^l ) = { l } 
+final ( [TargetPE(e)]^l)                   = { l }
+final ( [NRFunApp(kind,name,args)]^l )     = { l }
+final ( [Decl{adtype;id;type}]^l )         = { l }
+final ( [Break]^l )                        = { l }
+final ( [Continue]^l )                     = { l }
+final ( [Skip]^l )                         = { l }
+final ( [Return (e?) ]^l )                 = { l }
+final ( [IfElse (b, S1 , S2?)]^l )         = final (S1) ∪ final (S2)
+final ( [Block XS]^l )                     = final (last XS) ∪ continue(Block XS)
+final ( [SList  XS]^l )                    = final (last XS) ∪ continue(SList XS)
+final ( [While (b, S) )]^l                 = { l } ∪ break-ret(S)
+final ( [For { v ; lb; ub; S }]^l )        = { l } ∪ break-ret(S)
+
+*)
 let rec finals ?init:(accu = Int_label.Set.empty) stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
-  | Assignment _ | Skip -> Int_label.Set.add accu cur_label
+  | Assignment _ | TargetPE _ | NRFunApp _ | Break | Continue | Return _
+   |Decl _ | Skip ->
+      Int_label.Set.add accu cur_label
   | IfElse (_, ts, Some fs) -> finals ~init:(finals ~init:accu fs) ts
   | IfElse (_, ts, _) -> finals ~init:accu ts
-  | While (_, _) -> Int_label.Set.add accu cur_label
-  | Block xs -> (
-    match List.last xs with Some x -> finals ~init:accu x | _ -> accu )
-  | _ -> accu
+  | While (_, body) | For {body; _} ->
+      break_return (Int_label.Set.add accu cur_label) body
+  | SList xs | Block xs -> (
+    match List.last xs with
+    | Some x -> continue (finals ~init:accu x) stmt
+    | _ -> accu )
 
-(** Build the flowgraph of a statment in terms of `initial` and `finals` *)
+(**
+break-ret ( [Assignment ((id,index), rhs)]^l ) = { } 
+break-ret ( [TargetPE(e)]^l)                   = { }
+break-ret ( [NRFunApp(kind,name,args)]^l )     = { }
+break-ret ( [Break]^l )                        = { l }
+break-ret ( [Continue]^l )                     = { }
+break-ret ( [Skip]^l )                         = { }
+break-ret ( [Return (e?) ]^l )                 = { l }
+break-ret ( [IfElse (b, S1 , S2?)]^l )         = break-ret (S1) ∪ break-ret (S2)
+break-ret ( [Block XS]^l )                     =  ∪ {break-ret(S) | S in XS}
+break-ret ( [SList  XS]^l )                    =  ∪ {break-ret(S) | S in XS}
+break-ret ( [While (b, S) )]^l                 = { }
+break-ret ( [For { v ; lb; ub ; S }]^l )       = { }
+ *)
+and break_return accu stmt =
+  let cur_label = Labelled.label_of stmt in
+  match Fixed.pattern stmt with
+  | Assignment _ | TargetPE _ | NRFunApp _ | Continue | Decl _ | While _
+   |For _ | Skip ->
+      accu
+  | Break | Return _ -> Int_label.Set.add accu cur_label
+  | IfElse (_, ts, Some fs) -> break_return (break_return accu fs) ts
+  | IfElse (_, ts, _) -> break_return accu ts
+  | SList xs | Block xs -> List.fold_left ~init:accu xs ~f:break_return
+
+(** 
+continue ( [Assignment ((id,index), rhs)]^l ) = { } 
+continue ( [TargetPE(e)]^l)                   = { }
+continue ( [NRFunApp(kind,name,args)]^l )     = { }
+continue ( [Break]^l )                        = { }
+continue ( [Continue]^l )                     = { l }
+continue ( [Skip]^l )                         = { }
+continue ( [Return (e?) ]^l )                 = { }
+continue ( [IfElse (b, S1 , S2?)]^l )         = continue (S1) ∪ continue (S2)
+continue ( [Block XS]^l )                     =  ∪ {continue(S) | S in XS}
+continue ( [SList  XS]^l )                    =  ∪ {continue(S) | S in XS}
+continue ( [While (b, S) )]^l                 = { }
+continue ( [For { v ; lb; ub ; S }]^l )       = { }
+*)
+and continue accu stmt =
+  let cur_label = Labelled.label_of stmt in
+  match Fixed.pattern stmt with
+  | Assignment _ | TargetPE _ | NRFunApp _ | Decl _ | Break | Return _
+   |While _ | For _ | Skip ->
+      accu
+  | Continue -> Int_label.Set.add accu cur_label
+  | IfElse (_, ts, Some fs) -> continue (continue accu fs) ts
+  | IfElse (_, ts, _) -> continue accu ts
+  | SList xs | Block xs -> List.fold_left ~init:accu xs ~f:continue
+
+(** 
+
+Build the flowgraph of a statment in terms of `initial` and `finals` 
+
+flow ( [Assignment ((id,index), rhs)]^l ) = {  } 
+flow ( [TargetPE(e)]^l)                   = {  }
+flow ( [NRFunApp(kind,name,args)]^l )     = {  }
+flow ( [Break]^l )                        = {  }
+flow ( [Continue]^l )                     = {  }
+flow ( [Skip]^l )                         = {  }
+flow ( [Return (e?) ]^l )                 = {  }
+
+flow ( [While (b, S) )]^l         
+  = flow (S) ∪ {(l, l') | l' in initial(S) } ∪ { (l', l) | l' in final(S) }
+flow ( [For { v ; elower; eupper ; S }]^l )  
+  =  flow (S) ∪ {(l, l') | l' in initial(S) } ∪ { (l', l) | l' in final(S) }
+
+flow ( [IfElse (b, S1 , S2?)]^l )
+  = flow (S1) ∪ flow (S2) ∪ {(l, l') | l' in initial(S1) ∪ initial(S2)}
+
+flow ( [Block XS]^l )
+flow ( [SList  XS]^l )                    
+  = ∪ {flow S | S in XS } 
+    ∪ {(l, l') | l' in initial(head XS) } 
+    ∪ { (l1, l2) | 
+          l1 in final(S1) and l2 in initial(S2) for S1 S2 consecutive in XS
+      }
+*)
 let rec flow ?init:(accu = []) stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
-  | Assignment _ | Skip -> accu
-  | IfElse (_, ts, Some fs) ->
-      let init_ts = initial ts and init_fs = initial fs in
-      flow
-        ~init:
-          (flow ~init:((cur_label, init_ts) :: (cur_label, init_fs) :: accu) fs)
-        ts
-  | IfElse (_, ts, _) ->
-      let init_ts = initial ts in
-      flow ~init:((cur_label, init_ts) :: accu) ts
-  | While (_, body) ->
+  | Assignment _ | TargetPE _ | NRFunApp _ | Break | Continue | Return _
+   |Skip | Decl _ ->
+      accu
+  | For {body; _} | While (_, body) ->
       let init_body = initial body and finals_body = finals body in
-      let finals =
+      let initials = [(cur_label, init_body)]
+      and finals =
         List.map ~f:(fun l' -> (l', cur_label))
         @@ Int_label.Set.to_list finals_body
       in
-      flow ~init:(((cur_label, init_body) :: finals) @ accu) body
-  | Block xs -> pairwise ~init:accu xs
-  | _ -> accu
+      let accu' = initials @ finals @ accu in
+      flow ~init:accu' body
+  | IfElse (_, ts, Some fs) ->
+      let init_ts = initial ts and init_fs = initial fs in
+      let accu' = (cur_label, init_ts) :: (cur_label, init_fs) :: accu in
+      flow ~init:(flow ~init:accu' fs) ts
+  | IfElse (_, ts, _) ->
+      let init_ts = initial ts in
+      flow ~init:((cur_label, init_ts) :: accu) ts
+  | SList (next :: _ as xs) | Block (next :: _ as xs) ->
+      let init_next = initial next in
+      let accu' = (cur_label, init_next) :: accu in
+      pairwise ~init:accu' xs
+  | SList _ | Block _ -> accu
 
 and pairwise ~init = function
   | x :: y :: xs ->
