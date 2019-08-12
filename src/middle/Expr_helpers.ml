@@ -105,6 +105,22 @@ let is_internal_fun ?fn expr =
 let is_operator ?op expr =
   is_fun expr ~kind:StanLib ?name:(Option.map ~f:Operator.to_string op)
 
+let is_trivial expr =
+  match Fixed.pattern expr with Var _ | Lit _ -> true | _ -> false
+
+let free_vars expr =
+  let algebra : ('a, String.Set.t) Fixed.algebra = function
+    | _, Var n -> String.Set.singleton n
+    | _, Lit _ -> String.Set.empty
+    | _, TernaryIf (p, t, f) -> String.Set.union_list [p; t; f]
+    | _, EAnd (a, b) | _, EOr (a, b) -> String.Set.union a b
+    | _, Indexed (e, idxs) ->
+        List.map idxs ~f:(fun idx -> String.Set.union_list @@ index_bounds idx)
+        |> String.Set.union_list |> String.Set.union e
+    | _, FunApp (_, _, args) -> String.Set.union_list args
+  in
+  Fixed.cata algebra expr
+
 let contains_fun_algebra ?kind ?name = function
   | _, Expr.Fixed.Pattern.FunApp (fun_kind, fun_name, args) ->
       Option.(

@@ -31,6 +31,8 @@ val stanlib_fun : 'a -> string -> 'a Fixed.t list -> 'a Fixed.t
 val is_fun : ?kind:Fun_kind.t -> ?name:string -> 'a Fixed.t -> bool
 val is_internal_fun : ?fn:Internal_fun.t -> 'a Fixed.t -> bool
 val is_operator : ?op:Operator.t -> 'a Fixed.t -> bool
+val is_trivial : 'a Fixed.t -> bool
+val free_vars : 'a Fixed.t -> String.Set.t
 
 val contains_fun_algebra :
   ?kind:Fun_kind.t -> ?name:string -> ('a, bool) Fixed.algebra
