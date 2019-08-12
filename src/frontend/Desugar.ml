@@ -69,12 +69,11 @@ let rec desugar_index_expr = function
                        @ inner_tl )
                ; emeta }
              , outer_tl ))
-    | inner_singles, multis ->
+    | inner_singles, [] ->
         raise_s
           [%message
-            "We already checked for a multi"
-              (inner_singles : typed_expression index list)
-              (multis : typed_expression index list)] )
+            "We already checked that the 2nd list wasn't empty"
+              (inner_singles : typed_expression index list)] )
   | e -> e
 
 let rec map_statement_all_exprs expr_f {stmt; smeta} =
