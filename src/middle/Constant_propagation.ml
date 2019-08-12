@@ -59,6 +59,8 @@ module TF :
           | expr' when Expr_helpers.is_lit expr' ->
               String.Map.set env ~key:vbl ~data:expr'
           | _ -> String.Map.remove env vbl )
+        | Decl {decl_id= vbl; _} | Assignment ((vbl, _), _) ->
+            String.Map.remove env vbl
         | _ -> env )
 end
 
