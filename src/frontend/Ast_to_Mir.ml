@@ -465,9 +465,28 @@ let unwrap_block_or_skip = function
   | x ->
       raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
-let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
+let dist_name_suffix udf_names name =
+  let is_udf_name s = List.exists ~f:(( = ) s) udf_names in
+  match
+    Utils.distribution_suffices
+    |> List.filter ~f:(fun sfx ->
+           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
+       )
+    |> List.hd
+  with
+  | Some hd -> hd
+  | None -> raise_s [%message "Couldn't find distribution " name]
+
+let%expect_test "dist name suffix" =
+  dist_name_suffix [] "normal" |> print_endline ;
+  [%expect {| _log |}]
+
+let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
+    =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
+  let trans_stmt =
+    trans_stmt udf_names {declc with dread= None; dconstrain= None}
+  in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
@@ -516,7 +535,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix = stan_distribution_name_suffix distribution.name in
+      let suffix = dist_name_suffix udf_names distribution.name in
       let name =
         distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
       in
@@ -619,18 +638,19 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
 
-let trans_fun_def (ts : Ast.typed_statement) =
+let trans_fun_def udf_names (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef {returntype; funname; arguments; body} ->
-      { fdrt= (match returntype with Void -> None | ReturnType ut -> Some ut)
-      ; fdname= funname.name
-      ; fdargs= List.map ~f:trans_arg arguments
-      ; fdbody=
-          trans_stmt
-            {dread= None; dconstrain= None; dadlevel= AutoDiffable}
-            body
-          |> unwrap_block_or_skip
-      ; fdloc= ts.smeta.loc }
+      [ { fdrt=
+            (match returntype with Void -> None | ReturnType ut -> Some ut)
+        ; fdname= funname.name
+        ; fdargs= List.map ~f:trans_arg arguments
+        ; fdbody=
+            trans_stmt udf_names
+              {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+              body
+            |> unwrap_block_or_skip
+        ; fdloc= ts.smeta.loc } ]
   | _ ->
       raise_s
         [%message "Found non-function definition statement in function block"]
@@ -705,6 +725,12 @@ let trans_prog filename p : typed_prog =
     p
   in
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
+  let grab_fundef_names = function
+    | {Ast.stmt= Ast.FunDef {funname; _}; _} -> [funname.name]
+    | _ -> []
+  in
+  let udf_names = map grab_fundef_names functionblock in
+  let trans_stmt = trans_stmt udf_names in
   let get_name_size s =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
@@ -793,8 +819,7 @@ let trans_prog filename p : typed_prog =
       {dread= Some ReadData; dconstrain= Some Unconstrain; dadlevel= DataOnly}
       Parameters
   in
-  { functions_block=
-      Option.value_map functionblock ~default:[] ~f:(List.map ~f:trans_fun_def)
+  { functions_block= map (trans_fun_def udf_names) functionblock
   ; input_vars
   ; prepare_data
   ; log_prob
