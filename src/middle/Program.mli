@@ -41,6 +41,20 @@ module Make_traversable (A : Applicative.S) :
 module Make_traversable2 (A : Applicative.S2) :
   Bitraversable.S2 with module A := A and type ('a, 'b) t := ('a, 'b) t
 
+val map_accum_left :
+     f:('st -> 'a -> 'c * 'st)
+  -> g:('st -> 'b -> 'd * 'st)
+  -> init:'st
+  -> ('a Expr.Fixed.t, ('a, 'b) Stmt.Fixed.t) t
+  -> ('c Expr.Fixed.t, ('c, 'd) Stmt.Fixed.t) t * 'st
+
+val map_accum_right :
+     f:('st -> 'a -> 'c * 'st)
+  -> g:('st -> 'b -> 'd * 'st)
+  -> init:'st
+  -> ('a Expr.Fixed.t, ('a, 'b) Stmt.Fixed.t) t
+  -> ('c Expr.Fixed.t, ('c, 'd) Stmt.Fixed.t) t * 'st
+
 include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
 
 module Typed : sig

@@ -1,7 +1,7 @@
 open Core_kernel
 open Common
 open Helpers
-open State.Cps
+open State
 
 type 'a fun_def = 'a Mir_pattern.fun_def =
   { fdrt: UnsizedType.t option
@@ -109,6 +109,26 @@ let pp pp_e pp_s ppf prog =
 
 module Make_traversable = Mir_pattern.Make_traversable_prog
 module Make_traversable2 = Mir_pattern.Make_traversable_prog2
+module Traversable_state = Make_traversable2 (Cps.State)
+module Traversable_state_r = Make_traversable2 (Right.Cps.State)
+
+let map_accum_left ~f ~g ~init x =
+  Cps.State.(
+    Traversable_state.traverse x
+      ~f:(fun expr ->
+        state @@ fun accu -> Expr.Fixed.map_accum_left ~f ~init:accu expr )
+      ~g:(fun stmt ->
+        state @@ fun accu -> Stmt.Fixed.map_accum_left ~f ~g ~init:accu stmt )
+    |> run_state ~init)
+
+let map_accum_right ~f ~g ~init x =
+  Right.Cps.State.(
+    Traversable_state_r.traverse x
+      ~f:(fun expr ->
+        state @@ fun accu -> Expr.Fixed.map_accum_left ~f ~init:accu expr )
+      ~g:(fun stmt ->
+        state @@ fun accu -> Stmt.Fixed.map_accum_left ~f ~g ~init:accu stmt )
+    |> run_state ~init)
 
 module Typed = struct
   type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
