@@ -1,7 +1,6 @@
 open Core_kernel
 open Middle
 open Common
-open State.Cps
 
 module Numbered = struct
   module Meta = struct
@@ -20,29 +19,20 @@ type state_t = Location_span.t list
 
 let no_span_num = 0
 
-module Traversable_state = Program.Make_traversable2 (State)
-module Traversable_stmt_state = Stmt.Fixed.Make_traversable2 (State)
-module Traversable_expr_state = Expr.Fixed.Make_traversable2 (State)
-
 let number ~init (prog : Program.Typed.t) =
-  let g loc =
-    State.(
-      get
-      >>= fun (label, label_to_loc, loc_to_label) ->
-      match Location_span.Map.find loc_to_label loc with
-      | Some lbl -> return lbl
-      | _ ->
-          let loc_to_label' =
-            Location_span.Map.add_exn loc_to_label ~key:loc ~data:label
-          and label_to_loc' = Int.Map.add_exn label_to_loc ~key:label ~data:loc
-          and next_label = Numbered.Meta.next label in
-          put (next_label, label_to_loc', loc_to_label')
-          >>= fun _ -> return label)
+  let f accu expr = (expr, accu)
+  and g ((label, label_to_loc, loc_to_label) as accu) loc =
+    match Location_span.Map.find loc_to_label loc with
+    | Some lbl -> (lbl, accu)
+    | _ ->
+        let loc_to_label' =
+          Location_span.Map.add_exn loc_to_label ~key:loc ~data:label
+        and label_to_loc' = Int.Map.add_exn label_to_loc ~key:label ~data:loc
+        and next_label = Numbered.Meta.next label in
+        let accu' = (next_label, label_to_loc', loc_to_label') in
+        (label, accu')
   in
-  Traversable_state.traverse prog
-    ~f:(Traversable_expr_state.traverse ~f:State.return)
-    ~g:(Traversable_stmt_state.traverse ~f:State.return ~g)
-  |> State.run_state ~init
+  Program.map_accum_left ~f ~g ~init prog
 
 let prepare_prog (mir : Program.Typed.t) =
   let label_to_loc =
