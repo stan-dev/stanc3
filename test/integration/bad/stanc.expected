@@ -1312,7 +1312,7 @@ Instead supplied arguments of incompatible type: real.
 
 Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
-    13:    real[,] do_integration_nested(real[] y0, real t0, real[] ts, real[] theta, data matrix xmat_r) {
+    13:    real[,] do_integration_nested(real[] y0, real t0, data real[] ts, real[] theta, matrix xmat_r) {
     14:      int x_i[0];
     15:      return(integrate_ode_rk45(sho, y0, t0, ts, theta, to_array_1d(xmat_r[1]), x_i));
                     ^
@@ -1321,8 +1321,8 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[,]
+((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
+((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../install/default/bin/stanc functions-bad23.stan
