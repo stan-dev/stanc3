@@ -17,7 +17,6 @@ let pretty_print_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
-let dump_desugared = ref false
 let dump_tx_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
@@ -49,10 +48,6 @@ let options =
     ; ( "--debug-mir-pretty"
       , Arg.Set dump_mir_pretty
       , " For debugging purposes: pretty-print the MIR." )
-    ; ( "--debug-desugared"
-      , Arg.Set dump_desugared
-      , " For debugging purposes: print the Stan program after the desugaring \
-         step." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
@@ -133,8 +128,6 @@ let use_file filename =
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
-    let typed_ast = Desugar.desugar_prog typed_ast in
-    if !dump_desugared then Pretty_printing.pp_program Fmt.stdout typed_ast ;
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;

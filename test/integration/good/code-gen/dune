@@ -19,14 +19,3 @@
 (alias
  (name runtest)
  (action (diff mir.expected mir.output)))
-
-(rule
- (targets desugared.output)
- (deps (package stanc) (:stanfiles mother.stan))
- (action
-  (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-desugared" %{stanfiles}))))
-
-(alias
- (name runtest)
- (action (diff desugared.expected desugared.output)))

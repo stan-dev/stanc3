@@ -4005,7 +4005,8 @@
            ((mtype (UArray UVector)) (mloc <opaque>) (madlevel DataOnly))))
          ((Single
            ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          All)))
        (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
@@ -4017,7 +4018,8 @@
            ((mtype (UArray UVector)) (mloc <opaque>) (madlevel DataOnly))))
          ((Single
            ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          All)))
        (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
@@ -13060,38 +13062,28 @@
                         (emeta
                          ((mtype (UArray UMatrix)) (mloc <opaque>)
                           (madlevel DataOnly))))
-                       ((Single
-                         ((expr
-                           (Indexed
-                            ((expr (Var indices))
-                             (emeta
-                              ((mtype (UArray UInt)) (mloc <opaque>)
-                               (madlevel DataOnly))))
-                            ((Single
-                              ((expr (Lit Int 2))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))))))
+                       ((MultiIndex
+                         ((expr (Var indices))
                           (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                        (Single
-                         ((expr
-                           (Indexed
-                            ((expr (Var indices))
-                             (emeta
-                              ((mtype (UArray UInt)) (mloc <opaque>)
-                               (madlevel DataOnly))))
-                            ((Single
-                              ((expr (Lit Int 1))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))))))
+                           ((mtype (UArray UInt)) (mloc <opaque>)
+                            (madlevel DataOnly)))))
+                        (MultiIndex
+                         ((expr (Var indices))
                           (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                           ((mtype (UArray UInt)) (mloc <opaque>)
+                            (madlevel DataOnly))))))))
                      (emeta
                       ((mtype (UArray UMatrix)) (mloc <opaque>)
                        (madlevel DataOnly))))
                     ((Single
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
                       ((expr (Lit Int 1))
                        (emeta
                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
@@ -13228,28 +13220,24 @@
                         (emeta
                          ((mtype (UArray UMatrix)) (mloc <opaque>)
                           (madlevel DataOnly))))
-                       ((Single
-                         ((expr (Lit Int 2))
+                       (All
+                        (MultiIndex
+                         ((expr (Var indices))
                           (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                        (Single
-                         ((expr
-                           (Indexed
-                            ((expr (Var indices))
-                             (emeta
-                              ((mtype (UArray UInt)) (mloc <opaque>)
-                               (madlevel DataOnly))))
-                            ((Single
-                              ((expr (Lit Int 1))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))))))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                           ((mtype (UArray UInt)) (mloc <opaque>)
+                            (madlevel DataOnly))))))))
                      (emeta
                       ((mtype (UArray UMatrix)) (mloc <opaque>)
                        (madlevel DataOnly))))
                     ((Single
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
                       ((expr (Lit Int 1))
                        (emeta
                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
@@ -13438,42 +13426,32 @@
                         (emeta
                          ((mtype (UArray UMatrix)) (mloc <opaque>)
                           (madlevel DataOnly))))
-                       ((Single
-                         ((expr
-                           (Indexed
-                            ((expr (Var indices))
-                             (emeta
-                              ((mtype (UArray UInt)) (mloc <opaque>)
-                               (madlevel DataOnly))))
-                            ((Single
-                              ((expr (Lit Int 2))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))))))
+                       ((MultiIndex
+                         ((expr (Var indices))
                           (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                        (Single
-                         ((expr (Lit Int 1))
+                           ((mtype (UArray UInt)) (mloc <opaque>)
+                            (madlevel DataOnly)))))
+                        All
+                        (MultiIndex
+                         ((expr (Var indices))
                           (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                        (Single
-                         ((expr
-                           (Indexed
-                            ((expr (Var indices))
-                             (emeta
-                              ((mtype (UArray UInt)) (mloc <opaque>)
-                               (madlevel DataOnly))))
-                            ((Single
-                              ((expr (Lit Int 1))
-                               (emeta
-                                ((mtype UInt) (mloc <opaque>)
-                                 (madlevel DataOnly))))))))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                           ((mtype (UArray UInt)) (mloc <opaque>)
+                            (madlevel DataOnly))))))))
                      (emeta
                       ((mtype (UArray UMatrix)) (mloc <opaque>)
                        (madlevel DataOnly))))
-                    ()))
+                    ((Single
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                     (Single
+                      ((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
                  ((expr
                    (Indexed
@@ -13517,7 +13495,8 @@
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                  (Single
                   ((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                 All)))
               (emeta
                ((mtype (UArray URowVector)) (mloc <opaque>)
                 (madlevel DataOnly))))))

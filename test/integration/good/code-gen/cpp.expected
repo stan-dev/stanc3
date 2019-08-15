@@ -3154,9 +3154,9 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 233;
       td_1dk = rvalue(td_1d, cons_list(index_multi(td_1dk), nil_index_list()), "pretty printed e");
       current_statement__ = 234;
-      td_simplex = td_1d_simplex[(1 - 1)];
+      td_simplex = rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_omni(), nil_index_list())), "pretty printed e");
       current_statement__ = 235;
-      td_simplex = td_1d_simplex[(1 - 1)];
+      td_simplex = rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_omni(), nil_index_list())), "pretty printed e");
       current_statement__ = 236;
       td_simplex = rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_min_max(1, N), nil_index_list())), "pretty printed e");
       current_statement__ = 165;
@@ -4419,7 +4419,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 116;
         idx_res11 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
         current_statement__ = 118;
-        if (logical_neq(rvalue(indexing_mat, cons_list(index_uni(indices[(2 - 1)]), cons_list(index_uni(indices[(1 - 1)]), nil_index_list())), "pretty printed e")[(1 - 1)], rvalue(idx_res1, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res1, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
           current_statement__ = 117;
           std::stringstream errmsg_stream__;
           errmsg_stream__ << "indexing test 1 failed";
@@ -4435,7 +4435,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 122;
         idx_res21 = rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
         current_statement__ = 124;
-        if (logical_neq(rvalue(indexing_mat, cons_list(index_uni(2), cons_list(index_uni(indices[(1 - 1)]), nil_index_list())), "pretty printed e")[(1 - 1)], rvalue(idx_res2, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res2, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
           current_statement__ = 123;
           std::stringstream errmsg_stream__;
           errmsg_stream__ << "indexing test 2 failed";
@@ -4453,14 +4453,14 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 129;
         idx_res31 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e");
         current_statement__ = 131;
-        if (logical_neq(rvalue(indexing_mat, cons_list(index_uni(indices[(2 - 1)]), cons_list(index_uni(1), cons_list(index_uni(indices[(1 - 1)]), nil_index_list()))), "pretty printed e"), rvalue(idx_res3, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res3, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
           current_statement__ = 130;
           std::stringstream errmsg_stream__;
           errmsg_stream__ << "indexing test 3 failed";
           throw std::domain_error(errmsg_stream__.str());
         } 
         current_statement__ = 132;
-        idx_res4 = rvalue(indexing_mat, cons_list(index_min_max(1, 3), cons_list(index_uni(1), nil_index_list())), "pretty printed e");
+        idx_res4 = rvalue(indexing_mat, cons_list(index_min_max(1, 3), cons_list(index_uni(1), cons_list(index_omni(), nil_index_list()))), "pretty printed e");
         current_statement__ = 133;
         idx_res5 = rvalue(indexing_mat, cons_list(index_min(4), cons_list(index_min_max(2, 3), cons_list(index_uni(1), nil_index_list()))), "pretty printed e");
         vars__.push_back(gq_r1);

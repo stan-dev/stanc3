@@ -1119,7 +1119,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -1133,7 +1134,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -1147,7 +1149,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
@@ -1162,7 +1165,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -1176,7 +1180,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
@@ -1191,7 +1196,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -1205,7 +1211,8 @@ let () =
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType (UArray UReal) ) )
       ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
