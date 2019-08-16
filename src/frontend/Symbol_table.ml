@@ -72,7 +72,7 @@ let check_is_unassigned s str = Map.mem s.isunassigned str
 let check_some_id_is_unassigned s = not (Map.length s.isunassigned = 0)
 
 let is_global s str =
-  match Hashtbl.find s.globals str with Some _ -> true | _ -> false
+  match Map.find s.globals str with Some _ -> true | _ -> false
 
 let unsafe_clear_symbol_table s =
   Hashtbl.clear s.table ;
