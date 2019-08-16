@@ -2,8 +2,8 @@
 
 type 'a state
 
-val initialize : unit -> 'a state
-(** Creates a new symbol table *)
+val empty : 'a state
+(** The empty symbol table *)
 
 val enter : 'a state -> string -> 'a -> 'a state
 (** Enters a specified identifier with its specified type (or other) information

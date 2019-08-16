@@ -12,7 +12,7 @@ type 'a state =
   ; isunassigned: (string, unit, String.comparator_witness) Map.t
   ; globals: (string, unit, String.comparator_witness) Map.t }
 
-let initialize () =
+let empty =
   { table= Map.empty (module String)
   ; stack= []
   ; scopedepth= 0
@@ -42,24 +42,25 @@ let begin_scope s =
 
 (* using a string "-sentinel-new-scope-" here that can never be used as an identifier to indicate that new scope is entered *)
 let end_scope s =
-  s.scopedepth := !(s.scopedepth) - 1 ;
-  while Stack.top_exn s.stack <> sentinel_new_scope do
-    (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
-    Hashtbl.remove s.table (Stack.top_exn s.stack) ;
-    Hashtbl.remove s.readonly (Stack.top_exn s.stack) ;
-    Hashtbl.remove s.isunassigned (Stack.top_exn s.stack) ;
-    let _ : string = Stack.pop_exn s.stack in
-    ()
-  done ;
-  let _ : string = Stack.pop_exn s.stack in
-  ()
+  let new_scopedepth = s.scopedepth - 1 in
+  let (old_vars_list, sentinel_and_keep_vars) = List.split_while s.stack ~f:(fun var -> var <> sentinel_new_scope) in
+  let old_vars_set = String.Set.of_list old_vars_list in
+  let pop_old_vars map = Map.filter_keys map ~f:(fun key -> Set.mem old_vars_set key) in
+  let new_table = pop_old_vars s.table in
+  let new_readonly = pop_old_vars s.readonly in
+  let new_isunassigned = pop_old_vars s.isunassigned in
+  let new_stack = List.tl_exn sentinel_and_keep_vars in
+  { s with table= new_table
+         ; readonly= new_readonly
+         ; isunassigned= new_isunassigned
+         ; scopedepth= new_scopedepth
+         ; stack= new_stack }
 
 let set_read_only s str =
-  let _ : [`Duplicate | `Ok] = Hashtbl.add s.readonly ~key:str ~data:() in
-  ()
+  { s with readonly= add_ignoring_dup s.readonly str () }
 
 let get_read_only s str =
-  match Hashtbl.find s.readonly str with Some () -> true | _ -> false
+  match Map.find s.readonly str with Some () -> true | _ -> false
 
 let set_is_assigned s str = Hashtbl.remove s.isunassigned str
 
