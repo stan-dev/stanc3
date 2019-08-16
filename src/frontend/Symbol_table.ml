@@ -20,13 +20,18 @@ let initialize () =
   ; isunassigned= Map.empty (module String)
   ; globals= Map.empty (module String) }
 
+let add_ignoring_dup map k v = match Map.add map ~key:k ~data:v with
+  | `Duplicate -> map
+  | `Ok new_map -> new_map
+
 let enter s str ty =
-  let _ : [`Duplicate | `Ok] =
-    if !(s.scopedepth) = 0 then Hashtbl.add s.globals ~key:str ~data:()
-    else `Ok
+  let new_globals =
+    if s.scopedepth = 0
+    then add_ignoring_dup s.globals str ()
+    else s.globals
   in
-  let _ : [`Duplicate | `Ok] = Hashtbl.add s.table ~key:str ~data:ty in
-  Stack.push s.stack str
+  let new_table = add_ignoring_dup s.table str ty in
+  { s with table= new_table; globals= new_globals; stack= str :: s.stack }
 
 let look s str = Hashtbl.find s.table str
 
