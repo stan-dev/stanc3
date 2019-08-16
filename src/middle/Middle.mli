@@ -67,8 +67,6 @@ val pretty_print_all_math_lib_fn_sigs : string -> string
 val is_stan_math_function_name : string -> bool
 (** Check whether a string is the name of a Stan Math library function. *)
 
-val stan_distribution_name_suffix : string -> string
-
 val operator_return_type_from_string :
   string -> (autodifftype * unsizedtype) sexp_list -> returntype option
 
