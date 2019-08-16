@@ -5,20 +5,20 @@ open Core_kernel
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
 We could just keep track of the count of the entry into the hash table and use that for comparison. *)
 type 'a state =
-  { table: (string, 'a) Hashtbl.t
-  ; stack: string Stack.t
-  ; scopedepth: int ref
-  ; readonly: (string, unit) Hashtbl.t
-  ; isunassigned: (string, unit) Hashtbl.t
-  ; globals: (string, unit) Hashtbl.t }
+  { table: (string, 'a, String.comparator_witness) Map.t
+  ; stack: string List.t
+  ; scopedepth: int
+  ; readonly: (string, unit, String.comparator_witness) Map.t
+  ; isunassigned: (string, unit, String.comparator_witness) Map.t
+  ; globals: (string, unit, String.comparator_witness) Map.t }
 
 let initialize () =
-  { table= String.Table.create ()
-  ; stack= Stack.create ()
-  ; scopedepth= ref 0
-  ; readonly= String.Table.create ()
-  ; isunassigned= String.Table.create ()
-  ; globals= String.Table.create () }
+  { table= Map.empty (module String)
+  ; stack= []
+  ; scopedepth= 0
+  ; readonly= Map.empty (module String)
+  ; isunassigned= Map.empty (module String)
+  ; globals= Map.empty (module String) }
 
 let enter s str ty =
   let _ : [`Duplicate | `Ok] =
