@@ -40,6 +40,12 @@ let rec local_scalar ut ad =
   | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
+let minus_one e =
+  { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
+  ; emeta= e.emeta }
+
+let is_single_index = function Single _ -> true | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -163,6 +169,8 @@ and gen_misc_special_math_app f =
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | f when f = string_of_internal_fn FnLength ->
       Some (fun ppf -> gen_fun_app ppf "stan::length")
+  | f when f = string_of_internal_fn FnResizeToMatch ->
+      Some (fun ppf -> gen_fun_app ppf "resize_to_match")
   | f when f = string_of_internal_fn FnNegInf ->
       Some (fun ppf -> gen_fun_app ppf "stan::math::negative_infinity")
   | _ -> None
@@ -260,15 +268,27 @@ and pp_compiler_internal_fn ut f ppf es =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
-and pp_indexed_simple ppf (vident, idcs) =
-  let minus_one e =
-    { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
-    ; emeta= e.emeta }
+and pp_indexed_simple ppf (obj, idcs) =
+  let idx_minus_one = function
+    | Single e -> minus_one e
+    | MultiIndex e | Between (e, _) | Upfrom e ->
+        raise_s
+          [%message
+            "No non-Single indices allowed" ~obj
+              (idcs : expr_typed_located index list)
+              (e.emeta.mloc : location_span)]
+    | All ->
+        raise_s
+          [%message
+            "No non-Single indices allowed" ~obj
+              (idcs : expr_typed_located index list)]
   in
-  let idx_minus_one = map_index minus_one in
-  (Middle.Pretty.pp_indexed pp_expr)
-    ppf
-    (vident, List.map ~f:idx_minus_one idcs)
+  pf ppf "%s%a" obj
+    (fun ppf idcs ->
+      match idcs with
+      | [] -> ()
+      | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
+    (List.map ~f:idx_minus_one idcs)
 
 and pp_expr ppf e =
   match e.expr with
@@ -288,6 +308,7 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+  | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.expr with
     | FunApp (CompilerInternal, f, _)
@@ -295,6 +316,10 @@ and pp_expr ppf e =
         pp_expr ppf e
     | FunApp (CompilerInternal, f, _)
       when Some FnReadData = internal_fn_of_string f ->
+        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
+    | _
+      when List.for_all ~f:is_single_index idx
+           && not (is_indexing_matrix (e.emeta.mtype, idx)) ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 

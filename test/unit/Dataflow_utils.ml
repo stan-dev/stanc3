@@ -184,7 +184,7 @@ let%expect_test "Statement label map example" =
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
        (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
-       (4 (Assignment (i ()) (Lit Int 0)))
+       (4 (Assignment (i UInt ()) (Lit Int 0)))
        (5 (IfElse (FunApp StanLib Less__ ((Var i) (Lit Int 0))) 6 (8)))
        (6 (Block (7))) (7 (NRFunApp CompilerInternal FnPrint__ ((Var i))))
        (8 (Block (9)))

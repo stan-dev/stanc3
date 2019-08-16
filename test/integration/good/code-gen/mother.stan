@@ -513,7 +513,6 @@ generated quantities {
       idx_res1[i, j] = indexing_mat[indices[i], indices[j]];
 
   idx_res11 = indexing_mat[indices, indices];
-  //broken in stanc3
   if (indexing_mat[indices, indices][2,1,1] != idx_res1[2,1,1]) reject("indexing test 1 failed");
 
   //2nd, 3rd, 1st rows of every indexing_matrix
@@ -522,7 +521,7 @@ generated quantities {
       idx_res2[i, j] = indexing_mat[i, indices[j]];
   idx_res21 = indexing_mat[:, indices];
   //broken in stanc3
-  //if (indexing_mat[:, indices][2,1,1] != idx_res2[2,1,1]) reject("indexing test 2 failed");
+  if (indexing_mat[:, indices][2,1,1] != idx_res2[2,1,1]) reject("indexing test 2 failed");
 
   // (2nd, 3rd, 1st) indexing_matrices, all rows, 2nd, 3rd, 1st columns
   for (i in 1:size(indices))
@@ -530,8 +529,7 @@ generated quantities {
       for (k in 1:size(indices))
         idx_res3[i, j, k] = indexing_mat[indices[i], j, indices[k]];
   idx_res31 = indexing_mat[indices, :, indices];
-  // broken in stanc3:
-  // if (indexing_mat[indices, :, indices][2,1,1] != sym3[2,1,1]) reject("indexing test 3 failed");
+  if (indexing_mat[indices, :, indices][2,1,1] != idx_res3[2,1,1]) reject("indexing test 3 failed");
 
   idx_res4 = indexing_mat[:3, 1, :];
   idx_res5 = indexing_mat[4:, 2:3, 1];

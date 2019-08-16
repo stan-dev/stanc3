@@ -90,3 +90,5 @@ val mock_for :
      int
   -> (mtype_loc_ad, location_span) stmt_with
   -> (mtype_loc_ad, location_span) stmt_with
+
+val is_indexing_matrix : unsizedtype * 'e index list -> bool

@@ -365,6 +365,14 @@ let semantic_check_binop loc op (le, re) =
              |> ok
          | Void -> error err ))
 
+let to_exn v =
+  v |> Validate.to_result
+  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
+  |> Result.ok_or_failwith
+
+let semantic_check_binop_exn loc op (le, re) =
+  semantic_check_binop loc op (le, re) |> to_exn
+
 (* -- Prefix Operators ------------------------------------------------------ *)
 
 let semantic_check_prefixop loc op e =
@@ -470,11 +478,13 @@ let semantic_check_rowvector ~loc es =
     else Semantic_error.invalid_row_vector_types loc |> error)
 
 (* -- Indexed Expressions --------------------------------------------------- *)
-let compose f g x = f @@ g x
 let tuple2 a b = (a, b)
 let tuple3 a b c = (a, b, c)
 
-let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
+let index_with_type idx =
+  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, UInt)
+
+let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux k ut xs =
     match (ut, xs) with
     | UMatrix, [(All, _); (Single _, UInt)]
@@ -495,18 +505,15 @@ let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
       | _ -> (
         match ut with
         | UArray inner_ty ->
-            let k' = compose k (Validate.map ~f:(fun t -> UArray t)) in
+            let k' = Fn.compose k (Validate.map ~f:(fun t -> UArray t)) in
             aux k' inner_ty rest
         | UVector | URowVector | UMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
   in
-  aux (fun x -> x) ut typed_idxs
+  aux Fn.id ut (List.map ~f:index_with_type indices)
 
-let inferred_unsizedtype_of_indexed_exn ~loc ut typed_idxs =
-  inferred_unsizedtype_of_indexed ~loc ut typed_idxs
-  |> Validate.to_result
-  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
-  |> Result.ok_or_failwith
+let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
+  inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
 
 let inferred_ad_type_of_indexed at uindices =
   lub_ad_type
@@ -520,9 +527,6 @@ let inferred_ad_type_of_indexed at uindices =
                lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
          uindices )
 
-let index_with_type idx =
-  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, UInt)
-
 let rec semantic_check_indexed ~loc ~cf e indices =
   Validate.(
     indices
@@ -532,7 +536,6 @@ let rec semantic_check_indexed ~loc ~cf e indices =
     >>= fun (ue, uindices) ->
     let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices in
     uindices
-    |> List.map ~f:index_with_type
     |> inferred_unsizedtype_of_indexed ~loc ue.emeta.type_
     |> map ~f:(fun ut ->
            mk_typed_expression

@@ -419,7 +419,7 @@ let%expect_test "list collapsing" =
                ((stmt
                  (Block
                   (((stmt
-                     (Assignment (sym4__ ())
+                     (Assignment (sym4__ UReal ())
                       ((expr
                         (FunApp StanLib Pow__
                          (((expr (Lit Int 53))
@@ -3412,7 +3412,7 @@ let%expect_test "adlevel_optimization expressions" =
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
         (smeta <opaque>))
        ((stmt
-         (Assignment (w ())
+         (Assignment (w UReal ())
           ((expr
             (FunApp CompilerInternal FnReadParam__
              (((expr (Lit Str w))
@@ -3448,7 +3448,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (y ())
+                (Assignment (y UReal ())
                  ((expr
                    (FunApp StanLib Plus__
                     (((expr (Var y))
@@ -3459,7 +3459,7 @@ let%expect_test "adlevel_optimization expressions" =
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
                (smeta <opaque>))
               (((stmt
-                 (Assignment (y ())
+                 (Assignment (y UReal ())
                   ((expr
                     (FunApp StanLib Plus__
                      (((expr (Var y))
@@ -3481,7 +3481,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (z ())
+                (Assignment (z UReal ())
                  ((expr (Var y))
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
                (smeta <opaque>))
@@ -3497,7 +3497,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (z_data ())
+                (Assignment (z_data UReal ())
                  ((expr (Var x))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
                (smeta <opaque>))
