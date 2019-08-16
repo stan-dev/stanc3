@@ -38,6 +38,3 @@ val check_some_id_is_unassigned : 'a state -> bool
 
 val is_global : 'a state -> string -> bool
 (** Used to check whether an identifier was declared in global scope *)
-
-val unsafe_clear_symbol_table : 'a state -> 'a state
-(** Used to clear the whole symbol table *)

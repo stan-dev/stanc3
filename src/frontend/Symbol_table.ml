@@ -73,11 +73,3 @@ let check_some_id_is_unassigned s = not (Map.length s.isunassigned = 0)
 
 let is_global s str =
   match Map.find s.globals str with Some _ -> true | _ -> false
-
-let unsafe_clear_symbol_table s =
-  Hashtbl.clear s.table ;
-  Stack.clear s.stack ;
-  s.scopedepth := 0 ;
-  Hashtbl.clear s.readonly ;
-  Hashtbl.clear s.isunassigned ;
-  Hashtbl.clear s.globals
