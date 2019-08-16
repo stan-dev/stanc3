@@ -62,17 +62,14 @@ let set_read_only s str =
 let get_read_only s str =
   match Map.find s.readonly str with Some () -> true | _ -> false
 
-let set_is_assigned s str = Hashtbl.remove s.isunassigned str
+let set_is_assigned s str =
+  { s with isunassigned= Map.remove s.isunassigned str }
 
 let set_is_unassigned s str =
-  let _ : [`Duplicate | `Ok] =
-    if Hashtbl.mem s.isunassigned str then `Ok
-    else Hashtbl.add s.isunassigned ~key:str ~data:()
-  in
-  ()
+  { s with isunassigned= add_ignoring_dup s.isunassigned str () }
 
-let check_is_unassigned s str = Hashtbl.mem s.isunassigned str
-let check_some_id_is_unassigned s = not (Hashtbl.length s.isunassigned = 0)
+let check_is_unassigned s str = Map.mem s.isunassigned str
+let check_some_id_is_unassigned s = not (Map.length s.isunassigned = 0)
 
 let is_global s str =
   match Hashtbl.find s.globals str with Some _ -> true | _ -> false
