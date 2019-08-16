@@ -20,6 +20,8 @@ let initialize () =
   ; isunassigned= Map.empty (module String)
   ; globals= Map.empty (module String) }
 
+let sentinel_new_scope = "-sentinel-new-scope-"
+
 let add_ignoring_dup map k v = match Map.add map ~key:k ~data:v with
   | `Duplicate -> map
   | `Ok new_map -> new_map
@@ -33,16 +35,15 @@ let enter s str ty =
   let new_table = add_ignoring_dup s.table str ty in
   { s with table= new_table; globals= new_globals; stack= str :: s.stack }
 
-let look s str = Hashtbl.find s.table str
+let look s str = Map.find s.table str
 
 let begin_scope s =
-  s.scopedepth := !(s.scopedepth) + 1 ;
-  Stack.push s.stack "-sentinel-new-scope-"
+  { s with scopedepth = s.scopedepth + 1; stack= sentinel_new_scope :: s.stack }
 
 (* using a string "-sentinel-new-scope-" here that can never be used as an identifier to indicate that new scope is entered *)
 let end_scope s =
   s.scopedepth := !(s.scopedepth) - 1 ;
-  while Stack.top_exn s.stack <> "-sentinel-new-scope-" do
+  while Stack.top_exn s.stack <> sentinel_new_scope do
     (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
     Hashtbl.remove s.table (Stack.top_exn s.stack) ;
     Hashtbl.remove s.readonly (Stack.top_exn s.stack) ;
