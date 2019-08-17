@@ -1279,14 +1279,13 @@ and try_compute_block_statement_returntype loc srt1 srt2 =
       Validate.ok AnyReturnType
 
 and semantic_check_block ~loc ~cf vm stmts =
-  Symbol_table.begin_scope vm ;
+  let new_scope = Symbol_table.begin_scope vm in
   (* Any statements after a break or continue or return or reject
      do not count for the return type.
   *)
   let validated_stmts =
-    List.map ~f:(semantic_check_statement vm cf) stmts |> Validate.sequence
+    List.map ~f:(semantic_check_statement new_scope cf) stmts |> Validate.sequence
   in
-  Symbol_table.end_scope vm ;
   Validate.(
     validated_stmts
     >>= fun xs ->
