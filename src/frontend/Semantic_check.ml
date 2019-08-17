@@ -1182,17 +1182,17 @@ and semantic_check_while ~loc ~cf vm e s =
 
 (* -- For Statements -------------------------------------------------------- *)
 and semantic_check_loop_body ~cf vm loop_var loop_var_ty loop_body =
-  Symbol_table.begin_scope vm ;
-  let is_fresh_var = check_fresh_variable vm loop_var false in
-  Symbol_table.enter vm loop_var.name (cf.current_block, loop_var_ty) ;
+  let begun_scope = Symbol_table.begin_scope vm in
+  let is_fresh_var = check_fresh_variable begun_scope loop_var false in
+  let added_var = Symbol_table.enter vm loop_var.name (cf.current_block, loop_var_ty) in
   (* Check that function args and loop identifiers are not modified in
       function. (passed by const ref) *)
-  Symbol_table.set_read_only vm loop_var.name ;
+  let var_read_onlyed = Symbol_table.set_read_only added_var loop_var.name in
   let us =
-    semantic_check_statement vm {cf with loop_depth= cf.loop_depth + 1} loop_body
+    semantic_check_statement var_read_onlyed {cf with loop_depth= cf.loop_depth + 1} loop_body
     |> Validate.apply_const is_fresh_var
   in
-  Symbol_table.end_scope vm ; us
+  us (* TODO(palmerlao): omit symbol table return since mutation here is not visible outside this function? *)
 
 and semantic_check_for ~loc ~cf vm loop_var lower_bound_e upper_bound_e loop_body
     =
