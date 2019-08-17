@@ -1416,11 +1416,10 @@ and semantic_check_fundef_decl ~loc vm id body =
         if Symbol_table.check_is_unassigned vm id.name then
           error @@ Semantic_error.fn_decl_without_def loc
         else
-          let () = Symbol_table.set_is_unassigned vm id.name in
-          ok ()
+          ok (Symbol_table.set_is_unassigned vm id.name)
     | _ ->
-        Symbol_table.set_is_assigned vm id.name ;
-        ok ())
+        ok (Symbol_table.set_is_unassigned vm id.name)
+  )
 
 and semantic_check_fundef_dist_rt ~loc id return_ty =
   Validate.(
