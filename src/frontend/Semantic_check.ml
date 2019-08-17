@@ -1377,8 +1377,9 @@ and semantic_check_var_decl ~loc ~cf vm sized_ty trans id init is_global =
     semantic_check_size_decl ~loc is_global ust
     >>= fun _ ->
     let ut = unsizedtype_of_sizedtype ust in
-    Symbol_table.enter vm id.name (cf.current_block, ut) ;
-    semantic_check_var_decl_initial_value ~loc ~cf vm id init
+    (* TODO(palmerlao): return me? *)
+    let add_var = Symbol_table.enter vm id.name (cf.current_block, ut) in
+    semantic_check_var_decl_initial_value ~loc ~cf add_var id init
     |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
     |> apply_const (semantic_check_transformed_param_ty ~loc ~cf is_global ut)
     |> map ~f:(fun uinit ->
@@ -1408,7 +1409,6 @@ and semantic_check_fundef_overloaded ~loc vm id arg_tys rt =
           |> error
     else check_fresh_variable vm id (List.length arg_tys = 0))
 
-(** WARNING: side effecting *)
 and semantic_check_fundef_decl ~loc vm id body =
   Validate.(
     match body with
@@ -1511,18 +1511,16 @@ and semantic_check_fundef ~loc ~cf vm return_ty id args body =
     semantic_check_fundef_overloaded ~loc vm id uarg_types urt
     |> apply_const (semantic_check_fundef_decl ~loc vm id body)
     >>= fun _ ->
-    (* WARNING: SIDE EFFECTING *)
-    Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) ;
+    let entered = Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) in
     (* Check that function args and loop identifiers are not modified in
        function. (passed by const ref)*)
-    List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
+    let entered_read_only = List.fold uarg_names ~init:entered ~f:(fun sym_tab -> Symbol_table.set_read_only sym_tab) in
     semantic_check_fundef_dist_rt ~loc id urt
     |> apply_const (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
     |> apply_const (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
     >>= fun _ ->
-    (* WARNING: SIDE EFFECTING *)
-    Symbol_table.begin_scope vm ;
-    List.map ~f:(fun x -> check_fresh_variable vm x false) uarg_identifiers
+    let entered_read_only_begin_scope = Symbol_table.begin_scope entered_read_only in
+    List.map ~f:(fun x -> check_fresh_variable entered_read_only_begin_scope x false) uarg_identifiers
     |> sequence
     |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
     >>= fun _ ->
@@ -1533,9 +1531,8 @@ and semantic_check_fundef ~loc ~cf vm return_ty id args body =
     (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
         as if they are parameters, for the purposes of type checking.
     *)
-    (* WARNING: SIDE EFFECTING *)
-    let _ : unit Base.List.Or_unequal_lengths.t =
-      List.iter2 ~f:(Symbol_table.enter vm) uarg_names
+    let blah =
+      List.fold2_exn ~init:entered_read_only_begin_scope ~f:Symbol_table.enter uarg_names
         (List.map
            ~f:(function
              | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
@@ -1547,13 +1544,11 @@ and semantic_check_fundef ~loc ~cf vm return_ty id args body =
       ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
       ; in_returning_fun_def= urt <> Void }
     in
-    let body' = semantic_check_statement vm context body in
+    let body' = semantic_check_statement blah context body in
     body'
     >>= fun ub ->
-    semantic_check_fundef_return_tys ~loc vm id urt ub
+    semantic_check_fundef_return_tys ~loc blah id urt ub
     |> map ~f:(fun _ ->
-           (* WARNING: SIDE EFFECTING *)
-           Symbol_table.end_scope vm ;
            let stmt =
              FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
            in
@@ -1653,9 +1648,7 @@ let semantic_check_program
   let upb = semantic_check_ostatements_in_block ~cf vm Param pb in
   let utpb = semantic_check_ostatements_in_block ~cf vm TParam tpb in
   (* Model top level variables only assigned and read in model  *)
-  Symbol_table.begin_scope vm ;
-  let umb = semantic_check_ostatements_in_block ~cf vm Model mb in
-  Symbol_table.end_scope vm ;
+  let umb = semantic_check_ostatements_in_block ~cf (Symbol_table.begin_scope vm) Model mb in
   let ugb = semantic_check_ostatements_in_block ~cf vm GQuant gb in
   let mk_typed_prog ufb udb utdb upb utpb umb ugb : Ast.typed_program =
     { functionblock= ufb
