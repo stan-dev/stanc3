@@ -38,3 +38,5 @@ val check_some_id_is_unassigned : 'a state -> bool
 
 val is_global : 'a state -> string -> bool
 (** Used to check whether an identifier was declared in global scope *)
+
+val debug : 'a state -> unit

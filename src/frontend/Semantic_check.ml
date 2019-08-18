@@ -1650,22 +1650,37 @@ let semantic_check_program
   let vm = Symbol_table.empty in
   let typed_program : Ast.typed_program Validate.t =
     Validate.(
+      Debug.eprint "----- functions block -----";
+      Symbol_table.debug vm;
       semantic_check_ostatements_in_block ~cf vm Functions fb
-      >>= fun (vm, ufb) ->
-      semantic_check_functions_have_defn vm ufb |> map ~f:(fun _ -> ufb)
-      >>= fun ufb -> semantic_check_ostatements_in_block ~cf vm Data db
+      >>= fun (vm, xs) ->
+      Debug.eprint "----- check functions have defn -----";
+      Symbol_table.debug vm;
+      semantic_check_functions_have_defn vm xs |> map ~f:(fun _ -> xs)
+      >>= fun ufb ->
+      Debug.eprint "----- data block -----";
+      Symbol_table.debug vm;
+      semantic_check_ostatements_in_block ~cf vm Data db
       >>= fun (vm, udb) ->
+      Debug.eprint "----- transformed data block -----";
+      Symbol_table.debug vm;
       semantic_check_ostatements_in_block ~cf vm TData tdb
       >>= fun (vm, utdb) ->
+      Debug.eprint "----- parameters block -----";
+      Symbol_table.debug vm;
       semantic_check_ostatements_in_block ~cf vm Param pb
       >>= fun (vm, upb) ->
+      Debug.eprint "----- transformed parameters block -----";
+      Symbol_table.debug vm;
       semantic_check_ostatements_in_block ~cf vm TParam tpb
       >>= fun (vm, utpb) ->
       (* Model top level variables only assigned and read in model  *)
-      let vm' = Symbol_table.begin_scope vm in
-      semantic_check_ostatements_in_block ~cf vm' Model mb
-      >>= fun (vm', umb) ->
-      let vm = Symbol_table.end_scope vm' in
+      Debug.eprint "----- model block - before begin scope -----";
+      Symbol_table.debug vm;
+      semantic_check_ostatements_in_block ~cf vm Model mb
+      >>= fun (_, umb) ->
+      Debug.eprint "----- model block - end scope; generated quantities block  -----";
+      Symbol_table.debug vm;
       semantic_check_ostatements_in_block ~cf vm GQuant gb
       >>= fun (_, ugb) ->
       Validate.ok { functionblock= ufb

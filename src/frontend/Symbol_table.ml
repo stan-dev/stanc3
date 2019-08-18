@@ -37,6 +37,13 @@ let enter s str ty =
 
 let look s str = Map.find s.table str
 
+let debug s =
+  Debug.eprint "Symbol table keys:";
+  Map.keys s.table |> List.to_string ~f:(fun s -> s) |> Debug.eprint ;
+  Debug.eprint "Symbol table stack:";
+  s.stack |> List.to_string ~f:(fun s -> s) |> Debug.eprint ;
+  ()
+
 let begin_scope s =
   { s with scopedepth = s.scopedepth + 1; stack= sentinel_new_scope :: s.stack }
 
