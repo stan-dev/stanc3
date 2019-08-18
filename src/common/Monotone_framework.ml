@@ -63,8 +63,8 @@ module Make
       |> List.concat
     in
     List.fold_left ~init:F.Label.Map.empty all_labels ~f:(fun accu lbl ->
-        let t = F.Label.Map.find_exn assocs lbl
-        and entry = F.Label.Map.find_exn analysis lbl in
+        let entry = F.Label.Map.find_exn analysis lbl 
+        and t = F.Label.Map.find_exn assocs lbl in      
         let exit = TF.apply all_props t entry in
         let data = {entry; exit} in
         match F.Label.Map.add accu ~key:lbl ~data with
