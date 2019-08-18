@@ -1,5 +1,7 @@
+open Core_kernel
 open Stmt
 
+val free_vars : ('a, 'b) Fixed.t -> String.Set.t
 val break : 'b -> ('a, 'b) Fixed.t
 val continue : 'b -> ('a, 'b) Fixed.t
 val skip : 'b -> ('a, 'b) Fixed.t

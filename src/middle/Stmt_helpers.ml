@@ -1,6 +1,28 @@
 open Core_kernel
 open Stmt
 
+(** Calculate the free (non-bound) variables in a statement *)
+let free_vars stmt =
+  let algebra : ('a, 'b, String.Set.t) Fixed.algebra = function
+    | _, Assignment ((_, idxs), x) ->
+        String.Set.(
+          union x @@ union_list
+          @@ List.concat_map ~f:Expr_helpers.index_bounds idxs)
+    | _, Return e_opt -> Option.value ~default:String.Set.empty e_opt
+    | _, TargetPE e -> e
+    | _, NRFunApp (_, fname, args) ->
+        String.Set.(union (singleton fname) @@ union_list args)
+    | _, IfElse (pred, ts, fs_opt) ->
+        String.Set.(
+          union pred @@ union ts @@ Option.value ~default:empty fs_opt)
+    | _, While (pred, body) -> String.Set.union pred body
+    | _, For {lower; upper; body; _} ->
+        String.Set.(union lower @@ union upper body)
+    | _, Block xs | _, SList xs -> String.Set.union_list xs
+    | _, Decl _ | _, Break | _, Continue | _, Skip -> String.Set.empty
+  in
+  Fixed.cata Expr_helpers.free_vars_algebra algebra stmt
+
 let break meta = Fixed.fix meta Break
 let continue meta = Fixed.fix meta Continue
 let skip meta = Fixed.fix meta Skip
