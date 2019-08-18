@@ -32,6 +32,7 @@ val is_fun : ?kind:Fun_kind.t -> ?name:string -> 'a Fixed.t -> bool
 val is_internal_fun : ?fn:Internal_fun.t -> 'a Fixed.t -> bool
 val is_operator : ?op:Operator.t -> 'a Fixed.t -> bool
 val is_trivial : 'a Fixed.t -> bool
+val free_vars_algebra : ('a, String.Set.t) Fixed.algebra
 val free_vars : 'a Fixed.t -> String.Set.t
 
 val contains_fun_algebra :

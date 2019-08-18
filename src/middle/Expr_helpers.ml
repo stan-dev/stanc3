@@ -108,18 +108,18 @@ let is_operator ?op expr =
 let is_trivial expr =
   match Fixed.pattern expr with Var _ | Lit _ -> true | _ -> false
 
-let free_vars expr =
-  let algebra : ('a, String.Set.t) Fixed.algebra = function
-    | _, Var n -> String.Set.singleton n
-    | _, Lit _ -> String.Set.empty
-    | _, TernaryIf (p, t, f) -> String.Set.union_list [p; t; f]
-    | _, EAnd (a, b) | _, EOr (a, b) -> String.Set.union a b
-    | _, Indexed (e, idxs) ->
-        List.map idxs ~f:(fun idx -> String.Set.union_list @@ index_bounds idx)
-        |> String.Set.union_list |> String.Set.union e
-    | _, FunApp (_, _, args) -> String.Set.union_list args
-  in
-  Fixed.cata algebra expr
+let free_vars_algebra : ('a, String.Set.t) Fixed.algebra = function
+  | _, Var n -> String.Set.singleton n
+  | _, Lit _ -> String.Set.empty
+  | _, TernaryIf (p, t, f) -> String.Set.union_list [p; t; f]
+  | _, EAnd (a, b) | _, EOr (a, b) -> String.Set.union a b
+  | _, Indexed (e, idxs) ->
+      List.map idxs ~f:(fun idx -> String.Set.union_list @@ index_bounds idx)
+      |> String.Set.union_list |> String.Set.union e
+  | _, FunApp (_, fn_name, args) -> String.Set.(add (union_list args) fn_name)
+
+(** Calculate the free (non-bound) variables in an expression *)
+let free_vars expr = Fixed.cata free_vars_algebra expr
 
 let contains_fun_algebra ?kind ?name = function
   | _, Expr.Fixed.Pattern.FunApp (fun_kind, fun_name, args) ->
