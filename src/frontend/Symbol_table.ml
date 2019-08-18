@@ -4,7 +4,7 @@ open Core_kernel
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
 We could just keep track of the count of the entry into the hash table and use that for comparison. *)
-type 'a state =
+type 'a t =
   { table: (string, 'a, String.comparator_witness) Map.t
   ; stack: string List.t
   ; scopedepth: int

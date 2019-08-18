@@ -4,7 +4,6 @@
    during parsing and are in fact irrelevant for building up the parse tree *)
 
 open Core_kernel
-open Symbol_table
 open Middle
 open Ast
 open Errors
@@ -1032,7 +1031,7 @@ let semantic_check_sampling_cdf_defined ~loc vm id truncation args =
         ok ()
     | _ -> error @@ Semantic_error.invalid_truncation_cdf_or_ccdf loc)
 
-let semantic_check_tilde ~loc ~(cf: context_flags_record) (vm: (originblock * unsizedtype) state) distribution truncation arg args =
+let semantic_check_tilde ~loc ~(cf: context_flags_record) (vm: (originblock * unsizedtype) Symbol_table.t) distribution truncation arg args =
   Validate.(
     let ue = semantic_check_expression vm cf arg
     and ues = List.map ~f:(semantic_check_expression vm cf) args |> sequence
@@ -1564,7 +1563,7 @@ and semantic_check_fundef ~loc ~cf vm return_ty id args body =
 
 (* -- Top-level Statements -------------------------------------------------- *)
 and semantic_check_statement vm cf (s : Ast.untyped_statement) :
-  ((originblock * unsizedtype) state * Ast.typed_statement) Validate.t =
+  ((originblock * unsizedtype) Symbol_table.t * Ast.typed_statement) Validate.t =
   let loc = s.smeta.loc in
   let vm_read_only = Validate.map ~f:(fun res -> (vm, res)) in
   match s.stmt with
