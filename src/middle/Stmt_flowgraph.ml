@@ -50,22 +50,18 @@ final ( [For { v ; lb; ub; S }]^l )        = { l } ∪ break-ret(S)
 let rec finals ?init:(accu = Int_label.Set.empty) stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
-  | IfElse (_, ts,  fs_opt) -> 
-    finals ts 
-      ~init:(Option.value_map ~default:accu ~f:(finals ~init:accu) fs_opt)
-  
+  | IfElse (_, ts, fs_opt) ->
+      finals ts
+        ~init:(Option.value_map ~default:accu ~f:(finals ~init:accu) fs_opt)
   | While (_, body) | For {body; _} ->
       break_return (Int_label.Set.add accu cur_label) body
-
   | SList xs | Block xs -> (
     match List.last xs with
     | Some x -> continue (finals ~init:accu x) stmt
     | _ -> accu )
-
   | Assignment _ | TargetPE _ | NRFunApp _ | Break | Continue | Return _
    |Decl _ | Skip ->
       Int_label.Set.add accu cur_label
-
 
 (**
 break-ret ( [Assignment ((id,index), rhs)]^l ) = { } 
@@ -85,11 +81,10 @@ and break_return accu stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
   | Break | Return _ -> Int_label.Set.add accu cur_label
-  | IfElse (_, ts, fs_opt) -> 
-    break_return 
-      (Option.value_map ~default:accu ~f:(break_return accu) fs_opt) 
-      ts
-  
+  | IfElse (_, ts, fs_opt) ->
+      break_return
+        (Option.value_map ~default:accu ~f:(break_return accu) fs_opt)
+        ts
   | SList xs | Block xs -> List.fold_left ~init:accu xs ~f:break_return
   | Assignment _ | TargetPE _ | NRFunApp _ | Continue | Decl _ | While _
    |For _ | Skip ->
@@ -113,9 +108,8 @@ and continue accu stmt =
   let cur_label = Labelled.label_of stmt in
   match Fixed.pattern stmt with
   | Continue -> Int_label.Set.add accu cur_label
-  | IfElse (_, ts, fs_opt) -> 
-    continue (Option.value_map ~default:accu ~f:(continue accu) fs_opt) ts
-
+  | IfElse (_, ts, fs_opt) ->
+      continue (Option.value_map ~default:accu ~f:(continue accu) fs_opt) ts
   | SList xs | Block xs -> List.fold_left ~init:accu xs ~f:continue
   | Assignment _ | TargetPE _ | NRFunApp _ | Decl _ | Break | Return _
    |While _ | For _ | Skip ->
@@ -171,14 +165,11 @@ let rec flow ?init:(accu = []) stmt =
   | IfElse (_, ts, _) ->
       let init_ts = initial ts in
       flow ~init:((cur_label, init_ts) :: accu) ts
-  | SList xs | Block xs -> 
-    Option.value_map ~default:accu  (List.hd xs)
-      ~f:(fun next -> 
-        let init_next = initial next in
-        let accu' = (cur_label, init_next) :: accu in
-        pairwise ~init:accu' xs
-      )
-  
+  | SList xs | Block xs ->
+      Option.value_map ~default:accu (List.hd xs) ~f:(fun next ->
+          let init_next = initial next in
+          let accu' = (cur_label, init_next) :: accu in
+          pairwise ~init:accu' xs )
 
 and pairwise ~init = function
   | x :: y :: xs ->
