@@ -104,19 +104,6 @@ module Kill_gen :
 
   let diff p1 p2 = Assignment.Set.diff p1 p2
   let union p1 p2 = Assignment.Set.union p1 p2
-end
-
-module TF = Transfer_function.Make_using_kill_gen (Kill_gen)
-
-module L :
-  Lattice.S with type t = Stmt.Labelled.t and type property = Assignment.Set.t =
-struct
-  type t = Stmt.Labelled.t
-  type property = Assignment.Set.t
-
-  let leq a b = Assignment.Set.is_subset a ~of_:b
-  let lub a b = Assignment.Set.union a b
-  let least_element_of _ = Assignment.Set.empty
 
   let extremal_value_of stmt =
     Stmt_helpers.free_vars stmt
@@ -124,5 +111,13 @@ struct
     |> List.map ~f:(fun var -> (var, None))
     |> Assignment.Set.of_list
 end
+
+module TF = Transfer_function.Make_using_kill_gen (Kill_gen)
+
+module L = Lattice.Make_powerset (struct
+  type t = Stmt.Labelled.t
+
+  module Property = Assignment
+end)
 
 include Monotone_framework.Make (Stmt_flowgraph.Forward) (L) (TF)

@@ -7,6 +7,7 @@ module type Kill_gen = sig
   val kill : property -> t -> property
   val gen : t -> property
   val all_properties_of : t -> property
+  val extremal_value_of : t -> property
 end
 
 module type S = sig
@@ -14,6 +15,10 @@ module type S = sig
   type property
 
   val all_properties_of : t -> property
+  (**  An initial value, which might not be the top element.
+       The idea is that this is the property that you start with
+       (you assume to be true at the start of your analysis). *)
+  val extremal_value_of : t -> property
   val apply : property -> t -> property -> property
 end
 
@@ -23,4 +28,5 @@ module Make_using_kill_gen (X : Kill_gen) :
     X.kill prop_star t |> X.diff prop |> X.union (X.gen t)
 
   let all_properties_of = X.all_properties_of
+  let extremal_value_of = X.extremal_value_of
 end

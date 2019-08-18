@@ -4,12 +4,12 @@ For each program point, which expressions _must_ have already been computed, and
 not later modified, on all paths to the program point
 *)
 open Core_kernel
+
 open Common
 
 type t = Stmt.Labelled.t
 
 module Label = Int_label
-
 
 type property = Expr.Labelled.Set.t
 
@@ -28,7 +28,6 @@ module KillGen :
         |> List.filter_map ~f:(fun expr ->
                if Expr_helpers.is_trivial expr then None else Some expr )
         |> Expr.Labelled.Set.of_list
-
     | Assignment ((x, []), rhs) ->
         Expr.Labelled.associate rhs
         |> Int_label.Map.to_alist
@@ -42,7 +41,8 @@ module KillGen :
 
   let all_properties_of stmt =
     let assocs = Stmt.Labelled.associate stmt in
-    Int_label.Map.to_alist assocs.exprs |> List.map ~f:snd |> Expr.Labelled.Set.of_list
+    Int_label.Map.to_alist assocs.exprs
+    |> List.map ~f:snd |> Expr.Labelled.Set.of_list
 
   let kill prop_star stmt =
     match Stmt.Fixed.pattern stmt with
@@ -55,23 +55,20 @@ module KillGen :
 
   let diff = Expr.Labelled.Set.diff
   let union = Expr.Labelled.Set.union
+  let extremal_value_of (_ : t) = Expr.Labelled.Set.empty
 end
 
 module TF = Transfer_function.Make_using_kill_gen (KillGen)
 
-module L :
-  Lattice.S with type t = Stmt.Labelled.t and type property = Expr.Labelled.Set.t =
-struct
+module L = Lattice.Make_dual_powerset (struct
   type t = Stmt.Labelled.t
-  type property = Expr.Labelled.Set.t
 
-  let least_element_of x =
-    let assocs = Stmt.Labelled.associate x in
-    Int_label.Map.to_alist assocs.exprs |> List.map ~f:snd |> Expr.Labelled.Set.of_list
+  module Property = Expr.Labelled
 
-  let extremal_value_of (_ : t) = Expr.Labelled.Set.empty
-  let leq a b = Expr.Labelled.Set.is_subset b ~of_:a
-  let lub a b = Expr.Labelled.Set.inter a b
-end
+  let greatest_element_of stmt =
+    let assocs = Stmt.Labelled.associate stmt in
+    Int_label.Map.to_alist assocs.exprs
+    |> List.map ~f:snd |> Expr.Labelled.Set.of_list
+end)
 
 include Monotone_framework.Make (Stmt_flowgraph.Forward) (L) (TF)

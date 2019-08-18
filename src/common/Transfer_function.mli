@@ -7,6 +7,7 @@ module type Kill_gen = sig
   val kill : property -> t -> property
   val gen : t -> property
   val all_properties_of : t -> property
+  val extremal_value_of : t -> property
 end
 
 module type S = sig
@@ -14,6 +15,7 @@ module type S = sig
   type property
 
   val all_properties_of : t -> property
+  val extremal_value_of : t -> property
   val apply : property -> t -> property -> property
 end
 
