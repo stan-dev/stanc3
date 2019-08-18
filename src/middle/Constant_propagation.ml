@@ -1,3 +1,9 @@
+(** Constant Propagation Analysis
+
+For each program point, whether or not a variable has a constant value whenever
+execution reaches that point
+
+*)
 open Core_kernel
 open Common
 
