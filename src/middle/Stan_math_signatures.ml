@@ -71,7 +71,9 @@ let operator_stan_math_return_type op arg_tys =
 
 let pretty_print_all_math_lib_fn_sigs name =
   let name = Utils.stdlib_distribution_name name in
-  let namematches = Hashtbl.find_multi stan_math_signatures name in
+  let namematches =
+    Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
+  in
   if List.length namematches = 0 then ""
   else
     "\n"
