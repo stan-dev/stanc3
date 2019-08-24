@@ -95,3 +95,6 @@ val is_indexing_matrix : unsizedtype * 'e index list -> bool
 
 val stan_math_signatures :
   (returntype * (autodifftype * unsizedtype) list) list String.Table.t
+
+val manual_stan_math_signatures :
+  (returntype * (autodifftype * unsizedtype) list) list String.Table.t

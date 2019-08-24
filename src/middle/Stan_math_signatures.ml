@@ -25,6 +25,10 @@ let is_primitive = function UReal -> true | UInt -> true | _ -> false
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
 
+(** All of the signatures that are added by hand, rather than the ones
+    added "declaratively" *)
+let manual_stan_math_signatures = String.Table.create ()
+
 let rec bare_array_type (t, i) =
   match i with 0 -> t | j -> UArray (bare_array_type (t, j - 1))
 
@@ -62,7 +66,7 @@ let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UArray t
 
 let add_unqualified (name, rt, uqargts) =
-  Hashtbl.add_multi stan_math_signatures ~key:name
+  Hashtbl.add_multi manual_stan_math_signatures ~key:name
     ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
 
 let base_order = [UInt; UReal; URowVector; UVector; UMatrix]
@@ -85,7 +89,7 @@ let promote_base args =
     args
   |> Option.value_exn |> ints_to_real
 
-let add_declarative_sig (fnkinds, name, args) =
+let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
     | Lpdf -> ["_lpdf"; "_log"]
@@ -125,7 +129,8 @@ let add_declarative_sig (fnkinds, name, args) =
   in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
-  |> List.iter ~f:add_unqualified
+  |> List.map ~f:(fun (n, rt, args) ->
+         (n, rt, List.map ~f:(fun x -> (AutoDiffable, x)) args) )
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
@@ -231,7 +236,9 @@ let math_sigs =
   ; ([DimPromoting], "trigamma", [DDeepVectorized]) ]
 
 let all_declarative_sigs = distributions @ math_sigs
-let add_declarative_fnsigs = List.iter ~f:add_declarative_sig
+
+let declarative_fnsigs =
+  List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
@@ -355,15 +362,6 @@ let all_vector_types = function
 
 let all_vector_types_size = 6
 
-let eigen_vector_types = function
-  | 0 -> UVector
-  | 1 -> UArray UVector
-  | 2 -> URowVector
-  | 3 -> UArray URowVector
-  | i -> raise_s [%sexp (i : int)]
-
-let eigen_vector_types_size = 4
-
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
 
@@ -385,7 +383,8 @@ let for_vector_types s =
 
 (* -- Start populating stan_math_signaturess -- *)
 let () =
-  add_declarative_fnsigs all_declarative_sigs ;
+  List.iter declarative_fnsigs ~f:(fun (key, rt, args) ->
+      Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args) ) ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
   for i = 0 to bare_types_size - 1 do
@@ -1372,4 +1371,9 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [UVector]) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;
-  add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix])
+  add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix]) ;
+  (* Now add all the manually added stuff to the main hashtable used
+     for type-checking *)
+  Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
+      List.iter data ~f:(fun data ->
+          Hashtbl.add_multi stan_math_signatures ~key ~data ) )
