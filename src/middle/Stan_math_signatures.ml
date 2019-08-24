@@ -5,17 +5,17 @@ open Type_conversion
 open Mir
 
 type dimensionality =
-  | DInt
   | DReal
   | DInts
   | DReals
   | DIntAndReals
-  | DRealAndVector
+  | D1DeepReals
+  | DArrayAndVectors
   | DVectors
   | DVector
   | DMatrix
 
-type dist_fn = Lpmf | Lpdf | Rng | Cdf | Ccdf
+type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | Functional
 
 let vector_types_l = [UReal; UArray UReal; UVector; URowVector]
 let is_primitive = function UReal -> true | UInt -> true | _ -> false
@@ -31,14 +31,14 @@ let add_unqualified (name, rt, uqargts) =
     ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
 
 let rec expand_arg = function
-  | DInt -> [UInt]
   | DReal -> [UReal]
   | DReals -> [UReal; UArray UReal; UVector; URowVector]
   | DInts -> [UInt; UArray UInt]
   | DIntAndReals -> expand_arg DReals @ expand_arg DInts
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
+  | DArrayAndVectors -> UArray UReal :: expand_arg DVectors
+  | D1DeepReals -> [UArray UReal; UVector; URowVector]
   | DVector -> [UVector]
-  | DRealAndVector -> [UReal; UVector]
   | DMatrix -> [UMatrix]
 
 (* XXX The correct word here isn't combination - what is it? *)
@@ -55,22 +55,30 @@ let%expect_test "combinations " =
 
 let missing_math_functions = String.Set.of_list ["beta_proportion_cdf"]
 
-let add_declarative_sig (fnkinds, rt, name, args) =
+let add_declarative_sig (fnkinds, name, args) =
   let sfxes = function
-    | Lpmf -> ["lpmf"; "log"]
-    | Lpdf -> ["lpdf"; "log"]
-    | Rng -> ["rng"]
-    | Cdf -> ["cdf"; "cdf_log"; "lcdf"]
-    | Ccdf -> ["ccdf_log"; "lccdf"]
+    | Lpmf -> ["_lpmf"; "_log"]
+    | Lpdf -> ["_lpdf"; "_log"]
+    | Rng -> ["_rng"]
+    | Cdf -> ["_cdf"; "_cdf_log"; "_lcdf"]
+    | Ccdf -> ["_ccdf_log"; "_lccdf"]
+    | Functional -> [""]
   in
   let add_ints = function DReals -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
-    | DInt | DInts -> UInt
+    | DInts -> UInt
     (* XXX fix this up to work with more RNGs *)
-    | DReal | DReals | DIntAndReals | DRealAndVector | DVectors | DVector
-     |DMatrix ->
-        UReal
+    | _ -> UReal
+  in
+  let find_rt rt args = function
+    | Rng -> ReturnType (rng_return_type rt args)
+    | _ -> ReturnType UReal
+  in
+  let create_from_fk_args fk arglists =
+    List.concat_map arglists ~f:(fun args ->
+        List.map (sfxes fk) ~f:(fun sfx ->
+            (name ^ sfx, find_rt UReal args fk, args) ) )
   in
   let add_fnkind = function
     | Rng ->
@@ -79,11 +87,8 @@ let add_declarative_sig (fnkinds, rt, name, args) =
         let rt = promoted_dim rt in
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
-            (name, ReturnType (rng_return_type rt args), args) )
-    | fk ->
-        List.concat_map (all_expanded args) ~f:(fun args ->
-            List.map (sfxes fk) ~f:(fun sfx ->
-                (name ^ "_" ^ sfx, ReturnType rt, args) ) )
+            (name, find_rt rt args Rng, args) )
+    | fk -> create_from_fk_args fk (all_expanded args)
   in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
@@ -93,53 +98,58 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let distributions =
-  [ (full_lpmf, UReal, "beta_binomial", [DInts; DInts; DReals; DReals])
-  ; (full_lpdf, UReal, "beta", [DReals; DReals; DReals])
-  ; ( [Lpdf; Ccdf; Cdf]
-    , UReal
-    , "beta_proportion"
-    , [DReals; DReals; DIntAndReals] )
-  ; (full_lpmf, UReal, "bernoulli", [DInts; DReals])
-  ; ([Lpmf; Rng], UReal, "bernoulli_logit", [DInts; DReals])
-  ; (full_lpmf, UReal, "binomial", [DInts; DInts; DReals])
-  ; ([Lpmf], UReal, "binomial_logit", [DInts; DInts; DReals])
-  ; ([Lpmf], UReal, "categorical", [DInts; DVector])
-  ; ([Lpmf], UReal, "categorical_logit", [DInts; DVector])
-  ; (full_lpdf, UReal, "cauchy", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "chi_square", [DReals; DReals])
-  ; ([Lpdf], UReal, "dirichlet", [DVector; DVector])
-  ; (full_lpdf, UReal, "double_exponential", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "exp_mod_normal", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "exponential", [DReals; DReals])
-  ; (full_lpdf, UReal, "frechet", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "gamma", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "gumbel", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "inv_chi_square", [DReals; DReals])
-  ; (full_lpdf, UReal, "inv_gamma", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "logistic", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "lognormal", [DReals; DReals; DReals])
-  ; ([Lpdf], UReal, "multi_gp", [DMatrix; DMatrix; DVector])
-  ; ([Lpdf], UReal, "multi_gp_cholesky", [DMatrix; DMatrix; DVector])
-  ; ([Lpdf], UReal, "multi_normal", [DVectors; DVectors; DMatrix])
-  ; ([Lpdf], UReal, "multi_normal_cholesky", [DVectors; DVectors; DMatrix])
-  ; ([Lpdf], UReal, "multi_normal_prec", [DVectors; DVectors; DMatrix])
-  ; ([Lpdf], UReal, "multi_student_t", [DVectors; DReal; DVectors; DMatrix])
-  ; (full_lpmf, UReal, "neg_binomial", [DInts; DReals; DReals])
-  ; (full_lpmf, UReal, "neg_binomial_2", [DInts; DReals; DReals])
-  ; ([Lpmf; Rng], UReal, "neg_binomial_2_log", [DInts; DReals; DReals])
-  ; (full_lpdf, UReal, "normal", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "pareto", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "pareto_type_2", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "rayleigh", [DReals; DReals])
-  ; (full_lpdf, UReal, "scaled_inv_chi_square", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "skew_normal", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "student_t", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "uniform", [DReals; DReals; DReals])
-  ; ([Lpdf; Rng], UReal, "von_mises", [DReals; DReals; DReals])
-  ; (full_lpdf, UReal, "weibull", [DReals; DReals; DReals])
-  ; ([Lpdf], UReal, "wiener", [DReals; DReals; DReals; DReals; DReals])
-  ; ([Lpdf], UReal, "wishart", [DMatrix; DReal; DMatrix]) ]
+  [ (full_lpmf, "beta_binomial", [DInts; DInts; DReals; DReals])
+  ; (full_lpdf, "beta", [DReals; DReals; DReals])
+  ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DReals; DReals; DIntAndReals])
+  ; (full_lpmf, "bernoulli", [DInts; DReals])
+  ; ([Lpmf; Rng], "bernoulli_logit", [DInts; DReals])
+  ; (full_lpmf, "binomial", [DInts; DInts; DReals])
+  ; ([Lpmf], "binomial_logit", [DInts; DInts; DReals])
+  ; ([Lpmf], "categorical", [DInts; DVector])
+  ; ([Lpmf], "categorical_logit", [DInts; DVector])
+  ; (full_lpdf, "cauchy", [DReals; DReals; DReals])
+  ; (full_lpdf, "chi_square", [DReals; DReals])
+  ; ([Lpdf], "dirichlet", [DVector; DVector])
+  ; (full_lpdf, "double_exponential", [DReals; DReals; DReals])
+  ; (full_lpdf, "exp_mod_normal", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, "exponential", [DReals; DReals])
+  ; (full_lpdf, "frechet", [DReals; DReals; DReals])
+  ; (full_lpdf, "gamma", [DReals; DReals; DReals])
+  ; (full_lpdf, "gumbel", [DReals; DReals; DReals])
+  ; (full_lpdf, "inv_chi_square", [DReals; DReals])
+  ; (full_lpdf, "inv_gamma", [DReals; DReals; DReals])
+  ; (full_lpdf, "logistic", [DReals; DReals; DReals])
+  ; (full_lpdf, "lognormal", [DReals; DReals; DReals])
+  ; ([Lpdf], "multi_gp", [DMatrix; DMatrix; DVector])
+  ; ([Lpdf], "multi_gp_cholesky", [DMatrix; DMatrix; DVector])
+  ; ([Lpdf], "multi_normal", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], "multi_normal_cholesky", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], "multi_normal_prec", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], "multi_student_t", [DVectors; DReal; DVectors; DMatrix])
+  ; (full_lpmf, "neg_binomial", [DInts; DReals; DReals])
+  ; (full_lpmf, "neg_binomial_2", [DInts; DReals; DReals])
+  ; ([Lpmf; Rng], "neg_binomial_2_log", [DInts; DReals; DReals])
+  ; (full_lpdf, "normal", [DReals; DReals; DReals])
+  ; (full_lpdf, "pareto", [DReals; DReals; DReals])
+  ; (full_lpdf, "pareto_type_2", [DReals; DReals; DReals; DReals])
+  ; (full_lpmf, "poisson", [DInts; DReals])
+  ; ([Lpmf; Rng], "poisson_log", [DInts; DReals])
+  ; (full_lpdf, "rayleigh", [DReals; DReals])
+  ; (full_lpdf, "scaled_inv_chi_square", [DReals; DReals; DReals])
+  ; (full_lpdf, "skew_normal", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, "student_t", [DReals; DReals; DReals; DReals])
+  ; ([Lpdf], "std_normal", [DReals])
+  ; (full_lpdf, "uniform", [DReals; DReals; DReals])
+  ; ([Lpdf; Rng], "von_mises", [DReals; DReals; DReals])
+  ; (full_lpdf, "weibull", [DReals; DReals; DReals])
+  ; ([Lpdf], "wiener", [DReals; DReals; DReals; DReals; DReals])
+  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix]) ]
 
+let math_sigs =
+  [ ([Functional], "log_mix", [D1DeepReals; DArrayAndVectors])
+  ; ([Functional], "log_mix", [DReal; DReal; DReal]) ]
+
+let all_declarative_sigs = distributions @ math_sigs
 let add_declarative_fnsigs = List.iter ~f:add_declarative_sig
 
 (* -- Querying stan_math_signatures -- *)
@@ -249,13 +259,6 @@ let vector_types = function
 
 let vector_types_size = 4
 
-let int_vector_types = function
-  | 0 -> UInt
-  | 1 -> UArray UInt
-  | i -> raise_s [%sexp (i : int)]
-
-let int_vector_types_size = 2
-
 let primitive_types = function
   | 0 -> UInt
   | 1 -> UReal
@@ -323,11 +326,6 @@ let for_all_vector_types s =
     s (all_vector_types i)
   done
 
-let for_int_vector_types s =
-  for i = 0 to int_vector_types_size - 1 do
-    s (int_vector_types i)
-  done
-
 let for_vector_types s =
   for i = 0 to vector_types_size - 1 do
     s (vector_types i)
@@ -335,7 +333,7 @@ let for_vector_types s =
 
 (* -- Start populating stan_math_signaturess -- *)
 let () =
-  add_declarative_fnsigs distributions ;
+  add_declarative_fnsigs all_declarative_sigs ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
   add_unary_vectorized "acos" ;
@@ -864,21 +862,6 @@ let () =
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
   add_binary "log_diff_exp" ;
   add_binary "log_falling_factorial" ;
-  add_ternary "log_mix" ;
-  for i = 1 to vector_types_size - 1 do
-    for j = 1 to vector_types_size - 1 do
-      add_unqualified
-        ("log_mix", ReturnType UReal, [vector_types i; vector_types j])
-    done ;
-    add_unqualified
-      ( "log_mix"
-      , ReturnType UReal
-      , [vector_types i; bare_array_type (UVector, 1)] ) ;
-    add_unqualified
-      ( "log_mix"
-      , ReturnType UReal
-      , [vector_types i; bare_array_type (URowVector, 1)] )
-  done ;
   add_binary "log_rising_factorial" ;
   add_unary_vectorized "log_inv_logit" ;
   add_unqualified ("log_softmax", ReturnType UVector, [UVector]) ;
@@ -1111,48 +1094,6 @@ let () =
   add_unqualified ("plus", ReturnType UVector, [UVector]) ;
   add_unqualified ("plus", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("plus", ReturnType UMatrix, [UMatrix]) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "poisson_ccdf_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("poisson_cdf", ReturnType UReal, [int_vector_types i; vector_types j]) ;
-      add_unqualified
-        ( "poisson_cdf_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("poisson_log", ReturnType UReal, [int_vector_types i; vector_types j]) ;
-      add_unqualified
-        ( "poisson_lccdf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("poisson_lcdf", ReturnType UReal, [int_vector_types i; vector_types j]) ;
-      add_unqualified
-        ("poisson_lpmf", ReturnType UReal, [int_vector_types i; vector_types j])
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("poisson_rng", ReturnType (rng_return_type UInt [t]), [t]) ) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "poisson_log_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "poisson_log_lpmf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] )
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("poisson_log_rng", ReturnType (rng_return_type UInt [t]), [t]) ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
@@ -1318,10 +1259,6 @@ let () =
   add_unary_vectorized "sqrt" ;
   add_nullary "sqrt2" ;
   add_unary_vectorized "square" ;
-  for i = 0 to vector_types_size - 1 do
-    add_unqualified ("std_normal_log", ReturnType UReal, [vector_types i]) ;
-    add_unqualified ("std_normal_lpdf", ReturnType UReal, [vector_types i])
-  done ;
   add_unary "step" ;
   add_unqualified ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt]) ;
   add_unqualified
