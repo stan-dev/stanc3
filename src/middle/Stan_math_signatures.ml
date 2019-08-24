@@ -4,8 +4,143 @@ open Core_kernel
 open Type_conversion
 open Mir
 
+type dimensionality =
+  | DInt
+  | DReal
+  | DInts
+  | DReals
+  | DIntAndReals
+  | DRealAndVector
+  | DVectors
+  | DVector
+  | DMatrix
+
+type dist_fn = Lpmf | Lpdf | Rng | Cdf | Ccdf
+
+let vector_types_l = [UReal; UArray UReal; UVector; URowVector]
+let is_primitive = function UReal -> true | UInt -> true | _ -> false
+
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
+
+let rng_return_type t lt =
+  if List.for_all ~f:is_primitive lt then t else UArray t
+
+let add_unqualified (name, rt, uqargts) =
+  Hashtbl.add_multi stan_math_signatures ~key:name
+    ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
+
+let rec expand_arg = function
+  | DInt -> [UInt]
+  | DReal -> [UReal]
+  | DReals -> [UReal; UArray UReal; UVector; URowVector]
+  | DInts -> [UInt; UArray UInt]
+  | DIntAndReals -> expand_arg DReals @ expand_arg DInts
+  | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
+  | DVector -> [UVector]
+  | DRealAndVector -> [UReal; UVector]
+  | DMatrix -> [UMatrix]
+
+(* XXX The correct word here isn't combination - what is it? *)
+let all_combinations xx =
+  List.fold_right xx ~init:[[]] ~f:(fun x accum ->
+      List.concat_map accum ~f:(fun acc ->
+          List.map ~f:(fun arg -> arg :: acc) x ) )
+
+let%expect_test "combinations " =
+  let a = all_combinations [[1; 2]; [3; 4]; [5; 6]] in
+  [%sexp (a : int list list)] |> Sexp.to_string_hum |> print_endline ;
+  [%expect
+    {| ((1 3 5) (2 3 5) (1 4 5) (2 4 5) (1 3 6) (2 3 6) (1 4 6) (2 4 6)) |}]
+
+let missing_math_functions = String.Set.of_list ["beta_proportion_cdf"]
+
+let add_declarative_sig (fnkinds, rt, name, args) =
+  let sfxes = function
+    | Lpmf -> ["lpmf"; "log"]
+    | Lpdf -> ["lpdf"; "log"]
+    | Rng -> ["rng"]
+    | Cdf -> ["cdf"; "cdf_log"; "lcdf"]
+    | Ccdf -> ["ccdf_log"; "lccdf"]
+  in
+  let add_ints = function DReals -> DIntAndReals | x -> x in
+  let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
+  let promoted_dim = function
+    | DInt | DInts -> UInt
+    (* XXX fix this up to work with more RNGs *)
+    | DReal | DReals | DIntAndReals | DRealAndVector | DVectors | DVector
+     |DMatrix ->
+        UReal
+  in
+  let add_fnkind = function
+    | Rng ->
+        let rt, args = (List.hd_exn args, List.tl_exn args) in
+        let args = List.map ~f:add_ints args in
+        let rt = promoted_dim rt in
+        let name = name ^ "_rng" in
+        List.map (all_expanded args) ~f:(fun args ->
+            (name, ReturnType (rng_return_type rt args), args) )
+    | fk ->
+        List.concat_map (all_expanded args) ~f:(fun args ->
+            List.map (sfxes fk) ~f:(fun sfx ->
+                (name ^ "_" ^ sfx, ReturnType rt, args) ) )
+  in
+  List.concat_map fnkinds ~f:add_fnkind
+  |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
+  |> List.iter ~f:add_unqualified
+
+let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
+let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
+
+let distributions =
+  [ (full_lpmf, UReal, "beta_binomial", [DInts; DInts; DReals; DReals])
+  ; (full_lpdf, UReal, "beta", [DReals; DReals; DReals])
+  ; ( [Lpdf; Ccdf; Cdf]
+    , UReal
+    , "beta_proportion"
+    , [DReals; DReals; DIntAndReals] )
+  ; (full_lpmf, UReal, "bernoulli", [DInts; DReals])
+  ; ([Lpmf; Rng], UReal, "bernoulli_logit", [DInts; DReals])
+  ; (full_lpmf, UReal, "binomial", [DInts; DInts; DReals])
+  ; ([Lpmf], UReal, "binomial_logit", [DInts; DInts; DReals])
+  ; ([Lpmf], UReal, "categorical", [DInts; DVector])
+  ; ([Lpmf], UReal, "categorical_logit", [DInts; DVector])
+  ; (full_lpdf, UReal, "cauchy", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "chi_square", [DReals; DReals])
+  ; ([Lpdf], UReal, "dirichlet", [DVector; DVector])
+  ; (full_lpdf, UReal, "double_exponential", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "exp_mod_normal", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "exponential", [DReals; DReals])
+  ; (full_lpdf, UReal, "frechet", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "gamma", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "gumbel", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "inv_chi_square", [DReals; DReals])
+  ; (full_lpdf, UReal, "inv_gamma", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "logistic", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "lognormal", [DReals; DReals; DReals])
+  ; ([Lpdf], UReal, "multi_gp", [DMatrix; DMatrix; DVector])
+  ; ([Lpdf], UReal, "multi_gp_cholesky", [DMatrix; DMatrix; DVector])
+  ; ([Lpdf], UReal, "multi_normal", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], UReal, "multi_normal_cholesky", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], UReal, "multi_normal_prec", [DVectors; DVectors; DMatrix])
+  ; ([Lpdf], UReal, "multi_student_t", [DVectors; DReal; DVectors; DMatrix])
+  ; (full_lpmf, UReal, "neg_binomial", [DInts; DReals; DReals])
+  ; (full_lpmf, UReal, "neg_binomial_2", [DInts; DReals; DReals])
+  ; ([Lpmf; Rng], UReal, "neg_binomial_2_log", [DInts; DReals; DReals])
+  ; (full_lpdf, UReal, "normal", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "pareto", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "pareto_type_2", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "rayleigh", [DReals; DReals])
+  ; (full_lpdf, UReal, "scaled_inv_chi_square", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "skew_normal", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "student_t", [DReals; DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "uniform", [DReals; DReals; DReals])
+  ; ([Lpdf; Rng], UReal, "von_mises", [DReals; DReals; DReals])
+  ; (full_lpdf, UReal, "weibull", [DReals; DReals; DReals])
+  ; ([Lpdf], UReal, "wiener", [DReals; DReals; DReals; DReals; DReals])
+  ; ([Lpdf], UReal, "wishart", [DMatrix; DReal; DMatrix]) ]
+
+let add_declarative_fnsigs = List.iter ~f:add_declarative_sig
 
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
@@ -147,14 +282,6 @@ let eigen_vector_types = function
   | i -> raise_s [%sexp (i : int)]
 
 let eigen_vector_types_size = 4
-let is_primitive = function UReal -> true | UInt -> true | _ -> false
-
-let rng_return_type t lt =
-  if List.for_all ~f:is_primitive lt then t else UArray t
-
-let add_unqualified (name, rt, uqargts) =
-  Hashtbl.add_multi stan_math_signatures ~key:name
-    ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
@@ -208,6 +335,7 @@ let for_vector_types s =
 
 (* -- Start populating stan_math_signaturess -- *)
 let () =
+  add_declarative_fnsigs distributions ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
   add_unary_vectorized "acos" ;
@@ -326,56 +454,6 @@ let () =
   add_unary_vectorized "atan" ;
   add_binary "atan2" ;
   add_unary_vectorized "atanh" ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "bernoulli_ccdf_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_cdf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_cdf_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_lccdf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_lcdf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_lpmf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] )
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("bernoulli_rng", ReturnType (rng_return_type UInt [t]), [t]) ) ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("bernoulli_logit_rng", ReturnType (rng_return_type UInt [t]), [t]) ) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "bernoulli_logit_log"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "bernoulli_logit_lpmf"
-        , ReturnType UReal
-        , [int_vector_types i; vector_types j] )
-    done
-  done ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
@@ -386,110 +464,7 @@ let () =
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
   add_unqualified ("bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
   add_unqualified ("bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to int_vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          add_unqualified
-            ( "beta_binomial_ccdf_log"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_cdf"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_cdf_log"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_log"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_lccdf"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_lcdf"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] ) ;
-          add_unqualified
-            ( "beta_binomial_lpmf"
-            , ReturnType UReal
-            , [ int_vector_types i; int_vector_types j; vector_types k
-              ; vector_types l ] )
-        done
-      done
-    done
-  done ;
-  for_int_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ( "beta_binomial_rng"
-                , ReturnType (rng_return_type UInt [t; u; v])
-                , [t; u; v] ) ) ) ) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "beta_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "beta_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("beta_rng", ReturnType (rng_return_type UReal [t; u]), [t; u]) )
-  ) ;
-  for_vector_types (fun t ->
-      for_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ("beta_proportion_ccdf_log", ReturnType UReal, [t; u; v]) ;
-              add_unqualified
-                ("beta_proportion_cdf_log", ReturnType UReal, [t; u; v]) ;
-              add_unqualified
-                ("beta_proportion_log", ReturnType UReal, [t; u; v]) ;
-              add_unqualified
-                ("beta_proportion_lccdf", ReturnType UReal, [t; u; v]) ;
-              add_unqualified
-                ("beta_proportion_lcdf", ReturnType UReal, [t; u; v]) ;
-              add_unqualified
-                ("beta_proportion_lpdf", ReturnType UReal, [t; u; v]) ) ) ) ;
+  (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
           add_unqualified
@@ -497,115 +472,11 @@ let () =
             , ReturnType (rng_return_type UReal [t; u])
             , [t; u] ) ) ) ;
   add_unqualified ("binary_log_loss", ReturnType UReal, [UInt; UReal]) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to int_vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "binomial_ccdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_cdf"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_cdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_log"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_lccdf"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_lcdf"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_lpmf"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_int_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("binomial_rng", ReturnType (rng_return_type UInt [t; u]), [t; u])
-      ) ) ;
   add_binary "binomial_coefficient_log" ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to int_vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "binomial_logit_log"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "binomial_logit_lpmf"
-          , ReturnType UReal
-          , [int_vector_types i; int_vector_types j; vector_types k] )
-      done
-    done
-  done ;
   add_unqualified
     ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt]) ;
-  for i = 0 to int_vector_types_size - 1 do
-    add_unqualified
-      ("categorical_log", ReturnType UReal, [int_vector_types i; UVector]) ;
-    add_unqualified
-      ("categorical_logit_log", ReturnType UReal, [int_vector_types i; UVector]) ;
-    add_unqualified
-      ("categorical_lpmf", ReturnType UReal, [int_vector_types i; UVector]) ;
-    add_unqualified
-      ( "categorical_logit_lpmf"
-      , ReturnType UReal
-      , [int_vector_types i; UVector] )
-  done ;
   add_unqualified ("categorical_rng", ReturnType UInt, [UVector]) ;
   add_unqualified ("categorical_logit_rng", ReturnType UInt, [UVector]) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "cauchy_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "cauchy_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("cauchy_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UVector; UMatrix]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UVector]) ;
@@ -616,31 +487,6 @@ let () =
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal]) ;
   add_unary_vectorized "cbrt" ;
   add_unary_vectorized "ceil" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "chi_square_ccdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("chi_square_cdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ( "chi_square_cdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("chi_square_log", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("chi_square_lccdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("chi_square_lcdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("chi_square_lpdf", ReturnType UReal, [vector_types i; vector_types j])
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("chi_square_rng", ReturnType (rng_return_type UReal [t]), [t]) ) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("choose", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt]) ;
@@ -747,8 +593,6 @@ let () =
       , ReturnType (bare_array_type (UInt, 1))
       , [bare_array_type (UMatrix, i + 1)] )
   done ;
-  add_unqualified ("dirichlet_log", ReturnType UReal, [UVector; UVector]) ;
-  add_unqualified ("dirichlet_lpdf", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector]) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector]) ;
@@ -769,46 +613,6 @@ let () =
     , [bare_array_type (UReal, 1); bare_array_type (UReal, 1)] ) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector]) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector]) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "double_exponential_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "double_exponential_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ( "double_exponential_rng"
-            , ReturnType (rng_return_type UReal [t; u])
-            , [t; u] ) ) ) ;
   add_nullary "e" ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix]) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix]) ;
@@ -834,84 +638,7 @@ let () =
   add_unary_vectorized "erfc" ;
   add_unary_vectorized "exp" ;
   add_unary_vectorized "exp2" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          add_unqualified
-            ( "exp_mod_normal_ccdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_cdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_cdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_lccdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_lcdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "exp_mod_normal_lpdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            )
-        done
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ( "exp_mod_normal_rng"
-                , ReturnType (rng_return_type UReal [t; u; v])
-                , [t; u; v] ) ) ) ) ;
   add_unary_vectorized "expm1" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "exponential_ccdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("exponential_cdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ( "exponential_cdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("exponential_log", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ( "exponential_lccdf"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("exponential_lcdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("exponential_lpdf", ReturnType UReal, [vector_types i; vector_types j])
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("exponential_rng", ReturnType (rng_return_type UReal [t]), [t]) ) ;
   add_unary_vectorized "fabs" ;
   add_unqualified ("falling_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("falling_factorial", ReturnType UInt, [UInt; UInt]) ;
@@ -921,86 +648,8 @@ let () =
   add_binary "fmax" ;
   add_binary "fmin" ;
   add_binary "fmod" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "frechet_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "frechet_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("frechet_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "gamma_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gamma_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
   add_binary "gamma_p" ;
   add_binary "gamma_q" ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("gamma_rng", ReturnType (rng_return_type UReal [t; u]), [t; u]) )
-  ) ;
   add_unqualified
     ( "gaussian_dlm_obs_log"
     , ReturnType UReal
@@ -1018,45 +667,6 @@ let () =
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] )
   (* ; add_nullary ("get_lp")   *) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "gumbel_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "gumbel_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("gumbel_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unqualified ("head", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("head", ReturnType UVector, [UVector; UInt]) ;
   for i = 0 to bare_types_size - 1 do
@@ -1214,81 +824,7 @@ let () =
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
   add_unary_vectorized "inv" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "inv_chi_square_ccdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_cdf"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_cdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_lccdf"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_lcdf"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ( "inv_chi_square_lpdf"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] )
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("inv_chi_square_rng", ReturnType (rng_return_type UReal [t]), [t]) ) ;
   add_unary_vectorized "inv_cloglog" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "inv_gamma_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "inv_gamma_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("inv_gamma_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unary_vectorized "inv_logit" ;
   add_unary_vectorized "inv_Phi" ;
   add_unary_vectorized "inv_sqrt" ;
@@ -1373,85 +909,7 @@ let () =
         ("logical_gte", ReturnType UInt, [primitive_types i; primitive_types j])
     done
   done ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "logistic_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "logistic_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("logistic_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unary_vectorized "logit" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "lognormal_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "lognormal_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("lognormal_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_nullary "machine_precision" ;
   add_qualified
     ( "map_rect"
@@ -1512,50 +970,6 @@ let () =
   add_unqualified
     ("modified_bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
   add_unqualified ("modulus", ReturnType UInt, [UInt; UInt]) ;
-  add_unqualified
-    ("multi_gp_log", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
-  add_unqualified
-    ("multi_gp_lpdf", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
-  add_unqualified
-    ("multi_gp_cholesky_log", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
-  add_unqualified
-    ("multi_gp_cholesky_lpdf", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
-  for k = 0 to eigen_vector_types_size - 1 do
-    for l = 0 to eigen_vector_types_size - 1 do
-      add_unqualified
-        ( "multi_normal_cholesky_log"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_normal_cholesky_lpdf"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_normal_log"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_normal_lpdf"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_normal_prec_log"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_normal_prec_lpdf"
-        , ReturnType UReal
-        , [eigen_vector_types k; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_student_t_log"
-        , ReturnType UReal
-        , [eigen_vector_types k; UReal; eigen_vector_types l; UMatrix] ) ;
-      add_unqualified
-        ( "multi_student_t_lpdf"
-        , ReturnType UReal
-        , [eigen_vector_types k; UReal; eigen_vector_types l; UMatrix] )
-    done
-  done ;
   add_unqualified ("multi_normal_rng", ReturnType UVector, [UVector; UMatrix]) ;
   add_unqualified
     ( "multi_normal_rng"
@@ -1613,94 +1027,6 @@ let () =
   add_binary "multiply_log" ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix]) ;
-  for i = 0 to int_vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "neg_binomial_ccdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_cdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_cdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_lccdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_lcdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_lpmf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_ccdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_cdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_cdf_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_lccdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_lcdf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_lpmf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_log_log"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "neg_binomial_2_log_lpmf"
-          , ReturnType UReal
-          , [int_vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ( "neg_binomial_rng"
-            , ReturnType (rng_return_type UInt [t; u])
-            , [t; u] ) ) ) ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ( "neg_binomial_2_rng"
-            , ReturnType (rng_return_type UInt [t; u])
-            , [t; u] ) ) ) ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ( "neg_binomial_2_log_rng"
-            , ReturnType (rng_return_type UInt [t; u])
-            , [t; u] ) ) ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
@@ -1710,45 +1036,6 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector; UReal] ) ;
   add_nullary "negative_infinity" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "normal_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "normal_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("normal_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
@@ -1816,95 +1103,6 @@ let () =
     , [bare_array_type (UInt, 1); UReal; bare_array_type (UVector, 1)] ) ;
   add_unqualified ("ordered_probit_rng", ReturnType UInt, [UReal; UVector]) ;
   add_binary "owens_t" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "pareto_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "pareto_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("pareto_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          add_unqualified
-            ( "pareto_type_2_ccdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_cdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_cdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_lccdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_lcdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "pareto_type_2_lpdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            )
-        done
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ( "pareto_type_2_rng"
-                , ReturnType (rng_return_type UReal [t; u; v])
-                , [t; u; v] ) ) ) ) ;
   add_unary_vectorized "Phi" ;
   add_unary_vectorized "Phi_approx" ;
   add_nullary "pi" ;
@@ -1980,29 +1178,6 @@ let () =
   add_unqualified ("rank", ReturnType UInt, [bare_array_type (UReal, 1); UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [URowVector; UInt]) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      add_unqualified
-        ( "rayleigh_ccdf_log"
-        , ReturnType UReal
-        , [vector_types i; vector_types j] ) ;
-      add_unqualified
-        ("rayleigh_cdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("rayleigh_cdf_log", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("rayleigh_log", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("rayleigh_lccdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("rayleigh_lcdf", ReturnType UReal, [vector_types i; vector_types j]) ;
-      add_unqualified
-        ("rayleigh_lpdf", ReturnType UReal, [vector_types i; vector_types j])
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      add_unqualified
-        ("rayleigh_rng", ReturnType (rng_return_type UReal [t]), [t]) ) ;
   add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("append_row", ReturnType UMatrix, [URowVector; UMatrix]) ;
   add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; URowVector]) ;
@@ -2059,46 +1234,6 @@ let () =
   add_unqualified ("rows_dot_self", ReturnType UVector, [UMatrix]) ;
   add_unqualified
     ("scale_matrix_exp_multiply", ReturnType UMatrix, [UReal; UMatrix; UMatrix]) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "scaled_inv_chi_square_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "scaled_inv_chi_square_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ( "scaled_inv_chi_square_rng"
-            , ReturnType (rng_return_type UReal [t; u])
-            , [t; u] ) ) ) ;
   add_unqualified ("sd", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("sd", ReturnType UReal, [UVector]) ;
   add_unqualified ("sd", ReturnType UReal, [URowVector]) ;
@@ -2129,56 +1264,6 @@ let () =
     add_unqualified ("size", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)])
   done ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          add_unqualified
-            ( "skew_normal_ccdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_cdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_cdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_lccdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_lcdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "skew_normal_lpdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            )
-        done
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ( "skew_normal_rng"
-                , ReturnType (rng_return_type UReal [t; u; v])
-                , [t; u; v] ) ) ) ) ;
   add_unqualified ("softmax", ReturnType UVector, [UVector]) ;
   add_unqualified
     ( "sort_asc"
@@ -2238,56 +1323,6 @@ let () =
     add_unqualified ("std_normal_lpdf", ReturnType UReal, [vector_types i])
   done ;
   add_unary "step" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          add_unqualified
-            ( "student_t_ccdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_cdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_cdf_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_log"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_lccdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_lcdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            ) ;
-          add_unqualified
-            ( "student_t_lpdf"
-            , ReturnType UReal
-            , [vector_types i; vector_types j; vector_types k; vector_types l]
-            )
-        done
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          for_all_vector_types (fun v ->
-              add_unqualified
-                ( "student_t_rng"
-                , ReturnType (rng_return_type UReal [t; u; v])
-                , [t; u; v] ) ) ) ) ;
   add_unqualified ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt]) ;
   add_unqualified
     ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt]) ;
@@ -2392,127 +1427,8 @@ let () =
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix]) ;
   add_unary_vectorized "trunc" ;
   add_unary_vectorized "trigamma" ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "uniform_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "uniform_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("uniform_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
   add_unqualified ("variance", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("variance", ReturnType UReal, [UVector]) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "von_mises_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "von_mises_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("von_mises_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        add_unqualified
-          ( "weibull_ccdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_cdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_cdf_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_log"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_lccdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_lcdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] ) ;
-        add_unqualified
-          ( "weibull_lpdf"
-          , ReturnType UReal
-          , [vector_types i; vector_types j; vector_types k] )
-      done
-    done
-  done ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_unqualified
-            ("weibull_rng", ReturnType (rng_return_type UReal [t; u]), [t; u])
-      ) ) ;
-  for i = 0 to vector_types_size - 1 do
-    for j = 0 to vector_types_size - 1 do
-      for k = 0 to vector_types_size - 1 do
-        for l = 0 to vector_types_size - 1 do
-          for m = 0 to vector_types_size - 1 do
-            add_unqualified
-              ( "wiener_log"
-              , ReturnType UReal
-              , [ vector_types i; vector_types j; vector_types k; vector_types l
-                ; vector_types m ] ) ;
-            add_unqualified
-              ( "wiener_lpdf"
-              , ReturnType UReal
-              , [ vector_types i; vector_types j; vector_types k; vector_types l
-                ; vector_types m ] )
-          done
-        done
-      done
-    done
-  done ;
-  add_unqualified ("wishart_log", ReturnType UReal, [UMatrix; UReal; UMatrix]) ;
-  add_unqualified ("wishart_lpdf", ReturnType UReal, [UMatrix; UReal; UMatrix]) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix])
