@@ -20,10 +20,6 @@ def tagName() {
 }
 pipeline {
     agent none
-    parameters {
-        booleanParam(defaultValue: false, name: 'all_tests',
-               description: "Check this box if you want to run all end-to-end tests.")
-    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -53,44 +49,8 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run small good model subset end-to-end") {
-            when {
-                beforeAgent true
-                not { anyOf { expression { params.all_tests};
-                             buildingTag(); branch 'master' } }
-            }
+        stage("Run all models end-to-end") {
             agent { label 'linux' }
-            steps {
-                unstash 'ubuntu-exe'
-                sh """
-          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                   """
-                sh """
-          cd performance-tests-cmdstan
-          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-          cat known_good_perf_all.tests
-          CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-           cd ..
-               """
-                junit 'performance-tests-cmdstan/performance.xml'
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
-        //This stage is just gonna try to run all the models we normally
-        //do for regression testing
-        //and log all the failures. It'll make a big nasty red graph
-        //that becomes blue over time as we fix more models :)
-        stage("Try to run all models end-to-end") {
-            when {
-                beforeAgent true
-                anyOf { expression { params.all_tests};
-                       buildingTag(); branch 'master' }
-            }
-            agent { label 'ec2-linux' }
             steps {
                 unstash 'ubuntu-exe'
                 sh """
@@ -102,7 +62,7 @@ pipeline {
           cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
           echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                """
                 xunit([GoogleTest(
                     deleteOutputFiles: false,
@@ -120,8 +80,8 @@ pipeline {
             }
             post { always {
                 runShell("rm -rf ./*")
-             } }
-             }
+            } }
+        }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             failFast true
@@ -131,7 +91,7 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
-                    opam update
+                    opam update || true
                     bash -x scripts/install_build_deps.sh
                     dune subst
                     dune build @install
@@ -176,8 +136,6 @@ pipeline {
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                         bat "bash -cl \"cd ..\""
-                        bat "bash -cl \"eval \$(opam env) opam update\""
-                        bat "bash -cl \"eval \$(opam env) ./scripts/install_build_deps.sh\""
                         bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                         stash name:'windows-exe', includes:'bin/*'

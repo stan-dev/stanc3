@@ -166,15 +166,15 @@ let%expect_test "parse minus unary" =
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
         ((((stmt
-            (VarDecl (sizedtype SReal) (transformation Identity)
+            (VarDecl (decl_type (Sized SReal)) (transformation Identity)
              (identifier ((name x) (id_loc <opaque>))) (initial_value ())
              (is_global false)))
            (smeta ((loc <opaque>))))
           ((stmt
             (Assignment
              (assign_lhs
-              ((assign_identifier ((name x) (id_loc <opaque>))) (assign_indices ())
-               (assign_meta ((loc <opaque>)))))
+              ((lval (LVariable ((name x) (id_loc <opaque>))))
+               (lmeta ((loc <opaque>)))))
              (assign_op Assign)
              (assign_rhs
               ((expr
@@ -198,7 +198,7 @@ let%expect_test "parse unary over binary" =
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
       ((((stmt
-          (VarDecl (sizedtype SReal) (transformation Identity)
+          (VarDecl (decl_type (Sized SReal)) (transformation Identity)
            (identifier ((name x) (id_loc <opaque>)))
            (initial_value
             (((expr
@@ -240,9 +240,10 @@ let%expect_test "parse indices, two different colons" =
        (modelblock
         ((((stmt
             (VarDecl
-             (sizedtype
-              (SMatrix ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
-               ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))))
+             (decl_type
+              (Sized
+               (SMatrix ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
+                ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
              (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
              (initial_value ()) (is_global false)))
            (smeta ((loc <opaque>))))
@@ -462,10 +463,11 @@ let%expect_test "parse crazy truncation example" =
        (modelblock
         ((((stmt
             (VarDecl
-             (sizedtype
-              (SArray
-               (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
-               ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
+             (decl_type
+              (Sized
+               (SArray
+                (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+                ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))))
              (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
              (initial_value
               (((expr

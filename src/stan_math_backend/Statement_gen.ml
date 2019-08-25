@@ -74,19 +74,32 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
-  | Assignment ((vident, []), ({emeta= {mtype= UInt; _}; _} as rhs))
-   |Assignment ((vident, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
+  | Assignment ((vident, _, []), ({emeta= {mtype= UInt; _}; _} as rhs))
+   |Assignment ((vident, _, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
       pf ppf "%s = %a;" vident pp_expr rhs
-  | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
+  | Assignment
+      ((id, _, idcs), ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->
-      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
-  | Assignment ((assignee, idcs), rhs) ->
+      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
+  | Assignment ((assignee, UInt, idcs), rhs)
+   |Assignment ((assignee, UReal, idcs), rhs)
+    when List.for_all ~f:is_single_index idcs ->
+      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
+  | Assignment ((assignee, ut, idcs), rhs)
+    when List.for_all ~f:is_single_index idcs
+         && not (is_indexing_matrix (ut, idcs)) ->
+      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
+  | Assignment ((assignee, _, idcs), rhs) ->
+      (* XXX I think in general we don't need to do a deepcopy if e is nested
+       inside some function call - the function should get its own copy
+       (in all cases???) *)
       let rec maybe_deep_copy e =
         let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
         match e with
-        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
-            recurse e
-        | {expr= Var v; _} when v = assignee ->
+        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} -> e
+        | {expr= FunApp (CompilerInternal, _, _); _} -> e
+        | ({expr= Indexed ({expr= Var v; _}, _); _} | {expr= Var v; _})
+          when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
         | e -> recurse e
@@ -101,7 +114,9 @@ let rec pp_statement (ppf : Format.formatter)
       in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
-        (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
+        (strf "assigning variable %s"
+           assignee
+           (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, args)
     when fname = string_of_internal_fn FnPrint ->

@@ -259,8 +259,11 @@ let semantic_check_fn_rng cf ~loc id =
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
+let mk_fun_app ~is_cond_dist (x, y, z) =
+  if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
+
 (* Regular function application *)
-let semantic_check_fn_normal ~loc id es =
+let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
     | Some (_, UFun (_, Void)) ->
@@ -277,7 +280,7 @@ let semantic_check_fn_normal ~loc id es =
         |> error
     | Some (_, UFun (_, ReturnType ut)) ->
         mk_typed_expression
-          ~expr:(FunApp (UserDefined, id, es))
+          ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
           ~ad_level:(lub_ad_e es) ~type_:ut ~loc
         |> ok
     | Some _ ->
@@ -288,14 +291,14 @@ let semantic_check_fn_normal ~loc id es =
         |> error)
 
 (* Stan-Math function application *)
-let semantic_check_fn_stan_math ~loc id es =
+let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
   match stan_math_returntype id.name (get_arg_types es) with
   | Some Void ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
   | Some (ReturnType ut) ->
       mk_typed_expression
-        ~expr:(FunApp (StanLib, id, es))
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
         ~ad_level:(lub_ad_e es) ~type_:ut ~loc
       |> Validate.ok
   | _ ->
@@ -320,10 +323,10 @@ let fn_kind_from_application id es =
 (** Determines the function kind based on the identifier and performs the
     corresponding semantic check
 *)
-let semantic_check_fn ~loc id es =
+let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib -> semantic_check_fn_stan_math ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~loc id es
+  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -361,6 +364,14 @@ let semantic_check_binop loc op (le, re) =
                ~type_ ~loc
              |> ok
          | Void -> error err ))
+
+let to_exn v =
+  v |> Validate.to_result
+  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
+  |> Result.ok_or_failwith
+
+let semantic_check_binop_exn loc op (le, re) =
+  semantic_check_binop loc op (le, re) |> to_exn
 
 (* -- Prefix Operators ------------------------------------------------------ *)
 
@@ -467,11 +478,13 @@ let semantic_check_rowvector ~loc es =
     else Semantic_error.invalid_row_vector_types loc |> error)
 
 (* -- Indexed Expressions --------------------------------------------------- *)
-let compose f g x = f @@ g x
 let tuple2 a b = (a, b)
 let tuple3 a b c = (a, b, c)
 
-let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
+let index_with_type idx =
+  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, UInt)
+
+let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux k ut xs =
     match (ut, xs) with
     | UMatrix, [(All, _); (Single _, UInt)]
@@ -492,18 +505,15 @@ let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
       | _ -> (
         match ut with
         | UArray inner_ty ->
-            let k' = compose k (Validate.map ~f:(fun t -> UArray t)) in
+            let k' = Fn.compose k (Validate.map ~f:(fun t -> UArray t)) in
             aux k' inner_ty rest
         | UVector | URowVector | UMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
   in
-  aux (fun x -> x) ut typed_idxs
+  aux Fn.id ut (List.map ~f:index_with_type indices)
 
-let inferred_unsizedtype_of_indexed_exn ~loc ut typed_idxs =
-  inferred_unsizedtype_of_indexed ~loc ut typed_idxs
-  |> Validate.to_result
-  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
-  |> Result.ok_or_failwith
+let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
+  inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
 
 let inferred_ad_type_of_indexed at uindices =
   lub_ad_type
@@ -517,9 +527,6 @@ let inferred_ad_type_of_indexed at uindices =
                lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
          uindices )
 
-let index_with_type idx =
-  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, UInt)
-
 let rec semantic_check_indexed ~loc ~cf e indices =
   Validate.(
     indices
@@ -529,7 +536,6 @@ let rec semantic_check_indexed ~loc ~cf e indices =
     >>= fun (ue, uindices) ->
     let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices in
     uindices
-    |> List.map ~f:index_with_type
     |> inferred_unsizedtype_of_indexed ~loc ue.emeta.type_
     |> map ~f:(fun ut ->
            mk_typed_expression
@@ -659,19 +665,12 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> List.map ~f:(semantic_check_expression cf)
     |> sequence
     >>= fun ues ->
-    semantic_check_fn ~loc:emeta.loc id ues
+    semantic_check_fn ~is_cond_dist ~loc:emeta.loc id ues
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
-    >>= fun e ->
-    ok
-      { e with
-        expr=
-          ( match e.expr with
-          | FunApp (fun_kind, id, ues) -> CondDistApp (fun_kind, id, ues)
-          | _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
@@ -865,22 +864,8 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
 let mk_assignment_from_indexed_expr assop lhs rhs =
-  match lhs with
-  | { expr=
-        Indexed
-          ( { expr= Variable id
-            ; emeta= {ad_level= id_ad_level; type_= id_type_; _} }
-          , idx )
-    ; emeta= {loc; ad_level= lhs_ad_level; type_= lhs_type_} } ->
-      Assignment
-        { assign_lhs=
-            { assign_identifier= id
-            ; assign_indices= idx
-            ; assign_meta= {loc; lhs_ad_level; lhs_type_; id_ad_level; id_type_}
-            }
-        ; assign_op= assop
-        ; assign_rhs= rhs }
-  | _ -> fatal_error ()
+  Assignment
+    {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
   Validate.(
@@ -906,16 +891,9 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
                    ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
                  |> ok ))
 
-let semantic_check_assignment ~loc ~cf assign_id assign_indices assign_op
-    assign_rhs =
-  let lhs =
-    Ast.mk_untyped_expression ~loc
-      ~expr:
-        (Indexed
-           ( Ast.mk_untyped_expression ~expr:(Variable assign_id)
-               ~loc:assign_id.id_loc
-           , assign_indices ))
-    |> semantic_check_expression cf
+let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
+  let assign_id = Ast.id_of_lvalue assign_lhs in
+  let lhs = expr_of_lvalue assign_lhs |> semantic_check_expression cf
   and assop = semantic_check_assignmentoperator assign_op
   and rhs = semantic_check_expression cf assign_rhs
   and block =
@@ -1373,8 +1351,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
   |> Option.value_map ~default:(Validate.ok None) ~f:(fun e ->
          let stmt =
            Assignment
-             { assign_lhs=
-                 {assign_identifier= id; assign_indices= []; assign_meta= {loc}}
+             { assign_lhs= {lval= LVariable id; lmeta= {loc}}
              ; assign_op= Assign
              ; assign_rhs= e }
          in
@@ -1412,7 +1389,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     |> map ~f:(fun uinit ->
            let stmt =
              VarDecl
-               { sizedtype= ust
+               { decl_type= Sized ust
                ; transformation= utrans
                ; identifier= id
                ; initial_value= uinit
@@ -1594,12 +1571,8 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
   let loc = s.smeta.loc in
   match s.stmt with
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
-  | Assignment
-      { assign_lhs= {assign_identifier; assign_indices; _}
-      ; assign_op
-      ; assign_rhs } ->
-      semantic_check_assignment ~loc ~cf assign_identifier assign_indices
-        assign_op assign_rhs
+  | Assignment {assign_lhs; assign_op; assign_rhs} ->
+      semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs
   | TargetPE e -> semantic_check_target_pe ~loc ~cf e
   | IncrementLogProb e -> semantic_check_incr_logprob ~loc ~cf e
   | Tilde {arg; distribution; args; truncation} ->
@@ -1618,9 +1591,15 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
         loop_body
   | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
   | Block vdsl -> semantic_check_block ~loc ~cf vdsl
-  | VarDecl {sizedtype; transformation; identifier; initial_value; is_global}
-    ->
-      semantic_check_var_decl ~loc ~cf sizedtype transformation identifier
+  | VarDecl {decl_type= Unsized _; _} ->
+      raise_s [%message "Don't support unsized declarations yet."]
+  | VarDecl
+      { decl_type= Sized st
+      ; transformation
+      ; identifier
+      ; initial_value
+      ; is_global } ->
+      semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
   | FunDef {returntype; funname; arguments; body} ->
       semantic_check_fundef ~loc ~cf returntype funname arguments body
@@ -1696,9 +1675,33 @@ let semantic_check_program
     ; generatedquantitiesblock= ugb }
   in
   let apply_to x f = Validate.apply ~f x in
+  let check_correctness_invariant (decorated_ast : typed_program) :
+      typed_program =
+    if
+      compare_untyped_program
+        { functionblock= fb
+        ; datablock= db
+        ; transformeddatablock= tdb
+        ; parametersblock= pb
+        ; transformedparametersblock= tpb
+        ; modelblock= mb
+        ; generatedquantitiesblock= gb }
+        (untyped_program_of_typed_program decorated_ast)
+      = 0
+    then decorated_ast
+    else
+      raise_s
+        [%message
+          "Type checked AST does not match original AST. Please file a bug!"
+            (decorated_ast : typed_program)]
+  in
+  let check_correctness_invariant_validate =
+    Validate.map ~f:check_correctness_invariant
+  in
   Validate.(
     ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
     |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
+    |> check_correctness_invariant_validate
     |> get_with
          ~with_ok:(fun ok -> Result.Ok ok)
          ~with_errors:(fun errs -> Result.Error errs))

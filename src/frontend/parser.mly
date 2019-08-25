@@ -177,7 +177,7 @@ var_decl:
     { grammar_logger "var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-         VarDecl {sizedtype= reducearray (sbt, sizes);
+         VarDecl {decl_type= Sized (reducearray (sbt, sizes));
                   transformation= Identity;
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
@@ -203,7 +203,7 @@ top_var_decl_no_assign:
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-          VarDecl {sizedtype= reducearray (fst tvt, sizes);
+         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
                    transformation=  snd tvt;
                    identifier= id;
                    initial_value= None;
@@ -218,7 +218,7 @@ top_var_decl:
     { grammar_logger "top_var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-              VarDecl {sizedtype= reducearray (fst tvt, sizes);
+         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
                        transformation=  snd tvt;
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
@@ -302,19 +302,7 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
-      let l = fst l in
-      match snd l with
-        | [] -> {expr=Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-                }
-        | i ->
-          {expr =
-             Indexed
-               ({expr =Variable (fst l);
-                 emeta = { loc=loc_span_of_pos $startpos $endpos}
-               }, i);
-           emeta = { loc=loc_span_of_pos $startpos $endpos}
-          }
+      l
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
@@ -388,14 +376,14 @@ common_expression:
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ; FunApp (UserDefined, id, args) }
+    {  grammar_logger "fun_app" ; FunApp ((), id, args) }
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondDistApp (UserDefined, id, e :: args) }
+    {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 
@@ -483,9 +471,14 @@ printables:
 (* L-values *)
 lhs:
   | id=identifier
-    {  grammar_logger "lhs_identifier" ; ((id, []), loc_span_of_pos $startpos $endpos) }
-  | l=lhs LBRACK id=indexes RBRACK
-    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), loc_span_of_pos $startpos $endpos) }
+    {  grammar_logger "lhs_identifier" ;
+       {expr=Variable id
+       ;emeta = { loc=loc_span_of_pos $startpos $endpos}}
+    }
+  | l=lhs LBRACK indices=indexes RBRACK
+    {  grammar_logger "lhs_index" ;
+      {expr=Indexed (l, indices)
+      ;emeta = { loc=loc_span_of_pos $startpos $endpos}}}
 
 (* statements *)
 statement:
@@ -502,14 +495,12 @@ statement:
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
-    {  grammar_logger "assignment_statement" ; match fst l with (id, indices) ->
-       Assignment {assign_lhs={assign_identifier=id;
-                               assign_indices=indices;
-                               assign_meta={loc=snd l}};
+    {  grammar_logger "assignment_statement" ;
+       Assignment {assign_lhs=lvalue_of_expr l;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
-    {  grammar_logger "funapp_statement" ; NRFunApp (UserDefined,id, args)  }
+    {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)

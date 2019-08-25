@@ -159,6 +159,7 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
+and pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
@@ -210,29 +211,34 @@ and pp_transformation ppf = function
   | Correlation -> Fmt.pf ppf ""
   | Covariance -> Fmt.pf ppf ""
 
-and pp_transformed_type ppf (st, trans) =
-  let unsizedtype_fmt, sizes_fmt =
-    match st with
-    | Middle.SInt -> (Fmt.const pp_unsizedtype UInt, Fmt.nop)
-    | SReal -> (Fmt.const pp_unsizedtype UReal, Fmt.nop)
-    | SVector e ->
-        ( Fmt.const pp_unsizedtype UVector
-        , Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e )
-    | SRowVector e ->
-        ( Fmt.const pp_unsizedtype URowVector
-        , Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e )
-    | SMatrix (e1, e2) ->
-        ( Fmt.const pp_unsizedtype UMatrix
-        , Fmt.const
-            (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-            e2 )
-    | SArray _ -> (
-      match unwind_sized_array_type st with st, _ ->
-        (Fmt.const pp_sizedtype st, Fmt.nop) )
+and pp_transformed_type ppf (pst, trans) =
+  let rec discard_arrays pst =
+    match pst with
+    | Middle.Sized st ->
+        Middle.Sized (Fn.compose fst unwind_sized_array_type st)
+    | Unsized (UArray t) -> discard_arrays (Middle.Unsized t)
+    | Unsized ut -> Middle.Unsized ut
+  in
+  let pst = discard_arrays pst in
+  let unsizedtype_fmt =
+    match pst with
+    | Middle.Sized (SArray _ as st) ->
+        Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
+    | _ -> Fmt.const pp_unsizedtype (Middle.remove_possible_size pst)
+  in
+  let sizes_fmt =
+    match pst with
+    | Sized (SVector e) | Sized (SRowVector e) ->
+        Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e
+    | Sized (SMatrix (e1, e2)) ->
+        Fmt.const
+          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+          e2
+    | Sized (SArray _) | Unsized _ | Sized Middle.SInt | Sized SReal -> Fmt.nop
   in
   let cov_sizes_fmt =
-    match st with
-    | SMatrix (e1, e2) ->
+    match pst with
+    | Sized (SMatrix (e1, e2)) ->
         if e1 = e2 then
           Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e1
         else
@@ -242,7 +248,7 @@ and pp_transformed_type ppf (st, trans) =
     | _ -> Fmt.nop
   in
   match trans with
-  | Identity -> pp_sizedtype ppf st
+  | Identity -> Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
    |OffsetMultiplier _ ->
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt
@@ -286,18 +292,10 @@ and pp_recursive_ifthenelse ppf s =
 
 and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
-  | Assignment
-      { assign_lhs= {assign_identifier= id; assign_indices= lindex; _}
-      ; assign_op= assop
-      ; assign_rhs= e } ->
-      let inds_fmt ppf lindex =
-        match lindex with
-        | [] -> Fmt.nop ppf ()
-        | l -> Fmt.pf ppf "[%a]" pp_list_of_indices l
-      in
+  | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a%a %a %a;" pp_identifier id inds_fmt lindex
-            pp_assignmentoperator assop pp_expression e )
+          Fmt.pf ppf "%a %a %a;" pp_lvalue l pp_assignmentoperator assop
+            pp_expression e )
   | NRFunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a);" pp_list_of_expression es)
@@ -334,19 +332,23 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | VarDecl
-      { sizedtype= st
+      { decl_type= pst
       ; transformation= trans
       ; identifier= id
       ; initial_value= init
       ; is_global= _ } ->
-      let st2, es = unwind_sized_array_type st in
       let pp_init ppf init =
         match init with
         | None -> Fmt.pf ppf ""
         | Some e -> Fmt.pf ppf " = %a" pp_expression e
       in
+      let es =
+        match pst with
+        | Sized st -> Fn.compose snd unwind_sized_array_type st
+        | Unsized _ -> []
+      in
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a %a%a%a;" pp_transformed_type (st2, trans)
+          Fmt.pf ppf "%a %a%a%a;" pp_transformed_type (pst, trans)
             pp_identifier id pp_array_dims es pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
@@ -362,7 +364,7 @@ and pp_args ppf (at, ut, id) =
 and pp_list_of_statements ppf l =
   with_vbox ppf 0 (fun () -> Format.pp_print_list pp_statement ppf l)
 
-and pp_block block_name ppf block_stmts =
+let pp_block block_name ppf block_stmts =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
   if List.length block_stmts > 0 then (
@@ -374,25 +376,42 @@ and pp_block block_name ppf block_stmts =
   Fmt.pf ppf "}" ;
   Format.pp_print_cut ppf ()
 
-and pp_opt_block ppf block_name opt_block =
+let pp_opt_block ppf block_name opt_block =
   Fmt.option ~none:Fmt.nop (pp_block block_name) ppf opt_block
 
-and pp_program ppf = function
-  | { functionblock= bf
+let pp_program ppf
+    { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
     ; parametersblock= bp
     ; transformedparametersblock= btp
     ; modelblock= bm
-    ; generatedquantitiesblock= bgq } ->
-      Format.pp_open_vbox ppf 0 ;
-      pp_opt_block ppf "functions" bf ;
-      pp_opt_block ppf "data" bd ;
-      pp_opt_block ppf "transformed data" btd ;
-      pp_opt_block ppf "parameters" bp ;
-      pp_opt_block ppf "transformed parameters" btp ;
-      pp_opt_block ppf "model" bm ;
-      pp_opt_block ppf "generated quantities" bgq ;
-      Format.pp_close_box ppf ()
+    ; generatedquantitiesblock= bgq } =
+  Format.pp_open_vbox ppf 0 ;
+  pp_opt_block ppf "functions" bf ;
+  pp_opt_block ppf "data" bd ;
+  pp_opt_block ppf "transformed data" btd ;
+  pp_opt_block ppf "parameters" bp ;
+  pp_opt_block ppf "transformed parameters" btp ;
+  pp_opt_block ppf "model" bm ;
+  pp_opt_block ppf "generated quantities" bgq ;
+  Format.pp_close_box ppf ()
 
-and pretty_print_program p = wrap_fmt pp_program p
+let check_correctness prog pretty =
+  let result_ast =
+    Errors.without_warnings
+      (Parse.parse_string Parser.Incremental.program)
+      pretty
+  in
+  if
+    compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
+  then failwith "Pretty printing failed. Please file a bug."
+
+let pretty_print_program p =
+  let result = wrap_fmt pp_program p in
+  check_correctness p result ; result
+
+let pretty_print_typed_program p =
+  let result = wrap_fmt pp_program p in
+  check_correctness (untyped_program_of_typed_program p) result ;
+  result
