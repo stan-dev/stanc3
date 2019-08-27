@@ -3,10 +3,15 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 
-/* Functions that runs a sh command and returns the stdout */
+/* Function that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
     return "${output}"
+}
+
+def deleteDirWin() {
+    bat "attrib -r -s /s /d"
+    deleteDir()
 }
 
 def tagName() {
@@ -47,7 +52,7 @@ pipeline {
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
-            post { always { runShell("rm -rf ./*")} }
+            post { always { deleteDir() }}
         }
         stage("Run all models end-to-end") {
             agent { label 'linux' }
@@ -78,9 +83,7 @@ pipeline {
                     errorFailedThreshold: 100,
                     errorUnstableThreshold: 100
             }
-            post { always {
-                runShell("rm -rf ./*")
-            } }
+            post { always { deleteDir() }}
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
@@ -103,7 +106,7 @@ pipeline {
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         stash name:'mac-exe', includes:'bin/*'
                     }
-                    post {always { runShell("rm -rf ./*")}}
+                    post { always { deleteDir() }}
                 }
                 stage("Build & test a static Linux binary") {
                     agent {
@@ -128,7 +131,7 @@ pipeline {
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         stash name:'linux-exe', includes:'bin/*'
                     }
-                    post {always { runShell("rm -rf ./*")}}
+                    post { always { deleteDir() }}
                 }
                 stage("Build & test static Windows binary") {
                     agent { label "windows && WSL" }
@@ -140,6 +143,7 @@ pipeline {
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                         stash name:'windows-exe', includes:'bin/*'
                     }
+                    post { always { deleteDirWin() }}
                 }
             }
         }
@@ -155,6 +159,7 @@ pipeline {
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
                             ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ """)
             }
+            post { always { deleteDir() }}
         }
     }
     post {
