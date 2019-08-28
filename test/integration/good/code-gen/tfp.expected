@@ -1,0 +1,2 @@
+  $ ../../../../../install/default/bin/stan2tfp eight_schools_ncp.stan
+
