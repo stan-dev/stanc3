@@ -1,7 +1,16 @@
 (executable
  (name stanc)
  (libraries frontend stan_math_backend)
+ (modules Stanc)
  (public_name stanc)
+ (preprocess (pps ppx_jane))
+ )
+
+(executable
+ (name stan2tfp)
+ (libraries frontend tfp_backend)
+ (modules Stan2tfp)
+ (public_name stan2tfp)
  (preprocess (pps ppx_jane))
  )
 

@@ -55,4 +55,4 @@ let rec translate_funapps {expr; emeta} =
   in
   {expr; emeta}
 
-let trans_prog = map_prog translate_funapps Fn.id
+let trans_prog (p: typed_prog) = map_prog translate_funapps Fn.id p
