@@ -31,19 +31,26 @@ let rec pp_expr ppf {expr; _} = match expr with
       (list ~sep:comma (Middle.Pretty.pp_index pp_expr)) indices
 
 let dist_prefix = "tfd.distributions."
+let remove_stan_dist_suffix s =
+  List.filter_map ("_rng" :: Utils.distribution_suffices @ [""])
+    ~f:(fun suffix -> String.chop_suffix ~suffix s)
+  |> List.hd_exn
+
 let pass_through_fnames = String.Set.of_list ["normal"]
+
+let map_functions fname args = match fname with
+  | "multi_normal_cholesky" -> "MultivariateNormalTriL", args
+  | _ ->
+    if Set.mem pass_through_fnames fname then fname, args else
+      raise_s [%message "Not sure how to handle " fname " yet!"]
 
 let rec translate_funapps {expr; emeta} =
   let expr = match expr with
   | FunApp(StanLib, fname, args) ->
     let prefix = if Utils.is_distribution_name fname then dist_prefix else "" in
-    let fname', args' = (match fname with
-      | "multi_normal_cholesky" -> "MultivariateNormalTriL", args
-      | _ ->
-        if Set.mem pass_through_fnames fname then fname, args else
-        raise_s [%message "Not sure how to handle " fname " yet!"]
-    ) in
-    FunApp(StanLib, prefix ^ fname', args')
+    let fname = remove_stan_dist_suffix fname in
+    let fname, args = map_functions fname args in
+    FunApp(StanLib, prefix ^ fname, args)
   | _ -> map_expr translate_funapps expr
   in
   {expr; emeta}
