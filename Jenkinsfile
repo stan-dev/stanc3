@@ -52,7 +52,7 @@ pipeline {
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
-            post { always { runShell("rm -rf ./*")} }}
+            post { always { runShell("rm -rf ./*") }}
         }
         stage("Run all models end-to-end") {
             agent { label 'linux' }
@@ -131,7 +131,7 @@ pipeline {
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         stash name:'linux-exe', includes:'bin/*'
                     }
-                    post { always { runShell("rm -rf ./*")} }}
+                    post { always { deleteDir() }}
                 }
                 stage("Build & test static Windows binary") {
                     agent { label "windows && WSL" }
