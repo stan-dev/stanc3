@@ -77,15 +77,6 @@ let add_unqualified (name, rt, uqargts) =
   Hashtbl.add_multi manual_stan_math_signatures ~key:name
     ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
 
-let base_order = [UInt; UReal; URowVector; UVector; UMatrix]
-
-let rank lst a =
-  List.findi ~f:(fun _ b -> a = b) lst |> Option.value_exn |> fst
-
-let rec dim_precedence = function
-  | UArray t -> 2 * dim_precedence t
-  | x -> rank base_order x
-
 let rec ints_to_real = function
   | UInt -> UReal
   | UArray t -> UArray (ints_to_real t)
@@ -109,7 +100,7 @@ let mk_declarative_sig (fnkinds, name, args) =
   in
   let find_rt rt args = function
     | Rng -> ReturnType (rng_return_type rt args)
-    | UnaryVectorized -> ReturnType (List.hd_exn args)
+    | UnaryVectorized -> ReturnType (ints_to_real (List.hd_exn args))
     | _ -> ReturnType UReal
   in
   let create_from_fk_args fk arglists =
