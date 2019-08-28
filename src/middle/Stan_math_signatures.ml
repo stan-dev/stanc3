@@ -69,27 +69,38 @@ let operator_stan_math_return_type op arg_tys =
   |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
   |> List.hd
 
-let pretty_print_all_math_lib_fn_sigs name =
+let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
-  let namematches =
-    Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
+  Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
+
+let pp_math_sig ppf (rt, args) =
+  Mir_pretty_printer.pp_unsizedtype ppf (UFun (args, rt))
+
+let pp_math_sigs ppf name =
+  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
+
+let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
+
+let pretty_print_all_math_sigs ppf () =
+  let open Fmt in
+  let pp_sig ppf (name, (rt, args)) =
+    pf ppf "%a %s(@[<hov 2>%a@])" Mir_pretty_printer.pp_returntype rt name
+      (list ~sep:comma Mir_pretty_printer.pp_unsizedtype)
+      (List.map ~f:snd args)
   in
-  if List.length namematches = 0 then ""
-  else
-    "\n"
-    ^ String.concat ~sep:"\n"
-        (List.map
-           ~f:(fun (x, y) ->
-             (Fmt.to_to_string Mir_pretty_printer.pp_unsizedtype) (UFun (y, x))
-             )
-           namematches)
+  let pp_sigs_for_name ppf name =
+    (list ~sep:cut pp_sig) ppf
+      (List.map ~f:(fun t -> (name, t)) (get_sigs name))
+  in
+  pf ppf "@[<v>%a@]"
+    (list ~sep:cut pp_sigs_for_name)
+    (List.sort ~compare (Hashtbl.keys stan_math_signatures))
 
 let pretty_print_math_lib_operator_sigs op =
-  operator_to_stan_math_fns op |> List.map ~f:pretty_print_all_math_lib_fn_sigs
+  operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 let pretty_print_math_lib_assignmentoperator_sigs op =
-  assignmentoperator_to_stan_math_fn op
-  |> Option.map ~f:pretty_print_all_math_lib_fn_sigs
+  assignmentoperator_to_stan_math_fn op |> Option.map ~f:pretty_print_math_sigs
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =
