@@ -745,6 +745,7 @@ let rec simplify_index_expr = function
 
 let remove_trailing_alls_expr = function
   | Indexed (obj, indices) ->
+      (* a[2][:] -> a[2] *)
       let rec remove_trailing_alls indices =
         match List.rev indices with
         | All :: tl -> remove_trailing_alls (List.rev tl)
