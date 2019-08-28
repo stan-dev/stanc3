@@ -18,6 +18,7 @@ let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
 let dump_tx_mir = ref false
+let dump_stan_math_sigs = ref false
 let output_file = ref ""
 let generate_data = ref false
 
@@ -52,6 +53,10 @@ let options =
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
          transformed it." )
+    ; ( "--dump-stan-math-signatures"
+      , Arg.Set dump_stan_math_sigs
+      , "Dump out the list of supported type signatures for Stan Math backend."
+      )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -145,6 +150,11 @@ let remove_dotstan s = String.drop_suffix s 5
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
+  (* Deal with multiple modalities *)
+  if !dump_stan_math_sigs then (
+    Middle.pretty_print_all_math_sigs Format.std_formatter () ;
+    exit 0 ) ;
+  (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
