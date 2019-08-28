@@ -4,22 +4,49 @@ open Core_kernel
 open Type_conversion
 open Mir
 
+(** The "dimensionality" (bad name?) is supposed to help us represent the
+    vectorized nature of many Stan functions. It allows us to represent when
+    a function argument can be just a real or matrix, or some common forms of
+    vectorization over reals. This captures the most commonly used forms in our
+    previous signatures; there are a lot partially because we had a lot of
+    inconsistencies.
+*)
 type dimensionality =
   | DReal
-  | DInts
-  | DReals
-  | DIntAndReals
-  | D1DeepReals
-  | DArrayAndVectors
-  | DVectors
   | DVector
   | DMatrix
+  (* Vectorizable int *)
+  | DVInt
+  (* Vectorizable real *)
+  | DVReal
+  (* DEPRECATED; vectorizable ints or reals *)
+  | DIntAndReals
+  (* Vectorizable vectors - for multivariate functions *)
+  | DVectors
   | DDeepVectorized
-  | DAllBase
 
-type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | Functional | DimPromoting
+(* all base types with up 8 levels of nested containers -
+                       just used for element-wise vectorized unary functions now *)
 
-let vector_types_l = [UReal; UArray UReal; UVector; URowVector]
+let rec bare_array_type (t, i) =
+  match i with 0 -> t | j -> UArray (bare_array_type (t, j - 1))
+
+let rec expand_arg = function
+  | DReal -> [UReal]
+  | DVector -> [UVector]
+  | DMatrix -> [UMatrix]
+  | DVInt -> [UInt; UArray UInt]
+  | DVReal -> [UReal; UArray UReal; UVector; URowVector]
+  | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
+  | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
+  | DDeepVectorized ->
+      let all_base = [UInt; UReal; URowVector; UVector; UMatrix] in
+      List.(
+        concat_map all_base ~f:(fun a ->
+            map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
+
+type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
+
 let is_primitive = function UReal -> true | UInt -> true | _ -> false
 
 (** The signatures hash table *)
@@ -28,25 +55,6 @@ let stan_math_signatures = String.Table.create ()
 (** All of the signatures that are added by hand, rather than the ones
     added "declaratively" *)
 let manual_stan_math_signatures = String.Table.create ()
-
-let rec bare_array_type (t, i) =
-  match i with 0 -> t | j -> UArray (bare_array_type (t, j - 1))
-
-let rec expand_arg = function
-  | DReal -> [UReal]
-  | DReals -> [UReal; UArray UReal; UVector; URowVector]
-  | DInts -> [UInt; UArray UInt]
-  | DIntAndReals -> expand_arg DReals @ expand_arg DInts
-  | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
-  | DArrayAndVectors -> UArray UReal :: expand_arg DVectors
-  | D1DeepReals -> [UArray UReal; UVector; URowVector]
-  | DVector -> [UVector]
-  | DMatrix -> [UMatrix]
-  | DAllBase -> [UInt; UReal; URowVector; UVector; UMatrix]
-  | DDeepVectorized ->
-      List.(
-        concat_map (expand_arg DAllBase) ~f:(fun a ->
-            map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
@@ -83,12 +91,6 @@ let rec ints_to_real = function
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
-let promote_base args =
-  List.max_elt
-    ~compare:(fun a b -> compare (dim_precedence a) (dim_precedence b))
-    args
-  |> Option.value_exn |> ints_to_real
-
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
@@ -96,19 +98,18 @@ let mk_declarative_sig (fnkinds, name, args) =
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_cdf_log"; "_lcdf"]
     | Ccdf -> ["_ccdf_log"; "_lccdf"]
-    | Functional -> [""]
-    | DimPromoting -> [""]
+    | UnaryVectorized -> [""]
   in
-  let add_ints = function DReals -> DIntAndReals | x -> x in
+  let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
-    | DInts -> UInt
+    | DVInt -> UInt
     (* XXX fix this up to work with more RNGs *)
     | _ -> UReal
   in
   let find_rt rt args = function
     | Rng -> ReturnType (rng_return_type rt args)
-    | DimPromoting -> ReturnType (promote_base args)
+    | UnaryVectorized -> ReturnType (List.hd_exn args)
     | _ -> ReturnType UReal
   in
   let create_from_fk_args fk arglists =
@@ -124,7 +125,8 @@ let mk_declarative_sig (fnkinds, name, args) =
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
             (name, find_rt rt args Rng, args) )
-    | DimPromoting -> create_from_fk_args DimPromoting (all_expanded args)
+    | UnaryVectorized ->
+        create_from_fk_args UnaryVectorized (all_expanded args)
     | fk -> create_from_fk_args fk (all_expanded args)
   in
   List.concat_map fnkinds ~f:add_fnkind
@@ -136,104 +138,103 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let distributions =
-  [ (full_lpmf, "beta_binomial", [DInts; DInts; DReals; DReals])
-  ; (full_lpdf, "beta", [DReals; DReals; DReals])
-  ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DReals; DReals; DIntAndReals])
-  ; (full_lpmf, "bernoulli", [DInts; DReals])
-  ; ([Lpmf; Rng], "bernoulli_logit", [DInts; DReals])
-  ; (full_lpmf, "binomial", [DInts; DInts; DReals])
-  ; ([Lpmf], "binomial_logit", [DInts; DInts; DReals])
-  ; ([Lpmf], "categorical", [DInts; DVector])
-  ; ([Lpmf], "categorical_logit", [DInts; DVector])
-  ; (full_lpdf, "cauchy", [DReals; DReals; DReals])
-  ; (full_lpdf, "chi_square", [DReals; DReals])
+  [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
+  ; (full_lpdf, "beta", [DVReal; DVReal; DVReal])
+  ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DVReal; DVReal; DIntAndReals])
+  ; (full_lpmf, "bernoulli", [DVInt; DVReal])
+  ; ([Lpmf; Rng], "bernoulli_logit", [DVInt; DVReal])
+  ; (full_lpmf, "binomial", [DVInt; DVInt; DVReal])
+  ; ([Lpmf], "binomial_logit", [DVInt; DVInt; DVReal])
+  ; ([Lpmf], "categorical", [DVInt; DVector])
+  ; ([Lpmf], "categorical_logit", [DVInt; DVector])
+  ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "chi_square", [DVReal; DVReal])
   ; ([Lpdf], "dirichlet", [DVector; DVector])
-  ; (full_lpdf, "double_exponential", [DReals; DReals; DReals])
-  ; (full_lpdf, "exp_mod_normal", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, "exponential", [DReals; DReals])
-  ; (full_lpdf, "frechet", [DReals; DReals; DReals])
-  ; (full_lpdf, "gamma", [DReals; DReals; DReals])
-  ; (full_lpdf, "gumbel", [DReals; DReals; DReals])
-  ; (full_lpdf, "inv_chi_square", [DReals; DReals])
-  ; (full_lpdf, "inv_gamma", [DReals; DReals; DReals])
-  ; (full_lpdf, "logistic", [DReals; DReals; DReals])
-  ; (full_lpdf, "lognormal", [DReals; DReals; DReals])
+  ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
+  ; (full_lpdf, "exponential", [DVReal; DVReal])
+  ; (full_lpdf, "frechet", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "gamma", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "gumbel", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "inv_chi_square", [DVReal; DVReal])
+  ; (full_lpdf, "inv_gamma", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "lognormal", [DVReal; DVReal; DVReal])
   ; ([Lpdf], "multi_gp", [DMatrix; DMatrix; DVector])
   ; ([Lpdf], "multi_gp_cholesky", [DMatrix; DMatrix; DVector])
   ; ([Lpdf], "multi_normal", [DVectors; DVectors; DMatrix])
   ; ([Lpdf], "multi_normal_cholesky", [DVectors; DVectors; DMatrix])
   ; ([Lpdf], "multi_normal_prec", [DVectors; DVectors; DMatrix])
   ; ([Lpdf], "multi_student_t", [DVectors; DReal; DVectors; DMatrix])
-  ; (full_lpmf, "neg_binomial", [DInts; DReals; DReals])
-  ; (full_lpmf, "neg_binomial_2", [DInts; DReals; DReals])
-  ; ([Lpmf; Rng], "neg_binomial_2_log", [DInts; DReals; DReals])
-  ; (full_lpdf, "normal", [DReals; DReals; DReals])
-  ; (full_lpdf, "pareto", [DReals; DReals; DReals])
-  ; (full_lpdf, "pareto_type_2", [DReals; DReals; DReals; DReals])
-  ; (full_lpmf, "poisson", [DInts; DReals])
-  ; ([Lpmf; Rng], "poisson_log", [DInts; DReals])
-  ; (full_lpdf, "rayleigh", [DReals; DReals])
-  ; (full_lpdf, "scaled_inv_chi_square", [DReals; DReals; DReals])
-  ; (full_lpdf, "skew_normal", [DReals; DReals; DReals; DReals])
-  ; (full_lpdf, "student_t", [DReals; DReals; DReals; DReals])
-  ; ([Lpdf], "std_normal", [DReals])
-  ; (full_lpdf, "uniform", [DReals; DReals; DReals])
-  ; ([Lpdf; Rng], "von_mises", [DReals; DReals; DReals])
-  ; (full_lpdf, "weibull", [DReals; DReals; DReals])
-  ; ([Lpdf], "wiener", [DReals; DReals; DReals; DReals; DReals])
+  ; (full_lpmf, "neg_binomial", [DVInt; DVReal; DVReal])
+  ; (full_lpmf, "neg_binomial_2", [DVInt; DVReal; DVReal])
+  ; ([Lpmf; Rng], "neg_binomial_2_log", [DVInt; DVReal; DVReal])
+  ; (full_lpdf, "normal", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "pareto", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal])
+  ; (full_lpmf, "poisson", [DVInt; DVReal])
+  ; ([Lpmf; Rng], "poisson_log", [DVInt; DVReal])
+  ; (full_lpdf, "rayleigh", [DVReal; DVReal])
+  ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal])
+  ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal])
+  ; ([Lpdf], "std_normal", [DVReal])
+  ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal])
+  ; ([Lpdf; Rng], "von_mises", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal])
+  ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal])
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix]) ]
 
 let math_sigs =
-  [ ([Functional], "log_mix", [D1DeepReals; DArrayAndVectors])
-  ; ([Functional], "log_mix", [DReal; DReal; DReal])
-  ; ([DimPromoting], "acos", [DDeepVectorized])
-  ; ([DimPromoting], "acosh", [DDeepVectorized])
-  ; ([DimPromoting], "asin", [DDeepVectorized])
-  ; ([DimPromoting], "asinh", [DDeepVectorized])
-  ; ([DimPromoting], "atan", [DDeepVectorized])
-  ; ([DimPromoting], "atanh", [DDeepVectorized])
-  ; ([DimPromoting], "cbrt", [DDeepVectorized])
-  ; ([DimPromoting], "ceil", [DDeepVectorized])
-  ; ([DimPromoting], "cos", [DDeepVectorized])
-  ; ([DimPromoting], "cosh", [DDeepVectorized])
-  ; ([DimPromoting], "digamma", [DDeepVectorized])
-  ; ([DimPromoting], "erf", [DDeepVectorized])
-  ; ([DimPromoting], "erfc", [DDeepVectorized])
-  ; ([DimPromoting], "exp", [DDeepVectorized])
-  ; ([DimPromoting], "exp2", [DDeepVectorized])
-  ; ([DimPromoting], "expm1", [DDeepVectorized])
-  ; ([DimPromoting], "fabs", [DDeepVectorized])
-  ; ([DimPromoting], "floor", [DDeepVectorized])
-  ; ([DimPromoting], "inv", [DDeepVectorized])
-  ; ([DimPromoting], "inv_cloglog", [DDeepVectorized])
-  ; ([DimPromoting], "inv_logit", [DDeepVectorized])
-  ; ([DimPromoting], "inv_Phi", [DDeepVectorized])
-  ; ([DimPromoting], "inv_sqrt", [DDeepVectorized])
-  ; ([DimPromoting], "inv_square", [DDeepVectorized])
-  ; ([DimPromoting], "lgamma", [DDeepVectorized])
-  ; ([DimPromoting], "log", [DDeepVectorized])
-  ; ([DimPromoting], "log10", [DDeepVectorized])
-  ; ([DimPromoting], "log1m", [DDeepVectorized])
-  ; ([DimPromoting], "log1m_exp", [DDeepVectorized])
-  ; ([DimPromoting], "log1m_inv_logit", [DDeepVectorized])
-  ; ([DimPromoting], "log1p", [DDeepVectorized])
-  ; ([DimPromoting], "log1p_exp", [DDeepVectorized])
-  ; ([DimPromoting], "log2", [DDeepVectorized])
-  ; ([DimPromoting], "log_inv_logit", [DDeepVectorized])
-  ; ([DimPromoting], "logit", [DDeepVectorized])
-  ; ([DimPromoting], "Phi", [DDeepVectorized])
-  ; ([DimPromoting], "Phi_approx", [DDeepVectorized])
-  ; ([DimPromoting], "round", [DDeepVectorized])
-  ; ([DimPromoting], "sin", [DDeepVectorized])
-  ; ([DimPromoting], "sinh", [DDeepVectorized])
-  ; ([DimPromoting], "sqrt", [DDeepVectorized])
-  ; ([DimPromoting], "square", [DDeepVectorized])
-  ; ([DimPromoting], "step", [DReal])
-  ; ([DimPromoting], "tan", [DDeepVectorized])
-  ; ([DimPromoting], "tanh", [DDeepVectorized]) (* ; add_nullary ("target") *)
-  ; ([DimPromoting], "tgamma", [DDeepVectorized])
-  ; ([DimPromoting], "trunc", [DDeepVectorized])
-  ; ([DimPromoting], "trigamma", [DDeepVectorized]) ]
+  [ ([UnaryVectorized], "acos", [DDeepVectorized])
+  ; ([UnaryVectorized], "acosh", [DDeepVectorized])
+  ; ([UnaryVectorized], "asin", [DDeepVectorized])
+  ; ([UnaryVectorized], "asinh", [DDeepVectorized])
+  ; ([UnaryVectorized], "atan", [DDeepVectorized])
+  ; ([UnaryVectorized], "atanh", [DDeepVectorized])
+  ; ([UnaryVectorized], "cbrt", [DDeepVectorized])
+  ; ([UnaryVectorized], "ceil", [DDeepVectorized])
+  ; ([UnaryVectorized], "cos", [DDeepVectorized])
+  ; ([UnaryVectorized], "cosh", [DDeepVectorized])
+  ; ([UnaryVectorized], "digamma", [DDeepVectorized])
+  ; ([UnaryVectorized], "erf", [DDeepVectorized])
+  ; ([UnaryVectorized], "erfc", [DDeepVectorized])
+  ; ([UnaryVectorized], "exp", [DDeepVectorized])
+  ; ([UnaryVectorized], "exp2", [DDeepVectorized])
+  ; ([UnaryVectorized], "expm1", [DDeepVectorized])
+  ; ([UnaryVectorized], "fabs", [DDeepVectorized])
+  ; ([UnaryVectorized], "floor", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv_cloglog", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv_logit", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized])
+  ; ([UnaryVectorized], "inv_square", [DDeepVectorized])
+  ; ([UnaryVectorized], "lgamma", [DDeepVectorized])
+  ; ([UnaryVectorized], "log", [DDeepVectorized])
+  ; ([UnaryVectorized], "log10", [DDeepVectorized])
+  ; ([UnaryVectorized], "log1m", [DDeepVectorized])
+  ; ([UnaryVectorized], "log1m_exp", [DDeepVectorized])
+  ; ([UnaryVectorized], "log1m_inv_logit", [DDeepVectorized])
+  ; ([UnaryVectorized], "log1p", [DDeepVectorized])
+  ; ([UnaryVectorized], "log1p_exp", [DDeepVectorized])
+  ; ([UnaryVectorized], "log2", [DDeepVectorized])
+  ; ([UnaryVectorized], "log_inv_logit", [DDeepVectorized])
+  ; ([UnaryVectorized], "logit", [DDeepVectorized])
+  ; ([UnaryVectorized], "Phi", [DDeepVectorized])
+  ; ([UnaryVectorized], "Phi_approx", [DDeepVectorized])
+  ; ([UnaryVectorized], "round", [DDeepVectorized])
+  ; ([UnaryVectorized], "sin", [DDeepVectorized])
+  ; ([UnaryVectorized], "sinh", [DDeepVectorized])
+  ; ([UnaryVectorized], "sqrt", [DDeepVectorized])
+  ; ([UnaryVectorized], "square", [DDeepVectorized])
+  ; ([UnaryVectorized], "step", [DReal])
+  ; ([UnaryVectorized], "tan", [DDeepVectorized])
+  ; ([UnaryVectorized], "tanh", [DDeepVectorized])
+    (* ; add_nullary ("target") *)
+  ; ([UnaryVectorized], "tgamma", [DDeepVectorized])
+  ; ([UnaryVectorized], "trunc", [DDeepVectorized])
+  ; ([UnaryVectorized], "trigamma", [DDeepVectorized]) ]
 
 let all_declarative_sigs = distributions @ math_sigs
 
@@ -880,6 +881,21 @@ let () =
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
   add_binary "log_diff_exp" ;
   add_binary "log_falling_factorial" ;
+  add_ternary "log_mix" ;
+  for i = 1 to vector_types_size - 1 do
+    for j = 1 to vector_types_size - 1 do
+      add_unqualified
+        ("log_mix", ReturnType UReal, [vector_types i; vector_types j])
+    done ;
+    add_unqualified
+      ( "log_mix"
+      , ReturnType UReal
+      , [vector_types i; bare_array_type (UVector, 1)] ) ;
+    add_unqualified
+      ( "log_mix"
+      , ReturnType UReal
+      , [vector_types i; bare_array_type (URowVector, 1)] )
+  done ;
   add_binary "log_rising_factorial" ;
   add_unqualified ("log_softmax", ReturnType UVector, [UVector]) ;
   add_unqualified
