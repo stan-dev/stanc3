@@ -76,6 +76,7 @@ let rec unsizedtype_of_sizedtype = function
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
   | SMatrix (_, _) -> UMatrix
+  | SSparseMatrix (_, _) -> USparseMatrix
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
@@ -488,11 +489,15 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux k ut xs =
     match (ut, xs) with
     | UMatrix, [(All, _); (Single _, UInt)]
-     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Between _, _); (Single _, UInt)]
-     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k @@ Validate.ok UVector
+    | UMatrix, [(Upfrom _, _); (Single _, UInt)]
+    | UMatrix, [(Downfrom _, _); (Single _, UInt)]
+    | UMatrix, [(Between _, _); (Single _, UInt)]
+    | UMatrix, [(Single _, UArray UInt); (Single _, UInt)] -> k @@ Validate.ok UVector
+    | USparseMatrix, [(All, _); (Single _, UInt)]
+    | USparseMatrix, [(Upfrom _, _); (Single _, UInt)]
+    | USparseMatrix, [(Downfrom _, _); (Single _, UInt)]
+    | USparseMatrix, [(Between _, _); (Single _, UInt)]
+    | USparseMatrix, [(Single _, UArray UInt); (Single _, UInt)] -> k @@ Validate.ok UVector
     | _, [] -> k @@ Validate.ok ut
     | _, next :: rest -> (
       match next with
@@ -501,13 +506,14 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
         | UArray inner_ty -> aux k inner_ty rest
         | UVector | URowVector -> aux k UReal rest
         | UMatrix -> aux k URowVector rest
+        | USparseMatrix -> aux k URowVector rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
       | _ -> (
         match ut with
         | UArray inner_ty ->
             let k' = Fn.compose k (Validate.map ~f:(fun t -> UArray t)) in
             aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
+        | UVector | URowVector | UMatrix | USparseMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
   in
   aux Fn.id ut (List.map ~f:index_with_type indices)
@@ -702,6 +708,10 @@ let rec semantic_check_sizedtype cf = function
       let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
       Validate.liftA2 (fun ue1 ue2 -> SMatrix (ue1, ue2)) ue1 ue2
+  | SSparseMatrix (e1, e2) ->
+    let ue1 = semantic_check_expression_of_int_type cf e1 "Sparse Matrix sizes"
+    and ue2 = semantic_check_expression_of_int_type cf e2 "Sparse Matrix sizes" in
+    Validate.liftA2 (fun ue1 ue2 -> SSparseMatrix (ue1, ue2)) ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
@@ -1227,7 +1237,7 @@ and semantic_check_foreach_loop_identifier_type ~loc ty =
   Validate.(
     match ty with
     | UArray ut -> ok ut
-    | UVector | URowVector | UMatrix -> ok UReal
+    | UVector | URowVector | UMatrix | USparseMatrix -> ok UReal
     | _ ->
         Semantic_error.array_vector_rowvector_matrix_expected loc ty |> error)
 
@@ -1313,6 +1323,7 @@ and semantic_check_size_decl ~loc is_global sized_ty =
     | SVector e -> not_ptq e
     | SRowVector e -> not_ptq e
     | SMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
+    | SSparseMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
     | SArray (sized_ty, e) when not_ptq e -> check_sizes_data_only sized_ty
     | SArray _ -> false
     | _ -> true
@@ -1444,12 +1455,12 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
   Validate.(
     (* TODO: I think these kind of functions belong with the type definition *)
     let is_real_type = function
-      | UReal | UVector | URowVector | UMatrix
-       |UArray UReal
-       |UArray UVector
-       |UArray URowVector
-       |UArray UMatrix ->
-          true
+      | UReal | UVector | URowVector | UMatrix | USparseMatrix
+      |UArray UReal
+      |UArray UVector
+      |UArray URowVector
+      |UArray UMatrix
+      |UArray USparseMatrix -> true
       | _ -> false
     in
     if String.is_suffix id.name ~suffix:"_lpdf" then

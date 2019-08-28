@@ -46,6 +46,7 @@ let rec pp_unsizedtype ppf = function
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
+  | USparseMatrix -> pp_keyword ppf "sparse_matrix"
   | UArray ut ->
       let ty, depth = unsized_array_depth ut in
       let commas = String.make depth ',' in
@@ -76,6 +77,10 @@ let rec pp_sizedtype pp_e ppf st =
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
+  | SSparseMatrix (d1_expr, d2_expr) ->
+    Fmt.pf ppf {|matrix%a|}
+      Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+      (d1_expr, d2_expr)
   | SArray (st, expr) ->
       Fmt.pf ppf {|array%a|}
         Fmt.(

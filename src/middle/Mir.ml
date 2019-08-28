@@ -51,6 +51,7 @@ type unsizedtype =
   | UVector
   | URowVector
   | UMatrix
+  | USparseMatrix
   | UArray of unsizedtype
   | UFun of (autodifftype * unsizedtype) list * returntype
   | UMathLibraryFunction
@@ -68,6 +69,7 @@ type 'e sizedtype =
   | SVector of 'e
   | SRowVector of 'e
   | SMatrix of 'e * 'e
+  | SSparseMatrix of 'e * 'e
   | SArray of 'e sizedtype * 'e
 [@@deriving sexp, compare, map, hash, fold]
 

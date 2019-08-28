@@ -14,6 +14,11 @@ let rec sizedtype_to_json (st : mtype_loc_ad with_expr sizedtype) :
         [ ("name", `String "matrix")
         ; ("rows", `String (emit_cpp_expr d1))
         ; ("cols", `String (emit_cpp_expr d2)) ]
+  | SSparseMatrix (d1, d2) ->
+    `Assoc
+      [ ("name", `String "matrix")
+      ; ("rows", `String (emit_cpp_expr d1))
+      ; ("cols", `String (emit_cpp_expr d2)) ]
   | SArray (st, d) ->
       `Assoc
         [ ("name", `String "array")

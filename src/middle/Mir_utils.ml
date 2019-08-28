@@ -17,6 +17,7 @@ let rec remove_size = function
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
+  | SSparseMatrix _ -> USparseMatrix
   | SArray (t, _) -> UArray (remove_size t)
 
 let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
@@ -58,6 +59,7 @@ let rec remove_size = function
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
+  | SSparseMatrix _ -> USparseMatrix
   | SArray (t, _) -> UArray (remove_size t)
 
 let ternary_if = "TernaryIf__"

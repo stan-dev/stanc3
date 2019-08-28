@@ -166,6 +166,8 @@ let rec for_scalar st bodyfn var smeta =
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+  | SSparseMatrix (d1, d2) ->
+    mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -180,7 +182,7 @@ let rec for_scalar st bodyfn var smeta =
 *)
 let rec for_eigen st bodyfn var smeta =
   match st with
-  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
+  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ -> bodyfn var
   | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
 (* These types signal the context for a declaration during statement translation.
@@ -202,6 +204,7 @@ type decl_context =
 
 let rec unsizedtype_to_string = function
   | UMatrix -> "matrix"
+  | USparseMatrix -> "sparse_matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "scalar"
@@ -249,6 +252,7 @@ let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
   match st with
   | SArray (t, _) -> eigen_size t
   | SMatrix (d1, d2) -> [d1; d2]
+  | SSparseMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
@@ -269,7 +273,7 @@ let extra_constraint_args st = function
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UReal
+  | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ -> UReal
   | x -> remove_size x
 
 let internal_of_dread = function
@@ -290,6 +294,7 @@ let param_size transform sizedtype =
     match st with
     | SArray (t, d) -> SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
+    | SSparseMatrix (d, _) -> SVector (f d)
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
@@ -300,6 +305,7 @@ let param_size transform sizedtype =
     match st with
     | SArray (t, d) -> SArray (shrink_eigen_mat f t, d)
     | SMatrix (d1, d2) -> SVector (f d1 d2)
+    | SSparseMatrix (d1, d2) -> SVector (f d1 d2)
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
           [%message
@@ -619,6 +625,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
         in
         match iteratee'.emeta.mtype with
         | UMatrix -> [single_one; single_one]
+        | USparseMatrix -> [single_one; single_one]
         | _ -> [single_one]
       in
       let decl_type =

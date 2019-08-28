@@ -96,6 +96,12 @@ let rec is_indexing_matrix = function
   | UMatrix, _ -> true
   | _ -> false
 
+let rec is_indexing_sparse_matrix = function
+  | UArray t, _ :: idcs -> is_indexing_sparse_matrix (t, idcs)
+  | USparseMatrix, [] -> false
+  | USparseMatrix, _ -> true
+  | _ -> false
+
 let mock_stmt stmt = {stmt; smeta= no_span}
 let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 

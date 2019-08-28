@@ -125,6 +125,11 @@ let gen_matrix mm n m t =
       { int_two with
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
+
+let gen_sparse_matrix mm n m t =
+    { int_two with
+      expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+
 (* TODO: do some proper random generation of these special matrices *)
 
 let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
@@ -137,6 +142,8 @@ let rec generate_value m st t =
   | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
+  | SSparseMatrix (e1, e2) ->
+      gen_sparse_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t

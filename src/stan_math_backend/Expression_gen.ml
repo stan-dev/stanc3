@@ -24,6 +24,7 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
 let is_matrix e = e.emeta.mtype = UMatrix
+let is_sparse_matrix e = e.emeta.mtype = USparseMatrix
 let is_row_vector e = e.emeta.mtype = URowVector
 
 (* stub *)
@@ -60,6 +61,7 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
+  | USparseMatrix -> pf ppf "Eigen::SparseMatrix<%s>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
@@ -180,7 +182,7 @@ and read_data ut ppf es =
     match ut with
     | UInt -> "i"
     | UReal -> "r"
-    | UVector | URowVector | UMatrix | UArray _
+    | UVector | URowVector | UMatrix | USparseMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
@@ -248,6 +250,10 @@ and pp_compiler_internal_fn ut f ppf es =
         pf ppf "stan::math::to_matrix<%s>(%a)"
           (local_scalar ut (promote_adtype es))
           array_literal es
+    | USparseMatrix ->
+      pf ppf "stan::math::to_sparse_matrix<%s>(%a)"
+        (local_scalar ut (promote_adtype es))
+        array_literal es
     | _ ->
         raise_s
           [%message
