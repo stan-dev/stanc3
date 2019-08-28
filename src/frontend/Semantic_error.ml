@@ -83,7 +83,7 @@ module TypeError = struct
           "Ill-typed arguments supplied to ? : operator. Available \
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %a, %a, %a."
-          (pretty_print_all_math_lib_fn_sigs "if_else")
+          (pretty_print_math_sigs "if_else")
           pp_unsizedtype ut1 pp_unsizedtype ut2 pp_unsizedtype ut3
     | NotIndexable ut ->
         Fmt.pf ppf
@@ -126,7 +126,7 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a.@]"
           name
-          (pretty_print_all_math_lib_fn_sigs name)
+          (pretty_print_math_sigs name)
           Fmt.(list pp_unsizedtype ~sep:comma)
           arg_tys
     | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
