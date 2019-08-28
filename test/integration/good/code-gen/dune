@@ -25,7 +25,7 @@
  (deps (package stanc) (:stanfiles eight_schools_ncp.stan))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stan2tfp}" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} %{bin:stan2tfp} %{stanfiles}))))
 
 (alias
  (name runtest)

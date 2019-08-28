@@ -61,3 +61,4 @@ let rec translate_funapps {expr; emeta} =
   {expr; emeta}
 
 let trans_prog (p : typed_prog) = map_prog translate_funapps Fn.id p
+let pp_prog ppf (_ : typed_prog) = pf ppf "nothing here yet folks@,"
