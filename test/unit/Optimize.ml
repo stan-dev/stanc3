@@ -12,7 +12,7 @@ let semantic_check_program ast =
           (Option.value_exn (Result.ok ast))))
 
 let%expect_test "map_rec_stmt_loc" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -75,7 +75,7 @@ let%expect_test "map_rec_stmt_loc" =
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -145,7 +145,7 @@ let%expect_test "map_rec_state_stmt_loc" =
       3 |}]
 
 let%expect_test "inline functions" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -220,7 +220,7 @@ let%expect_test "inline functions" =
       } |}]
 
 let%expect_test "inline functions 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -286,7 +286,7 @@ let%expect_test "inline functions 2" =
       } |}]
 
 let%expect_test "list collapsing" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -419,7 +419,7 @@ let%expect_test "list collapsing" =
                ((stmt
                  (Block
                   (((stmt
-                     (Assignment (sym4__ ())
+                     (Assignment (sym4__ UReal ())
                       ((expr
                         (FunApp StanLib Pow__
                          (((expr (Lit Int 53))
@@ -445,7 +445,7 @@ let%expect_test "list collapsing" =
     |}]
 
 let%expect_test "do not inline recursive functions" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -504,7 +504,7 @@ let%expect_test "do not inline recursive functions" =
       } |}]
 
 let%expect_test "inline function in for loop" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -594,7 +594,7 @@ let%expect_test "inline function in for loop" =
 (* TODO: check test results from here *)
 
 let%expect_test "inline function in for loop 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -694,7 +694,7 @@ let%expect_test "inline function in for loop 2" =
       } |}]
 
 let%expect_test "inline function in while loop" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -774,7 +774,7 @@ let%expect_test "inline function in while loop" =
       } |}]
 
 let%expect_test "inline function in if then else" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -849,7 +849,7 @@ let%expect_test "inline function in if then else" =
     |}]
 
 let%expect_test "inline function in ternary if " =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -947,7 +947,7 @@ let%expect_test "inline function in ternary if " =
       } |}]
 
 let%expect_test "inline function multiple returns " =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1020,7 +1020,7 @@ let%expect_test "inline function multiple returns " =
       } |}]
 
 let%expect_test "inline function indices " =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1091,7 +1091,7 @@ let%expect_test "inline function indices " =
       } |}]
 
 let%expect_test "inline function and " =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1163,7 +1163,7 @@ let%expect_test "inline function and " =
       } |}]
 
 let%expect_test "inline function or " =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1234,7 +1234,7 @@ let%expect_test "inline function or " =
       } |}]
 
 let%expect_test "unroll nested loop" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1630,7 +1630,7 @@ let%expect_test "unroll nested loop 3" =
       } |}]
 
 let%expect_test "unroll nested loop with break" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1690,7 +1690,7 @@ let%expect_test "unroll nested loop with break" =
       } |}]
 
 let%expect_test "constant propagation" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1749,7 +1749,7 @@ let%expect_test "constant propagation" =
     } |}]
 
 let%expect_test "constant propagation, local scope" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1814,7 +1814,7 @@ let%expect_test "constant propagation, local scope" =
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1861,9 +1861,9 @@ let%expect_test "constant propagation, model block local scope" =
     }
 
     generate_quantities {
-      data int i;
-      data int j;
       if(emit_generated_quantities__) {
+        data int i;
+        data int j;
         for(x in 1:i) {
           FnPrint__((i + j));
         }
@@ -1882,7 +1882,7 @@ let%expect_test "constant propagation, model block local scope" =
     } |}]
 
 let%expect_test "expression propagation" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1939,7 +1939,7 @@ let%expect_test "expression propagation" =
       } |}]
 
 let%expect_test "copy propagation" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2000,7 +2000,7 @@ let%expect_test "copy propagation" =
       } |}]
 
 let%expect_test "dead code elimination" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2060,7 +2060,7 @@ let%expect_test "dead code elimination" =
       } |}]
 
 let%expect_test "dead code elimination decl" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2116,7 +2116,7 @@ let%expect_test "dead code elimination decl" =
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2165,7 +2165,7 @@ let%expect_test "dead code elimination, for loop" =
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2219,7 +2219,7 @@ let%expect_test "dead code elimination, while loop" =
       } |}]
 
 let%expect_test "dead code elimination, if then" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2288,7 +2288,7 @@ let%expect_test "dead code elimination, if then" =
       } |}]
 
 let%expect_test "dead code elimination, nested" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2339,7 +2339,7 @@ let%expect_test "dead code elimination, nested" =
       } |}]
 
 let%expect_test "partial evaluation" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2395,7 +2395,7 @@ let%expect_test "partial evaluation" =
       } |}]
 
 let%expect_test "try partially evaluate" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2451,7 +2451,7 @@ let%expect_test "try partially evaluate" =
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2503,7 +2503,7 @@ let%expect_test "partially evaluate with equality check" =
       } |}]
 
 let%expect_test "partially evaluate functions" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2935,7 +2935,7 @@ model {
       } |}]
 
 let%expect_test "lazy code motion" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2988,7 +2988,7 @@ let%expect_test "lazy code motion" =
     } |}]
 
 let%expect_test "lazy code motion, 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3043,7 +3043,7 @@ let%expect_test "lazy code motion, 2" =
       } |}]
 
 let%expect_test "lazy code motion, 3" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3097,7 +3097,7 @@ let%expect_test "lazy code motion, 3" =
       } |}]
 
 let%expect_test "lazy code motion, 4" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3181,7 +3181,7 @@ let%expect_test "lazy code motion, 4" =
       } |}]
 
 let%expect_test "lazy code motion, 5" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3267,7 +3267,7 @@ let%expect_test "lazy code motion, 5" =
       } |}]
 
 let%expect_test "lazy code motion, 6" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3326,7 +3326,7 @@ let%expect_test "lazy code motion, 6" =
       } |}]
 
 let%expect_test "lazy code motion, 7" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3445,7 +3445,7 @@ let%expect_test "lazy code motion, 7" =
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3514,7 +3514,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       } |}]
 
 let%expect_test "lazy code motion, 9" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3567,7 +3567,7 @@ let%expect_test "lazy code motion, 9" =
       } |}]
 
 let%expect_test "lazy code motion, 10" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3623,7 +3623,7 @@ let%expect_test "lazy code motion, 10" =
       } |}]
 
 let%expect_test "lazy code motion, 11" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3685,7 +3685,7 @@ let%expect_test "lazy code motion, 11" =
       } |}]
 
 let%expect_test "lazy code motion, 12" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3845,7 +3845,7 @@ let%expect_test "lazy code motion, 13" =
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3923,7 +3923,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       } |}]
 
 let%expect_test "block fixing" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3966,7 +3966,7 @@ let%expect_test "block fixing" =
        (prog_name "") (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -4047,7 +4047,7 @@ let%expect_test "one-step loop unrolling" =
       } |}]
 
 let%expect_test "adlevel_optimization" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -4112,7 +4112,7 @@ let%expect_test "adlevel_optimization" =
         data real w;
         w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
-        if(emit_transformed_parameters__) {
+        if(emit_transformed_parameters__ || emit_generated_quantities__) {
           data int x;
           data real y;
           data real z;
@@ -4136,7 +4136,7 @@ let%expect_test "adlevel_optimization" =
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -4179,7 +4179,7 @@ let%expect_test "adlevel_optimization expressions" =
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
         (smeta <opaque>))
        ((stmt
-         (Assignment (w ())
+         (Assignment (w UReal ())
           ((expr
             (FunApp CompilerInternal FnReadParam__
              (((expr (Lit Str w))
@@ -4215,7 +4215,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (y ())
+                (Assignment (y UReal ())
                  ((expr
                    (FunApp StanLib Plus__
                     (((expr (Var y))
@@ -4226,7 +4226,7 @@ let%expect_test "adlevel_optimization expressions" =
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
                (smeta <opaque>))
               (((stmt
-                 (Assignment (y ())
+                 (Assignment (y UReal ())
                   ((expr
                     (FunApp StanLib Plus__
                      (((expr (Var y))
@@ -4248,7 +4248,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (z ())
+                (Assignment (z UReal ())
                  ((expr (Var y))
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
                (smeta <opaque>))
@@ -4264,7 +4264,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
-                (Assignment (z_data ())
+                (Assignment (z_data UReal ())
                  ((expr (Var x))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
                (smeta <opaque>))
@@ -4283,7 +4283,7 @@ let%expect_test "adlevel_optimization expressions" =
         (smeta <opaque>))) |}]
 
 let%expect_test "adlevel_optimization 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -4352,7 +4352,7 @@ let%expect_test "adlevel_optimization 2" =
         w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
         data real w_trans;
-        if(emit_transformed_parameters__) {
+        if(emit_transformed_parameters__ || emit_generated_quantities__) {
           w_trans = 1;
           {
             data int x;

@@ -21,35 +21,35 @@ let initialize () =
   ; globals= String.Table.create () }
 
 let enter s str ty =
-  let _ =
+  let _ : [`Duplicate | `Ok] =
     if !(s.scopedepth) = 0 then Hashtbl.add s.globals ~key:str ~data:()
     else `Ok
   in
-  let _ = Hashtbl.add s.table ~key:str ~data:ty in
+  let _ : [`Duplicate | `Ok] = Hashtbl.add s.table ~key:str ~data:ty in
   Stack.push s.stack str
 
 let look s str = Hashtbl.find s.table str
 
 let begin_scope s =
-  let _ = s.scopedepth := !(s.scopedepth) + 1 in
+  s.scopedepth := !(s.scopedepth) + 1 ;
   Stack.push s.stack "-sentinel-new-scope-"
 
 (* using a string "-sentinel-new-scope-" here that can never be used as an identifier to indicate that new scope is entered *)
 let end_scope s =
-  let _ = s.scopedepth := !(s.scopedepth) - 1 in
+  s.scopedepth := !(s.scopedepth) - 1 ;
   while Stack.top_exn s.stack <> "-sentinel-new-scope-" do
     (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
     Hashtbl.remove s.table (Stack.top_exn s.stack) ;
     Hashtbl.remove s.readonly (Stack.top_exn s.stack) ;
     Hashtbl.remove s.isunassigned (Stack.top_exn s.stack) ;
-    let _ = Stack.pop_exn s.stack in
+    let _ : string = Stack.pop_exn s.stack in
     ()
   done ;
-  let _ = Stack.pop_exn s.stack in
+  let _ : string = Stack.pop_exn s.stack in
   ()
 
 let set_read_only s str =
-  let _ = Hashtbl.add s.readonly ~key:str ~data:() in
+  let _ : [`Duplicate | `Ok] = Hashtbl.add s.readonly ~key:str ~data:() in
   ()
 
 let get_read_only s str =
@@ -58,7 +58,7 @@ let get_read_only s str =
 let set_is_assigned s str = Hashtbl.remove s.isunassigned str
 
 let set_is_unassigned s str =
-  let _ =
+  let _ : [`Duplicate | `Ok] =
     if Hashtbl.mem s.isunassigned str then `Ok
     else Hashtbl.add s.isunassigned ~key:str ~data:()
   in

@@ -83,14 +83,14 @@ let replace_fresh_local_vars s' =
                   { mtype= remove_possible_size decl_type
                   ; madlevel= decl_adtype
                   ; mloc= Middle.no_span } } )
-    | Assignment ((var_name, l), e) ->
+    | Assignment ((var_name, ut, l), e) ->
         let var_name =
           match Map.Poly.find m var_name with
           | None -> var_name
           | Some {expr= Var var_name; _} -> var_name
           | Some e -> raise_s [%sexp (e : expr_typed_located)]
         in
-        (Assignment ((var_name, l), e), m)
+        (Assignment ((var_name, ut, l), e), m)
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -130,7 +130,8 @@ let handle_early_returns opt_triple b =
       | None, None -> Break
       | Some (Some _, _, name), Some e ->
           SList
-            [ {stmt= Assignment ((name, []), e); smeta= Middle.no_span}
+            [ { stmt= Assignment ((name, e.emeta.mtype, []), e)
+              ; smeta= Middle.no_span }
             ; {stmt= Break; smeta= Middle.no_span} ]
       | _, _ -> raise_s [%sexp ("" : string)] )
     | x -> x
@@ -241,7 +242,7 @@ and inline_function_index adt fim i =
 let rec inline_function_statement adt fim {stmt; smeta} =
   { stmt=
       ( match stmt with
-      | Assignment ((x, l), e2) ->
+      | Assignment ((x, ut, l), e2) ->
           let e1 = {e2 with expr= Indexed ({e2 with expr= Var x}, l)} in
           (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
           let dl1, sl1, e1 = inline_function_expression adt fim e1 in
@@ -252,7 +253,9 @@ let rec inline_function_statement adt fim {stmt; smeta} =
             | Indexed ({expr= Var x; _}, l) -> (x, l)
             | _ as w -> raise_s [%sexp (w : mtype_loc_ad with_expr expr)]
           in
-          slist_concat_no_loc (dl2 @ dl1 @ sl2 @ sl1) (Assignment ((x, l), e2))
+          slist_concat_no_loc
+            (dl2 @ dl1 @ sl2 @ sl1)
+            (Assignment ((x, ut, l), e2))
       | TargetPE e ->
           let d, s, e = inline_function_expression adt fim e in
           slist_concat_no_loc (d @ s) (TargetPE e)
@@ -564,11 +567,11 @@ let dead_code_elimination (mir : typed_prog) =
         (Map.find_exn live_variables i).Monotone_framework_sigs.entry
       in
       match stmt with
-      | Assignment ((x, []), rhs) ->
+      | Assignment ((x, _, []), rhs) ->
           if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
             stmt
           else Skip
-      | Assignment ((x, is), rhs) ->
+      | Assignment ((x, _, is), rhs) ->
           if
             Set.Poly.mem live_variables_s x
             || can_side_effect_expr rhs
@@ -711,14 +714,16 @@ let lazy_code_motion (mir : typed_prog) =
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
-            { stmt= Assignment ((Map.find_exn expression_map e, []), e)
+            { stmt=
+                Assignment
+                  ((Map.find_exn expression_map e, e.emeta.mtype, []), e)
             ; smeta= Middle.no_span } )
           to_assign_in_s
       in
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
-          | Assignment ((x, []), e')
+          | Assignment ((x, _, []), e')
             when Map.mem m e'
                  && Middle.compare_expr_typed_located {e' with expr= Var x}
                       (Map.find_exn m e')

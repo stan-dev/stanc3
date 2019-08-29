@@ -45,7 +45,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
-        | GetLP | GetTarget -> Var "target"
+        | GetLP | GetTarget -> FunApp (StanLib, "target", [])
         | ArrayExpr eles ->
             FunApp
               ( CompilerInternal
@@ -79,6 +79,7 @@ and trans_idx = function
 and trans_exprs = List.map ~f:trans_expr
 
 let trans_sizedtype = map_sizedtype trans_expr
+let trans_possiblysizedtype pst = map_possiblysizedtype trans_expr pst
 
 let neg_inf =
   { expr= FunApp (StanLib, string_of_internal_fn FnNegInf, [])
@@ -125,7 +126,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 let add_int_index e i =
   let mtype =
     Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
-      e.emeta.mtype [(i, UInt)]
+      e.emeta.mtype [i]
   and mir_i = trans_idx i in
   let expr =
     match e.expr with
@@ -164,7 +165,7 @@ let rec for_scalar st bodyfn var smeta =
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
-      mkfor d1 (fun e -> for_scalar (SVector d2) bodyfn e smeta) var smeta
+      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -263,8 +264,8 @@ let extra_constraint_args st = function
    |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
    |Identity ->
       []
-  | Covariance | Correlation | CholeskyCov | CholeskyCorr ->
-      eigen_size st |> List.last_exn |> List.return
+  | Covariance | Correlation | CholeskyCorr -> [List.hd_exn (eigen_size st)]
+  | CholeskyCov -> eigen_size st
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
@@ -275,11 +276,14 @@ let internal_of_dread = function
   | ReadParam -> FnReadParam
   | ReadData -> FnReadData
 
-let assign_indexed vident smeta varfn var =
-  let indices =
-    match var.expr with Indexed (_, indices) -> indices | _ -> []
-  in
-  {stmt= Assignment ((vident, indices), varfn var); smeta}
+let rec pull_indices {expr; _} =
+  match expr with
+  | Indexed (obj, indices) -> pull_indices obj @ indices
+  | _ -> []
+
+let assign_indexed decl_type vident smeta varfn var =
+  let indices = pull_indices var in
+  {stmt= Assignment ((vident, decl_type, indices), varfn var); smeta}
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -317,11 +321,32 @@ let param_size transform sizedtype =
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
-        (fun m n -> binop (k_choose_2 n) Plus (binop (binop m Minus n) Times n))
+        (fun m n ->
+          binop
+            (binop (k_choose_2 n) Plus n)
+            Plus
+            (binop (binop m Minus n) Times n) )
         sizedtype
   | Covariance -> shrink_eigen (fun k -> binop k Plus (k_choose_2 k)) sizedtype
 
-let read_decl dread decl_id transform sizedtype smeta decl_var =
+let remove_possibly_exn pst action loc =
+  match pst with
+  | Sized st -> st
+  | Unsized _ ->
+      raise_s
+        [%message
+          "Error extracting sizedtype" ~action ~loc:(loc : location_span)]
+
+(* mat_to_arr is used whenever we have a Stan matrix but we're dealing with
+   an underlying array. This is a code smell - not sure how to fix it short of
+   complete refactoring of data input.*)
+let rec mat_to_arr = function
+  | SMatrix (d1, d2) -> SArray (SRowVector d2, d1)
+  | SArray (t, d) -> SArray (mat_to_arr t, d)
+  | st -> st
+
+let read_decl dread decl_id decl_type smeta decl_var =
+  let sizedtype = remove_possibly_exn decl_type "read" smeta in
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
@@ -331,19 +356,22 @@ let read_decl dread decl_id transform sizedtype smeta decl_var =
   let readfn var =
     internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
   in
-  let readvar var =
+  let rec readvar var =
     match var.expr with
-    | Indexed (_, indices) -> {var with expr= Indexed (readfn var, indices)}
-    | _ -> readfn var
+    | Var id when id = decl_id -> readfn var
+    | e -> {var with expr= map_expr readvar e}
   in
-  let forl, st =
+  let forl =
     match dread with
-    | ReadData -> (for_scalar, sizedtype)
-    | ReadParam -> (for_eigen, param_size transform sizedtype)
+    | ReadData -> for_scalar (mat_to_arr sizedtype)
+    | ReadParam -> for_eigen sizedtype
   in
-  forl st (assign_indexed decl_id smeta readvar) decl_var smeta
+  forl
+    (assign_indexed (remove_size sizedtype) decl_id smeta readvar)
+    decl_var smeta
 
-let constrain_decl st dconstrain t decl_id decl_var smeta =
+let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
+  let st = remove_possibly_exn decl_type "constrain" smeta in
   let mkstring = mkstring decl_var.emeta.mloc in
   match Option.map ~f:(constraint_to_string t) dconstrain with
   | None | Some "" -> []
@@ -363,11 +391,11 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
         {expr= FunApp (CompilerInternal, fname, args var); emeta= var.emeta}
       in
       [ (constraint_forl t) st
-          (assign_indexed decl_id smeta constrainvar)
+          (assign_indexed (remove_size st) decl_id smeta constrainvar)
           decl_var smeta ]
 
-let rec check_decl decl_type decl_id decl_trans smeta adlevel =
-  let forl = constraint_forl decl_trans in
+let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
+  let decl_type = remove_possibly_exn decl_type' "check" smeta in
   let chk fn args =
     let check_id id =
       let id_str =
@@ -381,7 +409,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       {stmt; smeta}
     in
     let mtype = remove_size decl_type in
-    forl decl_type check_id
+    for_eigen decl_type check_id
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
@@ -389,82 +417,120 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
-      check_decl decl_type decl_id (Ast.Lower lb) smeta adlevel
-      @ check_decl decl_type decl_id (Ast.Upper ub) smeta adlevel
+      check_decl decl_type' decl_id (Ast.Lower lb) smeta adlevel
+      @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
-let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
+let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
     identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let dt = trans_sizedtype sizedtype in
+  let dt = trans_possiblysizedtype decl_type in
   let decl_adtype = dadlevel in
   let decl_var =
     { expr= Var decl_id
-    ; emeta= {mtype= remove_size sizedtype; madlevel= dadlevel; mloc= smeta} }
+    ; emeta=
+        {mtype= remove_possible_size decl_type; madlevel= dadlevel; mloc= smeta}
+    }
   in
-  let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= Sized dt}; smeta} in
-  let checks =
-    match dconstrain with
-    | Some Check -> check_decl dt decl_id transform smeta dadlevel
-    | _ -> []
+  let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= dt}; smeta} in
+  let rhs_assignment =
+    Option.map
+      ~f:(fun e -> {stmt= Assignment ((decl_id, e.emeta.mtype, []), e); smeta})
+      rhs
+    |> Option.to_list
   in
-  let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
-    let unconstrained_decl =
-      match transform with
-      | Ast.Identity | Ast.Lower _ | Ast.Upper _
-       |Ast.LowerUpper (_, _)
-       |Ast.Offset _ | Ast.Multiplier _
-       |Ast.OffsetMultiplier (_, _)
-       |Ast.Ordered | Ast.PositiveOrdered ->
-          None
-      | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
-       |Ast.Correlation | Ast.Covariance ->
-          let decl_id = decl_id ^ "_" ^ gensym () in
-          let st = param_size transform dt in
-          let emeta = {decl_var.emeta with mtype= remove_size st} in
-          let stmt = Decl {decl_adtype; decl_id; decl_type= Sized st} in
-          Some ((decl_id, {expr= Var decl_id; emeta}, st), [{stmt; smeta}])
+  if String.is_suffix ~suffix:"__" decl_id then decl :: rhs_assignment
+  else
+    let checks =
+      match dconstrain with
+      | Some Check -> check_decl dt decl_id transform smeta dadlevel
+      | _ -> []
     in
-    match (dconstrain, unconstrained_decl) with
-    | Some Constrain, Some ud -> ud
-    | _ -> ((decl_id, decl_var, dt), [])
-  in
-  let constrain_stmts =
-    match dconstrain with
-    | Some Constrain | Some Unconstrain ->
-        constrain_decl dt dconstrain transform decl_id temp_decl_var smeta
-    | _ -> []
-  in
-  let read_stmts =
-    match (dread, rhs) with
-    | Some dread, _ ->
-        [read_decl dread temp_decl_id transform temp_dt smeta temp_decl_var]
-    | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
-    | None, None -> []
-  in
-  (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
+    let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
+      let default = ((decl_id, decl_var, dt), []) in
+      match dconstrain with
+      | Some Constrain -> (
+        match transform with
+        | Ast.Identity | Ast.Lower _ | Ast.Upper _
+         |Ast.LowerUpper (_, _)
+         |Ast.Offset _ | Ast.Multiplier _
+         |Ast.OffsetMultiplier (_, _)
+         |Ast.Ordered | Ast.PositiveOrdered ->
+            default
+        | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
+         |Ast.Correlation | Ast.Covariance ->
+            let dt =
+              remove_possibly_exn dt "constrain" smeta |> param_size transform
+            in
+            let decl_id = decl_id ^ "_" ^ gensym () in
+            let emeta = {decl_var.emeta with mtype= remove_size dt} in
+            let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
+            ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}])
+        )
+      | _ -> default
+    in
+    let constrain_stmts =
+      match dconstrain with
+      | Some Constrain | Some Unconstrain ->
+          constrain_decl dt dconstrain transform decl_id temp_decl_var smeta
+      | _ -> []
+    in
+    let read_stmts =
+      match (dread, rhs) with
+      | Some dread, _ ->
+          [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
+      | None, Some _ -> rhs_assignment
+      | None, None -> []
+    in
+    (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
   | x ->
       raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
-let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
+let dist_name_suffix udf_names name =
+  let is_udf_name s = List.exists ~f:(( = ) s) udf_names in
+  match
+    Utils.distribution_suffices
+    |> List.filter ~f:(fun sfx ->
+           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
+       )
+    |> List.hd
+  with
+  | Some hd -> hd
+  | None -> raise_s [%message "Couldn't find distribution " name]
+
+let%expect_test "dist name suffix" =
+  dist_name_suffix [] "normal" |> print_endline ;
+  [%expect {| _log |}]
+
+let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
+    =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
+  let trans_stmt =
+    trans_stmt udf_names {declc with dread= None; dconstrain= None}
+  in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment
-      { assign_lhs=
-          { assign_identifier
-          ; assign_indices
-          ; assign_meta= {id_ad_level; id_type_; lhs_ad_level; lhs_type_; loc}
-          }
-      ; assign_rhs
-      ; assign_op } ->
+  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
+      let rec get_lhs_base = function
+        | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
+        | {lval= LVariable s; lmeta} -> (s, lmeta)
+      in
+      let assign_identifier, lmeta = get_lhs_base assign_lhs in
+      let id_ad_level = lmeta.Ast.ad_level in
+      let id_type_ = lmeta.Ast.type_ in
+      let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
+      let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
+      let rec get_lhs_indices = function
+        | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
+        | _ -> []
+      in
+      let assign_indices = get_lhs_indices assign_lhs in
       let assignee =
         { Ast.expr=
             ( match assign_indices with
@@ -477,7 +543,10 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
                         ; ad_level= id_ad_level
                         ; type_= id_type_ } }
                   , assign_indices ) )
-        ; emeta= {Ast.loc; ad_level= lhs_ad_level; type_= lhs_type_} }
+        ; emeta=
+            { Ast.loc= assign_lhs.lmeta.loc
+            ; ad_level= lhs_ad_level
+            ; type_= lhs_type_ } }
       in
       let rhs =
         match assign_op with
@@ -485,13 +554,16 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
       Assignment
-        ((assign_identifier.name, List.map ~f:trans_idx assign_indices), rhs)
+        ( ( assign_identifier.name
+          , id_type_
+          , List.map ~f:trans_idx assign_indices )
+        , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix = stan_distribution_name_suffix distribution.name in
+      let suffix = dist_name_suffix udf_names distribution.name in
       let name =
         distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
       in
@@ -537,25 +609,49 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.ForEach (loopvar, iteratee, body) ->
       let newsym = gensym () in
       let wrap expr = {expr; emeta= {mloc; mtype= UInt; madlevel= DataOnly}} in
-      let iteratee = trans_expr iteratee
+      let iteratee' = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in
+      let indices =
+        let single_one =
+          Ast.Single
+            { Ast.expr= Ast.IntNumeral "1"
+            ; emeta= {iteratee.emeta with type_= UInt} }
+        in
+        match iteratee'.emeta.mtype with
+        | UMatrix -> [single_one; single_one]
+        | _ -> [single_one]
+      in
+      let decl_type =
+        Semantic_check.inferred_unsizedtype_of_indexed_exn
+          ~loc:iteratee'.emeta.mloc iteratee'.emeta.mtype indices
+      in
+      let decl_loopvar =
+        Decl
+          { decl_adtype= iteratee'.emeta.madlevel
+          ; decl_id= loopvar.name
+          ; decl_type= Unsized decl_type }
+      in
+      let decl_loopvar = {stmt= decl_loopvar; smeta} in
       let assign_loopvar =
         Assignment
-          ( (loopvar.name, [])
-          , Indexed (iteratee, [Single indexing_var]) |> wrap )
+          ( (loopvar.name, UInt, [])
+          , Indexed (iteratee', [Single indexing_var]) |> wrap )
       in
       let assign_loopvar = {stmt= assign_loopvar; smeta} in
-      let body =
+      let body_stmts =
         match trans_single_stmt body with
-        | {stmt= Block body_stmts; smeta} ->
-            {stmt= Block (assign_loopvar :: body_stmts); smeta}
-        | {stmt; smeta} -> {stmt= Block [assign_loopvar; {stmt; smeta}]; smeta}
+        | {stmt= Block body_stmts; _} -> body_stmts
+        | b -> [b]
+      in
+      let body =
+        {stmt= Block (decl_loopvar :: assign_loopvar :: body_stmts); smeta}
       in
       For
         { loopvar= newsym
         ; lower= loop_bottom
         ; upper=
-            wrap @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
+            wrap
+            @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee'])
         ; body }
       |> swrap
   | Ast.FunDef _ ->
@@ -563,9 +659,9 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl
-      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      {decl_type; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
-      trans_decl declc smeta sizedtype
+      trans_decl declc smeta decl_type
         (Ast.map_transformation trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
@@ -575,18 +671,19 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
 
-let trans_fun_def (ts : Ast.typed_statement) =
+let trans_fun_def udf_names (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef {returntype; funname; arguments; body} ->
-      { fdrt= (match returntype with Void -> None | ReturnType ut -> Some ut)
-      ; fdname= funname.name
-      ; fdargs= List.map ~f:trans_arg arguments
-      ; fdbody=
-          trans_stmt
-            {dread= None; dconstrain= None; dadlevel= AutoDiffable}
-            body
-          |> unwrap_block_or_skip
-      ; fdloc= ts.smeta.loc }
+      [ { fdrt=
+            (match returntype with Void -> None | ReturnType ut -> Some ut)
+        ; fdname= funname.name
+        ; fdargs= List.map ~f:trans_arg arguments
+        ; fdbody=
+            trans_stmt udf_names
+              {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+              body
+            |> unwrap_block_or_skip
+        ; fdloc= ts.smeta.loc } ]
   | _ ->
       raise_s
         [%message "Found non-function definition statement in function block"]
@@ -633,25 +730,7 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:is_check stmts in
   not_checks @ checks
 
-let trans_prog filename p : typed_prog =
-  (*
-     1. prepare_params: add read_param calls (same call should constrain?)
-          maybe read(constrained()), constrain(read()), or read("constraint", ...)
-     1. prepare_params: add tparams 's; add checks
-     2. transform_inits: add read_param calls (same call should unconstrain?)
-     3. prepare_data: add read_data calls and checks
-     4. prepare_data: add tdata 's and checks
-     5. add write() calls to generate_quantities for params, tparams...
-             shit these are conditional depending on the flag.
-             add the flag to the call to write?
-           apparently tdata aren't written anywhere
-
-     during code gen:
-     get_param_names: scan prepare_params for Decl at top level
-     constrained_param_names: needs to tell between tparams and gqs and not
-     unconstrained param names: same, but also some funky
-        adjustments for unconstrained space: ???
-*)
+let trans_prog filename (p : Ast.typed_program) : typed_prog =
   let { Ast.functionblock
       ; datablock
       ; transformeddatablock
@@ -661,10 +740,16 @@ let trans_prog filename p : typed_prog =
     p
   in
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
+  let grab_fundef_names = function
+    | {Ast.stmt= Ast.FunDef {funname; _}; _} -> [funname.name]
+    | _ -> []
+  in
+  let udf_names = map grab_fundef_names functionblock in
+  let trans_stmt = trans_stmt udf_names in
   let get_name_size s =
     match s.Ast.stmt with
-    | Ast.VarDecl {sizedtype; identifier; transformation; _} ->
-        [(identifier.name, trans_sizedtype sizedtype, transformation)]
+    | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
+        [(identifier.name, trans_sizedtype st, transformation)]
     | _ -> []
   in
   let grab_names_sizes block =
@@ -685,24 +770,20 @@ let trans_prog filename p : typed_prog =
   and input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
+  let declc = {dread= None; dconstrain= None; dadlevel= DataOnly} in
   let datab =
     map
-      (trans_stmt
-         {dread= Some ReadData; dconstrain= Some Check; dadlevel= DataOnly})
+      (trans_stmt {declc with dread= Some ReadData; dconstrain= Some Check})
       datablock
     |> migrate_checks_to_end_of_block
   in
   let prepare_data =
     datab
-    @ map
-        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
-        transformeddatablock
+    @ map (trans_stmt {declc with dconstrain= Some Check}) transformeddatablock
     |> migrate_checks_to_end_of_block
   in
   let modelb =
-    map
-      (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
-      modelblock
+    map (trans_stmt {declc with dadlevel= AutoDiffable}) modelblock
   in
   let log_prob =
     map
@@ -713,7 +794,7 @@ let trans_prog filename p : typed_prog =
       parametersblock
     @ ( map
           (trans_stmt
-             {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
+             {declc with dconstrain= Some Check; dadlevel= AutoDiffable})
           transformedparametersblock
       |> migrate_checks_to_end_of_block )
     @
@@ -724,31 +805,30 @@ let trans_prog filename p : typed_prog =
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
-  let part_decls block =
-    List.partition_tf
-      ~f:(function {stmt= Decl _; _} -> true | _ -> false)
-      (gen_from_block
-         {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
-         block)
+  let txparam_decls, txparam_stmts =
+    gen_from_block declc TransformedParameters
+    |> List.partition_tf ~f:(function {stmt= Decl _; _} -> true | _ -> false)
   in
-  let txparam_decls, txparam_stmts = part_decls TransformedParameters in
-  let gq_decls, gq_stmts = part_decls GeneratedQuantities in
   let generate_quantities =
     gen_from_block
-      {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly}
+      {declc with dread= Some ReadParam; dconstrain= Some Constrain}
       Parameters
     @ txparam_decls
-    @ compiler_if "emit_transformed_parameters__" txparam_stmts
-    @ gq_decls
-    @ compiler_if "emit_generated_quantities__" gq_stmts
+    @ compiler_if
+        "emit_transformed_parameters__ || emit_generated_quantities__"
+        txparam_stmts
+    @ compiler_if "emit_generated_quantities__"
+        (migrate_checks_to_end_of_block
+           (gen_from_block
+              {declc with dconstrain= Some Check}
+              GeneratedQuantities))
   in
   let transform_inits =
     gen_from_block
-      {dread= Some ReadData; dconstrain= Some Unconstrain; dadlevel= DataOnly}
+      {declc with dread= Some ReadData; dconstrain= Some Unconstrain}
       Parameters
   in
-  { functions_block=
-      Option.value_map functionblock ~default:[] ~f:(List.map ~f:trans_fun_def)
+  { functions_block= map (trans_fun_def udf_names) functionblock
   ; input_vars
   ; prepare_data
   ; log_prob

@@ -65,6 +65,10 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s -> raise_s [%sexp (s : string)] ) )
 
+let is_multi_index = function
+  | MultiIndex _ | Upfrom _ | Between _ | All -> true
+  | Single _ -> false
+
 let rec eval_expr (e : Middle.expr_typed_located) =
   { e with
     expr=
@@ -723,11 +727,87 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-  Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval_expr e, List.map ~f:eval_idx l) ) }
+       Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+          Indexed (eval_expr e, List.map ~f:(map_index eval_expr) l) ) }
 
-and eval_idx i = map_index eval_expr i
+let rec simplify_index_expr = function
+  | Indexed
+      ( { expr=
+            Indexed (obj, inner_indices)
+            (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
+               *   :: inner_tl ) *)
+        ; emeta }
+      , (Single ({emeta= {mtype= UInt; _}; _} as single_e) as single)
+        :: outer_tl )
+    when List.exists ~f:is_multi_index inner_indices -> (
+    match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
+    | inner_singles, MultiIndex first_multi :: inner_tl ->
+        (* foo [arr1, ..., arrN] [i1, ..., iN] ->
+         foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+        simplify_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             { expr= Indexed (first_multi, [single])
+                             ; emeta= {emeta with mtype= UInt} } ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | inner_singles, All :: inner_tl ->
+        (* v[:x][i] -> v[i] *)
+        (* v[:][i] -> v[i] *)
+        (* XXX generate check *)
+        simplify_index_expr
+          (Indexed
+             ( {expr= Indexed (obj, inner_singles @ [single] @ inner_tl); emeta}
+             , outer_tl ))
+    | inner_singles, Between (bot, _) :: inner_tl
+     |inner_singles, Upfrom bot :: inner_tl ->
+        (* v[x:y][z] -> v[x+z-1] *)
+        (* XXX generate check *)
+        simplify_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             (binop (binop bot Plus single_e) Minus loop_bottom)
+                         ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | inner_singles, multis ->
+        raise_s
+          [%message
+            "impossible"
+              (inner_singles : expr_typed_located index list)
+              (multis : expr_typed_located index list)] )
+  | e -> e
 
-let eval_stmt_base = map_statement eval_expr (fun x -> x)
+let remove_trailing_alls_expr = function
+  | Indexed (obj, indices) ->
+      (* a[2][:] -> a[2] *)
+      let rec remove_trailing_alls indices =
+        match List.rev indices with
+        | All :: tl -> remove_trailing_alls (List.rev tl)
+        | _ -> indices
+      in
+      Indexed (obj, remove_trailing_alls indices)
+  | e -> e
+
+let rec simplify_indices_expr {expr; emeta} =
+  let expr =
+    expr |> remove_trailing_alls_expr |> simplify_index_expr
+    |> map_expr simplify_indices_expr
+  in
+  {expr; emeta}
+
+let eval_stmt_base =
+  map_statement (Fn.compose eval_expr simplify_indices_expr) Fn.id
+
 let eval_stmt = map_rec_stmt_loc eval_stmt_base
 let eval_prog = map_prog eval_expr eval_stmt

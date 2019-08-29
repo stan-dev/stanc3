@@ -20,10 +20,6 @@ def tagName() {
 }
 pipeline {
     agent none
-    parameters {
-        booleanParam(defaultValue: false, name: 'all_tests',
-               description: "Check this box if you want to run all end-to-end tests.")
-    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -47,16 +43,13 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
-
                 echo runShell("eval \$(opam env); dune runtest --verbose")
-
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
+        stage("Run all models end-to-end") {
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -65,36 +58,11 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "stat_comp_benchmarks/ --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
-           cd ..
-               """
-                junit 'performance-tests-cmdstan/performance.xml'
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
-        // This stage is just gonna try to run all the models we normally
-        // do for regression testing
-        // and log all the failures. It'll make a big nasty red graph
-        // that becomes blue over time as we fix more models :)
-        stage("Try to run all models end-to-end") {
-            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
-            agent { label 'linux' }
-            steps {
-                unstash 'ubuntu-exe'
-                sh """
-          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                   """
-                sh """
-          cd performance-tests-cmdstan
-          cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
+          echo "example-models/regression_tests/mother.stan" > all.tests
+          cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
-          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                """
                 xunit([GoogleTest(
                     deleteOutputFiles: false,
@@ -123,7 +91,8 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
-                    cd scripts && bash -x install_build_deps.sh && cd ..
+                    opam update || true
+                    bash -x scripts/install_build_deps.sh
                     dune subst
                     dune build @install
                 """)
@@ -141,7 +110,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u opam"
+                            args "-u 1000 --entrypoint=\'\'"
                         }
                     }
                     steps {
@@ -189,8 +158,8 @@ pipeline {
         }
     }
     post {
-        always {
-            script {utils.mailBuildResults()}
+       always {
+          script {utils.mailBuildResults()}
         }
     }
 }

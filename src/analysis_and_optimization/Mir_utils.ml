@@ -13,7 +13,7 @@ let map_rec_expr_state
   let cur_state = ref state in
   let g e' =
     let e', state = f !cur_state e' in
-    let _ = cur_state := state in
+    cur_state := state ;
     e'
   in
   let e = map_rec_expr g e in
@@ -43,7 +43,7 @@ let map_rec_state_stmt_loc
   let cur_state = ref state in
   let g stmt =
     let stmt, state = f !cur_state stmt in
-    let _ = cur_state := state in
+    cur_state := state ;
     stmt
   in
   let stmt = map_rec_stmt_loc g {smeta; stmt} in
@@ -74,7 +74,7 @@ let map_rec_state_stmt_loc_num
   let cur_state = ref state in
   let g i stmt =
     let stmt, state = f i !cur_state stmt in
-    let _ = cur_state := state in
+    cur_state := state ;
     stmt
   in
   let stmt = map_rec_stmt_loc_num flowgraph_to_mir g s in
@@ -213,7 +213,7 @@ let subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base_helper g h b =
   match b with
-  | Assignment ((x, l), e2) -> Assignment ((x, List.map ~f:h l), g e2)
+  | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
   | x -> map_statement g (fun y -> y) x
 
 let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)

@@ -193,7 +193,7 @@ let var_decl_id d =
 
 let var_decl_gen_val m d =
   match d.stmt with
-  | VarDecl {sizedtype; transformation; _} ->
+  | VarDecl {decl_type= Sized sizedtype; transformation; _} ->
       generate_value m sizedtype transformation
   | _ -> failwith "This should never happen."
 

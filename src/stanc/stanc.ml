@@ -16,6 +16,9 @@ let model_file = ref ""
 let pretty_print_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
+let dump_mir_pretty = ref false
+let dump_tx_mir = ref false
+let dump_stan_math_sigs = ref false
 let output_file = ref ""
 let generate_data = ref false
 
@@ -42,7 +45,18 @@ let options =
       )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
-      , " For debugging purposes: print the MIR." )
+      , " For debugging purposes: print the MIR as an S-expression." )
+    ; ( "--debug-mir-pretty"
+      , Arg.Set dump_mir_pretty
+      , " For debugging purposes: pretty-print the MIR." )
+    ; ( "--debug-transformed-mir"
+      , Arg.Set dump_tx_mir
+      , " For debugging purposes: print the MIR after the backend has \
+         transformed it." )
+    ; ( "--dump-stan-math-signatures"
+      , Arg.Set dump_stan_math_sigs
+      , "Dump out the list of supported type signatures for Stan Math backend."
+      )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -117,12 +131,17 @@ let use_file filename =
   in
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
-  let _ = Debugging.typed_ast_logger typed_ast in
+  Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
+    if !dump_mir_pretty then
+      Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+    let tx_mir = Transform_Mir.trans_prog mir in
+    if !dump_tx_mir then
+      Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
+    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
@@ -131,6 +150,11 @@ let remove_dotstan s = String.drop_suffix s 5
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
+  (* Deal with multiple modalities *)
+  if !dump_stan_math_sigs then (
+    Middle.pretty_print_all_math_sigs Format.std_formatter () ;
+    exit 0 ) ;
+  (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=

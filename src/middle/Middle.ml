@@ -90,6 +90,12 @@ let contains_fn fname s =
   in
   contains_fn_go fname false s
 
+let rec is_indexing_matrix = function
+  | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
+  | UMatrix, [] -> false
+  | UMatrix, _ -> true
+  | _ -> false
+
 let mock_stmt stmt = {stmt; smeta= no_span}
 let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
@@ -106,7 +112,8 @@ let%test "contains fn" =
     mock_for 8
       (mock_for 9
          (mock_stmt
-            (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
+            (Assignment
+               (("v", UInt, []), internal_funapp FnReadData [] internal_meta))))
   in
   contains_fn
     (string_of_internal_fn FnReadData)

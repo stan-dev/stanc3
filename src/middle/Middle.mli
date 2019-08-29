@@ -62,12 +62,11 @@ val pretty_print_math_lib_operator_sigs : Mir.operator -> string list
 val pretty_print_math_lib_assignmentoperator_sigs :
   Mir.operator -> string option
 
-val pretty_print_all_math_lib_fn_sigs : string -> string
+val pretty_print_math_sigs : string -> string
+val pretty_print_all_math_sigs : Format.formatter -> unit -> unit
 
 val is_stan_math_function_name : string -> bool
 (** Check whether a string is the name of a Stan Math library function. *)
-
-val stan_distribution_name_suffix : string -> string
 
 val operator_return_type_from_string :
   string -> (autodifftype * unsizedtype) sexp_list -> returntype option
@@ -92,3 +91,11 @@ val mock_for :
      int
   -> (mtype_loc_ad, location_span) stmt_with
   -> (mtype_loc_ad, location_span) stmt_with
+
+val is_indexing_matrix : unsizedtype * 'e index list -> bool
+
+val stan_math_signatures :
+  (returntype * (autodifftype * unsizedtype) list) list String.Table.t
+
+val manual_stan_math_signatures :
+  (returntype * (autodifftype * unsizedtype) list) list String.Table.t
