@@ -2882,10 +2882,10 @@ model {
           y_vector[sym3__] = FnReadData__("y_vector", "vector", 3)[sym3__];
         }
         data matrix[2, 2] x_cov;
-        for(sym4__ in 1:2) {
-          for(sym5__ in 1:2) {
-            x_cov[sym4__, sym5__] = FnReadData__("x_cov", "matrix", 2, 2)[sym4__,
-                                                                          sym5__];
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:2) {
+            x_cov[sym3__, sym4__] = FnReadData__("x_cov", "matrix", 2, 2)[sym3__,
+                                                                          sym4__];
           }
         }
         x_cov = FnUnconstrain__(x_cov, "cov_matrix");
