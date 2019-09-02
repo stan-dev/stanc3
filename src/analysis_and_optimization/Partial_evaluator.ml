@@ -630,7 +630,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with
-        | {expr= Lit (Int, "0"); _}, _, e3' -> e3'.expr
+        | x, _, e3' when is_int 0 x -> e3'.expr
         | {expr= Lit (Int, _); _}, e2', _ -> e2'.expr
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | EAnd (e1, e2) -> (
