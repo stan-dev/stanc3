@@ -27,6 +27,13 @@ let rec map_rec_stmt_loc
   let recurse = map_rec_stmt_loc f in
   {smeta; stmt= f (map_statement (fun x -> x) recurse stmt)}
 
+let rec top_down_map_rec_stmt_loc
+    (f :
+         (expr_typed_located, stmt_loc) statement
+      -> (expr_typed_located, stmt_loc) statement) ({smeta; stmt} : stmt_loc) =
+  let recurse = top_down_map_rec_stmt_loc f in
+  {smeta; stmt= map_statement (fun x -> x) recurse (f stmt)}
+
 let map_rec_state_stmt_loc
     (f :
          's

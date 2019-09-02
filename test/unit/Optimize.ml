@@ -38,18 +38,6 @@ let%expect_test "map_rec_stmt_loc" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnPrint__(24, 24);
@@ -60,18 +48,6 @@ let%expect_test "map_rec_stmt_loc" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
@@ -106,18 +82,6 @@ let%expect_test "map_rec_state_stmt_loc" =
   print_endline (string_of_int num) ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnPrint__(24, 24);
@@ -128,18 +92,6 @@ let%expect_test "map_rec_state_stmt_loc" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       }
 
       3 |}]
@@ -183,15 +135,6 @@ let%expect_test "inline functions" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           for(sym1__ in 1:1) {
@@ -205,18 +148,6 @@ let%expect_test "inline functions" =
           }
           FnReject__(sym4__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline functions 2" =
@@ -254,19 +185,6 @@ let%expect_test "inline functions 2" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
-      log_prob {
-
-      }
-
       generate_quantities {
         if(emit_generated_quantities__) {
           for(sym3__ in 1:1) {
@@ -275,14 +193,6 @@ let%expect_test "inline functions 2" =
             }
           }
         }
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "list collapsing" =
@@ -476,31 +386,10 @@ let%expect_test "do not inline recursive functions" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnReject__(g(53));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in for loop" =
@@ -543,15 +432,6 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -577,18 +457,6 @@ let%expect_test "inline function in for loop" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 (* TODO: check test results from here *)
@@ -633,15 +501,6 @@ let%expect_test "inline function in for loop 2" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym9__;
@@ -679,18 +538,6 @@ let%expect_test "inline function in for loop 2" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in while loop" =
@@ -733,15 +580,6 @@ let%expect_test "inline function in while loop" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -759,18 +597,6 @@ let%expect_test "inline function in while loop" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in if then else" =
@@ -813,15 +639,6 @@ let%expect_test "inline function in if then else" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -832,18 +649,6 @@ let%expect_test "inline function in if then else" =
           }
           if(sym3__) FnPrint__("body");
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       }
 
     |}]
@@ -898,15 +703,6 @@ let%expect_test "inline function in ternary if " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -932,18 +728,6 @@ let%expect_test "inline function in ternary if " =
           }
           FnPrint__(sym3__ ?sym6__: sym9__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function multiple returns " =
@@ -982,15 +766,6 @@ let%expect_test "inline function multiple returns " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1005,18 +780,6 @@ let%expect_test "inline function multiple returns " =
           }
           FnPrint__(sym3__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function indices " =
@@ -1050,15 +813,6 @@ let%expect_test "inline function indices " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           array[array[int, 2], 2] a;
@@ -1076,18 +830,6 @@ let%expect_test "inline function indices " =
           }
           FnPrint__(a[sym3__, sym6__]);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function and " =
@@ -1121,15 +863,6 @@ let%expect_test "inline function and " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1148,18 +881,6 @@ let%expect_test "inline function and " =
           }
           FnPrint__(sym3__ && sym6__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function or " =
@@ -1192,15 +913,6 @@ let%expect_test "inline function or " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1219,18 +931,6 @@ let%expect_test "inline function or " =
           }
           FnPrint__(sym3__ || sym6__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop" =
@@ -1250,18 +950,6 @@ let%expect_test "unroll nested loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1281,18 +969,292 @@ let%expect_test "unroll nested loop" =
             }
           }
         }
-      }
+      } |}]
 
-      generate_quantities {
+let%expect_test "unroll nested loop 2" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in i:4)
+                    for (k in j:9)
+                       print(i, j, k);
+                   }
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = static_loop_unrolling mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      log_prob {
+        {
+          {
+            {
+              {
+                FnPrint__(1, 1, 1);
+              }
+              {
+                FnPrint__(1, 1, 2);
+              }
+              {
+                FnPrint__(1, 1, 3);
+              }
+              {
+                FnPrint__(1, 1, 4);
+              }
+              {
+                FnPrint__(1, 1, 5);
+              }
+              {
+                FnPrint__(1, 1, 6);
+              }
+              {
+                FnPrint__(1, 1, 7);
+              }
+              {
+                FnPrint__(1, 1, 8);
+              }
+              {
+                FnPrint__(1, 1, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 2, 2);
+              }
+              {
+                FnPrint__(1, 2, 3);
+              }
+              {
+                FnPrint__(1, 2, 4);
+              }
+              {
+                FnPrint__(1, 2, 5);
+              }
+              {
+                FnPrint__(1, 2, 6);
+              }
+              {
+                FnPrint__(1, 2, 7);
+              }
+              {
+                FnPrint__(1, 2, 8);
+              }
+              {
+                FnPrint__(1, 2, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 3, 3);
+              }
+              {
+                FnPrint__(1, 3, 4);
+              }
+              {
+                FnPrint__(1, 3, 5);
+              }
+              {
+                FnPrint__(1, 3, 6);
+              }
+              {
+                FnPrint__(1, 3, 7);
+              }
+              {
+                FnPrint__(1, 3, 8);
+              }
+              {
+                FnPrint__(1, 3, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 4, 4);
+              }
+              {
+                FnPrint__(1, 4, 5);
+              }
+              {
+                FnPrint__(1, 4, 6);
+              }
+              {
+                FnPrint__(1, 4, 7);
+              }
+              {
+                FnPrint__(1, 4, 8);
+              }
+              {
+                FnPrint__(1, 4, 9);
+              }
+            }
+          }
+          {
+            {
+              {
+                FnPrint__(2, 2, 2);
+              }
+              {
+                FnPrint__(2, 2, 3);
+              }
+              {
+                FnPrint__(2, 2, 4);
+              }
+              {
+                FnPrint__(2, 2, 5);
+              }
+              {
+                FnPrint__(2, 2, 6);
+              }
+              {
+                FnPrint__(2, 2, 7);
+              }
+              {
+                FnPrint__(2, 2, 8);
+              }
+              {
+                FnPrint__(2, 2, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 3, 3);
+              }
+              {
+                FnPrint__(2, 3, 4);
+              }
+              {
+                FnPrint__(2, 3, 5);
+              }
+              {
+                FnPrint__(2, 3, 6);
+              }
+              {
+                FnPrint__(2, 3, 7);
+              }
+              {
+                FnPrint__(2, 3, 8);
+              }
+              {
+                FnPrint__(2, 3, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 4, 4);
+              }
+              {
+                FnPrint__(2, 4, 5);
+              }
+              {
+                FnPrint__(2, 4, 6);
+              }
+              {
+                FnPrint__(2, 4, 7);
+              }
+              {
+                FnPrint__(2, 4, 8);
+              }
+              {
+                FnPrint__(2, 4, 9);
+              }
+            }
+          }
+        }
+      } |}]
 
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
+let%expect_test "unroll nested loop 3" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in i:4)
+                    for (k in j:i+j)
+                       print(i, j, k);
+                   }
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = static_loop_unrolling mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      log_prob {
+        {
+          {
+            {
+              {
+                FnPrint__(1, 1, 1);
+              }
+              {
+                FnPrint__(1, 1, 2);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 2, 2);
+              }
+              {
+                FnPrint__(1, 2, 3);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 3, 3);
+              }
+              {
+                FnPrint__(1, 3, 4);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 4, 4);
+              }
+              {
+                FnPrint__(1, 4, 5);
+              }
+            }
+          }
+          {
+            {
+              {
+                FnPrint__(2, 2, 2);
+              }
+              {
+                FnPrint__(2, 2, 3);
+              }
+              {
+                FnPrint__(2, 2, 4);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 3, 3);
+              }
+              {
+                FnPrint__(2, 3, 4);
+              }
+              {
+                FnPrint__(2, 3, 5);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 4, 4);
+              }
+              {
+                FnPrint__(2, 4, 5);
+              }
+              {
+                FnPrint__(2, 4, 6);
+              }
+            }
+          }
+        }
       } |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1314,18 +1276,6 @@ let%expect_test "unroll nested loop with break" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1341,18 +1291,6 @@ let%expect_test "unroll nested loop with break" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "constant propagation" =
@@ -1379,39 +1317,18 @@ let%expect_test "constant propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
       data int j;
       j = (2 + 42);
     }
-
     log_prob {
       {
         for(x in 1:42) {
           FnPrint__((42 + 44));
         }
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "constant propagation, local scope" =
@@ -1441,14 +1358,6 @@ let%expect_test "constant propagation, local scope" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
@@ -1457,7 +1366,6 @@ let%expect_test "constant propagation, local scope" =
         j = 2;
       }
     }
-
     log_prob {
       {
         int j;
@@ -1465,18 +1373,6 @@ let%expect_test "constant propagation, local scope" =
           FnPrint__((42 + j));
         }
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
@@ -1505,18 +1401,6 @@ let%expect_test "constant propagation, model block local scope" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
-    prepare_data {
-
-    }
-
     log_prob {
       {
         int i;
@@ -1525,7 +1409,6 @@ let%expect_test "constant propagation, model block local scope" =
         j = 2;
       }
     }
-
     generate_quantities {
       if(emit_generated_quantities__) {
         data int i;
@@ -1537,11 +1420,6 @@ let%expect_test "constant propagation, model block local scope" =
         FnWriteParam__(j);
       }
     }
-
-    transform_inits {
-
-    }
-
     output_vars {
       generated_quantities int i; //int
       generated_quantities int j; //int
@@ -1570,38 +1448,17 @@ let%expect_test "expression propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
         j = (2 + i);
       }
-
       log_prob {
         {
           for(x in 1:i) {
             FnPrint__((i + (2 + i)));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "copy propagation" =
@@ -1629,14 +1486,6 @@ let%expect_test "copy propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
@@ -1644,25 +1493,12 @@ let%expect_test "copy propagation" =
         data int k;
         k = (2 * i);
       }
-
       log_prob {
         {
           for(x in 1:i) {
             FnPrint__(((i + i) + k));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination" =
@@ -1690,14 +1526,6 @@ let%expect_test "dead code elimination" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data array[int, 2] i;
         i = FnMakeArray__(3, 2);
@@ -1705,24 +1533,11 @@ let%expect_test "dead code elimination" =
         j = FnMakeArray__(3, 2);
         j[1] = 2;
       }
-
       log_prob {
         {
           FnPrint__(i);
           FnPrint__(j);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination decl" =
@@ -1748,37 +1563,16 @@ let%expect_test "dead code elimination decl" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
         }
       }
-
       generate_quantities {
         if(emit_generated_quantities__) {
           data int i;
           FnPrint__(i);
         }
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
@@ -1799,35 +1593,11 @@ let%expect_test "dead code elimination, for loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
@@ -1852,36 +1622,12 @@ let%expect_test "dead code elimination, while loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
           while(1) ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -1916,18 +1662,6 @@ let%expect_test "dead code elimination, if then" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
@@ -1939,18 +1673,6 @@ let%expect_test "dead code elimination, if then" =
             FnPrint__("goodbye");
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, nested" =
@@ -1973,35 +1695,11 @@ let%expect_test "dead code elimination, nested" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "partial evaluation" =
@@ -2025,18 +1723,6 @@ let%expect_test "partial evaluation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           if(0) {
@@ -2046,18 +1732,6 @@ let%expect_test "partial evaluation" =
             FnPrint__(log1m(i));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "try partially evaluate" =
@@ -2081,18 +1755,6 @@ let%expect_test "try partially evaluate" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           real x;
@@ -2102,18 +1764,6 @@ let%expect_test "try partially evaluate" =
           FnPrint__(log_diff_exp(x, y));
           FnPrint__(log((exp(a) - exp(b))));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
@@ -2135,18 +1785,6 @@ let%expect_test "partially evaluate with equality check" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           vector[2] x;
@@ -2154,116 +1792,423 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_self(x));
           FnPrint__(dot_product(x, y));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
-let%expect_test "partially evaluate glm" =
+let%expect_test "partially evaluate functions" =
   gensym_reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      model {
-        matrix[2,3] x;
-        int y[2];
-        vector[2] y_real;
-        vector[3] beta;
-        vector[2] alpha;
-        real sigma;
-        print(bernoulli_lpmf(y| inv_logit(alpha + x * beta)));
-        print(bernoulli_logit_lpmf(y| alpha + x * beta));
-        print(bernoulli_lpmf(y| inv_logit(x * beta + alpha)));
-        print(bernoulli_logit_lpmf(y| x * beta + alpha));
-        print(bernoulli_lpmf(y| inv_logit(x * beta)));
-        print(bernoulli_logit_lpmf(y| x * beta));
-        print(neg_binomial_2_lpmf(y| exp(alpha + x * beta), sigma));
-        print(neg_binomial_2_log_lpmf(y| alpha + x * beta, sigma));
-        print(neg_binomial_2_lpmf(y| exp(x * beta + alpha), sigma));
-        print(neg_binomial_2_log_lpmf(y| x * beta + alpha, sigma));
-        print(neg_binomial_2_lpmf(y| exp(x * beta), sigma));
-        print(neg_binomial_2_log_lpmf(y| x * beta, sigma));
-        print(normal_lpdf(y_real| alpha + x * beta, sigma));
-        print(normal_lpdf(y_real| x * beta + alpha, sigma));
-        print(normal_lpdf(y_real| x * beta, sigma));
-        print(poisson_lpmf(y| exp(alpha + x * beta)));
-        print(poisson_log_lpmf(y| alpha + x * beta));
-        print(poisson_lpmf(y| exp(x * beta + alpha)));
-        print(poisson_log_lpmf(y| x * beta + alpha));
-        print(poisson_lpmf(y| exp(x * beta)));
-        print(poisson_log_lpmf(y| x * beta));
-      }
+parameters {
+    matrix[3, 2] x_matrix;
+    matrix[2, 4] y_matrix;
+    matrix[4, 2] z_matrix;
+    vector[2] x_vector;
+    vector[3] y_vector;
+    cov_matrix[2] x_cov;
+    real theta_u;
+    real phi_u;
+}
+model {
+    real theta = 34.;
+    real phi = 5.;
+    real x;
+    int i = 23;
+    int j = 32;
+    int y_arr[3] = {32, 2, 35};
+    target += +i;
+    target += -i;
+    target += !i;
+    target += +theta;
+    target += -theta;
+    target += i+j;
+    target += i-j;
+    target += i*j;
+    target += i/j;
+    target += i==j;
+    target += i!=j;
+    target += i<j;
+    target += i<=j;
+    target += i>j;
+    target += i>=j;
+    target += i && j;
+    target += i || j;
+    target += theta + phi;
+    target += theta - phi;
+    target += theta * phi;
+    target += theta / phi;
+    target += theta == phi;
+    target += theta != phi;
+    target += theta <= phi;
+    target += theta < phi;
+    target += theta > phi;
+    target += theta >= phi;
+    target += theta && phi;
+    target += theta || phi;
+    target += bernoulli_lpmf(y_arr| inv_logit(theta + x_matrix * x_vector));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector + theta));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(y_arr| (theta + x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector + theta));
+    target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_vector));
+    target += binomial_lpmf(y_arr| j, inv_logit(x_vector));
+    target += categorical_lpmf(y_arr| inv_logit(x_vector));
+    target += columns_dot_product(x_matrix, x_matrix);
+    target += dot_product(x_vector, x_vector);
+    target += inv(sqrt(x_vector));
+    target += inv(square(x_vector));
+    target += log(1 - exp(x_vector));
+    target += log(1 - inv_logit(x_vector));
+    target += log(1 - x_matrix);
+    target += log(1. - exp(x_vector));
+    target += log(1. - inv_logit(x_vector));
+    target += log(1. - x_matrix);
+    target += log(1 + exp(x_vector));
+    target += log(1 + x_matrix);
+    target += log(fabs(determinant(x_matrix)));
+    target += log(exp(theta) - exp(theta));
+    target += log(falling_factorial(phi, i));
+    target += log(rising_factorial(phi, i));
+    target += log(inv_logit(theta));
+    target += log(softmax(x_vector));
+    target += log(sum(exp(x_vector)));
+    target += log(exp(theta_u) + exp(phi_u));
+    target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
+    target += neg_binomial_2_lpmf(y_arr| exp(theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(theta), phi);
+    target += normal_lpdf(y_vector| theta + x_matrix * x_vector, phi);
+    target += normal_lpdf(y_vector| x_matrix * x_vector + theta, phi);
+    target += normal_lpdf(y_vector| x_matrix * x_vector, phi);
+    target += poisson_lpmf(y_arr| exp(theta + x_matrix * x_vector));
+    target += poisson_lpmf(y_arr| exp(x_matrix * x_vector + theta));
+    target += poisson_lpmf(y_arr| exp(x_matrix * x_vector));
+    target += poisson_log_lpmf(y_arr| (theta + x_matrix * x_vector));
+    target += poisson_log_lpmf(y_arr| (x_matrix * x_vector + theta));
+    target += poisson_log_lpmf(y_arr| (x_matrix * x_vector));
+    target += poisson_lpmf(y_arr| exp(x_vector));
+    target += pow(2, theta);
+    target += pow(theta, 2);
+    target += pow(theta, 0.5);
+    target += pow(theta, 1./2.);
+    target += pow(theta, 1/2.);
+    target += pow(theta, 1./2);
+    target += square(sd(x_vector));
+    target += sqrt(2);
+    target += sum(square(x_vector - y_vector));
+    target += sum(diagonal(x_matrix));
+    target += trace(x_matrix * transpose(y_matrix) * z_matrix * y_matrix);
+    target += trace(quad_form(y_matrix, z_matrix));
+    target += 1 - erf(x_vector);
+    target += 1. - erf(x_vector);
+    target += 1 - erfc(x_vector);
+    target += 1. - erfc(x_vector);
+    target += exp(x_vector) - 1;
+    target += exp(x_vector) - 1.;
+    target += 1 - gamma_p(theta, phi);
+    target += 1. - gamma_p(theta, phi);
+    target += 1 - gamma_q(theta, phi);
+    target += 1. - gamma_q(theta, phi);
+    target += matrix_exp(theta * x_matrix) * y_matrix;
+    target += matrix_exp(x_matrix * theta) * y_matrix;
+    target += matrix_exp(x_matrix) * y_matrix;
+    target += phi * log(theta);
+    target += log(theta) * phi;
+    target += diag_matrix(x_vector) * x_cov * diag_matrix(x_vector);
+    target += diag_matrix(x_vector) * (x_cov * diag_matrix(x_vector));
+    target += transpose(x_vector) * x_cov * x_vector;
+    target += transpose(x_vector) * (x_cov * x_vector);
+    target += diag_matrix(x_vector) * x_cov;
+    target += x_cov * diag_matrix(x_vector);
+    target += 0 ? x_vector : y_vector;
+    target += 7 ? x_vector : y_vector;
+    }
       |}
   in
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = constant_propagation mir in
   let mir = partial_evaluation mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
+        matrix[3, 2] x_matrix;
+        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        matrix[2, 4] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
+        matrix[4, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
+        vector[2] x_vector;
+        x_vector = FnReadParam__("x_vector", "vector", 2);
+        vector[3] y_vector;
+        y_vector = FnReadParam__("y_vector", "vector", 3);
+        vector[3] x_cov_sym1__;
+        matrix[2, 2] x_cov;
+        x_cov_sym1__ = FnReadParam__("x_cov_sym1__", "vector", 3);
+        x_cov = FnConstrain__(x_cov_sym1__, "cov_matrix", 2);
+        real theta_u;
+        theta_u = FnReadParam__("theta_u", "scalar");
+        real phi_u;
+        phi_u = FnReadParam__("phi_u", "scalar");
         {
-          matrix[2, 3] x;
-          array[int, 2] y;
-          vector[2] y_real;
-          vector[3] beta;
-          vector[2] alpha;
-          real sigma;
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, 0, beta, sigma));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
+          real theta;
+          theta = 34.;
+          real phi;
+          phi = 5.;
+          real x;
+          int i;
+          i = 23;
+          int j;
+          j = 32;
+          array[int, 3] y_arr;
+          y_arr = FnMakeArray__(32, 2, 35);
+          target += 23;
+          target += -23;
+          target += 0;
+          target += 34.;
+          target += -34.;
+          target += 55;
+          target += -9;
+          target += 736;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 39.;
+          target += 29.;
+          target += 170.;
+          target += 6.8;
+          target += 0;
+          target += 1;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_lpmf(y_arr, x_vector);
+          target += binomial_logit_lpmf(y_arr, 32, x_vector);
+          target += categorical_logit_lpmf(y_arr, x_vector);
+          target += columns_dot_self(x_matrix);
+          target += dot_self(x_vector);
+          target += inv_sqrt(x_vector);
+          target += inv_square(x_vector);
+          target += log1m_exp(x_vector);
+          target += log1m_inv_logit(x_vector);
+          target += log1m(x_matrix);
+          target += log1m_exp(x_vector);
+          target += log1m_inv_logit(x_vector);
+          target += log1m(x_matrix);
+          target += log1p_exp(x_vector);
+          target += log1p(x_matrix);
+          target += log_determinant(x_matrix);
+          target += log_diff_exp(34., 34.);
+          target += log_falling_factorial(5., 23);
+          target += log_rising_factorial(5., 23);
+          target += log_inv_logit(34.);
+          target += log_softmax(x_vector);
+          target += log_sum_exp(x_vector);
+          target += log_sum_exp(theta_u, phi_u);
+          target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_lpmf(y_arr, 34., 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 0, x_vector, 5.);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_lpmf(y_arr, x_vector);
+          target += exp2(34.);
+          target += square(34.);
+          target += sqrt(34.);
+          target += sqrt(34.);
+          target += sqrt(34.);
+          target += sqrt(34.);
+          target += variance(x_vector);
+          target += sqrt2();
+          target += squared_distance(x_vector, y_vector);
+          target += trace(x_matrix);
+          target += trace_gen_quad_form(x_matrix, z_matrix, y_matrix);
+          target += trace_quad_form(y_matrix, z_matrix);
+          target += erfc(x_vector);
+          target += erfc(x_vector);
+          target += erf(x_vector);
+          target += erf(x_vector);
+          target += expm1(x_vector);
+          target += expm1(x_vector);
+          target += gamma_q(34., 5.);
+          target += gamma_q(34., 5.);
+          target += gamma_p(34., 5.);
+          target += gamma_p(34., 5.);
+          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
+          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
+          target += matrix_exp_multiply(x_matrix, y_matrix);
+          target += lmultiply(5., 34.);
+          target += lmultiply(5., 34.);
+          target += quad_form_diag(x_cov, x_vector);
+          target += quad_form_diag(x_cov, x_vector);
+          target += quad_form(x_cov, x_vector);
+          target += quad_form(x_cov, x_vector);
+          target += diag_pre_multiply(x_vector, x_cov);
+          target += diag_post_multiply(x_cov, x_vector);
+          target += y_vector;
+          target += x_vector;
         }
       }
-
       generate_quantities {
-
+        data matrix[3, 2] x_matrix;
+        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        data matrix[2, 4] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
+        data matrix[4, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
+        data vector[2] x_vector;
+        x_vector = FnReadParam__("x_vector", "vector", 2);
+        data vector[3] y_vector;
+        y_vector = FnReadParam__("y_vector", "vector", 3);
+        data vector[3] x_cov_sym2__;
+        data matrix[2, 2] x_cov;
+        x_cov_sym2__ = FnReadParam__("x_cov_sym2__", "vector", 3);
+        x_cov = FnConstrain__(x_cov_sym2__, "cov_matrix", 2);
+        data real theta_u;
+        theta_u = FnReadParam__("theta_u", "scalar");
+        data real phi_u;
+        phi_u = FnReadParam__("phi_u", "scalar");
+        for(sym2__ in 1:3) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(x_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:2) {
+          for(sym3__ in 1:4) {
+            FnWriteParam__(y_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:4) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(z_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:2) {
+          FnWriteParam__(x_vector[sym2__]);
+        }
+        for(sym2__ in 1:3) {
+          FnWriteParam__(y_vector[sym2__]);
+        }
+        for(sym2__ in 1:2) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(x_cov[sym2__, sym3__]);
+          }
+        }
+        FnWriteParam__(theta_u);
+        FnWriteParam__(phi_u);
       }
-
       transform_inits {
-
+        data matrix[3, 2] x_matrix;
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            x_matrix[sym3__, sym4__] = FnReadData__("x_matrix", "matrix", 3, 2)
+                                       [sym3__, sym4__];
+          }
+        }
+        data matrix[2, 4] y_matrix;
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:4) {
+            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 2, 4)
+                                       [sym3__, sym4__];
+          }
+        }
+        data matrix[4, 2] z_matrix;
+        for(sym3__ in 1:4) {
+          for(sym4__ in 1:2) {
+            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 4, 2)
+                                       [sym3__, sym4__];
+          }
+        }
+        data vector[2] x_vector;
+        for(sym3__ in 1:2) {
+          x_vector[sym3__] = FnReadData__("x_vector", "vector", 2)[sym3__];
+        }
+        data vector[3] y_vector;
+        for(sym3__ in 1:3) {
+          y_vector[sym3__] = FnReadData__("y_vector", "vector", 3)[sym3__];
+        }
+        data matrix[2, 2] x_cov;
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:2) {
+            x_cov[sym3__, sym4__] = FnReadData__("x_cov", "matrix", 2, 2)[sym3__,
+                                                                          sym4__];
+          }
+        }
+        x_cov = FnUnconstrain__(x_cov, "cov_matrix");
+        data real theta_u;
+        theta_u = FnReadData__("theta_u", "scalar");
+        data real phi_u;
+        phi_u = FnReadData__("phi_u", "scalar");
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(x_matrix[sym3__, sym4__]);
+          }
+        }
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:4) {
+            FnWriteParam__(y_matrix[sym3__, sym4__]);
+          }
+        }
+        for(sym3__ in 1:4) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(z_matrix[sym3__, sym4__]);
+          }
+        }
+        for(sym3__ in 1:2) {
+          FnWriteParam__(x_vector[sym3__]);
+        }
+        for(sym3__ in 1:3) {
+          FnWriteParam__(y_vector[sym3__]);
+        }
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(x_cov[sym3__, sym4__]);
+          }
+        }
+        FnWriteParam__(theta_u);
+        FnWriteParam__(phi_u);
       }
-
       output_vars {
-
+        parameters matrix[3, 2] x_matrix; //matrix[3, 2]
+        parameters matrix[2, 4] y_matrix; //matrix[2, 4]
+        parameters matrix[4, 2] z_matrix; //matrix[4, 2]
+        parameters vector[2] x_vector; //vector[2]
+        parameters vector[3] y_vector; //vector[3]
+        parameters matrix[2, 2] x_cov; //vector[3]
+        parameters real theta_u; //real
+        parameters real phi_u; //real
       } |}]
 
 let%expect_test "lazy code motion" =
@@ -2285,18 +2230,6 @@ let%expect_test "lazy code motion" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
-    prepare_data {
-
-    }
-
     log_prob {
       data real[] sym1__;
       {
@@ -2305,18 +2238,6 @@ let%expect_test "lazy code motion" =
         FnPrint__(sym1__);
         FnPrint__(sym1__);
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "lazy code motion, 2" =
@@ -2337,18 +2258,6 @@ let%expect_test "lazy code motion, 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -2360,18 +2269,6 @@ let%expect_test "lazy code motion, 2" =
             ;
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -2393,18 +2290,6 @@ let%expect_test "lazy code motion, 3" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -2414,18 +2299,6 @@ let%expect_test "lazy code motion, 3" =
           FnPrint__(sym1__);
           FnPrint__((sym1__ + 7));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 4" =
@@ -2460,18 +2333,6 @@ let%expect_test "lazy code motion, 4" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -2498,18 +2359,6 @@ let%expect_test "lazy code motion, 4" =
           }
           y = sym1__;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -2542,18 +2391,6 @@ let%expect_test "lazy code motion, 5" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -2584,18 +2421,6 @@ let%expect_test "lazy code motion, 5" =
           }
           y = sym1__;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -2619,18 +2444,6 @@ let%expect_test "lazy code motion, 6" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -2643,18 +2456,6 @@ let%expect_test "lazy code motion, 6" =
           } else ;
           y = (4 + 3);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 7" =
@@ -2696,18 +2497,6 @@ let%expect_test "lazy code motion, 7" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -2762,18 +2551,6 @@ let%expect_test "lazy code motion, 7" =
           }
           ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -2813,15 +2590,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -2831,18 +2599,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           FnPrint__(sym1__);
           FnPrint__(sym1__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 9" =
@@ -2863,18 +2619,6 @@ let%expect_test "lazy code motion, 9" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -2884,18 +2628,6 @@ let%expect_test "lazy code motion, 9" =
             ;
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -2919,18 +2651,6 @@ let%expect_test "lazy code motion, 10" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -2940,18 +2660,6 @@ let%expect_test "lazy code motion, 10" =
           x = 2;
           FnPrint__((x * 2));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 11" =
@@ -2978,18 +2686,6 @@ let%expect_test "lazy code motion, 11" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3002,18 +2698,6 @@ let%expect_test "lazy code motion, 11" =
             FnPrint__((x * 2));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 12" =
@@ -3037,18 +2721,6 @@ let%expect_test "lazy code motion, 12" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3062,18 +2734,81 @@ let%expect_test "lazy code motion, 12" =
             ;
           }
         }
+      } |}]
+
+let%expect_test "lazy code motion, 13" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        real temp;
+        if (2 > 3)
+          temp = 2 * 2;
+        else
+          print("hello");
+        temp =  2 * 2;
+        real temp2;
+        for (i in 2 : 3) {
+            temp2 = 2 * 3;
+            target += temp;
+            target += temp2;
+        }
       }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = one_step_loop_unrolling mir in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      log_prob {
+        data int sym8__;
+        data int sym7__;
+        data int sym6__;
+        data int sym5__;
+        data int sym4__;
+        real sym3__;
+        real sym2__;
+        data int sym1__;
+        {
+          real temp;
+          if((2 > 3)) {
+            sym7__ = (2 * 2);
+            temp = sym7__;
+            ;
+          } else {
+            FnPrint__("hello");
+            sym7__ = (2 * 2);
+            ;
+          }
+          temp = sym7__;
+          real temp2;
+          if((2 <= 3)) {
+            {
+              {
+                sym8__ = (2 * 3);
+                temp2 = sym8__;
+                sym2__ = temp;
+                target += sym2__;
+                sym6__ = (2 + 1);
+                target += temp2;
+              }
+              for(i in sym6__:3) {
+                {
+                  temp2 = sym8__;
+                  target += sym2__;
+                  target += temp2;
+                }
+                ;
+              }
+            }
+            ;
+          } else ;
+        }
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -3104,18 +2839,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real sym5__;
         real sym4__;
@@ -3141,18 +2864,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
             }
           } else ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "block fixing" =
@@ -3217,14 +2928,6 @@ let%expect_test "one-step loop unrolling" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int x;
         if((x <= 6)) {
@@ -3261,22 +2964,6 @@ let%expect_test "one-step loop unrolling" =
             }
           }
         }
-      }
-
-      log_prob {
-
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "adlevel_optimization" =
@@ -3313,18 +3000,6 @@ let%expect_test "adlevel_optimization" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real w;
         w = FnReadParam__("w", "scalar");
@@ -3340,7 +3015,6 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
-
       generate_quantities {
         data real w;
         w = FnReadParam__("w", "scalar");
@@ -3357,13 +3031,11 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
-
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
-
       output_vars {
         parameters real w; //real
       } |}]
@@ -3550,18 +3222,6 @@ let%expect_test "adlevel_optimization 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real w;
         w = FnReadParam__("w", "scalar");
@@ -3579,7 +3239,6 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z_data);
         }
       }
-
       generate_quantities {
         data real w;
         w = FnReadParam__("w", "scalar");
@@ -3601,13 +3260,11 @@ let%expect_test "adlevel_optimization 2" =
           FnWriteParam__(w_trans);
         }
       }
-
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
-
       output_vars {
         parameters real w; //real
         transformed_parameters real w_trans; //real
