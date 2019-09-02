@@ -3,17 +3,17 @@
 
 open Core_kernel
 
+(** Source code locations *)
 type location =
   { filename: string
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
 [@@deriving sexp, hash, compare]
-(** Source code locations *)
 
+(** Delimited locations *)
 type location_span = {begin_loc: location; end_loc: location}
 [@@deriving sexp, hash, compare]
-(** Delimited locations *)
 
 (** Arithmetic and logical operators *)
 type operator =
@@ -213,8 +213,8 @@ module ExprComparator = struct
   type t = expr_typed_located [@@deriving sexp, compare]
 end
 
-module ExprSet = Set.Make (ExprComparator)
 (**  A module for sets of expressions which ignore their locations *)
+module ExprSet = Set.Make (ExprComparator)
 
-module ExprMap = Map.Make (ExprComparator)
 (**  A module for maps of expressions which ignore their locations *)
+module ExprMap = Map.Make (ExprComparator)

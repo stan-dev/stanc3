@@ -10,7 +10,8 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
     match opt with
     | `Left v -> Some v
     | `Right v -> Some v
-    | `Both (v1, _) -> Some v1 in
+    | `Both (v1, _) -> Some v1
+  in
   Map.Poly.merge m1 m2 ~f
 
 (**
@@ -27,7 +28,7 @@ let branching_traverse_statement (stmt : ('e, 'a) statement)
         ~default:(s', IfElse (pred, c, None))
         ~f:(fun else_s ->
           let s'', c' = f state else_s in
-          (join s' s'', IfElse (pred, c, Some c')))
+          (join s' s'', IfElse (pred, c, Some c')) )
   | _ as s -> fwd_traverse_statement s ~init:state ~f
 
 (** Like a branching traversal, but doesn't return an updated statement.
@@ -36,7 +37,7 @@ let branching_fold_statement (stmt : ('e, 'a) statement)
     ~(join : 'f -> 'f -> 'f) ~init:(state : 'f) ~(f : 'f -> 'a -> 'f) : 'f =
   fst
     (branching_traverse_statement stmt ~join ~init:state ~f:(fun s a ->
-         (f s a, ())))
+         (f s a, ()) ))
 
 (**
    See interface file
@@ -51,11 +52,13 @@ let build_statement_map (extract : 's -> ('e, 's) statement)
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec label map stmt in
     let (next_label'', map), built =
-      fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f in
+      fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f
+    in
     ( ( next_label''
       , union_maps_left map
           (Map.Poly.singleton this_label (built, metadata stmt)) )
-    , this_label ) in
+    , this_label )
+  in
   let (_, map), _ = build_statement_map_rec 1 Map.Poly.empty stmt in
   map
 
@@ -73,11 +76,6 @@ let rec build_recursive_statement (rebuild : ('e, 's) statement -> 'm -> 's)
   let stmt = map_statement (fun x -> x) build_stmt stmt_ints in
   rebuild stmt meta
 
-type cf_state =
-  { breaks: label Set.Poly.t
-  ; continues: label Set.Poly.t
-  ; returns: label Set.Poly.t
-  ; exits: label Set.Poly.t }
 (** Represents the state required to build control flow information during an MIR
     traversal, where
      * breaks is the set of Breaks seen since the beginning of their loop
@@ -86,13 +84,18 @@ type cf_state =
      * exits is the set of nodes that could have been the last one to execute before this
        node
 *)
+type cf_state =
+  { breaks: label Set.Poly.t
+  ; continues: label Set.Poly.t
+  ; returns: label Set.Poly.t
+  ; exits: label Set.Poly.t }
 
-type cf_edges = {predecessors: label Set.Poly.t; parents: label Set.Poly.t}
 (** Represents the control flow information at each node in the control graph, where
      * predecessors points to the nodes which could have executed before this node
      * parents points to the adjacent nodes which directly influence the execution of this
        node
 *)
+type cf_edges = {predecessors: label Set.Poly.t; parents: label Set.Poly.t}
 
 (** Join the state of a controlflow traversal across different branches of execution such
     as over if/else branch. *)
@@ -128,12 +131,14 @@ let build_cf_graphs
     (* Only control flow nodes should pass themselves down as parents *)
     let child_cf = if is_ctrl_flow stmt then Some label else cf_parent in
     let join (state1, map1) (state2, map2) =
-      (join_cf_states state1 state2, union_maps_left map1 map2) in
+      (join_cf_states state1 state2, union_maps_left map1 map2)
+    in
     (* The accumulated state after traversing substatements *)
     let substmt_state_unlooped, substmt_map =
       branching_fold_statement stmt ~join
         ~init:({in_state with exits= Set.Poly.singleton label}, in_map)
-        ~f:(build_cf_graph_rec child_cf) in
+        ~f:(build_cf_graph_rec child_cf)
+    in
     (* If the statement is a loop, we need to include the loop body exits as predecessors
          of the loop *)
     let substmt_state, predecessors =
@@ -146,9 +151,11 @@ let build_cf_graphs
         *)
         let loop_predecessors =
           Set.Poly.union_list
-            [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits; (*3*)
+            [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits
+            ; (*3*)
               Set.Poly.diff substmt_state_unlooped.continues in_state.continues
-            ] in
+            ]
+        in
         (* Loop exits are:
            1. The loop node itself, since the last action of a typical loop execution is
               to check if there are any iterations remaining
@@ -157,14 +164,16 @@ let build_cf_graphs
         *)
         let loop_exits =
           Set.Poly.union_list
-            [ (*1*) Set.Poly.singleton label; (*2*)
-              Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks ]
+            [ (*1*) Set.Poly.singleton label
+            ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+            ]
         in
         ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       in
       match stmt with
       | For _ | While _ -> looped_state
-      | _ -> (substmt_state_unlooped, in_state.exits) in
+      | _ -> (substmt_state_unlooped, in_state.exits)
+    in
     (* Some statements interact with the break/return/continue states
        E.g., loops nullify breaks and continues in their body, but are still affected by
        breaks and input continues*)
@@ -194,18 +203,21 @@ let build_cf_graphs
           ( substmt_state.breaks
           , substmt_state.returns
           , substmt_state.continues
-          , Set.Poly.empty ) in
+          , Set.Poly.empty )
+    in
     let cf_parents =
       Set.Poly.union_list
         [ Option.value_map cf_parent ~default:Set.Poly.empty
-            ~f:Set.Poly.singleton; in_state.returns; in_state.continues
-        ; extra_cf_deps ] in
+            ~f:Set.Poly.singleton
+        ; in_state.returns; in_state.continues; extra_cf_deps ]
+    in
     ( { breaks= breaks_out
       ; continues= continues_out
       ; returns= returns_out
       ; exits= substmt_state.exits }
     , Map.Poly.add_exn substmt_map ~key:label
-        ~data:{parents= cf_parents; predecessors} ) in
+        ~data:{parents= cf_parents; predecessors} )
+  in
   let state, edges =
     build_cf_graph_rec None
       ( { breaks= Set.Poly.empty
@@ -213,7 +225,8 @@ let build_cf_graphs
         ; returns= Set.Poly.empty
         ; exits= Set.Poly.empty }
       , Map.Poly.empty )
-      1 in
+      1
+  in
   ( state.exits
   , Map.Poly.map edges ~f:(fun e -> e.predecessors)
   , Map.Poly.map edges ~f:(fun e -> e.parents) )

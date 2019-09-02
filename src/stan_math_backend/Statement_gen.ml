@@ -13,13 +13,13 @@ let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-      pf ppf "%a" pp_unsizedtype_local (adtype, remove_size st) in
+      pf ppf "%a" pp_unsizedtype_local (adtype, remove_size st)
+    in
     match st with
     | SInt | SReal -> pf ppf "0"
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
-    | SSparseMatrix (d1, d2) ->
-        pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SSparseMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
   match st with
@@ -103,14 +103,16 @@ let rec pp_statement (ppf : Format.formatter)
           when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        | e -> recurse e in
+        | e -> recurse e
+      in
       let rhs =
         match rhs.expr with
         | FunApp (CompilerInternal, f, _)
           when f = string_of_internal_fn FnConstrain
                || f = string_of_internal_fn FnUnconstrain ->
             rhs
-        | _ -> maybe_deep_copy rhs in
+        | _ -> maybe_deep_copy rhs
+      in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
         (strf "assigning variable %s"
@@ -158,8 +160,7 @@ let rec pp_statement (ppf : Format.formatter)
   | For
       { body=
           {stmt= Assignment (_, {expr= FunApp (CompilerInternal, f, _); _}); _}
-          as body
-      ; _ }
+          as body; _ }
     when internal_fn_of_string f = Some FnReadParam ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)

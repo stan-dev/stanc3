@@ -17,19 +17,20 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
                ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
                [ mir.prepare_data; mir.transform_inits; mir.log_prob
                ; mir.generate_quantities ])
-      ; smeta= Middle.no_span } in
+      ; smeta= Middle.no_span }
+  in
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody}) in
+        {fs with fdbody= transform fs.fdbody} )
+  in
   match transformed_prog_body with
   | { stmt=
         SList
           [ {stmt= SList prepare_data'; _}
           ; {stmt= SList transform_inits'; _}
           ; {stmt= SList log_prob'; _}
-          ; {stmt= SList generate_quantities'; _} ]
-    ; _ } ->
+          ; {stmt= SList generate_quantities'; _} ]; _ } ->
       { mir with
         functions_block= transformed_functions
       ; prepare_data= prepare_data'
@@ -54,7 +55,8 @@ let transform_program_blockwise (mir : typed_prog)
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody}) in
+        {fs with fdbody= transform fs.fdbody} )
+  in
   { mir with
     functions_block= transformed_functions
   ; prepare_data= transform' mir.prepare_data
@@ -86,16 +88,19 @@ let replace_fresh_local_vars s' =
           match Map.Poly.find m var_name with
           | None -> var_name
           | Some {expr= Var var_name; _} -> var_name
-          | Some e -> raise_s [%sexp (e : expr_typed_located)] in
+          | Some e -> raise_s [%sexp (e : expr_typed_located)]
+        in
         (Assignment ((var_name, ut, l), e), m)
-    | x -> (x, m) in
+    | x -> (x, m)
+  in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
   subst_stmt m s
 
 let replace_fresh_local_vars_triple (d_list, s_list, e) =
   let s =
     slist_no_loc
-      ([slist_no_loc d_list] @ [slist_no_loc s_list] @ [Return (Some e)]) in
+      ([slist_no_loc d_list] @ [slist_no_loc s_list] @ [Return (Some e)])
+  in
   let s = (replace_fresh_local_vars {stmt= s; smeta= no_span}).stmt in
   match s with
   | SList
@@ -126,10 +131,11 @@ let handle_early_returns opt_triple b =
       | Some (Some _, _, name), Some e ->
           SList
             [ { stmt= Assignment ((name, e.emeta.mtype, []), e)
-              ; smeta= Middle.no_span }; {stmt= Break; smeta= Middle.no_span}
-            ]
+              ; smeta= Middle.no_span }
+            ; {stmt= Break; smeta= Middle.no_span} ]
       | _, _ -> raise_s [%sexp ("" : string)] )
-    | x -> x in
+    | x -> x
+  in
   For
     { loopvar= gensym ()
     ; lower=
@@ -171,7 +177,8 @@ let rec inline_function_expression adt fim e =
                 ; emeta=
                     { mtype= remove_possible_size (Option.value_exn rt)
                     ; madlevel= adt
-                    ; mloc= Middle.no_span } } ) in
+                    ; mloc= Middle.no_span } } )
+          in
           let d_list = d_list @ d_list2 in
           let s_list = s_list @ s_list2 in
           (d_list, s_list, e) )
@@ -211,7 +218,8 @@ let rec inline_function_expression adt fim e =
         [ IfElse
             ( e1
             , {stmt= Skip; smeta= no_span}
-            , Some {stmt= Block (map_no_loc sl2); smeta= no_span} ) ] in
+            , Some {stmt= Block (map_no_loc sl2); smeta= no_span} ) ]
+      in
       (dl1 @ dl2, sl1 @ sl2, {e with expr= EOr (e1, e2)})
 
 and inline_function_index adt fim i =
@@ -243,7 +251,8 @@ let rec inline_function_statement adt fim {stmt; smeta} =
             match e1.expr with
             | Var x -> (x, [])
             | Indexed ({expr= Var x; _}, l) -> (x, l)
-            | _ as w -> raise_s [%sexp (w : mtype_loc_ad with_expr expr)] in
+            | _ as w -> raise_s [%sexp (w : mtype_loc_ad with_expr expr)]
+          in
           slist_concat_no_loc
             (dl2 @ dl1 @ sl2 @ sl1)
             (Assignment ((x, ut, l), e2))
@@ -255,10 +264,12 @@ let rec inline_function_statement adt fim {stmt; smeta} =
           (* function arguments are evaluated from right to left in C++, so we need to reverse *)
           let d_list =
             List.concat
-              (List.rev (List.map ~f:(function x, _, _ -> x) dse_list)) in
+              (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
+          in
           let s_list =
             List.concat
-              (List.rev (List.map ~f:(function _, x, _ -> x) dse_list)) in
+              (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
+          in
           let es = List.map ~f:(function _, _, x -> x) dse_list in
           slist_concat_no_loc (d_list @ s_list)
             ( match Map.find fim s with
@@ -296,9 +307,11 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                      ; smeta= Middle.no_span } ))
       | For {loopvar; lower; upper; body} ->
           let d_lower, s_lower, lower =
-            inline_function_expression adt fim lower in
+            inline_function_expression adt fim lower
+          in
           let d_upper, s_upper, upper =
-            inline_function_expression adt fim upper in
+            inline_function_expression adt fim upper
+          in
           slist_concat_no_loc
             (d_lower @ d_upper @ s_lower @ s_upper)
             (For
@@ -326,8 +339,7 @@ let create_function_inline_map adt l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum fundef =
-    match fundef with
-    | {fdname; fdargs; fdbody; fdrt; _} -> (
+    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
       match
         Map.add accum ~key:fdname
           ~data:
@@ -336,18 +348,22 @@ let create_function_inline_map adt l =
             , inline_function_statement adt accum fdbody )
       with
       | `Ok m -> m
-      | `Duplicate -> accum ) in
+      | `Duplicate -> accum )
+  in
   Map.filter
     ~f:(fun (_, _, v) -> v.stmt <> Skip)
     (List.fold l ~init:Map.Poly.empty ~f)
 
 let function_inlining (mir : typed_prog) =
   let dataonly_inline_map =
-    create_function_inline_map DataOnly mir.functions_block in
+    create_function_inline_map DataOnly mir.functions_block
+  in
   let autodiff_inline_map =
-    create_function_inline_map AutoDiffable mir.functions_block in
+    create_function_inline_map AutoDiffable mir.functions_block
+  in
   let dataonly_inline_function_statements =
-    List.map ~f:(inline_function_statement DataOnly dataonly_inline_map) in
+    List.map ~f:(inline_function_statement DataOnly dataonly_inline_map)
+  in
   let autodiffable_inline_function_statements =
     List.map ~f:(inline_function_statement AutoDiffable autodiff_inline_map)
   in
@@ -388,18 +404,21 @@ let unroll_static_loops_statement =
               ~f:(fun i ->
                 { expr= Lit (Int, Int.to_string i)
                 ; emeta= {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
-                })
+                } )
               (List.range ~start:`inclusive ~stop:`inclusive
-                 (Int.of_string low) (Int.of_string up)) in
+                 (Int.of_string low) (Int.of_string up))
+          in
           let stmts =
             List.map
               ~f:(fun i ->
                 subst_args_stmt [loopvar] [i]
-                  {stmt= body.stmt; smeta= Middle.no_span})
-              range in
+                  {stmt= body.stmt; smeta= Middle.no_span} )
+              range
+          in
           SList stmts
       | _ -> stmt )
-    | _ -> stmt in
+    | _ -> stmt
+  in
   map_rec_stmt_loc f
 
 let static_loop_unrolling mir =
@@ -439,7 +458,8 @@ let unroll_loop_one_step_statement =
             , { stmt= Block [body; {body with stmt= While (e, body)}]
               ; smeta= no_span }
             , None )
-    | _ -> stmt in
+    | _ -> stmt
+  in
   map_rec_stmt_loc f
 
 let one_step_loop_unrolling mir =
@@ -450,11 +470,13 @@ let collapse_lists_statement =
     match l with
     | [] -> []
     | {stmt= SList l'; _} :: rest -> l' @ collapse_lists rest
-    | x :: rest -> x :: collapse_lists rest in
+    | x :: rest -> x :: collapse_lists rest
+  in
   let f = function
     | Block l -> Block (collapse_lists l)
     | SList l -> SList (collapse_lists l)
-    | x -> x in
+    | x -> x
+  in
   map_rec_stmt_loc f
 
 let list_collapsing (mir : typed_prog) =
@@ -463,7 +485,8 @@ let list_collapsing (mir : typed_prog) =
 let propagation
     (propagation_transfer :
          (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
+      -> (module
+          Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
              and type properties = ( string
                                    , Middle.expr_typed_located )
@@ -471,18 +494,22 @@ let propagation
                                    option)) (mir : typed_prog) =
   let transform s =
     let flowgraph, flowgraph_to_mir =
-      Monotone_framework.forward_flowgraph_of_stmt s in
+      Monotone_framework.forward_flowgraph_of_stmt s
+    in
     let (module Flowgraph) = flowgraph in
     let values =
       Monotone_framework.propagation_mfp mir
         (module Flowgraph)
-        flowgraph_to_mir propagation_transfer in
+        flowgraph_to_mir propagation_transfer
+    in
     let propagate_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
           subst_stmt_base
-            (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry))
+            (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry)
+      )
     in
-    propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
+    propagate_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
   transform_program mir transform
 
 let constant_propagation =
@@ -521,16 +548,19 @@ let dead_code_elimination (mir : typed_prog) =
    go about live variables. *)
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s in
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
     let (module Rev_Flowgraph) = rev_flowgraph in
     let live_variables =
       Monotone_framework.live_variables_mfp mir
         (module Rev_Flowgraph)
-        flowgraph_to_mir in
+        flowgraph_to_mir
+    in
     let dead_code_elim_stmt_base i stmt =
       (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
       let live_variables_s =
-        (Map.find_exn live_variables i).Monotone_framework_sigs.entry in
+        (Map.find_exn live_variables i).Monotone_framework_sigs.entry
+      in
       match stmt with
       | Assignment ((x, _, []), rhs) ->
           if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
@@ -583,10 +613,13 @@ let dead_code_elimination (mir : typed_prog) =
       | SList l ->
           let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
           SList l'
-      (* TODO: do dead code elimination in function body too! *) in
+      (* TODO: do dead code elimination in function body too! *)
+    in
     let dead_code_elim_stmt =
-      map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base in
-    dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
+      map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
+    in
+    dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
   transform_program mir transform
 
 let partial_evaluation = Partial_evaluator.eval_prog
@@ -622,22 +655,27 @@ let lazy_code_motion (mir : typed_prog) =
             ; body=
                 {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             }
-      | _ -> stmt in
-    map_rec_stmt_loc preprocess_flowgraph_base in
+      | _ -> stmt
+    in
+    map_rec_stmt_loc preprocess_flowgraph_base
+  in
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s in
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
     let latest_expr, used_not_latest_expressions_mfp =
       Monotone_framework.lazy_expressions_mfp fwd_flowgraph rev_flowgraph
-        flowgraph_to_mir in
+        flowgraph_to_mir
+    in
     let expression_map =
       Set.fold (Monotone_framework.used_expressions_stmt s.stmt)
         ~init:ExprMap.empty ~f:(fun accum e ->
           match e.expr with
           | Lit (_, _) -> accum
           | _ when can_side_effect_expr e -> accum
-          | _ -> Map.set accum ~key:e ~data:(gensym ())) in
+          | _ -> Map.set accum ~key:e ~data:(gensym ()) )
+    in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
@@ -647,21 +685,25 @@ let lazy_code_motion (mir : typed_prog) =
                 ; decl_id= data
                 ; decl_type= Unsized key.emeta.mtype }
           ; smeta= Middle.no_span }
-          :: accum) in
+          :: accum )
+    in
     let lazy_code_motion_base i stmt =
       let latest_and_used_after_i =
         Set.inter
           (Map.find_exn latest_expr i)
-          (Map.find_exn used_not_latest_expressions_mfp i).entry in
+          (Map.find_exn used_not_latest_expressions_mfp i).entry
+      in
       let to_assign_in_s =
         Set.filter
           ~f:(fun x -> Map.mem expression_map x)
-          latest_and_used_after_i in
+          latest_and_used_after_i
+      in
       let to_assign_in_s = Set.to_list to_assign_in_s in
       let to_assign_in_s =
         List.sort
           ~compare:(fun e e' -> compare_int (expr_depth e) (expr_depth e'))
-          to_assign_in_s in
+          to_assign_in_s
+      in
       (* TODO: is this sort doing anything or are they already stored in the right order by
          chance? It appears to not do anything. *)
       let assignments_to_add_to_s =
@@ -670,8 +712,9 @@ let lazy_code_motion (mir : typed_prog) =
             { stmt=
                 Assignment
                   ((Map.find_exn expression_map e, e.emeta.mtype, []), e)
-            ; smeta= Middle.no_span })
-          to_assign_in_s in
+            ; smeta= Middle.no_span } )
+          to_assign_in_s
+      in
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
@@ -681,30 +724,36 @@ let lazy_code_motion (mir : typed_prog) =
                       (Map.find_exn m e')
                     = 0 ->
               expr_subst_stmt_base (Map.remove m e') stmt
-          | _ -> expr_subst_stmt_base m stmt in
-        map_rec_stmt_loc f in
+          | _ -> expr_subst_stmt_base m stmt
+        in
+        map_rec_stmt_loc f
+      in
       let f =
         expr_subst_stmt_except_initial_assign
           (Map.filter_keys
              ~f:(fun key ->
                Set.mem latest_and_used_after_i key
                || Set.mem (Map.find_exn used_not_latest_expressions_mfp i).exit
-                    key)
+                    key )
              (Map.mapi expression_map ~f:(fun ~key ~data ->
-                  {key with expr= Var data}))) in
+                  {key with expr= Var data} )))
+      in
       if List.length assignments_to_add_to_s = 0 then
         (f {stmt; smeta= Middle.no_span}).stmt
       else
         SList
           (List.map ~f
-             (assignments_to_add_to_s @ [{stmt; smeta= Middle.no_span}])) in
+             (assignments_to_add_to_s @ [{stmt; smeta= Middle.no_span}]))
+    in
     let lazy_code_motion_stmt =
-      map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base in
+      map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
+    in
     { stmt=
         SList
           ( declarations_list
           @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
-    ; smeta= Middle.no_span } in
+    ; smeta= Middle.no_span }
+  in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
 let block_fixing mir =
@@ -724,7 +773,7 @@ let block_fixing mir =
              While (e, {stmt= Block l; smeta})
          | For {loopvar; lower; upper; body= {stmt= SList l; smeta}} ->
              For {loopvar; lower; upper; body= {stmt= Block l; smeta}}
-         | _ -> stmt))
+         | _ -> stmt ))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
@@ -735,7 +784,8 @@ let block_fixing mir =
 let optimize_ad_levels mir =
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s in
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
     let (module Rev_Flowgraph) = rev_flowgraph in
     let (module Fwd_Flowgraph) = fwd_flowgraph in
@@ -743,13 +793,15 @@ let optimize_ad_levels mir =
       Set.Poly.of_list
         (List.filter_map
            ~f:(fun (v, {out_block; _}) ->
-             match out_block with Parameters -> Some v | _ -> None)
-           mir.output_vars) in
+             match out_block with Parameters -> Some v | _ -> None )
+           mir.output_vars)
+    in
     let ad_levels =
       Monotone_framework.autodiff_level_mfp
         (module Fwd_Flowgraph)
         (module Rev_Flowgraph)
-        flowgraph_to_mir initial_ad_variables in
+        flowgraph_to_mir initial_ad_variables
+    in
     let optimize_ad_levels_stmt_base i stmt =
       let autodiffable_variables = (Map.find_exn ad_levels i).exit in
       match
@@ -763,8 +815,11 @@ let optimize_ad_levels mir =
           Decl {decl_adtype= AutoDiffable; decl_id; decl_type}
       | Decl {decl_id; decl_type; _} ->
           Decl {decl_adtype= DataOnly; decl_id; decl_type}
-      | s -> s in
+      | s -> s
+    in
     let optimize_ad_levels_stmt =
-      map_rec_stmt_loc_num flowgraph_to_mir optimize_ad_levels_stmt_base in
-    optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1) in
+      map_rec_stmt_loc_num flowgraph_to_mir optimize_ad_levels_stmt_base
+    in
+    optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
   transform_program_blockwise mir transform

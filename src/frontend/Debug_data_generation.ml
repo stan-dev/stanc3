@@ -20,7 +20,8 @@ let gen_num_int m t =
     | Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
     | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
-    | _ -> (def_low, def_low + diff) in
+    | _ -> (def_low, def_low + diff)
+  in
   let low = if low = 0 && up <> 1 then low + 1 else low in
   Random.int (up - low + 1) + low
 
@@ -31,7 +32,8 @@ let gen_num_real m t =
     | Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
     | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
-    | _ -> (def_low, def_low +. diff) in
+    | _ -> (def_low, def_low +. diff)
+  in
   Random.float_range low up
 
 let rec repeat n e =
@@ -70,8 +72,10 @@ let gen_vector m n t =
     let l = repeat_th n (fun _ -> Random.float 1.) in
     let l =
       List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
-          (Float.exp elt +. List.hd_exn accum) :: accum) in
-    l in
+          (Float.exp elt +. List.hd_exn accum) :: accum )
+    in
+    l
+  in
   match t with
   | Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -81,7 +85,8 @@ let gen_vector m n t =
   | Ordered ->
       let l = gen_ordered n in
       let halfmax =
-        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2. in
+        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2.
+      in
       let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
       wrap_vector (List.map ~f:wrap_real l)
   | PositiveOrdered ->
@@ -110,7 +115,7 @@ let gen_identity_matrix n m =
                (List.map ~f:wrap_real
                   ( repeat (min (k - 1) m) 0.
                   @ (if k <= m then [1.0] else [])
-                  @ repeat (m - k) 0. )))) }
+                  @ repeat (m - k) 0. )) )) }
 
 let gen_matrix mm n m t =
   match t with
@@ -120,9 +125,10 @@ let gen_matrix mm n m t =
       { int_two with
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
+
 let gen_sparse_matrix mm n m t =
-  { int_two with
-    expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+    { int_two with
+      expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
 (* TODO: do some proper random generation of these special matrices *)
 
@@ -145,7 +151,8 @@ let rec generate_value m st t =
 let rec flatten e =
   let flatten_expr_list l =
     List.fold (List.map ~f:flatten l) ~init:[] ~f:(fun vals new_vals ->
-        new_vals @ vals) in
+        new_vals @ vals )
+  in
   match e.expr with
   | PostfixOp (e, Transpose) -> flatten e
   | IntNumeral s -> [s]
@@ -157,7 +164,8 @@ let rec flatten e =
 let rec dims e =
   let list_dims l =
     if List.length l = 0 then []
-    else Int.to_string (List.length l) :: dims (List.hd_exn l) in
+    else Int.to_string (List.length l) :: dims (List.hd_exn l)
+  in
   match e.expr with
   | PostfixOp (e, Transpose) -> dims e
   | IntNumeral _ -> []
@@ -175,7 +183,8 @@ let rec print_value_r e =
     else
       "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
       ^ String.concat ~sep:", " dims
-      ^ ")" ^ ")" in
+      ^ ")" ^ ")"
+  in
   match expr with
   | PostfixOp (e, Transpose) -> print_value_r e
   | IntNumeral s -> s
@@ -201,5 +210,6 @@ let print_data_prog s =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in
         ( l @ [var_decl_id decl ^ " <- " ^ print_value_r value]
-        , Map.set m ~key:(var_decl_id decl) ~data:value )) in
+        , Map.set m ~key:(var_decl_id decl) ~data:value ) )
+  in
   String.concat ~sep:"\n" l

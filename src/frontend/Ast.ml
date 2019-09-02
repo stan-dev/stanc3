@@ -1,10 +1,10 @@
-open Core_kernel
 (** Abstract syntax tree *)
+open Core_kernel
 
+(** Our type for identifiers, on which we record a location *)
 type identifier =
   {name: string; id_loc: Middle.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
-(** Our type for identifiers, on which we record a location *)
 
 (** Indices for array access *)
 type 'e index =
@@ -42,20 +42,20 @@ type ('e, 'f) expression =
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
+(** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: Middle.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
-(** Untyped expressions, which have location_spans as meta-data *)
 
 type untyped_expression = (located_meta, unit) expr_with
 [@@deriving sexp, compare, map, hash]
 
+(** Typed expressions also have meta-data after type checking: a location_span, as well as a type
+    and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
   { loc: Middle.location_span sexp_opaque [@compare.ignore]
   ; ad_level: Middle.autodifftype
   ; type_: Middle.unsizedtype }
 [@@deriving sexp, compare, map, hash]
-(** Typed expressions also have meta-data after type checking: a location_span, as well as a type
-    and an origin block (lub of the origin blocks of the identifiers in it) *)
 
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
 [@@deriving sexp, compare, map, hash]
@@ -135,7 +135,9 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
     typed_statement to get typed_statement    *)
 type ('e, 's, 'l, 'f) statement =
   | Assignment of
-      {assign_lhs: 'l; assign_op: assignmentoperator; assign_rhs: 'e}
+      { assign_lhs: 'l
+      ; assign_op: assignmentoperator
+      ; assign_rhs: 'e }
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
@@ -193,10 +195,10 @@ type ('e, 'm, 'l, 'f) statement_with =
   {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
+(** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
   (untyped_expression, located_meta, untyped_lval, unit) statement_with
 [@@deriving sexp, compare, map, hash]
-(** Untyped statements, which have location_spans as meta-data *)
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
@@ -205,6 +207,8 @@ type stmt_typed_located_meta =
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 
+(** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
+    to check that function bodies have the right return type*)
 type typed_statement =
   ( typed_expression
   , stmt_typed_located_meta
@@ -212,12 +216,12 @@ type typed_statement =
   , fun_kind )
   statement_with
 [@@deriving sexp, compare, map, hash]
-(** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
-    to check that function bodies have the right return type*)
 
 let mk_typed_statement ~stmt ~loc ~return_type =
   {stmt; smeta= {loc; return_type}}
 
+(** Program shapes, where we obtain types of programs if we substitute typed or untyped
+    statements for 's *)
 type 's program =
   { functionblock: 's list option
   ; datablock: 's list option
@@ -227,15 +231,13 @@ type 's program =
   ; modelblock: 's list option
   ; generatedquantitiesblock: 's list option }
 [@@deriving sexp, hash, compare, map]
-(** Program shapes, where we obtain types of programs if we substitute typed or untyped
-    statements for 's *)
 
+(** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program
 [@@deriving sexp, compare, map]
-(** Untyped programs (before type checking) *)
 
-type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (** Typed programs (after type checking) *)
+type typed_program = typed_statement program [@@deriving sexp, compare, map]
 
 (*========================== Helper functions ===============================*)
 

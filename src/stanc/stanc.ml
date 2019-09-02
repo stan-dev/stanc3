@@ -59,7 +59,7 @@ let options =
       , Arg.Unit
           (fun _ ->
             print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 1)
+            exit 1 )
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.Set_string Semantic_check.model_name
@@ -78,7 +78,8 @@ let options =
     ; ( "--include_paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str)
+            Preprocessor.include_paths := String.split_on_chars ~on:[','] str
+            )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
@@ -102,7 +103,8 @@ let use_file filename =
           exit 1
     with Errors.SyntaxError err ->
       Errors.report_syntax_error err ;
-      exit 1 in
+      exit 1
+  in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
@@ -120,7 +122,8 @@ let use_file filename =
           exit 1
     with Errors.SemanticError err ->
       Errors.report_semantic_error err ;
-      exit 1 in
+      exit 1
+  in
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;

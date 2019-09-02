@@ -30,7 +30,8 @@ let%expect_test "Loop test" =
     build_statement_map
       (fun s -> s.stmt)
       (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span} in
+      {stmt= block; smeta= Middle.no_span}
+  in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
@@ -123,7 +124,8 @@ let%expect_test "Loop passthrough" =
     build_statement_map
       (fun s -> s.stmt)
       (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span} in
+      {stmt= block; smeta= Middle.no_span}
+  in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
@@ -232,7 +234,8 @@ let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
       (fun stmt meta -> {stmt; smeta= meta})
-      example1_statement_map 1 in
+      example1_statement_map 1
+  in
   stmt = example1_program
 
 let example3_program =
@@ -247,7 +250,8 @@ let example3_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example3_statement_map =
@@ -331,7 +335,8 @@ let example4_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example4_statement_map =
@@ -421,7 +426,8 @@ let example5_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example5_statement_map =

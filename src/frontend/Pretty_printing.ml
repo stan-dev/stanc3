@@ -32,10 +32,11 @@ let with_indented_box ppf indentation offset f =
     | 0 -> ()
     | i ->
         Format.pp_print_space ppf () ;
-        pp_print_n_spaces ppf (i - 1) in
+        pp_print_n_spaces ppf (i - 1)
+  in
   with_hbox ppf (fun () ->
       pp_print_n_spaces ppf indentation ;
-      with_box ppf offset f) ;
+      with_box ppf offset f ) ;
   ()
 
 let rec unwind_sized_array_type = function
@@ -122,12 +123,12 @@ and pp_expression ppf {expr= e_content; _} =
           Format.pp_print_space ppf () ;
           Fmt.pf ppf "? %a" pp_expression e2 ;
           Format.pp_print_space ppf () ;
-          Fmt.pf ppf ": %a" pp_expression e3)
+          Fmt.pf ppf ": %a" pp_expression e3 )
   | BinOp (e1, op, e2) ->
       with_box ppf 0 (fun () ->
           Fmt.pf ppf "%a" pp_expression e1 ;
           Format.pp_print_space ppf () ;
-          Fmt.pf ppf "%a %a" pp_operator op pp_expression e2)
+          Fmt.pf ppf "%a %a" pp_operator op pp_expression e2 )
   | PrefixOp (op, e) -> Fmt.pf ppf "%a%a" pp_operator op pp_expression e
   | PostfixOp (e, op) -> Fmt.pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
@@ -142,7 +143,7 @@ and pp_expression ppf {expr= e_content; _} =
     | e :: es' ->
         with_hbox ppf (fun () ->
             Fmt.pf ppf "%a(%a| %a)" pp_identifier id pp_expression e
-              pp_list_of_expression es') )
+              pp_list_of_expression es' ) )
   (* GetLP is deprecated *)
   | GetLP -> Fmt.pf ppf "get_lp()"
   | GetTarget -> Fmt.pf ppf "target()"
@@ -191,7 +192,7 @@ and pp_sizedtype ppf = function
   | Middle.SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | Middle.SSparseMatrix (e1, e2) ->
-      Fmt.pf ppf "sparse_matrix[%a, %a]" pp_expression e1 pp_expression e2
+    Fmt.pf ppf "sparse_matrix[%a, %a]" pp_expression e1 pp_expression e2
   | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
@@ -219,13 +220,15 @@ and pp_transformed_type ppf (pst, trans) =
     | Middle.Sized st ->
         Middle.Sized (Fn.compose fst unwind_sized_array_type st)
     | Unsized (UArray t) -> discard_arrays (Middle.Unsized t)
-    | Unsized ut -> Middle.Unsized ut in
+    | Unsized ut -> Middle.Unsized ut
+  in
   let pst = discard_arrays pst in
   let unsizedtype_fmt =
     match pst with
     | Middle.Sized (SArray _ as st) ->
         Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
-    | _ -> Fmt.const pp_unsizedtype (Middle.remove_possible_size pst) in
+    | _ -> Fmt.const pp_unsizedtype (Middle.remove_possible_size pst)
+  in
   let sizes_fmt =
     match pst with
     | Sized (SVector e) | Sized (SRowVector e) ->
@@ -235,9 +238,9 @@ and pp_transformed_type ppf (pst, trans) =
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
     | Sized (SSparseMatrix (e1, e2)) ->
-        Fmt.const
-          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-          e2
+      Fmt.const
+        (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+        e2
     | Sized (SArray _) | Unsized _ | Sized Middle.SInt | Sized SReal -> Fmt.nop
   in
   let cov_sizes_fmt =
@@ -250,13 +253,14 @@ and pp_transformed_type ppf (pst, trans) =
             (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
             e2
     | Sized (SSparseMatrix (e1, e2)) ->
-        if e1 = e2 then
-          Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e1
-        else
-          Fmt.const
-            (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-            e2
-    | _ -> Fmt.nop in
+      if e1 = e2 then
+        Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e1
+      else
+        Fmt.const
+          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+          e2
+    | _ -> Fmt.nop
+  in
   match trans with
   | Identity -> Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
@@ -277,7 +281,7 @@ and pp_array_dims ppf = function
   | es ->
       Fmt.pf ppf "[" ;
       with_box ppf 0 (fun () ->
-          Fmt.pf ppf "%a]" pp_list_of_expression (List.rev es))
+          Fmt.pf ppf "%a]" pp_list_of_expression (List.rev es) )
 
 and pp_indent_unless_block ppf s =
   match s.stmt with
@@ -305,14 +309,14 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a %a %a;" pp_lvalue l pp_assignmentoperator assop
-            pp_expression e)
+            pp_expression e )
   | NRFunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a);" pp_list_of_expression es)
   | TargetPE e -> Fmt.pf ppf "target += %a;" pp_expression e
   | IncrementLogProb e ->
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "increment_log_prob(%a);" pp_expression e)
+          Fmt.pf ppf "increment_log_prob(%a);" pp_expression e )
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       Fmt.pf ppf "%a ~ %a(" pp_expression e pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es) ;
@@ -331,7 +335,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       with_vbox ppf 0 (fun () ->
           Fmt.pf ppf "for (%a in %a : %a) %a" pp_identifier id pp_expression e1
-            pp_expression e2 pp_indent_unless_block s)
+            pp_expression e2 pp_indent_unless_block s )
   | ForEach (id, e, s) ->
       Fmt.pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
         pp_indent_unless_block s
@@ -350,18 +354,20 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       let pp_init ppf init =
         match init with
         | None -> Fmt.pf ppf ""
-        | Some e -> Fmt.pf ppf " = %a" pp_expression e in
+        | Some e -> Fmt.pf ppf " = %a" pp_expression e
+      in
       let es =
         match pst with
         | Sized st -> Fn.compose snd unwind_sized_array_type st
-        | Unsized _ -> [] in
+        | Unsized _ -> []
+      in
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a %a%a%a;" pp_transformed_type (pst, trans)
-            pp_identifier id pp_array_dims es pp_init init)
+            pp_identifier id pp_array_dims es pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       with_box ppf 0 (fun () ->
-          Fmt.pf ppf "%a" (Fmt.list ~sep:Fmt.comma pp_args) args) ;
+          Fmt.pf ppf "%a" (Fmt.list ~sep:Fmt.comma pp_args) args ) ;
       match b with
       | {stmt= Skip; _} -> Fmt.pf ppf ");"
       | b -> Fmt.pf ppf ") %a" pp_statement b )
@@ -378,7 +384,7 @@ let pp_block block_name ppf block_stmts =
   if List.length block_stmts > 0 then (
     with_indented_box ppf 2 0 (fun () ->
         pp_list_of_statements ppf block_stmts ;
-        ()) ;
+        () ) ;
     Format.pp_print_cut ppf () )
   else Format.pp_print_cut ppf () ;
   Fmt.pf ppf "}" ;
@@ -409,7 +415,8 @@ let check_correctness prog pretty =
   let result_ast =
     Errors.without_warnings
       (Parse.parse_string Parser.Incremental.program)
-      pretty in
+      pretty
+  in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
   then failwith "Pretty printing failed. Please file a bug."

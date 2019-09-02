@@ -36,7 +36,8 @@ let pp_brackets_postfix pp_e ppf = Fmt.pf ppf {|%a[]|} pp_e
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
     | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth) in
+    | ut -> (ut, depth)
+  in
   aux 0 unsized_ty
 
 let rec pp_unsizedtype ppf = function
@@ -77,9 +78,9 @@ let rec pp_sizedtype pp_e ppf st =
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
   | SSparseMatrix (d1_expr, d2_expr) ->
-      Fmt.pf ppf {|matrix%a|}
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
-        (d1_expr, d2_expr)
+    Fmt.pf ppf {|matrix%a|}
+      Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+      (d1_expr, d2_expr)
   | SArray (st, expr) ->
       Fmt.pf ppf {|array%a|}
         Fmt.(
@@ -248,7 +249,8 @@ let pp_context ppf ({filename; line_num; col_num; _} : Mir.location) =
         match input_line input with
         | Some input -> Printf.sprintf "%6d:  %s\n" num input
         | _ -> ""
-      else "" in
+      else ""
+    in
     let line_2_before = get_line (line_num - 2) in
     let line_before = get_line (line_num - 1) in
     let our_line = get_line line_num in
