@@ -138,6 +138,42 @@ let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
 
+let all_labels
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int) : int Set.Poly.t =
+  let step set = union_map set ~f:(fun l -> Map.Poly.find_exn Flowgraph.successors l) in
+  let rec step_fix set =
+    let next = step set in
+    if set = next then
+      set
+    else
+      step_fix next
+  in
+  step_fix Flowgraph.initials
+
+let prog_rhs_variables
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (labels : int Set.Poly.t) : string Set.Poly.t =
+  let label_vars label = Set.Poly.map ~f:(fun (VVar s) -> s) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
+  union_map labels ~f:label_vars
+
+let mir_uninitialized_variables (mir : typed_prog) (stmt : stmt_loc) :
+    (label * string) Set.Poly.t =
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt stmt
+  in
+  let (module Flowgraph) = flowgraph in
+  let labels = all_labels (module Flowgraph) in
+  let rhs_vars = prog_rhs_variables flowgraph_to_mir labels in
+  let rd_map =
+    reaching_definitions_mfp ~uninitialized:rhs_vars mir (module Flowgraph) flowgraph_to_mir
+  in
+  Map.Poly.fold rd_map ~init:Set.Poly.empty ~f:(fun ~key:label ~data:rd acc ->
+    let rhs = Set.Poly.map ~f:(fun (VVar s) -> (label, s)) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
+    let uninitialized (_, var) = Set.Poly.mem rd.entry (var, None) in
+    let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
+    Set.Poly.union acc uninitialized_set)
+
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
   let log_prob_stmt = {smeta= Middle.no_span; stmt= SList mir.log_prob} in

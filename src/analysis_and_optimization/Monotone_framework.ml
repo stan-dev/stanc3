@@ -887,6 +887,7 @@ let propagation_mfp (prog : Middle.typed_prog)
   Mf.mfp ()
 
 let reaching_definitions_mfp (mir : Middle.typed_prog)
+    ?(uninitialized : string Set.Poly.t = Set.Poly.empty)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
@@ -897,7 +898,9 @@ let reaching_definitions_mfp (mir : Middle.typed_prog)
       let initial =
         Set.Poly.union_list
           [ Set.Poly.of_list (List.map ~f:fst mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst mir.output_vars) ]
+          ; Set.Poly.of_list (List.map ~f:fst mir.output_vars)
+          ; uninitialized
+          ]
     end
     : INITIALTYPE
       with type vals = string )

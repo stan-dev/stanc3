@@ -160,7 +160,6 @@ and index_var_set (ix : expr_typed_located index) : vexpr Set.Poly.t =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-(* Why does the formatter mangle this so much? *)
 let stmt_rhs stmt =
   match stmt with
   | For vars -> ExprSet.of_list [vars.lower; vars.upper]
