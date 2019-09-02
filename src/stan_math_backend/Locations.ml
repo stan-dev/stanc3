@@ -31,15 +31,13 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
         let new_label = Hashtbl.length label_to_location + 1 in
         Hashtbl.set label_to_location ~key:new_label ~data:smeta ;
         Hashtbl.set location_to_label ~key:smeta ~data:new_label ;
-        {stmt; smeta= new_label}
-  in
+        {stmt; smeta= new_label} in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in
   let location_list =
     List.map ~f:snd
       (List.sort
          ~compare:(fun x y -> compare_int (fst x) (fst y))
-         (Hashtbl.to_alist label_to_location))
-  in
+         (Hashtbl.to_alist label_to_location)) in
   (mir, location_list)
 
 let pp_globals ppf location_list =

@@ -38,12 +38,10 @@ let maybe_remove_quotes str =
   else str
 
 let try_get_new_lexbuf fname pos =
-  let chan, path =
-    try_open_in !include_paths (maybe_remove_quotes fname) pos
-  in
+  let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) pos in
   let new_lexbuf = from_channel chan in
-  new_lexbuf.lex_start_p
-  <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+  new_lexbuf.lex_start_p <-
+    {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
   new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p ;
   if dup_exists (Str.split (Str.regexp ", included from\n") path) then
     raise

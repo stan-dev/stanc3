@@ -1,5 +1,5 @@
-(** Some plumbing for our compiler errors *)
 open Middle
+(** Some plumbing for our compiler errors *)
 
 (** Our type of syntax error information *)
 type parse_error =
@@ -7,16 +7,16 @@ type parse_error =
   | Include of string * location
   | Parsing of string * location_span
 
-(** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
+(** Exception for Syntax Errors *)
 
+exception SemanticError of (string * location_span)
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
-exception SemanticError of (string * location_span)
 
+exception FatalError of string
 (** Exception for Fatal Errors. These should perhaps be left unhandled,
     so we can trace their origin. *)
-exception FatalError of string
 
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)

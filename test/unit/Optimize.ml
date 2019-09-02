@@ -32,8 +32,7 @@ let%expect_test "map_rec_stmt_loc" =
   let f = function
     | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
         NRFunApp (CompilerInternal, "FnPrint__", [s; s])
-    | x -> x
-  in
+    | x -> x in
   let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
@@ -95,12 +94,10 @@ let%expect_test "map_rec_state_stmt_loc" =
   let f i = function
     | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
         (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
-    | x -> (x, i)
-  in
+    | x -> (x, i) in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      {stmt= SList mir.log_prob; smeta= Middle.no_span}
-  in
+      {stmt= SList mir.log_prob; smeta= Middle.no_span} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   print_endline (string_of_int num) ;
@@ -3162,8 +3159,7 @@ let%expect_test "block fixing" =
       {|
       model {
       }
-      |}
-  in
+      |} in
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir =
@@ -3175,8 +3171,7 @@ let%expect_test "block fixing" =
                 , { stmt= While (zero, {stmt= SList []; smeta= no_span})
                   ; smeta= no_span }
                 , None )
-          ; smeta= no_span } ] }
-  in
+          ; smeta= no_span } ] } in
   let mir = block_fixing mir in
   print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect

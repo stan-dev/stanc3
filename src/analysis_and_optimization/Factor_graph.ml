@@ -15,7 +15,8 @@ type factor =
 let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
-  | Middle.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
+  | Middle.TargetPE e ->
+      List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | Middle.NRFunApp (_, f, _) when internal_fn_of_string f = Some FnReject ->
       [Reject]
   | Middle.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
@@ -35,11 +36,11 @@ let rec extract_factors
     (label : label) : (label * factor) list =
   let stmt, _ = Map.Poly.find_exn statement_map label in
   let this_stmt =
-    List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x))
-  in
+    List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
   fold_statement
     (fun s _ -> s)
-    (fun state label -> List.append state (extract_factors statement_map label))
+    (fun state label ->
+      List.append state (extract_factors statement_map label))
     this_stmt stmt
 
 let factor_rhs (factor : factor) : vexpr Set.Poly.t =
@@ -55,8 +56,7 @@ let factor_var_dependencies
   let rhs = factor_rhs factor in
   let dep_labels = node_vars_dependencies statement_map rhs label in
   let label_vars l =
-    stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l))
-  in
+    stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l)) in
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs
 
@@ -66,4 +66,4 @@ let prog_factor_graph (prog : typed_prog) :
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
   List.map factors ~f:(fun (fac, l) ->
-      (fac, l, factor_var_dependencies statement_map (fac, l)) )
+      (fac, l, factor_var_dependencies statement_map (fac, l)))
