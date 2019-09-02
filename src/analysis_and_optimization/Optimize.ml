@@ -828,3 +828,22 @@ let optimize_ad_levels mir =
     optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
   in
   transform_program_blockwise mir transform
+
+let optimization_suite mir =
+  let optimizations =
+    [ function_inlining
+    ; static_loop_unrolling
+    ; one_step_loop_unrolling
+    ; list_collapsing
+    ; block_fixing
+    ; constant_propagation
+    ; expression_propagation
+    ; copy_propagation
+    ; dead_code_elimination
+    ; partial_evaluation
+    ; lazy_code_motion
+    ; optimize_ad_levels
+    ]
+  in
+  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
+

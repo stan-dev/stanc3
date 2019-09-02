@@ -19,6 +19,8 @@ let dump_mir = ref false
 let dump_mir_pretty = ref false
 let dump_tx_mir = ref false
 let dump_stan_math_sigs = ref false
+let optimize = ref false
+let dump_opt_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
 
@@ -49,6 +51,10 @@ let options =
     ; ( "--debug-mir-pretty"
       , Arg.Set dump_mir_pretty
       , " For debugging purposes: pretty-print the MIR." )
+    ; ( "--debug-optimized-mir"
+      , Arg.Set dump_opt_mir
+      , " For debugging purposes: print the MIR after it's been optimized.\
+         Only has an effect when optimizations are turned on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
@@ -70,6 +76,10 @@ let options =
       , Arg.Set_string Semantic_check.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
+    ; ( "--O"
+      , Arg.Set optimize
+      , " Allow the compiler to apply optimizations to the Stan code.\
+         This is currently an experimental feature." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -138,7 +148,15 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
-    let tx_mir = Transform_Mir.trans_prog mir in
+    let opt_mir = if !optimize then
+        let opt = Analysis_and_optimization.Optimize.optimization_suite mir in
+        if !dump_opt_mir then
+          Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
+        opt
+      else
+        mir
+    in
+    let tx_mir = Transform_Mir.trans_prog opt_mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
