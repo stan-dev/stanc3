@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --print-cpp optimizations.stan
+  $ ../../../../../install/default/bin/stanc --O --print-cpp optimizations.stan
 
 #include <vector>
 #include <Eigen/Dense>
@@ -61,21 +61,22 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 23, column 4 to column 23)",
                                                       " (in 'optimizations.stan', line 24, column 4 to column 24)",
                                                       " (in 'optimizations.stan', line 27, column 4 to column 11)",
+                                                      " (in 'optimizations.stan', line 4, column 10 to column 17)",
+                                                      " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
+                                                      " (in 'optimizations.stan', line 5, column 8 to column 20)",
+                                                      " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
                                                       " (in 'optimizations.stan', line 28, column 4 to column 19)",
-                                                      " (in 'optimizations.stan', line 29, column 4 to column 19)",
+                                                      " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
+                                                      " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
                                                       " (in 'optimizations.stan', line 30, column 17 to column 28)",
-                                                      " (in 'optimizations.stan', line 30, column 4 to column 28)",
-                                                      " (in 'optimizations.stan', line 32, column 6 to column 24)",
                                                       " (in 'optimizations.stan', line 33, column 6 to column 22)",
                                                       " (in 'optimizations.stan', line 31, column 33 to line 34, column 5)",
                                                       " (in 'optimizations.stan', line 31, column 4 to line 34, column 5)",
                                                       " (in 'optimizations.stan', line 36, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 35, column 21 to line 37, column 5)",
-                                                      " (in 'optimizations.stan', line 35, column 4 to line 37, column 5)",
                                                       " (in 'optimizations.stan', line 41, column 16 to column 29)",
                                                       " (in 'optimizations.stan', line 40, column 12 to line 41, column 29)",
                                                       " (in 'optimizations.stan', line 39, column 8 to line 41, column 29)",
-                                                      " (in 'optimizations.stan', line 38, column 4 to line 41, column 29)",
                                                       " (in 'optimizations.stan', line 44, column 10 to column 16)",
                                                       " (in 'optimizations.stan', line 43, column 8 to line 44, column 16)",
                                                       " (in 'optimizations.stan', line 45, column 8 to column 20)",
@@ -91,115 +92,54 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 55, column 8 to column 20)",
                                                       " (in 'optimizations.stan', line 52, column 21 to line 56, column 5)",
                                                       " (in 'optimizations.stan', line 52, column 4 to line 56, column 5)",
-                                                      " (in 'optimizations.stan', line 57, column 4 to column 10)",
-                                                      " (in 'optimizations.stan', line 58, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 60, column 6 to column 12)",
                                                       " (in 'optimizations.stan', line 59, column 4 to line 60, column 12)",
                                                       " (in 'optimizations.stan', line 61, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 62, column 4 to column 11)",
-                                                      " (in 'optimizations.stan', line 63, column 4 to column 12)",
                                                       " (in 'optimizations.stan', line 64, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 65, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 66, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 68, column 6 to column 19)",
-                                                      " (in 'optimizations.stan', line 67, column 4 to line 68, column 19)",
                                                       " (in 'optimizations.stan', line 69, column 4 to column 16)",
                                                       " (in 'optimizations.stan', line 70, column 4 to column 11)",
-                                                      " (in 'optimizations.stan', line 71, column 4 to column 10)",
-                                                      " (in 'optimizations.stan', line 72, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 74, column 6 to column 12)",
-                                                      " (in 'optimizations.stan', line 73, column 4 to line 74, column 12)",
                                                       " (in 'optimizations.stan', line 75, column 4 to column 16)",
-                                                      " (in 'optimizations.stan', line 77, column 6 to column 9)",
-                                                      " (in 'optimizations.stan', line 76, column 4 to line 77, column 9)",
                                                       " (in 'optimizations.stan', line 78, column 4 to column 16)",
                                                       " (in 'optimizations.stan', line 80, column 8 to column 19)",
-                                                      " (in 'optimizations.stan', line 81, column 8 to column 15)",
                                                       " (in 'optimizations.stan', line 82, column 8 to column 20)",
                                                       " (in 'optimizations.stan', line 79, column 4 to line 83, column 5)",
                                                       " (in 'optimizations.stan', line 85, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 86, column 8 to column 16)",
                                                       " (in 'optimizations.stan', line 87, column 8 to column 20)",
                                                       " (in 'optimizations.stan', line 84, column 4 to line 88, column 5)",
-                                                      " (in 'optimizations.stan', line 89, column 11 to column 25)",
-                                                      " (in 'optimizations.stan', line 89, column 4 to column 25)",
                                                       " (in 'optimizations.stan', line 90, column 11 to column 23)",
                                                       " (in 'optimizations.stan', line 90, column 4 to column 23)",
-                                                      " (in 'optimizations.stan', line 91, column 25 to column 28)",
-                                                      " (in 'optimizations.stan', line 91, column 16 to column 19)",
-                                                      " (in 'optimizations.stan', line 91, column 4 to column 28)",
-                                                      " (in 'optimizations.stan', line 92, column 23 to column 24)",
-                                                      " (in 'optimizations.stan', line 92, column 16 to column 17)",
-                                                      " (in 'optimizations.stan', line 92, column 4 to column 24)",
-                                                      " (in 'optimizations.stan', line 93, column 16 to column 19)",
-                                                      " (in 'optimizations.stan', line 93, column 4 to column 19)",
-                                                      " (in 'optimizations.stan', line 94, column 16 to column 17)",
-                                                      " (in 'optimizations.stan', line 94, column 4 to column 17)",
-                                                      " (in 'optimizations.stan', line 95, column 26 to column 27)",
-                                                      " (in 'optimizations.stan', line 95, column 19 to column 20)",
-                                                      " (in 'optimizations.stan', line 95, column 4 to column 27)",
-                                                      " (in 'optimizations.stan', line 96, column 16 to column 30)",
-                                                      " (in 'optimizations.stan', line 96, column 14 to column 32)",
-                                                      " (in 'optimizations.stan', line 96, column 4 to column 32)",
+                                                      " (in 'optimizations.stan', line 15, column 8 to column 20)",
+                                                      " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)",
                                                       " (in 'optimizations.stan', line 97, column 20 to column 26)",
                                                       " (in 'optimizations.stan', line 97, column 4 to column 26)",
                                                       " (in 'optimizations.stan', line 98, column 22 to column 28)",
-                                                      " (in 'optimizations.stan', line 98, column 4 to column 28)",
                                                       " (in 'optimizations.stan', line 100, column 6 to column 15)",
                                                       " (in 'optimizations.stan', line 99, column 4 to line 100, column 15)",
                                                       " (in 'optimizations.stan', line 102, column 6 to column 12)",
                                                       " (in 'optimizations.stan', line 101, column 4 to line 102, column 12)",
-                                                      " (in 'optimizations.stan', line 104, column 6 to column 7)",
-                                                      " (in 'optimizations.stan', line 103, column 4 to line 104, column 7)",
                                                       " (in 'optimizations.stan', line 106, column 6 to column 15)",
-                                                      " (in 'optimizations.stan', line 105, column 4 to line 106, column 15)",
                                                       " (in 'optimizations.stan', line 108, column 6 to column 12)",
-                                                      " (in 'optimizations.stan', line 107, column 4 to line 108, column 12)",
-                                                      " (in 'optimizations.stan', line 110, column 6 to column 7)",
-                                                      " (in 'optimizations.stan', line 109, column 4 to line 110, column 7)",
                                                       " (in 'optimizations.stan', line 112, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 113, column 8 to column 9)",
-                                                      " (in 'optimizations.stan', line 114, column 8 to column 9)",
                                                       " (in 'optimizations.stan', line 115, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 111, column 4 to line 116, column 5)",
                                                       " (in 'optimizations.stan', line 119, column 12 to column 24)",
-                                                      " (in 'optimizations.stan', line 120, column 12 to column 13)",
                                                       " (in 'optimizations.stan', line 118, column 8 to line 121, column 9)",
-                                                      " (in 'optimizations.stan', line 122, column 8 to column 9)",
-                                                      " (in 'optimizations.stan', line 124, column 12 to column 13)",
-                                                      " (in 'optimizations.stan', line 123, column 8 to line 125, column 9)",
-                                                      " (in 'optimizations.stan', line 126, column 8 to column 10)",
                                                       " (in 'optimizations.stan', line 117, column 4 to line 127, column 5)",
                                                       " (in 'optimizations.stan', line 128, column 4 to column 14)",
                                                       " (in 'optimizations.stan', line 132, column 6 to column 21)",
-                                                      " (in 'optimizations.stan', line 130, column 6 to column 19)",
                                                       " (in 'optimizations.stan', line 129, column 4 to line 132, column 21)",
-                                                      " (in 'optimizations.stan', line 133, column 4 to column 17)",
                                                       " (in 'optimizations.stan', line 134, column 4 to column 15)",
-                                                      " (in 'optimizations.stan', line 136, column 8 to column 22)",
                                                       " (in 'optimizations.stan', line 137, column 8 to column 23)",
                                                       " (in 'optimizations.stan', line 138, column 8 to column 24)",
                                                       " (in 'optimizations.stan', line 135, column 21 to line 139, column 5)",
-                                                      " (in 'optimizations.stan', line 135, column 4 to line 139, column 5)",
                                                       " (in 'optimizations.stan', line 140, column 4 to column 25)",
-                                                      " (in 'optimizations.stan', line 142, column 6 to column 27)",
-                                                      " (in 'optimizations.stan', line 141, column 4 to line 142, column 27)",
                                                       " (in 'optimizations.stan', line 143, column 4 to column 26)",
                                                       " (in 'optimizations.stan', line 144, column 4 to column 22)",
                                                       " (in 'optimizations.stan', line 146, column 6 to column 28)",
                                                       " (in 'optimizations.stan', line 145, column 4 to line 146, column 28)",
                                                       " (in 'optimizations.stan', line 147, column 4 to column 23)",
-                                                      " (in 'optimizations.stan', line 4, column 10 to column 17)",
-                                                      " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
-                                                      " (in 'optimizations.stan', line 5, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
                                                       " (in 'optimizations.stan', line 10, column 12 to column 26)",
-                                                      " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
-                                                      " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
-                                                      " (in 'optimizations.stan', line 15, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 16, column 8 to column 18)",
-                                                      " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)"};
+                                                      " (in 'optimizations.stan', line 16, column 8 to column 18)"};
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 void
@@ -215,13 +155,17 @@ nrfun_lp(const T0__& x, const T1__& y, const T2__& lp__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
-  try {
-    current_statement__ = 137;
+  try int sym4__;
+  int sym3__;
+  {
+    current_statement__ = 9;
     if (logical_gt(x, 342)) {
-      current_statement__ = 136;
+      current_statement__ = 8;
       return ;
-    } 
-    current_statement__ = 138;
+    } else {
+      
+    }
+    current_statement__ = 10;
     lp_accum__.add(y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -252,13 +196,18 @@ rfun(const T0__& y, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
-  try {
-    current_statement__ = 141;
+  try int sym7__;
+  int sym6__;
+  int sym5__;
+  {
+    current_statement__ = 13;
     if (logical_gt(y, 2)) {
-      current_statement__ = 140;
+      current_statement__ = 84;
       return (y + 24);
-    } 
-    current_statement__ = 142;
+    } else {
+      
+    }
+    current_statement__ = 85;
     return (y + 2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -291,9 +240,9 @@ rfun_lp(const T0__& lp__, const T1__& lp_accum__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 144;
+    current_statement__ = 54;
     lp_accum__.add(2);
-    current_statement__ = 145;
+    current_statement__ = 86;
     return 24;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -347,7 +296,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     num_params_r__ += 1;
     num_params_r__ += 3 * 2;
     num_params_r__ += 2;
-    num_params_r__ += (2 + ((2 * (2 - 1)) / 2));
+    num_params_r__ += 3;
     
   }
   template <bool propto__, bool jacobian__, typename T__>
@@ -365,297 +314,700 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      int sym70__;
+      int sym69__;
+      int sym68__;
+      int sym67__;
+      int sym66__;
+      double sym65__;
+      double sym64__;
+      double sym63__;
+      double sym62__;
+      double sym61__;
+      Eigen::Matrix<double, -1, 1> sym60__;
+      int sym59__;
+      int sym58__;
+      int sym57__;
+      int sym56__;
+      int sym55__;
+      int sym54__;
+      int sym53__;
+      double sym52__;
+      int sym51__;
+      int sym50__;
+      int sym49__;
+      int sym48__;
+      int sym47__;
+      int sym46__;
+      int sym45__;
+      int sym44__;
+      double sym43__;
+      double sym42__;
+      double sym41__;
+      double sym40__;
+      double sym39__;
+      double sym38__;
+      int sym37__;
+      int sym36__;
+      int sym35__;
+      double sym34__;
       local_scalar_t__ theta;
       
-      current_statement__ = 2;
-      theta = in__.scalar();
       local_scalar_t__ phi;
       
-      current_statement__ = 3;
-      phi = in__.scalar();
       Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
       
-      current_statement__ = 4;
-      x_matrix = in__.matrix(3, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
-      current_statement__ = 5;
-      x_vector = in__.vector(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_cov_sym1__;
-      x_cov_sym1__ = Eigen::Matrix<local_scalar_t__, -1, 1>((2 + ((2 * (2 - 1)) / 2)));
+      Eigen::Matrix<double, -1, 1> x_cov_sym1__;
+      x_cov_sym1__ = Eigen::Matrix<double, -1, 1>(3);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       
-      current_statement__ = 6;
-      x_cov_sym1__ = in__.vector((2 + ((2 * (2 - 1)) / 2)));
-      current_statement__ = 6;
-      if (jacobian__) {
-        current_statement__ = 6;
-        x_cov = cov_matrix_constrain(x_cov_sym1__, 2, lp__);
-      } else {
-        current_statement__ = 6;
-        x_cov = cov_matrix_constrain(x_cov_sym1__, 2);
-      }
       {
-        local_scalar_t__ x;
+        double x;
         
-        current_statement__ = 8;
-        nrfun_lp(4, 3);
-        current_statement__ = 9;
+        current_statement__ = 12;
+        for (size_t sym73__ = 1; sym73__ <= 1; ++sym73__) {
+          int sym71__;
+          int sym72__;
+          {
+            current_statement__ = 9;
+            if (logical_gt(4, 342)) {
+              break;
+            } else {
+              
+            }
+            current_statement__ = 10;
+            lp_accum__.add(3);
+          }}
+        int sym76__;
+        for (size_t sym75__ = 1; sym75__ <= 1; ++sym75__) {
+          int sym77__;
+          int sym78__;
+          int sym79__;
+          {
+            current_statement__ = 13;
+            if (logical_gt(3, 2)) {
+              sym76__ = (3 + 24);
+              break;
+            } else {
+              
+            }
+            sym76__ = (3 + 2);
+            break;
+          }}
         if (pstream__) {
-          stan_print(pstream__, rfun(3, pstream__));
+          stan_print(pstream__, sym76__);
           stan_print(pstream__, "\n");
         }
-        current_statement__ = 11;
-        if (rfun(4, pstream__)) {
-          current_statement__ = 10;
+        int sym82__;
+        for (size_t sym81__ = 1; sym81__ <= 1; ++sym81__) {
+          int sym83__;
+          int sym84__;
+          int sym85__;
+          {
+            current_statement__ = 13;
+            if (logical_gt(4, 2)) {
+              sym82__ = (4 + 24);
+              break;
+            } else {
+              
+            }
+            sym82__ = (4 + 2);
+            break;
+          }}
+        if (sym82__) {
+          current_statement__ = 15;
           if (pstream__) {
             stan_print(pstream__, "a");
             stan_print(pstream__, "\n");
           }
-        } 
-        current_statement__ = 15;
-        for (size_t i = rfun(7, pstream__); i <= rfun(5, pstream__); ++i) {
-          current_statement__ = 12;
-          lp_accum__.add(rfun(8, pstream__));
-          current_statement__ = 13;
-          nrfun_lp(34, 3);}
+          int sym100__;
+          for (size_t sym99__ = 1; sym99__ <= 1; ++sym99__) {
+            int sym101__;
+            int sym102__;
+            int sym103__;
+            {
+              current_statement__ = 13;
+              if (logical_gt(5, 2)) {
+                sym100__ = (5 + 24);
+                break;
+              } else {
+                
+              }
+              sym100__ = (5 + 2);
+              break;
+            }}
+          sym68__ = sym100__;
+          int sym106__;
+          for (size_t sym105__ = 1; sym105__ <= 1; ++sym105__) {
+            int sym107__;
+            int sym108__;
+            int sym109__;
+            {
+              current_statement__ = 13;
+              if (logical_gt(7, 2)) {
+                sym106__ = (7 + 24);
+                break;
+              } else {
+                
+              }
+              sym106__ = (7 + 2);
+              break;
+            }}
+          sym69__ = sym106__;
+        } else {
+          int sym88__;
+          for (size_t sym87__ = 1; sym87__ <= 1; ++sym87__) {
+            int sym89__;
+            int sym90__;
+            int sym91__;
+            {
+              current_statement__ = 13;
+              if (logical_gt(5, 2)) {
+                sym88__ = (5 + 24);
+                break;
+              } else {
+                
+              }
+              sym88__ = (5 + 2);
+              break;
+            }}
+          sym68__ = sym88__;
+          int sym94__;
+          for (size_t sym93__ = 1; sym93__ <= 1; ++sym93__) {
+            int sym95__;
+            int sym96__;
+            int sym97__;
+            {
+              current_statement__ = 13;
+              if (logical_gt(7, 2)) {
+                sym94__ = (7 + 24);
+                break;
+              } else {
+                
+              }
+              sym94__ = (7 + 2);
+              break;
+            }}
+          sym69__ = sym94__;
+        }
         current_statement__ = 18;
+        if (logical_lte(sym69__, sym68__)) {
+          {
+            {
+              int sym112__;
+              for (size_t sym111__ = 1; sym111__ <= 1; ++sym111__) {
+                int sym113__;
+                int sym114__;
+                int sym115__;
+                {
+                  current_statement__ = 13;
+                  if (logical_gt(8, 2)) {
+                    sym112__ = (8 + 24);
+                    break;
+                  } else {
+                    
+                  }
+                  sym112__ = (8 + 2);
+                  break;
+                }}
+              lp_accum__.add(sym112__);
+              current_statement__ = 16;
+              for (size_t sym118__ = 1; sym118__ <= 1; ++sym118__) {
+                int sym116__;
+                int sym117__;
+                {
+                  current_statement__ = 9;
+                  if (logical_gt(34, 342)) {
+                    break;
+                  } else {
+                    
+                  }
+                  current_statement__ = 10;
+                  lp_accum__.add(3);
+                }}
+            }
+          }
+          for (size_t i = (sym69__ + 1); i <= sym68__; ++i) {
+            {
+              int sym112__;
+              for (size_t sym111__ = 1; sym111__ <= 1; ++sym111__) {
+                int sym113__;
+                int sym114__;
+                int sym115__;
+                {
+                  current_statement__ = 13;
+                  if (logical_gt(8, 2)) {
+                    sym112__ = (8 + 24);
+                    break;
+                  } else {
+                    
+                  }
+                  sym112__ = (8 + 2);
+                  break;
+                }}
+              lp_accum__.add(sym112__);
+              current_statement__ = 16;
+              for (size_t sym118__ = 1; sym118__ <= 1; ++sym118__) {
+                int sym116__;
+                int sym117__;
+                {
+                  current_statement__ = 9;
+                  if (logical_gt(34, 342)) {
+                    break;
+                  } else {
+                    
+                  }
+                  current_statement__ = 10;
+                  lp_accum__.add(3);
+                }}
+            }}
+        } 
+        {
+          {
+            current_statement__ = 19;
+            lp_accum__.add(53);
+          }
+        }
+        {
+          {
+            current_statement__ = 19;
+            lp_accum__.add(53);
+          }
+        }
+        {
+          {
+            current_statement__ = 19;
+            lp_accum__.add(53);
+          }
+        }
+        {
+          {
+            current_statement__ = 19;
+            lp_accum__.add(53);
+          }
+        }
+        {
+          {
+            current_statement__ = 19;
+            lp_accum__.add(53);
+          }
+        }
+        {
+          {
+            current_statement__ = 23;
+            if (logical_lte(1, (1 + 2))) {
+              {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(1, (1 * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (1 + 1); k <= (1 * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }
+              }
+              for (size_t j = (1 + 1); j <= (1 + 2); ++j) {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(j, (j * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (j + 1); k <= (j * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }}
+            } 
+          }
+        }
+        {
+          {
+            current_statement__ = 23;
+            if (logical_lte(2, (2 + 2))) {
+              {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(2, (2 * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (2 + 1); k <= (2 * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }
+              }
+              for (size_t j = (2 + 1); j <= (2 + 2); ++j) {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(j, (j * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (j + 1); k <= (j * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }}
+            } 
+          }
+        }
+        {
+          {
+            current_statement__ = 23;
+            if (logical_lte(3, (3 + 2))) {
+              {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(3, (3 * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (3 + 1); k <= (3 * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }
+              }
+              for (size_t j = (3 + 1); j <= (3 + 2); ++j) {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(j, (j * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (j + 1); k <= (j * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }}
+            } 
+          }
+        }
+        {
+          {
+            current_statement__ = 23;
+            if (logical_lte(4, (4 + 2))) {
+              {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(4, (4 * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (4 + 1); k <= (4 * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }
+              }
+              for (size_t j = (4 + 1); j <= (4 + 2); ++j) {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(j, (j * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (j + 1); k <= (j * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }}
+            } 
+          }
+        }
+        {
+          {
+            current_statement__ = 23;
+            if (logical_lte(5, (5 + 2))) {
+              {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(5, (5 * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (5 + 1); k <= (5 * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }
+              }
+              for (size_t j = (5 + 1); j <= (5 + 2); ++j) {
+                {
+                  current_statement__ = 22;
+                  if (logical_lte(j, (j * 2))) {
+                    {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }
+                    }
+                    for (size_t k = (j + 1); k <= (j * 2); ++k) {
+                      {
+                        current_statement__ = 21;
+                        lp_accum__.add(53);
+                      }}
+                  } 
+                }}
+            } 
+          }
+        }
+        current_statement__ = 28;
         for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 16;
-          lp_accum__.add(53);}
-        current_statement__ = 22;
+          {
+            current_statement__ = 25;
+            if (logical_gt(i, 4)) {
+              break;
+            } else {
+              
+            }
+            current_statement__ = 26;
+            lp_accum__.add(2);
+          }}
+        current_statement__ = 33;
         for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 21;
-          for (size_t j = i; j <= (i + 2); ++j) {
-            current_statement__ = 20;
-            for (size_t k = j; k <= (j * 2); ++k) {
-              current_statement__ = 19;
-              lp_accum__.add(53);}}}
-        current_statement__ = 27;
-        for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 24;
-          if (logical_gt(i, 4)) {
-            break;
-          } 
-          current_statement__ = 25;
-          lp_accum__.add(2);}
-        current_statement__ = 32;
-        for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 29;
-          if (logical_gt(i, 4)) {
-            continue;
-          } 
-          current_statement__ = 30;
-          lp_accum__.add(2);}
-        current_statement__ = 37;
-        for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 34;
-          if (logical_gt(i, 4)) {
-            continue;
-          } 
-          current_statement__ = 35;
-          lp_accum__.add(2);}
+          {
+            current_statement__ = 30;
+            if (logical_gt(i, 4)) {
+              continue;
+            } else {
+              
+            }
+            current_statement__ = 31;
+            lp_accum__.add(2);
+          }}
         current_statement__ = 38;
-        x = 3;
+        for (size_t i = 1; i <= 5; ++i) {
+          {
+            current_statement__ = 35;
+            if (logical_gt(i, 4)) {
+              continue;
+            } else {
+              
+            }
+            current_statement__ = 36;
+            lp_accum__.add(2);
+          }}
+        sym41__ = 3;
+        lp_accum__.add(3);
         current_statement__ = 39;
-        lp_accum__.add(x);
+        if (logical_gt(in__.scalar(), 2)) {
+          sym41__ = 2;
+        } else {
+          
+        }
+        current_statement__ = 40;
+        lp_accum__.add(sym41__);
         current_statement__ = 41;
-        if (logical_gt(theta, 2)) {
-          current_statement__ = 40;
-          x = 2;
-        } 
+        lp_accum__.add(247);
+        sym41__ = 576;
+        lp_accum__.add(576);
+        if (logical_gt(in__.scalar(), 46)) {
+          sym41__ = 5880;
+        } else {
+          
+        }
         current_statement__ = 42;
-        lp_accum__.add(x);
-        current_statement__ = 43;
-        x = 24;
-        current_statement__ = 44;
-        x = 247;
-        current_statement__ = 45;
-        lp_accum__.add(x);
-        current_statement__ = 46;
-        x = (24 * 24);
-        current_statement__ = 47;
-        lp_accum__.add(x);
-        current_statement__ = 49;
-        if (logical_gt(theta, 46)) {
-          current_statement__ = 48;
-          x = (24 * 245);
-        } 
-        current_statement__ = 50;
-        lp_accum__.add(x);
-        local_scalar_t__ z;
+        lp_accum__.add(sym41__);
+        double z;
         
-        current_statement__ = 52;
-        z = x;
-        current_statement__ = 53;
-        lp_accum__.add(z);
-        current_statement__ = 55;
-        if (logical_gt(theta, 46)) {
-          current_statement__ = 54;
-          z = x;
-        } 
-        current_statement__ = 56;
-        lp_accum__.add(z);
-        current_statement__ = 58;
-        for (size_t i = 14; i <= 35; ++i) { }
-        current_statement__ = 59;
+        lp_accum__.add(sym41__);
+        current_statement__ = 44;
+        lp_accum__.add(sym41__);
+        current_statement__ = 45;
         lp_accum__.add(2);
         {
-          local_scalar_t__ y;
+          double y;
           
-          current_statement__ = 60;
-          y = 2;
-          current_statement__ = 61;
-          y = 24;
-          current_statement__ = 62;
-          lp_accum__.add(y);
+          current_statement__ = 47;
+          lp_accum__.add(24);
         }
         {
-          local_scalar_t__ y;
+          double y;
           
-          current_statement__ = 64;
-          y = 22;
-          current_statement__ = 65;
-          y = 245;
-          current_statement__ = 66;
-          lp_accum__.add(y);
+          current_statement__ = 50;
+          lp_accum__.add(245);
         }
-        current_statement__ = 69;
-        if (0) {
-          current_statement__ = 68;
-          lp_accum__.add(235);
-        } 
-        current_statement__ = 71;
-        if (1) {
-          current_statement__ = 70;
+        {
+          current_statement__ = 52;
           lp_accum__.add(2);
-        } 
-        current_statement__ = 74;
-        if ((24 * 2)) {
-          
-        } else {
-          
         }
-        current_statement__ = 77;
-        if ((24 * 2)) {
-          
-        } else {
-          
-        }
-        current_statement__ = 79;
-        if ((24 * 2)) {
-          
-        } 
-        current_statement__ = 81;
-        if ((20 * 2)) {
-          
-        } 
-        current_statement__ = 84;
-        if (rfun_lp(lp__, lp_accum__, pstream__)) {
-          
-        } else {
-          
-        }
-        current_statement__ = 87;
-        while (0) {
-          current_statement__ = 85;
-          lp_accum__.add(325);
-        }
-        current_statement__ = 89;
-        while ((24 * 24)) {
+        int sym121__;
+        for (size_t sym120__ = 1; sym120__ <= 1; ++sym120__) {
+          {
+            current_statement__ = 54;
+            lp_accum__.add(2);
+            break;
+          }}
+        current_statement__ = 57;
+        while (576) {
           break;
         }
-        current_statement__ = 91;
-        while (rfun_lp(lp__, lp_accum__, pstream__)) {
-          break;
-        }
-        current_statement__ = 93;
-        for (size_t i = 31; i <= 225; ++i) { continue;}
-        current_statement__ = 95;
-        for (size_t i = 31; i <= 225; ++i) { break;}
-        current_statement__ = 97;
-        for (size_t i = 31; i <= 225; ++i) { }
-        current_statement__ = 99;
-        for (size_t i = rfun_lp(lp__, lp_accum__, pstream__); i <= 225; ++i) {
-          continue;}
-        current_statement__ = 101;
-        for (size_t i = rfun_lp(lp__, lp_accum__, pstream__); i <= 225; ++i) {
-          break;}
-        current_statement__ = 103;
-        for (size_t i = rfun_lp(lp__, lp_accum__, pstream__); i <= 225; ++i) {
+        int sym124__;
+        for (size_t sym123__ = 1; sym123__ <= 1; ++sym123__) {
+          {
+            current_statement__ = 54;
+            lp_accum__.add(2);
+            sym124__ = 24;
+            break;
+          }}
+        while (sym124__) {
+          {
+            break;
           }
+          for (size_t sym123__ = 1; sym123__ <= 1; ++sym123__) {
+            {
+              current_statement__ = 54;
+              lp_accum__.add(2);
+              sym124__ = 24;
+              break;
+            }}
+        }
+        current_statement__ = 60;
+        for (size_t i = 31; i <= 225; ++i) { {
+                                               continue;
+                                             }}
+        current_statement__ = 62;
+        for (size_t i = 31; i <= 225; ++i) { {
+                                               break;
+                                             }}
+        int sym127__;
+        for (size_t sym126__ = 1; sym126__ <= 1; ++sym126__) {
+          {
+            current_statement__ = 54;
+            lp_accum__.add(2);
+            sym127__ = 24;
+            break;
+          }}
+        for (size_t i = sym127__; i <= 225; ++i) { {
+                                                     continue;
+                                                   }}
+        int sym130__;
+        for (size_t sym129__ = 1; sym129__ <= 1; ++sym129__) {
+          {
+            current_statement__ = 54;
+            lp_accum__.add(2);
+            sym130__ = 24;
+            break;
+          }}
+        for (size_t i = sym130__; i <= 225; ++i) { {
+                                                     break;
+                                                   }}
+        int sym133__;
+        for (size_t sym132__ = 1; sym132__ <= 1; ++sym132__) {
+          {
+            current_statement__ = 54;
+            lp_accum__.add(2);
+            break;
+          }}
         {
-          current_statement__ = 104;
+          current_statement__ = 65;
           lp_accum__.add(1);
-          
-          
-          current_statement__ = 107;
+          current_statement__ = 66;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 109;
+            current_statement__ = 68;
             lp_accum__.add(1);
-            
-          }
-          
-          {
-            
-          }
-          {
-            
           }
         }
-        local_scalar_t__ temp;
+        double temp;
         
-        current_statement__ = 120;
-        if (logical_gt(2, 3)) {
-          current_statement__ = 119;
-          temp = (2 * 2);
-        } else {
-          current_statement__ = 118;
+        {
+          current_statement__ = 72;
           if (pstream__) {
             stan_print(pstream__, "hello");
             stan_print(pstream__, "\n");
           }
         }
-        current_statement__ = 121;
-        temp = (2 * 2);
-        local_scalar_t__ temp2;
+        double temp2;
         
-        current_statement__ = 127;
-        for (size_t i = 2; i <= 3; ++i) {
-          current_statement__ = 123;
-          temp2 = (2 * 3);
-          current_statement__ = 124;
-          lp_accum__.add(temp);
-          current_statement__ = 125;
-          lp_accum__.add(temp2);}
-        local_scalar_t__ dataonlyvar;
+        {
+          {
+            current_statement__ = 75;
+            lp_accum__.add(4);
+            current_statement__ = 76;
+            lp_accum__.add(6);
+          }
+        }
+        {
+          {
+            current_statement__ = 75;
+            lp_accum__.add(4);
+            current_statement__ = 76;
+            lp_accum__.add(6);
+          }
+        }
+        double dataonlyvar;
         
-        current_statement__ = 128;
+        current_statement__ = 78;
         dataonlyvar = 3;
-        current_statement__ = 130;
-        if (logical_gt(3, 4)) {
-          current_statement__ = 129;
-          dataonlyvar = (3 * 53);
-        } 
-        current_statement__ = 131;
+        current_statement__ = 79;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar;
         
-        current_statement__ = 132;
-        paramvar = 3;
-        current_statement__ = 134;
-        if (logical_gt(42, 1)) {
-          current_statement__ = 133;
-          paramvar = (theta * 34);
-        } 
-        current_statement__ = 135;
+        {
+          current_statement__ = 81;
+          paramvar = (in__.scalar() * 34);
+        }
+        current_statement__ = 83;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -684,6 +1036,19 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     
     try {
+      double sym33__;
+      double sym32__;
+      double sym31__;
+      double sym30__;
+      double sym29__;
+      double sym28__;
+      double sym27__;
+      double sym26__;
+      Eigen::Matrix<double, -1, 1> sym25__;
+      double sym24__;
+      int sym23__;
+      int sym22__;
+      double sym21__;
       double theta;
       
       current_statement__ = 2;
@@ -703,27 +1068,95 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       x_vector = in__.vector(2);
       Eigen::Matrix<double, -1, 1> x_cov_sym2__;
-      x_cov_sym2__ = Eigen::Matrix<double, -1, 1>((2 + ((2 * (2 - 1)) / 2)));
+      x_cov_sym2__ = Eigen::Matrix<double, -1, 1>(3);
       
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       
       current_statement__ = 6;
-      x_cov_sym2__ = in__.vector((2 + ((2 * (2 - 1)) / 2)));
-      current_statement__ = 6;
-      x_cov = cov_matrix_constrain(x_cov_sym2__, 2);
-      vars__.push_back(theta);
-      vars__.push_back(phi);
-      for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-        vars__.push_back(x_vector[(sym2__ - 1)]);}
-      for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-        }}
+      x_cov = cov_matrix_constrain(in__.vector(3), 2);
+      vars__.push_back(in__.scalar());
+      vars__.push_back(in__.scalar());
+      {
+        {
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+          {
+            {
+              vars__.push_back(in__.matrix(3, 2));
+            }
+          }
+        }
+      }
+      {
+        {
+          vars__.push_back(in__.vector(2));
+        }
+      }
+      {
+        {
+          vars__.push_back(in__.vector(2));
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(cov_matrix_constrain(in__.vector(3), 2)[(1 - 1)][(1 - 1)]);
+            }
+          }
+          {
+            {
+              vars__.push_back(cov_matrix_constrain(in__.vector(3), 2)[(1 - 1)][(2 - 1)]);
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(cov_matrix_constrain(in__.vector(3), 2)[(2 - 1)][(1 - 1)]);
+            }
+          }
+          {
+            {
+              vars__.push_back(cov_matrix_constrain(in__.vector(3), 2)[(2 - 1)][(2 - 1)]);
+            }
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
@@ -742,65 +1175,232 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     try {
       int pos__;
       
+      double sym20__;
+      double sym19__;
+      double sym18__;
+      double sym17__;
+      double sym16__;
+      double sym15__;
+      Eigen::Matrix<double, -1, -1> sym14__;
+      double sym13__;
+      double sym12__;
+      double sym11__;
+      int sym10__;
+      int sym9__;
+      double sym8__;
       double theta;
       
-      current_statement__ = 2;
-      theta = context__.vals_r("theta")[(1 - 1)];
       double phi;
       
-      current_statement__ = 3;
-      phi = context__.vals_r("phi")[(1 - 1)];
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       
-      current_statement__ = 4;
-      pos__ = 1;
-      current_statement__ = 4;
-      for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-        current_statement__ = 4;
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          current_statement__ = 4;
-          assign(x_matrix, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
-          current_statement__ = 4;
-          pos__ = (pos__ + 1);}}
+      {
+        {
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+          {
+            {
+              current_statement__ = 4;
+              assign(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 4;
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
       
-      current_statement__ = 5;
-      pos__ = 1;
-      current_statement__ = 5;
-      for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-        current_statement__ = 5;
-        x_vector[(sym3__ - 1)] = context__.vals_r("x_vector")[(pos__ - 1)];
-        current_statement__ = 5;
-        pos__ = (pos__ + 1);}
+      {
+        {
+          current_statement__ = 5;
+          x_vector[(1 - 1)] = context__.vals_r("x_vector")[(pos__ - 1)];
+          current_statement__ = 5;
+          pos__ = (pos__ + 1);
+        }
+      }
+      {
+        {
+          current_statement__ = 5;
+          x_vector[(2 - 1)] = context__.vals_r("x_vector")[(pos__ - 1)];
+          current_statement__ = 5;
+          pos__ = (pos__ + 1);
+        }
+      }
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       
-      current_statement__ = 6;
-      pos__ = 1;
-      current_statement__ = 6;
-      for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-        current_statement__ = 6;
-        for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          current_statement__ = 6;
-          assign(x_cov, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
-          current_statement__ = 6;
-          pos__ = (pos__ + 1);}}
+      {
+        {
+          {
+            {
+              current_statement__ = 6;
+              assign(x_cov, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 6;
+              pos__ = (pos__ + 1);
+            }
+          }
+          {
+            {
+              current_statement__ = 6;
+              assign(x_cov, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 6;
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              current_statement__ = 6;
+              assign(x_cov, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 6;
+              pos__ = (pos__ + 1);
+            }
+          }
+          {
+            {
+              current_statement__ = 6;
+              assign(x_cov, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 6;
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
       current_statement__ = 6;
       x_cov = cov_matrix_free(x_cov);
-      vars__.push_back(theta);
-      vars__.push_back(phi);
-      for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-        vars__.push_back(x_vector[(sym3__ - 1)]);}
-      for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), "pretty printed e"));
-        }}
+      vars__.push_back(context__.vals_r("theta"));
+      vars__.push_back(context__.vals_r("phi"));
+      {
+        {
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+            }
+          }
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+            }
+          }
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+            }
+          }
+          {
+            {
+              vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+            }
+          }
+        }
+      }
+      {
+        {
+          vars__.push_back(x_vector[(1 - 1)]);
+        }
+      }
+      {
+        {
+          vars__.push_back(x_vector[(2 - 1)]);
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(rvalue(cov_matrix_free(cov_matrix_free(x_cov)), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+            }
+          }
+          {
+            {
+              vars__.push_back(rvalue(cov_matrix_free(cov_matrix_free(x_cov)), cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+            }
+          }
+        }
+      }
+      {
+        {
+          {
+            {
+              vars__.push_back(rvalue(cov_matrix_free(cov_matrix_free(x_cov)), cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+            }
+          }
+          {
+            {
+              vars__.push_back(rvalue(cov_matrix_free(cov_matrix_free(x_cov)), cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+            }
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
@@ -848,22 +1448,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 2; ++sym134__) {
       {
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
+        for (size_t sym135__ = 1; sym135__ <= 3; ++sym135__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym135__) + '.' + std::to_string(sym134__));
           }}
       }}
-    for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 2; ++sym134__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym3__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym134__));
       }}
-    for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 2; ++sym134__) {
       {
-        for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
+        for (size_t sym135__ = 1; sym135__ <= 2; ++sym135__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__));
+            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym135__) + '.' + std::to_string(sym134__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -882,20 +1482,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 2; ++sym134__) {
       {
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
+        for (size_t sym135__ = 1; sym135__ <= 3; ++sym135__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym135__) + '.' + std::to_string(sym134__));
           }}
       }}
-    for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 2; ++sym134__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym3__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym134__));
       }}
-    for (size_t sym3__ = 1; sym3__ <= (2 + ((2 * (2 - 1)) / 2)); ++sym3__) {
+    for (size_t sym134__ = 1; sym134__ <= 3; ++sym134__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym3__));
+        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym134__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -915,7 +1515,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << (2 + ((2 * (2 - 1)) / 2)) << "},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     

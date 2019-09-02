@@ -829,20 +829,32 @@ let optimize_ad_levels mir =
   in
   transform_program_blockwise mir transform
 
+(* Choosing the best order of optimizations is an open problem called phase
+   ordering. There are many approaches. I'm not yet attempting to find a
+   reasonable one here.*)
 let optimization_suite mir =
   let optimizations =
-    [ function_inlining
+    [
+      lazy_code_motion
+    ; optimize_ad_levels
+
+    (* Repeat some subset, like constant propagation + partial_evaluation until
+       fixed? *)
+    ; constant_propagation
+    ; partial_evaluation
+    ; constant_propagation
+    ; partial_evaluation
+    ; constant_propagation
+    ; partial_evaluation
+
     ; static_loop_unrolling
+    ; function_inlining
     ; one_step_loop_unrolling
     ; list_collapsing
     ; block_fixing
-    ; constant_propagation
     ; expression_propagation
     ; copy_propagation
     ; dead_code_elimination
-    ; partial_evaluation
-    ; lazy_code_motion
-    ; optimize_ad_levels
     ]
   in
   List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
