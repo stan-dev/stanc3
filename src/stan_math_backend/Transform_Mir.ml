@@ -15,8 +15,7 @@ let rec invert_read_fors ({stmt; smeta} as s) =
     | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
         let final, args = unwind body in
         (final, (loopvar, lower, upper) :: args)
-    | _ -> (s, [])
-  in
+    | _ -> (s, []) in
   match stmt with
   | For {body; _}
     when contains_fn (string_of_internal_fn FnReadData) body
@@ -25,7 +24,7 @@ let rec invert_read_fors ({stmt; smeta} as s) =
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
           let sw stmt = {smeta; stmt} in
-          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
+          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw)
         args
   | _ -> {stmt= map_statement Fn.id invert_read_fors stmt; smeta}
 
@@ -56,7 +55,9 @@ let rec use_pos_in_readdata {stmt; smeta} =
                     Indexed
                       ( ( {expr= FunApp (CompilerInternal, f, _); emeta} as
                         fnapp )
-                      , _ ); _ } ); _ } ]
+                      , _ )
+                ; _ } )
+        ; _ } ]
     when internal_fn_of_string f = Some FnReadData ->
       let pos_var = {expr= Var pos; emeta= internal_meta} in
       [ Assignment (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
@@ -111,8 +112,7 @@ let rec add_read_data_vestigial_indices {stmt; smeta} =
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
       let with_vestigial_idx =
-        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
-      in
+        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} in
       {stmt= Assignment (lhs, with_vestigial_idx); smeta}
   | _ -> {stmt= map_statement Fn.id add_read_data_vestigial_indices stmt; smeta}
 
@@ -125,14 +125,12 @@ let rec ensure_body_in_block {stmt; smeta} =
         ( match stmt with
         | Block l | SList l -> Block l
         | stmt -> Block [{stmt; smeta}] )
-    ; smeta }
-  in
+    ; smeta } in
   let ensure_body_in_block_base stmt =
     match stmt with
     | IfElse (_, _, _) | While (_, _) | For _ ->
         map_statement (fun x -> x) in_block stmt
-    | _ -> stmt
-  in
+    | _ -> stmt in
   { stmt=
       ensure_body_in_block_base
         (map_statement (fun x -> x) ensure_body_in_block stmt)
@@ -149,14 +147,12 @@ let trans_prog p =
         |> List.concat_map ~f:add_pos_reset
         |> List.map ~f:use_pos_in_readdata
         |> List.map ~f:add_read_data_vestigial_indices
-    | [] -> []
-  in
+    | [] -> [] in
   let p =
     { p with
       log_prob= List.map ~f:add_jacobians p.log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data= fix_data_reads p.prepare_data
     ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
-    ; transform_inits= fix_data_reads p.transform_inits }
-  in
+    ; transform_inits= fix_data_reads p.transform_inits } in
   map_prog Fn.id ensure_body_in_block p

@@ -14,8 +14,7 @@ let map_rec_expr_state
   let g e' =
     let e', state = f !cur_state e' in
     cur_state := state ;
-    e'
-  in
+    e' in
   let e = map_rec_expr g e in
   let state = !cur_state in
   (e, state)
@@ -37,8 +36,7 @@ let map_rec_state_stmt_loc
   let g stmt =
     let stmt, state = f !cur_state stmt in
     cur_state := state ;
-    stmt
-  in
+    stmt in
   let stmt = map_rec_stmt_loc g {smeta; stmt} in
   let state = !cur_state in
   (stmt, state)
@@ -68,8 +66,7 @@ let map_rec_state_stmt_loc_num
   let g i stmt =
     let stmt, state = f i !cur_state stmt in
     cur_state := state ;
-    stmt
-  in
+    stmt in
   let stmt = map_rec_stmt_loc_num flowgraph_to_mir g s in
   let state = !cur_state in
   (stmt, state)
@@ -97,7 +94,7 @@ let fwd_traverse_statement (stmt : ('e, 'a) statement) ~init:(state : 'f)
         ~default:(s', IfElse (pred, c, None))
         ~f:(fun else_s ->
           let s'', c' = f s' else_s in
-          (s'', IfElse (pred, c, Some c')) )
+          (s'', IfElse (pred, c, Some c')))
   | While (pred, body) ->
       let s', c = f state body in
       (s', While (pred, c))
@@ -109,18 +106,16 @@ let fwd_traverse_statement (stmt : ('e, 'a) statement) ~init:(state : 'f)
         List.fold_left stmts
           ~f:(fun (s, l) stmt ->
             let s', c = f s stmt in
-            (s', List.cons c l) )
-          ~init:(state, [])
-      in
+            (s', List.cons c l))
+          ~init:(state, []) in
       (s', Block (List.rev ls))
   | SList stmts ->
       let s', ls =
         List.fold_left stmts
           ~f:(fun (s, l) stmt ->
             let s', c = f s stmt in
-            (s', List.cons c l) )
-          ~init:(state, [])
-      in
+            (s', List.cons c l))
+          ~init:(state, []) in
       (s', SList (List.rev ls))
   | Assignment _ as s -> (state, s)
   | TargetPE _ as s -> (state, s)
@@ -140,8 +135,7 @@ let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
 (** See interface file *)
 let rec expr_var_set (ex : expr_typed_located) : vexpr Set.Poly.t =
   let union_recur exprs =
-    Set.Poly.union_list (List.map exprs ~f:expr_var_set)
-  in
+    Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match ex.expr with
   | Var s -> Set.Poly.singleton (VVar s)
   | Lit _ -> Set.Poly.empty
@@ -286,8 +280,7 @@ let rec update_expr_ad_levels autodiffable_variables e =
   | Indexed (e, i_list) ->
       let e = update_expr_ad_levels autodiffable_variables e in
       let i_list =
-        List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list
-      in
+        List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list in
       { expr= Indexed (e, i_list)
       ; emeta=
           { e.emeta with

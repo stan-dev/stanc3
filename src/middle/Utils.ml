@@ -31,7 +31,7 @@ let%expect_test "propto name mangling" =
 
 let all_but_last_n l n =
   List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->
-      if n = 0 then (ele :: accum, n) else (accum, n - 1) )
+      if n = 0 then (ele :: accum, n) else (accum, n - 1))
   |> fst
 
 let%expect_test "all but last n" =

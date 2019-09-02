@@ -21,11 +21,10 @@ let initialize () =
   ; globals= String.Table.create () }
 
 let enter s str ty =
-  let _ : [`Duplicate | `Ok] =
+  let (_ : [`Duplicate | `Ok]) =
     if !(s.scopedepth) = 0 then Hashtbl.add s.globals ~key:str ~data:()
-    else `Ok
-  in
-  let _ : [`Duplicate | `Ok] = Hashtbl.add s.table ~key:str ~data:ty in
+    else `Ok in
+  let (_ : [`Duplicate | `Ok]) = Hashtbl.add s.table ~key:str ~data:ty in
   Stack.push s.stack str
 
 let look s str = Hashtbl.find s.table str
@@ -42,14 +41,14 @@ let end_scope s =
     Hashtbl.remove s.table (Stack.top_exn s.stack) ;
     Hashtbl.remove s.readonly (Stack.top_exn s.stack) ;
     Hashtbl.remove s.isunassigned (Stack.top_exn s.stack) ;
-    let _ : string = Stack.pop_exn s.stack in
+    let (_ : string) = Stack.pop_exn s.stack in
     ()
   done ;
-  let _ : string = Stack.pop_exn s.stack in
+  let (_ : string) = Stack.pop_exn s.stack in
   ()
 
 let set_read_only s str =
-  let _ : [`Duplicate | `Ok] = Hashtbl.add s.readonly ~key:str ~data:() in
+  let (_ : [`Duplicate | `Ok]) = Hashtbl.add s.readonly ~key:str ~data:() in
   ()
 
 let get_read_only s str =
@@ -58,10 +57,9 @@ let get_read_only s str =
 let set_is_assigned s str = Hashtbl.remove s.isunassigned str
 
 let set_is_unassigned s str =
-  let _ : [`Duplicate | `Ok] =
+  let (_ : [`Duplicate | `Ok]) =
     if Hashtbl.mem s.isunassigned str then `Ok
-    else Hashtbl.add s.isunassigned ~key:str ~data:()
-  in
+    else Hashtbl.add s.isunassigned ~key:str ~data:() in
   ()
 
 let check_is_unassigned s str = Hashtbl.mem s.isunassigned str

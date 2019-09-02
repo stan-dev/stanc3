@@ -26,22 +26,19 @@ let parse parse_fun lexbuf =
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Stack.top_exn Preprocessor.include_stack))
-      ()
-  in
+      () in
   let success prog = Result.Ok prog in
   let failure error_state =
     let env =
       match[@warning "-4"] error_state with
       | Interp.HandlingError env -> env
-      | _ -> assert false
-    in
+      | _ -> assert false in
     match Interp.stack env with
     | (lazy Nil) ->
         let message =
           "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
            or \"parameters {\" or \"transformed parameters {\" or \"model {\" \
-           or \"generated quantities {\".\n"
-        in
+           or \"generated quantities {\".\n" in
         Parsing
           ( message
           , Errors.loc_span_of_pos
@@ -60,22 +57,19 @@ let parse parse_fun lexbuf =
           with Not_found_s _ ->
             if !Debugging.grammar_logging then
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
-            else ""
-        in
+            else "" in
         Parsing (message, Errors.loc_span_of_pos start_pos end_pos)
-        |> Result.Error
-  in
+        |> Result.Error in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
 let parse_string parse_fun str =
   let lexbuf =
     let open Lexing in
     let lexbuf = from_string str in
-    lexbuf.lex_start_p
-    <- {pos_fname= "string"; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    lexbuf.lex_start_p <-
+      {pos_fname= "string"; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
     lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf
-  in
+    lexbuf in
   parse parse_fun lexbuf
 
 let parse_file parse_fun path =
@@ -83,11 +77,10 @@ let parse_file parse_fun path =
   let lexbuf =
     let open Lexing in
     let lexbuf = from_channel chan in
-    lexbuf.lex_start_p
-    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    lexbuf.lex_start_p <-
+      {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
     lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf
-  in
+    lexbuf in
   parse parse_fun lexbuf
 
 (* TESTS *)
@@ -96,8 +89,7 @@ let%expect_test "parse conditional" =
     parse_string Parser.Incremental.program
       "model { if (1 < 2) { print(\"hi\");}}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -124,8 +116,7 @@ let%expect_test "parse dangling else problem" =
       "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \
        \"); else print(\"I'm afraid I can't do that.\");}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -157,8 +148,7 @@ let%expect_test "parse minus unary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x; x = -x;}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -189,8 +179,7 @@ let%expect_test "parse unary over binary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x = x - - x - - x; }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -230,8 +219,7 @@ let%expect_test "parse indices, two different colons" =
     parse_string Parser.Incremental.program
       "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -275,8 +263,7 @@ let%expect_test "parse operator precedence" =
       "model {  \
        print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -453,8 +440,7 @@ let%expect_test "parse crazy truncation example" =
       \      }\n\
       \      "
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -518,8 +504,7 @@ let%expect_test "parse nested loop" =
       \            }\n\
       \            "
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|

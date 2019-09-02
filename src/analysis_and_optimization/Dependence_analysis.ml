@@ -30,8 +30,7 @@ let node_immediate_dependencies
   let stmt, info = Map.Poly.find_exn statement_map label in
   let rhs_set = stmt_rhs_var_set stmt in
   let rhs_deps =
-    union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry)
-  in
+    union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry) in
   Set.Poly.union info.parents rhs_deps
 
 (*
@@ -60,8 +59,7 @@ let node_vars_dependencies
     (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t =
   let _, info = Map.Poly.find_exn statement_map label in
   let var_deps =
-    union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry)
-  in
+    union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry) in
   Set.Poly.fold
     (Set.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -79,25 +77,20 @@ let all_node_dependencies
     : (label, label Set.Poly.t) Map.Poly.t =
   let immediate_map =
     Map.mapi statement_map ~f:(fun ~key:label ~data:_ ->
-        node_immediate_dependencies statement_map label )
-  in
+        node_immediate_dependencies statement_map label) in
   let step_node label m =
     let immediate = Map.find_exn immediate_map label in
     let updated =
       Set.union
         (union_map immediate ~f:(fun label -> Map.find_exn m label))
-        immediate
-    in
-    Set.remove updated label
-  in
+        immediate in
+    Set.remove updated label in
   let step_map m =
-    Map.mapi m ~f:(fun ~key:label ~data:_ -> step_node label m)
-  in
+    Map.mapi m ~f:(fun ~key:label ~data:_ -> step_node label m) in
   let map_equal = Map.Poly.equal Set.Poly.equal in
   let rec step_until_fixed m =
     let m' = step_map m in
-    if map_equal m m' then m else step_until_fixed m'
-  in
+    if map_equal m m' then m else step_until_fixed m' in
   step_until_fixed immediate_map
 
 let reaching_defns
@@ -106,7 +99,7 @@ let reaching_defns
     (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
   Map.Poly.mapi statement_map ~f:(fun ~key:_ ~data:_ ->
       (* TODO: figure out how to call RDs *)
-      {entry= Set.Poly.empty; exit= Set.Poly.empty} )
+      {entry= Set.Poly.empty; exit= Set.Poly.empty})
 
 let build_dep_info_map
     (statement_map :
@@ -120,23 +113,20 @@ let build_dep_info_map
       , { predecessors= Map.find_exn preds label
         ; parents= Map.find_exn parents label
         ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit } ) )
+        ; reaching_defn_exit= rds.exit } ))
 
 let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
     (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
   let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt
-  in
+    Monotone_framework.forward_flowgraph_of_stmt stmt in
   let (module Flowgraph) = flowgraph in
   let rd_map =
-    reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir
-  in
+    reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir in
   let to_rd_set set =
     Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:0) )
-  in
+        (VVar s, Option.value label_opt ~default:0)) in
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
-      {entry= to_rd_set entry; exit= to_rd_set exit} )
+      {entry= to_rd_set entry; exit= to_rd_set exit})
 
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
@@ -152,7 +142,7 @@ let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
       , { predecessors= Map.find_exn preds label
         ; parents= Map.find_exn parents label
         ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit } ) )
+        ; reaching_defn_exit= rds.exit } ))
 
 let stmt_map_dependency_graph
     (statement_map :

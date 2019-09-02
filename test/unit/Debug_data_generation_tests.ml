@@ -19,8 +19,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -48,8 +47,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -78,8 +76,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -113,8 +110,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -163,8 +159,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -209,8 +204,7 @@ let%expect_test "whole program data generation check" =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
+            (Option.value_exn (Result.ok ast)))) in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect

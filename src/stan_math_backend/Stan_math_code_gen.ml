@@ -39,9 +39,9 @@ let pp_located_msg ppf msg =
 
 let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
-    match adtype with AutoDiffable -> true | _ -> false
-  in
-  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+    match adtype with AutoDiffable -> true | _ -> false in
+  List.filter ~f:is_autodiff args
+  |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -57,8 +57,7 @@ let promoted_arg_type ppf argtypetemplates =
         let go ppf tl =
           match tl with
           | _ :: _ -> pf ppf ", %a" promote_args_chunked tl
-          | _ -> ()
-        in
+          | _ -> () in
         pf ppf "typename boost::math::tools::promote_args<%a%a>::type"
           (list ~sep:comma string) (List.hd_exn args) go (List.tl_exn args)
       in
@@ -68,8 +67,7 @@ let promoted_arg_type ppf argtypetemplates =
     promotion.*)
 let pp_returntype ppf arg_types rt =
   let scalar =
-    strf "%a" promoted_arg_type (maybe_templated_arg_types arg_types)
-  in
+    strf "%a" promoted_arg_type (maybe_templated_arg_types arg_types) in
   match rt with
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
@@ -100,13 +98,11 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   let extra =
     if String.is_suffix fdname ~suffix:"_lp" then
       List.map ~f:(fun n -> (AutoDiffable, n, UReal)) ["lp__"; "lp_accum__"]
-    else []
-  in
+    else [] in
   let fdargs = fdargs @ extra in
   let argtypetemplates =
     (* TODO: If one contains ints, we don't need to template it *)
-    List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
-  in
+    List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," promoted_arg_type
@@ -119,8 +115,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
     pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
-    pf ppf "@ "
-  in
+    pf ppf "@ " in
   let pp_sig ppf name =
     ( match argtypetemplates with
     | [] -> ()
@@ -133,10 +128,8 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       List.map
         ~f:(fun a -> strf "%a" pp_arg a)
         (List.zip_exn argtypetemplates fdargs)
-      @ ["std::ostream* pstream__"]
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
+      @ ["std::ostream* pstream__"] in
+    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs in
   pp_sig ppf fdname ;
   match fdbody.stmt with
   | Skip -> pf ppf ";@ "
@@ -186,29 +179,25 @@ let%expect_test "dims" =
 let pp_ctor ppf (p : Locations.typed_prog_num) =
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
-    ; "std::ostream* pstream__ = nullptr" ]
-  in
+    ; "std::ostream* pstream__ = nullptr" ] in
   pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.prog_name
     (list ~sep:comma string) params ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
-    pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
-  in
+    pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims in
   let get_param_st = function
     | _, {out_block= Parameters; out_unconstrained_st= st; _} -> (
       match get_dims st with
       | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
       | ls -> Some ls )
-    | _ -> None
-  in
+    | _ -> None in
   let pp_stmt_topdecl_size_only ppf s =
     match s.stmt with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
-    | _ -> pp_statement ppf s
-  in
+    | _ -> pp_statement ppf s in
   pp_block ppf
     ( (fun ppf p ->
         pf ppf "typedef double local_scalar_t__;@ " ;
@@ -224,15 +213,14 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
         pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
           (list ~sep:cut pp_num_param)
-          (List.filter_map ~f:get_param_st p.output_vars) )
+          (List.filter_map ~f:get_param_st p.output_vars))
     , p )
 
 let pp_model_private ppf p =
   let decl = function
     | {stmt= Decl d; _} ->
         Some (d.decl_id, remove_possible_size d.decl_type, DataOnly)
-    | _ -> None
-  in
+    | _ -> None in
   let data_decls = List.filter_map ~f:decl p.prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
@@ -249,13 +237,12 @@ let pp_get_param_names ppf p =
   pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names__"]
     [] (fun ppf ->
       pf ppf "names__.resize(0);@ " ;
-      (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars) )
+      (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars))
 
 let pp_get_dims ppf p =
   let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
   let pp_dim_sep ppf () =
-    pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
-  in
+    pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@," in
   let pp_output_var ppf =
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
       ppf
@@ -266,7 +253,7 @@ let pp_get_dims ppf p =
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
     ["dimss__.resize(0);"; "std::vector<size_t> dims__;"] (fun ppf ->
-      pp_output_var ppf ; pp_dim_sep ppf () )
+      pp_output_var ppf ; pp_dim_sep ppf ())
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
   pp_method ppf rt name params intro
@@ -280,14 +267,12 @@ let pp_write_array ppf p =
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = 0"
-    ]
-  in
+    ] in
   let intro =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (p.prog_name, "write_array")
-    ; strf "%a" pp_unused "function__" ]
-  in
+    ; strf "%a" pp_unused "function__" ] in
   pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 
 let pp_string_lit = fmt "%S"
@@ -301,21 +286,19 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
       , d
       , pp_block
       , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
-    gensym_exit ()
-  in
+    gensym_exit () in
   match dims with
   | [] -> pp_body ppf (iteratee, index_ids)
   | dim :: dims ->
       iter dim (fun ppf (i, idcs) ->
           pf ppf "%a" pp_block
-            (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
+            (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)))
 
 let pp_constrained_param_names ppf p =
   let params =
     [ "std::vector<std::string>& param_names__"
     ; "bool emit_transformed_parameters__ = true"
-    ; "bool emit_generated_quantities__ = true" ]
-  in
+    ; "bool emit_generated_quantities__ = true" ] in
   let paramvars, tparamvars, gqvars =
     List.partition3_map
       ~f:(function
@@ -325,24 +308,21 @@ let pp_constrained_param_names ppf p =
             `Snd (id, st)
         | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
             `Trd (id, st))
-      p.output_vars
-  in
+      p.output_vars in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
+      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
-  in
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name) in
   pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) )
+        (list ~sep:cut pp_param_names, gqvars))
 
 (* XXX This is just a copy of constrained, I need to figure out which one is wrong
    and fix it eventually. From Bob,
@@ -364,8 +344,7 @@ let pp_unconstrained_param_names ppf p =
   let params =
     [ "std::vector<std::string>& param_names__"
     ; "bool emit_transformed_parameters__ = true"
-    ; "bool emit_generated_quantities__ = true" ]
-  in
+    ; "bool emit_generated_quantities__ = true" ] in
   let paramvars, tparamvars, gqvars =
     List.partition3_map
       ~f:(function
@@ -376,34 +355,29 @@ let pp_unconstrained_param_names ppf p =
             `Snd (id, st)
         | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
             `Trd (id, st))
-      p.output_vars
-  in
+      p.output_vars in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
+      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
-  in
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name) in
   pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) )
+        (list ~sep:cut pp_param_names, gqvars))
 
 let pp_transform_inits ppf p =
   let params =
     [ "const stan::io::var_context& context__"; "std::vector<int>& params_i__"
-    ; "std::vector<double>& vars__"; "std::ostream* pstream__" ]
-  in
+    ; "std::vector<double>& vars__"; "std::ostream* pstream__" ] in
   let intro =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
-    ; "vars__.reserve(num_params_r__);" ]
-  in
+    ; "vars__.reserve(num_params_r__);" ] in
   pp_method_b ppf "void" "transform_inits" params intro p.transform_inits
 
 let pp_fndef_sig ppf (rt, fname, params) =
@@ -413,13 +387,12 @@ let pp_log_prob ppf p =
   pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
   let params =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
-    ; "std::ostream* pstream__ = 0" ]
-  in
+    ; "std::ostream* pstream__ = 0" ] in
   let intro =
     [ "typedef T__ local_scalar_t__;"
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
-    ; strf "%a" pp_unused "DUMMY_VAR__"
-    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    ; strf "%a" pp_unused "DUMMY_VAR__"; "T__ lp__(0.0);"
+    ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (p.prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
@@ -435,15 +408,13 @@ let pp_outvar_metadata ppf (method_name, outvars) =
 
 let pp_unconstrained_types ppf {output_vars; _} =
   let grab_unconstrained (name, {out_unconstrained_st; out_block; _}) =
-    (name, out_unconstrained_st, out_block)
-  in
+    (name, out_unconstrained_st, out_block) in
   let outvars = List.map ~f:grab_unconstrained output_vars in
   pp_outvar_metadata ppf ("get_unconstrained_sizedtypes", outvars)
 
 let pp_constrained_types ppf {output_vars; _} =
   let grab_constrained (name, {out_constrained_st; out_block; _}) =
-    (name, out_constrained_st, out_block)
-  in
+    (name, out_constrained_st, out_block) in
   let outvars = List.map ~f:grab_constrained output_vars in
   pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
 

@@ -17,8 +17,7 @@ let rec string_of_location ?(print_file = true) ?(print_line = true) loc =
   let incl =
     match loc.included_from with
     | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
-    | None -> ""
-  in
+    | None -> "" in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl
 
 (** Render a location_span as a string *)
@@ -31,8 +30,7 @@ let string_of_location_span {begin_loc; end_loc} =
             ~print_file:(begin_loc.filename <> end_loc.filename)
             ~print_line:(begin_loc.line_num <> end_loc.line_num)
             end_loc
-    | Some _ -> ""
-  in
+    | Some _ -> "" in
   string_of_location begin_loc ^ end_loc_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
@@ -86,8 +84,7 @@ let contains_fn fname s =
     | NRFunApp (_, fname', _) when fname' = fname -> true
     | _ ->
         fold_statement (expr_contains_fn fname) (contains_fn_go fname) accum
-          stmt
-  in
+          stmt in
   contains_fn_go fname false s
 
 let rec is_indexing_matrix = function
@@ -138,5 +135,5 @@ let%test "contains nrfn" =
        (Block
           [ mock_stmt
               (NRFunApp
-                 (CompilerInternal, string_of_internal_fn FnWriteParam, []))
-          ; f ]))
+                 (CompilerInternal, string_of_internal_fn FnWriteParam, [])); f
+          ]))

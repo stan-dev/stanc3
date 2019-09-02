@@ -68,8 +68,7 @@ let ternary_if = "TernaryIf__"
     Stan Math name of the operator *)
 let string_of_operators =
   Map.Poly.of_alist_multi
-    [ (string_of_operator Plus, "add")
-    ; (string_of_operator PPlus, "plus")
+    [ (string_of_operator Plus, "add"); (string_of_operator PPlus, "plus")
     ; (string_of_operator Minus, "subtract")
     ; (string_of_operator PMinus, "minus")
     ; (string_of_operator Times, "multiply")
@@ -79,8 +78,7 @@ let string_of_operators =
     ; (string_of_operator LDivide, "mdivide_left")
     ; (string_of_operator EltTimes, "elt_multiply")
     ; (string_of_operator EltDivide, "elt_divide")
-    ; (string_of_operator Pow, "pow")
-    ; (string_of_operator Or, "logical_or")
+    ; (string_of_operator Pow, "pow"); (string_of_operator Or, "logical_or")
     ; (string_of_operator And, "logical_and")
     ; (string_of_operator Equals, "logical_eq")
     ; (string_of_operator NEquals, "logical_neq")

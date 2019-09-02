@@ -16,16 +16,16 @@ open Dataflow_types
  * No probabilistic dependency, I'll do that elsewhere
  **)
 
-(**
-   Sufficient information about each node to build the dependency graph.
-
-   Label dependence doesn't need the exit RD set, but variable dependence does.
-*)
 type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t }
+(**
+   Sufficient information about each node to build the dependency graph.
+
+   Label dependence doesn't need the exit RD set, but variable dependence does.
+*)
 
 val node_immediate_dependencies :
      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
