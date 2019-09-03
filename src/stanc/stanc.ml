@@ -78,7 +78,7 @@ let options =
          \"$model_filename_model\")" )
     ; ( "--O"
       , Arg.Set optimize
-      , " Allow the compiler to apply optimizations to the Stan code.\
+      , " Allow the compiler to apply all optimizations to the Stan code.\
          This is currently an experimental feature." )
     ; ( "--o"
       , Arg.Set_string output_file
@@ -97,6 +97,21 @@ let options =
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
+
+let optimization_settings () : Analysis_and_optimization.Optimize.optimization_settings =
+  { function_inlining = !optimize
+  ; static_loop_unrolling = !optimize
+  ; one_step_loop_unrolling = !optimize
+  ; list_collapsing = !optimize
+  ; block_fixing = !optimize
+  ; constant_propagation = !optimize
+  ; expression_propagation = !optimize
+  ; copy_propagation = !optimize
+  ; dead_code_elimination = !optimize
+  ; partial_evaluation = !optimize
+  ; lazy_code_motion = !optimize
+  ; optimize_ad_levels = !optimize
+  }
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
@@ -149,7 +164,7 @@ let use_file filename =
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
     let opt_mir = if !optimize then
-        let opt = Analysis_and_optimization.Optimize.optimization_suite mir in
+        let opt = Analysis_and_optimization.Optimize.optimization_suite (optimization_settings ()) mir in
         if !dump_opt_mir then
           Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
         opt

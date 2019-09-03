@@ -829,6 +829,24 @@ let optimize_ad_levels mir =
   in
   transform_program_blockwise mir transform
 
+(* Apparently you need to completely copy/paste type definitions between
+   ml and mli files?*)
+type optimization_settings =
+  { function_inlining : bool
+  ; static_loop_unrolling : bool
+  ; one_step_loop_unrolling : bool
+  ; list_collapsing : bool
+  ; block_fixing : bool
+  ; constant_propagation : bool
+  ; expression_propagation : bool
+  ; copy_propagation : bool
+  ; dead_code_elimination : bool
+  ; partial_evaluation : bool
+  ; lazy_code_motion : bool
+  ; optimize_ad_levels : bool
+  }
+
+
 (*
 @VMatthijs on GitHub:
 
@@ -859,22 +877,25 @@ basically everything < dead_code_elimination, as that will lead to the most aggr
 basically everything < optimize_ad_levels, as that will lead to the most optimal AD-levels
 
 *)
-let optimization_suite mir =
-  let optimizations =
+let optimization_suite settings mir =
+  let maybe_optimizations =
     [
-      function_inlining
-    ; constant_propagation
-    ; static_loop_unrolling
-    ; expression_propagation
-    ; partial_evaluation
-    ; one_step_loop_unrolling
-    ; lazy_code_motion
-    ; copy_propagation
-    ; dead_code_elimination
-    ; optimize_ad_levels
-    ; list_collapsing
-    ; block_fixing
+      (function_inlining, settings.function_inlining)
+    ; (constant_propagation, settings.constant_propagation)
+    ; (static_loop_unrolling, settings.static_loop_unrolling)
+    ; (expression_propagation, settings.expression_propagation)
+    ; (partial_evaluation, settings.partial_evaluation)
+    ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
+    ; (lazy_code_motion, settings.lazy_code_motion)
+    ; (copy_propagation, settings.copy_propagation)
+    ; (dead_code_elimination, settings.dead_code_elimination)
+    ; (optimize_ad_levels, settings.optimize_ad_levels)
+    ; (list_collapsing, settings.list_collapsing)
+    ; (block_fixing, settings.block_fixing)
     ]
+  in
+  let optimizations =
+    (List.filter_map maybe_optimizations ~f:(fun (fn, flag) -> if flag then Some fn else None))
   in
   List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
 
