@@ -106,7 +106,7 @@ let warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t) =
       else
         "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line " ^ end_line ^ ", character " ^ end_col
     in
-    "File \"" ^ begin_loc.filename ^ ", " ^ char_range
+    "File \"" ^ begin_loc.filename ^ "\", " ^ char_range
   in
   let show_var_info (span, var_name) =
     show_location_span span ^ ":\n"
