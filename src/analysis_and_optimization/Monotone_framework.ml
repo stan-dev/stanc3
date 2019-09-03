@@ -197,19 +197,6 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
-let initialized_vars_lattice =
-  ( module struct
-    type properties = string Set.Poly.t
-
-    let bottom = Set.Poly.empty (*Set.Poly.of_list ["z"; "i"; "x"]*)
-    let lub s1 s2 = Set.Poly.inter s1 s2
-    let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
-    let initial = Set.Poly.empty
-  end
-  : LATTICE
-    with type properties = string Set.Poly.t )
-
-
 (* Autodiff-level lattice *)
 let autodiff_level_lattice autodiff_variables =
   powerset_lattice
@@ -393,7 +380,7 @@ let reaching_definitions_transfer
     with type labels = int
      and type properties = (string * int option) Set.Poly.t )
 
-(** The transfer function for a reaching definitions analysis *)
+(** The transfer function for an initialized variables analysis *)
 let initialized_vars_transfer
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -402,14 +389,7 @@ let initialized_vars_transfer
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
-      let gen =
-          assigned_vars_stmt mir_node
-      in
-      let () = match Set.Poly.min_elt gen with
-        | None -> (Out_channel.output_string stdout) ("no gen " ^ string_of_int l)
-        | Some s -> (Out_channel.output_string stdout) ("gen " ^ s ^ " " ^ string_of_int l)
-      in
-      let () = Out_channel.newline stdout in
+      let gen = assigned_vars_stmt mir_node in
       transfer_gen_kill p gen Set.Poly.empty
   end
   : TRANSFER_FUNCTION
@@ -938,7 +918,6 @@ let propagation_mfp (prog : Middle.typed_prog)
   Mf.mfp ()
 
 let reaching_definitions_mfp (mir : Middle.typed_prog)
-    ?(uninitialized : string Set.Poly.t = Set.Poly.empty)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
@@ -949,9 +928,7 @@ let reaching_definitions_mfp (mir : Middle.typed_prog)
       let initial =
         Set.Poly.union_list
           [ Set.Poly.of_list (List.map ~f:fst mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst mir.output_vars)
-          ; uninitialized
-          ]
+          ; Set.Poly.of_list (List.map ~f:fst mir.output_vars) ]
     end
     : INITIALTYPE
       with type vals = string )
@@ -967,10 +944,18 @@ let reaching_definitions_mfp (mir : Middle.typed_prog)
   Mf.mfp ()
 
 let initialized_vars_mfp
+    (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
-  let (module Lattice) = initialized_vars_lattice in
+  let (module Lattice) =
+    dual_powerset_lattice_empty_initial
+    ( module struct
+      type vals = string
+      let total = total
+      end
+    )
+  in
   let (module Transfer) = initialized_vars_transfer flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
