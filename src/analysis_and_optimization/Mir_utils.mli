@@ -19,6 +19,12 @@ val map_rec_stmt_loc :
   -> stmt_loc
   -> stmt_loc
 
+val top_down_map_rec_stmt_loc :
+     (   (expr_typed_located, stmt_loc) statement
+      -> (expr_typed_located, stmt_loc) statement)
+  -> stmt_loc
+  -> stmt_loc
+
 val map_rec_state_stmt_loc :
      (   's
       -> (expr_typed_located, stmt_loc) statement

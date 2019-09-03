@@ -397,29 +397,34 @@ let unroll_static_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
-      match (contains_top_break_or_continue body, lower.expr, upper.expr) with
-      | false, Lit (Int, low), Lit (Int, up) ->
-          let range =
-            List.map
-              ~f:(fun i ->
-                { expr= Lit (Int, Int.to_string i)
-                ; emeta= {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
-                } )
-              (List.range ~start:`inclusive ~stop:`inclusive
-                 (Int.of_string low) (Int.of_string up))
-          in
-          let stmts =
-            List.map
-              ~f:(fun i ->
-                subst_args_stmt [loopvar] [i]
-                  {stmt= body.stmt; smeta= Middle.no_span} )
-              range
-          in
-          SList stmts
-      | _ -> stmt )
+        let lower = Partial_evaluator.eval_expr lower in
+        let upper = Partial_evaluator.eval_expr upper in
+        match
+          (contains_top_break_or_continue body, lower.expr, upper.expr)
+        with
+        | false, Lit (Int, low), Lit (Int, up) ->
+            let range =
+              List.map
+                ~f:(fun i ->
+                  { expr= Lit (Int, Int.to_string i)
+                  ; emeta=
+                      {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
+                  } )
+                (List.range ~start:`inclusive ~stop:`inclusive
+                   (Int.of_string low) (Int.of_string up))
+            in
+            let stmts =
+              List.map
+                ~f:(fun i ->
+                  subst_args_stmt [loopvar] [i]
+                    {stmt= body.stmt; smeta= Middle.no_span} )
+                range
+            in
+            SList stmts
+        | _ -> stmt )
     | _ -> stmt
   in
-  map_rec_stmt_loc f
+  top_down_map_rec_stmt_loc f
 
 let static_loop_unrolling mir =
   transform_program_blockwise mir unroll_static_loops_statement
@@ -596,11 +601,12 @@ let dead_code_elimination (mir : typed_prog) =
             | Lit (_, _) -> b1.stmt
             | _ -> IfElse (e, b1, b2) )
       | While (e, b) -> (
-        match e.expr with
-        | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
-        | _ -> While (e, b) )
+          if (not (can_side_effect_expr e)) && b.stmt = Break then Skip
+          else
+            match e.expr with
+            | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+            | _ -> While (e, b) )
       | For {loopvar; lower; upper; body} ->
-          (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
           if
             (not (can_side_effect_expr lower))
             && (not (can_side_effect_expr upper))
@@ -613,7 +619,6 @@ let dead_code_elimination (mir : typed_prog) =
       | SList l ->
           let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
           SList l'
-      (* TODO: do dead code elimination in function body too! *)
     in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
