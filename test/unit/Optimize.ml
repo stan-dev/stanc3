@@ -38,18 +38,6 @@ let%expect_test "map_rec_stmt_loc" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnPrint__(24, 24);
@@ -60,18 +48,6 @@ let%expect_test "map_rec_stmt_loc" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
@@ -106,18 +82,6 @@ let%expect_test "map_rec_state_stmt_loc" =
   print_endline (string_of_int num) ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnPrint__(24, 24);
@@ -128,18 +92,6 @@ let%expect_test "map_rec_state_stmt_loc" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       }
 
       3 |}]
@@ -183,15 +135,6 @@ let%expect_test "inline functions" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           for(sym1__ in 1:1) {
@@ -205,18 +148,6 @@ let%expect_test "inline functions" =
           }
           FnReject__(sym4__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline functions 2" =
@@ -254,19 +185,6 @@ let%expect_test "inline functions 2" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
-      log_prob {
-
-      }
-
       generate_quantities {
         if(emit_generated_quantities__) {
           for(sym3__ in 1:1) {
@@ -275,14 +193,6 @@ let%expect_test "inline functions 2" =
             }
           }
         }
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "list collapsing" =
@@ -476,31 +386,10 @@ let%expect_test "do not inline recursive functions" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           FnReject__(g(53));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in for loop" =
@@ -543,15 +432,6 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -577,18 +457,6 @@ let%expect_test "inline function in for loop" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 (* TODO: check test results from here *)
@@ -633,15 +501,6 @@ let%expect_test "inline function in for loop 2" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym9__;
@@ -679,18 +538,6 @@ let%expect_test "inline function in for loop 2" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in while loop" =
@@ -733,15 +580,6 @@ let%expect_test "inline function in while loop" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -759,18 +597,6 @@ let%expect_test "inline function in while loop" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in if then else" =
@@ -813,15 +639,6 @@ let%expect_test "inline function in if then else" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -832,18 +649,6 @@ let%expect_test "inline function in if then else" =
           }
           if(sym3__) FnPrint__("body");
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       }
 
     |}]
@@ -898,15 +703,6 @@ let%expect_test "inline function in ternary if " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -932,18 +728,6 @@ let%expect_test "inline function in ternary if " =
           }
           FnPrint__(sym3__ ?sym6__: sym9__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function multiple returns " =
@@ -982,15 +766,6 @@ let%expect_test "inline function multiple returns " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1005,18 +780,6 @@ let%expect_test "inline function multiple returns " =
           }
           FnPrint__(sym3__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function indices " =
@@ -1050,15 +813,6 @@ let%expect_test "inline function indices " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           array[array[int, 2], 2] a;
@@ -1076,18 +830,6 @@ let%expect_test "inline function indices " =
           }
           FnPrint__(a[sym3__, sym6__]);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function and " =
@@ -1121,15 +863,6 @@ let%expect_test "inline function and " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1148,18 +881,6 @@ let%expect_test "inline function and " =
           }
           FnPrint__(sym3__ && sym6__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function or " =
@@ -1192,15 +913,6 @@ let%expect_test "inline function or " =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int sym3__;
@@ -1219,18 +931,6 @@ let%expect_test "inline function or " =
           }
           FnPrint__(sym3__ || sym6__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop" =
@@ -1250,18 +950,6 @@ let%expect_test "unroll nested loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1281,18 +969,6 @@ let%expect_test "unroll nested loop" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop 2" =
@@ -1313,18 +989,6 @@ let%expect_test "unroll nested loop 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1499,18 +1163,6 @@ let%expect_test "unroll nested loop 2" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop 3" =
@@ -1531,18 +1183,6 @@ let%expect_test "unroll nested loop 3" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1615,18 +1255,6 @@ let%expect_test "unroll nested loop 3" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1648,18 +1276,6 @@ let%expect_test "unroll nested loop with break" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           {
@@ -1675,18 +1291,6 @@ let%expect_test "unroll nested loop with break" =
             }
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "constant propagation" =
@@ -1713,39 +1317,18 @@ let%expect_test "constant propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
       data int j;
       j = (2 + 42);
     }
-
     log_prob {
       {
         for(x in 1:42) {
           FnPrint__((42 + 44));
         }
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "constant propagation, local scope" =
@@ -1775,14 +1358,6 @@ let%expect_test "constant propagation, local scope" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
@@ -1791,7 +1366,6 @@ let%expect_test "constant propagation, local scope" =
         j = 2;
       }
     }
-
     log_prob {
       {
         int j;
@@ -1799,18 +1373,6 @@ let%expect_test "constant propagation, local scope" =
           FnPrint__((42 + j));
         }
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
@@ -1839,18 +1401,6 @@ let%expect_test "constant propagation, model block local scope" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
-    prepare_data {
-
-    }
-
     log_prob {
       {
         int i;
@@ -1859,7 +1409,6 @@ let%expect_test "constant propagation, model block local scope" =
         j = 2;
       }
     }
-
     generate_quantities {
       if(emit_generated_quantities__) {
         data int i;
@@ -1871,11 +1420,6 @@ let%expect_test "constant propagation, model block local scope" =
         FnWriteParam__(j);
       }
     }
-
-    transform_inits {
-
-    }
-
     output_vars {
       generated_quantities int i; //int
       generated_quantities int j; //int
@@ -1904,38 +1448,17 @@ let%expect_test "expression propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
         j = (2 + i);
       }
-
       log_prob {
         {
           for(x in 1:i) {
             FnPrint__((i + (2 + i)));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "copy propagation" =
@@ -1963,14 +1486,6 @@ let%expect_test "copy propagation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
@@ -1978,25 +1493,12 @@ let%expect_test "copy propagation" =
         data int k;
         k = (2 * i);
       }
-
       log_prob {
         {
           for(x in 1:i) {
             FnPrint__(((i + i) + k));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination" =
@@ -2024,14 +1526,6 @@ let%expect_test "dead code elimination" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data array[int, 2] i;
         i = FnMakeArray__(3, 2);
@@ -2039,24 +1533,11 @@ let%expect_test "dead code elimination" =
         j = FnMakeArray__(3, 2);
         j[1] = 2;
       }
-
       log_prob {
         {
           FnPrint__(i);
           FnPrint__(j);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination decl" =
@@ -2082,37 +1563,16 @@ let%expect_test "dead code elimination decl" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
         }
       }
-
       generate_quantities {
         if(emit_generated_quantities__) {
           data int i;
           FnPrint__(i);
         }
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
@@ -2133,35 +1593,11 @@ let%expect_test "dead code elimination, for loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
@@ -2186,36 +1622,12 @@ let%expect_test "dead code elimination, while loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
           while(1) ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -2250,18 +1662,6 @@ let%expect_test "dead code elimination, if then" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
@@ -2273,18 +1673,6 @@ let%expect_test "dead code elimination, if then" =
             FnPrint__("goodbye");
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "dead code elimination, nested" =
@@ -2307,35 +1695,11 @@ let%expect_test "dead code elimination, nested" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "partial evaluation" =
@@ -2359,18 +1723,6 @@ let%expect_test "partial evaluation" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           if(0) {
@@ -2380,18 +1732,6 @@ let%expect_test "partial evaluation" =
             FnPrint__(log1m(i));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "try partially evaluate" =
@@ -2415,18 +1755,6 @@ let%expect_test "try partially evaluate" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           real x;
@@ -2436,18 +1764,6 @@ let%expect_test "try partially evaluate" =
           FnPrint__(log_diff_exp(x, y));
           FnPrint__(log((exp(a) - exp(b))));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
@@ -2469,18 +1785,6 @@ let%expect_test "partially evaluate with equality check" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         {
           vector[2] x;
@@ -2488,18 +1792,6 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_self(x));
           FnPrint__(dot_product(x, y));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "partially evaluate functions" =
@@ -2645,18 +1937,6 @@ model {
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
@@ -2801,7 +2081,6 @@ model {
           target += x_vector;
         }
       }
-
       generate_quantities {
         data matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
@@ -2850,7 +2129,6 @@ model {
         FnWriteParam__(theta_u);
         FnWriteParam__(phi_u);
       }
-
       transform_inits {
         data matrix[3, 2] x_matrix;
         for(sym3__ in 1:3) {
@@ -2922,7 +2200,6 @@ model {
         FnWriteParam__(theta_u);
         FnWriteParam__(phi_u);
       }
-
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
         parameters matrix[2, 4] y_matrix; //matrix[2, 4]
@@ -2953,18 +2230,6 @@ let%expect_test "lazy code motion" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    functions {
-
-    }
-
-    input_vars {
-
-    }
-
-    prepare_data {
-
-    }
-
     log_prob {
       data real[] sym1__;
       {
@@ -2973,18 +2238,6 @@ let%expect_test "lazy code motion" =
         FnPrint__(sym1__);
         FnPrint__(sym1__);
       }
-    }
-
-    generate_quantities {
-
-    }
-
-    transform_inits {
-
-    }
-
-    output_vars {
-
     } |}]
 
 let%expect_test "lazy code motion, 2" =
@@ -3005,18 +2258,6 @@ let%expect_test "lazy code motion, 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3028,18 +2269,6 @@ let%expect_test "lazy code motion, 2" =
             ;
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -3061,18 +2290,6 @@ let%expect_test "lazy code motion, 3" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3082,18 +2299,6 @@ let%expect_test "lazy code motion, 3" =
           FnPrint__(sym1__);
           FnPrint__((sym1__ + 7));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 4" =
@@ -3128,18 +2333,6 @@ let%expect_test "lazy code motion, 4" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3166,18 +2359,6 @@ let%expect_test "lazy code motion, 4" =
           }
           y = sym1__;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -3210,18 +2391,6 @@ let%expect_test "lazy code motion, 5" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3252,18 +2421,6 @@ let%expect_test "lazy code motion, 5" =
           }
           y = sym1__;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -3287,18 +2444,6 @@ let%expect_test "lazy code motion, 6" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3311,18 +2456,6 @@ let%expect_test "lazy code motion, 6" =
           } else ;
           y = (4 + 3);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 7" =
@@ -3364,18 +2497,6 @@ let%expect_test "lazy code motion, 7" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3430,18 +2551,6 @@ let%expect_test "lazy code motion, 7" =
           }
           ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -3481,15 +2590,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           }
         }
       }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3499,18 +2599,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           FnPrint__(sym1__);
           FnPrint__(sym1__);
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 9" =
@@ -3531,18 +2619,6 @@ let%expect_test "lazy code motion, 9" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3552,18 +2628,6 @@ let%expect_test "lazy code motion, 9" =
             ;
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -3587,18 +2651,6 @@ let%expect_test "lazy code motion, 10" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3608,18 +2660,6 @@ let%expect_test "lazy code motion, 10" =
           x = 2;
           FnPrint__((x * 2));
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 11" =
@@ -3646,18 +2686,6 @@ let%expect_test "lazy code motion, 11" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym1__;
         {
@@ -3670,18 +2698,6 @@ let%expect_test "lazy code motion, 11" =
             FnPrint__((x * 2));
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 12" =
@@ -3705,18 +2721,6 @@ let%expect_test "lazy code motion, 12" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym2__;
         data int sym1__;
@@ -3730,18 +2734,6 @@ let%expect_test "lazy code motion, 12" =
             ;
           }
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 13" =
@@ -3773,18 +2765,6 @@ let%expect_test "lazy code motion, 13" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         data int sym8__;
         data int sym7__;
@@ -3829,18 +2809,6 @@ let%expect_test "lazy code motion, 13" =
             ;
           } else ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -3871,18 +2839,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real sym5__;
         real sym4__;
@@ -3908,18 +2864,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
             }
           } else ;
         }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "block fixing" =
@@ -3984,14 +2928,6 @@ let%expect_test "one-step loop unrolling" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
       prepare_data {
         data int x;
         if((x <= 6)) {
@@ -4028,22 +2964,6 @@ let%expect_test "one-step loop unrolling" =
             }
           }
         }
-      }
-
-      log_prob {
-
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "adlevel_optimization" =
@@ -4080,18 +3000,6 @@ let%expect_test "adlevel_optimization" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real w;
         w = FnReadParam__("w", "scalar");
@@ -4107,7 +3015,6 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
-
       generate_quantities {
         data real w;
         w = FnReadParam__("w", "scalar");
@@ -4124,13 +3031,11 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
-
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
-
       output_vars {
         parameters real w; //real
       } |}]
@@ -4317,18 +3222,6 @@ let%expect_test "adlevel_optimization 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
       log_prob {
         real w;
         w = FnReadParam__("w", "scalar");
@@ -4346,7 +3239,6 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z_data);
         }
       }
-
       generate_quantities {
         data real w;
         w = FnReadParam__("w", "scalar");
@@ -4368,13 +3260,11 @@ let%expect_test "adlevel_optimization 2" =
           FnWriteParam__(w_trans);
         }
       }
-
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
-
       output_vars {
         parameters real w; //real
         transformed_parameters real w_trans; //real

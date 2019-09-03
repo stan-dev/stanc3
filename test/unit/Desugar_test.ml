@@ -117,3 +117,14 @@ transformed data {
     FnPrint__(mat[2, arr[1], 1]);
     FnPrint__(mat[2, 2, arr[1]]);
     FnPrint__(mat[2, 2, arr[1]]); |}]
+
+let%expect_test "intertwined with partial evaluator" =
+  to_mir {|
+transformed data {
+  vector[3] x;
+  print(log(1-x[:])[:]);
+} |}
+  |> Partial_evaluator.eval_prog |> print_tdata ;
+  [%expect {|
+    data vector[3] x;
+    FnPrint__(log1m(x)); |}]
