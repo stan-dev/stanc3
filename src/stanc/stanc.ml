@@ -3,6 +3,8 @@
 open Core_kernel
 open Frontend
 open Stan_math_backend
+open Analysis_and_optimization
+open Middle
 
 (** The main program. *)
 let version = "stanc version 3.0 alpha"
@@ -21,6 +23,7 @@ let dump_tx_mir = ref false
 let dump_stan_math_sigs = ref false
 let output_file = ref ""
 let generate_data = ref false
+let warnings = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -57,6 +60,9 @@ let options =
       , Arg.Set dump_stan_math_sigs
       , "Dump out the list of supported type signatures for Stan Math backend."
       )
+    ; ( "--warnings"
+      , Arg.Set warnings
+      , " Emit compilations warnings to stderr. Currently an experimental feature." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -87,6 +93,20 @@ let options =
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
+
+let warn_uninitialized (uninit_vars : (Middle.stmt_loc_num * string) Set.Poly.t) =
+  let show_location {line_num; col_num; _} =
+    string_of_int line_num ^ ":" ^ string_of_int col_num
+  in
+  let show_location_span {begin_loc; end_loc; _} =
+    show_location begin_loc ^ "-" ^ show_location end_loc
+  in
+  let show_var_info (stmt, var_name) = "The variable " ^ var_name
+    ^ " within the statement at "
+    ^ show_location_span stmt.smetan
+    ^ " may not have been initialized.\n"
+  in
+  Set.Poly.iter uninit_vars ~f:(fun v_info -> Out_channel.output_string stderr (show_var_info v_info))
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
@@ -138,6 +158,9 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+    if !warnings then
+      let uninitialized_vars = Dependence_analysis.mir_uninitialized_variables mir in
+      warn_uninitialized uninitialized_vars ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
