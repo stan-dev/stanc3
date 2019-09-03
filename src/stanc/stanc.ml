@@ -23,7 +23,7 @@ let dump_tx_mir = ref false
 let dump_stan_math_sigs = ref false
 let output_file = ref ""
 let generate_data = ref false
-let warnings = ref false
+let warn_uninitialized = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -60,9 +60,9 @@ let options =
       , Arg.Set dump_stan_math_sigs
       , "Dump out the list of supported type signatures for Stan Math backend."
       )
-    ; ( "--warnings"
-      , Arg.Set warnings
-      , " Emit compilations warnings to stderr. Currently an experimental feature." )
+    ; ( "--warn-uninitialized"
+      , Arg.Set warn_uninitialized
+      , " Emit warnings about uninitialized variables to stderr. Currently an experimental feature." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -102,7 +102,7 @@ let warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t) =
     let end_col = string_of_int end_loc.col_num in
     let char_range =
       if begin_line = end_line then
-        "line " ^ begin_line ^ ", characters " ^ begin_col ^ "-" ^ end_col
+        "line " ^ begin_line ^ ", character(s) " ^ begin_col ^ "-" ^ end_col
       else
         "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line " ^ end_line ^ ", character " ^ end_col
     in
@@ -165,7 +165,7 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
-    if !warnings then
+    if !warn_uninitialized then
       let uninitialized_vars = Dependence_analysis.mir_uninitialized_variables mir in
       warn_uninitialized uninitialized_vars ;
     let tx_mir = Transform_Mir.trans_prog mir in
