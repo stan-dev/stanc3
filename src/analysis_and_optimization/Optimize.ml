@@ -829,32 +829,51 @@ let optimize_ad_levels mir =
   in
   transform_program_blockwise mir transform
 
-(* Choosing the best order of optimizations is an open problem called phase
-   ordering. There are many approaches. I'm not yet attempting to find a
-   reasonable one here.*)
+(*
+@VMatthijs on GitHub:
+
+As noted by @rybern , it is a hard problem (known as the phase ordering problem) to decide on the optimal order to apply optimization passes. Sometimes, it can even be useful to apply the same optimization multiple times.
+
+The point of this issue is to come up with a sensible order of applying the optimization passes in stanc3. This should be backed up both by common sense and by some empirics.
+
+Some first thoughts on constraints we want on the order (where < means "is performed before"):
+
+function_inlining < basically everything, as most optimizations do not work yet in function bodies
+
+one_step_loop_unrolling < lazy_code_motion, to get loop-invariant code motion
+
+constant_propagation < static_loop_unrolling, to create opportunities for unrolling statically-sized loops
+
+list_collapsing should perhaps happen after some optimizations if they introduce redundant nesting of SList-structures
+
+everything < block_fixing, to make sure that SList constructors directly under if, for, while or fundef constructors are replaced with Block constructors, to make sure the C++ compiles
+
+expression_propagation < partial_evaluation, to create more opportunities for algebraic simplification
+
+partial_evaluation < lazy_code_motion, to reduce subcomputations to normal forms before we get rid of repeated computation (meaning that more subcomputations get shared)
+
+lazy_code_motion < copy_propagation, to clean up (probably, check that this is necessary though)
+
+basically everything < dead_code_elimination, as that will lead to the most aggressive dead-code elimination
+
+basically everything < optimize_ad_levels, as that will lead to the most optimal AD-levels
+
+*)
 let optimization_suite mir =
   let optimizations =
     [
-      lazy_code_motion
-    ; optimize_ad_levels
-
-    (* Repeat some subset, like constant propagation + partial_evaluation until
-       fixed? *)
+      function_inlining
     ; constant_propagation
-    ; partial_evaluation
-    ; constant_propagation
-    ; partial_evaluation
-    ; constant_propagation
-    ; partial_evaluation
-
     ; static_loop_unrolling
-    ; function_inlining
-    ; one_step_loop_unrolling
-    ; list_collapsing
-    ; block_fixing
     ; expression_propagation
+    ; partial_evaluation
+    ; one_step_loop_unrolling
+    ; lazy_code_motion
     ; copy_propagation
     ; dead_code_elimination
+    ; optimize_ad_levels
+    ; list_collapsing
+    ; block_fixing
     ]
   in
   List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
