@@ -138,6 +138,7 @@ let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
 
+(*
 let all_labels
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int) : int Set.Poly.t =
@@ -173,6 +174,28 @@ let mir_uninitialized_variables (mir : typed_prog) (stmt : stmt_loc) :
     let uninitialized (_, var) = Set.Poly.mem rd.entry (var, None) in
     let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
     Set.Poly.union acc uninitialized_set)
+*)
+
+let mir_uninitialized_variables (mir : typed_prog) (stmt : stmt_loc) :
+    (label * string) Set.Poly.t =
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt stmt
+  in
+  let (module Flowgraph) = flowgraph in
+  let initialized_vars_map =
+    initialized_vars_mfp (module Flowgraph) flowgraph_to_mir
+  in
+  let uninitialized =
+    Map.Poly.fold initialized_vars_map ~init:Set.Poly.empty ~f:(fun ~key:label ~data:inits acc ->
+      let rhs = Set.Poly.map ~f:(fun (VVar s) -> (label, s)) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
+      let uninitialized (_, var) = not (Set.Poly.mem inits.entry var) in
+      let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
+      Set.Poly.union acc uninitialized_set)
+  in
+  let input_var_names = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
+  let output_var_names = Set.Poly.of_list (List.map mir.output_vars ~f:(fun (v, _) -> v)) in
+  let global = Set.Poly.union input_var_names output_var_names in
+  Set.Poly.filter uninitialized ~f:(fun (_, v) -> not (Set.Poly.mem global v))
 
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
