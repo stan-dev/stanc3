@@ -94,7 +94,7 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
-let warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t) =
+let print_warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t) =
   let show_location_span {begin_loc; end_loc; _} =
     let begin_line = string_of_int begin_loc.line_num in
     let begin_col = string_of_int begin_loc.col_num in
@@ -167,7 +167,7 @@ let use_file filename =
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
     if !warn_uninitialized then
       let uninitialized_vars = Dependence_analysis.mir_uninitialized_variables mir in
-      warn_uninitialized uninitialized_vars ;
+      print_warn_uninitialized uninitialized_vars ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;

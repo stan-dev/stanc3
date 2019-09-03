@@ -134,6 +134,23 @@ let uninitialized_var_example =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
+        functions {
+          int f(int y) {
+            int x;
+            if (y > 2)
+              return y + 24;
+            return y + 2;
+          }
+        }
+        data {
+          real w;
+        }
+        transformed data {
+          real wu;
+          print(wu);
+          print(w);
+          wu = w;
+        }
         parameters {
           real x;
         }
@@ -141,19 +158,23 @@ let uninitialized_var_example =
         {
           int i;
           int z = 0;
-          print(i); // 8
+          print(i);
           print(z);
           print(x);
           if (z == 1) {
             i = 1;
           } else {}
-          print(i); // 15
+          print(i);
           if (z == 2) {
             i = 1;
           } else {
             i = 2;
           }
           print(i);
+        }
+        generated quantities {
+          int k;
+          print(k);
         }
       |}
   in
@@ -162,160 +183,25 @@ let uninitialized_var_example =
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = mir_uninitialized_variables uninitialized_var_example in
-  print_s [%sexp (deps : (Middle.stmt_loc_num * string) Set.Poly.t)] ;
+  print_s [%sexp (deps : (location_span * string) Set.Poly.t)] ;
   [%expect
     {|
-      ((((stmtn
-          (NRFunApp CompilerInternal FnPrint__
-           (((expr (Var i))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-         (smetan <opaque>))
+      ((((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+         (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))
+        emit_generated_quantities__)
+       (((begin_loc
+          ((filename string) (line_num 15) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 15) (col_num 18) (included_from ()))))
+        wu)
+       (((begin_loc
+          ((filename string) (line_num 26) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 26) (col_num 17) (included_from ()))))
         i)
-       (((stmtn
-          (NRFunApp CompilerInternal FnPrint__
-           (((expr (Var i))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-         (smetan <opaque>))
+       (((begin_loc
+          ((filename string) (line_num 32) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 32) (col_num 17) (included_from ()))))
         i))
-    |}]
-
-(* This is really just here to show what the labels mean in the above test *)
-let%expect_test "Uninitialized Var Example Statement Map" =
-  let uninitialized_var_example_statment_map = 
-    let s = {stmt= SList uninitialized_var_example.log_prob; smeta= no_span} in
-    build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) s
-  in
-  print_s
-    [%sexp
-      ( uninitialized_var_example_statment_map
-        : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
-          Map.Poly.t )] ;
-  [%expect
-    {|
-      ((1
-        ((SList (2 3 4))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
-       (2
-        ((Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal)))
-         ((begin_loc
-           ((filename string) (line_num 3) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 3) (col_num 17) (included_from ()))))))
-       (3
-        ((Assignment (x UReal ())
-          (FunApp CompilerInternal FnReadParam__ ((Lit Str x) (Lit Str scalar))))
-         ((begin_loc
-           ((filename string) (line_num 3) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 3) (col_num 17) (included_from ()))))))
-       (4
-        ((Block (5 6 7 8 9 10 11 15 16 21))
-         ((begin_loc
-           ((filename string) (line_num 7) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 7) (col_num 16) (included_from ()))))))
-       (5
-        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt)))
-         ((begin_loc
-           ((filename string) (line_num 7) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 7) (col_num 16) (included_from ()))))))
-       (6
-        ((Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SInt)))
-         ((begin_loc
-           ((filename string) (line_num 8) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 8) (col_num 20) (included_from ()))))))
-       (7
-        ((Assignment (z UInt ()) (Lit Int 0))
-         ((begin_loc
-           ((filename string) (line_num 8) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 8) (col_num 20) (included_from ()))))))
-       (8
-        ((NRFunApp CompilerInternal FnPrint__ ((Var i)))
-         ((begin_loc
-           ((filename string) (line_num 9) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 9) (col_num 19) (included_from ()))))))
-       (9
-        ((NRFunApp CompilerInternal FnPrint__ ((Var z)))
-         ((begin_loc
-           ((filename string) (line_num 10) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 10) (col_num 19) (included_from ()))))))
-       (10
-        ((NRFunApp CompilerInternal FnPrint__ ((Var x)))
-         ((begin_loc
-           ((filename string) (line_num 11) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 11) (col_num 19) (included_from ()))))))
-       (11
-        ((IfElse (FunApp StanLib Equals__ ((Var z) (Lit Int 1))) 12 (14))
-         ((begin_loc
-           ((filename string) (line_num 12) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 14) (col_num 19) (included_from ()))))))
-       (12
-        ((Block (13))
-         ((begin_loc
-           ((filename string) (line_num 12) (col_num 22) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 14) (col_num 11) (included_from ()))))))
-       (13
-        ((Assignment (i UInt ()) (Lit Int 1))
-         ((begin_loc
-           ((filename string) (line_num 13) (col_num 12) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 13) (col_num 18) (included_from ()))))))
-       (14
-        ((Block ())
-         ((begin_loc
-           ((filename string) (line_num 14) (col_num 17) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 14) (col_num 19) (included_from ()))))))
-       (15
-        ((NRFunApp CompilerInternal FnPrint__ ((Var i)))
-         ((begin_loc
-           ((filename string) (line_num 15) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 15) (col_num 19) (included_from ()))))))
-       (16
-        ((IfElse (FunApp StanLib Equals__ ((Var z) (Lit Int 2))) 17 (19))
-         ((begin_loc
-           ((filename string) (line_num 16) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 20) (col_num 11) (included_from ()))))))
-       (17
-        ((Block (18))
-         ((begin_loc
-           ((filename string) (line_num 16) (col_num 22) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 18) (col_num 11) (included_from ()))))))
-       (18
-        ((Assignment (i UInt ()) (Lit Int 1))
-         ((begin_loc
-           ((filename string) (line_num 17) (col_num 12) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 17) (col_num 18) (included_from ()))))))
-       (19
-        ((Block (20))
-         ((begin_loc
-           ((filename string) (line_num 18) (col_num 17) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 20) (col_num 11) (included_from ()))))))
-       (20
-        ((Assignment (i UInt ()) (Lit Int 2))
-         ((begin_loc
-           ((filename string) (line_num 19) (col_num 12) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 19) (col_num 18) (included_from ()))))))
-       (21
-        ((NRFunApp CompilerInternal FnPrint__ ((Var i)))
-         ((begin_loc
-           ((filename string) (line_num 21) (col_num 10) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 21) (col_num 19) (included_from ())))))))
     |}]
