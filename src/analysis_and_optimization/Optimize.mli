@@ -67,6 +67,8 @@ type optimization_settings =
   ; lazy_code_motion : bool
   ; optimize_ad_levels : bool
   }
+(** Interface for turning individual optimizations on/off. Useful for testing
+    and for top-level interface flags. *)
 
 val optimization_suite : optimization_settings -> Middle.typed_prog -> Middle.typed_prog
 (** Perform all optimizations in this module on the MIR in an appropriate order. *)

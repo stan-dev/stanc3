@@ -3,6 +3,7 @@
 open Core_kernel
 open Frontend
 open Stan_math_backend
+open Analysis_and_optimization
 
 (** The main program. *)
 let version = "stanc version 3.0 alpha"
@@ -98,7 +99,9 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
-let optimization_settings () : Analysis_and_optimization.Optimize.optimization_settings =
+(* Whether or not to run each optimization. Currently it's all or nothing
+   depending on the --O flag.*)
+let optimization_settings () : Optimize.optimization_settings =
   { function_inlining = !optimize
   ; static_loop_unrolling = !optimize
   ; one_step_loop_unrolling = !optimize
@@ -164,7 +167,7 @@ let use_file filename =
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
     let opt_mir = if !optimize then
-        let opt = Analysis_and_optimization.Optimize.optimization_suite (optimization_settings ()) mir in
+        let opt = Optimize.optimization_suite (optimization_settings ()) mir in
         if !dump_opt_mir then
           Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
         opt
