@@ -94,17 +94,24 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
-let warn_uninitialized (uninit_vars : (Middle.stmt_loc_num * string) Set.Poly.t) =
-  let show_location {line_num; col_num; _} =
-    string_of_int line_num ^ ":" ^ string_of_int col_num
-  in
+let warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t) =
   let show_location_span {begin_loc; end_loc; _} =
-    show_location begin_loc ^ "-" ^ show_location end_loc
+    let begin_line = string_of_int begin_loc.line_num in
+    let begin_col = string_of_int begin_loc.col_num in
+    let end_line = string_of_int end_loc.line_num in
+    let end_col = string_of_int end_loc.col_num in
+    let char_range =
+      if begin_line = end_line then
+        "line " ^ begin_line ^ ", characters " ^ begin_col ^ "-" ^ end_col
+      else
+        "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line " ^ end_line ^ ", character " ^ end_col
+    in
+    "File \"" ^ begin_loc.filename ^ ", " ^ char_range
   in
-  let show_var_info (stmt, var_name) = "The variable " ^ var_name
-    ^ " within the statement at "
-    ^ show_location_span stmt.smetan
-    ^ " may not have been initialized.\n"
+  let show_var_info (span, var_name) =
+    show_location_span span ^ ":\n"
+    ^ "  Warning: The variable '" ^ var_name
+    ^ "' may not have been initialized.\n"
   in
   Set.Poly.iter uninit_vars ~f:(fun v_info -> Out_channel.output_string stderr (show_var_info v_info))
 

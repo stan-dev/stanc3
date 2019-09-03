@@ -28,7 +28,7 @@ let node_immediate_dependencies
       (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
     (label : label) : label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
-  let rhs_set = stmt_rhs_var_set stmt in
+  let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
   let rhs_deps =
     union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
@@ -154,11 +154,11 @@ let all_labels
 let prog_rhs_variables
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
     (labels : int Set.Poly.t) : string Set.Poly.t =
-  let label_vars label = Set.Poly.map ~f:(fun (VVar s) -> s) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
+  let label_vars label = Set.Poly.map ~f:(fun (VVar s, _) -> s) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
   union_map labels ~f:label_vars
 
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_loc) :
-    (Middle.stmt_loc_num * string) Set.Poly.t =
+    (location_span  * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt stmt
   in
@@ -171,7 +171,7 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_l
   let uninitialized =
     Map.Poly.fold initialized_vars_map ~init:Set.Poly.empty ~f:(fun ~key:label ~data:inits acc ->
       let stmt = Map.Poly.find_exn flowgraph_to_mir label in
-      let rhs = Set.Poly.map ~f:(fun (VVar s) -> (stmt, s)) (stmt_rhs_var_set stmt.stmtn) in
+      let rhs = Set.Poly.map ~f:(fun (VVar s, {mloc;_}) -> (mloc, s)) (stmt_rhs_var_set stmt.stmtn) in
       let uninitialized (_, var) = not (Set.Poly.mem inits.entry var) in
       let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
       Set.Poly.union acc uninitialized_set)
@@ -179,7 +179,7 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_l
   Set.Poly.filter uninitialized ~f:(fun (_, v) -> not (Set.Poly.mem exceptions v))
 
 let mir_uninitialized_variables (mir : typed_prog)
-    : (Middle.stmt_loc_num * string) Set.Poly.t =
+    : (location_span  * string) Set.Poly.t =
   let input_var_names = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
   let output_var_names = Set.Poly.of_list (List.map mir.output_vars ~f:(fun (v, _) -> v)) in
   let globals = Set.Poly.union input_var_names output_var_names in
