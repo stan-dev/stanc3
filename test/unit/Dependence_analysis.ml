@@ -161,13 +161,22 @@ let uninitialized_var_example =
 
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
-  let prog = uninitialized_var_example in
-  let s = {stmt= SList prog.log_prob; smeta= no_span} in
-  let deps = mir_uninitialized_variables prog s in
-  print_s [%sexp (deps : (label * string) Set.Poly.t)] ;
+  let deps = mir_uninitialized_variables uninitialized_var_example in
+  print_s [%sexp (deps : (Middle.stmt_loc_num * string) Set.Poly.t)] ;
   [%expect
     {|
-      ((8 i) (15 i))
+      ((((stmtn
+          (NRFunApp CompilerInternal FnPrint__
+           (((expr (Var i))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+         (smetan <opaque>))
+        i)
+       (((stmtn
+          (NRFunApp CompilerInternal FnPrint__
+           (((expr (Var i))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+         (smetan <opaque>))
+        i))
     |}]
 
 (* This is really just here to show what the labels mean in the above test *)

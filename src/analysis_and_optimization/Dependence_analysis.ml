@@ -157,8 +157,8 @@ let prog_rhs_variables
   let label_vars label = Set.Poly.map ~f:(fun (VVar s) -> s) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
   union_map labels ~f:label_vars
 
-let mir_uninitialized_variables (mir : typed_prog) (stmt : stmt_loc) :
-    (label * string) Set.Poly.t =
+let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_loc) :
+    (Middle.stmt_loc_num * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt stmt
   in
@@ -170,15 +170,28 @@ let mir_uninitialized_variables (mir : typed_prog) (stmt : stmt_loc) :
   in
   let uninitialized =
     Map.Poly.fold initialized_vars_map ~init:Set.Poly.empty ~f:(fun ~key:label ~data:inits acc ->
-      let rhs = Set.Poly.map ~f:(fun (VVar s) -> (label, s)) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
+      let stmt = Map.Poly.find_exn flowgraph_to_mir label in
+      let rhs = Set.Poly.map ~f:(fun (VVar s) -> (stmt, s)) (stmt_rhs_var_set stmt.stmtn) in
       let uninitialized (_, var) = not (Set.Poly.mem inits.entry var) in
       let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
       Set.Poly.union acc uninitialized_set)
   in
+  Set.Poly.filter uninitialized ~f:(fun (_, v) -> not (Set.Poly.mem exceptions v))
+
+let mir_uninitialized_variables (mir : typed_prog)
+    : (Middle.stmt_loc_num * string) Set.Poly.t =
   let input_var_names = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
   let output_var_names = Set.Poly.of_list (List.map mir.output_vars ~f:(fun (v, _) -> v)) in
-  let global = Set.Poly.union input_var_names output_var_names in
-  Set.Poly.filter uninitialized ~f:(fun (_, v) -> not (Set.Poly.mem global v))
+  let globals = Set.Poly.union input_var_names output_var_names in
+  Set.Poly.union_list [
+      stmt_uninitialized_variables globals {stmt= SList mir.log_prob; smeta= no_span}
+    ; stmt_uninitialized_variables globals {stmt= SList mir.generate_quantities; smeta= no_span}
+    ; stmt_uninitialized_variables globals {stmt= SList mir.transform_inits; smeta= no_span}
+    ; stmt_uninitialized_variables input_var_names {stmt= SList mir.prepare_data; smeta= no_span}
+    ; Set.Poly.union_list (List.map mir.functions_block ~f:(fun {fdbody; fdargs; _} ->
+        let arg_vars = Set.Poly.of_list (List.map fdargs ~f:(fun (_, arg_name, _) -> arg_name)) in
+        stmt_uninitialized_variables (Set.Poly.union globals arg_vars) fdbody))
+    ]
 
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =

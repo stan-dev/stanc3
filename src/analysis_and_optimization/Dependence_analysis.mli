@@ -92,7 +92,7 @@ val reaching_defn_lookup :
 
 
 val mir_uninitialized_variables :
-  typed_prog -> stmt_loc -> (label * string) Set.Poly.t
+  typed_prog -> (Middle.stmt_loc_num * string) Set.Poly.t
 (**
    Produce a list of uninitialized variables and their label locations, from the
    flowgraph starting at the given statement
