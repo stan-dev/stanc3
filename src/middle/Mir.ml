@@ -206,6 +206,17 @@ type internal_fn =
   | FnResizeToMatch
 [@@deriving sexp]
 
+type flag_vars =
+  | EmitGeneratedQuantities
+  | EmitTransformedParameters
+  | Jacobian
+
+let string_of_flag_var (flag_var : flag_vars) : string =
+  match flag_var with
+    | EmitGeneratedQuantities -> "emit_generated_quantities__"
+    | EmitTransformedParameters -> "emit_transformed_parameters__"
+    | Jacobian -> "jacobian__"
+
 (**  A custom comparator which ignores locations on expressions *)
 module ExprComparator = struct
   type t = expr_typed_located [@@deriving sexp, compare]

@@ -815,9 +815,9 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
       Parameters
     @ txparam_decls
     @ compiler_if
-        "emit_transformed_parameters__ || emit_generated_quantities__"
+        (string_of_flag_var EmitTransformedParameters ^ " || " ^ string_of_flag_var EmitGeneratedQuantities)
         txparam_stmts
-    @ compiler_if "emit_generated_quantities__"
+    @ compiler_if (string_of_flag_var EmitGeneratedQuantities)
         (migrate_checks_to_end_of_block
            (gen_from_block
               {declc with dconstrain= Some Check}
