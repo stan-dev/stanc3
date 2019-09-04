@@ -182,7 +182,14 @@ let mir_uninitialized_variables (mir : typed_prog)
     : (location_span  * string) Set.Poly.t =
   let input_var_names = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
   let output_var_names = Set.Poly.of_list (List.map mir.output_vars ~f:(fun (v, _) -> v)) in
-  let globals = Set.Poly.union input_var_names output_var_names in
+  let flag_variables = List.map ~f:string_of_flag_var all_flag_vars in
+  let globals = Set.Poly.union_list
+    [ input_var_names
+    ; output_var_names
+    ; Set.Poly.of_list flag_variables
+    ; Set.Poly.singleton "target"
+    ]
+  in
   Set.Poly.union_list [
       stmt_uninitialized_variables globals {stmt= SList mir.log_prob; smeta= no_span}
     ; stmt_uninitialized_variables globals {stmt= SList mir.generate_quantities; smeta= no_span}

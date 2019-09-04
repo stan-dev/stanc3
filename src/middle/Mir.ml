@@ -211,11 +211,18 @@ type flag_vars =
   | EmitTransformedParameters
   | Jacobian
 
+let all_flag_vars =
+  [ EmitGeneratedQuantities
+  ; EmitTransformedParameters
+  ; Jacobian
+  ]
+
 let string_of_flag_var (flag_var : flag_vars) : string =
   match flag_var with
     | EmitGeneratedQuantities -> "emit_generated_quantities__"
     | EmitTransformedParameters -> "emit_transformed_parameters__"
     | Jacobian -> "jacobian__"
+
 
 (**  A custom comparator which ignores locations on expressions *)
 module ExprComparator = struct
