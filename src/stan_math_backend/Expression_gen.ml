@@ -257,7 +257,7 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | _ :: {expr= Lit (Str, base_type); _} :: dims ->
+    | {expr= Lit (Str, base_type); _} :: dims ->
         pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
     | _ ->
         raise_s

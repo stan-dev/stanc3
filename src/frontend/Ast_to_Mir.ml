@@ -121,68 +121,6 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
-(** [add_index expression index] returns an expression that (additionally)
-    indexes into the input [expression] by [index].*)
-let add_int_index e i =
-  let mtype =
-    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
-      e.emeta.mtype [i]
-  and mir_i = trans_idx i in
-  let expr =
-    match e.expr with
-    | Var _ -> Indexed (e, [mir_i])
-    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  in
-  {expr; emeta= {e.emeta with mtype}}
-
-(** [mkfor] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
-let mkfor upper bodyfn iteratee smeta =
-  let idx s =
-    Ast.Single
-      (Ast.mk_typed_expression
-         ~expr:(Ast.Variable {name= s; id_loc= smeta})
-         ~loc:smeta ~type_:UInt ~ad_level:DataOnly)
-  in
-  let loopvar, reset = gensym_enter () in
-  let lower = loop_bottom in
-  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
-  reset () ;
-  {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
-
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
-
-    We can call [bodyfn] directly on scalars, make a direct For loop
-    around Eigen types, or for Arrays we call mkfor but inserting a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_scalar st bodyfn var smeta =
-  match st with
-  | SInt | SReal -> bodyfn var
-  | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-  | SMatrix (d1, d2) ->
-      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
-
-(** [for_eigen unsizedtype...] generates a For statement that loops
-    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.
-
-    We can call [bodyfn] directly on scalars and Eigen types;
-    for Arrays we call mkfor but insert a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_eigen st bodyfn var smeta =
-  match st with
-  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
-  | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
-
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
 type ioaction = ReadData | ReadParam [@@deriving sexp]
@@ -199,17 +137,6 @@ type decl_context =
   { dread: ioaction option
   ; dconstrain: constrainaction option
   ; dadlevel: autodifftype }
-
-let rec unsizedtype_to_string = function
-  | UMatrix -> "matrix"
-  | UVector -> "vector"
-  | URowVector -> "row_vector"
-  | UReal -> "scalar"
-  | UInt -> "integer"
-  | UArray t -> unsizedtype_to_string t
-  | t ->
-      raise_s
-        [%message "Another place where it's weird to get " (t : unsizedtype)]
 
 let constraint_to_string t (c : constrainaction) =
   match t with
@@ -245,13 +172,6 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       for_eigen
 
-let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
-  match st with
-  | SArray (t, _) -> eigen_size t
-  | SMatrix (d1, d2) -> [d1; d2]
-  | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal -> []
-
 let extract_transform_args = function
   | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
@@ -266,24 +186,6 @@ let extra_constraint_args st = function
       []
   | Covariance | Correlation | CholeskyCorr -> [List.hd_exn (eigen_size st)]
   | CholeskyCov -> eigen_size st
-
-let rec base_type = function
-  | SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UReal
-  | x -> remove_size x
-
-let internal_of_dread = function
-  | ReadParam -> FnReadParam
-  | ReadData -> FnReadData
-
-let rec pull_indices {expr; _} =
-  match expr with
-  | Indexed (obj, indices) -> pull_indices obj @ indices
-  | _ -> []
-
-let assign_indexed decl_type vident smeta varfn var =
-  let indices = pull_indices var in
-  {stmt= Assignment ((vident, decl_type, indices), varfn var); smeta}
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -336,39 +238,6 @@ let remove_possibly_exn pst action loc =
       raise_s
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : location_span)]
-
-(* mat_to_arr is used whenever we have a Stan matrix but we're dealing with
-   an underlying array. This is a code smell - not sure how to fix it short of
-   complete refactoring of data input.*)
-let rec mat_to_arr = function
-  | SMatrix (d1, d2) -> SArray (SRowVector d2, d1)
-  | SArray (t, d) -> SArray (mat_to_arr t, d)
-  | st -> st
-
-let read_decl dread decl_id decl_type smeta decl_var =
-  let sizedtype = remove_possibly_exn decl_type "read" smeta in
-  let args =
-    [ mkstring smeta decl_id
-    ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
-    @ eigen_size sizedtype
-  in
-  let readfname = internal_of_dread dread in
-  let readfn var =
-    internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
-  in
-  let rec readvar var =
-    match var.expr with
-    | Var id when id = decl_id -> readfn var
-    | e -> {var with expr= map_expr readvar e}
-  in
-  let forl =
-    match dread with
-    | ReadData -> for_scalar (mat_to_arr sizedtype)
-    | ReadParam -> for_eigen sizedtype
-  in
-  forl
-    (assign_indexed (remove_size sizedtype) decl_id smeta readvar)
-    decl_var smeta
 
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in
@@ -447,43 +316,16 @@ let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
       | Some Check -> check_decl dt decl_id transform smeta dadlevel
       | _ -> []
     in
-    let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
-      let default = ((decl_id, decl_var, dt), []) in
-      match dconstrain with
-      | Some Constrain -> (
-        match transform with
-        | Ast.Identity | Ast.Lower _ | Ast.Upper _
-         |Ast.LowerUpper (_, _)
-         |Ast.Offset _ | Ast.Multiplier _
-         |Ast.OffsetMultiplier (_, _)
-         |Ast.Ordered | Ast.PositiveOrdered ->
-            default
-        | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
-         |Ast.Correlation | Ast.Covariance ->
-            let dt =
-              remove_possibly_exn dt "constrain" smeta |> param_size transform
-            in
-            let decl_id = decl_id ^ "_" ^ gensym () in
-            let emeta = {decl_var.emeta with mtype= remove_size dt} in
-            let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
-            ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}])
-        )
-      | _ -> default
-    in
     let constrain_stmts =
       match dconstrain with
       | Some Constrain | Some Unconstrain ->
-          constrain_decl dt dconstrain transform decl_id temp_decl_var smeta
+          constrain_decl dt dconstrain transform decl_id decl_var smeta
       | _ -> []
     in
     let read_stmts =
-      match (dread, rhs) with
-      | Some dread, _ ->
-          [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
-      | None, Some _ -> rhs_assignment
-      | None, None -> []
+      match (dread, rhs) with None, Some _ -> rhs_assignment | _ -> []
     in
-    (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
+    (decl :: read_stmts) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
@@ -699,6 +541,7 @@ let gen_write decl_id sizedtype =
     ; emeta= {internal_meta with mtype= remove_size sizedtype} }
     no_span
 
+(* XXX move to backend/Transform_mir.ml *)
 let gen_writes block_filter vars =
   List.filter_map
     ~f:(function

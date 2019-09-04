@@ -1939,23 +1939,14 @@ model {
     {|
       log_prob {
         matrix[3, 2] x_matrix;
-        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         matrix[2, 4] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
         matrix[4, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         vector[2] x_vector;
-        x_vector = FnReadParam__("x_vector", "vector", 2);
         vector[3] y_vector;
-        y_vector = FnReadParam__("y_vector", "vector", 3);
-        vector[3] x_cov_sym1__;
         matrix[2, 2] x_cov;
-        x_cov_sym1__ = FnReadParam__("x_cov_sym1__", "vector", 3);
-        x_cov = FnConstrain__(x_cov_sym1__, "cov_matrix", 2);
+        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         real theta_u;
-        theta_u = FnReadParam__("theta_u", "scalar");
         real phi_u;
-        phi_u = FnReadParam__("phi_u", "scalar");
         {
           real theta;
           theta = 34.;
@@ -2083,47 +2074,38 @@ model {
       }
       generate_quantities {
         data matrix[3, 2] x_matrix;
-        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         data matrix[2, 4] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
         data matrix[4, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         data vector[2] x_vector;
-        x_vector = FnReadParam__("x_vector", "vector", 2);
         data vector[3] y_vector;
-        y_vector = FnReadParam__("y_vector", "vector", 3);
-        data vector[3] x_cov_sym2__;
         data matrix[2, 2] x_cov;
-        x_cov_sym2__ = FnReadParam__("x_cov_sym2__", "vector", 3);
-        x_cov = FnConstrain__(x_cov_sym2__, "cov_matrix", 2);
+        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         data real theta_u;
-        theta_u = FnReadParam__("theta_u", "scalar");
         data real phi_u;
-        phi_u = FnReadParam__("phi_u", "scalar");
-        for(sym2__ in 1:3) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(x_matrix[sym2__, sym3__]);
+        for(sym1__ in 1:3) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(x_matrix[sym1__, sym2__]);
           }
         }
-        for(sym2__ in 1:2) {
-          for(sym3__ in 1:4) {
-            FnWriteParam__(y_matrix[sym2__, sym3__]);
+        for(sym1__ in 1:2) {
+          for(sym2__ in 1:4) {
+            FnWriteParam__(y_matrix[sym1__, sym2__]);
           }
         }
-        for(sym2__ in 1:4) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(z_matrix[sym2__, sym3__]);
+        for(sym1__ in 1:4) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(z_matrix[sym1__, sym2__]);
           }
         }
-        for(sym2__ in 1:2) {
-          FnWriteParam__(x_vector[sym2__]);
+        for(sym1__ in 1:2) {
+          FnWriteParam__(x_vector[sym1__]);
         }
-        for(sym2__ in 1:3) {
-          FnWriteParam__(y_vector[sym2__]);
+        for(sym1__ in 1:3) {
+          FnWriteParam__(y_vector[sym1__]);
         }
-        for(sym2__ in 1:2) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(x_cov[sym2__, sym3__]);
+        for(sym1__ in 1:2) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(x_cov[sym1__, sym2__]);
           }
         }
         FnWriteParam__(theta_u);
@@ -2131,70 +2113,38 @@ model {
       }
       transform_inits {
         data matrix[3, 2] x_matrix;
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
-            x_matrix[sym3__, sym4__] = FnReadData__("x_matrix", "matrix", 3, 2)
-                                       [sym3__, sym4__];
-          }
-        }
         data matrix[2, 4] y_matrix;
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:4) {
-            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 2, 4)
-                                       [sym3__, sym4__];
-          }
-        }
         data matrix[4, 2] z_matrix;
-        for(sym3__ in 1:4) {
-          for(sym4__ in 1:2) {
-            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 4, 2)
-                                       [sym3__, sym4__];
-          }
-        }
         data vector[2] x_vector;
-        for(sym3__ in 1:2) {
-          x_vector[sym3__] = FnReadData__("x_vector", "vector", 2)[sym3__];
-        }
         data vector[3] y_vector;
-        for(sym3__ in 1:3) {
-          y_vector[sym3__] = FnReadData__("y_vector", "vector", 3)[sym3__];
-        }
         data matrix[2, 2] x_cov;
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:2) {
-            x_cov[sym3__, sym4__] = FnReadData__("x_cov", "matrix", 2, 2)[sym3__,
-                                                                          sym4__];
-          }
-        }
         x_cov = FnUnconstrain__(x_cov, "cov_matrix");
         data real theta_u;
-        theta_u = FnReadData__("theta_u", "scalar");
         data real phi_u;
-        phi_u = FnReadData__("phi_u", "scalar");
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(x_matrix[sym3__, sym4__]);
+        for(sym1__ in 1:3) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(x_matrix[sym1__, sym2__]);
           }
         }
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:4) {
-            FnWriteParam__(y_matrix[sym3__, sym4__]);
+        for(sym1__ in 1:2) {
+          for(sym2__ in 1:4) {
+            FnWriteParam__(y_matrix[sym1__, sym2__]);
           }
         }
-        for(sym3__ in 1:4) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(z_matrix[sym3__, sym4__]);
+        for(sym1__ in 1:4) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(z_matrix[sym1__, sym2__]);
           }
         }
-        for(sym3__ in 1:2) {
-          FnWriteParam__(x_vector[sym3__]);
+        for(sym1__ in 1:2) {
+          FnWriteParam__(x_vector[sym1__]);
         }
-        for(sym3__ in 1:3) {
-          FnWriteParam__(y_vector[sym3__]);
+        for(sym1__ in 1:3) {
+          FnWriteParam__(y_vector[sym1__]);
         }
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(x_cov[sym3__, sym4__]);
+        for(sym1__ in 1:2) {
+          for(sym2__ in 1:2) {
+            FnWriteParam__(x_cov[sym1__, sym2__]);
           }
         }
         FnWriteParam__(theta_u);
@@ -3002,7 +2952,6 @@ let%expect_test "adlevel_optimization" =
     {|
       log_prob {
         real w;
-        w = FnReadParam__("w", "scalar");
         {
           data int x;
           real y;
@@ -3017,7 +2966,6 @@ let%expect_test "adlevel_optimization" =
       }
       generate_quantities {
         data real w;
-        w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
         if(emit_transformed_parameters__ || emit_generated_quantities__) {
           data int x;
@@ -3033,7 +2981,6 @@ let%expect_test "adlevel_optimization" =
       }
       transform_inits {
         data real w;
-        w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
       output_vars {
@@ -3082,16 +3029,6 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((stmt
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
-        (smeta <opaque>))
-       ((stmt
-         (Assignment (w UReal ())
-          ((expr
-            (FunApp CompilerInternal FnReadParam__
-             (((expr (Lit Str w))
-               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-              ((expr (Lit Str scalar))
-               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
         (smeta <opaque>))
        ((stmt
          (Block
@@ -3224,7 +3161,6 @@ let%expect_test "adlevel_optimization 2" =
     {|
       log_prob {
         real w;
-        w = FnReadParam__("w", "scalar");
         data real w_trans;
         w_trans = 1;
         {
@@ -3241,7 +3177,6 @@ let%expect_test "adlevel_optimization 2" =
       }
       generate_quantities {
         data real w;
-        w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
         data real w_trans;
         if(emit_transformed_parameters__ || emit_generated_quantities__) {
@@ -3262,7 +3197,6 @@ let%expect_test "adlevel_optimization 2" =
       }
       transform_inits {
         data real w;
-        w = FnReadData__("w", "scalar");
         FnWriteParam__(w);
       }
       output_vars {

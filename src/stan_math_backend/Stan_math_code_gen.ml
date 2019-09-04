@@ -194,9 +194,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
   in
   let get_param_st = function
     | _, {out_block= Parameters; out_unconstrained_st= st; _} -> (
-      match get_dims st with
-      | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
-      | ls -> Some ls )
+      match get_dims st with [] -> Some [loop_bottom] | ls -> Some ls )
     | _ -> None
   in
   let pp_stmt_topdecl_size_only ppf s =

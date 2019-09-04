@@ -56,25 +56,7 @@ let%expect_test "read data" =
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
-          (body
-           (Block
-            ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
-              (body
-               (Block
-                ((Assignment
-                  (mat (UArray UMatrix)
-                   ((Single (Var sym1__)) (Single (Var sym2__))
-                    (Single (Var sym3__))))
-                  (Indexed
-                   (FunApp CompilerInternal FnReadData__
-                    ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
-                   ((Single (Var sym1__)) (Single (Var sym2__))
-                    (Single (Var sym3__)))))))))))))))))) |}]
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -84,14 +66,6 @@ let%expect_test "read param" =
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type
        (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((Assignment (mat (UArray UMatrix) ((Single (Var sym1__))))
-          (Indexed
-           (FunApp CompilerInternal FnReadParam__
-            ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
-           ((Single (Var sym1__)))))))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
