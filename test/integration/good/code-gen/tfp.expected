@@ -1,5 +1,7 @@
   $ ../../../../../install/default/bin/stan2tfp eight_schools_ncp.stan
 
+import numpy as np
+import tensorflow as tf
 import tensorflow_probability as tfp
 tfd = tfp.distributions
 
@@ -9,4 +11,27 @@ class eight_schools_ncp_model(tfd.Distribution):
     self.J = data[0]
     self.y = data[1]
     self.sigma = data[2]
+     
+  def log_prob(self, params):
+    target = tf.Variable(0, dtype=np.float64)
+    J = self.J
+    y = self.y
+    sigma = self.sigma
+    mu = params[0]
+    tau = params[1]
+    theta_tilde = params[2]
+    
+    
+    
+    
+    tau = exp(tau) + 0
+    
+    
+    
+    
+    target += tfd.distributions.Normal(0, 5).log_prob(mu)
+    target += tfd.distributions.Cauchy(0, 5).log_prob(tau)
+    target += tfd.distributions.Normal(0, 1).log_prob(theta_tilde)
+    target += tfd.distributions.Normal(theta, sigma).log_prob(y)
+    return target
      

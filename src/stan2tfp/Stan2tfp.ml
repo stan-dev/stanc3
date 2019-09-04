@@ -2,13 +2,17 @@ open Core_kernel
 open Frontend
 open Tfp_backend
 
+let dump_mir = ref false
 let dump_transformed_mir = ref false
 
 let options =
   Arg.align
     [ ( "--dump-transformed-mir"
       , Arg.Set dump_transformed_mir
-      , "Dump the MIR after it's been transformed by the TFP backend." ) ]
+      , "Dump the MIR after it's been transformed by the TFP backend." )
+    ; ( "--dump-mir"
+      , Arg.Set dump_mir
+      , "Dump the MIR immediately after transformation from the AST." ) ]
 
 let usage = "Usage: stan2tfp [option] ... <model_file.stan>"
 let model_file = ref ""
@@ -28,8 +32,10 @@ let main () =
     !model_file |> Frontend_utils.get_ast_or_exit
     |> Frontend_utils.type_ast_or_exit
     |> Ast_to_Mir.trans_prog !Semantic_check.model_name
-    |> Code_gen.trans_prog
   in
+  if !dump_mir then
+    mir |> Middle.sexp_of_typed_prog |> Sexp.to_string_hum |> print_endline ;
+  let mir = Code_gen.trans_prog mir in
   if !dump_transformed_mir then Fmt.pr "%a" Middle.Pretty.pp_typed_prog mir ;
   Fmt.pr "%a" Code_gen.pp_prog mir
 
