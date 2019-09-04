@@ -1,2 +1,12 @@
   $ ../../../../../install/default/bin/stan2tfp eight_schools_ncp.stan
 
+import tensorflow_probability as tfp
+tfd = tfp.distributions
+
+class eight_schools_ncp_model(tfd.Distribution):
+
+  def __init__(self, data):
+    self.J = data[0]
+    self.y = data[1]
+    self.sigma = data[2]
+     

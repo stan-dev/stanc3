@@ -34,3 +34,23 @@ let main () =
   Fmt.pr "%a" Code_gen.pp_prog mir
 
 let () = main ()
+
+(*
+   let's just ignore all the FnReadData stuff.
+   What about FnReadParam?
+
+   Let's generate a class:
+
+   class StanModelName(object):
+     def __init__(self, data=[data1, data2...]):
+       self.data = data
+
+     def log_prob(self, params=[param1, param2...]):
+       target = tf.Variable(0) #?
+       target += tfd.Normal(param1, param2).log_prob(self.data[0])...
+
+       return target
+
+   provide:
+
+ *)

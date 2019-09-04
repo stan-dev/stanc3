@@ -61,4 +61,39 @@ let rec translate_funapps {expr; emeta} =
   {expr; emeta}
 
 let trans_prog (p : typed_prog) = map_prog translate_funapps Fn.id p
-let pp_prog ppf (_ : typed_prog) = pf ppf "nothing here yet folks@,"
+
+let pp_call ppf (name, pp_arg, args) =
+  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
+
+let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
+
+let pp_method ppf name params intro ?(outro = []) ppbody =
+  pf ppf "@[<v 2>def %a:" pp_call_str (name, params) ;
+  (list ~sep:cut string) ppf intro ;
+  cut ppf () ;
+  ppbody ppf ;
+  if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
+  pf ppf "@, @]"
+
+let pp_init ppf p =
+  let pp_save_data ppf (idx, name) = pf ppf "self.%s = data[%d]" name idx in
+  let ppbody ppf =
+    (list ~sep:cut pp_save_data)
+      ppf
+      (List.mapi p.input_vars ~f:(fun idx (name, _) -> (idx, name)))
+  in
+  pp_method ppf "__init__" ["self"; "data"] [] ppbody
+
+let pp_methods ppf p = pf ppf "@ %a" pp_init p
+
+(* pf ppf "@ %a" pp_log_prob p ; *)
+
+let imports =
+  {|
+import tensorflow_probability as tfp
+tfd = tfp.distributions
+|}
+
+let pp_prog ppf (p : typed_prog) =
+  pf ppf "%s@,@,class %s(tfd.Distribution):@,@[<v 2>%a@]" imports p.prog_name
+    pp_methods p
