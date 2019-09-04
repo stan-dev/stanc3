@@ -157,6 +157,17 @@ let prog_rhs_variables
   let label_vars label = Set.Poly.map ~f:(fun (VVar s, _) -> s) (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn) in
   union_map labels ~f:label_vars
 
+let rec var_declarations (sw : ('e, 'm) stmt_with) : string Set.Poly.t =
+  match sw.stmt with
+  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+  | IfElse (_, s, None)
+  | While (_, s)
+  | For {body=s; _} -> var_declarations s
+  | IfElse (_, s1, Some s2) -> Set.Poly.union (var_declarations s1) (var_declarations s2)
+  | Block slist
+  | SList slist -> Set.Poly.union_list (List.map ~f:var_declarations slist)
+  | _ -> Set.Poly.empty
+
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_loc) :
     (location_span  * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
@@ -180,24 +191,24 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t) (stmt : stmt_l
 
 let mir_uninitialized_variables (mir : typed_prog)
     : (location_span  * string) Set.Poly.t =
-  let input_var_names = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
-  let output_var_names = Set.Poly.of_list (List.map mir.output_vars ~f:(fun (v, _) -> v)) in
   let flag_variables = List.map ~f:string_of_flag_var all_flag_vars in
-  let globals = Set.Poly.union_list
-    [ input_var_names
-    ; output_var_names
-    ; Set.Poly.of_list flag_variables
-    ; Set.Poly.singleton "target"
-    ]
-  in
-  Set.Poly.union_list [
-      stmt_uninitialized_variables globals {stmt= SList mir.log_prob; smeta= no_span}
-    ; stmt_uninitialized_variables globals {stmt= SList mir.generate_quantities; smeta= no_span}
-    ; stmt_uninitialized_variables globals {stmt= SList mir.transform_inits; smeta= no_span}
-    ; stmt_uninitialized_variables input_var_names {stmt= SList mir.prepare_data; smeta= no_span}
+  let data_vars = Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v)) in
+  let prep_vars = Set.Poly.union_list (List.map ~f:var_declarations mir.prepare_data) in
+  let globals = Set.Poly.union (Set.Poly.of_list flag_variables) (Set.Poly.singleton "target") in
+  let globals_data = Set.Poly.union globals data_vars in
+  let globals_data_prep = Set.Poly.union globals_data prep_vars in
+  Set.Poly.union_list
+    [
+      (* prepare_data scope: data *)
+      stmt_uninitialized_variables globals_data {stmt= SList mir.prepare_data; smeta= no_span}
+      (* log_prob scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep {stmt= SList mir.log_prob; smeta= no_span}
+      (* gen quant scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep {stmt= SList mir.generate_quantities; smeta= no_span}
+      (* functions scope: arguments *)
     ; Set.Poly.union_list (List.map mir.functions_block ~f:(fun {fdbody; fdargs; _} ->
         let arg_vars = Set.Poly.of_list (List.map fdargs ~f:(fun (_, arg_name, _) -> arg_name)) in
-        stmt_uninitialized_variables (Set.Poly.union globals arg_vars) fdbody))
+        stmt_uninitialized_variables (Set.Poly.union arg_vars globals) fdbody))
     ]
 
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :

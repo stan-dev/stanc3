@@ -186,7 +186,10 @@ let%expect_test "Uninitialized variables example" =
   print_s [%sexp (deps : (location_span * string) Set.Poly.t)] ;
   [%expect
     {|
-      ((((begin_loc
+      ((((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+         (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))
+        k)
+       (((begin_loc
           ((filename string) (line_num 15) (col_num 16) (included_from ())))
          (end_loc
           ((filename string) (line_num 15) (col_num 18) (included_from ()))))
@@ -200,5 +203,262 @@ let%expect_test "Uninitialized variables example" =
           ((filename string) (line_num 32) (col_num 16) (included_from ())))
          (end_loc
           ((filename string) (line_num 32) (col_num 17) (included_from ()))))
-        i))
+        i)
+       (((begin_loc
+          ((filename string) (line_num 42) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 42) (col_num 17) (included_from ()))))
+        k))
+    |}]
+
+let%expect_test "Show Uninitialized variables example" =
+  print_s [%sexp (uninitialized_var_example : typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block
+        (((fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable y UInt)))
+          (fdbody
+           ((stmt
+             (Block
+              (((stmt
+                 (Decl (decl_adtype AutoDiffable) (decl_id x)
+                  (decl_type (Sized SInt))))
+                (smeta <opaque>))
+               ((stmt
+                 (IfElse
+                  ((expr
+                    (FunApp StanLib Greater__
+                     (((expr (Var y))
+                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                      ((expr (Lit Int 2))
+                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                  ((stmt
+                    (Return
+                     (((expr
+                        (FunApp StanLib Plus__
+                         (((expr (Var y))
+                           (emeta
+                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                          ((expr (Lit Int 24))
+                           (emeta
+                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                   (smeta <opaque>))
+                  ()))
+                (smeta <opaque>))
+               ((stmt
+                 (Return
+                  (((expr
+                     (FunApp StanLib Plus__
+                      (((expr (Var y))
+                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                       ((expr (Lit Int 2))
+                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                (smeta <opaque>)))))
+            (smeta <opaque>)))
+          (fdloc <opaque>))))
+       (input_vars ((w SReal)))
+       (prepare_data
+        (((stmt
+           (Decl (decl_adtype DataOnly) (decl_id w) (decl_type (Sized SReal))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (w UReal ())
+            ((expr
+              (FunApp CompilerInternal FnReadData__
+               (((expr (Lit Str w))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                ((expr (Lit Str scalar))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (smeta <opaque>))
+         ((stmt
+           (Decl (decl_adtype DataOnly) (decl_id wu) (decl_type (Sized SReal))))
+          (smeta <opaque>))
+         ((stmt
+           (NRFunApp CompilerInternal FnPrint__
+            (((expr (Var wu))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>))
+         ((stmt
+           (NRFunApp CompilerInternal FnPrint__
+            (((expr (Var w))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (wu UReal ())
+            ((expr (Var w))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (smeta <opaque>))))
+       (log_prob
+        (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (x UReal ())
+            ((expr
+              (FunApp CompilerInternal FnReadParam__
+               (((expr (Lit Str x))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                ((expr (Lit Str scalar))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+          (smeta <opaque>))
+         ((stmt
+           (Block
+            (((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id i)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id z)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Assignment (z UInt ())
+                ((expr (Lit Int 0))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+              (smeta <opaque>))
+             ((stmt
+               (NRFunApp CompilerInternal FnPrint__
+                (((expr (Var i))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>))
+             ((stmt
+               (NRFunApp CompilerInternal FnPrint__
+                (((expr (Var z))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>))
+             ((stmt
+               (NRFunApp CompilerInternal FnPrint__
+                (((expr (Var x))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+              (smeta <opaque>))
+             ((stmt
+               (IfElse
+                ((expr
+                  (FunApp StanLib Equals__
+                   (((expr (Var z))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                    ((expr (Lit Int 1))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                ((stmt
+                  (Block
+                   (((stmt
+                      (Assignment (i UInt ())
+                       ((expr (Lit Int 1))
+                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>))
+                (((stmt (Block ())) (smeta <opaque>)))))
+              (smeta <opaque>))
+             ((stmt
+               (NRFunApp CompilerInternal FnPrint__
+                (((expr (Var i))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>))
+             ((stmt
+               (IfElse
+                ((expr
+                  (FunApp StanLib Equals__
+                   (((expr (Var z))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                    ((expr (Lit Int 2))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                ((stmt
+                  (Block
+                   (((stmt
+                      (Assignment (i UInt ())
+                       ((expr (Lit Int 1))
+                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>))
+                (((stmt
+                   (Block
+                    (((stmt
+                       (Assignment (i UInt ())
+                        ((expr (Lit Int 2))
+                         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                      (smeta <opaque>)))))
+                  (smeta <opaque>)))))
+              (smeta <opaque>))
+             ((stmt
+               (NRFunApp CompilerInternal FnPrint__
+                (((expr (Var i))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (generate_quantities
+        (((stmt
+           (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SReal))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (x UReal ())
+            ((expr
+              (FunApp CompilerInternal FnReadParam__
+               (((expr (Lit Str x))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                ((expr (Lit Str scalar))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (smeta <opaque>))
+         ((stmt
+           (NRFunApp CompilerInternal FnWriteParam__
+            (((expr (Var x))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>))
+         ((stmt
+           (IfElse
+            ((expr (Var emit_generated_quantities__))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((stmt
+              (Block
+               (((stmt
+                  (Decl (decl_adtype DataOnly) (decl_id k)
+                   (decl_type (Sized SInt))))
+                 (smeta <opaque>))
+                ((stmt
+                  (NRFunApp CompilerInternal FnPrint__
+                   (((expr (Var k))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (smeta <opaque>))
+                ((stmt
+                  (NRFunApp CompilerInternal FnWriteParam__
+                   (((expr (Var k))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (smeta <opaque>)))))
+             (smeta <opaque>))
+            ()))
+          (smeta <opaque>))))
+       (transform_inits
+        (((stmt
+           (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SReal))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (x UReal ())
+            ((expr
+              (FunApp CompilerInternal FnReadData__
+               (((expr (Lit Str x))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                ((expr (Lit Str scalar))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (smeta <opaque>))
+         ((stmt
+           (NRFunApp CompilerInternal FnWriteParam__
+            (((expr (Var x))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>))))
+       (output_vars
+        ((x
+          ((out_unconstrained_st SReal) (out_constrained_st SReal)
+           (out_block Parameters)))
+         (k
+          ((out_unconstrained_st SInt) (out_constrained_st SInt)
+           (out_block GeneratedQuantities)))))
+       (prog_name "") (prog_path ""))
     |}]

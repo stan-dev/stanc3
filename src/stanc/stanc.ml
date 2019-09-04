@@ -113,7 +113,8 @@ let print_warn_uninitialized (uninit_vars : (location_span * string) Set.Poly.t)
     ^ "  Warning: The variable '" ^ var_name
     ^ "' may not have been initialized.\n"
   in
-  Set.Poly.iter uninit_vars ~f:(fun v_info -> Out_channel.output_string stderr (show_var_info v_info))
+  let filtered_uninit_vars = Set.Poly.filter ~f:(fun (span, _) -> span <> no_span) uninit_vars in
+  Set.Poly.iter filtered_uninit_vars ~f:(fun v_info -> Out_channel.output_string stderr (show_var_info v_info))
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
