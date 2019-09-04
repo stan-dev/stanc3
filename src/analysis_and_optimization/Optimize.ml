@@ -876,6 +876,7 @@ basically everything < dead_code_elimination, as that will lead to the most aggr
 
 basically everything < optimize_ad_levels, as that will lead to the most optimal AD-levels
 
+TODO: Look at Muchnick compiler design book for phase ordering
 *)
 let optimization_suite settings mir =
   let maybe_optimizations =
