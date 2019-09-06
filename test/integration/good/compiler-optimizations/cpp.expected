@@ -336,6 +336,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     try {
       
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
@@ -742,6 +743,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     try {
       int pos__;
       
+      pos__ = 1;
       double theta;
       
       current_statement__ = 2;

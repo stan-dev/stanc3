@@ -187,8 +187,9 @@ let constrain_in_params outvars stmts =
 
 let trans_prog (p : typed_prog) =
   let init_pos =
-    { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; smeta= no_span }
+    [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+    ; Assignment ((pos, UInt, []), loop_bottom) ]
+    |> List.map ~f:(fun stmt -> {stmt; smeta= no_span})
   in
   let log_prob = List.map ~f:add_jacobians p.log_prob in
   let p =
@@ -199,13 +200,13 @@ let trans_prog (p : typed_prog) =
         (* transform_inits needs this too?*)
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
-        init_pos :: add_reads p.prepare_data p.input_vars data_read
+        init_pos @ add_reads p.prepare_data p.input_vars data_read
         (* ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities *)
     ; transform_inits=
         init_pos
-        :: add_reads p.transform_inits
-             (List.filter_map ~f:get_name_st p.output_vars)
-             data_read
+        @ add_reads p.transform_inits
+            (List.filter_map ~f:get_name_st p.output_vars)
+            data_read
     ; generate_quantities=
         add_reads p.generate_quantities p.output_vars param_read
         |> constrain_in_params p.output_vars }

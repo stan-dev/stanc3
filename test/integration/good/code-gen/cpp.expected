@@ -95,6 +95,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     try {
       
+      pos__ = 1;
       
       current_statement__ = 12;
       J = context__.vals_i("J")[(pos__ - 1)];
@@ -270,6 +271,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     try {
       int pos__;
       
+      pos__ = 1;
       double mu;
       
       current_statement__ = 2;
@@ -2827,6 +2829,7 @@ class mother_model : public model_base_crtp<mother_model> {
     
     try {
       
+      pos__ = 1;
       
       current_statement__ = 165;
       N = context__.vals_i("N")[(pos__ - 1)];
@@ -4656,6 +4659,7 @@ class mother_model : public model_base_crtp<mother_model> {
     try {
       int pos__;
       
+      pos__ = 1;
       double p_real;
       
       current_statement__ = 2;
