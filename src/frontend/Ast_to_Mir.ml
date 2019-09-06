@@ -133,10 +133,7 @@ let constrainaction_fname c =
     | Constrain -> FnConstrain
     | Unconstrain -> FnUnconstrain )
 
-type decl_context =
-  { dread: ioaction option
-  ; dconstrain: constrainaction option
-  ; dadlevel: autodifftype }
+type decl_context = {dconstrain: constrainaction option; dadlevel: autodifftype}
 
 let constraint_to_string t (c : constrainaction) =
   match t with
@@ -290,8 +287,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
       @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
-let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
-    identifier initial_value =
+let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
+    initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let dt = trans_possiblysizedtype decl_type in
@@ -322,10 +319,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
           constrain_decl dt dconstrain transform decl_id decl_var smeta
       | _ -> []
     in
-    let read_stmts =
-      match (dread, rhs) with None, Some _ -> rhs_assignment | _ -> []
-    in
-    (decl :: read_stmts) @ constrain_stmts @ checks
+    (decl :: rhs_assignment) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
@@ -351,9 +345,7 @@ let%expect_test "dist name suffix" =
 let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
     =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt =
-    trans_stmt udf_names {declc with dread= None; dconstrain= None}
-  in
+  let trans_stmt = trans_stmt udf_names {declc with dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
@@ -522,7 +514,7 @@ let trans_fun_def udf_names (ts : Ast.typed_statement) =
         ; fdargs= List.map ~f:trans_arg arguments
         ; fdbody=
             trans_stmt udf_names
-              {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+              {dconstrain= None; dadlevel= AutoDiffable}
               body
             |> unwrap_block_or_skip
         ; fdloc= ts.smeta.loc } ]
@@ -613,11 +605,9 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   and input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
-  let declc = {dread= None; dconstrain= None; dadlevel= DataOnly} in
+  let declc = {dconstrain= None; dadlevel= DataOnly} in
   let datab =
-    map
-      (trans_stmt {declc with dread= Some ReadData; dconstrain= Some Check})
-      datablock
+    map (trans_stmt {declc with dconstrain= Some Check}) datablock
     |> migrate_checks_to_end_of_block
   in
   let prepare_data =
@@ -630,14 +620,10 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   in
   let log_prob =
     map
-      (trans_stmt
-         { dread= Some ReadParam
-         ; dconstrain= Some Constrain
-         ; dadlevel= AutoDiffable })
+      (trans_stmt {dconstrain= Some Constrain; dadlevel= AutoDiffable})
       parametersblock
     @ ( map
-          (trans_stmt
-             {declc with dconstrain= Some Check; dadlevel= AutoDiffable})
+          (trans_stmt {dconstrain= Some Check; dadlevel= AutoDiffable})
           transformedparametersblock
       |> migrate_checks_to_end_of_block )
     @
@@ -653,9 +639,7 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
     |> List.partition_tf ~f:(function {stmt= Decl _; _} -> true | _ -> false)
   in
   let generate_quantities =
-    gen_from_block
-      {declc with dread= Some ReadParam; dconstrain= Some Constrain}
-      Parameters
+    gen_from_block {declc with dconstrain= Some Constrain} Parameters
     @ txparam_decls
     @ compiler_if
         "emit_transformed_parameters__ || emit_generated_quantities__"
@@ -667,9 +651,7 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
               GeneratedQuantities))
   in
   let transform_inits =
-    gen_from_block
-      {declc with dread= Some ReadData; dconstrain= Some Unconstrain}
-      Parameters
+    gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
   { functions_block= map (trans_fun_def udf_names) functionblock
   ; input_vars
