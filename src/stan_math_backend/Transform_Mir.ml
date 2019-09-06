@@ -98,7 +98,7 @@ let rec add_jacobians {stmt; smeta} =
       let assign rhs = {stmt= Assignment (lhs, rhs); smeta} in
       { stmt=
           IfElse
-            ( var (string_of_flag_var Jacobian)
+            ( var "jacobian__"
             , assign
                 {expr= FunApp (CompilerInternal, f, args @ [var "lp__"]); emeta}
             , Some (assign {expr= FunApp (CompilerInternal, f, args); emeta})
