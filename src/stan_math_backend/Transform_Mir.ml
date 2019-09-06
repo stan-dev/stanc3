@@ -4,6 +4,24 @@ open Middle
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
 
+let rec invert_write_fors ({stmt; smeta} as s) =
+  let rec unwind s =
+    match s.stmt with
+    | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
+        let final, args = unwind body in
+        (final, (loopvar, lower, upper) :: args)
+    | _ -> (s, [])
+  in
+  match stmt with
+  | For {body; _} when contains_fn (string_of_internal_fn FnWriteParam) body ->
+      let final, args = unwind s in
+      List.fold ~init:final
+        ~f:(fun accum (loopvar, lower, upper) ->
+          let sw stmt = {smeta; stmt} in
+          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
+        args
+  | _ -> {stmt= map_statement Fn.id invert_write_fors stmt; smeta}
+
 let data_read smeta (decl_id, st) =
   let decl_var =
     { expr= Var decl_id
@@ -34,7 +52,7 @@ let data_read smeta (decl_id, st) =
     if is_scalar st then []
     else [Assignment ((pos, UInt, []), loop_bottom) |> swrap]
   in
-  pos_reset @ [for_scalar st bodyfn decl_var smeta]
+  pos_reset @ [for_scalar_inv st bodyfn decl_var smeta]
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
@@ -197,11 +215,10 @@ let trans_prog (p : typed_prog) =
       log_prob=
         add_reads log_prob p.output_vars param_read
         |> constrain_in_params p.output_vars
-        (* transform_inits needs this too?*)
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos @ add_reads p.prepare_data p.input_vars data_read
-        (* ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities *)
+        |> List.map ~f:invert_write_fors
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits
@@ -209,6 +226,7 @@ let trans_prog (p : typed_prog) =
             data_read
     ; generate_quantities=
         add_reads p.generate_quantities p.output_vars param_read
-        |> constrain_in_params p.output_vars }
+        |> constrain_in_params p.output_vars
+        |> List.map ~f:invert_write_fors }
   in
   map_prog Fn.id ensure_body_in_block p

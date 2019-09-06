@@ -206,6 +206,14 @@ let rec for_scalar st bodyfn var smeta =
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
+(* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
+let rec for_scalar_inv st bodyfn var smeta =
+  match st with
+  | SArray (t, d) ->
+      let bodyfn' var = mkfor d bodyfn var smeta in
+      for_scalar_inv t bodyfn' var smeta
+  | _ -> for_scalar st bodyfn var smeta
+
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating
     overarrays and running bodyfn on any eign types found within.

@@ -107,6 +107,13 @@ val for_scalar :
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
 
+val for_scalar_inv :
+     mtype_loc_ad with_expr sizedtype
+  -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
 val for_eigen :
      mtype_loc_ad with_expr sizedtype
   -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
