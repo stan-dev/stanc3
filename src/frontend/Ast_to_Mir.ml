@@ -123,7 +123,6 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
-type ioaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constrainaction_fname c =

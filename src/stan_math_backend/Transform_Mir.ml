@@ -4,27 +4,6 @@ open Middle
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
 
-(* TODO:
-   gen for loops
-   make sure when we read in constrained shit, we change types and name of variable,
-        | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
-         |Ast.Correlation | Ast.Covariance ->
-            let dt =
-              remove_possibly_exn dt "constrain" smeta |> param_size transform
-            in
-            let decl_id = decl_id ^ "_" ^ gensym () in
-            let emeta = {decl_var.emeta with mtype= remove_size dt} in
-            let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
-            ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}])
-
-   IDEA: always read to/from decl_id_in__. dimensions of this?
-
-   Whenever we see FnConstrain / Unconstrain, we should be able to note
-   that we need to
-   1) make a new declaration for unconstrained / constrained var read
-   2) change FunApp of FnConstrain/ Unconstrain to read that new var
-   XXX does that mean we need to eff with transform_inits too?
-*)
 let data_read smeta (decl_id, st) =
   let decl_var =
     { expr= Var decl_id
@@ -100,7 +79,7 @@ let param_read smeta
           :: eigen_size ucst )
           {var.emeta with mtype= base_type ucst}
       in
-      assign_indexed (remove_size ucst) decl_id smeta readfnapp var
+      assign_indexed (remove_size cst) decl_id smeta readfnapp var
     in
     decl @ [for_eigen ucst bodyfn unconstrained_decl_var smeta]
 
@@ -150,8 +129,8 @@ let rec ensure_body_in_block {stmt; smeta} =
 let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x]
 
 let get_name_st = function
-  | name, {out_block= Parameters; out_unconstrained_st; _} ->
-      Some (name, out_unconstrained_st)
+  | name, {out_block= Parameters; out_constrained_st; _} ->
+      Some (name, out_constrained_st)
   | _ -> None
 
 let add_reads stmts vars mkread =
@@ -190,9 +169,8 @@ let constrain_in_params outvars stmts =
     | Assignment (_, {expr= FunApp (CompilerInternal, f, args); _})
       when ( internal_fn_of_string f = Some FnConstrain
            || internal_fn_of_string f = Some FnUnconstrain )
-           && List.exists
-                ~f:(contains_var_expr (Set.mem target_vars) false)
-                args ->
+           && List.exists args
+                ~f:(contains_var_expr (Set.mem target_vars) false) ->
         let rec change_var_expr e =
           match e.expr with
           | Var vident when Set.mem target_vars vident ->
@@ -206,10 +184,6 @@ let constrain_in_params outvars stmts =
     | _ -> {s with stmt= map_statement Fn.id change_constrain_target s.stmt}
   in
   List.map ~f:change_constrain_target stmts
-
-(* XXX Read Refactor TODO:
-   1. need to declare new type for unconstrained param reading
-*)
 
 let trans_prog (p : typed_prog) =
   let init_pos =
@@ -233,6 +207,7 @@ let trans_prog (p : typed_prog) =
              (List.filter_map ~f:get_name_st p.output_vars)
              data_read
     ; generate_quantities=
-        add_reads p.generate_quantities p.output_vars param_read }
+        add_reads p.generate_quantities p.output_vars param_read
+        |> constrain_in_params p.output_vars }
   in
   map_prog Fn.id ensure_body_in_block p

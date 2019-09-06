@@ -711,7 +711,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 6;
       x_cov_in__ = in__.vector((2 + ((2 * (2 - 1)) / 2)));
       current_statement__ = 6;
-      x_cov = cov_matrix_constrain(x_cov, 2);
+      x_cov = cov_matrix_constrain(x_cov_in__, 2);
       vars__.push_back(theta);
       vars__.push_back(phi);
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -780,11 +780,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 6;
       pos__ = 1;
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= (2 + ((2 * (2 - 1)) / 2)); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
-        x_cov[(sym1__ - 1)] = context__.vals_r("x_cov")[(pos__ - 1)];
-        current_statement__ = 6;
-        pos__ = (pos__ + 1);}
+        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 6;
+          assign(x_cov, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+          current_statement__ = 6;
+          pos__ = (pos__ + 1);}}
       current_statement__ = 6;
       x_cov = cov_matrix_free(x_cov);
       vars__.push_back(theta);
