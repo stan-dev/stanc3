@@ -96,6 +96,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       pos__ = 1;
       
       current_statement__ = 12;
+      pos__ = 1;
+      current_statement__ = 12;
       J = context__.vals_i("J")[(pos__ - 1)];
       y = std::vector<double>(J, 0);
       
@@ -277,9 +279,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       double mu;
       
       current_statement__ = 2;
+      pos__ = 1;
+      current_statement__ = 2;
       mu = context__.vals_r("mu")[(pos__ - 1)];
       double tau;
       
+      current_statement__ = 3;
+      pos__ = 1;
       current_statement__ = 3;
       tau = context__.vals_r("tau")[(pos__ - 1)];
       current_statement__ = 3;
@@ -2832,11 +2838,17 @@ class mother_model : public model_base_crtp<mother_model> {
       pos__ = 1;
       
       current_statement__ = 165;
+      pos__ = 1;
+      current_statement__ = 165;
       N = context__.vals_i("N")[(pos__ - 1)];
       
       current_statement__ = 166;
+      pos__ = 1;
+      current_statement__ = 166;
       M = context__.vals_i("M")[(pos__ - 1)];
       
+      current_statement__ = 167;
+      pos__ = 1;
       current_statement__ = 167;
       K = context__.vals_i("K")[(pos__ - 1)];
       d_int_1d_ar = std::vector<int>(N, 0);
@@ -2864,6 +2876,8 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 169;
             pos__ = (pos__ + 1);}}}
       
+      current_statement__ = 170;
+      pos__ = 1;
       current_statement__ = 170;
       J = context__.vals_r("J")[(pos__ - 1)];
       d_real_1d_ar = std::vector<double>(N, 0);
@@ -4662,6 +4676,8 @@ class mother_model : public model_base_crtp<mother_model> {
       pos__ = 1;
       double p_real;
       
+      current_statement__ = 2;
+      pos__ = 1;
       current_statement__ = 2;
       p_real = context__.vals_r("p_real")[(pos__ - 1)];
       std::vector<double> offset_multiplier;

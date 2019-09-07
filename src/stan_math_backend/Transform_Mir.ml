@@ -30,11 +30,8 @@ let data_read smeta (decl_id, st) =
       :: pos_increment )
     |> swrap
   in
-  let pos_reset =
-    if is_scalar st then []
-    else [Assignment ((pos, UInt, []), loop_bottom) |> swrap]
-  in
-  pos_reset @ [for_scalar_inv st bodyfn decl_var smeta]
+  let pos_reset = Assignment ((pos, UInt, []), loop_bottom) |> swrap in
+  [pos_reset; for_scalar_inv st bodyfn decl_var smeta]
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
