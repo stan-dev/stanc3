@@ -4,24 +4,6 @@ open Middle
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
 
-let rec invert_write_fors ({stmt; smeta} as s) =
-  let rec unwind s =
-    match s.stmt with
-    | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
-        let final, args = unwind body in
-        (final, (loopvar, lower, upper) :: args)
-    | _ -> (s, [])
-  in
-  match stmt with
-  | For {body; _} when contains_fn (string_of_internal_fn FnWriteParam) body ->
-      let final, args = unwind s in
-      List.fold ~init:final
-        ~f:(fun accum (loopvar, lower, upper) ->
-          let sw stmt = {smeta; stmt} in
-          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
-        args
-  | _ -> {stmt= map_statement Fn.id invert_write_fors stmt; smeta}
-
 let data_read smeta (decl_id, st) =
   let decl_var =
     { expr= Var decl_id
@@ -146,11 +128,6 @@ let rec ensure_body_in_block {stmt; smeta} =
 
 let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x]
 
-let get_name_st = function
-  | name, {out_block= Parameters; out_constrained_st; _} ->
-      Some (name, out_constrained_st)
-  | _ -> None
-
 let add_reads stmts vars mkread =
   let var_names = String.Map.of_alist_exn vars in
   let add_read_to_decl = function
@@ -159,6 +136,17 @@ let add_reads stmts vars mkread =
     | s -> [s]
   in
   List.concat_map ~f:add_read_to_decl stmts |> List.concat_map ~f:flatten_slist
+
+let gen_write (decl_id, sizedtype) =
+  let bodyfn var =
+    { stmt=
+        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
+    ; smeta= no_span }
+  in
+  for_scalar_inv sizedtype bodyfn
+    { expr= Var decl_id
+    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
+    no_span
 
 let rec contains_var_expr is_vident accum {expr; _} =
   accum
@@ -203,6 +191,17 @@ let constrain_in_params outvars stmts =
   in
   List.map ~f:change_constrain_target stmts
 
+let rec insert_before f to_insert = function
+  | [] -> to_insert
+  | hd :: tl ->
+      if f hd then to_insert @ (hd :: tl)
+      else hd :: insert_before f to_insert tl
+
+let%expect_test "insert before" =
+  let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
+  [%sexp (l : int list)] |> print_s ;
+  [%expect {| (1 2 3 4 5 999 6) |}]
+
 let trans_prog (p : typed_prog) =
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
@@ -210,23 +209,58 @@ let trans_prog (p : typed_prog) =
     |> List.map ~f:(fun stmt -> {stmt; smeta= no_span})
   in
   let log_prob = List.map ~f:add_jacobians p.log_prob in
+  let get_pname_cst = function
+    | name, {out_block= Parameters; out_constrained_st; _} ->
+        Some (name, out_constrained_st)
+    | _ -> None
+  in
+  let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let param_writes, tparam_writes, gq_writes =
+    List.map p.output_vars
+      ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
+        (out_block, gen_write (name, st)) )
+    |> List.partition3_map ~f:(fun (b, x) ->
+           match b with
+           | Parameters -> `Fst x
+           | TransformedParameters -> `Snd x
+           | GeneratedQuantities -> `Trd x )
+  in
+  let tparam_start {stmt; _} =
+    match stmt with
+    | IfElse (cond, _, _)
+      when contains_var_expr (( = ) "emit_transformed_parameters__") false cond
+      ->
+        true
+    | _ -> false
+  in
+  let gq_start {stmt; _} =
+    match stmt with
+    | IfElse
+        ( { expr= FunApp (_, _, [{expr= Var "emit_generated_quantities__"; _}]); _
+          }
+        , _
+        , _ ) ->
+        true
+    | _ -> false
+  in
+  let gq =
+    ( add_reads p.generate_quantities p.output_vars param_read
+    |> constrain_in_params p.output_vars
+    |> insert_before tparam_start param_writes
+    |> insert_before gq_start tparam_writes )
+    @ gq_writes
+  in
   let p =
     { p with
       log_prob=
         add_reads log_prob p.output_vars param_read
         |> constrain_in_params p.output_vars
     ; prog_name= escape_name p.prog_name
-    ; prepare_data=
-        init_pos @ add_reads p.prepare_data p.input_vars data_read
-        |> List.map ~f:invert_write_fors
+    ; prepare_data= init_pos @ add_reads p.prepare_data p.input_vars data_read
     ; transform_inits=
         init_pos
-        @ add_reads p.transform_inits
-            (List.filter_map ~f:get_name_st p.output_vars)
-            data_read
-    ; generate_quantities=
-        add_reads p.generate_quantities p.output_vars param_read
-        |> constrain_in_params p.output_vars
-        |> List.map ~f:invert_write_fors }
+        @ add_reads p.transform_inits constrained_params data_read
+        @ List.map ~f:gen_write constrained_params
+    ; generate_quantities= gq }
   in
   map_prog Fn.id ensure_body_in_block p

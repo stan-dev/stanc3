@@ -521,38 +521,6 @@ let trans_fun_def udf_names (ts : Ast.typed_statement) =
       raise_s
         [%message "Found non-function definition statement in function block"]
 
-let gen_write decl_id sizedtype =
-  let bodyfn var =
-    { stmt=
-        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
-    ; smeta= no_span }
-  in
-  for_scalar sizedtype bodyfn
-    { expr= Var decl_id
-    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
-    no_span
-
-(* XXX move to backend/Transform_mir.ml *)
-let gen_writes block_filter vars =
-  List.filter_map
-    ~f:(function
-      | decl_id, {out_block; out_constrained_st; _}
-        when out_block = block_filter ->
-          Some (gen_write decl_id out_constrained_st)
-      | _ -> None)
-    vars
-
-let compiler_if compiler_internal_var stmts =
-  let body =
-    match stmts with
-    | [({stmt= Block _; _} as s)] -> s
-    | ls -> {stmt= Block ls; smeta= no_span}
-  in
-  let cond = {expr= Var compiler_internal_var; emeta= internal_meta} in
-  match stmts with
-  | [] -> []
-  | _ -> [{stmt= IfElse (cond, body, None); smeta= no_span}]
-
 let get_block block prog =
   match block with
   | Parameters -> prog.Ast.parametersblock
@@ -597,10 +565,9 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
                   ; out_block= block } ) ))
   in
   let output_vars =
-    [ grab_names_sizes Parameters
-    ; grab_names_sizes TransformedParameters
-    ; grab_names_sizes GeneratedQuantities ]
-    |> List.concat
+    grab_names_sizes Parameters
+    @ grab_names_sizes TransformedParameters
+    @ grab_names_sizes GeneratedQuantities
   and input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
@@ -631,23 +598,38 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
     | hd :: _ -> [{stmt= Block modelb; smeta= hd.smeta}]
   in
   let gen_from_block declc block =
-    map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
+    map (trans_stmt declc) (get_block block p)
   in
   let txparam_decls, txparam_stmts =
     gen_from_block declc TransformedParameters
     |> List.partition_tf ~f:(function {stmt= Decl _; _} -> true | _ -> false)
   in
+  let compiler_if_return cond =
+    { stmt= IfElse (cond, {stmt= Return None; smeta= no_span}, None)
+    ; smeta= no_span }
+  in
+  let iexpr expr = {expr; emeta= internal_meta} in
   let generate_quantities =
     gen_from_block {declc with dconstrain= Some Constrain} Parameters
     @ txparam_decls
-    @ compiler_if
-        "emit_transformed_parameters__ || emit_generated_quantities__"
-        txparam_stmts
-    @ compiler_if "emit_generated_quantities__"
-        (migrate_checks_to_end_of_block
-           (gen_from_block
-              {declc with dconstrain= Some Check}
-              GeneratedQuantities))
+    @ [ compiler_if_return
+          ( FunApp
+              ( StanLib
+              , string_of_operator PNot
+              , [ EOr
+                    ( Var "emit_transformed_parameters__" |> iexpr
+                    , Var "emit_generated_quantities__" |> iexpr )
+                  |> iexpr ] )
+          |> iexpr ) ]
+    @ txparam_stmts
+    @ [ compiler_if_return
+          ( FunApp
+              ( StanLib
+              , string_of_operator PNot
+              , [Var "emit_generated_quantities__" |> iexpr] )
+          |> iexpr ) ]
+    @ migrate_checks_to_end_of_block
+        (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
   in
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters

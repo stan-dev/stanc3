@@ -207,12 +207,53 @@ let rec for_scalar st bodyfn var smeta =
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
-let rec for_scalar_inv st bodyfn var smeta =
-  match st with
-  | SArray (t, d) ->
-      let bodyfn' var = mkfor d bodyfn var smeta in
-      for_scalar_inv t bodyfn' var smeta
-  | _ -> for_scalar st bodyfn var smeta
+let for_scalar_inv st bodyfn var smeta =
+  let invert_index_order = function
+    | {expr= Indexed (obj, indices); emeta} ->
+        {expr= Indexed (obj, List.rev indices); emeta}
+    | e -> e
+  in
+  let rec go st bodyfn var smeta =
+    match st with
+    | SArray (t, d) ->
+        let bodyfn' var = mkfor d bodyfn var smeta in
+        go t bodyfn' var smeta
+    | SMatrix (d1, d2) ->
+        let bodyfn' var = mkfor d1 bodyfn var smeta in
+        go (SRowVector d2) bodyfn' var smeta
+    | _ -> for_scalar st bodyfn var smeta
+  in
+  go st (Fn.compose bodyfn invert_index_order) var smeta
+
+let%expect_test "inverted for" =
+  let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
+  let bodyfn var =
+    {stmt= NRFunApp (StanLib, "print", [var]); smeta= no_span}
+  in
+  for_scalar_inv
+    (SArray (SArray (SMatrix (int 2, int 3), int 5), int 4))
+    bodyfn
+    {expr= Var "hi"; emeta= {internal_meta with mtype= UArray (UArray UMatrix)}}
+    no_span
+  |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+  [%expect
+    {|
+    (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 3))
+     (body
+      (Block
+       ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 2))
+         (body
+          (Block
+           ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 5))
+             (body
+              (Block
+               ((For (loopvar sym4__) (lower (Lit Int 1)) (upper (Lit Int 4))
+                 (body
+                  (Block
+                   ((NRFunApp StanLib print
+                     ((Indexed (Var hi)
+                       ((Single (Var sym4__)) (Single (Var sym3__))
+                        (Single (Var sym2__)) (Single (Var sym1__)))))))))))))))))))))) |}]
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating

@@ -236,20 +236,24 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         current_statement__ = 4;
         theta_tilde[(sym1__ - 1)] = in__.scalar();}
+      std::vector<double> theta;
+      theta = std::vector<double>(J, 0);
+      
       vars__.push_back(mu);
       vars__.push_back(tau);
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(theta_tilde[(sym1__ - 1)]);}
-      std::vector<double> theta;
-      theta = std::vector<double>(J, 0);
-      
-      if (emit_transformed_parameters__ || emit_generated_quantities__) {
-        current_statement__ = 7;
-        for (size_t j = 1; j <= J; ++j) {
-          current_statement__ = 6;
-          theta[(j - 1)] = (mu + (tau * theta_tilde[(j - 1)]));}
-        for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-          vars__.push_back(theta[(sym1__ - 1)]);}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      current_statement__ = 7;
+      for (size_t j = 1; j <= J; ++j) {
+        current_statement__ = 6;
+        theta[(j - 1)] = (mu + (tau * theta_tilde[(j - 1)]));}
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        vars__.push_back(theta[(sym1__ - 1)]);}
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
@@ -2856,7 +2860,7 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 169;
           for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
             current_statement__ = 169;
-            d_int_3d_ar[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)] = context__.vals_i("d_int_3d_ar")[(pos__ - 1)];
+            d_int_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_i("d_int_3d_ar")[(pos__ - 1)];
             current_statement__ = 169;
             pos__ = (pos__ + 1);}}}
       
@@ -2883,7 +2887,7 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 172;
           for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
             current_statement__ = 172;
-            d_real_3d_ar[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)] = context__.vals_r("d_real_3d_ar")[(pos__ - 1)];
+            d_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_real_3d_ar")[(pos__ - 1)];
             current_statement__ = 172;
             pos__ = (pos__ + 1);}}}
       d_vec = Eigen::Matrix<double, -1, 1>(N);
@@ -2905,7 +2909,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 174;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 174;
-          d_1d_vec[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("d_1d_vec")[(pos__ - 1)];
+          d_1d_vec[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_1d_vec")[(pos__ - 1)];
           current_statement__ = 174;
           pos__ = (pos__ + 1);}}
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -2921,7 +2925,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 175;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 175;
-              d_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("d_3d_vec")[(pos__ - 1)];
+              d_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_3d_vec")[(pos__ - 1)];
               current_statement__ = 175;
               pos__ = (pos__ + 1);}}}}
       d_row_vec = Eigen::Matrix<double, 1, -1>(N);
@@ -2943,7 +2947,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 177;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 177;
-          d_1d_row_vec[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("d_1d_row_vec")[(pos__ - 1)];
+          d_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_1d_row_vec")[(pos__ - 1)];
           current_statement__ = 177;
           pos__ = (pos__ + 1);}}
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
@@ -2959,7 +2963,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 178;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 178;
-              d_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("d_3d_row_vec")[(pos__ - 1)];
+              d_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_3d_row_vec")[(pos__ - 1)];
               current_statement__ = 178;
               pos__ = (pos__ + 1);}}}}
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
@@ -2967,15 +2971,15 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 179;
       pos__ = 1;
       current_statement__ = 179;
-      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
         current_statement__ = 179;
-        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
           current_statement__ = 179;
           for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
             current_statement__ = 179;
             for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
               current_statement__ = 179;
-              assign(d_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), context__.vals_r("d_ar_mat")[(pos__ - 1)], "assigning variable d_ar_mat");
+              assign(d_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_ar_mat")[(pos__ - 1)], "assigning variable d_ar_mat");
               current_statement__ = 179;
               pos__ = (pos__ + 1);}}}}
       d_simplex = Eigen::Matrix<double, -1, 1>(N);
@@ -2997,7 +3001,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 181;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 181;
-          d_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("d_1d_simplex")[(pos__ - 1)];
+          d_1d_simplex[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_1d_simplex")[(pos__ - 1)];
           current_statement__ = 181;
           pos__ = (pos__ + 1);}}
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -3013,7 +3017,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 182;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 182;
-              d_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("d_3d_simplex")[(pos__ - 1)];
+              d_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("d_3d_simplex")[(pos__ - 1)];
               current_statement__ = 182;
               pos__ = (pos__ + 1);}}}}
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
@@ -3021,11 +3025,11 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 183;
       pos__ = 1;
       current_statement__ = 183;
-      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
         current_statement__ = 183;
-        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
           current_statement__ = 183;
-          assign(d_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), context__.vals_r("d_cfcov_54")[(pos__ - 1)], "assigning variable d_cfcov_54");
+          assign(d_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_cfcov_54")[(pos__ - 1)], "assigning variable d_cfcov_54");
           current_statement__ = 183;
           pos__ = (pos__ + 1);}}
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
@@ -3037,7 +3041,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 184;
         for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
           current_statement__ = 184;
-          assign(d_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), context__.vals_r("d_cfcov_33")[(pos__ - 1)], "assigning variable d_cfcov_33");
+          assign(d_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_cfcov_33")[(pos__ - 1)], "assigning variable d_cfcov_33");
           current_statement__ = 184;
           pos__ = (pos__ + 1);}}
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -3051,7 +3055,7 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 185;
           for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
             current_statement__ = 185;
-            assign(d_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), context__.vals_r("d_cfcov_33_ar")[(pos__ - 1)], "assigning variable d_cfcov_33_ar");
+            assign(d_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_r("d_cfcov_33_ar")[(pos__ - 1)], "assigning variable d_cfcov_33_ar");
             current_statement__ = 185;
             pos__ = (pos__ + 1);}}}
       
@@ -4061,68 +4065,6 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 18;
         p_cfcov_33_ar[(sym2__ - 1)] = cholesky_factor_constrain(p_cfcov_33_ar_in__[(sym2__ - 1)],
                                                                 3, 3);}
-      vars__.push_back(p_real);
-      for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-        vars__.push_back(offset_multiplier[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_real_1d_ar[(sym2__ - 1)]);}
-      for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(p_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
-          }}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_vec[(sym2__ - 1)]);}
-      for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(p_1d_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-        for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-              vars__.push_back(p_3d_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-            }}}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_row_vec[(sym2__ - 1)]);}
-      for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(p_1d_row_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-        for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-              vars__.push_back(p_3d_row_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-            }}}}
-      for (size_t sym5__ = 1; sym5__ <= 3; ++sym5__) {
-        for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
-            }}}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_simplex[(sym2__ - 1)]);}
-      for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(p_1d_simplex[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-        for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-              vars__.push_back(p_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-            }}}}
-      for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-          }}}
       std::vector<double> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<double>(N, 0);
       
@@ -4168,475 +4110,537 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      if (emit_transformed_parameters__ || emit_generated_quantities__) {
-        current_statement__ = 34;
-        tp_real_1d_ar = p_real_1d_ar;
-        current_statement__ = 35;
-        tp_real_3d_ar = p_real_3d_ar;
-        current_statement__ = 36;
-        tp_1d_vec = p_1d_vec;
-        current_statement__ = 37;
-        tp_3d_vec = p_3d_vec;
-        current_statement__ = 38;
-        tp_simplex = p_simplex;
-        current_statement__ = 39;
-        tp_1d_simplex = p_1d_simplex;
-        current_statement__ = 40;
-        tp_3d_simplex = p_3d_simplex;
-        current_statement__ = 41;
-        tp_cfcov_54 = p_cfcov_54;
-        current_statement__ = 42;
-        tp_cfcov_33 = p_cfcov_33;
-        current_statement__ = 43;
-        tp_cfcov_33_ar = p_cfcov_33_ar;
-        current_statement__ = 52;
-        for (size_t i = 1; i <= 2; ++i) {
-          current_statement__ = 50;
-          for (size_t j = 1; j <= 3; ++j) {
-            current_statement__ = 48;
-            for (size_t m = 1; m <= 4; ++m) {
-              current_statement__ = 46;
-              for (size_t n = 1; n <= 5; ++n) {
-                current_statement__ = 44;
-                assign(tp_ar_mat, cons_list(index_uni(m), cons_list(index_uni(n), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())))), 0.4, "assigning variable tp_ar_mat");
-              }}}}
-        current_statement__ = 54;
-        for (size_t i = 1; i <= N; ++i) {
-          current_statement__ = 53;
-          tp_vec[(i - 1)] = (-1.0 * p_vec[(i - 1)]);}
-        current_statement__ = 55;
-        tp_row_vec = transpose(tp_1d_vec[(1 - 1)]);
-        current_statement__ = 56;
-        tp_1d_row_vec = p_1d_row_vec;
-        current_statement__ = 57;
-        tp_3d_row_vec = p_3d_row_vec;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(tp_real_1d_ar[(sym2__ - 1)]);}
-        for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-              vars__.push_back(tp_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
-            }}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(tp_vec[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(tp_1d_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(tp_3d_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(tp_row_vec[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(tp_1d_row_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(tp_3d_row_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym5__ = 1; sym5__ <= 3; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-                vars__.push_back(rvalue(tp_ar_mat, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
-              }}}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(tp_simplex[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(tp_1d_simplex[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(tp_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            vars__.push_back(rvalue(tp_cfcov_54, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-          }}
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.push_back(rvalue(tp_cfcov_33, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-          }}
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-              vars__.push_back(rvalue(tp_cfcov_33_ar, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
+      vars__.push_back(p_real);
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        vars__.push_back(offset_multiplier[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_real_1d_ar[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
+            vars__.push_back(p_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_row_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
+              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_simplex[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_simplex[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+        return ;
       } 
-      if (emit_generated_quantities__) {
-        double gq_r1;
-        
-        current_statement__ = 58;
-        gq_r1 = foo_bar1(p_real, pstream__);
-        double gq_r2;
-        
-        current_statement__ = 59;
-        gq_r2 = foo_bar1(J, pstream__);
-        std::vector<double> gq_real_1d_ar;
-        gq_real_1d_ar = std::vector<double>(N, 0);
-        
-        std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
-        gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
-        
-        Eigen::Matrix<double, -1, 1> gq_vec;
-        gq_vec = Eigen::Matrix<double, -1, 1>(N);
-        
-        std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
-        gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-        
-        std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
-        gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-        
-        Eigen::Matrix<double, 1, -1> gq_row_vec;
-        gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
-        
-        std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
-        gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-        
-        std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
-        gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
-        
-        std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
-        gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
-        
-        Eigen::Matrix<double, -1, 1> gq_simplex;
-        gq_simplex = Eigen::Matrix<double, -1, 1>(N);
-        
-        std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
-        gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-        
-        std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
-        gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-        
-        Eigen::Matrix<double, -1, -1> gq_cfcov_54;
-        gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-        
-        Eigen::Matrix<double, -1, -1> gq_cfcov_33;
-        gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
-        gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-        
-        std::vector<int> indices;
-        indices = std::vector<int>(3, 0);
-        
-        current_statement__ = 75;
-        indices = {2, 3, 1};
-        std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
-        indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
-        idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res2;
-        idx_res2 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res3;
-        idx_res3 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
-        idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
-        idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
-        
-        std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
-        idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
-        
-        std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
-        idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
-        
-        std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
-        idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
-        
-        current_statement__ = 85;
-        gq_real_1d_ar = rvalue(p_1d_simplex, cons_list(index_omni(), cons_list(index_uni(1), nil_index_list())), "pretty printed e");
-        current_statement__ = 86;
-        gq_real_3d_ar = p_real_3d_ar;
-        current_statement__ = 87;
-        gq_1d_vec = p_1d_vec;
-        current_statement__ = 88;
-        gq_3d_vec = p_3d_vec;
-        current_statement__ = 89;
-        gq_row_vec = p_row_vec;
-        current_statement__ = 90;
-        gq_1d_row_vec = p_1d_row_vec;
-        current_statement__ = 91;
-        gq_3d_row_vec = p_3d_row_vec;
-        current_statement__ = 92;
-        gq_simplex = rvalue(p_1d_simplex, cons_list(index_uni(1), cons_list(index_min_max(1, N), nil_index_list())), "pretty printed e");
-        current_statement__ = 93;
-        gq_1d_simplex = p_1d_simplex;
-        current_statement__ = 94;
-        gq_3d_simplex = p_3d_simplex;
-        current_statement__ = 95;
-        gq_cfcov_54 = p_cfcov_54;
-        current_statement__ = 96;
-        gq_cfcov_33 = p_cfcov_33;
-        current_statement__ = 97;
-        gq_cfcov_33_ar = p_cfcov_33_ar;
-        current_statement__ = 106;
-        for (size_t i = 1; i <= 2; ++i) {
-          current_statement__ = 104;
-          for (size_t j = 1; j <= 3; ++j) {
-            current_statement__ = 102;
-            for (size_t m = 1; m <= 4; ++m) {
-              current_statement__ = 100;
-              for (size_t n = 1; n <= 5; ++n) {
-                current_statement__ = 98;
-                assign(gq_ar_mat, cons_list(index_uni(m), cons_list(index_uni(n), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())))), 0.4, "assigning variable gq_ar_mat");
-              }}}}
-        current_statement__ = 108;
-        for (size_t i = 1; i <= N; ++i) {
-          current_statement__ = 107;
-          gq_vec[(i - 1)] = (-1.0 * p_vec[(i - 1)]);}
-        current_statement__ = 112;
-        for (size_t i = 1; i <= 3; ++i) {
-          current_statement__ = 111;
-          for (size_t j = 1; j <= 4; ++j) {
-            current_statement__ = 110;
-            for (size_t k = 1; k <= 5; ++k) {
-              current_statement__ = 109;
-              assign(indexing_mat, cons_list(index_uni(k), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list()))), normal_rng(
-                     0, 1, base_rng__), "assigning variable indexing_mat");}}
-        }
-        current_statement__ = 115;
-        for (size_t i = 1; i <= size(indices); ++i) {
-          current_statement__ = 114;
-          for (size_t j = 1; j <= size(indices); ++j) {
-            current_statement__ = 113;
-            assign(idx_res1, cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())), rvalue(indexing_mat, cons_list(index_uni(indices[(i - 1)]), cons_list(index_uni(indices[(j - 1)]), nil_index_list())), "pretty printed e"), "assigning variable idx_res1");
-          }}
-        current_statement__ = 116;
-        idx_res11 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
-        current_statement__ = 118;
-        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res1, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
-          current_statement__ = 117;
-          std::stringstream errmsg_stream__;
-          errmsg_stream__ << "indexing test 1 failed";
-          throw std::domain_error(errmsg_stream__.str());
-        } 
-        current_statement__ = 121;
-        for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 120;
-          for (size_t j = 1; j <= size(indices); ++j) {
-            current_statement__ = 119;
-            assign(idx_res2, cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())), rvalue(indexing_mat, cons_list(index_uni(i), cons_list(index_uni(indices[(j - 1)]), nil_index_list())), "pretty printed e"), "assigning variable idx_res2");
-          }}
-        current_statement__ = 122;
-        idx_res21 = rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
-        current_statement__ = 124;
-        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res2, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
-          current_statement__ = 123;
-          std::stringstream errmsg_stream__;
-          errmsg_stream__ << "indexing test 2 failed";
-          throw std::domain_error(errmsg_stream__.str());
-        } 
-        current_statement__ = 128;
-        for (size_t i = 1; i <= size(indices); ++i) {
-          current_statement__ = 127;
-          for (size_t j = 1; j <= 3; ++j) {
-            current_statement__ = 126;
-            for (size_t k = 1; k <= size(indices); ++k) {
-              current_statement__ = 125;
-              assign(idx_res3, cons_list(index_uni(i), cons_list(index_uni(j), cons_list(index_uni(k), nil_index_list()))), rvalue(indexing_mat, cons_list(index_uni(indices[(i - 1)]), cons_list(index_uni(j), cons_list(index_uni(indices[(k - 1)]), nil_index_list()))), "pretty printed e"), "assigning variable idx_res3");
-            }}}
-        current_statement__ = 129;
-        idx_res31 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e");
-        current_statement__ = 131;
-        if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res3, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
-          current_statement__ = 130;
-          std::stringstream errmsg_stream__;
-          errmsg_stream__ << "indexing test 3 failed";
-          throw std::domain_error(errmsg_stream__.str());
-        } 
-        current_statement__ = 132;
-        idx_res4 = rvalue(indexing_mat, cons_list(index_min_max(1, 3), cons_list(index_uni(1), cons_list(index_omni(), nil_index_list()))), "pretty printed e");
-        current_statement__ = 133;
-        idx_res5 = rvalue(indexing_mat, cons_list(index_min(4), cons_list(index_min_max(2, 3), cons_list(index_uni(1), nil_index_list()))), "pretty printed e");
-        vars__.push_back(gq_r1);
-        vars__.push_back(gq_r2);
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(gq_real_1d_ar[(sym2__ - 1)]);}
-        for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-              vars__.push_back(gq_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
-            }}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(gq_vec[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(gq_1d_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(gq_3d_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(gq_row_vec[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(gq_1d_row_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(gq_3d_row_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym5__ = 1; sym5__ <= 3; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-                vars__.push_back(rvalue(gq_ar_mat, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
-              }}}}
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(gq_simplex[(sym2__ - 1)]);}
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.push_back(gq_1d_simplex[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-                vars__.push_back(gq_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
-              }}}}
-        for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            vars__.push_back(rvalue(gq_cfcov_54, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-          }}
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.push_back(rvalue(gq_cfcov_33, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
-          }}
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-              vars__.push_back(rvalue(gq_cfcov_33_ar, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.push_back(indices[(sym2__ - 1)]);}
-        for (size_t sym4__ = 1; sym4__ <= 4; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-              vars__.push_back(rvalue(indexing_mat, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 4; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              vars__.push_back(rvalue(idx_res1, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 4; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-              vars__.push_back(rvalue(idx_res2, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              vars__.push_back(rvalue(idx_res3, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 4; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              vars__.push_back(rvalue(idx_res11, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 4; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-              vars__.push_back(rvalue(idx_res21, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              vars__.push_back(rvalue(idx_res31, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
-            }}}
-        for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.push_back(idx_res4[(sym2__ - 1)][(sym3__ - 1)]);}}
-        for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            vars__.push_back(idx_res5[(sym2__ - 1)][(sym3__ - 1)]);}}
+      current_statement__ = 34;
+      tp_real_1d_ar = p_real_1d_ar;
+      current_statement__ = 35;
+      tp_real_3d_ar = p_real_3d_ar;
+      current_statement__ = 36;
+      tp_1d_vec = p_1d_vec;
+      current_statement__ = 37;
+      tp_3d_vec = p_3d_vec;
+      current_statement__ = 38;
+      tp_simplex = p_simplex;
+      current_statement__ = 39;
+      tp_1d_simplex = p_1d_simplex;
+      current_statement__ = 40;
+      tp_3d_simplex = p_3d_simplex;
+      current_statement__ = 41;
+      tp_cfcov_54 = p_cfcov_54;
+      current_statement__ = 42;
+      tp_cfcov_33 = p_cfcov_33;
+      current_statement__ = 43;
+      tp_cfcov_33_ar = p_cfcov_33_ar;
+      current_statement__ = 52;
+      for (size_t i = 1; i <= 2; ++i) {
+        current_statement__ = 50;
+        for (size_t j = 1; j <= 3; ++j) {
+          current_statement__ = 48;
+          for (size_t m = 1; m <= 4; ++m) {
+            current_statement__ = 46;
+            for (size_t n = 1; n <= 5; ++n) {
+              current_statement__ = 44;
+              assign(tp_ar_mat, cons_list(index_uni(m), cons_list(index_uni(n), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())))), 0.4, "assigning variable tp_ar_mat");
+            }}}}
+      current_statement__ = 54;
+      for (size_t i = 1; i <= N; ++i) {
+        current_statement__ = 53;
+        tp_vec[(i - 1)] = (-1.0 * p_vec[(i - 1)]);}
+      current_statement__ = 55;
+      tp_row_vec = transpose(tp_1d_vec[(1 - 1)]);
+      current_statement__ = 56;
+      tp_1d_row_vec = p_1d_row_vec;
+      current_statement__ = 57;
+      tp_3d_row_vec = p_3d_row_vec;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(tp_real_1d_ar[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
+            vars__.push_back(tp_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(tp_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(tp_1d_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(tp_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(tp_row_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(tp_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(tp_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
+              vars__.push_back(rvalue(tp_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(tp_simplex[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(tp_1d_simplex[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(tp_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          vars__.push_back(rvalue(tp_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          vars__.push_back(rvalue(tp_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            vars__.push_back(rvalue(tp_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+      double gq_r1;
+      
+      current_statement__ = 58;
+      gq_r1 = foo_bar1(p_real, pstream__);
+      double gq_r2;
+      
+      current_statement__ = 59;
+      gq_r2 = foo_bar1(J, pstream__);
+      std::vector<double> gq_real_1d_ar;
+      gq_real_1d_ar = std::vector<double>(N, 0);
+      
+      std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
+      gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
+      
+      Eigen::Matrix<double, -1, 1> gq_vec;
+      gq_vec = Eigen::Matrix<double, -1, 1>(N);
+      
+      std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
+      gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
+      gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      
+      Eigen::Matrix<double, 1, -1> gq_row_vec;
+      gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      
+      std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
+      gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
+      gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
+      gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      
+      Eigen::Matrix<double, -1, 1> gq_simplex;
+      gq_simplex = Eigen::Matrix<double, -1, 1>(N);
+      
+      std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
+      gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
+      gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      
+      Eigen::Matrix<double, -1, -1> gq_cfcov_54;
+      gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      
+      Eigen::Matrix<double, -1, -1> gq_cfcov_33;
+      gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
+      gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      
+      std::vector<int> indices;
+      indices = std::vector<int>(3, 0);
+      
+      current_statement__ = 75;
+      indices = {2, 3, 1};
+      std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
+      indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
+      idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res2;
+      idx_res2 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res3;
+      idx_res3 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
+      idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
+      idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      
+      std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
+      idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
+      
+      std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
+      idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
+      
+      std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
+      idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
+      
+      current_statement__ = 85;
+      gq_real_1d_ar = rvalue(p_1d_simplex, cons_list(index_omni(), cons_list(index_uni(1), nil_index_list())), "pretty printed e");
+      current_statement__ = 86;
+      gq_real_3d_ar = p_real_3d_ar;
+      current_statement__ = 87;
+      gq_1d_vec = p_1d_vec;
+      current_statement__ = 88;
+      gq_3d_vec = p_3d_vec;
+      current_statement__ = 89;
+      gq_row_vec = p_row_vec;
+      current_statement__ = 90;
+      gq_1d_row_vec = p_1d_row_vec;
+      current_statement__ = 91;
+      gq_3d_row_vec = p_3d_row_vec;
+      current_statement__ = 92;
+      gq_simplex = rvalue(p_1d_simplex, cons_list(index_uni(1), cons_list(index_min_max(1, N), nil_index_list())), "pretty printed e");
+      current_statement__ = 93;
+      gq_1d_simplex = p_1d_simplex;
+      current_statement__ = 94;
+      gq_3d_simplex = p_3d_simplex;
+      current_statement__ = 95;
+      gq_cfcov_54 = p_cfcov_54;
+      current_statement__ = 96;
+      gq_cfcov_33 = p_cfcov_33;
+      current_statement__ = 97;
+      gq_cfcov_33_ar = p_cfcov_33_ar;
+      current_statement__ = 106;
+      for (size_t i = 1; i <= 2; ++i) {
+        current_statement__ = 104;
+        for (size_t j = 1; j <= 3; ++j) {
+          current_statement__ = 102;
+          for (size_t m = 1; m <= 4; ++m) {
+            current_statement__ = 100;
+            for (size_t n = 1; n <= 5; ++n) {
+              current_statement__ = 98;
+              assign(gq_ar_mat, cons_list(index_uni(m), cons_list(index_uni(n), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())))), 0.4, "assigning variable gq_ar_mat");
+            }}}}
+      current_statement__ = 108;
+      for (size_t i = 1; i <= N; ++i) {
+        current_statement__ = 107;
+        gq_vec[(i - 1)] = (-1.0 * p_vec[(i - 1)]);}
+      current_statement__ = 112;
+      for (size_t i = 1; i <= 3; ++i) {
+        current_statement__ = 111;
+        for (size_t j = 1; j <= 4; ++j) {
+          current_statement__ = 110;
+          for (size_t k = 1; k <= 5; ++k) {
+            current_statement__ = 109;
+            assign(indexing_mat, cons_list(index_uni(k), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list()))), normal_rng(
+                   0, 1, base_rng__), "assigning variable indexing_mat");}}}
+      current_statement__ = 115;
+      for (size_t i = 1; i <= size(indices); ++i) {
+        current_statement__ = 114;
+        for (size_t j = 1; j <= size(indices); ++j) {
+          current_statement__ = 113;
+          assign(idx_res1, cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())), rvalue(indexing_mat, cons_list(index_uni(indices[(i - 1)]), cons_list(index_uni(indices[(j - 1)]), nil_index_list())), "pretty printed e"), "assigning variable idx_res1");
+        }}
+      current_statement__ = 116;
+      idx_res11 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
+      current_statement__ = 118;
+      if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res1, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        current_statement__ = 117;
+        std::stringstream errmsg_stream__;
+        errmsg_stream__ << "indexing test 1 failed";
+        throw std::domain_error(errmsg_stream__.str());
+      } 
+      current_statement__ = 121;
+      for (size_t i = 1; i <= 5; ++i) {
+        current_statement__ = 120;
+        for (size_t j = 1; j <= size(indices); ++j) {
+          current_statement__ = 119;
+          assign(idx_res2, cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())), rvalue(indexing_mat, cons_list(index_uni(i), cons_list(index_uni(indices[(j - 1)]), nil_index_list())), "pretty printed e"), "assigning variable idx_res2");
+        }}
+      current_statement__ = 122;
+      idx_res21 = rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e");
+      current_statement__ = 124;
+      if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list())), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res2, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        current_statement__ = 123;
+        std::stringstream errmsg_stream__;
+        errmsg_stream__ << "indexing test 2 failed";
+        throw std::domain_error(errmsg_stream__.str());
+      } 
+      current_statement__ = 128;
+      for (size_t i = 1; i <= size(indices); ++i) {
+        current_statement__ = 127;
+        for (size_t j = 1; j <= 3; ++j) {
+          current_statement__ = 126;
+          for (size_t k = 1; k <= size(indices); ++k) {
+            current_statement__ = 125;
+            assign(idx_res3, cons_list(index_uni(i), cons_list(index_uni(j), cons_list(index_uni(k), nil_index_list()))), rvalue(indexing_mat, cons_list(index_uni(indices[(i - 1)]), cons_list(index_uni(j), cons_list(index_uni(indices[(k - 1)]), nil_index_list()))), "pretty printed e"), "assigning variable idx_res3");
+          }}}
+      current_statement__ = 129;
+      idx_res31 = rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e");
+      current_statement__ = 131;
+      if (logical_neq(rvalue(rvalue(indexing_mat, cons_list(index_multi(indices), cons_list(index_omni(), cons_list(index_multi(indices), nil_index_list()))), "pretty printed e"), cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"), rvalue(idx_res3, cons_list(index_uni(2), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list()))), "pretty printed e"))) {
+        current_statement__ = 130;
+        std::stringstream errmsg_stream__;
+        errmsg_stream__ << "indexing test 3 failed";
+        throw std::domain_error(errmsg_stream__.str());
+      } 
+      current_statement__ = 132;
+      idx_res4 = rvalue(indexing_mat, cons_list(index_min_max(1, 3), cons_list(index_uni(1), cons_list(index_omni(), nil_index_list()))), "pretty printed e");
+      current_statement__ = 133;
+      idx_res5 = rvalue(indexing_mat, cons_list(index_min(4), cons_list(index_min_max(2, 3), cons_list(index_uni(1), nil_index_list()))), "pretty printed e");
+      current_statement__ = 60;
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         current_statement__ = 60;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 60;
-          current_statement__ = 60;
-          check_greater_or_equal(function__, "gq_real_1d_ar[sym2__]",
-                                 gq_real_1d_ar[(sym2__ - 1)], 0);}
+        current_statement__ = 60;
+        check_greater_or_equal(function__, "gq_real_1d_ar[sym2__]",
+                               gq_real_1d_ar[(sym2__ - 1)], 0);}
+      current_statement__ = 61;
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         current_statement__ = 61;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
           current_statement__ = 61;
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
+          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
             current_statement__ = 61;
-            for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-              current_statement__ = 61;
-              current_statement__ = 61;
-              check_greater_or_equal(function__,
-                                     "gq_real_3d_ar[sym2__, sym3__, sym4__]",
-                                     gq_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)],
-                                     0);}}}
-        current_statement__ = 62;
-        current_statement__ = 62;
-        check_less_or_equal(function__, "gq_vec", gq_vec, 1);
+            current_statement__ = 61;
+            check_greater_or_equal(function__,
+                                   "gq_real_3d_ar[sym2__, sym3__, sym4__]",
+                                   gq_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)],
+                                   0);}}}
+      current_statement__ = 62;
+      current_statement__ = 62;
+      check_less_or_equal(function__, "gq_vec", gq_vec, 1);
+      current_statement__ = 68;
+      for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
         current_statement__ = 68;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
           current_statement__ = 68;
-          for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            current_statement__ = 68;
-            current_statement__ = 68;
-            check_greater_or_equal(function__, "gq_ar_mat[sym2__, sym3__]",
-                                   gq_ar_mat[(sym2__ - 1)][(sym3__ - 1)], 0);
-          }}
+          current_statement__ = 68;
+          check_greater_or_equal(function__, "gq_ar_mat[sym2__, sym3__]",
+                                 gq_ar_mat[(sym2__ - 1)][(sym3__ - 1)], 0);}}
+      current_statement__ = 68;
+      for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
         current_statement__ = 68;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
           current_statement__ = 68;
-          for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            current_statement__ = 68;
-            current_statement__ = 68;
-            check_less_or_equal(function__, "gq_ar_mat[sym2__, sym3__]",
-                                gq_ar_mat[(sym2__ - 1)][(sym3__ - 1)], 1);}}
-        current_statement__ = 69;
-        current_statement__ = 69;
-        check_simplex(function__, "gq_simplex", gq_simplex);
+          current_statement__ = 68;
+          check_less_or_equal(function__, "gq_ar_mat[sym2__, sym3__]",
+                              gq_ar_mat[(sym2__ - 1)][(sym3__ - 1)], 1);}}
+      current_statement__ = 69;
+      current_statement__ = 69;
+      check_simplex(function__, "gq_simplex", gq_simplex);
+      current_statement__ = 70;
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         current_statement__ = 70;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 70;
-          current_statement__ = 70;
-          check_simplex(function__, "gq_1d_simplex[sym2__]",
-                        gq_1d_simplex[(sym2__ - 1)]);}
+        current_statement__ = 70;
+        check_simplex(function__, "gq_1d_simplex[sym2__]",
+                      gq_1d_simplex[(sym2__ - 1)]);}
+      current_statement__ = 71;
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         current_statement__ = 71;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
           current_statement__ = 71;
-          for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
+          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
             current_statement__ = 71;
-            for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-              current_statement__ = 71;
-              current_statement__ = 71;
-              check_simplex(function__,
-                            "gq_3d_simplex[sym2__, sym3__, sym4__]",
-                            gq_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
-            }}}
-        current_statement__ = 72;
-        current_statement__ = 72;
-        check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
-        current_statement__ = 73;
-        current_statement__ = 73;
-        check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
+            current_statement__ = 71;
+            check_simplex(function__,
+                          "gq_3d_simplex[sym2__, sym3__, sym4__]",
+                          gq_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
+          }}}
+      current_statement__ = 72;
+      current_statement__ = 72;
+      check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
+      current_statement__ = 73;
+      current_statement__ = 73;
+      check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
+      current_statement__ = 74;
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
         current_statement__ = 74;
-        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-          current_statement__ = 74;
-          current_statement__ = 74;
-          check_cholesky_factor(function__, "gq_cfcov_33_ar[sym2__]",
-                                gq_cfcov_33_ar[(sym2__ - 1)]);}
-      } 
+        current_statement__ = 74;
+        check_cholesky_factor(function__, "gq_cfcov_33_ar[sym2__]",
+                              gq_cfcov_33_ar[(sym2__ - 1)]);}
+      vars__.push_back(gq_r1);
+      vars__.push_back(gq_r2);
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(gq_real_1d_ar[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
+            vars__.push_back(gq_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(gq_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(gq_1d_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(gq_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(gq_row_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(gq_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(gq_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
+              vars__.push_back(rvalue(gq_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(gq_simplex[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(gq_1d_simplex[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(gq_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
+            }}}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          vars__.push_back(rvalue(gq_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          vars__.push_back(rvalue(gq_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            vars__.push_back(rvalue(gq_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        vars__.push_back(indices[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            vars__.push_back(rvalue(indexing_mat, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            vars__.push_back(rvalue(idx_res1, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            vars__.push_back(rvalue(idx_res2, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            vars__.push_back(rvalue(idx_res3, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            vars__.push_back(rvalue(idx_res11, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            vars__.push_back(rvalue(idx_res21, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            vars__.push_back(rvalue(idx_res31, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          vars__.push_back(idx_res4[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          vars__.push_back(idx_res5[(sym14__ - 1)][(sym13__ - 1)]);}}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
@@ -4703,7 +4707,7 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 5;
           for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
             current_statement__ = 5;
-            p_real_3d_ar[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)] = context__.vals_r("p_real_3d_ar")[(pos__ - 1)];
+            p_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_real_3d_ar")[(pos__ - 1)];
             current_statement__ = 5;
             pos__ = (pos__ + 1);}}}
       current_statement__ = 5;
@@ -4740,7 +4744,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 7;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 7;
-          p_1d_vec[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("p_1d_vec")[(pos__ - 1)];
+          p_1d_vec[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_1d_vec")[(pos__ - 1)];
           current_statement__ = 7;
           pos__ = (pos__ + 1);}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
@@ -4757,7 +4761,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 8;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 8;
-              p_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("p_3d_vec")[(pos__ - 1)];
+              p_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_3d_vec")[(pos__ - 1)];
               current_statement__ = 8;
               pos__ = (pos__ + 1);}}}}
       Eigen::Matrix<double, 1, -1> p_row_vec;
@@ -4781,7 +4785,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 10;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 10;
-          p_1d_row_vec[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("p_1d_row_vec")[(pos__ - 1)];
+          p_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_1d_row_vec")[(pos__ - 1)];
           current_statement__ = 10;
           pos__ = (pos__ + 1);}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
@@ -4798,7 +4802,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 11;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 11;
-              p_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("p_3d_row_vec")[(pos__ - 1)];
+              p_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_3d_row_vec")[(pos__ - 1)];
               current_statement__ = 11;
               pos__ = (pos__ + 1);}}}}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
@@ -4807,15 +4811,15 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 12;
       pos__ = 1;
       current_statement__ = 12;
-      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
         current_statement__ = 12;
-        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
           current_statement__ = 12;
           for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
             current_statement__ = 12;
             for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
               current_statement__ = 12;
-              assign(p_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), context__.vals_r("p_ar_mat")[(pos__ - 1)], "assigning variable p_ar_mat");
+              assign(p_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("p_ar_mat")[(pos__ - 1)], "assigning variable p_ar_mat");
               current_statement__ = 12;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 12;
@@ -4853,7 +4857,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 14;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 14;
-          p_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = context__.vals_r("p_1d_simplex")[(pos__ - 1)];
+          p_1d_simplex[(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_1d_simplex")[(pos__ - 1)];
           current_statement__ = 14;
           pos__ = (pos__ + 1);}}
       current_statement__ = 14;
@@ -4875,7 +4879,7 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 15;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 15;
-              p_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = context__.vals_r("p_3d_simplex")[(pos__ - 1)];
+              p_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)] = context__.vals_r("p_3d_simplex")[(pos__ - 1)];
               current_statement__ = 15;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 15;
@@ -4893,11 +4897,11 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 16;
       pos__ = 1;
       current_statement__ = 16;
-      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
         current_statement__ = 16;
-        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
           current_statement__ = 16;
-          assign(p_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), context__.vals_r("p_cfcov_54")[(pos__ - 1)], "assigning variable p_cfcov_54");
+          assign(p_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("p_cfcov_54")[(pos__ - 1)], "assigning variable p_cfcov_54");
           current_statement__ = 16;
           pos__ = (pos__ + 1);}}
       current_statement__ = 16;
@@ -4912,7 +4916,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 17;
         for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
           current_statement__ = 17;
-          assign(p_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), context__.vals_r("p_cfcov_33")[(pos__ - 1)], "assigning variable p_cfcov_33");
+          assign(p_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("p_cfcov_33")[(pos__ - 1)], "assigning variable p_cfcov_33");
           current_statement__ = 17;
           pos__ = (pos__ + 1);}}
       current_statement__ = 17;
@@ -4929,7 +4933,7 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 18;
           for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
             current_statement__ = 18;
-            assign(p_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), context__.vals_r("p_cfcov_33_ar")[(pos__ - 1)], "assigning variable p_cfcov_33_ar");
+            assign(p_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_r("p_cfcov_33_ar")[(pos__ - 1)], "assigning variable p_cfcov_33_ar");
             current_statement__ = 18;
             pos__ = (pos__ + 1);}}}
       current_statement__ = 18;
@@ -4938,66 +4942,66 @@ class mother_model : public model_base_crtp<mother_model> {
         p_cfcov_33_ar[(sym2__ - 1)] = cholesky_factor_free(p_cfcov_33_ar[(sym2__ - 1)]);
       }
       vars__.push_back(p_real);
-      for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-        vars__.push_back(offset_multiplier[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_real_1d_ar[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            vars__.push_back(p_real_3d_ar[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        vars__.push_back(offset_multiplier[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_real_1d_ar[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
+            vars__.push_back(p_real_3d_ar[(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
           }}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_vec[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          vars__.push_back(p_1d_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-              vars__.push_back(p_3d_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
             }}}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_row_vec[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          vars__.push_back(p_1d_row_vec[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-              vars__.push_back(p_3d_row_vec[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_row_vec[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_row_vec[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_row_vec[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
             }}}}
-      for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= 5; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= 2; ++sym4__) {
-            for (size_t sym5__ = 1; sym5__ <= 3; ++sym5__) {
-              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
+              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), "pretty printed e"));
             }}}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        vars__.push_back(p_simplex[(sym2__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          vars__.push_back(p_1d_simplex[(sym2__ - 1)][(sym3__ - 1)]);}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
-            for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-              vars__.push_back(p_3d_simplex[(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)][(sym5__ - 1)]);
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        vars__.push_back(p_simplex[(sym13__ - 1)]);}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          vars__.push_back(p_1d_simplex[(sym14__ - 1)][(sym13__ - 1)]);}}
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              vars__.push_back(p_3d_simplex[(sym16__ - 1)][(sym15__ - 1)][(sym14__ - 1)][(sym13__ - 1)]);
             }}}}
-      for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
         }}
-      for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), "pretty printed e"));
         }}
-      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-          for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list()))), "pretty printed e"));
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e"));
           }}}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(

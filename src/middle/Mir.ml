@@ -29,7 +29,9 @@ type operator =
   | EltDivide
   | Pow
   | Or
+  (* deprecated?*)
   | And
+  (* deprecated?*)
   | Equals
   | NEquals
   | Less
