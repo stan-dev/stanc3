@@ -609,25 +609,24 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
     ; smeta= no_span }
   in
   let iexpr expr = {expr; emeta= internal_meta} in
+  let fnot e = FunApp (StanLib, string_of_operator PNot, [e]) |> iexpr in
+  let tparam_early_return =
+    match txparam_stmts with
+    | [] -> []
+    | _ ->
+        let v1 = Var "emit_transformed_parameters__" |> iexpr in
+        let v2 = Var "emit_generated_quantities__" |> iexpr in
+        [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
+  in
+  let gq_early_return =
+    match txparam_stmts with
+    | [] -> []
+    | _ ->
+        [compiler_if_return (fnot (Var "emit_generated_quantities__" |> iexpr))]
+  in
   let generate_quantities =
     gen_from_block {declc with dconstrain= Some Constrain} Parameters
-    @ txparam_decls
-    @ [ compiler_if_return
-          ( FunApp
-              ( StanLib
-              , string_of_operator PNot
-              , [ EOr
-                    ( Var "emit_transformed_parameters__" |> iexpr
-                    , Var "emit_generated_quantities__" |> iexpr )
-                  |> iexpr ] )
-          |> iexpr ) ]
-    @ txparam_stmts
-    @ [ compiler_if_return
-          ( FunApp
-              ( StanLib
-              , string_of_operator PNot
-              , [Var "emit_generated_quantities__" |> iexpr] )
-          |> iexpr ) ]
+    @ txparam_decls @ tparam_early_return @ txparam_stmts @ gq_early_return
     @ migrate_checks_to_end_of_block
         (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
   in
