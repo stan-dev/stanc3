@@ -713,16 +713,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       x_cov = cov_matrix_constrain(x_cov_in__, 2);
       vars__.push_back(theta);
       vars__.push_back(phi);
-      for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "pretty printed e"));
         }}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(x_vector[(sym1__ - 1)]);}
-      for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "pretty printed e"));
         }}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
@@ -745,9 +751,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       double theta;
       
       current_statement__ = 2;
+      pos__ = 1;
+      current_statement__ = 2;
       theta = context__.vals_r("theta")[(pos__ - 1)];
       double phi;
       
+      current_statement__ = 3;
+      pos__ = 1;
       current_statement__ = 3;
       phi = context__.vals_r("phi")[(pos__ - 1)];
       Eigen::Matrix<double, -1, -1> x_matrix;
@@ -756,11 +766,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 4;
       pos__ = 1;
       current_statement__ = 4;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 4;
-          assign(x_matrix, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+          assign(x_matrix, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
           current_statement__ = 4;
           pos__ = (pos__ + 1);}}
       Eigen::Matrix<double, -1, 1> x_vector;
@@ -784,22 +794,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 6;
         for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
           current_statement__ = 6;
-          assign(x_cov, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+          assign(x_cov, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
           current_statement__ = 6;
           pos__ = (pos__ + 1);}}
       current_statement__ = 6;
       x_cov = cov_matrix_free(x_cov);
       vars__.push_back(theta);
       vars__.push_back(phi);
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          vars__.push_back(rvalue(x_matrix, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "pretty printed e"));
         }}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(x_vector[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+          vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "pretty printed e"));
         }}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
