@@ -2,88 +2,83 @@ open Core_kernel
 open Middle
 
 let pos = "pos__"
+let is_scalar = function SInt | SReal -> true | _ -> false
 
-let add_pos_reset ({stmt; smeta} as s) =
-  match stmt with
-  | For {body; _} when contains_fn (string_of_internal_fn FnReadData) body ->
-      [{stmt= Assignment ((pos, UInt, []), loop_bottom); smeta}; s]
-  | _ -> [s]
-
-let rec invert_read_fors ({stmt; smeta} as s) =
-  let rec unwind s =
-    match s.stmt with
-    | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
-        let final, args = unwind body in
-        (final, (loopvar, lower, upper) :: args)
-    | _ -> (s, [])
+let data_read smeta (decl_id, st) =
+  let decl_var =
+    { expr= Var decl_id
+    ; emeta= {mloc= smeta; mtype= remove_size st; madlevel= DataOnly} }
   in
-  match stmt with
-  | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) body
-         || contains_fn (string_of_internal_fn FnWriteParam) body ->
-      let final, args = unwind s in
-      List.fold ~init:final
-        ~f:(fun accum (loopvar, lower, upper) ->
-          let sw stmt = {smeta; stmt} in
-          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
-        args
-  | _ -> {stmt= map_statement Fn.id invert_read_fors stmt; smeta}
-
-let%expect_test "invert write fors" =
-  mock_for 8
-    (mock_for 9
-       { stmt=
-           NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [])
-       ; smeta= no_span })
-  |> invert_read_fors
-  |> Fmt.strf "%a" Pretty.pp_stmt_loc
-  |> print_endline ;
-  [%expect
-    {|
-    for(lv in 0:9) { for(lv in 0:8) {
-                       FnWriteParam__();
-                     }
-    } |}]
-
-let rec use_pos_in_readdata {stmt; smeta} =
   let swrap stmt = {stmt; smeta} in
-  match stmt with
-  | Block
-      [ { stmt=
-            Assignment
-              ( lhs
-              , { expr=
-                    Indexed
-                      ( ( {expr= FunApp (CompilerInternal, f, _); emeta} as
-                        fnapp )
-                      , _ ); _ } ); _ } ]
-    when internal_fn_of_string f = Some FnReadData ->
-      let pos_var = {expr= Var pos; emeta= internal_meta} in
-      [ Assignment (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
-      ; Assignment ((pos, UInt, []), binop pos_var Plus (mir_int 1)) ]
-      |> List.map ~f:swrap |> Block |> swrap
-  | x -> {stmt= map_statement Fn.id use_pos_in_readdata x; smeta}
+  let bodyfn var =
+    let pos_var = {expr= Var pos; emeta= internal_meta} in
+    let readfnapp var =
+      let f =
+        internal_funapp FnReadData
+          [{var with expr= Lit (Str, decl_id)}]
+          var.emeta
+      in
+      {expr= Indexed (f, [Single pos_var]); emeta= {var.emeta with mtype= UInt}}
+    in
+    let pos_increment =
+      if is_scalar st then []
+      else
+        [Assignment ((pos, UInt, []), binop pos_var Plus (mir_int 1)) |> swrap]
+    in
+    SList
+      ( assign_indexed (remove_size st) decl_id smeta readfnapp var
+      :: pos_increment )
+    |> swrap
+  in
+  let pos_reset = Assignment ((pos, UInt, []), loop_bottom) |> swrap in
+  [pos_reset; for_scalar_inv st bodyfn decl_var smeta]
 
-let%expect_test "xform_readdata" =
-  let idx v = Single {expr= Var v; emeta= internal_meta} in
-  let read = internal_funapp FnReadData [] internal_meta in
-  let idcs = [idx "i"; idx "j"; idx "k"] in
-  let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
-  mock_for 7
-    (mock_for 8
-       (mock_for 9
-          {stmt= Assignment (("v", UArray UInt, idcs), indexed); smeta= no_span}))
-  |> use_pos_in_readdata
-  |> Fmt.strf "@[<h>%a@]" Pretty.pp_stmt_loc
-  |> print_endline ;
-  [%expect
-    {|
-    for(lv in 0:7) { for(lv in 0:8) {
-                       for(lv in 0:9) {
-                         v[i, j, k] = FnReadData__()[pos__];
-                         pos__ = (pos__ + 1);
-                       }
-                     } } |}]
+let rec base_type = function
+  | SArray (t, _) -> base_type t
+  | SVector _ | SRowVector _ | SMatrix _ -> UReal
+  | x -> remove_size x
+
+let rec base_ut_to_string = function
+  | UMatrix -> "matrix"
+  | UVector -> "vector"
+  | URowVector -> "row_vector"
+  | UReal -> "scalar"
+  | UInt -> "integer"
+  | UArray t -> base_ut_to_string t
+  | t ->
+      raise_s
+        [%message "Another place where it's weird to get " (t : unsizedtype)]
+
+let param_read smeta
+    (decl_id, {out_constrained_st= cst; out_unconstrained_st= ucst; out_block})
+    =
+  if not (out_block = Parameters) then []
+  else
+    let decl_id, decl =
+      match cst = ucst with
+      | true -> (decl_id, [])
+      | false ->
+          let decl_id = decl_id ^ "_in__" in
+          let d =
+            Decl {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
+          in
+          (decl_id, [{stmt= d; smeta}])
+    in
+    let unconstrained_decl_var =
+      { expr= Var decl_id
+      ; emeta= {mloc= smeta; mtype= remove_size cst; madlevel= AutoDiffable} }
+    in
+    let bodyfn var =
+      let readfnapp var =
+        internal_funapp FnReadParam
+          ( { expr= Lit (Str, base_ut_to_string (remove_size ucst))
+            ; emeta= internal_meta }
+          :: eigen_size ucst )
+          {var.emeta with mtype= base_type ucst}
+      in
+      assign_indexed (remove_size cst) decl_id smeta readfnapp var
+    in
+    decl @ [for_eigen ucst bodyfn unconstrained_decl_var smeta]
 
 let escape_name str =
   str
@@ -105,16 +100,6 @@ let rec add_jacobians {stmt; smeta} =
             )
       ; smeta }
   | _ -> {stmt= map_statement Fn.id add_jacobians stmt; smeta}
-
-let rec add_read_data_vestigial_indices {stmt; smeta} =
-  match stmt with
-  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
-    when internal_fn_of_string f = Some FnReadData ->
-      let with_vestigial_idx =
-        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
-      in
-      {stmt= Assignment (lhs, with_vestigial_idx); smeta}
-  | _ -> {stmt= map_statement Fn.id add_read_data_vestigial_indices stmt; smeta}
 
 (* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
    The blocks make sure that the program with the inserted location update is still well-formed C++ though.
@@ -138,25 +123,141 @@ let rec ensure_body_in_block {stmt; smeta} =
         (map_statement (fun x -> x) ensure_body_in_block stmt)
   ; smeta }
 
-let trans_prog p =
-  let fix_data_reads = function
-    | {stmt; smeta} :: stmts ->
-        { stmt=
-            Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-        ; smeta }
-        :: {stmt; smeta} :: stmts
-        |> List.map ~f:invert_read_fors
-        |> List.concat_map ~f:add_pos_reset
-        |> List.map ~f:use_pos_in_readdata
-        |> List.map ~f:add_read_data_vestigial_indices
-    | [] -> []
+let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x]
+
+let add_reads stmts vars mkread =
+  let var_names = String.Map.of_alist_exn vars in
+  let add_read_to_decl = function
+    | {stmt= Decl {decl_id; _}; smeta} as s when Map.mem var_names decl_id ->
+        s :: mkread smeta (decl_id, Map.find_exn var_names decl_id)
+    | s -> [s]
+  in
+  List.concat_map ~f:add_read_to_decl stmts |> List.concat_map ~f:flatten_slist
+
+let gen_write (decl_id, sizedtype) =
+  let bodyfn var =
+    { stmt=
+        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
+    ; smeta= no_span }
+  in
+  for_scalar_inv sizedtype bodyfn
+    { expr= Var decl_id
+    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
+    no_span
+
+let rec contains_var_expr is_vident accum {expr; _} =
+  accum
+  ||
+  match expr with
+  | Var v when is_vident v -> true
+  | _ -> fold_expr (contains_var_expr is_vident) false expr
+
+(* When a parameter's unconstrained type and its constrained type are different,
+   we generate a new variable "<param_name>_in__" and read into that. We now need
+   to change the FnConstrain calls to constrain that variable and assign to the
+   actual <param_name> var.
+*)
+let constrain_in_params outvars stmts =
+  let is_target_var = function
+    | name, {out_unconstrained_st; out_constrained_st; out_block= Parameters}
+      when not (out_unconstrained_st = out_constrained_st) ->
+        Some name
+    | _ -> None
+  in
+  let target_vars =
+    List.filter_map outvars ~f:is_target_var |> String.Set.of_list
+  in
+  let rec change_constrain_target s =
+    match s.stmt with
+    | Assignment (_, {expr= FunApp (CompilerInternal, f, args); _})
+      when ( internal_fn_of_string f = Some FnConstrain
+           || internal_fn_of_string f = Some FnUnconstrain )
+           && List.exists args
+                ~f:(contains_var_expr (Set.mem target_vars) false) ->
+        let rec change_var_expr e =
+          match e.expr with
+          | Var vident when Set.mem target_vars vident ->
+              {e with expr= Var (vident ^ "_in__")}
+          | _ -> {e with expr= map_expr change_var_expr e.expr}
+        in
+        let rec change_var_stmt s =
+          {s with stmt= map_statement change_var_expr change_var_stmt s.stmt}
+        in
+        change_var_stmt s
+    | _ -> {s with stmt= map_statement Fn.id change_constrain_target s.stmt}
+  in
+  List.map ~f:change_constrain_target stmts
+
+let rec insert_before f to_insert = function
+  | [] -> to_insert
+  | hd :: tl ->
+      if f hd then to_insert @ (hd :: tl)
+      else hd :: insert_before f to_insert tl
+
+let%expect_test "insert before" =
+  let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
+  [%sexp (l : int list)] |> print_s ;
+  [%expect {| (1 2 3 4 5 999 6) |}]
+
+let trans_prog (p : typed_prog) =
+  let init_pos =
+    [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+    ; Assignment ((pos, UInt, []), loop_bottom) ]
+    |> List.map ~f:(fun stmt -> {stmt; smeta= no_span})
+  in
+  let log_prob = List.map ~f:add_jacobians p.log_prob in
+  let get_pname_cst = function
+    | name, {out_block= Parameters; out_constrained_st; _} ->
+        Some (name, out_constrained_st)
+    | _ -> None
+  in
+  let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let param_writes, tparam_writes, gq_writes =
+    List.map p.output_vars
+      ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
+        (out_block, gen_write (name, st)) )
+    |> List.partition3_map ~f:(fun (b, x) ->
+           match b with
+           | Parameters -> `Fst x
+           | TransformedParameters -> `Snd x
+           | GeneratedQuantities -> `Trd x )
+  in
+  let tparam_start {stmt; _} =
+    match stmt with
+    | IfElse (cond, _, _)
+      when contains_var_expr (( = ) "emit_transformed_parameters__") false cond
+      ->
+        true
+    | _ -> false
+  in
+  let gq_start {stmt; _} =
+    match stmt with
+    | IfElse
+        ( { expr= FunApp (_, _, [{expr= Var "emit_generated_quantities__"; _}]); _
+          }
+        , _
+        , _ ) ->
+        true
+    | _ -> false
+  in
+  let gq =
+    ( add_reads p.generate_quantities p.output_vars param_read
+    |> constrain_in_params p.output_vars
+    |> insert_before tparam_start param_writes
+    |> insert_before gq_start tparam_writes )
+    @ gq_writes
   in
   let p =
     { p with
-      log_prob= List.map ~f:add_jacobians p.log_prob
+      log_prob=
+        add_reads log_prob p.output_vars param_read
+        |> constrain_in_params p.output_vars
     ; prog_name= escape_name p.prog_name
-    ; prepare_data= fix_data_reads p.prepare_data
-    ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
-    ; transform_inits= fix_data_reads p.transform_inits }
+    ; prepare_data= init_pos @ add_reads p.prepare_data p.input_vars data_read
+    ; transform_inits=
+        init_pos
+        @ add_reads p.transform_inits constrained_params data_read
+        @ List.map ~f:gen_write constrained_params
+    ; generate_quantities= gq }
   in
   map_prog Fn.id ensure_body_in_block p

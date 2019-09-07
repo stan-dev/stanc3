@@ -29,7 +29,9 @@ type operator =
   | EltDivide
   | Pow
   | Or
+  (* deprecated?*)
   | And
+  (* deprecated?*)
   | Equals
   | NEquals
   | Less
@@ -147,7 +149,7 @@ type 'e outvar =
 
 type ('e, 's) prog =
   { functions_block: 's fun_def list
-  ; input_vars: (string * 'e sizedtype) list
+  ; input_vars: (string * 'e sizedtype) list (* AS READ IN, ie unconstrained *)
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 's list (* assumes data & params ready & in scope*)
@@ -196,6 +198,7 @@ type internal_fn =
   | FnMakeRowVec
   | FnNegInf
   | FnReadData
+  (* XXX move these to a backend specific file?*)
   | FnReadParam
   | FnWriteParam
   | FnConstrain
