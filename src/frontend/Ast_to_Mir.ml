@@ -618,8 +618,12 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
         let v2 = Var "emit_generated_quantities__" |> iexpr in
         [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
   in
+  let gq_stmts =
+    migrate_checks_to_end_of_block
+      (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
+  in
   let gq_early_return =
-    match txparam_stmts with
+    match gq_stmts with
     | [] -> []
     | _ ->
         [compiler_if_return (fnot (Var "emit_generated_quantities__" |> iexpr))]
@@ -627,8 +631,7 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   let generate_quantities =
     gen_from_block {declc with dconstrain= Some Constrain} Parameters
     @ txparam_decls @ tparam_early_return @ txparam_stmts @ gq_early_return
-    @ migrate_checks_to_end_of_block
-        (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
+    @ gq_stmts
   in
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters

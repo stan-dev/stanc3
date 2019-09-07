@@ -186,6 +186,7 @@ let%expect_test "inline functions 2" =
         }
       }
       generate_quantities {
+        if(PNot__(emit_generated_quantities__)) return;
         for(sym3__ in 1:1) {
           for(sym1__ in 1:1) {
 
@@ -1408,6 +1409,7 @@ let%expect_test "constant propagation, model block local scope" =
       }
     }
     generate_quantities {
+      if(PNot__(emit_generated_quantities__)) return;
       data int i;
       data int j;
       for(x in 1:i) {
@@ -1563,6 +1565,7 @@ let%expect_test "dead code elimination decl" =
         }
       }
       generate_quantities {
+        if(PNot__(emit_generated_quantities__)) return;
         {
           data int i;
           FnPrint__(i);
@@ -2916,7 +2919,6 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z);
           FnPrint__(z_data);
         }
-        if(PNot__(emit_generated_quantities__)) return;
       }
       transform_inits {
         data real w;
@@ -3129,7 +3131,6 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z);
           FnPrint__(z_data);
         }
-        if(PNot__(emit_generated_quantities__)) return;
       }
       transform_inits {
         data real w;

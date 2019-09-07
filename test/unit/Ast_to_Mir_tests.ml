@@ -92,7 +92,9 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
+    ((IfElse (FunApp StanLib PNot__ ((Var emit_generated_quantities__)))
+      (Return ()) ())
+     (Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type
        (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
