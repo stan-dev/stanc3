@@ -254,6 +254,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         theta[(j - 1)] = (mu + (tau * theta_tilde[(j - 1)]));}
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(theta[(sym1__ - 1)]);}
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);

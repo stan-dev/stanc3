@@ -611,22 +611,16 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   let iexpr expr = {expr; emeta= internal_meta} in
   let fnot e = FunApp (StanLib, string_of_operator PNot, [e]) |> iexpr in
   let tparam_early_return =
-    match txparam_stmts with
-    | [] -> []
-    | _ ->
-        let v1 = Var "emit_transformed_parameters__" |> iexpr in
-        let v2 = Var "emit_generated_quantities__" |> iexpr in
-        [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
+    let v1 = Var "emit_transformed_parameters__" |> iexpr in
+    let v2 = Var "emit_generated_quantities__" |> iexpr in
+    [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
   in
   let gq_stmts =
     migrate_checks_to_end_of_block
       (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
   in
   let gq_early_return =
-    match gq_stmts with
-    | [] -> []
-    | _ ->
-        [compiler_if_return (fnot (Var "emit_generated_quantities__" |> iexpr))]
+    [compiler_if_return (fnot (Var "emit_generated_quantities__" |> iexpr))]
   in
   let generate_quantities =
     gen_from_block {declc with dconstrain= Some Constrain} Parameters

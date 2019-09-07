@@ -92,7 +92,12 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((IfElse (FunApp StanLib PNot__ ((Var emit_generated_quantities__)))
+    ((IfElse
+      (FunApp StanLib PNot__
+       ((EOr (Var emit_transformed_parameters__)
+         (Var emit_generated_quantities__))))
+      (Return ()) ())
+     (IfElse (FunApp StanLib PNot__ ((Var emit_generated_quantities__)))
       (Return ()) ())
      (Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type

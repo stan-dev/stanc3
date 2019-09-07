@@ -723,6 +723,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
           vars__.push_back(rvalue(x_cov, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "pretty printed e"));
         }}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
