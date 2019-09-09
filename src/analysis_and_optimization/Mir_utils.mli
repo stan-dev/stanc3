@@ -19,6 +19,12 @@ val map_rec_stmt_loc :
   -> stmt_loc
   -> stmt_loc
 
+val top_down_map_rec_stmt_loc :
+     (   (expr_typed_located, stmt_loc) statement
+      -> (expr_typed_located, stmt_loc) statement)
+  -> stmt_loc
+  -> stmt_loc
+
 val map_rec_state_stmt_loc :
      (   's
       -> (expr_typed_located, stmt_loc) statement
@@ -78,14 +84,15 @@ val vexpr_of_expr_exn : expr_typed_located -> vexpr
    LHS expression.
 *)
 
-val expr_var_set : expr_typed_located -> vexpr Set.Poly.t
+val expr_var_set : expr_typed_located -> (vexpr * mtype_loc_ad) Set.Poly.t
 (**
    The set of variables in an expression, including inside an index.
 
    For use in RHS sets, not LHS assignment sets, except in a target term.
 *)
 
-val index_var_set : expr_typed_located index -> vexpr Set.Poly.t
+val index_var_set :
+  expr_typed_located index -> (vexpr * mtype_loc_ad) Set.Poly.t
 (**
    The set of variables in an index.
 
@@ -105,7 +112,8 @@ val union_map : 'a Set.Poly.t -> f:('a -> 'b Set.Poly.t) -> 'b Set.Poly.t
    This is a helper function equivalent to List.concat_map but for Sets
 *)
 
-val stmt_rhs_var_set : (expr_typed_located, 's) statement -> vexpr Set.Poly.t
+val stmt_rhs_var_set :
+  (expr_typed_located, 's) statement -> (vexpr * mtype_loc_ad) Set.Poly.t
 (**
    The set of variables in an expression, including inside an index.
 

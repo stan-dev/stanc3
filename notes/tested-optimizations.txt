@@ -1,0 +1,32 @@
+End-to-end tests for optimizations
+-----------------
+
+static_loop_unrolling - tested on stat-comp-benchmarks
+function_inlining - tested on stat-comp-benchmarks - except there are currently no models which involve function calls, so basically untested
+constant_propagation - tested on stat-comp-benchmarks
+one_step_loop_unrolling - tested on stat-comp-benchmarks
+list_collapsing - tested on stat-comp-benchmarks
+block_fixing - tested on stat-comp-benchmarks
+expression_propagation - fails???
+copy_propagation - fails???
+dead_code_elimination - fails???
+partial_evaluation - 
+lazy_code_motion -
+optimize_ad_levels -
+
+
+
+Unit tests for optimizations
+------------------
+static_loop_unrolling - 
+function_inlining - 
+constant_propagation - 
+one_step_loop_unrolling - 
+list_collapsing - 
+block_fixing - 
+expression_propagation - 
+copy_propagation - 
+dead_code_elimination - 
+partial_evaluation - very thoroughly tested
+lazy_code_motion -
+optimize_ad_levels -
