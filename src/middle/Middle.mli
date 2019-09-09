@@ -99,3 +99,35 @@ val stan_math_signatures :
 
 val manual_stan_math_signatures :
   (returntype * (autodifftype * unsizedtype) list) list String.Table.t
+
+val for_scalar :
+     mtype_loc_ad with_expr sizedtype
+  -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
+val for_scalar_inv :
+     mtype_loc_ad with_expr sizedtype
+  -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
+val for_eigen :
+     mtype_loc_ad with_expr sizedtype
+  -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
+val assign_indexed :
+     unsizedtype
+  -> string
+  -> 'a
+  -> ('b with_expr -> 'b with_expr)
+  -> 'b with_expr
+  -> ('b, 'a) stmt_with
+
+val eigen_size :
+  mtype_loc_ad with_expr sizedtype -> mtype_loc_ad with_expr list

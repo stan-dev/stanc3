@@ -145,7 +145,8 @@ let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
   | _ -> raise (Failure "Non-var expression found, but var expected")
 
 (** See interface file *)
-let rec expr_var_set (ex : expr_typed_located) : (vexpr * mtype_loc_ad) Set.Poly.t =
+let rec expr_var_set (ex : expr_typed_located) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_var_set)
   in
@@ -158,7 +159,8 @@ let rec expr_var_set (ex : expr_typed_located) : (vexpr * mtype_loc_ad) Set.Poly
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
-and index_var_set (ix : expr_typed_located index) : (vexpr * mtype_loc_ad) Set.Poly.t =
+and index_var_set (ix : expr_typed_located index) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   match ix with
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr

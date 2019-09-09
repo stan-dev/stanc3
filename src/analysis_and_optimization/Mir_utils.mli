@@ -91,7 +91,8 @@ val expr_var_set : expr_typed_located -> (vexpr * mtype_loc_ad) Set.Poly.t
    For use in RHS sets, not LHS assignment sets, except in a target term.
 *)
 
-val index_var_set : expr_typed_located index -> (vexpr * mtype_loc_ad) Set.Poly.t
+val index_var_set :
+  expr_typed_located index -> (vexpr * mtype_loc_ad) Set.Poly.t
 (**
    The set of variables in an index.
 
@@ -111,7 +112,8 @@ val union_map : 'a Set.Poly.t -> f:('a -> 'b Set.Poly.t) -> 'b Set.Poly.t
    This is a helper function equivalent to List.concat_map but for Sets
 *)
 
-val stmt_rhs_var_set : (expr_typed_located, 's) statement -> (vexpr * mtype_loc_ad) Set.Poly.t
+val stmt_rhs_var_set :
+  (expr_typed_located, 's) statement -> (vexpr * mtype_loc_ad) Set.Poly.t
 (**
    The set of variables in an expression, including inside an index.
 

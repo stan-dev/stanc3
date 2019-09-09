@@ -55,7 +55,9 @@ let factor_var_dependencies
   let rhs = factor_rhs factor in
   let dep_labels = node_vars_dependencies statement_map rhs label in
   let label_vars l =
-    Set.Poly.map (stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l))) ~f:fst
+    Set.Poly.map
+      (stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l)))
+      ~f:fst
   in
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs

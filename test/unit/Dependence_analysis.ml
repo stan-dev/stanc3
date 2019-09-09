@@ -184,10 +184,7 @@ let%expect_test "Uninitialized variables example" =
   print_s [%sexp (deps : (location_span * string) Set.Poly.t)] ;
   [%expect
     {|
-      ((((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-         (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))
-        k)
-       (((begin_loc
+      ((((begin_loc
           ((filename string) (line_num 15) (col_num 16) (included_from ())))
          (end_loc
           ((filename string) (line_num 15) (col_num 18) (included_from ()))))
@@ -197,6 +194,11 @@ let%expect_test "Uninitialized variables example" =
          (end_loc
           ((filename string) (line_num 26) (col_num 17) (included_from ()))))
         i)
+       (((begin_loc
+          ((filename string) (line_num 28) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 28) (col_num 17) (included_from ()))))
+        x)
        (((begin_loc
           ((filename string) (line_num 32) (col_num 16) (included_from ())))
          (end_loc

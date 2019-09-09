@@ -60,7 +60,6 @@ let rec remove_size = function
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (remove_size t)
 
-
 let ternary_if = "TernaryIf__"
 
 (** A hash table to hold some name conversions between the AST nodes and the

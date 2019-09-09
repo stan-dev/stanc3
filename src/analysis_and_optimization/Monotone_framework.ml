@@ -314,11 +314,9 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 (* TODO: from here *)
 
 (** Calculate the set of variables that a statement can assign to *)
-let assigned_vars_stmt
-    (s : (Middle.expr_typed_located, 'a) Middle.statement) =
+let assigned_vars_stmt (s : (Middle.expr_typed_located, 'a) Middle.statement) =
   match s with
-  | Middle.Assignment ((x, _, _), _)  ->
-      Set.Poly.singleton x
+  | Middle.Assignment ((x, _, _), _) -> Set.Poly.singleton x
   | Middle.TargetPE _ -> Set.Poly.singleton "target"
   | Middle.NRFunApp (_, s, _) when String.suffix s 3 = "_lp" ->
       Set.Poly.singleton "target"
@@ -332,8 +330,7 @@ let assigned_vars_stmt
       Set.Poly.empty
 
 (** Calculate the set of variables that a statement can declare *)
-let declared_vars_stmt
-    (s : (Middle.expr_typed_located, 'a) Middle.statement) =
+let declared_vars_stmt (s : (Middle.expr_typed_located, 'a) Middle.statement) =
   match s with
   | Middle.Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
@@ -341,8 +338,7 @@ let declared_vars_stmt
 (** Calculate the set of variables that a statement can assign to or declare *)
 let assigned_or_declared_vars_stmt
     (s : (Middle.expr_typed_located, 'a) Middle.statement) =
-      Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
-
+  Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for a reaching definitions analysis *)
 let reaching_definitions_transfer
@@ -393,9 +389,7 @@ let initialized_vars_transfer
       transfer_gen_kill p gen Set.Poly.empty
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = string Set.Poly.t )
-
+    with type labels = int and type properties = string Set.Poly.t )
 
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Middle.expr_typed_located) =
@@ -943,18 +937,15 @@ let reaching_definitions_mfp (mir : Middle.typed_prog)
   in
   Mf.mfp ()
 
-let initialized_vars_mfp
-    (total : string Set.Poly.t)
+let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   let (module Lattice) =
     dual_powerset_lattice_empty_initial
-    ( module struct
-      type vals = string
-      let total = total
-      end
-    )
+      (module struct type vals = string
+
+                     let total = total end)
   in
   let (module Transfer) = initialized_vars_transfer flowgraph_to_mir in
   let (module Mf) =

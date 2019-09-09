@@ -48,6 +48,10 @@ let%expect_test "map_rec_stmt_loc" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
@@ -92,6 +96,10 @@ let%expect_test "map_rec_state_stmt_loc" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       }
 
       3 |}]
@@ -148,6 +156,13 @@ let%expect_test "inline functions" =
           }
           FnReject__(sym4__);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline functions 2" =
@@ -186,11 +201,14 @@ let%expect_test "inline functions 2" =
         }
       }
       generate_quantities {
-        if(emit_generated_quantities__) {
-          for(sym3__ in 1:1) {
-            for(sym1__ in 1:1) {
+        if(emit_transformed_parameters__) ; else {
 
-            }
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+        for(sym3__ in 1:1) {
+          for(sym1__ in 1:1) {
+
           }
         }
       } |}]
@@ -350,8 +368,37 @@ let%expect_test "list collapsing" =
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
             (smeta <opaque>)))))
         (smeta <opaque>))))
-     (generate_quantities ()) (transform_inits ()) (output_vars ())
-     (prog_name "") (prog_path ""))
+     (generate_quantities
+      (((stmt
+         (IfElse
+          ((expr (Var emit_transformed_parameters__))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+          ((stmt Skip) (smeta <opaque>)) (((stmt (Block ())) (smeta <opaque>)))))
+        (smeta <opaque>))
+       ((stmt
+         (IfElse
+          ((expr
+            (FunApp StanLib PNot__
+             (((expr
+                (EOr
+                 ((expr (Var emit_transformed_parameters__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Var emit_generated_quantities__))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+          ((stmt (Return ())) (smeta <opaque>)) ()))
+        (smeta <opaque>))
+       ((stmt
+         (IfElse
+          ((expr
+            (FunApp StanLib PNot__
+             (((expr (Var emit_generated_quantities__))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+          ((stmt (Return ())) (smeta <opaque>)) ()))
+        (smeta <opaque>))))
+     (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
 
 let%expect_test "do not inline recursive functions" =
@@ -390,6 +437,13 @@ let%expect_test "do not inline recursive functions" =
         {
           FnReject__(g(53));
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function in for loop" =
@@ -457,6 +511,13 @@ let%expect_test "inline function in for loop" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 (* TODO: check test results from here *)
@@ -538,6 +599,13 @@ let%expect_test "inline function in for loop 2" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function in while loop" =
@@ -597,6 +665,13 @@ let%expect_test "inline function in while loop" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function in if then else" =
@@ -649,6 +724,13 @@ let%expect_test "inline function in if then else" =
           }
           if(sym3__) FnPrint__("body");
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       }
 
     |}]
@@ -728,6 +810,13 @@ let%expect_test "inline function in ternary if " =
           }
           FnPrint__(sym3__ ?sym6__: sym9__);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function multiple returns " =
@@ -780,6 +869,13 @@ let%expect_test "inline function multiple returns " =
           }
           FnPrint__(sym3__);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function indices " =
@@ -830,6 +926,13 @@ let%expect_test "inline function indices " =
           }
           FnPrint__(a[sym3__, sym6__]);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function and " =
@@ -881,6 +984,13 @@ let%expect_test "inline function and " =
           }
           FnPrint__(sym3__ && sym6__);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "inline function or " =
@@ -931,6 +1041,13 @@ let%expect_test "inline function or " =
           }
           FnPrint__(sym3__ || sym6__);
         }
+      }
+      generate_quantities {
+        if(emit_transformed_parameters__) ; else {
+
+        }
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop" =
@@ -969,6 +1086,10 @@ let%expect_test "unroll nested loop" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop 2" =
@@ -1163,6 +1284,10 @@ let%expect_test "unroll nested loop 2" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop 3" =
@@ -1255,6 +1380,10 @@ let%expect_test "unroll nested loop 3" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1291,6 +1420,10 @@ let%expect_test "unroll nested loop with break" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "constant propagation" =
@@ -1329,6 +1462,10 @@ let%expect_test "constant propagation" =
           FnPrint__((42 + 44));
         }
       }
+    }
+    generate_quantities {
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "constant propagation, local scope" =
@@ -1373,6 +1510,10 @@ let%expect_test "constant propagation, local scope" =
           FnPrint__((42 + j));
         }
       }
+    }
+    generate_quantities {
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
@@ -1410,14 +1551,12 @@ let%expect_test "constant propagation, model block local scope" =
       }
     }
     generate_quantities {
-      if(emit_generated_quantities__) {
-        data int i;
-        data int j;
-        for(x in 1:i) {
-          FnPrint__((i + j));
-        }
-        FnWriteParam__(i);
-        FnWriteParam__(j);
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return;
+      data int i;
+      data int j;
+      for(x in 1:i) {
+        FnPrint__((i + j));
       }
     }
     output_vars {
@@ -1459,6 +1598,10 @@ let%expect_test "expression propagation" =
             FnPrint__((i + (2 + i)));
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "copy propagation" =
@@ -1499,6 +1642,10 @@ let%expect_test "copy propagation" =
             FnPrint__(((i + i) + k));
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination" =
@@ -1538,6 +1685,10 @@ let%expect_test "dead code elimination" =
           FnPrint__(i);
           FnPrint__(j);
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination decl" =
@@ -1569,7 +1720,9 @@ let%expect_test "dead code elimination decl" =
         }
       }
       generate_quantities {
-        if(emit_generated_quantities__) {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+        {
           data int i;
           FnPrint__(i);
         }
@@ -1598,6 +1751,10 @@ let%expect_test "dead code elimination, for loop" =
           int i;
           FnPrint__(i);
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
@@ -1628,6 +1785,10 @@ let%expect_test "dead code elimination, while loop" =
           FnPrint__(i);
           while(1) ;
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -1673,6 +1834,10 @@ let%expect_test "dead code elimination, if then" =
             FnPrint__("goodbye");
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, nested" =
@@ -1700,6 +1865,10 @@ let%expect_test "dead code elimination, nested" =
           int i;
           FnPrint__(i);
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partial evaluation" =
@@ -1732,6 +1901,10 @@ let%expect_test "partial evaluation" =
             FnPrint__(log1m(i));
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "try partially evaluate" =
@@ -1764,6 +1937,10 @@ let%expect_test "try partially evaluate" =
           FnPrint__(log_diff_exp(x, y));
           FnPrint__(log((exp(a) - exp(b))));
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
@@ -1792,6 +1969,10 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_self(x));
           FnPrint__(dot_product(x, y));
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partially evaluate functions" =
@@ -1939,23 +2120,14 @@ model {
     {|
       log_prob {
         matrix[3, 2] x_matrix;
-        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         matrix[2, 4] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
         matrix[4, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         vector[2] x_vector;
-        x_vector = FnReadParam__("x_vector", "vector", 2);
         vector[3] y_vector;
-        y_vector = FnReadParam__("y_vector", "vector", 3);
-        vector[3] x_cov_sym1__;
         matrix[2, 2] x_cov;
-        x_cov_sym1__ = FnReadParam__("x_cov_sym1__", "vector", 3);
-        x_cov = FnConstrain__(x_cov_sym1__, "cov_matrix", 2);
+        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         real theta_u;
-        theta_u = FnReadParam__("theta_u", "scalar");
         real phi_u;
-        phi_u = FnReadParam__("phi_u", "scalar");
         {
           real theta;
           theta = 34.;
@@ -2083,122 +2255,27 @@ model {
       }
       generate_quantities {
         data matrix[3, 2] x_matrix;
-        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         data matrix[2, 4] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
         data matrix[4, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         data vector[2] x_vector;
-        x_vector = FnReadParam__("x_vector", "vector", 2);
         data vector[3] y_vector;
-        y_vector = FnReadParam__("y_vector", "vector", 3);
-        data vector[3] x_cov_sym2__;
         data matrix[2, 2] x_cov;
-        x_cov_sym2__ = FnReadParam__("x_cov_sym2__", "vector", 3);
-        x_cov = FnConstrain__(x_cov_sym2__, "cov_matrix", 2);
+        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         data real theta_u;
-        theta_u = FnReadParam__("theta_u", "scalar");
         data real phi_u;
-        phi_u = FnReadParam__("phi_u", "scalar");
-        for(sym2__ in 1:3) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(x_matrix[sym2__, sym3__]);
-          }
-        }
-        for(sym2__ in 1:2) {
-          for(sym3__ in 1:4) {
-            FnWriteParam__(y_matrix[sym2__, sym3__]);
-          }
-        }
-        for(sym2__ in 1:4) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(z_matrix[sym2__, sym3__]);
-          }
-        }
-        for(sym2__ in 1:2) {
-          FnWriteParam__(x_vector[sym2__]);
-        }
-        for(sym2__ in 1:3) {
-          FnWriteParam__(y_vector[sym2__]);
-        }
-        for(sym2__ in 1:2) {
-          for(sym3__ in 1:2) {
-            FnWriteParam__(x_cov[sym2__, sym3__]);
-          }
-        }
-        FnWriteParam__(theta_u);
-        FnWriteParam__(phi_u);
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       }
       transform_inits {
         data matrix[3, 2] x_matrix;
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
-            x_matrix[sym3__, sym4__] = FnReadData__("x_matrix", "matrix", 3, 2)
-                                       [sym3__, sym4__];
-          }
-        }
         data matrix[2, 4] y_matrix;
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:4) {
-            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 2, 4)
-                                       [sym3__, sym4__];
-          }
-        }
         data matrix[4, 2] z_matrix;
-        for(sym3__ in 1:4) {
-          for(sym4__ in 1:2) {
-            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 4, 2)
-                                       [sym3__, sym4__];
-          }
-        }
         data vector[2] x_vector;
-        for(sym3__ in 1:2) {
-          x_vector[sym3__] = FnReadData__("x_vector", "vector", 2)[sym3__];
-        }
         data vector[3] y_vector;
-        for(sym3__ in 1:3) {
-          y_vector[sym3__] = FnReadData__("y_vector", "vector", 3)[sym3__];
-        }
         data matrix[2, 2] x_cov;
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:2) {
-            x_cov[sym3__, sym4__] = FnReadData__("x_cov", "matrix", 2, 2)[sym3__,
-                                                                          sym4__];
-          }
-        }
         x_cov = FnUnconstrain__(x_cov, "cov_matrix");
         data real theta_u;
-        theta_u = FnReadData__("theta_u", "scalar");
         data real phi_u;
-        phi_u = FnReadData__("phi_u", "scalar");
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(x_matrix[sym3__, sym4__]);
-          }
-        }
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:4) {
-            FnWriteParam__(y_matrix[sym3__, sym4__]);
-          }
-        }
-        for(sym3__ in 1:4) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(z_matrix[sym3__, sym4__]);
-          }
-        }
-        for(sym3__ in 1:2) {
-          FnWriteParam__(x_vector[sym3__]);
-        }
-        for(sym3__ in 1:3) {
-          FnWriteParam__(y_vector[sym3__]);
-        }
-        for(sym3__ in 1:2) {
-          for(sym4__ in 1:2) {
-            FnWriteParam__(x_cov[sym3__, sym4__]);
-          }
-        }
-        FnWriteParam__(theta_u);
-        FnWriteParam__(phi_u);
       }
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
@@ -2231,13 +2308,25 @@ let%expect_test "lazy code motion" =
   [%expect
     {|
     log_prob {
-      data real[] sym1__;
+      data real[] sym3__;
       {
-        sym1__ = FnMakeArray__(3.0);
-        FnPrint__(sym1__);
-        FnPrint__(sym1__);
-        FnPrint__(sym1__);
+        sym3__ = FnMakeArray__(3.0);
+        FnPrint__(sym3__);
+        FnPrint__(sym3__);
+        FnPrint__(sym3__);
       }
+    }
+    generate_quantities {
+      data int sym2__;
+      data int sym1__;
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+        return;
+        ;
+      } else ;
+      if(PNot__(emit_generated_quantities__)) {
+        return;
+        ;
+      } else ;
     } |}]
 
 let%expect_test "lazy code motion, 2" =
@@ -2259,8 +2348,8 @@ let%expect_test "lazy code motion, 2" =
   [%expect
     {|
       log_prob {
-        data int sym2__;
-        data int sym1__;
+        data int sym4__;
+        data int sym3__;
         {
           for(i in 1:2) {
             {
@@ -2269,6 +2358,18 @@ let%expect_test "lazy code motion, 2" =
             ;
           }
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -2291,14 +2392,26 @@ let%expect_test "lazy code motion, 3" =
   [%expect
     {|
       log_prob {
-        data int sym2__;
-        data int sym1__;
+        data int sym4__;
+        data int sym3__;
         {
           FnPrint__(3);
-          sym1__ = (3 + 5);
-          FnPrint__(sym1__);
-          FnPrint__((sym1__ + 7));
+          sym3__ = (3 + 5);
+          FnPrint__(sym3__);
+          FnPrint__((sym3__ + 7));
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 4" =
@@ -2334,7 +2447,7 @@ let%expect_test "lazy code motion, 4" =
   [%expect
     {|
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           int b;
           int c;
@@ -2347,18 +2460,30 @@ let%expect_test "lazy code motion, 4" =
               ;
               ;
             }
-            sym1__ = (b + c);
+            sym3__ = (b + c);
             ;
           } else {
             {
-              sym1__ = (b + c);
-              x = sym1__;
+              sym3__ = (b + c);
+              x = sym3__;
               ;
             }
             ;
           }
-          y = sym1__;
+          y = sym3__;
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -2392,7 +2517,7 @@ let%expect_test "lazy code motion, 5" =
   [%expect
     {|
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           int b;
           int c;
@@ -2405,22 +2530,34 @@ let%expect_test "lazy code motion, 5" =
               ;
               ;
             }
-            sym1__ = (b + c);
+            sym3__ = (b + c);
             ;
           } else {
             {
               if(2) {
-                sym1__ = (b + c);
-                x = sym1__;
+                sym3__ = (b + c);
+                x = sym3__;
                 ;
-              } else sym1__ = (b + c);
+              } else sym3__ = (b + c);
                      ;
               ;
             }
             ;
           }
-          y = sym1__;
+          y = sym3__;
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -2445,8 +2582,8 @@ let%expect_test "lazy code motion, 6" =
   [%expect
     {|
       log_prob {
-        data int sym2__;
-        data int sym1__;
+        data int sym4__;
+        data int sym3__;
         {
           int x;
           int y;
@@ -2456,6 +2593,18 @@ let%expect_test "lazy code motion, 6" =
           } else ;
           y = (4 + 3);
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 7" =
@@ -2498,8 +2647,8 @@ let%expect_test "lazy code motion, 7" =
   [%expect
     {|
       log_prob {
-        data int sym2__;
-        data int sym1__;
+        data int sym4__;
+        data int sym3__;
         {
           int a;
           int b;
@@ -2521,10 +2670,10 @@ let%expect_test "lazy code motion, 7" =
             {
               if(3) {
                 {
-                  sym2__ = (a + b);
+                  sym4__ = (a + b);
                   ;
                   while(4) {
-                    y = sym2__;
+                    y = sym4__;
                     ;
                   }
                   ;
@@ -2537,12 +2686,12 @@ let%expect_test "lazy code motion, 7" =
                     ;
                     ;
                   }
-                  sym2__ = (a + b);
-                  y = sym2__;
+                  sym4__ = (a + b);
+                  y = sym4__;
                 }
                 ;
               }
-              z = sym2__;
+              z = sym4__;
             }
             ;
           } else {
@@ -2551,6 +2700,18 @@ let%expect_test "lazy code motion, 7" =
           }
           ;
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -2591,14 +2752,26 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
         }
       }
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           FnPrint__(foo(foo_lp(1)));
           FnPrint__(foo(foo_lp(1)));
-          sym1__ = foo(foo(1));
-          FnPrint__(sym1__);
-          FnPrint__(sym1__);
+          sym3__ = foo(foo(1));
+          FnPrint__(sym3__);
+          FnPrint__(sym3__);
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 9" =
@@ -2620,7 +2793,7 @@ let%expect_test "lazy code motion, 9" =
   [%expect
     {|
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           int x;
           while((x * 2)) {
@@ -2628,6 +2801,18 @@ let%expect_test "lazy code motion, 9" =
             ;
           }
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -2652,7 +2837,7 @@ let%expect_test "lazy code motion, 10" =
   [%expect
     {|
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           int x;
           x = 3;
@@ -2660,6 +2845,18 @@ let%expect_test "lazy code motion, 10" =
           x = 2;
           FnPrint__((x * 2));
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 11" =
@@ -2687,7 +2884,7 @@ let%expect_test "lazy code motion, 11" =
   [%expect
     {|
       log_prob {
-        data int sym1__;
+        data int sym3__;
         {
           {
             int x;
@@ -2698,6 +2895,18 @@ let%expect_test "lazy code motion, 11" =
             FnPrint__((x * 2));
           }
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 12" =
@@ -2722,8 +2931,8 @@ let%expect_test "lazy code motion, 12" =
   [%expect
     {|
       log_prob {
-        data int sym2__;
-        data int sym1__;
+        data int sym4__;
+        data int sym3__;
         {
           int x;
           for(i in 1:6) {
@@ -2734,6 +2943,18 @@ let%expect_test "lazy code motion, 12" =
             ;
           }
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "lazy code motion, 13" =
@@ -2766,41 +2987,41 @@ let%expect_test "lazy code motion, 13" =
   [%expect
     {|
       log_prob {
+        data int sym10__;
+        data int sym9__;
         data int sym8__;
         data int sym7__;
         data int sym6__;
-        data int sym5__;
-        data int sym4__;
-        real sym3__;
-        real sym2__;
-        data int sym1__;
+        real sym5__;
+        real sym4__;
+        data int sym3__;
         {
           real temp;
           if((2 > 3)) {
-            sym7__ = (2 * 2);
-            temp = sym7__;
+            sym9__ = (2 * 2);
+            temp = sym9__;
             ;
           } else {
             FnPrint__("hello");
-            sym7__ = (2 * 2);
+            sym9__ = (2 * 2);
             ;
           }
-          temp = sym7__;
+          temp = sym9__;
           real temp2;
           if((2 <= 3)) {
             {
               {
-                sym8__ = (2 * 3);
-                temp2 = sym8__;
-                sym2__ = temp;
-                target += sym2__;
-                sym6__ = (2 + 1);
+                sym10__ = (2 * 3);
+                temp2 = sym10__;
+                sym4__ = temp;
+                target += sym4__;
+                sym8__ = (2 + 1);
                 target += temp2;
               }
-              for(i in sym6__:3) {
+              for(i in sym8__:3) {
                 {
-                  temp2 = sym8__;
-                  target += sym2__;
+                  temp2 = sym10__;
+                  target += sym4__;
                   target += temp2;
                 }
                 ;
@@ -2809,6 +3030,18 @@ let%expect_test "lazy code motion, 13" =
             ;
           } else ;
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+          ;
+        } else ;
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -2840,11 +3073,11 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   [%expect
     {|
       log_prob {
-        real sym5__;
-        real sym4__;
+        real sym7__;
+        real sym6__;
+        data int sym5__;
+        data int sym4__;
         data int sym3__;
-        data int sym2__;
-        data int sym1__;
         {
           real x;
           int y;
@@ -2852,18 +3085,28 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
           if((1 <= 100000)) {
             {
               {
-                sym3__ = (1 + 1);
-                sym4__ = bernoulli_logit_lpmf(y, x);
-                target += sym4__;
+                sym5__ = (1 + 1);
+                sym6__ = bernoulli_logit_lpmf(y, x);
+                target += sym6__;
               }
-              for(i in sym3__:100000) {
+              for(i in sym5__:100000) {
                 {
-                  target += sym4__;
+                  target += sym6__;
                 }
               }
             }
           } else ;
         }
+      }
+      generate_quantities {
+        data int sym2__;
+        data int sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+          return;
+        } else ;
+        if(PNot__(emit_generated_quantities__)) {
+          return;
+        } else ;
       } |}]
 
 let%expect_test "block fixing" =
@@ -2906,8 +3149,31 @@ let%expect_test "block fixing" =
              (smeta <opaque>))
             ()))
           (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+       (generate_quantities
+        (((stmt
+           (IfElse
+            ((expr
+              (FunApp StanLib PNot__
+               (((expr
+                  (EOr
+                   ((expr (Var emit_transformed_parameters__))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   ((expr (Var emit_generated_quantities__))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((stmt (Return ())) (smeta <opaque>)) ()))
+          (smeta <opaque>))
+         ((stmt
+           (IfElse
+            ((expr
+              (FunApp StanLib PNot__
+               (((expr (Var emit_generated_quantities__))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((stmt (Return ())) (smeta <opaque>)) ()))
+          (smeta <opaque>))))
+       (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
   gensym_reset_danger_use_cautiously () ;
@@ -2964,6 +3230,10 @@ let%expect_test "one-step loop unrolling" =
             }
           }
         }
+      }
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "adlevel_optimization" =
@@ -3002,7 +3272,6 @@ let%expect_test "adlevel_optimization" =
     {|
       log_prob {
         real w;
-        w = FnReadParam__("w", "scalar");
         {
           data int x;
           real y;
@@ -3017,9 +3286,8 @@ let%expect_test "adlevel_optimization" =
       }
       generate_quantities {
         data real w;
-        w = FnReadParam__("w", "scalar");
-        FnWriteParam__(w);
-        if(emit_transformed_parameters__ || emit_generated_quantities__) {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        {
           data int x;
           data real y;
           data real z;
@@ -3030,11 +3298,10 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z);
           FnPrint__(z_data);
         }
+        if(PNot__(emit_generated_quantities__)) return;
       }
       transform_inits {
         data real w;
-        w = FnReadData__("w", "scalar");
-        FnWriteParam__(w);
       }
       output_vars {
         parameters real w; //real
@@ -3082,16 +3349,6 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((stmt
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
-        (smeta <opaque>))
-       ((stmt
-         (Assignment (w UReal ())
-          ((expr
-            (FunApp CompilerInternal FnReadParam__
-             (((expr (Lit Str w))
-               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-              ((expr (Lit Str scalar))
-               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
         (smeta <opaque>))
        ((stmt
          (Block
@@ -3224,7 +3481,6 @@ let%expect_test "adlevel_optimization 2" =
     {|
       log_prob {
         real w;
-        w = FnReadParam__("w", "scalar");
         data real w_trans;
         w_trans = 1;
         {
@@ -3241,29 +3497,24 @@ let%expect_test "adlevel_optimization 2" =
       }
       generate_quantities {
         data real w;
-        w = FnReadParam__("w", "scalar");
-        FnWriteParam__(w);
         data real w_trans;
-        if(emit_transformed_parameters__ || emit_generated_quantities__) {
-          w_trans = 1;
-          {
-            data int x;
-            data array[real, 2] y;
-            data real z;
-            data real z_data;
-            if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
-            if((2 > 1)) z = y[1];
-            if((3 > 1)) z_data = x;
-            FnPrint__(z);
-            FnPrint__(z_data);
-          }
-          FnWriteParam__(w_trans);
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        w_trans = 1;
+        {
+          data int x;
+          data array[real, 2] y;
+          data real z;
+          data real z_data;
+          if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
+          if((2 > 1)) z = y[1];
+          if((3 > 1)) z_data = x;
+          FnPrint__(z);
+          FnPrint__(z_data);
         }
+        if(PNot__(emit_generated_quantities__)) return;
       }
       transform_inits {
         data real w;
-        w = FnReadData__("w", "scalar");
-        FnWriteParam__(w);
       }
       output_vars {
         parameters real w; //real
