@@ -171,17 +171,17 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
-    if !warn_uninitialized then (
+    ( if !warn_uninitialized then
       let uninitialized_vars =
         Dependence_analysis.mir_uninitialized_variables mir
       in
-      print_warn_uninitialized uninitialized_vars ;
-      let tx_mir = Transform_Mir.trans_prog mir in
-      if !dump_tx_mir then
-        Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
-      let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
-      Out_channel.write_all !output_file ~data:cpp ;
-      if !print_model_cpp then print_endline cpp ) )
+      print_warn_uninitialized uninitialized_vars ) ;
+    let tx_mir = Transform_Mir.trans_prog mir in
+    if !dump_tx_mir then
+      Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
+    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
+    Out_channel.write_all !output_file ~data:cpp ;
+    if !print_model_cpp then print_endline cpp )
 
 let remove_dotstan s = String.drop_suffix s 5
 
