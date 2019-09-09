@@ -28,7 +28,7 @@ let node_immediate_dependencies
       (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
     (label : label) : label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
-  let rhs_set = stmt_rhs_var_set stmt in
+  let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
   let rhs_deps =
     union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
@@ -137,6 +137,103 @@ let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
   in
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
+
+let all_labels
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int) : int Set.Poly.t =
+  let step set =
+    Set.Poly.union set
+      (union_map set ~f:(fun l -> Map.Poly.find_exn Flowgraph.successors l))
+  in
+  let rec step_fix set =
+    let next = step set in
+    if Set.Poly.equal set next then set else step_fix next
+  in
+  step_fix Flowgraph.initials
+
+let prog_rhs_variables
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (labels : int Set.Poly.t) : string Set.Poly.t =
+  let label_vars label =
+    Set.Poly.map
+      ~f:(fun (VVar s, _) -> s)
+      (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn)
+  in
+  union_map labels ~f:label_vars
+
+let rec var_declarations (sw : ('e, 'm) stmt_with) : string Set.Poly.t =
+  match sw.stmt with
+  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+  | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
+  | IfElse (_, s1, Some s2) ->
+      Set.Poly.union (var_declarations s1) (var_declarations s2)
+  | Block slist | SList slist ->
+      Set.Poly.union_list (List.map ~f:var_declarations slist)
+  | _ -> Set.Poly.empty
+
+let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
+    (stmt : stmt_loc) : (location_span * string) Set.Poly.t =
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt stmt
+  in
+  let (module Flowgraph) = flowgraph in
+  let labels = all_labels (module Flowgraph) in
+  let all_variables = prog_rhs_variables flowgraph_to_mir labels in
+  let initialized_vars_map =
+    initialized_vars_mfp all_variables (module Flowgraph) flowgraph_to_mir
+  in
+  let uninitialized =
+    Map.Poly.fold initialized_vars_map ~init:Set.Poly.empty
+      ~f:(fun ~key:label ~data:inits acc ->
+        let stmt = Map.Poly.find_exn flowgraph_to_mir label in
+        let rhs =
+          Set.Poly.map
+            ~f:(fun (VVar s, {mloc; _}) -> (mloc, s))
+            (stmt_rhs_var_set stmt.stmtn)
+        in
+        let uninitialized (_, var) = not (Set.Poly.mem inits.entry var) in
+        let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
+        Set.Poly.union acc uninitialized_set )
+  in
+  Set.Poly.filter uninitialized ~f:(fun (_, v) ->
+      not (Set.Poly.mem exceptions v) )
+
+let mir_uninitialized_variables (mir : typed_prog) :
+    (location_span * string) Set.Poly.t =
+  let flag_variables = List.map ~f:string_of_flag_var all_flag_vars in
+  let data_vars =
+    Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v))
+  in
+  let prep_vars =
+    Set.Poly.union_list (List.map ~f:var_declarations mir.prepare_data)
+  in
+  let globals =
+    Set.Poly.union
+      (Set.Poly.of_list flag_variables)
+      (Set.Poly.singleton "target")
+  in
+  let globals_data = Set.Poly.union globals data_vars in
+  let globals_data_prep = Set.Poly.union globals_data prep_vars in
+  Set.Poly.union_list
+    [ (* prepare_data scope: data *)
+      stmt_uninitialized_variables globals_data
+        {stmt= SList mir.prepare_data; smeta= no_span}
+      (* log_prob scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep
+        {stmt= SList mir.log_prob; smeta= no_span}
+      (* gen quant scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep
+        {stmt= SList mir.generate_quantities; smeta= no_span}
+      (* functions scope: arguments *)
+    ; Set.Poly.union_list
+        (List.map mir.functions_block ~f:(fun {fdbody; fdargs; _} ->
+             let arg_vars =
+               Set.Poly.of_list
+                 (List.map fdargs ~f:(fun (_, arg_name, _) -> arg_name))
+             in
+             stmt_uninitialized_variables
+               (Set.Poly.union arg_vars globals)
+               fdbody )) ]
 
 let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
