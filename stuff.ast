@@ -1,0 +1,82 @@
+((functionblock ())
+ (datablock
+  ((((stmt
+      (VarDecl (decl_type (Sized SInt))
+       (transformation
+        (Lower
+         ((expr (IntNumeral 0))
+          (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
+       (identifier ((name row_size) (id_loc <opaque>))) (initial_value ())
+       (is_global true)))
+     (smeta ((loc <opaque>) (return_type NoReturnType))))
+    ((stmt
+      (VarDecl (decl_type (Sized SInt))
+       (transformation
+        (Lower
+         ((expr (IntNumeral 0))
+          (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
+       (identifier ((name col_size) (id_loc <opaque>))) (initial_value ())
+       (is_global true)))
+     (smeta ((loc <opaque>) (return_type NoReturnType))))
+    ((stmt
+      (VarDecl
+       (decl_type
+        (Sized
+         (SSparseMatrix
+          ((expr (Variable ((name row_size) (id_loc <opaque>))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))
+          ((expr (Variable ((name col_size) (id_loc <opaque>))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt)))))))
+       (transformation
+        (Lower
+         ((expr (IntNumeral 0))
+          (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
+       (identifier ((name x_matrix) (id_loc <opaque>))) (initial_value ())
+       (is_global true)))
+     (smeta ((loc <opaque>) (return_type NoReturnType))))
+    ((stmt
+      (VarDecl
+       (decl_type
+        (Sized
+         (SVector
+          ((expr (Variable ((name row_size) (id_loc <opaque>))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt)))))))
+       (transformation Identity)
+       (identifier ((name y_vector) (id_loc <opaque>))) (initial_value ())
+       (is_global true)))
+     (smeta ((loc <opaque>) (return_type NoReturnType)))))))
+ (transformeddatablock ())
+ (parametersblock
+  ((((stmt
+      (VarDecl
+       (decl_type
+        (Sized
+         (SVector
+          ((expr (Variable ((name col_size) (id_loc <opaque>))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt)))))))
+       (transformation Identity) (identifier ((name beta) (id_loc <opaque>)))
+       (initial_value ()) (is_global true)))
+     (smeta ((loc <opaque>) (return_type NoReturnType)))))))
+ (transformedparametersblock ())
+ (modelblock
+  ((((stmt
+      (Tilde
+       (arg
+        ((expr (Variable ((name y_vector) (id_loc <opaque>))))
+         (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UVector)))))
+       (distribution ((name normal) (id_loc <opaque>)))
+       (args
+        (((expr
+           (BinOp
+            ((expr (Variable ((name x_matrix) (id_loc <opaque>))))
+             (emeta
+              ((loc <opaque>) (ad_level DataOnly) (type_ USparseMatrix))))
+            Times
+            ((expr (Variable ((name beta) (id_loc <opaque>))))
+             (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UVector))))))
+          (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UVector))))
+         ((expr (IntNumeral 1))
+          (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
+       (truncation NoTruncate)))
+     (smeta ((loc <opaque>) (return_type NoReturnType)))))))
+ (generatedquantitiesblock ()))

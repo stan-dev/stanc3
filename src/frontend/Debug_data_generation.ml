@@ -121,8 +121,8 @@ let gen_matrix mm n m t =
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
 let gen_sparse_matrix mm n m t =
-  { int_two with
-    expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+      { int_two with
+        expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
 (* TODO: do some proper random generation of these special matrices *)
 

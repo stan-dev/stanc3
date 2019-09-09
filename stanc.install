@@ -1,0 +1,13 @@
+lib: [
+  "_build/install/default/lib/stanc/META"
+  "_build/install/default/lib/stanc/dune-package"
+  "_build/install/default/lib/stanc/opam"
+]
+bin: [
+  "_build/install/default/bin/run_bin_on_args"
+  "_build/install/default/bin/stanc"
+]
+doc: [
+  "_build/install/default/doc/stanc/LICENSE.txt"
+  "_build/install/default/doc/stanc/README.md"
+]
