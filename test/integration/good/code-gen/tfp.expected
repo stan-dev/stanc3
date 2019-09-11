@@ -8,15 +8,15 @@ tfd = tfp.distributions
 class eight_schools_ncp_model(tfd.Distribution):
 
   def __init__(self, J, y, sigma):
-    self.J = J
-    self.y = y
-    self.sigma = sigma
+    self.J = self.J
+    self.y = tf.cast(self.y, tf.float64)
+    self.sigma = tf.cast(self.sigma, tf.float64)
      
   def log_prob(self, params):
     target = 0
     J = self.J
-    y = tf.cast(self.y, tf.float64)
-    sigma = tf.cast(self.sigma, tf.float64)
+    y = self.y
+    sigma = self.sigma
     mu = tf.cast(params[0], tf.float64)
     tau = tf.cast(params[1], tf.float64)
     theta_tilde = tf.cast(params[2], tf.float64)
@@ -34,8 +34,8 @@ class eight_schools_ncp_model(tfd.Distribution):
      
   def sample(self, nchains__):
     J = self.J
-    y = tf.cast(self.y, tf.float64)
-    sigma = tf.cast(self.sigma, tf.float64)
+    y = self.y
+    sigma = self.sigma
     
     
     

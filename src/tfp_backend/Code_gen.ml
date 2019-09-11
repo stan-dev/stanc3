@@ -84,20 +84,21 @@ let pp_method ppf name params intro ?(outro = []) ppbody =
   if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
   pf ppf "@, @]"
 
+let rec pp_cast ppf (name, st) =
+  match st with
+  | SArray (t, _) -> pp_cast ppf (name, t)
+  | SInt -> pf ppf "self.%s" name
+  | _ -> pf ppf "tf.cast(%a, tf.float64)" pp_cast (name, SInt)
+
 let pp_init ppf p =
-  let data_names = List.map p.input_vars ~f:(fun (name, _) -> name) in
-  let pp_save_data ppf name = pf ppf "self.%s = %s" name name in
-  let ppbody ppf = (list ~sep:cut pp_save_data) ppf data_names in
-  pp_method ppf "__init__" ("self" :: data_names) [] ppbody
+  let pp_save_data ppf (name, st) =
+    pf ppf "self.%s = %a" name pp_cast (name, st)
+  in
+  let ppbody ppf = (list ~sep:cut pp_save_data) ppf p.input_vars in
+  pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
 let pp_extract_data ppf p =
-  let rec pp_cast ppf (name, st) =
-    match st with
-    | SArray (t, _) -> pp_cast ppf (name, t)
-    | SInt -> pf ppf "self.%s" name
-    | _ -> pf ppf "tf.cast(%a, tf.float64)" pp_cast (name, SInt)
-  in
-  let pp_data ppf (name, st) = pf ppf "%s = %a" name pp_cast (name, st) in
+  let pp_data ppf (name, _) = pf ppf "%s = self.%s" name name in
   (list ~sep:cut pp_data) ppf p.input_vars
 
 let pp_log_prob ppf p =
@@ -171,7 +172,7 @@ let pp_sample ppf p =
       when String.is_prefix ~prefix:Transform_mir.dist_prefix f
            && is_param (match lvalue_of_expr obs with v, _, _ -> v) ->
         let vident, _, _ = lvalue_of_expr obs in
-        pf ppf "%s = %a.sample(@[<hov 4>%a@])" vident pp_call
+        pf ppf "%s = %a.sample(@[<hov 2>%a@])" vident pp_call
           (f, pp_expr, dist_args) pp_shape obs
     | Block ls | SList ls -> (list ~sep:cut no_param_deps) ppf ls
     | _ -> ()
