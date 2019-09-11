@@ -2,66 +2,13 @@ open Core_kernel
 open Middle
 open Fmt
 
-let dist_prefix = "tfd.distributions."
-
-let remove_stan_dist_suffix s =
-  let s = Utils.stdlib_distribution_name s in
-  List.filter_map
-    (("_rng" :: Utils.distribution_suffices) @ [""])
-    ~f:(fun suffix -> String.chop_suffix ~suffix s)
-  |> List.hd_exn
-
-let capitalize_fnames = String.Set.of_list ["normal"; "cauchy"]
-
-let map_functions fname args =
-  match fname with
-  | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
-  | f when operator_of_string f |> Option.is_some -> (fname, args)
-  | _ ->
-      if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
-      else raise_s [%message "Not sure how to handle " fname " yet!"]
-
-let map_constraints args emeta =
-  match args with
-  | [var; {expr= Lit (Str, "lb"); _}; lb] ->
-      let f = {expr= FunApp (StanLib, "exp", [var]); emeta} in
-      binop f Plus lb
-  | _ ->
-      raise_s
-        [%message "No constraint mapping for" (args : expr_typed_located list)]
-
-let rec translate_funapps {expr; emeta} =
-  let e expr = {expr; emeta} in
-  match expr with
-  | FunApp (CompilerInternal, fname, args)
-    when internal_fn_of_string fname = Some FnConstrain ->
-      map_constraints args emeta
-  | FunApp (StanLib, fname, args) ->
-      let prefix =
-        if Utils.is_distribution_name fname then dist_prefix else ""
-      in
-      let fname = remove_stan_dist_suffix fname in
-      let fname, args = map_functions fname args in
-      FunApp (StanLib, prefix ^ fname, args) |> e
-  | _ -> map_expr translate_funapps expr |> e
-
-let trans_prog (p : typed_prog) =
-  let rec map_stmt {stmt; smeta} =
-    {stmt= map_statement translate_funapps map_stmt stmt; smeta}
-  in
-  map_prog translate_funapps map_stmt p
-
 let is_multi_index = function MultiIndex _ -> true | _ -> false
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-
-let pystring_of_operator = function
-  | Plus -> "+"
-  | Minus -> "-"
-  | x -> string_of_operator x
+let pystring_of_operator = function x -> strf "%a" Pretty.pp_operator x
 
 let rec pp_expr ppf {expr; _} =
   match expr with
@@ -69,7 +16,7 @@ let rec pp_expr ppf {expr; _} =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> string ppf s
   | FunApp (StanLib, f, obs :: dist_params)
-    when String.is_prefix ~prefix:dist_prefix f ->
+    when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
   | FunApp (StanLib, f, args) when operator_of_string f |> Option.is_some -> (
     match
@@ -104,27 +51,28 @@ let rec pp_expr ppf {expr; _} =
       in
       pf ppf "%a%a" pp_expr obj pp_indexed indices
 
-let rec pp_stmt ppf {stmt; _} =
+let rec pp_stmt ppf s =
   let fake_expr expr = {expr; emeta= internal_meta} in
-  match stmt with
-  | Assignment (_, {expr= FunApp (CompilerInternal, f, _); _})
-    when internal_fn_of_string f = Some FnReadParam ->
-      ()
+  match s.stmt with
   | Assignment ((lhs, _, indices), rhs) ->
       let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
       pf ppf "%a = %a" pp_expr indexed pp_expr rhs
   | TargetPE rhs -> pf ppf "target += %a" pp_expr rhs
-  | NRFunApp (_, _, _) -> ()
+  | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
+      pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
   | Continue -> pf ppf "continue"
   | Return rhs ->
       pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
-  | Skip -> ()
   | IfElse (_, _, _) -> ()
   | While (_, _) -> ()
-  | For _ -> ()
   | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
-  | Decl _ -> ()
+  | Skip -> ()
+  | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
+      pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id
+  | Decl {decl_adtype= DataOnly; _} -> ()
+  | For _ | NRFunApp (CompilerInternal, _, _) ->
+      raise_s [%message "Not implemented" (s : stmt_loc)]
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
   pf ppf "@[<v 2>def %a:@," pp_call_str (name, params) ;
@@ -157,7 +105,7 @@ let pp_log_prob ppf p =
       List.(concat (mapi p.output_vars ~f:grab_params))
       (list ~sep:cut pp_stmt) p.log_prob
   in
-  let intro = ["target = tf.Variable(0, dtype=np.float64)"] in
+  let intro = ["target = 0"] in
   let outro = ["return target"] in
   pp_method ppf "log_prob" ["self"; "params"] intro ~outro ppbody
 
@@ -176,3 +124,8 @@ tfd = tfp.distributions
 let pp_prog ppf (p : typed_prog) =
   pf ppf "%s@,@,class %s(tfd.Distribution):@,@[<v 2>%a@]" imports p.prog_name
     pp_methods p
+
+(* Major work to do:
+1. Work awareness of distributions and bijectors into the type system
+2. Have backends present an environment that the frontend and middle can use for type checking and optimization.
+*)

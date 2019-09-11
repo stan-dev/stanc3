@@ -35,28 +35,11 @@ let main () =
   in
   if !dump_mir then
     mir |> Middle.sexp_of_typed_prog |> Sexp.to_string_hum |> print_endline ;
-  let mir = Code_gen.trans_prog mir in
+  let mir = Transform_mir.trans_prog mir in
   if !dump_transformed_mir then Fmt.pr "%a" Middle.Pretty.pp_typed_prog mir ;
   Fmt.pr "%a" Code_gen.pp_prog mir
 
 let () = main ()
 
-(*
-   let's just ignore all the FnReadData stuff.
-   What about FnReadParam?
-
-   Let's generate a class:
-
-   class StanModelName(object):
-     def __init__(self, data=[data1, data2...]):
-       self.data = data
-
-     def log_prob(self, params=[param1, param2...]):
-       target = tf.Variable(0) #?
-       target += tfd.Normal(param1, param2).log_prob(self.data[0])...
-
-       return target
-
-   provide:
-
- *)
+(* TODO: Refactor this into a shared pluggable compiler interface @enetsee
+talked about.*)
