@@ -37,7 +37,7 @@ let pp_located_msg ppf msg =
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
     msg
 
-let maybe_templated_arg_types (args : fun_arg_decl) =
+let maybe_templated_arg_types (args : fun_arg_decl list) =
   let is_autodiff (adtype, _, _) =
     match adtype with AutoDiffable -> true | _ -> false
   in

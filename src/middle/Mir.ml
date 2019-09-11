@@ -100,13 +100,13 @@ and 'e expr =
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map, compare, fold]
 
-type fun_arg_decl = (autodifftype * string * unsizedtype) list
+type fun_arg_decl = autodifftype * string * unsizedtype
 [@@deriving sexp, hash, map]
 
 type 's fun_def =
   { fdrt: unsizedtype option
   ; fdname: string
-  ; fdargs: fun_arg_decl
+  ; fdargs: fun_arg_decl list
   ; fdbody: 's
   ; fdloc: location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]

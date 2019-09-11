@@ -119,13 +119,11 @@ let pp_log_prob ppf p =
   let outro = ["return target"] in
   pp_method ppf "log_prob" ["self"; "params"] intro ~outro ppbody
 
-let rec lvalue_of_expr {expr; emeta} =
-  match expr with
-  | Var s -> (s, emeta.mtype, [])
-  | Indexed (l, i) ->
-      let vid, _, idcs = lvalue_of_expr l in
-      (vid, emeta.mtype, idcs @ i)
-  | _ -> failwith "Trying to convert illegal expression to lval."
+let rec get_vident_exn e =
+  match e.expr with
+  | Var s -> s
+  | Indexed (e, _) -> get_vident_exn e
+  | _ -> raise_s [%message "No vident in" (e : expr_typed_located)]
 
 let rec contains_var_expr is_vident accum {expr; _} =
   accum
@@ -141,9 +139,8 @@ let rec contains_var_stmt is_vident accum {stmt; _} =
     accum stmt
 
 let get_param_st p var =
-  let vident, _, _ = lvalue_of_expr var in
   let {out_constrained_st= st; _} =
-    List.Assoc.find_exn ~equal:( = ) p.output_vars vident
+    List.Assoc.find_exn ~equal:( = ) p.output_vars (get_vident_exn var)
   in
   st
 
@@ -170,8 +167,8 @@ let pp_sample ppf p =
     match s.stmt with
     | TargetPE {expr= FunApp (StanLib, f, obs :: dist_args); _}
       when String.is_prefix ~prefix:Transform_mir.dist_prefix f
-           && is_param (match lvalue_of_expr obs with v, _, _ -> v) ->
-        let vident, _, _ = lvalue_of_expr obs in
+           && is_param (get_vident_exn obs) ->
+        let vident = get_vident_exn obs in
         pf ppf "%s = %a.sample(@[<hov 2>%a@])" vident pp_call
           (f, pp_expr, dist_args) pp_shape obs
     | Block ls | SList ls -> (list ~sep:cut no_param_deps) ppf ls
@@ -191,6 +188,12 @@ let pp_methods ppf p =
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_sample p
 
+let pp_fundef ppf {fdname; fdargs; fdbody; _} =
+  pp_method ppf fdname
+    (List.map ~f:(fun (_, name, _) -> name) fdargs)
+    []
+    (fun ppf -> pp_stmt ppf fdbody)
+
 let imports =
   {|
 import numpy as np
@@ -200,8 +203,8 @@ tfd = tfp.distributions
 |}
 
 let pp_prog ppf (p : typed_prog) =
-  pf ppf "%s@,@,class %s(tfd.Distribution):@,@[<v 2>%a@]" imports p.prog_name
-    pp_methods p
+  pf ppf "%s@,@,%a@,class %s(tfd.Distribution):@,@[<v 2>%a@]" imports
+    (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p
 
 (* Major work to do:
 1. Work awareness of distributions and bijectors into the type system
