@@ -14,7 +14,7 @@ let rec pp_expr ppf {expr; _} =
   match expr with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
-  | Lit (_, s) -> string ppf s
+  | Lit (_, s) -> pf ppf "tf.cast(%s, tf.float64)" s
   | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
@@ -85,16 +85,22 @@ let pp_method ppf name params intro ?(outro = []) ppbody =
   pf ppf "@, @]"
 
 let pp_init ppf p =
-  let pp_save_data ppf (idx, name) = pf ppf "self.%s = data[%d]" name idx in
-  let ppbody ppf =
-    (list ~sep:cut pp_save_data)
-      ppf
-      (List.mapi p.input_vars ~f:(fun idx (name, _) -> (idx, name)))
+  let data_names = List.map p.input_vars ~f:(fun (name, _) -> name) in
+  let pp_save_data ppf name = pf ppf "self.%s = %s" name name in
+  let ppbody ppf = (list ~sep:cut pp_save_data) ppf data_names in
+  pp_method ppf "__init__" ("self" :: data_names) [] ppbody
+
+let pp_extract_data ppf p =
+  let rec pp_cast ppf (name, st) =
+    match st with
+    | SArray (t, _) -> pp_cast ppf (name, t)
+    | SInt -> pf ppf "self.%s" name
+    | _ -> pf ppf "tf.cast(%a, tf.float64)" pp_cast (name, SInt)
   in
-  pp_method ppf "__init__" ["self"; "data"] [] ppbody
+  let pp_data ppf (name, st) = pf ppf "%s = %a" name pp_cast (name, st) in
+  (list ~sep:cut pp_data) ppf p.input_vars
 
 let pp_log_prob ppf p =
-  let pp_extract_data ppf name = pf ppf "%s = self.%s" name name in
   let pp_extract_param ppf (idx, name) =
     pf ppf "%s = tf.cast(params[%d], tf.float64)" name idx
   in
@@ -103,9 +109,7 @@ let pp_log_prob ppf p =
     | _ -> []
   in
   let ppbody ppf =
-    pf ppf "%a@,%a@,%a"
-      (list ~sep:cut pp_extract_data)
-      (List.map p.input_vars ~f:(fun (name, _) -> name))
+    pf ppf "%a@,%a@,%a" pp_extract_data p
       (list ~sep:cut pp_extract_param)
       List.(concat (mapi p.output_vars ~f:grab_params))
       (list ~sep:cut pp_stmt) p.log_prob
@@ -114,9 +118,77 @@ let pp_log_prob ppf p =
   let outro = ["return target"] in
   pp_method ppf "log_prob" ["self"; "params"] intro ~outro ppbody
 
+let rec lvalue_of_expr {expr; emeta} =
+  match expr with
+  | Var s -> (s, emeta.mtype, [])
+  | Indexed (l, i) ->
+      let vid, _, idcs = lvalue_of_expr l in
+      (vid, emeta.mtype, idcs @ i)
+  | _ -> failwith "Trying to convert illegal expression to lval."
+
+let rec contains_var_expr is_vident accum {expr; _} =
+  accum
+  ||
+  match expr with
+  | Var v when is_vident v -> true
+  | _ -> fold_expr (contains_var_expr is_vident) false expr
+
+let rec contains_var_stmt is_vident accum {stmt; _} =
+  fold_statement
+    (contains_var_expr is_vident)
+    (contains_var_stmt is_vident)
+    accum stmt
+
+let get_param_st p var =
+  let vident, _, _ = lvalue_of_expr var in
+  let {out_constrained_st= st; _} =
+    List.Assoc.find_exn ~equal:( = ) p.output_vars vident
+  in
+  st
+
+let rec get_dims = function
+  | SInt | SReal -> []
+  | SVector d | SRowVector d -> [d]
+  | SMatrix (dim1, dim2) -> [dim1; dim2]
+  | SArray (t, dim) -> dim :: get_dims t
+
+let pp_sample ppf p =
+  let params =
+    List.filter_map p.output_vars ~f:(function
+      | name, {out_block= Parameters; _} -> Some name
+      | _ -> None )
+  in
+  let is_param = Set.mem (String.Set.of_list params) in
+  let pp_shape ppf var =
+    let st = get_param_st p var in
+    let dims = get_dims st in
+    pf ppf "(%a)" (list ~sep:comma pp_expr)
+      ({expr= Var "nchains__"; emeta= internal_meta} :: dims)
+  in
+  let rec no_param_deps ppf s =
+    match s.stmt with
+    | TargetPE {expr= FunApp (StanLib, f, obs :: dist_args); _}
+      when String.is_prefix ~prefix:Transform_mir.dist_prefix f
+           && is_param (match lvalue_of_expr obs with v, _, _ -> v) ->
+        let vident, _, _ = lvalue_of_expr obs in
+        pf ppf "%s = %a.sample(@[<hov 4>%a@])" vident pp_call
+          (f, pp_expr, dist_args) pp_shape obs
+    | Block ls | SList ls -> (list ~sep:cut no_param_deps) ppf ls
+    | _ -> ()
+  in
+  let ppbody ppf =
+    pf ppf "%a@,%a@," pp_extract_data p
+      (list ~sep:cut no_param_deps)
+      p.log_prob
+  in
+  let intro = [] in
+  let outro = [strf "return [@[<hov>%a@]]" (list ~sep:comma string) params] in
+  pp_method ppf "sample" ["self"; "nchains__"] intro ~outro ppbody
+
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
-  pf ppf "@ %a" pp_log_prob p
+  pf ppf "@ %a" pp_log_prob p ;
+  pf ppf "@ %a" pp_sample p
 
 let imports =
   {|

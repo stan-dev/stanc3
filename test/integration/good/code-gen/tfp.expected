@@ -7,28 +7,48 @@ tfd = tfp.distributions
 
 class eight_schools_ncp_model(tfd.Distribution):
 
-  def __init__(self, data):
-    self.J = data[0]
-    self.y = data[1]
-    self.sigma = data[2]
+  def __init__(self, J, y, sigma):
+    self.J = J
+    self.y = y
+    self.sigma = sigma
      
   def log_prob(self, params):
     target = 0
     J = self.J
-    y = self.y
-    sigma = self.sigma
+    y = tf.cast(self.y, tf.float64)
+    sigma = tf.cast(self.sigma, tf.float64)
     mu = tf.cast(params[0], tf.float64)
     tau = tf.cast(params[1], tf.float64)
     theta_tilde = tf.cast(params[2], tf.float64)
     
     
-    tau = exp(tau) + 0
+    tau = tf.exp(tau) + tf.cast(0, tf.float64)
     
     
     theta = mu + tau * theta_tilde
-    target += tfd.distributions.Normal(0, 5).log_prob(mu)
-    target += tfd.distributions.Cauchy(0, 5).log_prob(tau)
-    target += tfd.distributions.Normal(0, 1).log_prob(theta_tilde)
-    target += tfd.distributions.Normal(theta, sigma).log_prob(y)
+    target += tfd.Normal(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).log_prob(mu)
+    target += tfd.Cauchy(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).log_prob(tau)
+    target += tfd.Normal(tf.cast(0, tf.float64), tf.cast(1, tf.float64)).log_prob(theta_tilde)
+    target += tfd.Normal(theta, sigma).log_prob(y)
     return target
+     
+  def sample(self, nchains__):
+    J = self.J
+    y = tf.cast(self.y, tf.float64)
+    sigma = tf.cast(self.sigma, tf.float64)
+    
+    
+    
+    
+    
+    
+    mu = tfd.Normal(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).sample(
+    (nchains__))
+    tau = tfd.Cauchy(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).sample(
+    (nchains__))
+    theta_tilde = tfd.Normal(tf.cast(0, tf.float64), tf.cast(1, tf.float64)).sample(
+    (nchains__, J))
+    
+    
+    return [mu, tau, theta_tilde]
      

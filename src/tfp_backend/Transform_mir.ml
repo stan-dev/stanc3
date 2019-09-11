@@ -1,7 +1,7 @@
 open Core_kernel
 open Middle
 
-let dist_prefix = "tfd.distributions."
+let dist_prefix = "tfd."
 
 let remove_stan_dist_suffix s =
   let s = Utils.stdlib_distribution_name s in
@@ -23,7 +23,7 @@ let map_functions fname args =
 let map_constraints args emeta =
   match args with
   | [var; {expr= Lit (Str, "lb"); _}; lb] ->
-      let f = {expr= FunApp (StanLib, "exp", [var]); emeta} in
+      let f = {expr= FunApp (StanLib, "tf.exp", [var]); emeta} in
       binop f Plus lb
   | _ ->
       raise_s
