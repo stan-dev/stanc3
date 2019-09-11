@@ -20,11 +20,11 @@ class eight_schools_ncp_model(tfd.Distribution):
     mu = tf.cast(params[0], tf.float64)
     tau = tf.cast(params[1], tf.float64)
     theta_tilde = tf.cast(params[2], tf.float64)
-    mu = tf.Variable(0, name="mu", dtype=np.float64)
-    tau = tf.Variable(0, name="tau", dtype=np.float64)
+    
+    
     tau = exp(tau) + 0
-    theta_tilde = tf.Variable(0, name="theta_tilde", dtype=np.float64)
-    theta = tf.Variable(0, name="theta", dtype=np.float64)
+    
+    
     theta = mu + tau * theta_tilde
     target += tfd.distributions.Normal(0, 5).log_prob(mu)
     target += tfd.distributions.Cauchy(0, 5).log_prob(tau)

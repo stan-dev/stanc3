@@ -66,9 +66,9 @@ let rec pp_stmt ppf s =
       pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
   | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
   | Skip -> ()
-  | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
-      pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id
-  | Decl {decl_adtype= DataOnly; _} -> ()
+  (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
+   *     pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id *)
+  | Decl _ -> ()
   (* if else, for loop, while loop all need to create functions for
      their arguments. I think these functions need to be named and
      defined inline in general because lambdas are limited.
