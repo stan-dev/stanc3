@@ -64,14 +64,17 @@ let rec pp_stmt ppf s =
   | Continue -> pf ppf "continue"
   | Return rhs ->
       pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
-  | IfElse (_, _, _) -> ()
-  | While (_, _) -> ()
   | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
   | Skip -> ()
   | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
       pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id
   | Decl {decl_adtype= DataOnly; _} -> ()
-  | For _ | NRFunApp (CompilerInternal, _, _) ->
+  (* if else, for loop, while loop all need to create functions for
+     their arguments. I think these functions need to be named and
+     defined inline in general because lambdas are limited.
+  *)
+  | IfElse (_, _, _) | While (_, _) | For _ | NRFunApp (CompilerInternal, _, _)
+    ->
       raise_s [%message "Not implemented" (s : stmt_loc)]
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
@@ -92,7 +95,9 @@ let pp_init ppf p =
 
 let pp_log_prob ppf p =
   let pp_extract_data ppf name = pf ppf "%s = self.%s" name name in
-  let pp_extract_param ppf (idx, name) = pf ppf "%s = params[%d]" name idx in
+  let pp_extract_param ppf (idx, name) =
+    pf ppf "%s = tf.cast(params[%d], tf.float64)" name idx
+  in
   let grab_params idx = function
     | name, {out_block= Parameters; _} -> [(idx, name)]
     | _ -> []

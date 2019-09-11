@@ -17,9 +17,9 @@ class eight_schools_ncp_model(tfd.Distribution):
     J = self.J
     y = self.y
     sigma = self.sigma
-    mu = params[0]
-    tau = params[1]
-    theta_tilde = params[2]
+    mu = tf.cast(params[0], tf.float64)
+    tau = tf.cast(params[1], tf.float64)
+    theta_tilde = tf.cast(params[2], tf.float64)
     mu = tf.Variable(0, name="mu", dtype=np.float64)
     tau = tf.Variable(0, name="tau", dtype=np.float64)
     tau = exp(tau) + 0
