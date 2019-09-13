@@ -65,8 +65,18 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, hash, sexp]
 
+  
+
   let rec pp f ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} f meta (Pattern.pp (pp f)) pattern
+
+  let rec cata f {meta;pattern} = 
+    {meta ; pattern = Pattern.map (cata f) pattern} |> f
+
+  let rec ana f x = 
+    let t = f x in 
+    let pattern = Pattern.map (ana f) t.pattern in 
+    { t with pattern }
 
   let rec map f {pattern; meta} =
     {pattern= Pattern.map (map f) pattern; meta= f meta}

@@ -75,7 +75,7 @@ module Make1 (X : Basic1) :
 
   let rec cata f x = proj x |> on_snd (Pattern.map (cata f)) |> f
   let transform_bottom_up f x = cata (Fn.compose f inj) x
-
+  
   type ('a, 'r) r_algebra = 'a t -> 'a * 'r Pattern.t -> 'r
 
   let rec para f t = proj t |> on_snd (Pattern.map (para f)) |> f t
@@ -143,6 +143,8 @@ module Make2 (X : Basic2) :
 
   let transform_bottom_up f g x =
     cata (Fn.compose f First.inj) (Fn.compose g inj) x
+
+  
 
   type ('a, 'b, 'r1, 'r2) r_algebra =
     ('a, 'b) t -> 'b * ('r1, 'r2) Pattern.t -> 'r2

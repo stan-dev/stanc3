@@ -13,13 +13,10 @@ let add_pos_reset stmt =
   | _ -> [stmt]
 
 let rec unwind stmt =
-  match Stmt.Fixed.pattern stmt with
-  | For {loopvar; lower; upper; body} when is_block body -> (
-    match block_statements body with
-    | [body] ->
+  match Stmt.Fixed.proj2 stmt with
+  | _ , For {loopvar; lower; upper; body=(_, Block [body])}-> 
         let final, args = unwind body in
         (final, (loopvar, lower, upper) :: args)
-    | _ -> (stmt, []) )
   | _ -> (stmt, [])
 
 let transform_for stmt =

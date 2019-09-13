@@ -1,6 +1,7 @@
 open Core_kernel
 open Expr
-open Common.Helpers
+open Common
+open Helpers
 
 let var meta name = Fixed.fix meta @@ Var name
 
@@ -146,6 +147,39 @@ let contains_internal_fun ?fn expr =
     ?name:(Option.map ~f:Internal_fun.to_string fn)
     expr
 
+
+let monoid_algebra (type a) (module M : Monoid.S with type t = a) ~f ~bottom x = 
+  M.combine 
+    (f x)
+    (match x with 
+    | _ , Expr.Fixed.Pattern.Var _ | _ , Lit _ -> bottom
+    | _ , FunApp (_,_,args) -> List.fold args ~init:M.empty ~f:M.combine
+    | _ , TernaryIf (p,t,f) -> M.(combine p @@ combine t f)
+    | _ , EAnd(a,b) | _ , EOr(a,b) -> M.combine a b 
+    | _ , Indexed(a,idxs) -> 
+      M.combine a @@ 
+        List.fold ~init:M.empty ~f:M.combine 
+          (List.concat_map ~f:index_bounds idxs)        
+    )
+    
+let exists ~pred expr = 
+  Expr.Fixed.cata 
+    (monoid_algebra (module Monoid.Bool_or) ~f:pred ~bottom:false) expr
+
+let for_all ~pred expr = 
+  Expr.Fixed.cata 
+    (monoid_algebra (module Monoid.Bool_and) ~f:pred ~bottom:false) expr
+
+let contains_fun ?kind ?name expr = 
+  let pred = function 
+      | _ , Expr.Fixed.Pattern.FunApp (fun_kind, fun_name, _) ->    
+        Option.(
+            value_map ~default:true ~f:((=) fun_name) name && 
+            value_map ~default:true ~f:((=) fun_kind) kind
+        )
+      | _ -> false
+  in
+  exists ~pred expr
 (* == Binary operations ===================================================== *)
 
 let lift_int_binop = function
