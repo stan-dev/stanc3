@@ -89,3 +89,10 @@ val log_prob_dependency_graph :
 
 val reaching_defn_lookup :
   reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t
+
+val mir_uninitialized_variables :
+  typed_prog -> (location_span * string) Set.Poly.t
+(**
+   Produce a list of uninitialized variables and their label locations, from the
+   flowgraph starting at the given statement
+*)

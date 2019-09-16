@@ -580,8 +580,9 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   let iexpr expr = {expr; emeta= internal_meta} in
   let fnot e = FunApp (StanLib, string_of_operator PNot, [e]) |> iexpr in
   let tparam_early_return =
-    let v1 = Var "emit_transformed_parameters__" |> iexpr in
-    let v2 = Var "emit_generated_quantities__" |> iexpr in
+    let to_var fv = iexpr (Var (string_of_flag_var fv)) in
+    let v1 = to_var EmitTransformedParameters in
+    let v2 = to_var EmitGeneratedQuantities in
     [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
   in
   let gq_stmts =
@@ -589,7 +590,8 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
       (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
   in
   let gq_early_return =
-    [compiler_if_return (fnot (Var "emit_generated_quantities__" |> iexpr))]
+    [ compiler_if_return
+        (fnot (Var (string_of_flag_var EmitGeneratedQuantities) |> iexpr)) ]
   in
   let generate_quantities =
     gen_from_block {declc with dconstrain= Some Constrain} Parameters

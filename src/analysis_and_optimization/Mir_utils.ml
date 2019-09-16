@@ -140,11 +140,12 @@ let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
   | _ -> raise (Failure "Non-var expression found, but var expected")
 
 (** See interface file *)
-let rec expr_var_set (ex : expr_typed_located) : vexpr Set.Poly.t =
+let rec expr_var_set (ex : expr_typed_located) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match ex.expr with
-  | Var s -> Set.Poly.singleton (VVar s)
+  | Var s -> Set.Poly.singleton (VVar s, ex.emeta)
   | Lit _ -> Set.Poly.empty
   | FunApp (_, _, exprs) -> union_recur exprs
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
@@ -152,7 +153,8 @@ let rec expr_var_set (ex : expr_typed_located) : vexpr Set.Poly.t =
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
-and index_var_set (ix : expr_typed_located index) : vexpr Set.Poly.t =
+and index_var_set (ix : expr_typed_located index) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   match ix with
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr
@@ -161,7 +163,6 @@ and index_var_set (ix : expr_typed_located index) : vexpr Set.Poly.t =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-(* Why does the formatter mangle this so much? *)
 let stmt_rhs stmt =
   match stmt with
   | For vars -> ExprSet.of_list [vars.lower; vars.upper]

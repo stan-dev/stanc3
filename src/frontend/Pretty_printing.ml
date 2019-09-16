@@ -1,14 +1,15 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
-(* TODO: this should probably be made tail recursive by accumulating list of strings in reverse *)
 (* TODO: to preserve comments during pretty printing, we should capture them during parsing and attach them to AST nodes *)
-(* TODO: we could consider cutting off lines after 80 characters *)
 
 open Core_kernel
 open Ast
 
 let wrap_fmt fmt x =
-  x |> fmt Format.str_formatter |> Format.flush_str_formatter
+  (* Switched from Format.str_formatter partially because of
+     https://discuss.ocaml.org/t/debugging-memory-issues/3223/8
+  *)
+  Fmt.strf "%a" fmt x
 
 let with_hbox ppf f =
   Format.pp_open_hbox ppf () ; f () ; Format.pp_close_box ppf () ; ()

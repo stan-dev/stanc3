@@ -1,6 +1,7 @@
 open Core_kernel
 open Frontend
 open Analysis_and_optimization.Dependence_analysis
+open Middle
 open Analysis_and_optimization.Dataflow_types
 
 let semantic_check_program ast =
@@ -122,4 +123,87 @@ let%expect_test "Variable dependency example" =
   print_s [%sexp (deps : label Set.Poly.t)] ;
   [%expect {|
       (4 5 9 11 13 14 16)
+    |}]
+
+let uninitialized_var_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        functions {
+          int f(int y) {
+            int x;
+            if (y > 2)
+              return y + 24;
+            return y + 2;
+          }
+        }
+        data {
+          real w;
+        }
+        transformed data {
+          real wu;
+          print(wu);
+          print(w);
+          wu = w;
+        }
+        parameters {
+          real x;
+        }
+        model
+        {
+          int i;
+          int z = 0;
+          print(i);
+          print(z);
+          print(x);
+          if (z == 1) {
+            i = 1;
+          } else {}
+          print(i);
+          if (z == 2) {
+            i = 1;
+          } else {
+            i = 2;
+          }
+          print(i);
+        }
+        generated quantities {
+          int k;
+          print(k);
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Uninitialized variables example" =
+  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
+  let deps = mir_uninitialized_variables uninitialized_var_example in
+  print_s [%sexp (deps : (location_span * string) Set.Poly.t)] ;
+  [%expect
+    {|
+      ((((begin_loc
+          ((filename string) (line_num 15) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 15) (col_num 18) (included_from ()))))
+        wu)
+       (((begin_loc
+          ((filename string) (line_num 26) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 26) (col_num 17) (included_from ()))))
+        i)
+       (((begin_loc
+          ((filename string) (line_num 28) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 28) (col_num 17) (included_from ()))))
+        x)
+       (((begin_loc
+          ((filename string) (line_num 32) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 32) (col_num 17) (included_from ()))))
+        i)
+       (((begin_loc
+          ((filename string) (line_num 42) (col_num 16) (included_from ())))
+         (end_loc
+          ((filename string) (line_num 42) (col_num 17) (included_from ()))))
+        k))
     |}]
