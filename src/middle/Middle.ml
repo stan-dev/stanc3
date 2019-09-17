@@ -94,6 +94,8 @@ let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
   | UMatrix, [] -> false
   | UMatrix, _ -> true
+  | USparseMatrix, [] -> false
+  | USparseMatrix, _ -> true
   | _ -> false
 
 let mock_stmt stmt = {stmt; smeta= no_span}
@@ -143,8 +145,12 @@ let rec infer_type_of_indexed ut indices =
    |UMatrix, [Upfrom _; Single _]
    |UMatrix, [Between _; Single _]
    |UMatrix, [MultiIndex _]
-   |UMatrix, [Single _] ->
-      UVector
+   |UMatrix, [Single _] -> UVector
+  | USparseMatrix, [All; Single _]
+   |USparseMatrix, [Upfrom _; Single _]
+   |USparseMatrix, [Between _; Single _]
+   |USparseMatrix, [MultiIndex _; MultiIndex _; All; All;]
+   |USparseMatrix, [Single _] -> UVector
   | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
   | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
   | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
@@ -203,6 +209,8 @@ let rec for_scalar st bodyfn var smeta =
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
+      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+  | SSparseMatrix (d1, d2, _, _) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
@@ -267,7 +275,7 @@ let%expect_test "inverted for" =
 *)
 let rec for_eigen st bodyfn var smeta =
   match st with
-  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
+  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _-> bodyfn var
   | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
 let rec pull_indices {expr; _} =
@@ -283,5 +291,6 @@ let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
   match st with
   | SArray (t, _) -> eigen_size t
   | SMatrix (d1, d2) -> [d1; d2]
+  | SSparseMatrix (d1, d2, d3, d4) -> [d1; d2; d3; d4]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []

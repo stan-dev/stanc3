@@ -3,7 +3,7 @@ open Middle
 
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
-
+(*let is_sparse_matrix = function SSparseMatrix _ -> true *)
 let data_read smeta (decl_id, st) =
   let decl_var =
     { expr= Var decl_id
@@ -35,11 +35,12 @@ let data_read smeta (decl_id, st) =
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UReal
+  | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ -> UReal
   | x -> remove_size x
 
 let rec base_ut_to_string = function
   | UMatrix -> "matrix"
+  | USparseMatrix -> "sparse_matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "scalar"

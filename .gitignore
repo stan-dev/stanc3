@@ -12,3 +12,7 @@ _build
 _opam
 .#*
 node_modules/*
+
+# del me later
+.vscode/**
+example*

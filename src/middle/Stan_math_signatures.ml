@@ -15,6 +15,7 @@ type dimensionality =
   | DReal
   | DVector
   | DMatrix
+  | DSparseMatrix
   (* Vectorizable int *)
   | DVInt
   (* Vectorizable real *)
@@ -35,12 +36,13 @@ let rec expand_arg = function
   | DReal -> [UReal]
   | DVector -> [UVector]
   | DMatrix -> [UMatrix]
+  | DSparseMatrix -> [USparseMatrix]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
   | DDeepVectorized ->
-      let all_base = [UInt; UReal; URowVector; UVector; UMatrix] in
+      let all_base = [UInt; UReal; URowVector; UVector; UMatrix; USparseMatrix] in
       List.(
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))

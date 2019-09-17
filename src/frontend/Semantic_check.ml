@@ -76,6 +76,7 @@ let rec unsizedtype_of_sizedtype = function
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
   | SMatrix (_, _) -> UMatrix
+  | SSparseMatrix (_, _, _, _) -> USparseMatrix
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
@@ -679,6 +680,14 @@ and semantic_check_expression_of_int_type cf e name =
     if has_int_type ue then ok ue
     else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
 
+and semantic_check_expression_of_int_array_or_range_type cf e name =
+  Validate.(
+    semantic_check_expression cf e
+    >>= fun ue ->
+    if has_int_array_type ue then ok ue
+    else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
+
+
 and semantic_check_expression_of_int_or_real_type cf e name =
   Validate.(
     semantic_check_expression cf e
@@ -702,6 +711,12 @@ let rec semantic_check_sizedtype cf = function
       let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
       Validate.liftA2 (fun ue1 ue2 -> SMatrix (ue1, ue2)) ue1 ue2
+  | SSparseMatrix (e1, e2, e3, e4) ->
+      let ue1 = semantic_check_expression_of_int_array_or_range_type cf e1 "Sparse Matrix sizes"
+      and ue2 = semantic_check_expression_of_int_array_or_range_type cf e2 "Sparse Matrix sizes"
+      and ue3 = semantic_check_expression_of_int_type cf e3 "Sparse Matrix sizes"
+      and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
+      Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
@@ -1227,7 +1242,7 @@ and semantic_check_foreach_loop_identifier_type ~loc ty =
   Validate.(
     match ty with
     | UArray ut -> ok ut
-    | UVector | URowVector | UMatrix -> ok UReal
+    | UVector | URowVector | UMatrix | USparseMatrix -> ok UReal
     | _ ->
         Semantic_error.array_vector_rowvector_matrix_expected loc ty |> error)
 
@@ -1313,6 +1328,7 @@ and semantic_check_size_decl ~loc is_global sized_ty =
     | SVector e -> not_ptq e
     | SRowVector e -> not_ptq e
     | SMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
+    | SSparseMatrix (_, _, e1, e2) -> not_ptq e1 && not_ptq e2
     | SArray (sized_ty, e) when not_ptq e -> check_sizes_data_only sized_ty
     | SArray _ -> false
     | _ -> true

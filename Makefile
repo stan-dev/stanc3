@@ -19,6 +19,9 @@ clean:
 
 re: clean all
 
+debug:
+	dune build src/stanc/stanc.bc
+
 test/integration/examples-good/%/dune: test/integration/examples-good/dune
 	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
 

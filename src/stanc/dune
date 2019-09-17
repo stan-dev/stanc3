@@ -7,6 +7,6 @@
 
 (env
  (static
-  (flags (-ccopt -static)))
+  (flags (-ccopt -static -g)))
   (dev
   (flags (:standard -g))))

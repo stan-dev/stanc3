@@ -19,6 +19,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
     | SInt | SReal -> pf ppf "0"
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SSparseMatrix (_, _, d3, d4) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d3 pp_expr d4
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
   match st with
@@ -41,7 +42,7 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
-  | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
+  | SReal | SVector _ | SMatrix _ | SRowVector _ | SSparseMatrix _ -> false
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 

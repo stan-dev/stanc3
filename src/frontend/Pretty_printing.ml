@@ -62,6 +62,7 @@ and pp_unsizedtype ppf = function
   | Middle.UVector -> Fmt.pf ppf "vector"
   | Middle.URowVector -> Fmt.pf ppf "row_vector"
   | Middle.UMatrix -> Fmt.pf ppf "matrix"
+  | Middle.USparseMatrix -> Fmt.pf ppf "sparse_matrix"
   | Middle.UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
@@ -191,6 +192,8 @@ and pp_sizedtype ppf = function
   | Middle.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | Middle.SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
+  | Middle.SSparseMatrix (e1, e2, e3, e4) ->
+      Fmt.pf ppf "sparse_matrix[%a, %a, %a, %a]" pp_expression e1 pp_expression e2 pp_expression e3 pp_expression e4
   | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
@@ -235,6 +238,9 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
+    | Sized (SSparseMatrix (e1, e2, e3, e4)) ->
+        Fmt.const
+          (fun ppf -> Fmt.pf ppf "[%a, %a, %a, %a]" pp_expression e1 pp_expression e2 pp_expression e3 pp_expression) e4
     | Sized (SArray _) | Unsized _ | Sized Middle.SInt | Sized SReal -> Fmt.nop
   in
   let cov_sizes_fmt =

@@ -17,6 +17,7 @@ module type S = sig
   val bind : 'a t -> f:('a -> 'b t) -> 'b t
   val liftA2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
   val liftA3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
+  val liftA4 : ('a -> 'b -> 'c -> 'd -> 'e) -> 'a t -> 'b t -> 'c t -> 'd t -> 'e t
   val sequence : 'a t list -> 'a list t
   val ok : 'a -> 'a t
   val error : error -> _ t
@@ -136,6 +137,7 @@ end) : S with type error := X.t = struct
   let bind x ~f = match x with Ok x -> f x | Error e -> Error e
   let liftA2 f x y = apply y ~f:(apply x ~f:(pure f))
   let liftA3 f x y z = apply z ~f:(apply y ~f:(apply x ~f:(pure f)))
+  let liftA4 f x y v z = apply z ~f:(apply v ~f:(apply y ~f:(apply x ~f:(pure f))))
   let consA next rest = liftA2 List.cons next rest
   let sequence ts = List.fold_right ~init:(pure []) ~f:consA ts
 

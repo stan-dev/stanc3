@@ -187,7 +187,7 @@ let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SArray (t, d) -> SArray (shrink_eigen f t, d)
-    | SVector d | SMatrix (d, _) -> SVector (f d)
+    | SVector d | SMatrix (d, _) | SSparseMatrix (_, _, d, _) -> SVector (f d)
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
@@ -197,7 +197,7 @@ let param_size transform sizedtype =
   let rec shrink_eigen_mat f st =
     match st with
     | SArray (t, d) -> SArray (shrink_eigen_mat f t, d)
-    | SMatrix (d1, d2) -> SVector (f d1 d2)
+    | SMatrix (d1, d2) | SSparseMatrix (_, _, d1, d2) -> SVector (f d1 d2)
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
           [%message

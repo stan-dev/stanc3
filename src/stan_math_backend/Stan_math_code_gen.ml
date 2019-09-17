@@ -154,6 +154,7 @@ let rec basetype = function
   | UReal -> "double"
   | UArray t -> basetype t
   | UMatrix -> "matrix_d"
+  | USparseMatrix -> "sparse_matrix_d"
   | URowVector -> "row_vector_d"
   | UVector -> "vector_d"
   | x -> raise_s [%message "basetype not defined for " (x : unsizedtype)]
@@ -165,6 +166,7 @@ let rec get_dims = function
   | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
+  | SSparseMatrix (nz1, nz2, dim1, dim2) -> [nz1; nz2; dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
