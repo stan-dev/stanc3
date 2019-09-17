@@ -210,8 +210,8 @@ let rec for_scalar st bodyfn var smeta =
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SSparseMatrix (d1, d2, _, _) ->
-      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+  | SSparseMatrix (d1, _, _, _) ->
+      mkfor d1 bodyfn var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)

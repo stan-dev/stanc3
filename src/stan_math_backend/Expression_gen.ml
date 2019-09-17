@@ -182,7 +182,8 @@ and read_data ut ppf es =
     match ut with
     | UInt -> "i"
     | UReal -> "r"
-    | URowVector | UVector | UMatrix  | USparseMatrix | UArray _
+    | UVector -> "r" (*FIXME(Steve): Obvi not correct*)
+    | URowVector | UMatrix  | USparseMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
