@@ -105,6 +105,26 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
+                stage("Build stanc.js") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build --profile release src/stanc/stanc.bc.js
+                        """)
+
+                        sh "mv _build/default/src/stanc/stanc.bc.js bin/stanc.js"
+                        stash name:'js-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
                 stage("Build & test a static Linux binary") {
                     agent {
                         dockerfile {
@@ -123,9 +143,11 @@ pipeline {
                         echo runShell("""
                     eval \$(opam env)
                     time dune runtest --profile static --verbose
+		    dune build --profile release src/stanc/stanc.bc.js
                 """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        sh "mv _build/default/src/stanc/stanc.bc.js bin/stanc.js"
                         stash name:'linux-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}

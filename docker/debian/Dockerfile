@@ -18,5 +18,7 @@ RUN opam update; bash -x install_build_deps.sh
 COPY ./scripts/install_dev_deps.sh ./
 RUN opam update; bash -x install_dev_deps.sh
 
+RUN opam update; opam install js_of_ocaml-compiler
+
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
