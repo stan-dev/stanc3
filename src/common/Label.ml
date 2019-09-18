@@ -16,3 +16,24 @@ module type S = sig
   val init : t
   val next : t -> t
 end
+
+(* Integer labels *)
+module Int = struct
+  module Basic = struct
+    type t = int [@@deriving compare, hash, sexp]
+
+    let init = 0
+    let next label = label + 1
+    let pp ppf x = Fmt.int ppf x
+
+    include Comparator.Make (struct
+      type nonrec t = t
+
+      let compare = compare
+      let sexp_of_t = sexp_of_t
+    end)
+  end
+
+  include Basic
+  include Comparable.Make_using_comparator (Basic)
+end
