@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Middle
+module Str = Re.Str
 
 (** Our type of syntax error information *)
 type parse_error =

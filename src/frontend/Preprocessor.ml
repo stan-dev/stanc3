@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Lexing
+module Str = Re.Str
 
 let dup_exists l =
   match List.find_a_dup ~compare:String.compare l with
