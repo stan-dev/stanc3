@@ -1,5 +1,5 @@
 (library
   (name middle)
-  (libraries core_kernel str fmt)
+  (libraries core_kernel str fmt common)
   (inline_tests)
   (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
