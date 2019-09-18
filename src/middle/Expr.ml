@@ -97,7 +97,7 @@ module Labelled = struct
       { type_: UnsizedType.t
       ; loc: Location_span.t sexp_opaque [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
-      ; label: Label.Int.t [@compare.ignore] }
+      ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
     let label {label; _} = label
@@ -117,19 +117,19 @@ module Labelled = struct
   (** Traverse a typed expression adding unique labels using locally mutable 
       state 
   *)
-  let label ?(init = Label.Int.init) (expr : Typed.t) : t =
+  let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
     let lbl = ref init in
     Fixed.map
       (fun Typed.Meta.({adlevel; type_; loc}) ->
         let cur_lbl = !lbl in
-        lbl := Label.Int.next cur_lbl ;
+        lbl := Label.Int_label.next cur_lbl ;
         Meta.create ~label:cur_lbl ~adlevel ~type_ ~loc () )
       expr
 
   (** Build a map from expression labels to expressions *)
-  let rec associate ?init:(assocs = Label.Int.Map.empty) (expr : t) =
-    let assocs_result : t Label.Int.Map.t Map_intf.Or_duplicate.t =
-      Label.Int.Map.add ~key:(label_of expr) ~data:expr
+  let rec associate ?init:(assocs = Label.Int_label.Map.empty) (expr : t) =
+    let assocs_result : t Label.Int_label.Map.t Map_intf.Or_duplicate.t =
+      Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
         (associate_pattern assocs @@ Fixed.pattern expr)
     in
     match assocs_result with `Ok x -> x | _ -> assocs

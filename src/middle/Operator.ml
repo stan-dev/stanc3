@@ -54,3 +54,30 @@ let of_string_opt x =
   with
   | Sexplib.Conv.Of_sexp_error _ -> None
   | Invalid_argument _ -> None
+
+let stan_math_name = function
+  | Plus -> "add"
+  | PPlus -> "plus"
+  | Minus -> "subtract"
+  | PMinus -> "minus"
+  | Times -> "multiply"
+  (* TODO: this was taken from `Mir_utils.string_of_operators`
+    what was the intended behaviour here?
+    *)
+  | Divide -> "mdivide_right"
+  (* | Divide -> "divide" *)
+  | Modulo -> "modulus"
+  | LDivide -> "mdivide_left"
+  | EltTimes -> "elt_multiply"
+  | EltDivide -> "elt_divide"
+  | Pow -> "pow"
+  | Or -> "logical_or"
+  | And -> "logical_and"
+  | Equals -> "logical_eq"
+  | NEquals -> "logical_neq"
+  | Less -> "logical_lt"
+  | Leq -> "logical_lte"
+  | Greater -> "logical_gt"
+  | Geq -> "logical_gte"
+  | PNot -> "logical_negation"
+  | Transpose -> "transpose"

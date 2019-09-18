@@ -41,7 +41,7 @@ let rec to_unsized = function
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (to_unsized t)
 
-let rec associate ?init:(assocs = Label.Int.Map.empty) = function
+let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal -> assocs
   | SVector e | SRowVector e -> Expr.Labelled.associate ~init:assocs e
   | SMatrix (e1, e2) ->

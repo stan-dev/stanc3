@@ -18,7 +18,7 @@ module type S = sig
 end
 
 (* Integer labels *)
-module Int = struct
+module Int_label = struct
   module Basic = struct
     type t = int [@@deriving compare, hash, sexp]
 
