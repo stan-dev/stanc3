@@ -1,8 +1,6 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
-
 open Core_kernel
-open Type_conversion
-open Mir
+
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
@@ -29,10 +27,10 @@ type dimensionality =
                        just used for element-wise vectorized unary functions now *)
 
 let rec bare_array_type (t, i) =
-  match i with 0 -> t | j -> UArray (bare_array_type (t, j - 1))
+  match i with 0 -> t | j -> UnsizedType.UArray (bare_array_type (t, j - 1))
 
 let rec expand_arg = function
-  | DReal -> [UReal]
+  | DReal -> [UnsizedType.UReal]
   | DVector -> [UVector]
   | DMatrix -> [UMatrix]
   | DVInt -> [UInt; UArray UInt]
@@ -40,14 +38,14 @@ let rec expand_arg = function
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
   | DDeepVectorized ->
-      let all_base = [UInt; UReal; URowVector; UVector; UMatrix] in
+      let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
       List.(
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
 type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
 
-let is_primitive = function UReal -> true | UInt -> true | _ -> false
+let is_primitive = function UnsizedType.UReal -> true | UInt -> true | _ -> false
 
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
@@ -71,14 +69,14 @@ let%expect_test "combinations " =
 let missing_math_functions = String.Set.of_list ["beta_proportion_cdf"]
 
 let rng_return_type t lt =
-  if List.for_all ~f:is_primitive lt then t else UArray t
+  if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
 
 let add_unqualified (name, rt, uqargts) =
   Hashtbl.add_multi manual_stan_math_signatures ~key:name
-    ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
+    ~data:(rt, List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts)
 
 let rec ints_to_real = function
-  | UInt -> UReal
+  | UnsizedType.UInt -> UnsizedType.UReal
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
@@ -94,12 +92,12 @@ let mk_declarative_sig (fnkinds, name, args) =
   let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
-    | DVInt -> UInt
+    | DVInt -> UnsizedType.UInt
     (* XXX fix this up to work with more RNGs *)
     | _ -> UReal
   in
   let find_rt rt args = function
-    | Rng -> ReturnType (rng_return_type rt args)
+    | Rng -> UnsizedType.ReturnType (rng_return_type rt args)
     | UnaryVectorized -> ReturnType (ints_to_real (List.hd_exn args))
     | _ -> ReturnType UReal
   in
@@ -123,7 +121,7 @@ let mk_declarative_sig (fnkinds, name, args) =
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
   |> List.map ~f:(fun (n, rt, args) ->
-         (n, rt, List.map ~f:(fun x -> (AutoDiffable, x)) args) )
+         (n, rt, List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) args) )
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
@@ -257,7 +255,7 @@ let stan_math_returntype name args =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
-      ~f:(fun x -> check_compatible_arguments_mod_conv name (snd x) args)
+      ~f:(fun x -> UnsizedType.check_compatible_arguments_mod_conv name (snd x) args)
       namematches
   in
   if List.length filteredmatches = 0 then None
@@ -265,7 +263,7 @@ let stan_math_returntype name args =
   else
     Some
       (List.hd_exn
-         (List.sort ~compare:compare_returntype
+         (List.sort ~compare:UnsizedType.compare_returntype
             (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
@@ -285,7 +283,7 @@ let is_propto_distribution s =
   is_distribution_name ~infix:proportional_to_distribution_infix s
 
 let assignmentoperator_to_stan_math_fn = function
-  | Plus -> Some "assign_add"
+  | Operator.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"
   | Times -> Some "assign_multiply"
   | Divide -> Some "assign_divide"
@@ -298,7 +296,7 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
   |> Option.bind ~f:(fun name -> stan_math_returntype name arg_tys)
 
 let operator_to_stan_math_fns = function
-  | Plus -> ["add"]
+  | Operator.Plus -> ["add"]
   | PPlus -> ["plus"]
   | Minus -> ["subtract"]
   | PMinus -> ["minus"]
@@ -330,7 +328,7 @@ let get_sigs name =
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
 let pp_math_sig ppf (rt, args) =
-  Mir_pretty_printer.pp_unsizedtype ppf (UFun (args, rt))
+  UnsizedType.pp ppf (UFun (args, rt))
 
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
@@ -340,8 +338,8 @@ let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args)) =
-    pf ppf "%a %s(@[<hov 2>%a@])" Mir_pretty_printer.pp_returntype rt name
-      (list ~sep:comma Mir_pretty_printer.pp_unsizedtype)
+    pf ppf "%a %s(@[<hov 2>%a@])" UnsizedType.pp_returntype rt name
+      (list ~sep:comma UnsizedType.pp)
       (List.map ~f:snd args)
   in
   let pp_sigs_for_name ppf name =
@@ -360,7 +358,7 @@ let pretty_print_math_lib_assignmentoperator_sigs op =
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types = function
-  | 0 -> UInt
+  | 0 -> UnsizedType.UInt
   | 1 -> UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -370,7 +368,7 @@ let bare_types = function
 let bare_types_size = 5
 
 let vector_types = function
-  | 0 -> UReal
+  | 0 -> UnsizedType.UReal
   | 1 -> UArray UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -379,14 +377,14 @@ let vector_types = function
 let vector_types_size = 4
 
 let primitive_types = function
-  | 0 -> UInt
+  | 0 -> UnsizedType.UInt
   | 1 -> UReal
   | i -> raise_s [%sexp (i : int)]
 
 let primitive_types_size = 2
 
 let all_vector_types = function
-  | 0 -> UReal
+  | 0 -> UnsizedType.UReal
   | 1 -> UArray UReal
   | 2 -> UVector
   | 3 -> URowVector
@@ -399,8 +397,8 @@ let all_vector_types_size = 6
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
 
-let add_nullary name = add_unqualified (name, ReturnType UReal, [])
-let add_binary name = add_unqualified (name, ReturnType UReal, [UReal; UReal])
+let add_nullary name = add_unqualified (name, UnsizedType.ReturnType UReal, [])
+let add_binary name = add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
 
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])

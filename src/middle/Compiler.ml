@@ -14,10 +14,10 @@ module type Frontend = sig
   val mir_of_file :
        opts:frontend_opts
     -> file:string
-    -> (Mir.typed_prog, frontend_error) result
+    -> (Program.Typed.t, frontend_error) result
 
   val mir_of_string :
-    opts:frontend_opts -> str:string -> (Mir.typed_prog, frontend_error) result
+    opts:frontend_opts -> str:string -> (Program.Typed.t, frontend_error) result
 end
 
 module type Backend = sig
@@ -29,8 +29,8 @@ module type Backend = sig
   (* the type of backend representation *)
   type repr
 
-  val mir_to_repr : opts:backend_opts -> Mir.typed_prog -> repr
-  val mir_to_string : opts:backend_opts -> Mir.typed_prog -> string
+  val mir_to_repr : opts:backend_opts -> Program.Typed.t -> repr
+  val mir_to_string : opts:backend_opts -> Program.Typed.t -> string
 end
 
 module type Optimization = sig
@@ -42,7 +42,7 @@ module type Optimization = sig
     string -> (optimization_opts, string) result
 
   val default_optimization_opts : optimization_opts
-  val optimize : opts:optimization_opts -> Mir.typed_prog -> Mir.typed_prog
+  val optimize : opts:optimization_opts -> Program.Typed.t -> Program.Typed.t
 end
 
 module Compiler = struct

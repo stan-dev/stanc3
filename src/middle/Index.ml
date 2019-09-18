@@ -20,3 +20,9 @@ let pp_indexed pp_e ppf (ident, indices) =
     ( if List.is_empty indices then fun _ _ -> ()
     else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
     indices
+
+
+let bounds = function 
+    | All -> [] 
+    | Single e | Upfrom e | MultiIndex e -> [e]
+    | Between(e1,e2) -> [e1;e2]
