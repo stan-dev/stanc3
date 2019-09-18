@@ -194,9 +194,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
   in
   let get_param_st = function
     | _, {out_block= Parameters; out_unconstrained_st= st; _} -> (
-      match get_dims st with
-      | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
-      | ls -> Some ls )
+      match get_dims st with [] -> Some [loop_bottom] | ls -> Some ls )
     | _ -> None
   in
   let pp_stmt_topdecl_size_only ppf s =
@@ -536,9 +534,7 @@ using stan::model::nil_index_list;
 using namespace stan::math; |}
 
 let pre_boilerplate =
-  {|#include <vector>
-#include <Eigen/Dense>
-
+  {|
 template <typename T, typename S>
 std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -571,7 +567,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   pf ppf "@[<v>@ %s@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
-    pre_boilerplate version includes p.prog_name usings Locations.pp_globals s
+    version includes pre_boilerplate p.prog_name usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf

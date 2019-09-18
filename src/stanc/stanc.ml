@@ -4,6 +4,7 @@ open Core_kernel
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
+open Middle
 
 (** The main program. *)
 let version = "stanc version 3.0 alpha"
@@ -24,6 +25,7 @@ let optimize = ref false
 let dump_opt_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
+let warn_uninitialized = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -64,6 +66,10 @@ let options =
       , Arg.Set dump_stan_math_sigs
       , "Dump out the list of supported type signatures for Stan Math backend."
       )
+    ; ( "--warn-uninitialized"
+      , Arg.Set warn_uninitialized
+      , " Emit warnings about uninitialized variables to stderr. Currently an \
+         experimental feature." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -99,6 +105,7 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
+
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
 let optimization_settings () : Optimize.optimization_settings =
@@ -115,6 +122,33 @@ let optimization_settings () : Optimize.optimization_settings =
   ; lazy_code_motion = !optimize
   ; optimize_ad_levels = !optimize
   }
+
+let print_warn_uninitialized
+    (uninit_vars : (location_span * string) Set.Poly.t) =
+  let show_location_span {begin_loc; end_loc; _} =
+    let begin_line = string_of_int begin_loc.line_num in
+    let begin_col = string_of_int begin_loc.col_num in
+    let end_line = string_of_int end_loc.line_num in
+    let end_col = string_of_int end_loc.col_num in
+    let char_range =
+      if begin_line = end_line then
+        "line " ^ begin_line ^ ", character(s) " ^ begin_col ^ "-" ^ end_col
+      else
+        "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line "
+        ^ end_line ^ ", character " ^ end_col
+    in
+    "File \"" ^ begin_loc.filename ^ "\", " ^ char_range
+  in
+  let show_var_info (span, var_name) =
+    show_location_span span ^ ":\n" ^ "  Warning: The variable '" ^ var_name
+    ^ "' may not have been initialized.\n"
+  in
+  let filtered_uninit_vars =
+    Set.Poly.filter ~f:(fun (span, _) -> span <> no_span) uninit_vars
+  in
+  Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
+      Out_channel.output_string stderr (show_var_info v_info) )
+
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
@@ -166,6 +200,11 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     if !dump_mir_pretty then
       Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+    ( if !warn_uninitialized then
+      let uninitialized_vars =
+        Dependence_analysis.mir_uninitialized_variables mir
+      in
+      print_warn_uninitialized uninitialized_vars ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;

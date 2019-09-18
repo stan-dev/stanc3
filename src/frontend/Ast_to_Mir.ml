@@ -121,71 +121,8 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
-(** [add_index expression index] returns an expression that (additionally)
-    indexes into the input [expression] by [index].*)
-let add_int_index e i =
-  let mtype =
-    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
-      e.emeta.mtype [i]
-  and mir_i = trans_idx i in
-  let expr =
-    match e.expr with
-    | Var _ -> Indexed (e, [mir_i])
-    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  in
-  {expr; emeta= {e.emeta with mtype}}
-
-(** [mkfor] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
-let mkfor upper bodyfn iteratee smeta =
-  let idx s =
-    Ast.Single
-      (Ast.mk_typed_expression
-         ~expr:(Ast.Variable {name= s; id_loc= smeta})
-         ~loc:smeta ~type_:UInt ~ad_level:DataOnly)
-  in
-  let loopvar, reset = gensym_enter () in
-  let lower = loop_bottom in
-  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
-  reset () ;
-  {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
-
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
-
-    We can call [bodyfn] directly on scalars, make a direct For loop
-    around Eigen types, or for Arrays we call mkfor but inserting a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_scalar st bodyfn var smeta =
-  match st with
-  | SInt | SReal -> bodyfn var
-  | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-  | SMatrix (d1, d2) ->
-      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
-
-(** [for_eigen unsizedtype...] generates a For statement that loops
-    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.
-
-    We can call [bodyfn] directly on scalars and Eigen types;
-    for Arrays we call mkfor but insert a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_eigen st bodyfn var smeta =
-  match st with
-  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
-  | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
-
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
-type ioaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constrainaction_fname c =
@@ -195,21 +132,7 @@ let constrainaction_fname c =
     | Constrain -> FnConstrain
     | Unconstrain -> FnUnconstrain )
 
-type decl_context =
-  { dread: ioaction option
-  ; dconstrain: constrainaction option
-  ; dadlevel: autodifftype }
-
-let rec unsizedtype_to_string = function
-  | UMatrix -> "matrix"
-  | UVector -> "vector"
-  | URowVector -> "row_vector"
-  | UReal -> "scalar"
-  | UInt -> "integer"
-  | UArray t -> unsizedtype_to_string t
-  | t ->
-      raise_s
-        [%message "Another place where it's weird to get " (t : unsizedtype)]
+type decl_context = {dconstrain: constrainaction option; dadlevel: autodifftype}
 
 let constraint_to_string t (c : constrainaction) =
   match t with
@@ -245,13 +168,6 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       for_eigen
 
-let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
-  match st with
-  | SArray (t, _) -> eigen_size t
-  | SMatrix (d1, d2) -> [d1; d2]
-  | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal -> []
-
 let extract_transform_args = function
   | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
@@ -266,24 +182,6 @@ let extra_constraint_args st = function
       []
   | Covariance | Correlation | CholeskyCorr -> [List.hd_exn (eigen_size st)]
   | CholeskyCov -> eigen_size st
-
-let rec base_type = function
-  | SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UReal
-  | x -> remove_size x
-
-let internal_of_dread = function
-  | ReadParam -> FnReadParam
-  | ReadData -> FnReadData
-
-let rec pull_indices {expr; _} =
-  match expr with
-  | Indexed (obj, indices) -> pull_indices obj @ indices
-  | _ -> []
-
-let assign_indexed decl_type vident smeta varfn var =
-  let indices = pull_indices var in
-  {stmt= Assignment ((vident, decl_type, indices), varfn var); smeta}
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -337,39 +235,6 @@ let remove_possibly_exn pst action loc =
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : location_span)]
 
-(* mat_to_arr is used whenever we have a Stan matrix but we're dealing with
-   an underlying array. This is a code smell - not sure how to fix it short of
-   complete refactoring of data input.*)
-let rec mat_to_arr = function
-  | SMatrix (d1, d2) -> SArray (SRowVector d2, d1)
-  | SArray (t, d) -> SArray (mat_to_arr t, d)
-  | st -> st
-
-let read_decl dread decl_id decl_type smeta decl_var =
-  let sizedtype = remove_possibly_exn decl_type "read" smeta in
-  let args =
-    [ mkstring smeta decl_id
-    ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
-    @ eigen_size sizedtype
-  in
-  let readfname = internal_of_dread dread in
-  let readfn var =
-    internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
-  in
-  let rec readvar var =
-    match var.expr with
-    | Var id when id = decl_id -> readfn var
-    | e -> {var with expr= map_expr readvar e}
-  in
-  let forl =
-    match dread with
-    | ReadData -> for_scalar (mat_to_arr sizedtype)
-    | ReadParam -> for_eigen sizedtype
-  in
-  forl
-    (assign_indexed (remove_size sizedtype) decl_id smeta readvar)
-    decl_var smeta
-
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in
   let mkstring = mkstring decl_var.emeta.mloc in
@@ -421,8 +286,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
       @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
-let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
-    identifier initial_value =
+let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
+    initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let dt = trans_possiblysizedtype decl_type in
@@ -447,43 +312,13 @@ let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
       | Some Check -> check_decl dt decl_id transform smeta dadlevel
       | _ -> []
     in
-    let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
-      let default = ((decl_id, decl_var, dt), []) in
-      match dconstrain with
-      | Some Constrain -> (
-        match transform with
-        | Ast.Identity | Ast.Lower _ | Ast.Upper _
-         |Ast.LowerUpper (_, _)
-         |Ast.Offset _ | Ast.Multiplier _
-         |Ast.OffsetMultiplier (_, _)
-         |Ast.Ordered | Ast.PositiveOrdered ->
-            default
-        | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
-         |Ast.Correlation | Ast.Covariance ->
-            let dt =
-              remove_possibly_exn dt "constrain" smeta |> param_size transform
-            in
-            let decl_id = decl_id ^ "_" ^ gensym () in
-            let emeta = {decl_var.emeta with mtype= remove_size dt} in
-            let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
-            ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}])
-        )
-      | _ -> default
-    in
     let constrain_stmts =
       match dconstrain with
       | Some Constrain | Some Unconstrain ->
-          constrain_decl dt dconstrain transform decl_id temp_decl_var smeta
+          constrain_decl dt dconstrain transform decl_id decl_var smeta
       | _ -> []
     in
-    let read_stmts =
-      match (dread, rhs) with
-      | Some dread, _ ->
-          [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
-      | None, Some _ -> rhs_assignment
-      | None, None -> []
-    in
-    (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
+    (decl :: rhs_assignment) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
@@ -509,9 +344,7 @@ let%expect_test "dist name suffix" =
 let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
     =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt =
-    trans_stmt udf_names {declc with dread= None; dconstrain= None}
-  in
+  let trans_stmt = trans_stmt udf_names {declc with dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
@@ -680,44 +513,13 @@ let trans_fun_def udf_names (ts : Ast.typed_statement) =
         ; fdargs= List.map ~f:trans_arg arguments
         ; fdbody=
             trans_stmt udf_names
-              {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+              {dconstrain= None; dadlevel= AutoDiffable}
               body
             |> unwrap_block_or_skip
         ; fdloc= ts.smeta.loc } ]
   | _ ->
       raise_s
         [%message "Found non-function definition statement in function block"]
-
-let gen_write decl_id sizedtype =
-  let bodyfn var =
-    { stmt=
-        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
-    ; smeta= no_span }
-  in
-  for_scalar sizedtype bodyfn
-    { expr= Var decl_id
-    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
-    no_span
-
-let gen_writes block_filter vars =
-  List.filter_map
-    ~f:(function
-      | decl_id, {out_block; out_constrained_st; _}
-        when out_block = block_filter ->
-          Some (gen_write decl_id out_constrained_st)
-      | _ -> None)
-    vars
-
-let compiler_if compiler_internal_var stmts =
-  let body =
-    match stmts with
-    | [({stmt= Block _; _} as s)] -> s
-    | ls -> {stmt= Block ls; smeta= no_span}
-  in
-  let cond = {expr= Var compiler_internal_var; emeta= internal_meta} in
-  match stmts with
-  | [] -> []
-  | _ -> [{stmt= IfElse (cond, body, None); smeta= no_span}]
 
 let get_block block prog =
   match block with
@@ -763,18 +565,15 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
                   ; out_block= block } ) ))
   in
   let output_vars =
-    [ grab_names_sizes Parameters
-    ; grab_names_sizes TransformedParameters
-    ; grab_names_sizes GeneratedQuantities ]
-    |> List.concat
+    grab_names_sizes Parameters
+    @ grab_names_sizes TransformedParameters
+    @ grab_names_sizes GeneratedQuantities
   and input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
-  let declc = {dread= None; dconstrain= None; dadlevel= DataOnly} in
+  let declc = {dconstrain= None; dadlevel= DataOnly} in
   let datab =
-    map
-      (trans_stmt {declc with dread= Some ReadData; dconstrain= Some Check})
-      datablock
+    map (trans_stmt {declc with dconstrain= Some Check}) datablock
     |> migrate_checks_to_end_of_block
   in
   let prepare_data =
@@ -787,14 +586,10 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
   in
   let log_prob =
     map
-      (trans_stmt
-         { dread= Some ReadParam
-         ; dconstrain= Some Constrain
-         ; dadlevel= AutoDiffable })
+      (trans_stmt {dconstrain= Some Constrain; dadlevel= AutoDiffable})
       parametersblock
     @ ( map
-          (trans_stmt
-             {declc with dconstrain= Some Check; dadlevel= AutoDiffable})
+          (trans_stmt {dconstrain= Some Check; dadlevel= AutoDiffable})
           transformedparametersblock
       |> migrate_checks_to_end_of_block )
     @
@@ -803,30 +598,39 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
     | hd :: _ -> [{stmt= Block modelb; smeta= hd.smeta}]
   in
   let gen_from_block declc block =
-    map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
+    map (trans_stmt declc) (get_block block p)
   in
   let txparam_decls, txparam_stmts =
     gen_from_block declc TransformedParameters
     |> List.partition_tf ~f:(function {stmt= Decl _; _} -> true | _ -> false)
   in
+  let compiler_if_return cond =
+    { stmt= IfElse (cond, {stmt= Return None; smeta= no_span}, None)
+    ; smeta= no_span }
+  in
+  let iexpr expr = {expr; emeta= internal_meta} in
+  let fnot e = FunApp (StanLib, string_of_operator PNot, [e]) |> iexpr in
+  let tparam_early_return =
+    let to_var fv = iexpr (Var (string_of_flag_var fv)) in
+    let v1 = to_var EmitTransformedParameters in
+    let v2 = to_var EmitGeneratedQuantities in
+    [compiler_if_return (fnot (EOr (v1, v2) |> iexpr))]
+  in
+  let gq_stmts =
+    migrate_checks_to_end_of_block
+      (gen_from_block {declc with dconstrain= Some Check} GeneratedQuantities)
+  in
+  let gq_early_return =
+    [ compiler_if_return
+        (fnot (Var (string_of_flag_var EmitGeneratedQuantities) |> iexpr)) ]
+  in
   let generate_quantities =
-    gen_from_block
-      {declc with dread= Some ReadParam; dconstrain= Some Constrain}
-      Parameters
-    @ txparam_decls
-    @ compiler_if
-        "emit_transformed_parameters__ || emit_generated_quantities__"
-        txparam_stmts
-    @ compiler_if "emit_generated_quantities__"
-        (migrate_checks_to_end_of_block
-           (gen_from_block
-              {declc with dconstrain= Some Check}
-              GeneratedQuantities))
+    gen_from_block {declc with dconstrain= Some Constrain} Parameters
+    @ txparam_decls @ tparam_early_return @ txparam_stmts @ gq_early_return
+    @ gq_stmts
   in
   let transform_inits =
-    gen_from_block
-      {declc with dread= Some ReadData; dconstrain= Some Unconstrain}
-      Parameters
+    gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
   { functions_block= map (trans_fun_def udf_names) functionblock
   ; input_vars
