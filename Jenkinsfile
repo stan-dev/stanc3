@@ -120,7 +120,7 @@ pipeline {
                             dune build --profile release src/stanc/stanc.bc.js
                         """)
 
-                        sh "mv `find _build -name stanc.bc.js` bin/stanc.js"
+                        sh "mkdir -p bin && mv `find _build -name stanc.bc.js` bin/stanc.js"
                         stash name:'js-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
