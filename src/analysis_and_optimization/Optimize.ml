@@ -847,51 +847,45 @@ type optimization_settings =
   }
 
 
-(*
-@VMatthijs on GitHub:
-
-As noted by @rybern , it is a hard problem (known as the phase ordering problem) to decide on the optimal order to apply optimization passes. Sometimes, it can even be useful to apply the same optimization multiple times.
-
-The point of this issue is to come up with a sensible order of applying the optimization passes in stanc3. This should be backed up both by common sense and by some empirics.
-
-Some first thoughts on constraints we want on the order (where < means "is performed before"):
-
-function_inlining < basically everything, as most optimizations do not work yet in function bodies
-
-one_step_loop_unrolling < lazy_code_motion, to get loop-invariant code motion
-
-constant_propagation < static_loop_unrolling, to create opportunities for unrolling statically-sized loops
-
-list_collapsing should perhaps happen after some optimizations if they introduce redundant nesting of SList-structures
-
-everything < block_fixing, to make sure that SList constructors directly under if, for, while or fundef constructors are replaced with Block constructors, to make sure the C++ compiles
-
-expression_propagation < partial_evaluation, to create more opportunities for algebraic simplification
-
-partial_evaluation < lazy_code_motion, to reduce subcomputations to normal forms before we get rid of repeated computation (meaning that more subcomputations get shared)
-
-lazy_code_motion < copy_propagation, to clean up (probably, check that this is necessary though)
-
-basically everything < dead_code_elimination, as that will lead to the most aggressive dead-code elimination
-
-basically everything < optimize_ad_levels, as that will lead to the most optimal AD-levels
-
-TODO: Look at Muchnick compiler design book for phase ordering
-*)
 let optimization_suite settings mir =
   let maybe_optimizations =
-    [
+    [ (* Phase order. See phase-ordering-nodes.org for details *)
+        (* Book section A *)
+        (* Book section B *)
+          (* Book: Procedure integration *)
       (function_inlining, settings.function_inlining)
+          (* Book: Sparse conditional constant propagation *)
     ; (constant_propagation, settings.constant_propagation)
-    ; (static_loop_unrolling, settings.static_loop_unrolling)
-    ; (expression_propagation, settings.expression_propagation)
-    ; (partial_evaluation, settings.partial_evaluation)
-    ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
-    ; (lazy_code_motion, settings.lazy_code_motion)
+        (* Book section C *)
+          (* Book: Local and global copy propagation *)
     ; (copy_propagation, settings.copy_propagation)
+          (* Book: Sparse conditional constant propagation *)
+    ; (constant_propagation, settings.constant_propagation)
+          (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
-    ; (optimize_ad_levels, settings.optimize_ad_levels)
+          (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
+    ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
+          (* Matthjis: expression_propagation < partial_evaluation *)
+    ; (expression_propagation, settings.expression_propagation)
+          (* Matthjis: partial_evaluation < lazy_code_motion *)
+    ; (partial_evaluation, settings.partial_evaluation)
+          (* Book: Loop-invariant code motion *)
+    ; (lazy_code_motion, settings.lazy_code_motion)
+          (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary *)
+    ; (copy_propagation, settings.copy_propagation)
+          (* Matthijs: Constant propagation before static loop unrolling *)
+    ; (constant_propagation, settings.constant_propagation)
+          (* Book: Loop simplification *)
+    ; (static_loop_unrolling, settings.static_loop_unrolling)
+          (* Book: Dead-code elimination *)
+          (* Matthijs: Everything < Dead-code elimination *)
+    ; (dead_code_elimination, settings.dead_code_elimination)
+          (* Book: Machine idioms and instruction combining *)
     ; (list_collapsing, settings.list_collapsing)
+          (* Book: Machine idioms and instruction combining *)
+    ; (optimize_ad_levels, settings.optimize_ad_levels)
+          (* Book: Machine idioms and instruction combining *)
+          (* Matthijs: Everything < block_fixing *)
     ; (block_fixing, settings.block_fixing)
     ]
   in
