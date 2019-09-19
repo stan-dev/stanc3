@@ -117,10 +117,11 @@ pipeline {
                         runShell("""
                             eval \$(opam env)
                             dune subst
-                            dune build --profile release src/stanc/stanc.bc.js
+                            dune build --profile release src/stancjs
                         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.bc.js` bin/stanc.js"
+                        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                        sh "mv `find _build -name index.html` bin/load_stanc.html"
                         stash name:'js-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
