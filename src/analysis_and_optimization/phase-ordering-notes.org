@@ -127,39 +127,53 @@ My process was to assign each phase from the book to an optimization that we hav
 * Phase order
 ** A
 ** B
-       Book: Procedure integration
+       Book: Procedure integration\\
        (function_inlining, settings.function_inlining)
-       Book: Sparse conditional constant propagation
+
+       Book: Sparse conditional constant propagation\\
      ; (constant_propagation, settings.constant_propagation)
 ** C
-       Book: Local and global copy propagation
+       Book: Local and global copy propagation\\
      ; (copy_propagation, settings.copy_propagation)
-       Book: Sparse conditional constant propagation
+
+       Book: Sparse conditional constant propagation\\
      ; (constant_propagation, settings.constant_propagation)
-       Book: Dead-code elimination
+
+       Book: Dead-code elimination\\
      ; (dead_code_elimination, settings.dead_code_elimination)
-       Matthijs: Before lazy code motion to get loop-invariant code motion
+
+       Matthijs: Before lazy code motion to get loop-invariant code motion\\
      ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
-       expression_propagation < partial_evaluation
+
+       expression_propagation < partial_evaluation\\
      ; (expression_propagation, settings.expression_propagation)
-       partial_evaluation < lazy_code_motion
+
+       partial_evaluation < lazy_code_motion\\
      ; (partial_evaluation, settings.partial_evaluation)
-       Book: Loop-invariant code motion
+
+       Book: Loop-invariant code motion\\
      ; (lazy_code_motion, settings.lazy_code_motion)
-       Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary
+
+       Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary\\
      ; (copy_propagation, settings.copy_propagation)
-       Matthijs: Constant propagation before static loop unrolling
+
+       Matthijs: Constant propagation before static loop unrolling\\
      ; (constant_propagation, settings.constant_propagation)
-       Book: Loop simplification
+
+       Book: Loop simplification\\
      ; (static_loop_unrolling, settings.static_loop_unrolling)
-       Book: Dead-code elimination
-       Matthijs: Everything < Dead-code elimination
+
+       Book: Dead-code elimination\\
+       Matthijs: Everything < Dead-code elimination\\
      ; (dead_code_elimination, settings.dead_code_elimination)
-       Book: Machine idioms and instruction combining
+
+       Book: Machine idioms and instruction combining\\
      ; (list_collapsing, settings.list_collapsing)
-       Book: Machine idioms and instruction combining
+
+       Book: Machine idioms and instruction combining\\
      ; (optimize_ad_levels, settings.optimize_ad_levels)
-       Book: Machine idioms and instruction combining
-       Matthijs: Everything < block_fixing
+
+       Book: Machine idioms and instruction combining\\
+       Matthijs: Everything < block_fixing\\
      ; (block_fixing, settings.block_fixing)
      
