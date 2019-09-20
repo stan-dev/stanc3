@@ -48,3 +48,5 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
+
+let is_scalar = function SInt | SReal -> true | _ -> false

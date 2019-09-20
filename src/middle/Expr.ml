@@ -5,7 +5,8 @@ open Helpers
 (** Pattern and fixed-point of MIR expressions *)
 module Fixed = struct
   module Pattern = struct
-    
+    type litType = Int | Real | Str [@@deriving sexp, hash, compare]
+
     type 'a t =
       | Var of string
       | Lit of litType * string
@@ -15,8 +16,6 @@ module Fixed = struct
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
     [@@deriving sexp, hash, map, compare, fold]
-    and litType = Int | Real | Str 
-    [@@deriving sexp, hash, compare]
 
     let pp pp_e ppf = function
       | Var varname -> Fmt.string ppf varname
@@ -47,7 +46,6 @@ module Fixed = struct
     end)
   end
 
-  (** Fixed-point of `expr` *)
   include Fixed.Make (Pattern)
 end
 
@@ -56,6 +54,7 @@ module NoMeta = struct
   module Meta = struct
     type t = unit [@@deriving compare, sexp, hash]
 
+    let empty = ()
     let pp _ _ = ()
   end
 
@@ -63,12 +62,6 @@ module NoMeta = struct
 
   let remove_meta x = Fixed.map (Fn.const ()) x
 end
-
-(** Interface for expressions with types *)
-module type HasType = sig 
-  type t 
-  val type_of : t -> UnsizedType.t
-end 
 
 (** Expressions with associated location and type *)
 module Typed = struct
@@ -92,9 +85,9 @@ module Typed = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let type_of x = Meta.type_ @@ Fixed.meta x
-  let loc_of x = Meta.loc @@ Fixed.meta x
-  let adlevel_of x = Meta.adlevel @@ Fixed.meta x
+  let type_of x = Meta.type_ @@ Fixed.meta_of x
+  let loc_of x = Meta.loc @@ Fixed.meta_of x
+  let adlevel_of x = Meta.adlevel @@ Fixed.meta_of x
 end
 
 (** Expressions with associated location, type and label *)
@@ -107,6 +100,12 @@ module Labelled = struct
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
+    let empty =
+      create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
+        ~loc:Location_span.empty
+        ~label:Label.Int_label.(prev init)
+        ()
+
     let label {label; _} = label
     let adlevel {adlevel; _} = adlevel
     let type_ {type_; _} = type_
@@ -116,10 +115,10 @@ module Labelled = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let label_of x = Meta.label @@ Fixed.meta x
-  let type_of x = Meta.type_ @@ Fixed.meta x
-  let loc_of x = Meta.loc @@ Fixed.meta x
-  let adlevel_of x = Meta.adlevel @@ Fixed.meta x
+  let label_of x = Meta.label @@ Fixed.meta_of x
+  let type_of x = Meta.type_ @@ Fixed.meta_of x
+  let loc_of x = Meta.loc @@ Fixed.meta_of x
+  let adlevel_of x = Meta.adlevel @@ Fixed.meta_of x
 
   (** Traverse a typed expression adding unique labels using locally mutable 
       state 
@@ -137,7 +136,7 @@ module Labelled = struct
   let rec associate ?init:(assocs = Label.Int_label.Map.empty) (expr : t) =
     let assocs_result : t Label.Int_label.Map.t Map_intf.Or_duplicate.t =
       Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
-        (associate_pattern assocs @@ Fixed.pattern expr)
+        (associate_pattern assocs @@ Fixed.pattern_of expr)
     in
     match assocs_result with `Ok x -> x | _ -> assocs
 
@@ -159,49 +158,65 @@ module Labelled = struct
 end
 
 module Helpers = struct
+  let int i =
+    {Fixed.meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
 
-  let internal_funapp fn args meta = 
-    { Fixed.meta = meta
-    ; pattern = 
-      Fixed.Pattern.FunApp
-        ( Fun_kind.CompilerInternal
-        , Internal_fun.to_string fn
-        , args
-        )
-    }
+  let zero = int 0
+  let one = int 1
 
-  let contains_fn fn ?init:(init = false) e =
-    let fstr = Internal_fun.to_string fn in 
-    let rec aux accu e = 
+  let binop e1 op e2 =
+    { Fixed.meta= Typed.Meta.empty
+    ; pattern= FunApp (StanLib, Operator.to_string op, [e1; e2]) }
+
+  let loop_bottom = one
+
+  let internal_funapp fn args meta =
+    { Fixed.meta
+    ; pattern= FunApp (CompilerInternal, Internal_fun.to_string fn, args) }
+
+  let contains_fn fn ?(init = false) e =
+    let fstr = Internal_fun.to_string fn in
+    let rec aux accu e =
       accu
       ||
-        match Fixed.pattern e with
-        | FunApp (_, name, _) when name = fstr -> true
-        | x -> Fixed.Pattern.fold aux accu x
-    in 
+      match Fixed.pattern_of e with
+      | FunApp (_, name, _) when name = fstr -> true
+      | x -> Fixed.Pattern.fold aux accu x
+    in
     aux init e
 
   let%test "expr contains fn" =
-    internal_funapp FnReadData [] ()
-    |> contains_fn FnReadData
-
+    internal_funapp FnReadData [] () |> contains_fn FnReadData
 
   let rec infer_type_of_indexed ut indices =
-  match (ut, indices) with
-  | _, [] -> ut
-  | _, [Index.All] | _, [Upfrom _] | _, [Between _] -> ut
-  | UnsizedType.UMatrix, [All; Single _]
-   |UMatrix, [Upfrom _; Single _]
-   |UMatrix, [Between _; Single _]
-   |UMatrix, [MultiIndex _]
-   |UMatrix, [Single _] ->
-      UVector
-  | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
-  | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
-  | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
-  | _ -> raise_s [%message "Can't index" (ut : UnsizedType.t)]
+    match (ut, indices) with
+    | _, [] -> ut
+    | _, [Index.All] | _, [Upfrom _] | _, [Between _] -> ut
+    | UnsizedType.UMatrix, [All; Single _]
+     |UMatrix, [Upfrom _; Single _]
+     |UMatrix, [Between _; Single _]
+     |UMatrix, [MultiIndex _]
+     |UMatrix, [Single _] ->
+        UVector
+    | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
+    | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
+    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | _ -> raise_s [%message "Can't index" (ut : UnsizedType.t)]
 
-(* let%expect_test "infer type of indexed" =
+  (** [add_index expression index] returns an expression that (additionally)
+      indexes into the input [expression] by [index].*)
+  let add_int_index e i =
+    let mtype = infer_type_of_indexed Typed.(type_of e) [i] in
+    let meta = Typed.Meta.{e.meta with type_= mtype}
+    and pattern =
+      match Fixed.pattern_of e with
+      | Var _ -> Fixed.Pattern.Indexed (e, [i])
+      | Indexed (e, indices) -> Indexed (e, indices @ [i])
+      | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+    in
+    Fixed.fix (meta, pattern)
+
+  (* let%expect_test "infer type of indexed" =
   [ (UnsizedType.UArray UMatrix, [Index.Single loop_bottom; Single loop_bottom])
   ; (UArray (UArray UMatrix), [Single loop_bottom])
   ; (UArray UMatrix, [Single loop_bottom])
@@ -216,30 +231,10 @@ module Helpers = struct
   [%expect {|
     vector, matrix[], matrix, vector[], real, real[] |}]
 
-(** [add_index expression index] returns an expression that (additionally)
-    indexes into the input [expression] by [index].*)
-let add_int_index e i =
-  let mtype = infer_type_of_indexed e.emeta.mtype [i] in
-  let expr =
-    match e.expr with
-    | Var _ -> Indexed (e, [i])
-    | Indexed (e, indices) -> Indexed (e, indices @ [i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  in
-  {expr; emeta= {e.emeta with mtype}} 
+
   
 
-(** [mkfor] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
-let mkfor upper bodyfn iteratee smeta =
-  let idx s =
-    Single {expr= Var s; emeta= {mtype= UInt; mloc= smeta; madlevel= DataOnly}}
-  in
-  let loopvar, reset = gensym_enter () in
-  let lower = loop_bottom in
-  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
-  reset () ;
-  {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
+
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].

@@ -52,7 +52,6 @@ and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
 
-
 (* -- Type conversion -- *)
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
@@ -98,6 +97,7 @@ let is_real_type = function
       true
   | _ -> false
 
+let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
 let is_fun_type = function UFun _ -> true | _ -> false
 
@@ -106,8 +106,6 @@ let rec is_indexing_matrix = function
   | UMatrix, [] -> false
   | UMatrix, _ -> true
   | _ -> false
-
-
 
 module Comparator = Comparator.Make (struct
   type nonrec t = t

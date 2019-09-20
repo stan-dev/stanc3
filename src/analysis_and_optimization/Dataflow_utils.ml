@@ -4,15 +4,14 @@ open Dataflow_types
 open Mir_utils
 
 (** Union maps, preserving the left element in a collision *)
-let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
-    ('a, 'b) Map.Poly.t =
+let union_maps_left' m1 m2 =
   let f ~key:_ opt =
     match opt with
     | `Left v -> Some v
     | `Right v -> Some v
     | `Both (v1, _) -> Some v1
   in
-  Map.Poly.merge m1 m2 ~f
+  Map.merge m1 m2 ~f
 
 (**
    Like a forward traversal, but branches accumulate two different states that are

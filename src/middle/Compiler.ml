@@ -17,7 +17,9 @@ module type Frontend = sig
     -> (Program.Typed.t, frontend_error) result
 
   val mir_of_string :
-    opts:frontend_opts -> str:string -> (Program.Typed.t, frontend_error) result
+       opts:frontend_opts
+    -> str:string
+    -> (Program.Typed.t, frontend_error) result
 end
 
 module type Backend = sig

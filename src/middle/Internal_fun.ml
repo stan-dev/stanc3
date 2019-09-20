@@ -6,6 +6,7 @@ type t =
   | FnMakeRowVec
   | FnNegInf
   | FnReadData
+  (* XXX move these to a backend specific file?*)
   | FnReadParam
   | FnWriteParam
   | FnConstrain
@@ -13,6 +14,7 @@ type t =
   | FnCheck
   | FnPrint
   | FnReject
+  | FnResizeToMatch
 [@@deriving sexp]
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"

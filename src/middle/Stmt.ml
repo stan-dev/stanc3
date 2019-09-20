@@ -8,7 +8,7 @@ module Fixed = struct
 
   module Pattern = struct
     type ('a, 'b) t =
-      | Assignment of (string * 'a Index.t list) * 'a
+      | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
       | NRFunApp of Fun_kind.t * string * 'a list
       | Break
@@ -26,8 +26,11 @@ module Fixed = struct
           ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, map, fold, compare]
 
+    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    [@@deriving sexp, hash, map, compare, fold]
+
     let pp pp_e pp_s ppf = function
-      | Assignment ((assignee, idcs), rhs) ->
+      | Assignment ((assignee, _, idcs), rhs) ->
           Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Index.pp_indexed pp_e)
             (assignee, idcs) pp_e rhs
       | TargetPE expr ->
@@ -77,6 +80,7 @@ module NoMeta = struct
   module Meta = struct
     type t = unit [@@deriving compare, sexp, hash]
 
+    let empty = ()
     let pp _ _ = ()
   end
 
@@ -91,23 +95,26 @@ module Located = struct
     type t = (Location_span.t sexp_opaque[@compare.ignore])
     [@@deriving compare, sexp, hash]
 
+    let empty = Location_span.empty
     let pp _ _ = ()
   end
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
-  let loc_of x = Fixed.meta x
+  let loc_of x = Fixed.meta_of x
 end
 
-(** Statements with location information, labels and types for contained 
-expressions 
-*)
+(** Statements with location information and labels. Contained expressions have
+both are typed and labelled. *)
 module Labelled = struct
   module Meta = struct
     type t =
       { loc: Location_span.t sexp_opaque [@compare.ignore]
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
+
+    let empty =
+      create ~loc:Location_span.empty ~label:Label.Int_label.(prev init) ()
 
     let label {label; _} = label
     let loc {loc; _} = loc
@@ -116,8 +123,8 @@ module Labelled = struct
 
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of x = Meta.label @@ Fixed.meta x
-  let loc_of x = Meta.loc @@ Fixed.meta x
+  let label_of x = Meta.label @@ Fixed.meta_of x
+  let loc_of x = Meta.loc @@ Fixed.meta_of x
 
   let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
     let lbl = ref init in
@@ -145,7 +152,7 @@ module Labelled = struct
         stmts=
           Label.Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt)
             ~data:stmt }
-      (Fixed.pattern stmt)
+      (Fixed.pattern_of stmt)
 
   and associate_pattern assocs = function
     | Fixed.Pattern.Break | Skip | Continue | Return None -> assocs
@@ -156,7 +163,7 @@ module Labelled = struct
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
                 Expr.Labelled.associate ~init:accu x ) }
-    | Assignment ((_, idxs), rhs) ->
+    | Assignment ((_, _, idxs), rhs) ->
         let exprs =
           Expr.Labelled.(
             associate rhs
@@ -187,59 +194,90 @@ module Labelled = struct
     | Unsized _ -> assocs
 end
 
+module Numbered = struct
+  module Meta = struct
+    type t = (int sexp_opaque[@compare.ignore])
+    [@@deriving compare, sexp, hash]
+
+    let empty = 0
+    let from_int (i : int) : t = i
+    let pp _ _ = ()
+  end
+
+  include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
+end
 
 module Helpers = struct
-  let contains_fn fn ?init:(init = false) stmt =
-    let fstr = Internal_fun.to_string fn in 
-
-    let rec aux accu stmt = 
-      match Fixed.pattern stmt with 
-      | NRFunApp(_,fname,_) when fname = fstr -> true
-      | stmt_pattern -> 
-        Fixed.Pattern.fold_left ~init:accu stmt_pattern
-          ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr ) 
-          ~g:aux 
-          
-    in 
+  let contains_fn fn ?(init = false) stmt =
+    let fstr = Internal_fun.to_string fn in
+    let rec aux accu stmt =
+      match Fixed.pattern_of stmt with
+      | NRFunApp (_, fname, _) when fname = fstr -> true
+      | stmt_pattern ->
+          Fixed.Pattern.fold_left ~init:accu stmt_pattern
+            ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
+            ~g:aux
+    in
     aux init stmt
-  
-(* 
-  let mock_stmt stmt = {stmt; smeta= no_span}
-let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
-let mock_for i body =
-  For
-    { loopvar= "lv"
-    ; lower= mir_int 0
-    ; upper= mir_int i
-    ; body= mock_stmt (Block [body]) }
-  |> mock_stmt
+  (** [mkfor] returns a MIR For statement that iterates over the given expression
+    [iteratee]. *)
+  let mkfor upper bodyfn iteratee meta =
+    let idx s =
+      let meta =
+        Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
+      in
+      let expr = Expr.Fixed.fix (meta, Var s) in
+      Index.Single expr
+    in
+    let loopvar, reset = Gensym.enter () in
+    let lower = Expr.Helpers.loop_bottom in
+    let stmt =
+      Fixed.Pattern.Block
+        [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))]
+    in
+    reset () ;
+    let body = Fixed.fix (meta, stmt) in
+    let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
+    Fixed.fix (meta, pattern)
 
-let%test "contains fn" =
-  let f =
-    mock_for 8
-      (mock_for 9
-         (mock_stmt
-            (Assignment
-               (("v", UInt, []), internal_funapp FnReadData [] internal_meta))))
-  in
-  contains_fn
-    (string_of_internal_fn FnReadData)
-    (mock_stmt (Block [f; mock_stmt Break]))
+  (* 
+    let mock_stmt stmt = {stmt; smeta= no_span}
+  let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
-let%test "contains nrfn" =
-  let f =
-    mock_for 8
-      (mock_for 9
-         (mock_stmt
-            (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
-  in
-  contains_fn
-    (string_of_internal_fn FnWriteParam)
-    (mock_stmt
-       (Block
-          [ mock_stmt
-              (NRFunApp
-                 (CompilerInternal, string_of_internal_fn FnWriteParam, []))
-          ; f ])) *)
+  let mock_for i body =
+    For
+      { loopvar= "lv"
+      ; lower= mir_int 0
+      ; upper= mir_int i
+      ; body= mock_stmt (Block [body]) }
+    |> mock_stmt
+
+  let%test "contains fn" =
+    let f =
+      mock_for 8
+        (mock_for 9
+          (mock_stmt
+              (Assignment
+                (("v", UInt, []), internal_funapp FnReadData [] internal_meta))))
+    in
+    contains_fn
+      (string_of_internal_fn FnReadData)
+      (mock_stmt (Block [f; mock_stmt Break]))
+
+  let%test "contains nrfn" =
+    let f =
+      mock_for 8
+        (mock_for 9
+          (mock_stmt
+              (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
+    in
+    contains_fn
+      (string_of_internal_fn FnWriteParam)
+      (mock_stmt
+        (Block
+            [ mock_stmt
+                (NRFunApp
+                  (CompilerInternal, string_of_internal_fn FnWriteParam, []))
+            ; f ])) *)
 end

@@ -15,6 +15,7 @@ module type S = sig
 
   val init : t
   val next : t -> t
+  val prev : t -> t
 end
 
 (* Integer labels *)
@@ -24,6 +25,7 @@ module Int_label = struct
 
     let init = 0
     let next label = label + 1
+    let prev label = label - 1
     let pp ppf x = Fmt.int ppf x
 
     include Comparator.Make (struct

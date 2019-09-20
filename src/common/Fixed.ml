@@ -9,8 +9,8 @@ module type S = sig
 
   val fix : 'a * 'a t Pattern.t -> 'a t
   val unfix : 'a t -> 'a * 'a t Pattern.t
-  val pattern : 'a t -> 'a t Pattern.t
-  val meta : 'a t -> 'a
+  val pattern_of : 'a t -> 'a t Pattern.t
+  val meta_of : 'a t -> 'a
 
   include Foldable.S with type 'a t := 'a t
   include Pretty.S1 with type 'a t := 'a t
@@ -73,8 +73,8 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
 
   let fix (meta, pattern) = {meta; pattern}
   let unfix {meta; pattern} = (meta, pattern)
-  let pattern {pattern; _} = pattern
-  let meta {meta; _} = meta
+  let pattern_of {pattern; _} = pattern
+  let meta_of {meta; _} = meta
 
   let rec pp f ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} f meta (Pattern.pp (pp f)) pattern
@@ -118,8 +118,8 @@ module type S2 = sig
 
   val fix : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
   val unfix : ('a, 'b) t -> 'b * ('a First.t, ('a, 'b) t) Pattern.t
-  val pattern : ('a, 'b) t -> ('a First.t, ('a, 'b) t) Pattern.t
-  val meta : ('a, 'b) t -> 'b
+  val pattern_of : ('a, 'b) t -> ('a First.t, ('a, 'b) t) Pattern.t
+  val meta_of : ('a, 'b) t -> 'b
 
   include Foldable.S2 with type ('a, 'b) t := ('a, 'b) t
   include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -179,8 +179,8 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
 
   let unfix {meta; pattern} = (meta, pattern)
   let fix (meta, pattern) = {meta; pattern}
-  let pattern {pattern; _} = pattern
-  let meta {meta; _} = meta
+  let pattern_of {pattern; _} = pattern
+  let meta_of {meta; _} = meta
 
   let rec pp f g ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} g meta (Pattern.pp (First.pp f) (pp f g)) pattern

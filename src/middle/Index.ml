@@ -21,8 +21,7 @@ let pp_indexed pp_e ppf (ident, indices) =
     else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
     indices
 
-
-let bounds = function 
-    | All -> [] 
-    | Single e | Upfrom e | MultiIndex e -> [e]
-    | Between(e1,e2) -> [e1;e2]
+let bounds = function
+  | All -> []
+  | Single e | Upfrom e | MultiIndex e -> [e]
+  | Between (e1, e2) -> [e1; e2]

@@ -2,14 +2,16 @@ open Core_kernel
 open Middle
 open Dataflow_types
 
-let rec map_rec_expr (f : expr_typed_located expr -> expr_typed_located expr)
-    (e : expr_typed_located) =
-  let recurse = map_rec_expr f in
-  {e with expr= f (map_expr recurse e.expr)}
+let rec map_rec_expr f e =
+  { e with
+    Expr.Fixed.pattern= f @@ Expr.Fixed.Pattern.map (map_rec_expr f) e.pattern
+  }
 
-let map_rec_expr_state
-    (f : 's -> expr_typed_located expr -> expr_typed_located expr * 's)
-    (state : 's) (e : expr_typed_located) : expr_typed_located * 's =
+(* (e : expr_typed_located) =
+  let recurse = map_rec_expr f in
+  {e with expr= f (map_expr recurse e.expr)} *)
+
+let map_rec_expr_state f state e =
   let cur_state = ref state in
   let g e' =
     let e', state = f !cur_state e' in

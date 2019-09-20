@@ -2,9 +2,7 @@ open Core_kernel
 open Common
 open Helpers
 
-
-
-type 'a fun_def = 
+type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
@@ -12,10 +10,7 @@ type 'a fun_def =
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map]
 
-type io_block =
-  | Parameters
-  | TransformedParameters
-  | GeneratedQuantities
+type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
 type 'a outvar =
@@ -24,7 +19,7 @@ type 'a outvar =
   ; out_block: io_block }
 [@@deriving sexp, map, hash]
 
-type ('a, 'b) t = 
+type ('a, 'b) t =
   { functions_block: 'b fun_def list
   ; input_vars: (string * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
@@ -35,7 +30,6 @@ type ('a, 'b) t =
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map]
-
 
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
@@ -110,8 +104,6 @@ let pp pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-
-
 (* Programs with typed expressions and locations *)
 module Typed = struct
   type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
@@ -128,7 +120,6 @@ module Labelled = struct
   let pp ppf x = pp Expr.Labelled.pp Stmt.Labelled.pp ppf x
   let sexp_of_t = sexp_of_t Expr.Labelled.sexp_of_t Stmt.Labelled.sexp_of_t
   let t_of_sexp = t_of_sexp Expr.Labelled.t_of_sexp Stmt.Labelled.t_of_sexp
-
 
   (* let label ?(init = 0) (prog : Typed.t) : t =
     let incr_label =
@@ -148,7 +139,8 @@ module Labelled = struct
     |> State.run_state ~init |> fst *)
 
   let empty =
-    {Stmt.Labelled.exprs= Label.Int_label.Map.empty; stmts= Label.Int_label.Map.empty}
+    { Stmt.Labelled.exprs= Label.Int_label.Map.empty
+    ; stmts= Label.Int_label.Map.empty }
 
   let rec associate ?init:(assocs = empty) prog =
     let assoc_fundef =
@@ -190,4 +182,12 @@ module Labelled = struct
           out_constrained_st)
     in
     {assocs with exprs}
+end
+
+module Numbered = struct
+  type nonrec t = (Expr.Typed.t, Stmt.Numbered.t) t
+
+  let pp ppf x = pp Expr.Typed.pp Stmt.Numbered.pp ppf x
+  let sexp_of_t = sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t
+  let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Numbered.t_of_sexp
 end

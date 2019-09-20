@@ -1,9 +1,12 @@
 open Core_kernel
+open Common
 open Middle
 open Dataflow_types
 
 val union_maps_left :
-  ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
+     ('a, 'b, 'c) Map_intf.Map.t
+  -> ('a, 'b, 'c) Map_intf.Map.t
+  -> ('a, 'b, 'c) Map_intf.Map.t
 (** Union maps, preserving the left element in a collision *)
 
 val build_cf_graphs :

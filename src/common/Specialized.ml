@@ -5,6 +5,8 @@ module type Meta = sig
   type t [@@deriving compare, sexp, hash]
 
   include Pretty.S with type t := t
+
+  val empty : t
 end
 
 (* Signature of modules derived from `Fixed.S` or `Fixed.S2` with a module,
@@ -26,7 +28,19 @@ module type S = sig
      and type comparator_witness := comparator_witness
 end
 
-module Make (X : Fixed.S) (Meta : Meta) :
+module type Unspecialized = sig
+  type 'a t [@@deriving compare, map, fold, hash, sexp]
+
+  include Pretty.S1 with type 'a t := 'a t
+end
+
+module type Unspecialized2 = sig
+  type ('a, 'b) t [@@deriving compare, map, fold, hash, sexp]
+
+  include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
+end
+
+module Make (X : Unspecialized) (Meta : Meta) :
   S with type t = Meta.t X.t and module Meta := Meta = struct
   module Basic = struct
     type t = Meta.t X.t
@@ -48,7 +62,7 @@ module Make (X : Fixed.S) (Meta : Meta) :
   include Comparable.Make_using_comparator (Basic)
 end
 
-module Make2 (X : Fixed.S2) (First : S) (Meta : Meta) :
+module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
   S with type t = (First.Meta.t, Meta.t) X.t and module Meta := Meta = struct
   module Basic = struct
     type nonrec t = (First.Meta.t, Meta.t) X.t
