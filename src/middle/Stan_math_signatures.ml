@@ -750,6 +750,31 @@ let () =
   add_unqualified ("int_step", ReturnType UInt, [UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UInt]) ;
   add_qualified
+    ( "integrate_1d"
+    , ReturnType UReal
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType UReal ) )
+      ; (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+  add_qualified
+    ( "integrate_1d"
+    , ReturnType UReal
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType UReal ) )
+      ; (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
+    ) ;
+  add_qualified
     ( "integrate_ode"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
