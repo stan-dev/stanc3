@@ -22,8 +22,11 @@ parameters {
 transformed parameters {
   vector[J] a_hat;
   vector[N] y_hat;
-  for (j in 1 : J) a_hat[j] = g_0 + g_1 * program[j];
-  for (i in 1 : N) y_hat[i] = a[village[i]] + beta[1] * enroll97[i] + beta[2] * work97[i] + beta[3] * poor[i] + beta[4] * male[i] + beta[5] * age97[i];
+  for (j in 1 : J) 
+    a_hat[j] = g_0 + g_1 * program[j];
+  for (i in 1 : N) 
+    y_hat[i] = a[village[i]] + beta[1] * enroll97[i] + beta[2] * work97[i]
+               + beta[3] * poor[i] + beta[4] * male[i] + beta[5] * age97[i];
 }
 model {
   sigma_a ~ uniform(0, 100);
@@ -51,7 +54,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a[pair[i]] + beta * treatment[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[pair[i]] + beta * treatment[i];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -125,7 +129,8 @@ transformed parameters {
   vector[n_pair] a;
   vector<lower=0>[N] sigma_y_hat;
   vector[N] y_hat;
-  for (i in 1 : n_pair) a[i] = 100 * mu_a[grade_pair[i]] + sigma_a[grade_pair[i]] * eta_a[i];
+  for (i in 1 : n_pair) 
+    a[i] = 100 * mu_a[grade_pair[i]] + sigma_a[grade_pair[i]] * eta_a[i];
   for (i in 1 : N) {
     y_hat[i] = a[pair[i]] + b[grade[i]] * treatment[i];
     sigma_y_hat[i] = sigma_y[grade[i]];
@@ -156,7 +161,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a[pair[i]] + beta[1] * treatment[i] + beta[2] * pre_test[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[pair[i]] + beta[1] * treatment[i] + beta[2] * pre_test[i];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -185,7 +191,8 @@ transformed parameters {
   vector[N] y_hat;
   vector[n_pair] a;
   a = 100 * mu_a + sigma_a * eta;
-  for (i in 1 : N) y_hat[i] = a[pair[i]] + beta[1] * treatment[i] + beta[2] * pre_test[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[pair[i]] + beta[1] * treatment[i] + beta[2] * pre_test[i];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -221,7 +228,8 @@ transformed parameters {
   vector<lower=0, upper=100>[N] sigma_y_hat;
   vector[N] y_hat;
   for (i in 1 : N) {
-    y_hat[i] = a[pair[i]] + b[grade[i]] * treatment[i] + c[grade[i]] * pre_test[i];
+    y_hat[i] = a[pair[i]] + b[grade[i]] * treatment[i]
+               + c[grade[i]] * pre_test[i];
     sigma_y_hat[i] = sigma_y[grade[i]];
   }
   for (i in 1 : n_pair) {
@@ -262,9 +270,11 @@ transformed parameters {
   vector[n_pair] a;
   vector<lower=0, upper=100>[N] sigma_y_hat;
   vector[N] y_hat;
-  for (i in 1 : n_pair) a[i] = 50 * mu_a[grade_pair[i]] + sigma_a[grade_pair[i]] * eta_a[i];
+  for (i in 1 : n_pair) 
+    a[i] = 50 * mu_a[grade_pair[i]] + sigma_a[grade_pair[i]] * eta_a[i];
   for (i in 1 : N) {
-    y_hat[i] = a[pair[i]] + b[grade[i]] * treatment[i] + c[grade[i]] * pre_test[i];
+    y_hat[i] = a[pair[i]] + b[grade[i]] * treatment[i]
+               + c[grade[i]] * pre_test[i];
     sigma_y_hat[i] = sigma_y[grade[i]];
   }
 }
@@ -295,7 +305,8 @@ transformed parameters {
   vector[N] y_hat;
   vector[n_pair] a;
   a = 100 * mu_a + sigma_a * eta;
-  for (i in 1 : N) y_hat[i] = a[pair[i]] + beta * treatment[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[pair[i]] + beta * treatment[i];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -316,7 +327,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  post_test ~ normal(beta[1] + beta[2] * treatment + beta[3] * pre_test, sigma);
+  post_test ~ normal(beta[1] + beta[2] * treatment + beta[3] * pre_test,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format electric_one_pred.stan
@@ -384,8 +396,10 @@ model {
   sigma_g ~ uniform(0, 100);
   rho_ag ~ uniform(-1, 1);
   mu_ag ~ normal(0, 31.6);
-  for (j in 1 : J) ag[j] ~ multi_normal(mu_ag, Sigma_ag);
-  for (i in 1 : N) yt[i] ~ multi_normal(yt_hat[i], Sigma_yt);
+  for (j in 1 : J) 
+    ag[j] ~ multi_normal(mu_ag, Sigma_ag);
+  for (i in 1 : N) 
+    yt[i] ~ multi_normal(yt_hat[i], Sigma_yt);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format sesame_street2.stan
@@ -449,7 +463,9 @@ model {
   rho_ag ~ uniform(-1, 1);
   mu_ag[1] ~ normal(0, 100);
   mu_ag[2] ~ normal(0, 100);
-  for (i in 1 : N) transpose(yt[i]) ~ multi_normal(transpose(yt_hat[i]), Sigma_yt);
-  for (j in 1 : J) transpose(ag[j]) ~ multi_normal(mu_ag, Sigma_ag);
+  for (i in 1 : N) 
+    transpose(yt[i]) ~ multi_normal(transpose(yt_hat[i]), Sigma_yt);
+  for (j in 1 : J) 
+    transpose(ag[j]) ~ multi_normal(mu_ag, Sigma_ag);
 }
 

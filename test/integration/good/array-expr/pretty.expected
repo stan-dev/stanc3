@@ -1,7 +1,12 @@
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_big.stan
 transformed data {
   int i = 5;
-  int td_ar_int_dim1[100] = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10};
+  int td_ar_int_dim1[100] = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i,
+                             7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1,
+                             2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7,
+                             8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2,
+                             3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8,
+                             i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10};
 }
 parameters {
   real<lower=0, upper=1> theta;
@@ -32,7 +37,8 @@ transformed data {
   row_vector[d] td_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
   row_vector[d] td_rv_ar_dim1_3[1] = {d_rv_ar[3]};
   row_vector[d] td_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] td_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1}, {d_rv2, d_rv2, d_rv2}};
+  row_vector[d] td_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
+                                         {d_rv2, d_rv2, d_rv2}};
   matrix[d, d] td_m_ar_dim1_1[1] = {d_m};
   matrix[d, d] td_m_ar_dim1_2[2] = {d_m, d_m};
   matrix[d, d] td_m_ar_dim2_1[1, 1] = {{d_m}};
@@ -69,7 +75,8 @@ transformed parameters {
   row_vector[d] tp_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
   row_vector[d] tp_rv_ar_dim1_3[1] = {d_rv_ar[3]};
   row_vector[d] tp_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] tp_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1}, {d_rv2, d_rv2, d_rv2}};
+  row_vector[d] tp_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
+                                         {d_rv2, d_rv2, d_rv2}};
   matrix[d, d] tp_m_ar_dim1_1[1] = {d_m};
   matrix[d, d] tp_m_ar_dim1_2[2] = {d_m, d_m};
   matrix[d, d] tp_m_ar_dim2_1[1, 1] = {{d_m}};
@@ -105,7 +112,8 @@ generated quantities {
   row_vector[d] gq_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
   row_vector[d] gq_rv_ar_dim1_3[1] = {d_rv_ar[3]};
   row_vector[d] gq_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] gq_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1}, {d_rv2, d_rv2, d_rv2}};
+  row_vector[d] gq_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
+                                         {d_rv2, d_rv2, d_rv2}};
   matrix[d, d] gq_m_ar_dim1_1[1] = {d_m};
   matrix[d, d] gq_m_ar_dim1_2[2] = {d_m, d_m};
   matrix[d, d] gq_m_ar_dim2_1[1, 1] = {{d_m}};
@@ -189,7 +197,8 @@ transformed data {
     int loc_td_arr_int_d2_1[1, 2] = {{4, 5}};
     int loc_td_arr_int_d2_2[1, 2] = {{4, d_i3}};
     int loc_td_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-    int loc_td_arr_int_d2_4[2, 3] = {loc_td_arr_int_d1_1, loc_td_arr_int_d1_2};
+    int loc_td_arr_int_d2_4[2, 3] = {loc_td_arr_int_d1_1,
+                                     loc_td_arr_int_d1_2};
     real loc_td_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
     real loc_td_arr_real_d1_2[3] = {d_r1, 2, 3};
     real loc_td_arr_real_d1_3[2] = f1_arr_real();
@@ -280,7 +289,8 @@ generated quantities {
     int loc_gq_arr_int_d2_1[1, 2] = {{4, 5}};
     int loc_gq_arr_int_d2_2[1, 2] = {{4, d_i3}};
     int loc_gq_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-    int loc_gq_arr_int_d2_4[2, 3] = {loc_gq_arr_int_d1_1, loc_gq_arr_int_d1_2};
+    int loc_gq_arr_int_d2_4[2, 3] = {loc_gq_arr_int_d1_1,
+                                     loc_gq_arr_int_d1_2};
     real loc_gq_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
     real loc_gq_arr_real_d1_2[3] = {d_r1, 2, 3};
     real loc_gq_arr_real_d1_3[2] = f1_arr_real();

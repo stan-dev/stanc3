@@ -13,7 +13,8 @@ transformed parameters {
   real<lower=0> sigma;
   real<lower=0, upper=1> p[N];
   sigma <- sqrt(sigmasq);
-  for (i in 1 : N) p[i] <- inv_logit(b[i]);
+  for (i in 1 : N) 
+    p[i] <- inv_logit(b[i]);
 }
 model {
   mu ~ normal(0.0, 1000.0);

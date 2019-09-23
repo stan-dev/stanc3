@@ -48,7 +48,8 @@ model {
   }
   for (prior in 1 : N_priors) {
     vector[N_studies] tmpm;
-    for (i in 1 : N_studies) tmpm[i] <- theta[prior, i] + logit(pc[prior, i]);
+    for (i in 1 : N_studies) 
+      tmpm[i] <- theta[prior, i] + logit(pc[prior, i]);
     rc ~ binomial(nc, pc[prior]);
     rt ~ binomial_logit(nt, tmpm);
   }

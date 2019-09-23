@@ -65,6 +65,7 @@ parameters {
   vector[2] beta;
 }
 model {
-  for (n in 1 : N) switc[n] ~ bernoulli(Phi(beta[1] + beta[2] * dist100[n]));
+  for (n in 1 : N) 
+    switc[n] ~ bernoulli(Phi(beta[1] + beta[2] * dist100[n]));
 }
 

@@ -18,7 +18,8 @@ parameters {
 transformed parameters {
   simplex[K] theta[M];
   cov_matrix[K] Sigma;
-  for (m in 1 : M) theta[m] <- softmax(eta[m]);
+  for (m in 1 : M) 
+    theta[m] <- softmax(eta[m]);
   for (m in 1 : K) {
     Sigma[m, m] <- sigma[m] * sigma[m] * Omega[m, m];
     for (n in (m + 1) : K) {
@@ -28,14 +29,17 @@ transformed parameters {
   }
 }
 model {
-  for (k in 1 : K) phi[k] ~ dirichlet(beta);
+  for (k in 1 : K) 
+    phi[k] ~ dirichlet(beta);
   mu ~ normal(0, 5);
   Omega ~ lkj_corr(2.0);
   sigma ~ cauchy(0, 5);
-  for (m in 1 : M) eta[m] ~ multi_normal(mu, Sigma);
+  for (m in 1 : M) 
+    eta[m] ~ multi_normal(mu, Sigma);
   for (n in 1 : N) {
     real gamma[K];
-    for (k in 1 : K) gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
+    for (k in 1 : K) 
+      gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
     increment_log_prob(log_sum_exp(gamma));
   }
 }
@@ -134,11 +138,14 @@ parameters {
   simplex[V] phi[K];
 }
 model {
-  for (m in 1 : M) theta[m] ~ dirichlet(alpha);
-  for (k in 1 : K) phi[k] ~ dirichlet(beta);
+  for (m in 1 : M) 
+    theta[m] ~ dirichlet(alpha);
+  for (k in 1 : K) 
+    phi[k] ~ dirichlet(beta);
   for (n in 1 : N) {
     real gamma[K];
-    for (k in 1 : K) gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
+    for (k in 1 : K) 
+      gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
     increment_log_prob(log_sum_exp(gamma));
   }
 }

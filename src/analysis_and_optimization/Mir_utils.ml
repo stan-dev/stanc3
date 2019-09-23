@@ -13,7 +13,7 @@ let map_rec_expr_state
   let cur_state = ref state in
   let g e' =
     let e', state = f !cur_state e' in
-    let _ = cur_state := state in
+    cur_state := state ;
     e'
   in
   let e = map_rec_expr g e in
@@ -27,6 +27,13 @@ let rec map_rec_stmt_loc
   let recurse = map_rec_stmt_loc f in
   {smeta; stmt= f (map_statement (fun x -> x) recurse stmt)}
 
+let rec top_down_map_rec_stmt_loc
+    (f :
+         (expr_typed_located, stmt_loc) statement
+      -> (expr_typed_located, stmt_loc) statement) ({smeta; stmt} : stmt_loc) =
+  let recurse = top_down_map_rec_stmt_loc f in
+  {smeta; stmt= map_statement (fun x -> x) recurse (f stmt)}
+
 let map_rec_state_stmt_loc
     (f :
          's
@@ -36,7 +43,7 @@ let map_rec_state_stmt_loc
   let cur_state = ref state in
   let g stmt =
     let stmt, state = f !cur_state stmt in
-    let _ = cur_state := state in
+    cur_state := state ;
     stmt
   in
   let stmt = map_rec_stmt_loc g {smeta; stmt} in
@@ -67,7 +74,7 @@ let map_rec_state_stmt_loc_num
   let cur_state = ref state in
   let g i stmt =
     let stmt, state = f i !cur_state stmt in
-    let _ = cur_state := state in
+    cur_state := state ;
     stmt
   in
   let stmt = map_rec_stmt_loc_num flowgraph_to_mir g s in
@@ -138,12 +145,13 @@ let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
   | _ -> raise (Failure "Non-var expression found, but var expected")
 
 (** See interface file *)
-let rec expr_var_set (ex : expr_typed_located) : vexpr Set.Poly.t =
+let rec expr_var_set (ex : expr_typed_located) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_var_set)
   in
   match ex.expr with
-  | Var s -> Set.Poly.singleton (VVar s)
+  | Var s -> Set.Poly.singleton (VVar s, ex.emeta)
   | Lit _ -> Set.Poly.empty
   | FunApp (_, _, exprs) -> union_recur exprs
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
@@ -151,17 +159,16 @@ let rec expr_var_set (ex : expr_typed_located) : vexpr Set.Poly.t =
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
-and index_var_set (ix : expr_typed_located index) : vexpr Set.Poly.t =
+and index_var_set (ix : expr_typed_located index) :
+    (vexpr * mtype_loc_ad) Set.Poly.t =
   match ix with
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr
   | Upfrom expr -> expr_var_set expr
-  | Downfrom expr -> expr_var_set expr
   | Between (expr1, expr2) ->
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-(* Why does the formatter mangle this so much? *)
 let stmt_rhs stmt =
   match stmt with
   | For vars -> ExprSet.of_list [vars.lower; vars.upper]
@@ -207,7 +214,7 @@ let subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base_helper g h b =
   match b with
-  | Assignment ((x, l), e2) -> Assignment ((x, List.map ~f:h l), g e2)
+  | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
   | x -> map_statement g (fun y -> y) x
 
 let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
@@ -250,7 +257,7 @@ let rec expr_depth (e : expr_typed_located) : int =
 and idx_depth (i : expr_typed_located index) : int =
   match i with
   | All -> 0
-  | Single e | Upfrom e | Downfrom e | MultiIndex e -> expr_depth e
+  | Single e | Upfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
 
 let ad_level_sup l =

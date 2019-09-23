@@ -20,7 +20,9 @@ model {
     t_uncensored[n] ~ weibull(r, exp(-beta[group_uncensored[n]] / r));
   }
   for (n in 1 : N_censored) {
-    t2_censored[n] ~ weibull(r, exp(-beta[group_censored[n]] / r) / censor_time[n]);
+    t2_censored[n] ~ weibull(r,
+                             exp(-beta[group_censored[n]] / r)
+                             / censor_time[n]);
   }
 }
 generated quantities {
@@ -28,7 +30,8 @@ generated quantities {
   real pos_control;
   real test_sub;
   real veh_control;
-  for (m in 1 : M) median[m] <- pow(log(2) * exp(-beta[m]), 1 / r);
+  for (m in 1 : M) 
+    median[m] <- pow(log(2) * exp(-beta[m]), 1 / r);
   veh_control <- beta[2] - beta[1];
   test_sub <- beta[3] - beta[1];
   pos_control <- beta[4] - beta[1];

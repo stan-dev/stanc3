@@ -26,7 +26,8 @@ model {
 }
 generated quantities {
   real<lower=0, upper=1> p[nyears];
-  for (i in 1 : nyears) p[i] = inv_logit(logit_p[i]);
+  for (i in 1 : nyears) 
+    p[i] = inv_logit(logit_p[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLM_Poisson.stan
@@ -49,7 +50,8 @@ parameters {
 }
 transformed parameters {
   vector[n] log_lambda;
-  log_lambda = alpha + beta1 * year + +beta2 * year_squared + +beta3 * year_cubed;
+  log_lambda = alpha + beta1 * year + +beta2 * year_squared
+               + +beta3 * year_cubed;
 }
 model {
   C ~ poisson_log(log_lambda);

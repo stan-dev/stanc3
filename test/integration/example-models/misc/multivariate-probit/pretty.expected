@@ -36,7 +36,8 @@ model {
           z[d] = inv_Phi(t);
           target += log(bound);
         }
-        if (d < D) prev = L_Omega[d + 1, 1 : d] * head(z, d);
+        if (d < D) 
+          prev = L_Omega[d + 1, 1 : d] * head(z, d);
       }
     }
   }
@@ -51,7 +52,9 @@ functions {
   int sum_(int[,] a) {
     int s;
     s <- 0;
-    for (i in 1 : size(a)) for (j in 1 : size(a[i])) s <- s + a[i, j];
+    for (i in 1 : size(a)) 
+      for (j in 1 : size(a[i])) 
+        s <- s + a[i, j];
     return s;
   }
 }
@@ -100,15 +103,18 @@ parameters {
 }
 transformed parameters {
   vector[D] z[N];
-  for (n in 1 : N_pos) z[n_pos[n], d_pos[n]] <- z_pos[n];
-  for (n in 1 : N_neg) z[n_neg[n], d_neg[n]] <- z_neg[n];
+  for (n in 1 : N_pos) 
+    z[n_pos[n], d_pos[n]] <- z_pos[n];
+  for (n in 1 : N_neg) 
+    z[n_neg[n], d_neg[n]] <- z_neg[n];
 }
 model {
   L_Omega ~ lkj_corr_cholesky(4);
   to_vector(beta) ~ normal(0, 5);
   {
     vector[D] beta_x[N];
-    for (n in 1 : N) beta_x[n] <- beta * x[n];
+    for (n in 1 : N) 
+      beta_x[n] <- beta * x[n];
     z ~ multi_normal_cholesky(beta_x, L_Omega);
   }
 }

@@ -220,12 +220,12 @@ Semantic error in 'bad_cov_exp_quad_len_data.stan', line 13, column 28 to column
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real, real[].
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
@@ -315,12 +315,12 @@ Semantic error in 'bad_cov_exp_quad_rvec_data.stan', line 12, column 28 to colum
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector, real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
@@ -336,12 +336,12 @@ Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to c
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector[], vector[], real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
@@ -372,12 +372,12 @@ Semantic error in 'bad_cov_exp_quad_sigma_data.stan', line 13, column 28 to colu
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real[], real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
@@ -467,12 +467,12 @@ Semantic error in 'bad_cov_exp_quad_vec_data.stan', line 12, column 28 to column
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector, real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
@@ -488,12 +488,12 @@ Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to c
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(row_vector[], row_vector[], real, real) => matrix
-(vector[], vector[], real, real) => matrix
-(real[], real[], real, real) => matrix
-(row_vector[], real, real) => matrix
-(vector[], real, real) => matrix
 (real[], real, real) => matrix
+(real[], real[], real, real) => matrix
+(vector[], real, real) => matrix
+(vector[], vector[], real, real) => matrix
+(row_vector[], real, real) => matrix
+(row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], row_vector[], real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan

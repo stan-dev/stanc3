@@ -9,11 +9,14 @@ Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`. T
 The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.
 
 ### Distinct Stanc Phases
-1. Parse Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters
-1. Typecheck & add type information
-1. De-sugar into [Middle Intermediate Representation](https://blog.rust-lang.org/2016/04/19/MIR.html)
-1. Analyze & optimize MIR -> MIR (will be many passes)
-1. Interpret MIR, emit C++ (or LLVM IR, or Tensorflow)
+1. [Lex](src/frontend/lexer.mll) the Stan language into tokens.
+1. [Parse](src/frontend/parser.mly) Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters. `stanc --debug-ast` to print this out.
+1. Typecheck & add type information [Semantic_check.ml](src/frontend/Semantic_check.ml).  `stanc --debug-decorated-ast`
+1. [Desugaring phase](src/frontend/Desugar.ml) (AST -> AST). `stanc --debug-desugared`
+1. [Lower](src/frontend/Ast_to_Mir.ml) into [Middle Intermediate Representation](src/middle/Mir.ml) (AST -> MIR) `stanc --debug-mir` (or `--debug-mir-pretty`)
+1. Analyze & optimize (MIR -> MIR)
+1. Backend MIR transform (MIR -> MIR) [Transform_Mir.ml](src/stan_math_backend/Transform_Mir.ml)  `stanc --debug-transformed-mir`
+1. Hand off to a backend to [emit C++](src/stan_math_backend/Stan_math_code_gen.ml) (or LLVM IR, or Tensorflow, or interpret it!).
 
 ### The two central data structures
 

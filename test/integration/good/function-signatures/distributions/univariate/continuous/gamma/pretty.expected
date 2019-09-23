@@ -71,19 +71,27 @@ transformed data {
   transformed_data_real = gamma_ccdf_log(d_real_array, d_real, d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array, d_int);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array, d_real);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array, d_real_array);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                         d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                         d_vector);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_vector, d_real);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_vector, d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_vector,
+                                         d_real_array);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_vector, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_vector, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_vector,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector, d_real);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector, d_real_array);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                         d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                         d_vector);
+  transformed_data_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_vector, d_int, d_int);
   transformed_data_real = gamma_ccdf_log(d_vector, d_int, d_real);
   transformed_data_real = gamma_ccdf_log(d_vector, d_int, d_real_array);
@@ -96,9 +104,11 @@ transformed data {
   transformed_data_real = gamma_ccdf_log(d_vector, d_real, d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_vector, d_real_array, d_int);
   transformed_data_real = gamma_ccdf_log(d_vector, d_real_array, d_real);
-  transformed_data_real = gamma_ccdf_log(d_vector, d_real_array, d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_vector, d_real_array,
+                                         d_real_array);
   transformed_data_real = gamma_ccdf_log(d_vector, d_real_array, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_vector, d_real_array, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_vector, d_real_array,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_vector, d_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_vector, d_vector, d_real);
   transformed_data_real = gamma_ccdf_log(d_vector, d_vector, d_real_array);
@@ -106,9 +116,11 @@ transformed data {
   transformed_data_real = gamma_ccdf_log(d_vector, d_vector, d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector, d_real);
-  transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector, d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                         d_real_array);
   transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_int, d_int);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_int, d_real);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_int, d_real_array);
@@ -121,19 +133,27 @@ transformed data {
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_real, d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array, d_int);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array, d_real);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array, d_real_array);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                         d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                         d_vector);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector, d_real);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector, d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                         d_real_array);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                         d_row_vector);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_int);
   transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_real);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_real_array);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_vector);
-  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_row_vector);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                         d_real_array);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                         d_vector);
+  transformed_data_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                         d_row_vector);
 }
 parameters {
   real p_real;
@@ -326,31 +346,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real, d_real_array);
@@ -362,31 +398,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_real_array, p_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_int, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, d_int, d_real);
   transformed_param_real = gamma_ccdf_log(d_vector, d_int, d_real_array);
@@ -407,13 +459,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_vector, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, d_vector, d_real);
   transformed_param_real = gamma_ccdf_log(d_vector, d_vector, d_real_array);
@@ -425,13 +481,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real, d_real_array);
@@ -443,13 +503,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_vector, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, p_vector, d_real);
   transformed_param_real = gamma_ccdf_log(d_vector, p_vector, d_real_array);
@@ -461,13 +525,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_vector, p_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_int, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_int, d_real);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_int, d_real_array);
@@ -488,31 +556,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real, d_real_array);
@@ -524,31 +608,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(d_row_vector, p_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real, d_int, d_int);
   transformed_param_real = gamma_ccdf_log(p_real, d_int, d_real);
   transformed_param_real = gamma_ccdf_log(p_real, d_int, d_real_array);
@@ -650,31 +750,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real, d_real_array);
@@ -686,31 +802,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_real_array, p_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_int, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, d_int, d_real);
   transformed_param_real = gamma_ccdf_log(p_vector, d_int, d_real_array);
@@ -731,13 +863,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_vector, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, d_vector, d_real);
   transformed_param_real = gamma_ccdf_log(p_vector, d_vector, d_real_array);
@@ -749,13 +885,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real, d_real_array);
@@ -767,13 +907,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_vector, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, p_vector, d_real);
   transformed_param_real = gamma_ccdf_log(p_vector, p_vector, d_real_array);
@@ -785,13 +929,17 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_vector, p_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_int, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_int, d_real);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_int, d_real_array);
@@ -812,31 +960,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, d_row_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real, d_real);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real, d_real_array);
@@ -848,31 +1012,47 @@ transformed parameters {
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_real_array,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector,
+                                          d_real_array);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector,
+                                          p_real_array);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_vector,
+                                          p_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, d_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          d_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          d_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          d_row_vector);
   transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, p_real_array);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          p_real_array);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          p_vector);
+  transformed_param_real = gamma_ccdf_log(p_row_vector, p_row_vector,
+                                          p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -1206,13 +1386,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, d_real_array, d_int);
   transformed_param_real = gamma_cdf(d_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_cdf(d_real_array, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf(d_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_cdf(d_real_array, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf(d_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, d_vector, d_int);
   transformed_param_real = gamma_cdf(d_real_array, d_vector, d_real);
   transformed_param_real = gamma_cdf(d_real_array, d_vector, d_real_array);
@@ -1224,13 +1408,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_real_array, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_cdf(d_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf(d_real_array, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(d_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf(d_real_array, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(d_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_real, d_int);
   transformed_param_real = gamma_cdf(d_real_array, p_real, d_real);
   transformed_param_real = gamma_cdf(d_real_array, p_real, d_real_array);
@@ -1242,13 +1430,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_real_array, d_int);
   transformed_param_real = gamma_cdf(d_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_cdf(d_real_array, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf(d_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_cdf(d_real_array, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf(d_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_vector, d_int);
   transformed_param_real = gamma_cdf(d_real_array, p_vector, d_real);
   transformed_param_real = gamma_cdf(d_real_array, p_vector, d_real_array);
@@ -1260,13 +1452,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_real_array, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_cdf(d_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf(d_real_array, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(d_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf(d_real_array, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(d_real_array, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(d_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(d_real_array, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_vector, d_int, d_int);
   transformed_param_real = gamma_cdf(d_vector, d_int, d_real);
   transformed_param_real = gamma_cdf(d_vector, d_int, d_real_array);
@@ -1368,13 +1564,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf(d_row_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf(d_row_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, d_vector, d_real);
   transformed_param_real = gamma_cdf(d_row_vector, d_vector, d_real_array);
@@ -1386,13 +1586,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_row_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_real, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, p_real, d_real);
   transformed_param_real = gamma_cdf(d_row_vector, p_real, d_real_array);
@@ -1404,13 +1608,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf(d_row_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf(d_row_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, p_vector, d_real);
   transformed_param_real = gamma_cdf(d_row_vector, p_vector, d_real_array);
@@ -1422,13 +1630,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(d_row_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(d_row_vector, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_real, d_int, d_int);
   transformed_param_real = gamma_cdf(p_real, d_int, d_real);
   transformed_param_real = gamma_cdf(p_real, d_int, d_real_array);
@@ -1530,13 +1742,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, d_real_array, d_int);
   transformed_param_real = gamma_cdf(p_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_cdf(p_real_array, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf(p_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_cdf(p_real_array, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf(p_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, d_vector, d_int);
   transformed_param_real = gamma_cdf(p_real_array, d_vector, d_real);
   transformed_param_real = gamma_cdf(p_real_array, d_vector, d_real_array);
@@ -1548,13 +1764,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_real_array, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_cdf(p_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf(p_real_array, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(p_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf(p_real_array, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(p_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_real, d_int);
   transformed_param_real = gamma_cdf(p_real_array, p_real, d_real);
   transformed_param_real = gamma_cdf(p_real_array, p_real, d_real_array);
@@ -1566,13 +1786,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_real_array, d_int);
   transformed_param_real = gamma_cdf(p_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_cdf(p_real_array, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf(p_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_cdf(p_real_array, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf(p_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_vector, d_int);
   transformed_param_real = gamma_cdf(p_real_array, p_vector, d_real);
   transformed_param_real = gamma_cdf(p_real_array, p_vector, d_real_array);
@@ -1584,13 +1808,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_real_array, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_cdf(p_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf(p_real_array, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(p_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf(p_real_array, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(p_real_array, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(p_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(p_real_array, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_vector, d_int, d_int);
   transformed_param_real = gamma_cdf(p_vector, d_int, d_real);
   transformed_param_real = gamma_cdf(p_vector, d_int, d_real_array);
@@ -1692,13 +1920,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf(p_row_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf(p_row_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, d_vector, d_real);
   transformed_param_real = gamma_cdf(p_row_vector, d_vector, d_real_array);
@@ -1710,13 +1942,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_row_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_real, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, p_real, d_real);
   transformed_param_real = gamma_cdf(p_row_vector, p_real, d_real_array);
@@ -1728,13 +1964,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf(p_row_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf(p_row_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, p_vector, d_real);
   transformed_param_real = gamma_cdf(p_row_vector, p_vector, d_real_array);
@@ -1746,13 +1986,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf(p_row_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf(p_row_vector, p_row_vector,
+                                     p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -1831,9 +2075,11 @@ transformed data {
   transformed_data_real = gamma_cdf_log(d_real_array, d_real, d_row_vector);
   transformed_data_real = gamma_cdf_log(d_real_array, d_real_array, d_int);
   transformed_data_real = gamma_cdf_log(d_real_array, d_real_array, d_real);
-  transformed_data_real = gamma_cdf_log(d_real_array, d_real_array, d_real_array);
+  transformed_data_real = gamma_cdf_log(d_real_array, d_real_array,
+                                        d_real_array);
   transformed_data_real = gamma_cdf_log(d_real_array, d_real_array, d_vector);
-  transformed_data_real = gamma_cdf_log(d_real_array, d_real_array, d_row_vector);
+  transformed_data_real = gamma_cdf_log(d_real_array, d_real_array,
+                                        d_row_vector);
   transformed_data_real = gamma_cdf_log(d_real_array, d_vector, d_int);
   transformed_data_real = gamma_cdf_log(d_real_array, d_vector, d_real);
   transformed_data_real = gamma_cdf_log(d_real_array, d_vector, d_real_array);
@@ -1841,9 +2087,11 @@ transformed data {
   transformed_data_real = gamma_cdf_log(d_real_array, d_vector, d_row_vector);
   transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector, d_int);
   transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector, d_real);
-  transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector, d_real_array);
+  transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                        d_real_array);
   transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector, d_vector);
-  transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector, d_row_vector);
+  transformed_data_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                        d_row_vector);
   transformed_data_real = gamma_cdf_log(d_vector, d_int, d_int);
   transformed_data_real = gamma_cdf_log(d_vector, d_int, d_real);
   transformed_data_real = gamma_cdf_log(d_vector, d_int, d_real_array);
@@ -1881,9 +2129,11 @@ transformed data {
   transformed_data_real = gamma_cdf_log(d_row_vector, d_real, d_row_vector);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array, d_int);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array, d_real);
-  transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array, d_real_array);
+  transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                        d_real_array);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array, d_vector);
-  transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array, d_row_vector);
+  transformed_data_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                        d_row_vector);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_vector, d_int);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_vector, d_real);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_vector, d_real_array);
@@ -1891,9 +2141,11 @@ transformed data {
   transformed_data_real = gamma_cdf_log(d_row_vector, d_vector, d_row_vector);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector, d_int);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector, d_real);
-  transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector, d_real_array);
+  transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                        d_real_array);
   transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector, d_vector);
-  transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector, d_row_vector);
+  transformed_data_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                        d_row_vector);
 }
 parameters {
   real p_real;
@@ -2086,31 +2338,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, d_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_real_array, d_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_real_array, d_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real, d_real);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real, d_real_array);
@@ -2122,31 +2390,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, p_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_real_array, p_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_real_array, p_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_real_array, p_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_int, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, d_int, d_real);
   transformed_param_real = gamma_cdf_log(d_vector, d_int, d_real_array);
@@ -2167,13 +2451,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, d_real_array,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, d_real_array,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, d_vector, d_real);
   transformed_param_real = gamma_cdf_log(d_vector, d_vector, d_real_array);
@@ -2185,13 +2473,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_real, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, p_real, d_real);
   transformed_param_real = gamma_cdf_log(d_vector, p_real, d_real_array);
@@ -2203,13 +2495,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, p_real_array,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, p_real_array,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, p_vector, d_real);
   transformed_param_real = gamma_cdf_log(d_vector, p_vector, d_real_array);
@@ -2221,13 +2517,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_vector, p_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_int, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_int, d_real);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_int, d_real_array);
@@ -2248,31 +2548,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real, d_real);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real, d_real_array);
@@ -2284,31 +2600,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(d_row_vector, p_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real, d_int, d_int);
   transformed_param_real = gamma_cdf_log(p_real, d_int, d_real);
   transformed_param_real = gamma_cdf_log(p_real, d_int, d_real_array);
@@ -2410,31 +2742,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, d_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_real_array, d_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_real_array, d_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real, d_real);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real, d_real_array);
@@ -2446,31 +2794,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, p_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_real_array, p_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_real_array, p_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_real_array, p_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_int, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, d_int, d_real);
   transformed_param_real = gamma_cdf_log(p_vector, d_int, d_real_array);
@@ -2491,13 +2855,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, d_real_array,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, d_real_array,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, d_vector, d_real);
   transformed_param_real = gamma_cdf_log(p_vector, d_vector, d_real_array);
@@ -2509,13 +2877,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_real, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, p_real, d_real);
   transformed_param_real = gamma_cdf_log(p_vector, p_real, d_real_array);
@@ -2527,13 +2899,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, p_real_array,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, p_real_array,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, p_vector, d_real);
   transformed_param_real = gamma_cdf_log(p_vector, p_vector, d_real_array);
@@ -2545,13 +2921,17 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_vector, p_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_int, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_int, d_real);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_int, d_real_array);
@@ -2572,31 +2952,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, d_row_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real, d_real);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real, d_real_array);
@@ -2608,31 +3004,47 @@ transformed parameters {
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_real_array,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector,
+                                         d_real_array);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector,
+                                         p_real_array);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_vector,
+                                         p_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, d_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         d_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         d_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         d_row_vector);
   transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, p_real_array);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         p_real_array);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         p_vector);
+  transformed_param_real = gamma_cdf_log(p_row_vector, p_row_vector,
+                                         p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -2966,13 +3378,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_log(d_real_array, d_real_array, d_int);
   transformed_param_real = gamma_log(d_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_log(d_real_array, d_real_array, d_real_array);
+  transformed_param_real = gamma_log(d_real_array, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_log(d_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_log(d_real_array, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_log(d_real_array, d_real_array, p_real_array);
+  transformed_param_real = gamma_log(d_real_array, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_log(d_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_log(d_real_array, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_real_array, d_vector, d_int);
   transformed_param_real = gamma_log(d_real_array, d_vector, d_real);
   transformed_param_real = gamma_log(d_real_array, d_vector, d_real_array);
@@ -2984,13 +3400,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_real_array, d_vector, p_row_vector);
   transformed_param_real = gamma_log(d_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_log(d_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_log(d_real_array, d_row_vector, d_real_array);
+  transformed_param_real = gamma_log(d_real_array, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_log(d_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(d_real_array, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_log(d_real_array, d_row_vector, p_real_array);
+  transformed_param_real = gamma_log(d_real_array, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_log(d_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(d_real_array, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_real, d_int);
   transformed_param_real = gamma_log(d_real_array, p_real, d_real);
   transformed_param_real = gamma_log(d_real_array, p_real, d_real_array);
@@ -3002,13 +3422,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_real_array, d_int);
   transformed_param_real = gamma_log(d_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_log(d_real_array, p_real_array, d_real_array);
+  transformed_param_real = gamma_log(d_real_array, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_log(d_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_log(d_real_array, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_log(d_real_array, p_real_array, p_real_array);
+  transformed_param_real = gamma_log(d_real_array, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_log(d_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_log(d_real_array, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_vector, d_int);
   transformed_param_real = gamma_log(d_real_array, p_vector, d_real);
   transformed_param_real = gamma_log(d_real_array, p_vector, d_real_array);
@@ -3020,13 +3444,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_real_array, p_vector, p_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_log(d_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_log(d_real_array, p_row_vector, d_real_array);
+  transformed_param_real = gamma_log(d_real_array, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_log(d_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(d_real_array, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_log(d_real_array, p_row_vector, p_real_array);
+  transformed_param_real = gamma_log(d_real_array, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_log(d_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(d_real_array, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_vector, d_int, d_int);
   transformed_param_real = gamma_log(d_vector, d_int, d_real);
   transformed_param_real = gamma_log(d_vector, d_int, d_real_array);
@@ -3128,13 +3556,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_log(d_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_log(d_row_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_log(d_row_vector, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_log(d_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_log(d_row_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_log(d_row_vector, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_log(d_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, d_vector, d_int);
   transformed_param_real = gamma_log(d_row_vector, d_vector, d_real);
   transformed_param_real = gamma_log(d_row_vector, d_vector, d_real_array);
@@ -3146,13 +3578,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_row_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_log(d_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_log(d_row_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_log(d_row_vector, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_log(d_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_log(d_row_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_log(d_row_vector, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_log(d_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_real, d_int);
   transformed_param_real = gamma_log(d_row_vector, p_real, d_real);
   transformed_param_real = gamma_log(d_row_vector, p_real, d_real_array);
@@ -3164,13 +3600,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_log(d_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_log(d_row_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_log(d_row_vector, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_log(d_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_log(d_row_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_log(d_row_vector, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_log(d_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_vector, d_int);
   transformed_param_real = gamma_log(d_row_vector, p_vector, d_real);
   transformed_param_real = gamma_log(d_row_vector, p_vector, d_real_array);
@@ -3182,13 +3622,17 @@ transformed parameters {
   transformed_param_real = gamma_log(d_row_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_log(d_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_log(d_row_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_log(d_row_vector, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(d_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_log(d_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(d_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_log(d_row_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_log(d_row_vector, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(d_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_log(d_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(d_row_vector, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_real, d_int, d_int);
   transformed_param_real = gamma_log(p_real, d_int, d_real);
   transformed_param_real = gamma_log(p_real, d_int, d_real_array);
@@ -3290,13 +3734,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_real_array, d_real, p_row_vector);
   transformed_param_real = gamma_log(p_real_array, d_real_array, d_int);
   transformed_param_real = gamma_log(p_real_array, d_real_array, d_real);
-  transformed_param_real = gamma_log(p_real_array, d_real_array, d_real_array);
+  transformed_param_real = gamma_log(p_real_array, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_real_array, d_real_array, d_vector);
-  transformed_param_real = gamma_log(p_real_array, d_real_array, d_row_vector);
+  transformed_param_real = gamma_log(p_real_array, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_real_array, d_real_array, p_real);
-  transformed_param_real = gamma_log(p_real_array, d_real_array, p_real_array);
+  transformed_param_real = gamma_log(p_real_array, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_real_array, d_real_array, p_vector);
-  transformed_param_real = gamma_log(p_real_array, d_real_array, p_row_vector);
+  transformed_param_real = gamma_log(p_real_array, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_real_array, d_vector, d_int);
   transformed_param_real = gamma_log(p_real_array, d_vector, d_real);
   transformed_param_real = gamma_log(p_real_array, d_vector, d_real_array);
@@ -3308,13 +3756,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_real_array, d_vector, p_row_vector);
   transformed_param_real = gamma_log(p_real_array, d_row_vector, d_int);
   transformed_param_real = gamma_log(p_real_array, d_row_vector, d_real);
-  transformed_param_real = gamma_log(p_real_array, d_row_vector, d_real_array);
+  transformed_param_real = gamma_log(p_real_array, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_real_array, d_row_vector, d_vector);
-  transformed_param_real = gamma_log(p_real_array, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(p_real_array, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_real_array, d_row_vector, p_real);
-  transformed_param_real = gamma_log(p_real_array, d_row_vector, p_real_array);
+  transformed_param_real = gamma_log(p_real_array, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_real_array, d_row_vector, p_vector);
-  transformed_param_real = gamma_log(p_real_array, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(p_real_array, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_real, d_int);
   transformed_param_real = gamma_log(p_real_array, p_real, d_real);
   transformed_param_real = gamma_log(p_real_array, p_real, d_real_array);
@@ -3326,13 +3778,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_real_array, p_real, p_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_real_array, d_int);
   transformed_param_real = gamma_log(p_real_array, p_real_array, d_real);
-  transformed_param_real = gamma_log(p_real_array, p_real_array, d_real_array);
+  transformed_param_real = gamma_log(p_real_array, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_real_array, p_real_array, d_vector);
-  transformed_param_real = gamma_log(p_real_array, p_real_array, d_row_vector);
+  transformed_param_real = gamma_log(p_real_array, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_real_array, p_real);
-  transformed_param_real = gamma_log(p_real_array, p_real_array, p_real_array);
+  transformed_param_real = gamma_log(p_real_array, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_real_array, p_real_array, p_vector);
-  transformed_param_real = gamma_log(p_real_array, p_real_array, p_row_vector);
+  transformed_param_real = gamma_log(p_real_array, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_vector, d_int);
   transformed_param_real = gamma_log(p_real_array, p_vector, d_real);
   transformed_param_real = gamma_log(p_real_array, p_vector, d_real_array);
@@ -3344,13 +3800,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_real_array, p_vector, p_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_row_vector, d_int);
   transformed_param_real = gamma_log(p_real_array, p_row_vector, d_real);
-  transformed_param_real = gamma_log(p_real_array, p_row_vector, d_real_array);
+  transformed_param_real = gamma_log(p_real_array, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_real_array, p_row_vector, d_vector);
-  transformed_param_real = gamma_log(p_real_array, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(p_real_array, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_real_array, p_row_vector, p_real);
-  transformed_param_real = gamma_log(p_real_array, p_row_vector, p_real_array);
+  transformed_param_real = gamma_log(p_real_array, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_real_array, p_row_vector, p_vector);
-  transformed_param_real = gamma_log(p_real_array, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(p_real_array, p_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_vector, d_int, d_int);
   transformed_param_real = gamma_log(p_vector, d_int, d_real);
   transformed_param_real = gamma_log(p_vector, d_int, d_real_array);
@@ -3452,13 +3912,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_row_vector, d_real, p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, d_real_array, d_int);
   transformed_param_real = gamma_log(p_row_vector, d_real_array, d_real);
-  transformed_param_real = gamma_log(p_row_vector, d_real_array, d_real_array);
+  transformed_param_real = gamma_log(p_row_vector, d_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_row_vector, d_real_array, d_vector);
-  transformed_param_real = gamma_log(p_row_vector, d_real_array, d_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, d_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_row_vector, d_real_array, p_real);
-  transformed_param_real = gamma_log(p_row_vector, d_real_array, p_real_array);
+  transformed_param_real = gamma_log(p_row_vector, d_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_row_vector, d_real_array, p_vector);
-  transformed_param_real = gamma_log(p_row_vector, d_real_array, p_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, d_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, d_vector, d_int);
   transformed_param_real = gamma_log(p_row_vector, d_vector, d_real);
   transformed_param_real = gamma_log(p_row_vector, d_vector, d_real_array);
@@ -3470,13 +3934,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_row_vector, d_vector, p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, d_row_vector, d_int);
   transformed_param_real = gamma_log(p_row_vector, d_row_vector, d_real);
-  transformed_param_real = gamma_log(p_row_vector, d_row_vector, d_real_array);
+  transformed_param_real = gamma_log(p_row_vector, d_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_row_vector, d_row_vector, d_vector);
-  transformed_param_real = gamma_log(p_row_vector, d_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, d_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_row_vector, d_row_vector, p_real);
-  transformed_param_real = gamma_log(p_row_vector, d_row_vector, p_real_array);
+  transformed_param_real = gamma_log(p_row_vector, d_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_row_vector, d_row_vector, p_vector);
-  transformed_param_real = gamma_log(p_row_vector, d_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, d_row_vector,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_real, d_int);
   transformed_param_real = gamma_log(p_row_vector, p_real, d_real);
   transformed_param_real = gamma_log(p_row_vector, p_real, d_real_array);
@@ -3488,13 +3956,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_row_vector, p_real, p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_real_array, d_int);
   transformed_param_real = gamma_log(p_row_vector, p_real_array, d_real);
-  transformed_param_real = gamma_log(p_row_vector, p_real_array, d_real_array);
+  transformed_param_real = gamma_log(p_row_vector, p_real_array,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_row_vector, p_real_array, d_vector);
-  transformed_param_real = gamma_log(p_row_vector, p_real_array, d_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, p_real_array,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_real_array, p_real);
-  transformed_param_real = gamma_log(p_row_vector, p_real_array, p_real_array);
+  transformed_param_real = gamma_log(p_row_vector, p_real_array,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_row_vector, p_real_array, p_vector);
-  transformed_param_real = gamma_log(p_row_vector, p_real_array, p_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, p_real_array,
+                                     p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_vector, d_int);
   transformed_param_real = gamma_log(p_row_vector, p_vector, d_real);
   transformed_param_real = gamma_log(p_row_vector, p_vector, d_real_array);
@@ -3506,13 +3978,17 @@ transformed parameters {
   transformed_param_real = gamma_log(p_row_vector, p_vector, p_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_row_vector, d_int);
   transformed_param_real = gamma_log(p_row_vector, p_row_vector, d_real);
-  transformed_param_real = gamma_log(p_row_vector, p_row_vector, d_real_array);
+  transformed_param_real = gamma_log(p_row_vector, p_row_vector,
+                                     d_real_array);
   transformed_param_real = gamma_log(p_row_vector, p_row_vector, d_vector);
-  transformed_param_real = gamma_log(p_row_vector, p_row_vector, d_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, p_row_vector,
+                                     d_row_vector);
   transformed_param_real = gamma_log(p_row_vector, p_row_vector, p_real);
-  transformed_param_real = gamma_log(p_row_vector, p_row_vector, p_real_array);
+  transformed_param_real = gamma_log(p_row_vector, p_row_vector,
+                                     p_real_array);
   transformed_param_real = gamma_log(p_row_vector, p_row_vector, p_vector);
-  transformed_param_real = gamma_log(p_row_vector, p_row_vector, p_row_vector);
+  transformed_param_real = gamma_log(p_row_vector, p_row_vector,
+                                     p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);

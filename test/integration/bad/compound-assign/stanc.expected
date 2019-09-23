@@ -10,13 +10,13 @@ Semantic error in 'elt_divide_equals_prim.stan', line 4, column 2 to column 10:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator ./=: lhs has type real and rhs has type real. Available signatures:
-(vector, vector) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(matrix, int) => void
 (row_vector, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
 
@@ -52,7 +52,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 12 to column 19, par
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 
-Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 14:
+Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[3] x;
      3:    real y;
@@ -76,18 +76,18 @@ Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 14:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type (real) => real and rhs has type real. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
 
@@ -128,18 +128,18 @@ Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type matrix[] and rhs has type matrix[]. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
 
@@ -153,18 +153,18 @@ Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 2 to column 1
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type matrix and rhs has type row_vector. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
 
@@ -193,18 +193,18 @@ Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type real[] and rhs has type real[]. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
 
@@ -218,18 +218,18 @@ Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 9
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type row_vector[] and rhs has type row_vector[]. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
 
@@ -244,18 +244,18 @@ Semantic error in 'plus_equals_sliced.stan', line 6, column 4 to column 27:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type vector and rhs has type matrix. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
 
@@ -269,18 +269,18 @@ Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 2 to column 9
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type int and rhs has type real. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
 
@@ -294,18 +294,18 @@ Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 2 to column 
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type real and rhs has type vector. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
 
@@ -319,18 +319,18 @@ Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type vector[] and rhs has type vector[]. Available signatures:
-(vector, vector) => void
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, row_vector) => void
+(vector, vector) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, row_vector) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 
   $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
 
@@ -345,15 +345,15 @@ Semantic error in 'times_equals_matrix_array.stan', line 5, column 2 to column 1
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator *=: lhs has type row_vector and rhs has type row_vector. Available signatures:
+(int, int) => void
+(real, int) => void
+(real, real) => void
 (vector, int) => void
 (vector, real) => void
-(row_vector, matrix) => void
 (row_vector, int) => void
-(real, int) => void
-(matrix, int) => void
 (row_vector, real) => void
-(real, real) => void
+(row_vector, matrix) => void
+(matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
-(int, int) => void
 

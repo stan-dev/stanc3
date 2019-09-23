@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Middle
+module Str = Re.Str
 
 (** Our type of syntax error information *)
 type parse_error =
@@ -133,14 +134,24 @@ let report_semantic_error (message, loc_span) =
     (string_of_location_span loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
+(** Switch to control whether warning messages should be printed to stderr (or discarded in case set to false) *)
+let print_warnings = ref true
+
+let without_warnings function_name args =
+  print_warnings := false ;
+  let out = function_name args in
+  print_warnings := true ;
+  out
+
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, message) =
   let loc =
     location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
   in
-  Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
-    (string_of_location loc) ;
-  print_context_and_message message loc
+  if !print_warnings then (
+    Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
+      (string_of_location loc) ;
+    print_context_and_message message loc )
 
 (* TESTS *)
 let%expect_test "location string equivalence 1" =

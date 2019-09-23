@@ -27,7 +27,8 @@ model {
 }
 generated quantities {
   vector<lower=0>[G] theta;
-  for (g in 1 : G) theta[g] <- 1 / (a[g] + b[g]);
+  for (g in 1 : G) 
+    theta[g] <- 1 / (a[g] + b[g]);
 }
 
 
@@ -93,8 +94,10 @@ model {
 generated quantities {
   vector<lower=0, upper=1>[G] mu;
   vector<lower=0>[G] theta;
-  for (g in 1 : G) mu[g] <- a[g] / (a[g] + b[g]);
-  for (g in 1 : G) theta[g] <- 1 / (a[g] + b[g]);
+  for (g in 1 : G) 
+    mu[g] <- a[g] / (a[g] + b[g]);
+  for (g in 1 : G) 
+    theta[g] <- 1 / (a[g] + b[g]);
 }
 
 

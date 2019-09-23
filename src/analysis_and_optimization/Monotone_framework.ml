@@ -220,12 +220,12 @@ let constant_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Assignment ((s, []), e) -> (
+            | Middle.Assignment ((s, _, []), e) -> (
               match Partial_evaluator.eval_expr (subst_expr m e) with
               | {expr= Middle.Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -257,10 +257,10 @@ let expression_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Assignment ((s, []), e) ->
+            | Middle.Assignment ((s, _, []), e) ->
                 Map.set m ~key:s ~data:(subst_expr m e)
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -289,10 +289,10 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
           Some
             ( match mir_node with
-            | Middle.Assignment ((s, []), {expr= Middle.Var t; emeta}) ->
+            | Middle.Assignment ((s, _, []), {expr= Middle.Var t; emeta}) ->
                 Map.set m ~key:s ~data:{Middle.expr= Middle.Var t; emeta}
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
-              ->
+            | Middle.Decl {decl_id= s; _}
+             |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | Middle.Assignment (_, _)
              |Middle.TargetPE _
@@ -313,22 +313,32 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
 (* TODO: from here *)
 
-(** Calculate the set of variables that a statement can assign to or declare *)
-let assigned_or_declared_vars_stmt
-    (s : (Middle.expr_typed_located, 'a) Middle.statement) =
+(** Calculate the set of variables that a statement can assign to *)
+let assigned_vars_stmt (s : (Middle.expr_typed_located, 'a) Middle.statement) =
   match s with
-  | Middle.Assignment ((x, _), _) | Middle.Decl {decl_id= x; _} ->
-      Set.Poly.singleton x
+  | Middle.Assignment ((x, _, _), _) -> Set.Poly.singleton x
   | Middle.TargetPE _ -> Set.Poly.singleton "target"
   | Middle.NRFunApp (_, s, _) when String.suffix s 3 = "_lp" ->
       Set.Poly.singleton "target"
   | Middle.For {loopvar= x; _} -> Set.Poly.singleton x
-  | Middle.NRFunApp (_, _, _)
+  | Middle.Decl {decl_id= _; _}
+   |Middle.NRFunApp (_, _, _)
    |Middle.Break | Middle.Continue | Middle.Return _ | Middle.Skip
    |Middle.IfElse (_, _, _)
    |Middle.While (_, _)
    |Middle.Block _ | Middle.SList _ ->
       Set.Poly.empty
+
+(** Calculate the set of variables that a statement can declare *)
+let declared_vars_stmt (s : (Middle.expr_typed_located, 'a) Middle.statement) =
+  match s with
+  | Middle.Decl {decl_id= x; _} -> Set.Poly.singleton x
+  | _ -> Set.Poly.empty
+
+(** Calculate the set of variables that a statement can assign to or declare *)
+let assigned_or_declared_vars_stmt
+    (s : (Middle.expr_typed_located, 'a) Middle.statement) =
+  Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for a reaching definitions analysis *)
 let reaching_definitions_transfer
@@ -347,7 +357,7 @@ let reaching_definitions_transfer
       let kill =
         match mir_node with
         | Middle.Decl {decl_id= x; _}
-         |Middle.Assignment ((x, []), _)
+         |Middle.Assignment ((x, _, []), _)
          |Middle.For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | Middle.TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
@@ -365,6 +375,21 @@ let reaching_definitions_transfer
   : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (string * int option) Set.Poly.t )
+
+(** The transfer function for an initialized variables analysis *)
+let initialized_vars_transfer
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = string Set.Poly.t
+
+    let transfer_function l p =
+      let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
+      let gen = assigned_vars_stmt mir_node in
+      transfer_gen_kill p gen Set.Poly.empty
+  end
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = string Set.Poly.t )
 
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Middle.expr_typed_located) =
@@ -384,9 +409,7 @@ let rec free_vars_expr (e : Middle.expr_typed_located) =
 and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Set.Poly.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      free_vars_expr e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> free_vars_expr e
   | Middle.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
@@ -394,10 +417,11 @@ and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
 let rec free_vars_stmt
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.Return (Some e) | Middle.TargetPE e
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.Return (Some e)
+   |Middle.TargetPE e ->
       free_vars_expr e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | Middle.NRFunApp (_, f, l) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
@@ -444,7 +468,7 @@ let live_variables_transfer
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Middle.Assignment ((x, []), _) | Middle.Decl {decl_id= x; _} ->
+        | Middle.Assignment ((x, _, []), _) | Middle.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | Middle.TargetPE _
          |Middle.NRFunApp (_, _, _)
@@ -452,7 +476,7 @@ let live_variables_transfer
          |Middle.IfElse (_, _, _)
          |Middle.While (_, _)
          |Middle.For _ | Middle.Block _ | Middle.SList _
-         |Middle.Assignment ((_, _ :: _), _) ->
+         |Middle.Assignment ((_, _, _ :: _), _) ->
             Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -485,9 +509,7 @@ let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
 and used_expressions_idx_help f (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Middle.ExprSet.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      f e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> f e
   | Middle.Between (e1, e2) -> Middle.ExprSet.union (f e1) (f e2)
 
 (** Calculate the set of expressions of an expression *)
@@ -496,10 +518,11 @@ let used_expressions_expr e = Middle.ExprSet.singleton e
 let rec used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.TargetPE e
+   |Middle.Return (Some e) ->
       f e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Middle.ExprSet.union (f e)
         (Middle.ExprSet.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
@@ -537,10 +560,11 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, int) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
-    ->
+  | Middle.Assignment ((_, _, []), e)
+   |Middle.TargetPE e
+   |Middle.Return (Some e) ->
       f e
-  | Middle.Assignment ((_, l), e) ->
+  | Middle.Assignment ((_, _, l), e) ->
       Middle.ExprSet.union (f e)
         (Middle.ExprSet.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
@@ -704,7 +728,7 @@ let autodiff_level_fwd1_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen =
         match mir_node with
-        | Middle.Assignment ((x, _), e)
+        | Middle.Assignment ((x, _, _), e)
           when (update_expr_ad_levels p e).emeta.madlevel = Middle.AutoDiffable
           ->
             Set.Poly.singleton x
@@ -784,35 +808,29 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       (* STEP 1: initialize data structures *)
       let workstack = Stack.create () in
       (* TODO: does the order matter a lot for efficiency here? *)
-      let _ =
-        Map.iteri F.successors ~f:(fun ~key ~data ->
-            Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) )
-      in
+      Map.iteri F.successors ~f:(fun ~key ~data ->
+          Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) ) ;
       let analysis_in = Hashtbl.create (module F) in
-      let _ =
-        Map.iter_keys
-          ~f:(fun l ->
-            Hashtbl.add_exn analysis_in ~key:l
-              ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
-          F.successors
-      in
+      Map.iter_keys
+        ~f:(fun l ->
+          Hashtbl.add_exn analysis_in ~key:l
+            ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
+        F.successors ;
       (* STEP 2: iterate *)
-      let _ =
-        while Stack.length workstack <> 0 do
-          let l, l' = Stack.pop_exn workstack in
-          let old_analysis_in_l' = Hashtbl.find_exn analysis_in l' in
-          let new_analysis_in_l' =
-            T.transfer_function l (Hashtbl.find_exn analysis_in l)
+      while Stack.length workstack <> 0 do
+        let l, l' = Stack.pop_exn workstack in
+        let old_analysis_in_l' = Hashtbl.find_exn analysis_in l' in
+        let new_analysis_in_l' =
+          T.transfer_function l (Hashtbl.find_exn analysis_in l)
+        in
+        if not (L.leq new_analysis_in_l' old_analysis_in_l') then
+          let () =
+            Hashtbl.set analysis_in ~key:l'
+              ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
           in
-          if not (L.leq new_analysis_in_l' old_analysis_in_l') then
-            let _ =
-              Hashtbl.set analysis_in ~key:l'
-                ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
-            in
-            Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
-                Stack.push workstack (l', l'') )
-        done
-      in
+          Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
+              Stack.push workstack (l', l'') )
+      done ;
       (* STEP 3: present final results *)
       let analysis_in_out =
         Map.fold ~init:Map.Poly.empty
@@ -914,6 +932,22 @@ let reaching_definitions_mfp (mir : Middle.typed_prog)
   in
   let (module Lattice) = reaching_definitions_lattice variables labels in
   let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
+
+let initialized_vars_mfp (total : string Set.Poly.t)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
+  let (module Lattice) =
+    dual_powerset_lattice_empty_initial
+      (module struct type vals = string
+
+                     let total = total end)
+  in
+  let (module Transfer) = initialized_vars_transfer flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

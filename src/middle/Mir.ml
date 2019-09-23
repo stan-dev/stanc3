@@ -29,7 +29,9 @@ type operator =
   | EltDivide
   | Pow
   | Or
+  (* deprecated?*)
   | And
+  (* deprecated?*)
   | Equals
   | NEquals
   | Less
@@ -83,11 +85,7 @@ type fun_kind = StanLib | CompilerInternal | UserDefined
 type 'e index =
   | All
   | Single of 'e
-  (*
-  | MatrixSingle of 'e
- *)
   | Upfrom of 'e
-  | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
 [@@deriving sexp, hash, map, fold]
@@ -113,7 +111,8 @@ type 's fun_def =
   ; fdloc: location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
-type 'e lvalue = string * 'e index list [@@deriving sexp, hash, map, fold]
+type 'e lvalue = string * unsizedtype * 'e index list
+[@@deriving sexp, hash, map, fold]
 
 type ('e, 's) statement =
   | Assignment of 'e lvalue * 'e
@@ -150,7 +149,7 @@ type 'e outvar =
 
 type ('e, 's) prog =
   { functions_block: 's fun_def list
-  ; input_vars: (string * 'e sizedtype) list
+  ; input_vars: (string * 'e sizedtype) list (* AS READ IN, ie unconstrained *)
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 's list (* assumes data & params ready & in scope*)
@@ -199,6 +198,7 @@ type internal_fn =
   | FnMakeRowVec
   | FnNegInf
   | FnReadData
+  (* XXX move these to a backend specific file?*)
   | FnReadParam
   | FnWriteParam
   | FnConstrain
@@ -206,7 +206,17 @@ type internal_fn =
   | FnCheck
   | FnPrint
   | FnReject
+  | FnResizeToMatch
 [@@deriving sexp]
+
+type flag_vars = EmitGeneratedQuantities | EmitTransformedParameters
+
+let all_flag_vars = [EmitGeneratedQuantities; EmitTransformedParameters]
+
+let string_of_flag_var (flag_var : flag_vars) : string =
+  match flag_var with
+  | EmitGeneratedQuantities -> "emit_generated_quantities__"
+  | EmitTransformedParameters -> "emit_transformed_parameters__"
 
 (**  A custom comparator which ignores locations on expressions *)
 module ExprComparator = struct

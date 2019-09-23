@@ -16,10 +16,12 @@ transformed data {
 generated quantities {
   simplex[K] is_best;
   vector<lower=0, upper=1>[K] theta;
-  for (k in 1 : K) theta[k] = beta_rng(1 + successes[k], 1 + trials[k] - successes[k]);
+  for (k in 1 : K) 
+    theta[k] = beta_rng(1 + successes[k], 1 + trials[k] - successes[k]);
   {
     real best_prob = max(theta);
-    for (k in 1 : K) is_best[k] = (theta[k] >= best_prob);
+    for (k in 1 : K) 
+      is_best[k] = (theta[k] >= best_prob);
     is_best /= sum(is_best);
   }
 }
@@ -49,7 +51,8 @@ generated quantities {
   simplex[K] is_best;
   {
     real best_prob = max(theta);
-    for (k in 1 : K) is_best[k] = (theta[k] >= best_prob);
+    for (k in 1 : K) 
+      is_best[k] = (theta[k] >= best_prob);
     is_best /= sum(is_best);
   }
 }
@@ -71,7 +74,8 @@ generated quantities {
   simplex[K] is_best;
   {
     real best_prob = max(theta);
-    for (k in 1 : K) is_best[k] = (theta[k] >= best_prob);
+    for (k in 1 : K) 
+      is_best[k] = (theta[k] >= best_prob);
     is_best /= sum(is_best);
   }
 }

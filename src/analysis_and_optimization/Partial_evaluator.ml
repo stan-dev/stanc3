@@ -4,6 +4,14 @@ open Core_kernel
 open Mir_utils
 open Middle
 
+let is_int i e =
+  let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
+  match e with
+  | ({expr= Lit (Int, i); _} | {expr= Lit (Real, i); _})
+    when List.mem nums i ~equal:String.equal ->
+      true
+  | _ -> false
+
 let apply_prefix_operator_int (op : string) i =
   Lit
     ( Int
@@ -64,6 +72,10 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s -> raise_s [%sexp (s : string)] ) )
+
+let is_multi_index = function
+  | MultiIndex _ | Upfrom _ | Between _ | All -> true
+  | Single _ -> false
 
 let rec eval_expr (e : Middle.expr_typed_located) =
   { e with
@@ -170,7 +182,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               , [{expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "bernoulli_logit_rng", [alpha])
             | ( "binomial_lpmf"
-              , [y; {expr= FunApp (StanLib, "inv_logit", [n; alpha]); _}] ) ->
+              , [y; n; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "binomial_logit_lpmf", [y; n; alpha])
             | ( "categorical_lpmf"
               , [y; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
@@ -192,38 +204,33 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "Minus__"
-                        , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
-              ) ->
+                        , [y; {expr= FunApp (StanLib, "exp", [x]); _}] ); _ }
+                ] )
+              when is_int 1 y ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
               , [ { expr=
                       FunApp
                         ( StanLib
                         , "Minus__"
-                        , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "inv_logit", [x]); _} ] ); _
-                  } ] ) ->
+                        , [y; {expr= FunApp (StanLib, "inv_logit", [x]); _}] ); _
+                  } ] )
+              when is_int 1 y ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
-            | ( "log"
-              , [ { expr=
-                      FunApp
-                        (StanLib, "Minus__", [{expr= Lit (Int, "1"); _}; x]); _
-                  } ] ) ->
+            | "log", [{expr= FunApp (StanLib, "Minus__", [y; x]); _}]
+              when is_int 1 y ->
                 FunApp (StanLib, "log1m", [x])
             | ( "log"
               , [ { expr=
                       FunApp
                         ( StanLib
                         , "Plus__"
-                        , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
-              ) ->
+                        , [y; {expr= FunApp (StanLib, "exp", [x]); _}] ); _ }
+                ] )
+              when is_int 1 y ->
                 FunApp (StanLib, "log1p_exp", [x])
-            | ( "log"
-              , [ { expr=
-                      FunApp (StanLib, "Plus__", [{expr= Lit (Int, "1"); _}; x]); _
-                  } ] ) ->
+            | "log", [{expr= FunApp (StanLib, "Plus__", [y; x]); _}]
+              when is_int 1 y ->
                 FunApp (StanLib, "log1p", [x])
             | ( "log"
               , [ { expr=
@@ -366,22 +373,6 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             | ( "neg_binomial_2_rng"
               , [{expr= FunApp (StanLib, "exp", [eta]); _}; phi] ) ->
                 FunApp (StanLib, "neg_binomial_2_log_rng", [eta; phi])
-            | ( "poisson_lpmf"
-              , [ y
-                ; { expr=
-                      FunApp
-                        ( StanLib
-                        , "exp"
-                        , [ { expr=
-                                FunApp
-                                  ( StanLib
-                                  , "Plus__"
-                                  , [ alpha
-                                    ; { expr=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      } ] ); _ } ] ); _ } ] )
-              when x.emeta.mtype = UMatrix ->
-                FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "normal_lpdf"
               , [ y
                 ; { expr=
@@ -412,6 +403,22 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "normal_id_glm_lpdf", [y; x; zero; beta; sigma])
+            | ( "poisson_lpmf"
+              , [ y
+                ; { expr=
+                      FunApp
+                        ( StanLib
+                        , "exp"
+                        , [ { expr=
+                                FunApp
+                                  ( StanLib
+                                  , "Plus__"
+                                  , [ alpha
+                                    ; { expr=
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      } ] ); _ } ] ); _ } ] )
+              when x.emeta.mtype = UMatrix ->
+                FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_lpmf"
               , [ y
                 ; { expr=
@@ -467,27 +474,20 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "poisson_log_lpmf", [y; eta])
             | "poisson_rng", [{expr= FunApp (StanLib, "exp", [eta]); _}] ->
                 FunApp (StanLib, "poisson_log_rng", [eta])
-            | "pow", [{expr= Lit (Int, "2"); _}; x] ->
-                FunApp (StanLib, "exp2", [x])
+            | "pow", [y; x] when is_int 2 y -> FunApp (StanLib, "exp2", [x])
             | "rows_dot_product", [x; y]
               when compare_expr_typed_located x y = 0 ->
                 FunApp (StanLib, "rows_dot_self", [x])
             | "pow", [x; {expr= Lit (Int, "2"); _}] ->
                 FunApp (StanLib, "square", [x])
-            | "pow", [x; {expr= Lit (Real, "0.5"); _}]
-             |( "pow"
-              , [ x
-                ; { expr=
-                      FunApp
-                        ( StanLib
-                        , "Divide__"
-                        , [{expr= Lit (Int, "1"); _}; {expr= Lit (Int, "2"); _}]
-                        ); _ } ] ) ->
+            | "pow", [x; {expr= Lit (Real, "0.5"); _}] ->
+                FunApp (StanLib, "sqrt", [x])
+            | "pow", [x; {expr= FunApp (StanLib, "Divide__", [y; z]); _}]
+              when is_int 1 y && is_int 2 z ->
                 FunApp (StanLib, "sqrt", [x])
             | "square", [{expr= FunApp (StanLib, "sd", [x]); _}] ->
                 FunApp (StanLib, "variance", [x])
-            | "sqrt", [{expr= Lit (Int, "2"); _}] ->
-                FunApp (StanLib, "sqrt2", [])
+            | "sqrt", [x] when is_int 2 x -> FunApp (StanLib, "sqrt2", [])
             | ( "sum"
               , [ { expr=
                       FunApp
@@ -523,28 +523,23 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "trace_gen_quad_form", [d; a; b])
             | "trace", [{expr= FunApp (StanLib, "quad_form", [a; b]); _}] ->
                 FunApp (StanLib, "trace_quad_form", [a; b])
-            | ( "Minus__"
-              , [ {expr= Lit (Int, "1"); _}
-                ; {expr= FunApp (StanLib, "erf", l); _} ] ) ->
+            | "Minus__", [x; {expr= FunApp (StanLib, "erf", l); _}]
+              when is_int 1 x ->
                 FunApp (StanLib, "erfc", l)
-            | ( "Minus__"
-              , [ {expr= Lit (Int, "1"); _}
-                ; {expr= FunApp (StanLib, "erfc", l); _} ] ) ->
+            | "Minus__", [x; {expr= FunApp (StanLib, "erfc", l); _}]
+              when is_int 1 x ->
                 FunApp (StanLib, "erf", l)
-            | ( "Minus__"
-              , [ {expr= FunApp (StanLib, "exp", l'); _}
-                ; {expr= Lit (Int, "1"); _} ] ) ->
+            | "Minus__", [{expr= FunApp (StanLib, "exp", l'); _}; x]
+              when is_int 1 x ->
                 FunApp (StanLib, "expm1", l')
             | "Plus__", [{expr= FunApp (StanLib, "Times__", [x; y]); _}; z]
              |"Plus__", [z; {expr= FunApp (StanLib, "Times__", [x; y]); _}] ->
                 FunApp (StanLib, "fma", [x; y; z])
-            | ( "Minus__"
-              , [ {expr= Lit (Int, "1"); _}
-                ; {expr= FunApp (StanLib, "gamma_p", l); _} ] ) ->
+            | "Minus__", [x; {expr= FunApp (StanLib, "gamma_p", l); _}]
+              when is_int 1 x ->
                 FunApp (StanLib, "gamma_q", l)
-            | ( "Minus__"
-              , [ {expr= Lit (Int, "1"); _}
-                ; {expr= FunApp (StanLib, "gamma_q", l); _} ] ) ->
+            | "Minus__", [x; {expr= FunApp (StanLib, "gamma_q", l); _}]
+              when is_int 1 x ->
                 FunApp (StanLib, "gamma_p", l)
             | ( "Times__"
               , [ { expr=
@@ -568,36 +563,16 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
             | "Times__", [{expr= FunApp (StanLib, "matrix_exp", [a]); _}; b] ->
                 FunApp (StanLib, "matrix_exp_multiply", [a; b])
-            | "Times__", [x; {expr= FunApp (StanLib, "log", [y]); _}] ->
-                FunApp (StanLib, "multiply_log", [x; y])
+            | "Times__", [x; {expr= FunApp (StanLib, "log", [y]); _}]
+             |"Times__", [{expr= FunApp (StanLib, "log", [y]); _}; x] ->
+                FunApp (StanLib, "lmultiply", [x; y])
             | ( "Times__"
-              , [ { expr=
-                      FunApp
-                        ( StanLib
-                        , "transpose"
-                        , [{expr= FunApp (StanLib, "diag_matrix", [v]); _}] ); _
-                  }
-                ; { expr=
-                      FunApp
-                        ( StanLib
-                        , "Times__"
-                        , [a; {expr= FunApp (StanLib, "diag_matrix", [w]); _}]
-                        ); _ } ] )
+              , [ {expr= FunApp (StanLib, "diag_matrix", [v]); _}
+                ; {expr= FunApp (StanLib, "diag_post_multiply", [a; w]); _} ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
             | ( "Times__"
-              , [ { expr=
-                      FunApp
-                        ( StanLib
-                        , "Times__"
-                        , [ { expr=
-                                FunApp
-                                  ( StanLib
-                                  , "transpose"
-                                  , [ { expr=
-                                          FunApp (StanLib, "diag_matrix", [v]); _
-                                      } ] ); _ }
-                          ; a ] ); _ }
+              , [ {expr= FunApp (StanLib, "diag_pre_multiply", [v; a]); _}
                 ; {expr= FunApp (StanLib, "diag_matrix", [w]); _} ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
@@ -625,12 +600,12 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 (* Constant folding for operators *)
             | op, [{expr= Lit (Int, i); _}] -> (
               match op with
-              | "PPlus_" | "PMinus__" | "PNot__" ->
+              | "PPlus__" | "PMinus__" | "PNot__" ->
                   apply_prefix_operator_int op (Int.of_string i)
               | _ -> FunApp (StanLib, op, l) )
             | op, [{expr= Lit (Real, r); _}] -> (
               match op with
-              | "PPlus_" | "PMinus__" ->
+              | "PPlus__" | "PMinus__" ->
                   apply_prefix_operator_real op (Float.of_string r)
               | _ -> FunApp (StanLib, op, l) )
             | op, [{expr= Lit (Int, i1); _}; {expr= Lit (Int, i2); _}] -> (
@@ -655,7 +630,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with
-        | {expr= Lit (Int, "0"); _}, _, e3' -> e3'.expr
+        | x, _, e3' when is_int 0 x -> e3'.expr
         | {expr= Lit (Int, _); _}, e2', _ -> e2'.expr
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | EAnd (e1, e2) -> (
@@ -663,7 +638,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
-        | {expr= Lit (Real, s1); _}, {expr= Lit (Real, s2); _} ->
+        | {expr= Lit (_, s1); _}, {expr= Lit (_, s2); _} ->
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
         | e1', e2' -> EAnd (e1', e2') )
@@ -672,17 +647,93 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
-        | {expr= Lit (Real, s1); _}, {expr= Lit (Real, s2); _} ->
+        | {expr= Lit (_, s1); _}, {expr= Lit (_, s2); _} ->
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-  Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval_expr e, List.map ~f:eval_idx l) ) }
+       Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+          Indexed (eval_expr e, List.map ~f:(map_index eval_expr) l) ) }
 
-and eval_idx i = map_index eval_expr i
+let rec simplify_index_expr = function
+  | Indexed
+      ( { expr=
+            Indexed (obj, inner_indices)
+            (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
+               *   :: inner_tl ) *)
+        ; emeta }
+      , (Single ({emeta= {mtype= UInt; _}; _} as single_e) as single)
+        :: outer_tl )
+    when List.exists ~f:is_multi_index inner_indices -> (
+    match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
+    | inner_singles, MultiIndex first_multi :: inner_tl ->
+        (* foo [arr1, ..., arrN] [i1, ..., iN] ->
+         foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+        simplify_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             { expr= Indexed (first_multi, [single])
+                             ; emeta= {emeta with mtype= UInt} } ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | inner_singles, All :: inner_tl ->
+        (* v[:x][i] -> v[i] *)
+        (* v[:][i] -> v[i] *)
+        (* XXX generate check *)
+        simplify_index_expr
+          (Indexed
+             ( {expr= Indexed (obj, inner_singles @ [single] @ inner_tl); emeta}
+             , outer_tl ))
+    | inner_singles, Between (bot, _) :: inner_tl
+     |inner_singles, Upfrom bot :: inner_tl ->
+        (* v[x:y][z] -> v[x+z-1] *)
+        (* XXX generate check *)
+        simplify_index_expr
+          (Indexed
+             ( { expr=
+                   Indexed
+                     ( obj
+                     , inner_singles
+                       @ [ Single
+                             (binop (binop bot Plus single_e) Minus loop_bottom)
+                         ]
+                       @ inner_tl )
+               ; emeta }
+             , outer_tl ))
+    | inner_singles, multis ->
+        raise_s
+          [%message
+            "impossible"
+              (inner_singles : expr_typed_located index list)
+              (multis : expr_typed_located index list)] )
+  | e -> e
 
-let eval_stmt_base = map_statement eval_expr (fun x -> x)
+let remove_trailing_alls_expr = function
+  | Indexed (obj, indices) ->
+      (* a[2][:] -> a[2] *)
+      let rec remove_trailing_alls indices =
+        match List.rev indices with
+        | All :: tl -> remove_trailing_alls (List.rev tl)
+        | _ -> indices
+      in
+      Indexed (obj, remove_trailing_alls indices)
+  | e -> e
+
+let rec simplify_indices_expr {expr; emeta} =
+  let expr =
+    expr |> remove_trailing_alls_expr |> simplify_index_expr
+    |> map_expr simplify_indices_expr
+  in
+  {expr; emeta}
+
+let eval_stmt_base =
+  map_statement (Fn.compose eval_expr simplify_indices_expr) Fn.id
+
 let eval_stmt = map_rec_stmt_loc eval_stmt_base
 let eval_prog = map_prog eval_expr eval_stmt

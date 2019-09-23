@@ -15,7 +15,8 @@ parameters {
 }
 model {
   a ~ normal(mu_a, sigma_a);
-  for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+  for (n in 1 : N) 
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format radon.2.stan
@@ -36,8 +37,10 @@ parameters {
   real<lower=0> sigma_a;
 }
 model {
-  for (j in 1 : J) a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
-  for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+  for (j in 1 : J) 
+    a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
+  for (n in 1 : N) 
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format radon.2a.stan
@@ -58,8 +61,10 @@ parameters {
   real<lower=0> sigma_a;
 }
 model {
-  for (j in 1 : J) a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
-  for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+  for (j in 1 : J) 
+    a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
+  for (n in 1 : N) 
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 generated quantities {
   real y_tilde;
@@ -84,8 +89,10 @@ parameters {
   real<lower=0> sigma_a;
 }
 model {
-  for (j in 1 : J) a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
-  for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+  for (j in 1 : J) 
+    a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
+  for (n in 1 : N) 
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 generated quantities {
   real u_tilde;
@@ -118,8 +125,10 @@ parameters {
   real g_1;
 }
 model {
-  for (j in 1 : J) a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
-  for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
+  for (j in 1 : J) 
+    a[j] ~ normal(g_0 + g_1 * u[j], sigma_a);
+  for (n in 1 : N) 
+    y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format radon.nopooling.stan
@@ -136,7 +145,8 @@ parameters {
   real<lower=0> sigma_y;
 }
 model {
-  for (i in 1 : N) y[i] ~ normal(a[county[i]] + b * x[i], sigma_y);
+  for (i in 1 : N) 
+    y[i] ~ normal(a[county[i]] + b * x[i], sigma_y);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format radon.pooling.stan

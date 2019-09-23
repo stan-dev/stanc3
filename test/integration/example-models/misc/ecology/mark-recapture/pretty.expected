@@ -13,13 +13,17 @@ transformed data {
   for (i in 1 : I) {
     for (k in 1 : K) {
       if (X[i, k] == 1) {
-        if (k < first[i]) first[i] <- k;
-        if (k > last[i]) last[i] <- k;
+        if (k < first[i]) 
+          first[i] <- k;
+        if (k > last[i]) 
+          last[i] <- k;
       }
     }
   }
   n_captured <- rep_array(0, K);
-  for (i in 1 : I) for (k in 1 : K) n_captured[k] <- n_captured[k] + X[i, k];
+  for (i in 1 : I) 
+    for (k in 1 : K) 
+      n_captured[k] <- n_captured[k] + X[i, k];
 }
 parameters {
   vector<lower=0, upper=1>[K - 1] phi;
@@ -42,8 +46,10 @@ model {
     if (last[i] > 0) {
       for (k in (first[i] + 1) : last[i]) {
         increment_log_prob(log(phi[k - 1]));
-        if (X[i, k] == 1) increment_log_prob(log(p[k]));
-        else increment_log_prob(log1m(p[k]));
+        if (X[i, k] == 1) 
+          increment_log_prob(log(p[k]));
+        else 
+          increment_log_prob(log1m(p[k]));
       }
       increment_log_prob(log(chi[last[i]]));
     }
@@ -53,7 +59,8 @@ generated quantities {
   real beta;
   vector<lower=0>[K] pop_hat;
   beta <- phi[K - 1] * p[K];
-  for (k in 1 : K) pop_hat[k] <- n_captured[k] / p[k];
+  for (k in 1 : K) 
+    pop_hat[k] <- n_captured[k] / p[k];
 }
 
 
@@ -278,9 +285,11 @@ transformed parameters {
   chi[1] <- (1 - phi[1]) + phi[1] * (1 - p[2]) * chi[2];
 }
 model {
-  increment_log_prob(history[7] * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
+  increment_log_prob(history[7]
+                     * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
   increment_log_prob(history[6] * (log(phi[1]) + log(p[2]) + log(chi[2])));
-  increment_log_prob(history[5] * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
+  increment_log_prob(history[5]
+                     * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
   increment_log_prob(history[4] * (log(chi[1])));
   increment_log_prob(history[3] * (log(phi[2]) + log(p[3])));
   increment_log_prob(history[2] * log(chi[2]));
