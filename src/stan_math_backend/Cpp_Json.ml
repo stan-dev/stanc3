@@ -1,5 +1,6 @@
 open Core_kernel
 open Middle
+module Str = Re.Str
 
 let rec sizedtype_to_json (st : mtype_loc_ad with_expr sizedtype) :
     Yojson.Basic.t =
