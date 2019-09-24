@@ -179,7 +179,7 @@ let use_file filename =
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog tx_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
