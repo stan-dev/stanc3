@@ -177,18 +177,17 @@ let add_int_index e i =
   let mtype = infer_type_of_indexed e.emeta.mtype [i] in
   let expr =
     match e.expr with
-    | Var _ -> Indexed (e, [i])
     | Indexed (e, indices) -> Indexed (e, indices @ [i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+    | _ -> Indexed (e, [i])
   in
   {expr; emeta= {e.emeta with mtype}}
 
-let%expect_test "adding integer index" = 
- let inner_idx s = 
+let%expect_test "adding integer index" =
+ let inner_idx s =
    Single {expr= Var s; emeta= {mtype= UArray UInt; mloc= no_span; madlevel= DataOnly}} in
- let expr_idx s = 
+ let expr_idx s =
    Single {expr= s.expr; emeta= s.emeta}
- in 
+ in
   let decl_var =
   { expr= Var "test_val"
   ; emeta= {mloc= no_span; mtype= USparseMatrix; madlevel= DataOnly} } in
@@ -213,7 +212,7 @@ let mkfor upper bodyfn iteratee smeta =
   {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
 
   let%expect_test "making vector for loop" =
-    let bodyfn var = 
+    let bodyfn var =
      {stmt = NRFunApp (StanLib, "print", [var]); smeta = no_span} in
     let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UVector}} in
     let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
@@ -226,7 +225,7 @@ let mkfor upper bodyfn iteratee smeta =
        ((NRFunApp StanLib print ((Indexed (Var hi) ((Single (Var sym1__)))))))))) |}]
 
   let%expect_test "making matrix for loop" =
-    let bodyfn var = 
+    let bodyfn var =
      {stmt = NRFunApp (StanLib, "print", [var]); smeta = no_span} in
     let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UMatrix}} in
     let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
@@ -242,20 +241,21 @@ let mkfor upper bodyfn iteratee smeta =
            ((Indexed (Var hi) ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
 
 
-let mkfortnite row_expr col_expr bodyfn iteratee smeta =
-  let idx s = 
+let mkfortnite nonzero_rows nonzero_cols bodyfn var smeta =
+  let idx s =
     Single {expr= Var s; emeta= {mtype= UInt; mloc = smeta; madlevel= DataOnly}}
-  in
-  let expr_idx s =
-   Single {expr= s.expr; emeta= s.emeta}
   in
   let loopvar, reset = gensym_enter () in
   let lower = loop_bottom in
-  let row_idx = add_int_index row_expr (idx loopvar) in
-  let col_idx = add_int_index col_expr (idx loopvar) in
-  let stmt = Block [bodyfn [(add_int_index iteratee (expr_idx row_idx)), (add_int_index iteratee (expr_idx col_idx))]] in
+  let upper = internal_funapp FnLength [nonzero_rows] internal_meta in
+  let row_idx = add_int_index nonzero_rows (idx loopvar) in
+  let col_idx = add_int_index nonzero_cols (idx loopvar) in
+  let bodyfn var =
+    add_int_index (add_int_index var (Single row_idx)) (Single col_idx)
+    |> bodyfn in
   reset ();
-  {stmt= For {loopvar; lower; upper=row_expr; body= {stmt; smeta}}; smeta}
+  {stmt= For {loopvar; lower; upper; body=bodyfn var}; smeta}
+
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -272,9 +272,37 @@ let rec for_scalar st bodyfn var smeta =
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SSparseMatrix (d1, d2, _, _) ->
-      mkfortnite d1 d2 bodyfn var smeta
+  | SSparseMatrix (_, _, nonzero_rows, nonzero_cols) ->
+      mkfortnite nonzero_rows nonzero_cols bodyfn var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+
+let%expect_test "making sparsematrix for loop" =
+  let bodyfn var =
+    {stmt = NRFunApp (StanLib, "print", [var]); smeta = no_span} in
+  let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UMatrix}} in
+  let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
+  let int_array = internal_funapp FnMakeArray [int 1; int 2; int 3] {internal_meta with mtype=UArray UInt} in
+  for_scalar (SSparseMatrix (int 1, int 2, int_array, int_array)) bodyfn
+     var_test no_span |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+  [%expect {|
+  (For (loopvar sym1__) (lower (Lit Int 1))
+   (upper
+    (FunApp CompilerInternal FnLength__
+     ((FunApp CompilerInternal FnMakeArray__
+       ((Lit Int 1) (Lit Int 2) (Lit Int 3))))))
+   (body
+    (NRFunApp StanLib print
+     ((Indexed (Var hi)
+       ((Single
+         (Indexed
+          (FunApp CompilerInternal FnMakeArray__
+           ((Lit Int 1) (Lit Int 2) (Lit Int 3)))
+          ((Single (Var sym1__)))))
+        (Single
+         (Indexed
+          (FunApp CompilerInternal FnMakeArray__
+           ((Lit Int 1) (Lit Int 2) (Lit Int 3)))
+          ((Single (Var sym1__))))))))))) |}]
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
 let for_scalar_inv st bodyfn var smeta =
