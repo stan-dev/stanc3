@@ -7,9 +7,9 @@ open Analysis_and_optimization
 open Middle
 
 (** The main program. *)
-let version = "stanc version 3.0 alpha"
+let version = "%%NAME%% %%VERSION%%"
 
-let name = "stanc"
+let name = "%%NAME%%"
 
 (** The usage message. *)
 let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
