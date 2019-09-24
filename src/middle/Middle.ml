@@ -217,7 +217,7 @@ let mkfor upper bodyfn iteratee smeta =
     let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UVector}} in
     let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
     let dim_test = int 1 in
-    mkfor dim_test bodyfn var_test no_span |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+    mkfor dim_test bodyfn var_test no_span|> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
 [%expect {|
     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 1))
      (body
@@ -283,26 +283,12 @@ let%expect_test "making sparsematrix for loop" =
   let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
   let int_array = internal_funapp FnMakeArray [int 1; int 2; int 3] {internal_meta with mtype=UArray UInt} in
   for_scalar (SSparseMatrix (int 1, int 2, int_array, int_array)) bodyfn
-     var_test no_span |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+     var_test no_span |> Fmt.strf "%a" Pretty.pp_stmt_loc |> print_endline ;
   [%expect {|
-  (For (loopvar sym1__) (lower (Lit Int 1))
-   (upper
-    (FunApp CompilerInternal FnLength__
-     ((FunApp CompilerInternal FnMakeArray__
-       ((Lit Int 1) (Lit Int 2) (Lit Int 3))))))
-   (body
-    (NRFunApp StanLib print
-     ((Indexed (Var hi)
-       ((Single
-         (Indexed
-          (FunApp CompilerInternal FnMakeArray__
-           ((Lit Int 1) (Lit Int 2) (Lit Int 3)))
-          ((Single (Var sym1__)))))
-        (Single
-         (Indexed
-          (FunApp CompilerInternal FnMakeArray__
-           ((Lit Int 1) (Lit Int 2) (Lit Int 3)))
-          ((Single (Var sym1__))))))))))) |}]
+  for(sym1__ in 1:FnLength__(FnMakeArray__(1, 2, 3))) print(hi[FnMakeArray__(1, 2, 3)
+                                                               [sym1__],
+                                                               FnMakeArray__(1, 2, 3)
+                                                               [sym1__]]); |}]
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
 let for_scalar_inv st bodyfn var smeta =
