@@ -8,9 +8,10 @@ let opencl_suffix = "_opencl__"
 let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl available_cl_vars e =
+  let is_avail = List.mem available_cl_vars ~equal:( = ) in
   let to_cl e =
     match e.expr with
-    | Var s -> {e with expr= Var (s ^ opencl_suffix)}
+    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
     | _ -> to_matrix_cl e
   in
   match e.expr with
