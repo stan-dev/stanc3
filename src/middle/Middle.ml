@@ -183,6 +183,23 @@ let add_int_index e i =
   in
   {expr; emeta= {e.emeta with mtype}}
 
+let%expect_test "adding integer index" = 
+ let inner_idx s = 
+   Single {expr= Var s; emeta= {mtype= UArray UInt; mloc= no_span; madlevel= DataOnly}} in
+ let expr_idx s = 
+   Single {expr= s.expr; emeta= s.emeta}
+ in 
+  let decl_var =
+  { expr= Var "test_val"
+  ; emeta= {mloc= no_span; mtype= USparseMatrix; madlevel= DataOnly} } in
+  let decl_inner_var =
+  { expr= Var "inner_test_val"
+  ; emeta= {mloc= no_span; mtype= UArray UInt; madlevel= DataOnly} } in
+  let inner_add_int_index = add_int_index decl_inner_var (inner_idx "sym1__") in
+  let test_add_int_index = add_int_index decl_var (expr_idx inner_add_int_index) in
+  Fmt.(strf "@[%a@]" Pretty.pp_expr_typed_located test_add_int_index) |> print_endline;
+  [%expect {| test_val[inner_test_val[sym1__]] |}]
+
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
 let mkfor upper bodyfn iteratee smeta =
@@ -194,6 +211,51 @@ let mkfor upper bodyfn iteratee smeta =
   let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
   reset () ;
   {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
+
+  let%expect_test "making vector for loop" =
+    let bodyfn var = 
+     {stmt = NRFunApp (StanLib, "print", [var]); smeta = no_span} in
+    let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UVector}} in
+    let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
+    let dim_test = int 1 in
+    mkfor dim_test bodyfn var_test no_span |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+[%expect {|
+    (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 1))
+     (body
+      (Block
+       ((NRFunApp StanLib print ((Indexed (Var hi) ((Single (Var sym1__)))))))))) |}]
+
+  let%expect_test "making matrix for loop" =
+    let bodyfn var = 
+     {stmt = NRFunApp (StanLib, "print", [var]); smeta = no_span} in
+    let var_test = {expr= Var "hi"; emeta= {internal_meta with mtype= UMatrix}} in
+    let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
+    mkfor (int 1) (fun e -> mkfor (int 2) bodyfn e no_span) var_test no_span |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+[%expect {|
+  (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 1))
+   (body
+    (Block
+     ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 2))
+       (body
+        (Block
+         ((NRFunApp StanLib print
+           ((Indexed (Var hi) ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
+
+
+let mkfortnite row_expr col_expr bodyfn iteratee smeta =
+  let idx s = 
+    Single {expr= Var s; emeta= {mtype= UInt; mloc = smeta; madlevel= DataOnly}}
+  in
+  let expr_idx s =
+   Single {expr= s.expr; emeta= s.emeta}
+  in
+  let loopvar, reset = gensym_enter () in
+  let lower = loop_bottom in
+  let row_idx = add_int_index row_expr (idx loopvar) in
+  let col_idx = add_int_index col_expr (idx loopvar) in
+  let stmt = Block [bodyfn [(add_int_index iteratee (expr_idx row_idx)), (add_int_index iteratee (expr_idx col_idx))]] in
+  reset ();
+  {stmt= For {loopvar; lower; upper=row_expr; body= {stmt; smeta}}; smeta}
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -210,8 +272,8 @@ let rec for_scalar st bodyfn var smeta =
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SSparseMatrix (d1, _, _, _) ->
-      mkfor d1 bodyfn var smeta
+  | SSparseMatrix (d1, d2, _, _) ->
+      mkfortnite d1 d2 bodyfn var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
