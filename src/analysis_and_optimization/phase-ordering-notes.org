@@ -130,53 +130,51 @@ My process was to assign each phase from the book to an optimization that we hav
   Final list of the optimizations to include at source level, with rationale.
 ** A
 ** B
-       \# Book: Procedure integration\\
-     Run optimization: function_inlining
+     Optimization: function_inlining\\
+       from  Book: Procedure integration
 
-       \#Book: Sparse conditional constant propagation\\
-     Run optimization: constant_propagation
+     Optimization: constant_propagation\\
+       from Book: Sparse conditional constant propagation
 ** C
-       \#Book: Local and global copy propagation\\
-     Run optimization: copy_propagation
+     Optimization: copy_propagation\\
+       from Book: Local and global copy propagation
 
-       \#Book: Sparse conditional constant propagation\\
-     Run optimization: constant_propagation
+     Optimization: constant_propagation\\
+       from Book: Sparse conditional constant propagation
 
-       \#Book: Dead-code elimination\\
-     Run optimization: dead_code_elimination
+     Optimization: dead_code_elimination\\
+       from Book: Dead-code elimination
 
-       \#Matthijs: Before lazy code motion to get loop-invariant code motion\\
-     Run optimization: one_step_loop_unrolling
+     Optimization: one_step_loop_unrolling\\
+       from Matthijs: Before lazy code motion to get loop-invariant code motion
 
-       \#Matthijs: expression_propagation < partial_evaluation\\
-     Run optimization: expression_propagation
+     Optimization: expression_propagation\\
+       from Matthijs: expression_propagation < partial_evaluation
 
-       \#Matthijs: partial_evaluation < lazy_code_motion\\
-     Run optimization: partial_evaluation
+     Optimization: partial_evaluation\\
+       from Matthijs: partial_evaluation < lazy_code_motion
 
-       \#Book: Loop-invariant code motion\\
-     Run optimization: lazy_code_motion
+     Optimization: lazy_code_motion\\
+       from Book: Loop-invariant code motion
 
-       \#Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary\\
-     Run optimization: copy_propagation
+     Optimization: copy_propagation\\
+       from Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary
 
-       \#Matthijs: Constant propagation before static loop unrolling\\
-     Run optimization: constant_propagation
+     Optimization: constant_propagation\\
+       from Matthijs: Constant propagation before static loop unrolling
 
-       \#Book: Loop simplification\\
-     Run optimization: static_loop_unrolling
+     Optimization: static_loop_unrolling\\
+       from Book: Loop simplification
 
-       \#Book: Dead-code elimination\\
-       \#Matthijs: Everything < Dead-code elimination\\
-     Run optimization: dead_code_elimination
+     Optimization: dead_code_elimination\\
+       from Book: Dead-code elimination, from Matthijs: Everything < Dead-code elimination
 
-       \#Book: Machine idioms and instruction combining\\
-     Run optimization: list_collapsing
+     Optimization: list_collapsing\\
+       from Book: Machine idioms and instruction combining
 
-       \#Book: Machine idioms and instruction combining\\
-     Run optimization: optimize_ad_levels
+     Optimization: optimize_ad_levels\\
+       from Book: Machine idioms and instruction combining
 
-       \#Book: Machine idioms and instruction combining\\
-       \#Matthijs: Everything < block_fixing\\
-     Run optimization: block_fixing
+     Optimization: block_fixing\\
+       from Book: Machine idioms and instruction combining, from Matthijs: Everything < block_fixing
      
