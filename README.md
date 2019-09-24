@@ -16,7 +16,7 @@ The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the v
 1. [Lower](src/frontend/Ast_to_Mir.ml) into [Middle Intermediate Representation](src/middle/Mir.ml) (AST -> MIR) `stanc --debug-mir` (or `--debug-mir-pretty`)
 1. Analyze & optimize (MIR -> MIR)
 1. Backend MIR transform (MIR -> MIR) [Transform_Mir.ml](src/stan_math_backend/Transform_Mir.ml)  `stanc --debug-transformed-mir`
-1. Hand off to a backend to [emit C++](src/stan_math_backend/Stan_math_codegen.ml) (or LLVM IR, or Tensorflow, or interpret it!).
+1. Hand off to a backend to [emit C++](src/stan_math_backend/Stan_math_code_gen.ml) (or LLVM IR, or Tensorflow, or interpret it!).
 
 ### The two central data structures
 
