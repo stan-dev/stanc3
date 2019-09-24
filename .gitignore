@@ -12,3 +12,4 @@ _build
 _opam
 .#*
 node_modules/*
+.vscode/**
