@@ -7,9 +7,9 @@ open Analysis_and_optimization
 open Middle
 
 (** The main program. *)
-let version = "stanc version 3.0 alpha"
+let version = "%%NAME%% %%VERSION%%"
 
-let name = "stanc"
+let name = "%%NAME%%"
 
 (** The usage message. *)
 let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
@@ -21,6 +21,8 @@ let dump_mir = ref false
 let dump_mir_pretty = ref false
 let dump_tx_mir = ref false
 let dump_stan_math_sigs = ref false
+let optimize = ref false
+let dump_opt_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -52,6 +54,10 @@ let options =
     ; ( "--debug-mir-pretty"
       , Arg.Set dump_mir_pretty
       , " For debugging purposes: pretty-print the MIR." )
+    ; ( "--debug-optimized-mir"
+      , Arg.Set dump_opt_mir
+      , " For debugging purposes: print the MIR after it's been \
+         optimized.Only has an effect when optimizations are turned on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
@@ -77,6 +83,10 @@ let options =
       , Arg.Set_string Semantic_check.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
+    ; ( "--O"
+      , Arg.Set optimize
+      , " Allow the compiler to apply all optimizations to the Stan \
+         code.WARNING: This is currently an experimental feature!" )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -94,6 +104,22 @@ let options =
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
+
+(* Whether or not to run each optimization. Currently it's all or nothing
+   depending on the --O flag.*)
+let optimization_settings () : Optimize.optimization_settings =
+  { function_inlining= !optimize
+  ; static_loop_unrolling= !optimize
+  ; one_step_loop_unrolling= !optimize
+  ; list_collapsing= !optimize
+  ; block_fixing= !optimize
+  ; constant_propagation= !optimize
+  ; expression_propagation= !optimize
+  ; copy_propagation= !optimize
+  ; dead_code_elimination= !optimize
+  ; partial_evaluation= !optimize
+  ; lazy_code_motion= !optimize
+  ; optimize_ad_levels= !optimize }
 
 let print_warn_uninitialized
     (uninit_vars : (location_span * string) Set.Poly.t) =
@@ -179,7 +205,17 @@ let use_file filename =
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
+    let opt_mir =
+      if !optimize then (
+        let opt =
+          Optimize.optimization_suite (optimization_settings ()) tx_mir
+        in
+        if !dump_opt_mir then
+          Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
+        opt )
+      else tx_mir
+    in
+    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
