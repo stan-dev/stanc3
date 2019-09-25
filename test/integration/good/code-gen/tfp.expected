@@ -4,15 +4,17 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 tfd = tfp.distributions
+from tensorflow.python.ops.parallel_for import pfor
 
 class eight_schools_ncp_model(tfd.Distribution):
 
   def __init__(self, J, y, sigma):
-    self.J = self.J
-    self.y = tf.cast(self.y, tf.float64)
-    self.sigma = tf.cast(self.sigma, tf.float64)
+    self.J = J
+    self.y = tf.cast(y, tf.float64)
+    self.sigma = tf.cast(sigma, tf.float64)
      
-  def log_prob(self, params):
+  
+  def log_prob_one(self, params):
     target = 0
     J = self.J
     y = self.y
@@ -26,13 +28,21 @@ class eight_schools_ncp_model(tfd.Distribution):
     
     
     theta = mu + tau * theta_tilde
-    target += tfd.Normal(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).log_prob(mu)
-    target += tfd.Cauchy(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).log_prob(tau)
-    target += tfd.Normal(tf.cast(0, tf.float64), tf.cast(1, tf.float64)).log_prob(theta_tilde)
-    target += tfd.Normal(theta, sigma).log_prob(y)
+    target += tf.reduce_sum(tfd.Normal(tf.cast(0, tf.float64),
+                                       tf.cast(5, tf.float64)).log_prob(mu))
+    target += tf.reduce_sum(tfd.Cauchy(tf.cast(0, tf.float64),
+                                       tf.cast(5, tf.float64)).log_prob(tau))
+    target += tf.reduce_sum(tfd.Normal(tf.cast(0, tf.float64),
+                                       tf.cast(1, tf.float64)).log_prob(theta_tilde))
+    target += tf.reduce_sum(tfd.Normal(theta, sigma).log_prob(y))
     return target
      
-  def sample(self, nchains__):
+  def log_prob(self, params):
+    return tf.vectorized_map(self.log_prob_one, params)
+    
+     
+  
+  def sample_one(self):
     J = self.J
     y = self.y
     sigma = self.sigma
@@ -43,12 +53,17 @@ class eight_schools_ncp_model(tfd.Distribution):
     
     
     mu = tfd.Normal(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).sample(
-    (nchains__))
+    )
     tau = tfd.Cauchy(tf.cast(0, tf.float64), tf.cast(5, tf.float64)).sample(
-    (nchains__))
+    )
     theta_tilde = tfd.Normal(tf.cast(0, tf.float64), tf.cast(1, tf.float64)).sample(
-    (nchains__, J))
+    (J,))
     
     
     return [mu, tau, theta_tilde]
+     
+  def sample(self, nchains):
+    f = lambda _ : self.sample_one()
+    return pfor(f, nchains)
+    
      

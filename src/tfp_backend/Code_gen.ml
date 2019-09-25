@@ -57,7 +57,7 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
       pf ppf "%a = %a" pp_expr indexed pp_expr rhs
-  | TargetPE rhs -> pf ppf "target += %a" pp_expr rhs
+  | TargetPE rhs -> pf ppf "target += tf.reduce_sum(%a)" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
@@ -84,15 +84,15 @@ let pp_method ppf name params intro ?(outro = []) ppbody =
   if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
   pf ppf "@, @]"
 
-let rec pp_cast ppf (name, st) =
+let rec pp_cast prefix ppf (name, st) =
   match st with
-  | SArray (t, _) -> pp_cast ppf (name, t)
-  | SInt -> pf ppf "self.%s" name
-  | _ -> pf ppf "tf.cast(%a, tf.float64)" pp_cast (name, SInt)
+  | SArray (t, _) -> pp_cast prefix ppf (name, t)
+  | SInt -> pf ppf "%s%s" prefix name
+  | _ -> pf ppf "tf.cast(%a, tf.float64)" (pp_cast prefix) (name, SInt)
 
 let pp_init ppf p =
   let pp_save_data ppf (name, st) =
-    pf ppf "self.%s = %a" name pp_cast (name, st)
+    pf ppf "self.%s = %a" name (pp_cast "") (name, st)
   in
   let ppbody ppf = (list ~sep:cut pp_save_data) ppf p.input_vars in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
@@ -101,7 +101,7 @@ let pp_extract_data ppf p =
   let pp_data ppf (name, _) = pf ppf "%s = self.%s" name name in
   (list ~sep:cut pp_data) ppf p.input_vars
 
-let pp_log_prob ppf p =
+let pp_log_prob_one ppf p =
   let pp_extract_param ppf (idx, name) =
     pf ppf "%s = tf.cast(params[%d], tf.float64)" name idx
   in
@@ -117,7 +117,7 @@ let pp_log_prob ppf p =
   in
   let intro = ["target = 0"] in
   let outro = ["return target"] in
-  pp_method ppf "log_prob" ["self"; "params"] intro ~outro ppbody
+  pp_method ppf "log_prob_one" ["self"; "params"] intro ~outro ppbody
 
 let rec get_vident_exn e =
   match e.expr with
@@ -150,7 +150,7 @@ let rec get_dims = function
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
-let pp_sample ppf p =
+let pp_sample_one ppf p =
   let params =
     List.filter_map p.output_vars ~f:(function
       | name, {out_block= Parameters; _} -> Some name
@@ -160,8 +160,10 @@ let pp_sample ppf p =
   let pp_shape ppf var =
     let st = get_param_st p var in
     let dims = get_dims st in
-    pf ppf "(%a)" (list ~sep:comma pp_expr)
-      ({expr= Var "nchains__"; emeta= internal_meta} :: dims)
+    match dims with
+    | [] -> ()
+    | dims -> pf ppf "(%a,)" (list ~sep:comma pp_expr) dims
+    (* ({expr= Var "nchains__"; emeta= internal_meta} :: dims) *)
   in
   let rec no_param_deps ppf s =
     match s.stmt with
@@ -181,7 +183,19 @@ let pp_sample ppf p =
   in
   let intro = [] in
   let outro = [strf "return [@[<hov>%a@]]" (list ~sep:comma string) params] in
-  pp_method ppf "sample" ["self"; "nchains__"] intro ~outro ppbody
+  pp_method ppf "sample_one" ["self"] intro ~outro ppbody
+
+let pp_sample ppf p =
+  pf ppf "@ %a@ " pp_sample_one p ;
+  let intro =
+    ["f = lambda _ : self.sample_one()"; "return pfor(f, nchains)"]
+  in
+  pp_method ppf "sample" ["self"; "nchains"] intro (fun _ -> ())
+
+let pp_log_prob ppf p =
+  pf ppf "@ %a@ " pp_log_prob_one p ;
+  let intro = ["return tf.vectorized_map(self.log_prob_one, params)"] in
+  pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
 
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
@@ -200,6 +214,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 tfd = tfp.distributions
+from tensorflow.python.ops.parallel_for import pfor
 |}
 
 let pp_prog ppf (p : typed_prog) =
