@@ -272,7 +272,7 @@ let rec for_scalar st bodyfn var smeta =
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SSparseMatrix (_, _, nonzero_rows, nonzero_cols) ->
+  | SSparseMatrix (nonzero_rows, nonzero_cols, _, _) ->
       mkfortnite nonzero_rows nonzero_cols bodyfn var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
