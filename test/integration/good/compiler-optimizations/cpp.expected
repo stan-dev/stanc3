@@ -1133,11 +1133,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(sym64__, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                  vars__.push_back(rvalue(sym64__, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "sym64__"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(sym64__, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(sym64__, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "sym64__"));
                   }
                 }
               }
@@ -1148,11 +1148,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(sym64__, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(sym64__, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "sym64__"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(sym64__, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                      vars__.push_back(rvalue(sym64__, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "sym64__"));
                     }
                   }
                 }
@@ -1354,16 +1354,16 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                  vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
                   }
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
                   }
                 }
               }
@@ -1374,16 +1374,16 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
                     }
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
                     }
                   }
                 }
@@ -1411,11 +1411,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   sym41__ = cov_matrix_free(x_cov);
-                  vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                  vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                   }
                 }
               }
@@ -1427,11 +1427,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 {
                   {
                     sym41__ = cov_matrix_free(x_cov);
-                    vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                    vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "pretty printed e"));
+                      vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                     }
                   }
                 }
