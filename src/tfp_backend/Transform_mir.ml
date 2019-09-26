@@ -1,7 +1,7 @@
 open Core_kernel
 open Middle
 
-let dist_prefix = "tfd."
+let dist_prefix = "tfd__."
 
 let remove_stan_dist_suffix s =
   let s = Utils.stdlib_distribution_name s in

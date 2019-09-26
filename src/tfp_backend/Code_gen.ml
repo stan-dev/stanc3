@@ -14,7 +14,7 @@ let rec pp_expr ppf {expr; _} =
   match expr with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
-  | Lit (_, s) -> pf ppf "tf.cast(%s, tf.float64)" s
+  | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
   | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
@@ -57,7 +57,7 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
       pf ppf "%a = %a" pp_expr indexed pp_expr rhs
-  | TargetPE rhs -> pf ppf "target += tf.reduce_sum(%a)" pp_expr rhs
+  | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
@@ -88,7 +88,7 @@ let rec pp_cast prefix ppf (name, st) =
   match st with
   | SArray (t, _) -> pp_cast prefix ppf (name, t)
   | SInt -> pf ppf "%s%s" prefix name
-  | _ -> pf ppf "tf.cast(%a, tf.float64)" (pp_cast prefix) (name, SInt)
+  | _ -> pf ppf "tf__.cast(%a, tf__.float64)" (pp_cast prefix) (name, SInt)
 
 let pp_init ppf p =
   let pp_save_data ppf (name, st) =
@@ -103,7 +103,7 @@ let pp_extract_data ppf p =
 
 let pp_log_prob_one ppf p =
   let pp_extract_param ppf (idx, name) =
-    pf ppf "%s = tf.cast(params[%d], tf.float64)" name idx
+    pf ppf "%s = tf__.cast(params[%d], tf__.float64)" name idx
   in
   let grab_params idx = function
     | name, {out_block= Parameters; _} -> [(idx, name)]
@@ -188,13 +188,13 @@ let pp_sample_one ppf p =
 let pp_sample ppf p =
   pf ppf "@ %a@ " pp_sample_one p ;
   let intro =
-    ["f = lambda _ : self.sample_one()"; "return pfor(f, nchains)"]
+    ["f = lambda _ : self.sample_one()"; "return pfor__(f, nchains)"]
   in
   pp_method ppf "sample" ["self"; "nchains"] intro (fun _ -> ())
 
 let pp_log_prob ppf p =
   pf ppf "@ %a@ " pp_log_prob_one p ;
-  let intro = ["return tf.vectorized_map(self.log_prob_one, params)"] in
+  let intro = ["return tf__.vectorized_map(self.log_prob_one, params)"] in
   pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
 
 let pp_methods ppf p =
@@ -210,15 +210,15 @@ let pp_fundef ppf {fdname; fdargs; fdbody; _} =
 
 let imports =
   {|
-import numpy as np
-import tensorflow as tf
-import tensorflow_probability as tfp
-tfd = tfp.distributions
-from tensorflow.python.ops.parallel_for import pfor
+import numpy as np__
+import tensorflow as tf__
+import tensorflow_probability as tfp__
+tfd__ = tfp.distributions
+from tensorflow.python.ops.parallel_for import pfor__
 |}
 
 let pp_prog ppf (p : typed_prog) =
-  pf ppf "%s@,@,%a@,class %s(tfd.Distribution):@,@[<v 2>%a@]" imports
+  pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
     (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p
 
 (* Major work to do:
