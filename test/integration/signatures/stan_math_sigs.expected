@@ -7640,6 +7640,10 @@ matrix[,,,,,,] if_else(int, matrix[,,,,,,], matrix[,,,,,,])
 real inc_beta(real, real, real)
 int int_step(int)
 int int_step(real)
+real integrate_1d((real, real, real[], data real[], data int[]) => real,
+                    real, real, real[], real[], int[])
+real integrate_1d((real, real, real[], data real[], data int[]) => real,
+                    real, real, real[], real[], int[], real)
 real[,] integrate_ode((real, real[], real[], data real[], data int[]) => real[],
                         real[], real, real[], real[], real[], int[])
 real[,] integrate_ode_adams((real, real[], real[], data real[], data int[]) => real[],
