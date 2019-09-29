@@ -212,8 +212,11 @@ let mir_uninitialized_variables (mir : typed_prog) :
       (Set.Poly.of_list flag_variables)
       (Set.Poly.singleton "target")
   in
+  let parameters = Set.Poly.of_list (List.map ~f:fst
+    (List.filter ~f:(fun (_, {out_block; _}) -> out_block = Parameters) mir.output_vars))
+  in
   let globals_data = Set.Poly.union globals data_vars in
-  let globals_data_prep = Set.Poly.union globals_data prep_vars in
+  let globals_data_prep = Set.Poly.union_list [globals_data; prep_vars; parameters] in
   Set.Poly.union_list
     [ (* prepare_data scope: data *)
       stmt_uninitialized_variables globals_data

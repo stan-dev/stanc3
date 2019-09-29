@@ -195,11 +195,6 @@ let%expect_test "Uninitialized variables example" =
           ((filename string) (line_num 26) (col_num 17) (included_from ()))))
         i)
        (((begin_loc
-          ((filename string) (line_num 28) (col_num 16) (included_from ())))
-         (end_loc
-          ((filename string) (line_num 28) (col_num 17) (included_from ()))))
-        x)
-       (((begin_loc
           ((filename string) (line_num 32) (col_num 16) (included_from ())))
          (end_loc
           ((filename string) (line_num 32) (col_num 17) (included_from ()))))
