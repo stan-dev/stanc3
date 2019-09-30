@@ -523,6 +523,14 @@ let () =
     ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt]) ;
   add_unqualified ("categorical_rng", ReturnType UInt, [UVector]) ;
   add_unqualified ("categorical_logit_rng", ReturnType UInt, [UVector]) ;
+  add_unqualified
+    ( "categorical_logit_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); UMatrix; UVector; UMatrix] ) ;
+  add_unqualified
+    ( "categorical_logit_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UVector; UMatrix] ) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UVector; UMatrix]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UVector]) ;
@@ -1102,6 +1110,15 @@ let () =
     add_unqualified
       ("num_elements", ReturnType UInt, [bare_array_type (UVector, i)])
   done ;
+  add_unqualified
+    ( "ordered_logistic_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+  add_unqualified
+    ( "ordered_logistic_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
+  add_unqualified
   add_unqualified
     ("ordered_logistic_log", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
