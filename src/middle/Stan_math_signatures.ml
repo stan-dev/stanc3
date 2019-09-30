@@ -1119,7 +1119,6 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
   add_unqualified
-  add_unqualified
     ("ordered_logistic_log", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
     ( "ordered_logistic_log"
