@@ -2,7 +2,7 @@ open Core_kernel
 open Middle
 
 let opencl_triggers =
-  String.Map.of_alist_exn [("normal_id_glm_propto_lpdf", [0; 1])]
+  String.Map.of_alist_exn [("normal_id_glm_lpdf", [0; 1]); ("bernoulli_logit_glm_lpmf", [0; 1]); ("categorical_logit_glm_lpmf", [0; 1]); ("neg_binomial_2_log_glm_lpmf", [0; 1]); ("ordered_logistic_glm_lpmf", [0; 1]); ("poisson_log_glm_lpmf", [0; 1])]
 
 let opencl_suffix = "_opencl__"
 let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
@@ -29,14 +29,14 @@ let%expect_test "replaces normal" =
   { expr=
       FunApp
         ( StanLib
-        , "normal_id_glm_propto_lpdf"
+        , "normal_id_glm_lpdf"
         , List.map ~f:mkvar ["y"; "x"; "alpha"; "beta"; "sigma"] )
   ; emeta= internal_meta }
   |> switch_expr_to_opencl ["y"; "x"]
   |> Fmt.strf "%a" Pretty.pp_expr_typed_located
   |> print_endline ;
   [%expect
-    {| normal_id_glm_propto_lpdf(y_opencl__, x_opencl__, alpha, beta, sigma) |}]
+    {| normal_id_glm_lpdf(y_opencl__, x_opencl__, alpha, beta, sigma) |}]
 
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
