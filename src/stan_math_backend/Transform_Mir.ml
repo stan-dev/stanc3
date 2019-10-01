@@ -258,7 +258,7 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let trans_prog (p : typed_prog) =
+let trans_prog (p : typed_prog) use_opencl =
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; Assignment ((pos, UInt, []), loop_bottom) ]
@@ -300,15 +300,19 @@ let trans_prog (p : typed_prog) =
     | _ -> false
   in
   let translate_to_open_cl stmts =
-    let data_var_idents = List.map ~f:fst p.input_vars in
-    let rec trans_stmt_to_opencl s =
-      { s with
-        stmt=
-          map_statement
-            (switch_expr_to_opencl data_var_idents)
-            trans_stmt_to_opencl s.stmt }
-    in
-    List.map stmts ~f:trans_stmt_to_opencl
+    if use_opencl then
+      let data_var_idents = 
+        List.map ~f:fst p.input_vars in
+      let rec trans_stmt_to_opencl s =
+        { s with
+          stmt=
+            map_statement
+              (switch_expr_to_opencl data_var_idents)
+              trans_stmt_to_opencl s.stmt }
+      in
+      List.map stmts ~f:trans_stmt_to_opencl
+    else
+      []
   in
   let gq =
     ( add_reads p.generate_quantities p.output_vars param_read
@@ -325,11 +329,14 @@ let trans_prog (p : typed_prog) =
   in
   let generate_quantities = gq in
   let opencl_vars =
-    String.Set.union_list
-      (List.concat_map
-         ~f:(List.map ~f:collect_opencl_vars)
-         [log_prob; generate_quantities])
-    |> String.Set.to_list
+    if use_opencl then
+      String.Set.union_list
+        (List.concat_map
+          ~f:(List.map ~f:collect_opencl_vars)
+          [log_prob; generate_quantities])
+      |> String.Set.to_list
+    else
+      []
   in
   let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->

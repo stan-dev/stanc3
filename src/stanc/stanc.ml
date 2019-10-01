@@ -26,6 +26,7 @@ let dump_opt_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
+let use_opencl = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -103,7 +104,10 @@ let options =
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str
             )
       , " Takes a comma-separated list of directories that may contain a file \
-         in an #include directive (default = \"\")" ) ]
+         in an #include directive (default = \"\")" )
+    ; ( "--use-opencl"
+      , Arg.Set use_opencl
+      , " If set, try to use matrix_cl signatures." ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
@@ -202,7 +206,7 @@ let use_file filename =
         Dependence_analysis.mir_uninitialized_variables mir
       in
       print_warn_uninitialized uninitialized_vars ) ;
-    let tx_mir = Transform_Mir.trans_prog mir in
+    let tx_mir = Transform_Mir.trans_prog mir !use_opencl in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
     let opt_mir =
