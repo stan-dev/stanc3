@@ -8,22 +8,22 @@ transformed data {
   matrix[N,M] d_x_m = [[1, 2, 3],[4, 5, 6]];
   row_vector[M] d_x_rv = [1, 2, 3];
 
-  vector[N] d_beta_v = [1, 2]';
+  vector[N] d_cuts_v = [1, 2]';
 
   vector[N] d_alpha_v = [0.5, 0.6]';
 
   real transformed_data_real;
 
-  transformed_data_real = ordered_logistic_glm_lpmf(d_y| d_x_m, d_alpha_v, d_beta_v);
-  transformed_data_real = ordered_logistic_glm_lpmf(d_y| d_x_rv, d_alpha_v, d_beta_v);
-  transformed_data_real = ordered_logistic_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_beta_v);
-  transformed_data_real = ordered_logistic_glm_lpmf(d_y_a| d_x_rv, d_alpha_v, d_beta_v);
+  transformed_data_real = ordered_logistic_glm_lpmf(d_y| d_x_m, d_alpha_v, d_cuts_v);
+  transformed_data_real = ordered_logistic_glm_lpmf(d_y| d_x_rv, d_alpha_v, d_cuts_v);
+  transformed_data_real = ordered_logistic_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_cuts_v);
+  transformed_data_real = ordered_logistic_glm_lpmf(d_y_a| d_x_rv, d_alpha_v, d_cuts_v);
 }
 parameters {
   matrix[N,M] p_x_m;
   row_vector[M] p_x_rv;
 
-  matrix[N,M] p_cuts_v;
+  vector[N] p_cuts_v;
 
   vector[N] p_alpha_v;
 
