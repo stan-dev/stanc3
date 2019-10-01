@@ -20,9 +20,6 @@ transformed data {
   transformed_data_real = ordered_logistic_glm_lpmf(d_y_a| d_x_rv, d_alpha_v, d_beta_v);
 }
 parameters {
-  int p_y;
-  int p_y_a[N];
-
   matrix[N,M] p_x_m;
   row_vector[M] p_x_rv;
 
@@ -35,10 +32,10 @@ parameters {
 transformed parameters {
   real transformed_param_real;
 
-  transformed_param_real = ordered_logistic_glm_lpmf(p_y| p_x_m, p_alpha_v, p_cuts_v);
-  transformed_param_real = ordered_logistic_glm_lpmf(p_y| p_x_rv, p_alpha_v, p_cuts_v);
-  transformed_param_real = ordered_logistic_glm_lpmf(p_y_a| p_x_m, p_alpha_v, p_cuts_v);
-  transformed_param_real = ordered_logistic_glm_lpmf(p_y_a| p_x_rv, p_alpha_v, p_cuts_v);
+  transformed_param_real = ordered_logistic_glm_lpmf(d_y| p_x_m, p_alpha_v, p_cuts_v);
+  transformed_param_real = ordered_logistic_glm_lpmf(d_y| p_x_rv, p_alpha_v, p_cuts_v);
+  transformed_param_real = ordered_logistic_glm_lpmf(d_y_a| p_x_m, p_alpha_v, p_cuts_v);
+  transformed_param_real = ordered_logistic_glm_lpmf(d_y_a| p_x_rv, p_alpha_v, p_cuts_v);
 }
 model {  
   y_p ~ normal(0,1); // in case anyone tries to run it
