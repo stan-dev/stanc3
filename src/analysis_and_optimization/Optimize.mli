@@ -52,3 +52,23 @@ val optimize_ad_levels : Middle.typed_prog -> Middle.typed_prog
 (** Assign the optimal ad-levels to local variables. That means, make sure that
     variables only ever get treated as autodiff variables if they have some
     dependency on a parameter *)
+
+(** Interface for turning individual optimizations on/off. Useful for testing
+    and for top-level interface flags. *)
+type optimization_settings =
+  { function_inlining: bool
+  ; static_loop_unrolling: bool
+  ; one_step_loop_unrolling: bool
+  ; list_collapsing: bool
+  ; block_fixing: bool
+  ; constant_propagation: bool
+  ; expression_propagation: bool
+  ; copy_propagation: bool
+  ; dead_code_elimination: bool
+  ; partial_evaluation: bool
+  ; lazy_code_motion: bool
+  ; optimize_ad_levels: bool }
+
+val optimization_suite :
+  optimization_settings -> Middle.typed_prog -> Middle.typed_prog
+(** Perform all optimizations in this module on the MIR in an appropriate order. *)

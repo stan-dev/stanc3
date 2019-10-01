@@ -828,3 +828,66 @@ let optimize_ad_levels mir =
     optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
   in
   transform_program_blockwise mir transform
+
+(* Apparently you need to completely copy/paste type definitions between
+   ml and mli files?*)
+type optimization_settings =
+  { function_inlining: bool
+  ; static_loop_unrolling: bool
+  ; one_step_loop_unrolling: bool
+  ; list_collapsing: bool
+  ; block_fixing: bool
+  ; constant_propagation: bool
+  ; expression_propagation: bool
+  ; copy_propagation: bool
+  ; dead_code_elimination: bool
+  ; partial_evaluation: bool
+  ; lazy_code_motion: bool
+  ; optimize_ad_levels: bool }
+
+let optimization_suite settings mir =
+  let maybe_optimizations =
+    [ (* Phase order. See phase-ordering-nodes.org for details *)
+      (* Book section A *)
+      (* Book section B *)
+      (* Book: Procedure integration *)
+      (function_inlining, settings.function_inlining)
+      (* Book: Sparse conditional constant propagation *)
+    ; (constant_propagation, settings.constant_propagation)
+      (* Book section C *)
+      (* Book: Local and global copy propagation *)
+    ; (copy_propagation, settings.copy_propagation)
+      (* Book: Sparse conditional constant propagation *)
+    ; (constant_propagation, settings.constant_propagation)
+      (* Book: Dead-code elimination *)
+    ; (dead_code_elimination, settings.dead_code_elimination)
+      (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
+    ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
+      (* Matthjis: expression_propagation < partial_evaluation *)
+    ; (expression_propagation, settings.expression_propagation)
+      (* Matthjis: partial_evaluation < lazy_code_motion *)
+    ; (partial_evaluation, settings.partial_evaluation)
+      (* Book: Loop-invariant code motion *)
+    ; (lazy_code_motion, settings.lazy_code_motion)
+      (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary *)
+    ; (copy_propagation, settings.copy_propagation)
+      (* Matthijs: Constant propagation before static loop unrolling *)
+    ; (constant_propagation, settings.constant_propagation)
+      (* Book: Loop simplification *)
+    ; (static_loop_unrolling, settings.static_loop_unrolling)
+      (* Book: Dead-code elimination *)
+      (* Matthijs: Everything < Dead-code elimination *)
+    ; (dead_code_elimination, settings.dead_code_elimination)
+      (* Book: Machine idioms and instruction combining *)
+    ; (list_collapsing, settings.list_collapsing)
+      (* Book: Machine idioms and instruction combining *)
+    ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (* Book: Machine idioms and instruction combining *)
+      (* Matthijs: Everything < block_fixing *)
+    ; (block_fixing, settings.block_fixing) ]
+  in
+  let optimizations =
+    List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
+        if flag then Some fn else None )
+  in
+  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)

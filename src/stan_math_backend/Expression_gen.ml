@@ -27,7 +27,7 @@ let is_matrix e = e.emeta.mtype = UMatrix
 let is_row_vector e = e.emeta.mtype = URowVector
 
 (* stub *)
-let pretty_print _e = "pretty printed e"
+let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
 
 let rec stantype_prim_str = function
   | UInt -> "int"
@@ -375,8 +375,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect
-    {| rvalue(a, cons_list(index_omni(), nil_index_list()), "pretty printed e") |}]
+  [%expect {| rvalue(a, cons_list(index_omni(), nil_index_list()), "a") |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

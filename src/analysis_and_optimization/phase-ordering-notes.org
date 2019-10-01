@@ -1,0 +1,180 @@
+Phase ordering is the problem of ordering the optimizations applied to the code (in this case, the MIR). The current phase order was decided based on some suggested rules from Matthijs, and from the book Advanced Compiler Design and Implementation by Steven S. Muchnick.
+
+My process was to assign each phase from the book to an optimization that we have implemented, and then to adjust the result until all of our optimizations were applied Matthijs' rules were followed.
+
+* Book phases
+  Each suggested optimization from the book, with either the corresponding Stan optimization or explanation of what it is if it's missing.
+  These sections (A, B..) are in decreasing level of code representation, starting from the source code and going to machine code. I've left out sections lower than C, since I think they're intended for machine code, which is optimized anyway by GCC.
+** A
+*** Scalar replacement of array references
+    Book suggests replacing array references with variables to reduce memory accesses (pg. 682)
+*** Data-cache optimizations
+    Book suggests commuting sections to promote locality for cache optimization, especially useful for numerical code
+** B
+*** Procedure integration
+       (function_inlining, settings.function_inlining)
+*** Tail-call optimization, including tail-recursion elimination
+    Not done
+*** Scalar replacement of aggregates
+    Book suggests replacing elements of structs with variables to optimize register allocation
+*** Sparse conditional constant propagation
+     Run optimization: constant_propagation
+     Book suggests another form that takes conditionals into account
+*** Interprocedural constant propagation
+     Book suggests interprocedural version of constant propagation which determines which parameters are constant for all calls of the procedure
+*** Procedure specialization and cloning
+    Book suggests: When a procedure is called with only a small set of values for a parameter, clone the procedure and special each one to a constant value of the parameter
+*** Sparse conditional constant propogation
+     Run optimization: constant_propagation
+     Book suggests another form that takes conditionals into account
+** C1
+*** Global value numbering
+    Book suggests assigning numbers to computed values, which is a method for removing redundant computations that is sometimes more powerful than CSE/constant propagation. See pg. 343-349
+*** Local and global copy propagation
+     Run optimization: copy_propagation
+*** Sparse conditional constant propagation
+     Run optimization: constant_propagation
+*** Dead-code elimination
+     Run optimization: dead_code_elimination
+** C2
+*** Local and global common-subexpression elimination
+*** Loop-invariant code motion
+     Run optimization: lazy_code_motion
+** --C3--
+   This is an alternative to C2.
+*** TODO Partial-redundancy elimination
+** C4
+*** Dead-code elimination
+     Run optimization: dead_code_elimination
+*** Code hoisting
+    Move code to the latest possible point of evaluation. Done by lazy code motion. Redo here?
+*** Induction-variable strength reduction
+    Book suggests identifying loop variables, and optimizing how they are computed via basic arithmetic, i.e. computing an index via repeated addition instead of multiplication
+    Very likely done by GCC
+    pg. 435
+*** Linear-function test replacement
+    With induction-variable removal, removing useless loop variable co-variates and rewriting their uses
+    pg. 447
+*** Induction-variable removal
+    See Linear-function test replacement, pg. 447
+*** Unnecessary bounds-checking elimination
+    Book suggests not bounds-checking where in-bounds can be proven, doesn't apply
+*** Control-flow optimizations
+**** Branch optimizations
+**** Branch prediction
+**** Conditional moves
+**** Dead-code elimination
+    Run optimization: dead_code_elimination
+**** if simplifications
+**** Loop inversion
+**** Loop simplification
+     Run optimization: static_loop_unrolling
+**** Machine idioms and instruction combining
+     Run optimization: list_collapsing
+     Run optimization: optimize_ad_levels
+     Run optimization: block_fixing
+**** Postpass of peephole optimizations
+**** Straightening
+**** Tail merging or cross jumping
+**** Unreachable-code elimination
+**** Unswitching
+** D
+   "These optimizations are almost always done on a low-level form of code - one that may be quite machine-dependent (e.g., a structured assembly language) or that may be somewhat more general, such as the low-level intermediate code used in this book - because they require that addresses have been turned into the form required by the target processor and because several of them require low-level control-flow code."
+   I think these phases are intended for lower level code than we touch in the OCaml code.
+*** In-line expansion
+*** Leaf-routine optimization
+*** Shrink wrapping
+*** Machine idioms
+*** Tail merging
+*** Branch optimizations and conditional moves
+*** Dead-code eliminations
+*** Software pipelining, with loop unrolling, variable elimination, register renaming, and hierarchical reduction
+*** Basic-block and branch scheduling
+*** Register allocation by graph coloring
+*** Basic-block and branch scheduling 2
+*** Intraprocedural 1-cache optimization
+*** Instruction prefetching
+*** Data prefetching
+*** Branch prediction
+** E
+   "These optimizations are performed at link time, so they operate on relocatable object code."
+*** Interprocedural register allocation
+*** Aggregation of global references
+*** Interprocedural I-cache optimization
+
+* Matthijs suggestions
+  Matthijs suggested some rules for applying optimizations. They're followed in the final phase order.
+** DONE function_inlining < basically everything
+   as most optimizations do not work yet in function bodies
+** DONE one_step_loop_unrolling < lazy_code_motion
+   CLOSED: [2019-09-19 Thu 11:44]
+   to get loop-invariant code motion
+** DONE constant_propagation < static_loop_unrolling
+   to create opportunities for unrolling statically-sized loops
+** DONE X < list_collapsing if X introduces redundant nesting of SList-structures
+   Unsure which optimizations create SLists, but list_collapsing is near the end
+** DONE everything < block_fixing
+   CLOSED: [2019-09-19 Thu 11:47]
+   to make sure that SList constructors directly under if, for, while or fundef constructors are replaced with Block constructors, to make sure the C++ compiles
+** DONE expression_propagation < partial_evaluation
+   to create more opportunities for algebraic simplification
+** DONE partial_evaluation < lazy_code_motion
+   to reduce subcomputations to normal forms before we get rid of repeated computation (meaning that more subcomputations get shared)
+** DONE lazy_code_motion < copy_propagation
+   to clean up (probably, check that this is necessary though)
+** DONE basically everything < dead_code_elimination
+   as that will lead to the most aggressive dead-code elimination
+** DONE basically everything < optimize_ad_levels
+   as that will lead to the most optimal AD-levels
+* Phase order
+  Final list of the optimizations to include at source level, with rationale.
+** A
+** B
+     Optimization: function_inlining\\
+       from  Book: Procedure integration
+
+     Optimization: constant_propagation\\
+       from Book: Sparse conditional constant propagation
+** C
+     Optimization: copy_propagation\\
+       from Book: Local and global copy propagation
+
+     Optimization: constant_propagation\\
+       from Book: Sparse conditional constant propagation
+
+     Optimization: dead_code_elimination\\
+       from Book: Dead-code elimination
+
+     Optimization: one_step_loop_unrolling\\
+       from Matthijs: Before lazy code motion to get loop-invariant code motion
+
+     Optimization: expression_propagation\\
+       from Matthijs: expression_propagation < partial_evaluation
+
+     Optimization: partial_evaluation\\
+       from Matthijs: partial_evaluation < lazy_code_motion
+
+     Optimization: lazy_code_motion\\
+       from Book: Loop-invariant code motion
+
+     Optimization: copy_propagation\\
+       from Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary
+
+     Optimization: constant_propagation\\
+       from Matthijs: Constant propagation before static loop unrolling
+
+     Optimization: static_loop_unrolling\\
+       from Book: Loop simplification
+
+     Optimization: dead_code_elimination\\
+       from Book: Dead-code elimination, from Matthijs: Everything < Dead-code elimination
+
+     Optimization: list_collapsing\\
+       from Book: Machine idioms and instruction combining
+
+     Optimization: optimize_ad_levels\\
+       from Book: Machine idioms and instruction combining
+
+     Optimization: block_fixing\\
+       from Book: Machine idioms and instruction combining, from Matthijs: Everything < block_fixing
+     
