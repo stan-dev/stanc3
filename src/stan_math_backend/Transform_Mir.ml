@@ -2,7 +2,13 @@ open Core_kernel
 open Middle
 
 let opencl_triggers =
-  String.Map.of_alist_exn [("normal_id_glm_lpdf", [0; 1]); ("bernoulli_logit_glm_lpmf", [0; 1]); ("categorical_logit_glm_lpmf", [0; 1]); ("neg_binomial_2_log_glm_lpmf", [0; 1]); ("ordered_logistic_glm_lpmf", [0; 1]); ("poisson_log_glm_lpmf", [0; 1])]
+  String.Map.of_alist_exn
+    [ ("normal_id_glm_lpdf", [0; 1])
+    ; ("bernoulli_logit_glm_lpmf", [0; 1])
+    ; ("categorical_logit_glm_lpmf", [0; 1])
+    ; ("neg_binomial_2_log_glm_lpmf", [0; 1])
+    ; ("ordered_logistic_glm_lpmf", [0; 1])
+    ; ("poisson_log_glm_lpmf", [0; 1]) ]
 
 let opencl_suffix = "_opencl__"
 let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
@@ -301,8 +307,7 @@ let trans_prog (p : typed_prog) use_opencl =
   in
   let translate_to_open_cl stmts =
     if use_opencl then
-      let data_var_idents = 
-        List.map ~f:fst p.input_vars in
+      let data_var_idents = List.map ~f:fst p.input_vars in
       let rec trans_stmt_to_opencl s =
         { s with
           stmt=
@@ -311,8 +316,7 @@ let trans_prog (p : typed_prog) use_opencl =
               trans_stmt_to_opencl s.stmt }
       in
       List.map stmts ~f:trans_stmt_to_opencl
-    else
-      []
+    else []
   in
   let gq =
     ( add_reads p.generate_quantities p.output_vars param_read
@@ -332,11 +336,10 @@ let trans_prog (p : typed_prog) use_opencl =
     if use_opencl then
       String.Set.union_list
         (List.concat_map
-          ~f:(List.map ~f:collect_opencl_vars)
-          [log_prob; generate_quantities])
+           ~f:(List.map ~f:collect_opencl_vars)
+           [log_prob; generate_quantities])
       |> String.Set.to_list
-    else
-      []
+    else []
   in
   let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
