@@ -1,5 +1,6 @@
 include Mir
-    (* TODO: probably just namespace these somehow inside Middle rather than
+
+(* TODO: probably just namespace these somehow inside Middle rather than
        'includ'ing them
     *)
 include Stan_math_signatures

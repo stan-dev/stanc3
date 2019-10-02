@@ -111,7 +111,7 @@ let iter_stmt_transform f stmts =
      this count keeps us from infinite loops.
   *)
   let count = ref 0 in
-    while (Stdlib.(!=) !old_stmts !new_stmts) && !count < 100 do
+  while Stdlib.( != ) !old_stmts !new_stmts && !count < 100 do
     old_stmts := !new_stmts ;
     new_stmts := f !old_stmts ;
     count := !count + 1
@@ -143,7 +143,8 @@ let rec cleanup_stmts_one_pass stmts =
   |> List.concat_map ~f:flatten_block
   |> List.concat_map ~f:ellide_skip
 
-let cleanup_empty_stmts stmts = iter_stmt_transform cleanup_stmts_one_pass stmts
+let cleanup_empty_stmts stmts =
+  iter_stmt_transform cleanup_stmts_one_pass stmts
 
 let%expect_test "cleanup" =
   let swrap stmt = {stmt; smeta= no_span} in
@@ -159,5 +160,4 @@ let map_prog_stmts f p =
     prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
   ; generate_quantities= f p.generate_quantities
-  ; transform_inits= f p.transform_inits
-  }
+  ; transform_inits= f p.transform_inits }

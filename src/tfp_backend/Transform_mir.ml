@@ -20,21 +20,9 @@ let map_functions fname args =
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
       else raise_s [%message "Not sure how to handle " fname " yet!"]
 
-let map_constraints args emeta =
-  match args with
-  | [var; {expr= Lit (Str, "lb"); _}; lb] ->
-      let f = {expr= FunApp (StanLib, "tf.exp", [var]); emeta} in
-      binop f Plus lb
-  | _ ->
-      raise_s
-        [%message "No constraint mapping for" (args : expr_typed_located list)]
-
 let rec translate_funapps {expr; emeta} =
   let e expr = {expr; emeta} in
   match expr with
-  | FunApp (CompilerInternal, fname, args)
-    when internal_fn_of_string fname = Some FnConstrain ->
-      map_constraints args emeta
   | FunApp (StanLib, fname, args) ->
       let prefix =
         if Utils.is_distribution_name fname then dist_prefix else ""
@@ -44,9 +32,23 @@ let rec translate_funapps {expr; emeta} =
       FunApp (StanLib, prefix ^ fname, args) |> e
   | _ -> map_expr translate_funapps expr |> e
 
+(* temporary until we get rid of these from the MIR *)
+let rec remove_unused_stmts s =
+  let stmt =
+    match s.stmt with
+    | Assignment (_, {expr= FunApp (CompilerInternal, f, _); _})
+      when string_of_internal_fn FnConstrain = f
+           || string_of_internal_fn FnUnconstrain = f ->
+        Skip
+    | Decl _ -> Skip
+    | x -> map_statement Fn.id remove_unused_stmts x
+  in
+  {s with stmt}
+
 let trans_prog (p : typed_prog) =
   let rec map_stmt {stmt; smeta} =
     {stmt= map_statement translate_funapps map_stmt stmt; smeta}
   in
   map_prog translate_funapps map_stmt p
+  |> map_prog Fn.id remove_unused_stmts
   |> map_prog_stmts cleanup_empty_stmts
