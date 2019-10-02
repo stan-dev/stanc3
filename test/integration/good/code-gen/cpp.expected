@@ -183,7 +183,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         current_statement__ = 6;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
         current_statement__ = 7;
-        lp_accum__.add(cauchy_log<propto__>(tau, 0, 5));
+        lp_accum__.add(normal_log<propto__>(tau, 0, 5));
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(theta_tilde, 0, 1));
         current_statement__ = 9;

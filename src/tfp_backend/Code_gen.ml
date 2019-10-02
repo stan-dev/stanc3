@@ -184,9 +184,9 @@ let pp_bijector ppf trans =
   match components with
   | [] -> pf ppf "tfb__.Identity()"
   | ls ->
-      pf ppf "tfb__.Chain([%a])"
+      pf ppf "tfb__.Chain([@[<hov>%a@]])"
         (list ~sep:comma pp_call_expr)
-        (List.map ls ~f:(fun (s, args) -> ("tfb__." ^ s, args)))
+        List.(rev (map ls ~f:(fun (s, args) -> ("tfb__." ^ s, args))))
 
 let pp_bijectors ppf p =
   let ppbody ppf =
