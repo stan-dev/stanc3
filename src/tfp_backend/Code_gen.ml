@@ -166,9 +166,10 @@ let pp_shapes ppf p =
       (get_dims out_unconstrained_st)
   in
   let ppbody ppf =
+    pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]" (list ~sep:comma pp_shape) (get_params p)
   in
-  pp_method ppf "param_shape" ["self"; "nchains__"] [] ppbody
+  pp_method ppf "parameter_shapes" ["self"; "nchains__"] [] ppbody
 
 let pp_bijector ppf trans =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
@@ -182,15 +183,19 @@ let pp_bijector ppf trans =
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"
-  | ls -> pf ppf "tfb__.Chain([%a])" (list ~sep:comma pp_call_expr) ls
+  | ls ->
+      pf ppf "tfb__.Chain([%a])"
+        (list ~sep:comma pp_call_expr)
+        (List.map ls ~f:(fun (s, args) -> ("tfb__." ^ s, args)))
 
 let pp_bijectors ppf p =
   let ppbody ppf =
+    pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]"
       (list ~sep:comma pp_bijector)
       (List.map ~f:(fun (_, {out_trans; _}) -> out_trans) (get_params p))
   in
-  pp_method ppf "param_bijectors" ["self"] [] ppbody
+  pp_method ppf "parameter_bijectors" ["self"] [] ppbody
 
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
@@ -210,7 +215,8 @@ import numpy as np__
 import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp.distributions
-from tensorflow.python.ops.parallel_for import pfor__
+tfb__ = tfp.bijectors
+from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : typed_prog) =

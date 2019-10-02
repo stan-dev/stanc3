@@ -4,7 +4,8 @@ import numpy as np__
 import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp.distributions
-from tensorflow.python.ops.parallel_for import pfor__
+tfb__ = tfp.bijectors
+from tensorflow.python.ops.parallel_for import pfor as pfor__
 
 class eight_schools_ncp_model(tfd__.Distribution):
 
@@ -36,10 +37,17 @@ class eight_schools_ncp_model(tfd__.Distribution):
     return tf__.vectorized_map(self.log_prob_one, params)
     
      
-  def param_shape(self, nchains__):
+  def parameter_shapes(self, nchains__):
+    J = self.J
+    y = self.y
+    sigma = self.sigma
     return [(nchains__, ), (nchains__, ), (nchains__, J)]
      
-  def param_bijectors(self):
-    return [tfb__.Identity(), tfb__.Chain([Exp(),
-            AffineScalar(tf__.cast(0, tf__.float64))]), tfb__.Identity()]
+  def parameter_bijectors(self):
+    J = self.J
+    y = self.y
+    sigma = self.sigma
+    return [tfb__.Identity(), tfb__.Chain([tfb__.Exp(),
+            tfb__.AffineScalar(tf__.cast(0, tf__.float64))]),
+            tfb__.Identity()]
      
