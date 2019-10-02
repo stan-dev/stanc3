@@ -9067,7 +9067,7 @@
  (output_vars
   ((p_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (offset_multiplier
     ((out_unconstrained_st
       (SArray SReal
@@ -9077,7 +9077,13 @@
       (SArray SReal
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters)
+     (out_trans
+      (OffsetMultiplier
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (p_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -9087,7 +9093,11 @@
       (SArray SReal
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (p_real_3d_ar
     ((out_unconstrained_st
       (SArray
@@ -9109,7 +9119,11 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (p_vec
     ((out_unconstrained_st
       (SVector
@@ -9119,7 +9133,11 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (p_1d_vec
     ((out_unconstrained_st
       (SArray
@@ -9135,7 +9153,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (p_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -9163,7 +9181,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (p_row_vec
     ((out_unconstrained_st
       (SRowVector
@@ -9173,7 +9191,7 @@
       (SRowVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (p_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -9189,7 +9207,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (p_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -9217,7 +9235,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Identity)))
    (p_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -9243,7 +9261,13 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters)
+     (out_trans
+      (LowerUpper
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (p_simplex
     ((out_unconstrained_st
       (SVector
@@ -9258,7 +9282,7 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Simplex)))
    (p_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -9279,7 +9303,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Simplex)))
    (p_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -9312,7 +9336,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans Simplex)))
    (p_cfcov_54
     ((out_unconstrained_st
       (SVector
@@ -9369,7 +9393,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans CholeskyCov)))
    (p_cfcov_33
     ((out_unconstrained_st
       (SVector
@@ -9426,7 +9450,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans CholeskyCov)))
    (p_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -9489,7 +9513,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var K))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block Parameters)))
+     (out_block Parameters) (out_trans CholeskyCov)))
    (tp_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -9499,7 +9523,11 @@
       (SArray SReal
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (tp_real_3d_ar
     ((out_unconstrained_st
       (SArray
@@ -9521,7 +9549,11 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (tp_vec
     ((out_unconstrained_st
       (SVector
@@ -9531,7 +9563,11 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters)
+     (out_trans
+      (Upper
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (tp_1d_vec
     ((out_unconstrained_st
       (SArray
@@ -9547,7 +9583,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -9575,7 +9611,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_row_vec
     ((out_unconstrained_st
       (SRowVector
@@ -9585,7 +9621,7 @@
       (SRowVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -9601,7 +9637,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -9629,7 +9665,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -9655,7 +9691,13 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters)
+     (out_trans
+      (LowerUpper
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (tp_simplex
     ((out_unconstrained_st
       (SVector
@@ -9670,7 +9712,7 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Simplex)))
    (tp_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -9691,7 +9733,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Simplex)))
    (tp_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -9724,7 +9766,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans Simplex)))
    (tp_cfcov_54
     ((out_unconstrained_st
       (SVector
@@ -9781,7 +9823,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans CholeskyCov)))
    (tp_cfcov_33
     ((out_unconstrained_st
       (SVector
@@ -9838,7 +9880,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans CholeskyCov)))
    (tp_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -9901,13 +9943,13 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var K))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block TransformedParameters)))
+     (out_block TransformedParameters) (out_trans CholeskyCov)))
    (gq_r1
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_r2
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -9917,7 +9959,11 @@
       (SArray SReal
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (gq_real_3d_ar
     ((out_unconstrained_st
       (SArray
@@ -9939,7 +9985,11 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities)
+     (out_trans
+      (Lower
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (gq_vec
     ((out_unconstrained_st
       (SVector
@@ -9949,7 +9999,11 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities)
+     (out_trans
+      (Upper
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (gq_1d_vec
     ((out_unconstrained_st
       (SArray
@@ -9965,7 +10019,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -9993,7 +10047,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_row_vec
     ((out_unconstrained_st
       (SRowVector
@@ -10003,7 +10057,7 @@
       (SRowVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -10019,7 +10073,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -10047,7 +10101,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -10073,7 +10127,13 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities)
+     (out_trans
+      (LowerUpper
+       ((expr (Lit Int 0))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+       ((expr (Lit Int 1))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
    (gq_simplex
     ((out_unconstrained_st
       (SVector
@@ -10088,7 +10148,7 @@
       (SVector
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Simplex)))
    (gq_1d_simplex
     ((out_unconstrained_st
       (SArray
@@ -10109,7 +10169,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Simplex)))
    (gq_3d_simplex
     ((out_unconstrained_st
       (SArray
@@ -10142,7 +10202,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var N))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Simplex)))
    (gq_cfcov_54
     ((out_unconstrained_st
       (SVector
@@ -10199,7 +10259,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 4))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
    (gq_cfcov_33
     ((out_unconstrained_st
       (SVector
@@ -10256,7 +10316,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
    (gq_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
@@ -10319,7 +10379,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Var K))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans CholeskyCov)))
    (indices
     ((out_unconstrained_st
       (SArray SInt
@@ -10329,7 +10389,7 @@
       (SArray SInt
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (indexing_mat
     ((out_unconstrained_st
       (SArray
@@ -10349,7 +10409,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res1
     ((out_unconstrained_st
       (SArray
@@ -10369,7 +10429,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res2
     ((out_unconstrained_st
       (SArray
@@ -10389,7 +10449,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res3
     ((out_unconstrained_st
       (SArray
@@ -10409,7 +10469,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res11
     ((out_unconstrained_st
       (SArray
@@ -10429,7 +10489,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res21
     ((out_unconstrained_st
       (SArray
@@ -10449,7 +10509,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 5))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res31
     ((out_unconstrained_st
       (SArray
@@ -10469,7 +10529,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res4
     ((out_unconstrained_st
       (SArray
@@ -10485,7 +10545,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 3))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res5
     ((out_unconstrained_st
       (SArray
@@ -10501,7 +10561,7 @@
          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
        ((expr (Lit Int 2))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-     (out_block GeneratedQuantities)))))
+     (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
 
 Warning: deprecated language construct used in 'mother.stan', line 60, column 21:

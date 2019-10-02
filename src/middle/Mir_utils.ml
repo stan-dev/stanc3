@@ -96,3 +96,68 @@ let string_of_operators =
     ; ("(OperatorAssign Divide)", "assign_divide")
     ; ("(OperatorAssign EltTimes)", "assign_elt_times")
     ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+
+(** [iter_stmt_transform transform stmts] will run the transform function
+    on the list of statements until the list of statements stops changing.
+
+    In our use case this could be replaced with a bottom-up map.
+*)
+let iter_stmt_transform f stmts =
+  let old_stmts = ref stmts in
+  let new_stmts = ref (f stmts) in
+  (* The count here just enforces a hard limit on the number of iterations.
+     In principle, we should only use this function with monotonic update
+     functions, but in practice we may get that wrong from time to time and
+     this count keeps us from infinite loops.
+  *)
+  let count = ref 0 in
+    while (Stdlib.(!=) !old_stmts !new_stmts) && !count < 100 do
+    old_stmts := !new_stmts ;
+    new_stmts := f !old_stmts ;
+    count := !count + 1
+  done ;
+  !new_stmts
+
+(** [cleanup_stmts statements] will do a few simple transformations like
+    removing Skips, collapsing empty blocks and SLists, etc. *)
+let rec cleanup_stmts_one_pass stmts =
+  let rec cleanup_stmt s =
+    let ellide = {s with stmt= Skip} in
+    match s.stmt with
+    | Block [] | SList [] -> ellide
+    | For {body= {stmt= Skip; _}; _} -> ellide
+    | While (_, {stmt= Skip; _}) -> ellide
+    | SList ls -> {s with stmt= SList (cleanup_stmts_one_pass ls)}
+    | Block ls -> {s with stmt= Block (cleanup_stmts_one_pass ls)}
+    | _ -> {s with stmt= map_statement Fn.id cleanup_stmt s.stmt}
+  in
+  let is_decl = function {stmt= Decl _; _} -> true | _ -> false in
+  let flatten_block s =
+    match s.stmt with
+    | SList ls | Block ls ->
+        if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
+    | _ -> [s]
+  in
+  let ellide_skip s = match s.stmt with Skip -> [] | _ -> [s] in
+  List.map stmts ~f:cleanup_stmt
+  |> List.concat_map ~f:flatten_block
+  |> List.concat_map ~f:ellide_skip
+
+let cleanup_empty_stmts stmts = iter_stmt_transform cleanup_stmts_one_pass stmts
+
+let%expect_test "cleanup" =
+  let swrap stmt = {stmt; smeta= no_span} in
+  let body = Block [Skip |> swrap] |> swrap in
+  let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
+  let res = [s |> swrap] |> cleanup_empty_stmts in
+  [%sexp (res : stmt_loc list)] |> print_s ;
+  [%expect {|
+    () |}]
+
+let map_prog_stmts f p =
+  { p with
+    prepare_data= f p.prepare_data
+  ; log_prob= f p.log_prob
+  ; generate_quantities= f p.generate_quantities
+  ; transform_inits= f p.transform_inits
+  }

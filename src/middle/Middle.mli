@@ -131,3 +131,6 @@ val assign_indexed :
 
 val eigen_size :
   mtype_loc_ad with_expr sizedtype -> mtype_loc_ad with_expr list
+
+val cleanup_empty_stmts : ('e, 's) stmt_with list -> ('e, 's) stmt_with list
+val map_prog_stmts : ('s list -> 's list) -> ('e, 's) prog -> ('e, 's) prog

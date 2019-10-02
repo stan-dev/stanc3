@@ -49,3 +49,4 @@ let trans_prog (p : typed_prog) =
     {stmt= map_statement translate_funapps map_stmt stmt; smeta}
   in
   map_prog translate_funapps map_stmt p
+  |> map_prog_stmts cleanup_empty_stmts
