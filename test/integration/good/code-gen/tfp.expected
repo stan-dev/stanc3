@@ -57,3 +57,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     return pfor__(f, nchains)
     
      
+  def param_bijectors(self):
+    return [tfb__.Identity(), tfb__.Chain([Exp(),
+            AffineScalar(tf__.cast(0, tf__.float64))]), tfb__.Identity()]
+     

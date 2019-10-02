@@ -197,10 +197,37 @@ let pp_log_prob ppf p =
   let intro = ["return tf__.vectorized_map(self.log_prob_one, params)"] in
   pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
 
+let pp_bijector ppf trans =
+  let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
+  let components =
+    match trans with
+    | Identity -> []
+    | Lower lb -> [("Exp", []); ("AffineScalar", [lb])]
+    | _ ->
+        raise_s
+          [%message "Unsupported " (trans : expr_typed_located transformation)]
+  in
+  match components with
+  | [] -> pf ppf "tfb__.Identity()"
+  | ls -> pf ppf "tfb__.Chain([%a])" (list ~sep:comma pp_call_expr) ls
+
+let pp_bijectors ppf p =
+  let ppbody ppf =
+    pf ppf "return [@[<hov>%a@]]"
+      (list ~sep:comma pp_bijector)
+      (List.filter_map
+         ~f:(function
+           | _, {out_trans; out_block= Parameters; _} -> Some out_trans
+           | _ -> None)
+         p.output_vars)
+  in
+  pp_method ppf "param_bijectors" ["self"] [] ppbody
+
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
   pf ppf "@ %a" pp_log_prob p ;
-  pf ppf "@ %a" pp_sample p
+  pf ppf "@ %a" pp_sample p ;
+  pf ppf "@ %a" pp_bijectors p
 
 let pp_fundef ppf {fdname; fdargs; fdbody; _} =
   pp_method ppf fdname
