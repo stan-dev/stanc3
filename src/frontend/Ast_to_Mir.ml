@@ -136,7 +136,7 @@ type decl_context = {dconstrain: constrainaction option; dadlevel: autodifftype}
 
 let constraint_to_string t (c : constrainaction) =
   match t with
-  | Ast.Ordered -> "ordered"
+  | Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
   | Simplex -> "simplex"
   | UnitVector -> "unit_vector"
@@ -161,22 +161,22 @@ let constraint_to_string t (c : constrainaction) =
   | Identity -> ""
 
 let constraint_forl = function
-  | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier _
-   |Lower _ | Upper _ | LowerUpper _ ->
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
+   |Upper _ | LowerUpper _ ->
       for_scalar
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
       for_eigen
 
 let extract_transform_args = function
-  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | Lower a | Upper a | Offset a | Multiplier a -> [a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
 
 let extra_constraint_args st = function
-  | Ast.Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
+  | Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
    |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
    |Identity ->
       []
@@ -208,7 +208,7 @@ let param_size transform sizedtype =
     binop (binop k Times (binop k Minus (int 1))) Divide (int 2)
   in
   match transform with
-  | Ast.Identity | Lower _ | Upper _
+  | Identity | Lower _ | Upper _
    |LowerUpper (_, _)
    |Offset _ | Multiplier _
    |OffsetMultiplier (_, _)
@@ -282,8 +282,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
-      check_decl decl_type' decl_id (Ast.Lower lb) smeta adlevel
-      @ check_decl decl_type' decl_id (Ast.Upper ub) smeta adlevel
+      check_decl decl_type' decl_id (Lower lb) smeta adlevel
+      @ check_decl decl_type' decl_id (Upper ub) smeta adlevel
   | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
 let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
@@ -495,7 +495,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
       {decl_type; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
       trans_decl declc smeta decl_type
-        (Ast.map_transformation trans_expr transformation)
+        (map_transformation trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
@@ -562,7 +562,8 @@ let trans_prog filename (p : Ast.typed_program) : typed_prog =
                 ( n
                 , { out_constrained_st= s
                   ; out_unconstrained_st= param_size t s
-                  ; out_block= block } ) ))
+                  ; out_block= block
+                  ; out_trans= map_transformation trans_expr t } ) ))
   in
   let output_vars =
     grab_names_sizes Parameters

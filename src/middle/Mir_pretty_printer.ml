@@ -196,7 +196,7 @@ let pp_io_block ppf = function
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
 let pp_output_var pp_e ppf
-    (name, {out_unconstrained_st; out_constrained_st; out_block}) =
+    (name, {out_unconstrained_st; out_constrained_st; out_block; _}) =
   Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (pp_sizedtype pp_e)
     out_constrained_st name (pp_sizedtype pp_e) out_unconstrained_st
 
