@@ -105,6 +105,27 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
+                stage("Build stanc.js") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build --profile release src/stancjs
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                        sh "mv `find _build -name index.html` bin/load_stanc.html"
+                        stash name:'js-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
                 stage("Build & test a static Linux binary") {
                     agent {
                         dockerfile {
@@ -151,6 +172,7 @@ pipeline {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
+                unstash 'js-exe'
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
                             ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ """)
