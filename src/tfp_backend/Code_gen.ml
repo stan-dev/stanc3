@@ -101,7 +101,7 @@ let pp_extract_data ppf p =
   let pp_data ppf (name, _) = pf ppf "%s = self.%s" name name in
   (list ~sep:cut pp_data) ppf p.input_vars
 
-let pp_log_prob_one ppf p =
+let pp_log_prob_one_chain ppf p =
   let pp_extract_param ppf (idx, name) =
     pf ppf "%s = tf__.cast(params[%d], tf__.float64)" name idx
   in
@@ -117,7 +117,7 @@ let pp_log_prob_one ppf p =
   in
   let intro = ["target = 0"] in
   let outro = ["return target"] in
-  pp_method ppf "log_prob_one" ["self"; "params"] intro ~outro ppbody
+  pp_method ppf "log_prob_one_chain" ["self"; "params"] intro ~outro ppbody
 
 let rec get_vident_exn e =
   match e.expr with
@@ -151,8 +151,10 @@ let rec get_dims = function
   | SArray (t, dim) -> dim :: get_dims t
 
 let pp_log_prob ppf p =
-  pf ppf "@ %a@ " pp_log_prob_one p ;
-  let intro = ["return tf__.vectorized_map(self.log_prob_one, params)"] in
+  pf ppf "@ %a@ " pp_log_prob_one_chain p ;
+  let intro =
+    ["return tf__.vectorized_map(self.log_prob_one_chain, params)"]
+  in
   pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
 
 let get_params p =

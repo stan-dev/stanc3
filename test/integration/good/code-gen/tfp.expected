@@ -15,7 +15,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     self.sigma = tf__.cast(sigma, tf__.float64)
      
   
-  def log_prob_one(self, params):
+  def log_prob_one_chain(self, params):
     target = 0
     J = self.J
     y = self.y
@@ -34,7 +34,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     return target
      
   def log_prob(self, params):
-    return tf__.vectorized_map(self.log_prob_one, params)
+    return tf__.vectorized_map(self.log_prob_one_chain, params)
     
      
   def parameter_shapes(self, nchains__):
