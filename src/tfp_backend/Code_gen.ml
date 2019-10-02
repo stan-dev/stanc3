@@ -150,52 +150,25 @@ let rec get_dims = function
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
-let pp_sample_one ppf p =
-  let params =
-    List.filter_map p.output_vars ~f:(function
-      | name, {out_block= Parameters; _} -> Some name
-      | _ -> None )
-  in
-  let is_param = Set.mem (String.Set.of_list params) in
-  let pp_shape ppf var =
-    let st = get_param_st p var in
-    let dims = get_dims st in
-    match dims with
-    | [] -> ()
-    | dims -> pf ppf "(%a,)" (list ~sep:comma pp_expr) dims
-    (* ({expr= Var "nchains__"; emeta= internal_meta} :: dims) *)
-  in
-  let rec no_param_deps ppf s =
-    match s.stmt with
-    | TargetPE {expr= FunApp (StanLib, f, obs :: dist_args); _}
-      when String.is_prefix ~prefix:Transform_mir.dist_prefix f
-           && is_param (get_vident_exn obs) ->
-        let vident = get_vident_exn obs in
-        pf ppf "%s = %a.sample(@[<hov 2>%a@])" vident pp_call
-          (f, pp_expr, dist_args) pp_shape obs
-    | Block ls | SList ls -> (list ~sep:cut no_param_deps) ppf ls
-    | _ -> ()
-  in
-  let ppbody ppf =
-    pf ppf "%a@,%a@," pp_extract_data p
-      (list ~sep:cut no_param_deps)
-      p.log_prob
-  in
-  let intro = [] in
-  let outro = [strf "return [@[<hov>%a@]]" (list ~sep:comma string) params] in
-  pp_method ppf "sample_one" ["self"] intro ~outro ppbody
-
-let pp_sample ppf p =
-  pf ppf "@ %a@ " pp_sample_one p ;
-  let intro =
-    ["f = lambda _ : self.sample_one()"; "return pfor__(f, nchains)"]
-  in
-  pp_method ppf "sample" ["self"; "nchains"] intro (fun _ -> ())
-
 let pp_log_prob ppf p =
   pf ppf "@ %a@ " pp_log_prob_one p ;
   let intro = ["return tf__.vectorized_map(self.log_prob_one, params)"] in
   pp_method ppf "log_prob" ["self"; "params"] intro (fun _ -> ())
+
+let get_params p =
+  List.filter
+    ~f:(function _, {out_block= Parameters; _} -> true | _ -> false)
+    p.output_vars
+
+let pp_shapes ppf p =
+  let pp_shape ppf (_, {out_unconstrained_st; _}) =
+    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
+      (get_dims out_unconstrained_st)
+  in
+  let ppbody ppf =
+    pf ppf "return [@[<hov>%a@]]" (list ~sep:comma pp_shape) (get_params p)
+  in
+  pp_method ppf "param_shape" ["self"; "nchains__"] [] ppbody
 
 let pp_bijector ppf trans =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
@@ -215,18 +188,14 @@ let pp_bijectors ppf p =
   let ppbody ppf =
     pf ppf "return [@[<hov>%a@]]"
       (list ~sep:comma pp_bijector)
-      (List.filter_map
-         ~f:(function
-           | _, {out_trans; out_block= Parameters; _} -> Some out_trans
-           | _ -> None)
-         p.output_vars)
+      (List.map ~f:(fun (_, {out_trans; _}) -> out_trans) (get_params p))
   in
   pp_method ppf "param_bijectors" ["self"] [] ppbody
 
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
   pf ppf "@ %a" pp_log_prob p ;
-  pf ppf "@ %a" pp_sample p ;
+  pf ppf "@ %a" pp_shapes p ;
   pf ppf "@ %a" pp_bijectors p
 
 let pp_fundef ppf {fdname; fdargs; fdbody; _} =

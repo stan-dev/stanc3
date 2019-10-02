@@ -36,26 +36,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
     return tf__.vectorized_map(self.log_prob_one, params)
     
      
-  
-  def sample_one(self):
-    J = self.J
-    y = self.y
-    sigma = self.sigma
-    
-    mu = tfd__.Normal(tf__.cast(0, tf__.float64), tf__.cast(5, tf__.float64)).sample(
-    )
-    tau = tfd__.Cauchy(tf__.cast(0, tf__.float64), tf__.cast(5, tf__.float64)).sample(
-    )
-    theta_tilde = tfd__.Normal(tf__.cast(0, tf__.float64),
-                               tf__.cast(1, tf__.float64)).sample((J,))
-    
-    
-    return [mu, tau, theta_tilde]
-     
-  def sample(self, nchains):
-    f = lambda _ : self.sample_one()
-    return pfor__(f, nchains)
-    
+  def param_shape(self, nchains__):
+    return [(nchains__, ), (nchains__, ), (nchains__, J)]
      
   def param_bijectors(self):
     return [tfb__.Identity(), tfb__.Chain([Exp(),
