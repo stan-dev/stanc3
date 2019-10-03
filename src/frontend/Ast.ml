@@ -97,25 +97,6 @@ type 'e truncation =
 type 'e printable = PString of string | PExpr of 'e
 [@@deriving sexp, compare, map, hash]
 
-(** Transformations (constraints) for global variable declarations *)
-type 'e transformation =
-  | Identity
-  | Lower of 'e
-  | Upper of 'e
-  | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-[@@deriving sexp, compare, map, hash]
-
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
@@ -165,7 +146,7 @@ type ('e, 's, 'l, 'f) statement =
   | Block of 's list
   | VarDecl of
       { decl_type: 'e Middle.possiblysizedtype
-      ; transformation: 'e transformation
+      ; transformation: 'e Middle.transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }

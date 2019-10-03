@@ -141,10 +141,30 @@ type ('e, 's) statement =
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
+(** Transformations (constraints) for global variable declarations *)
+type 'e transformation =
+  | Identity
+  | Lower of 'e
+  | Upper of 'e
+  | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
+  | OffsetMultiplier of 'e * 'e
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+[@@deriving sexp, compare, map, hash]
+
 type 'e outvar =
   { out_unconstrained_st: 'e sizedtype
   ; out_constrained_st: 'e sizedtype
-  ; out_block: io_block }
+  ; out_block: io_block
+  ; out_trans: 'e transformation }
 [@@deriving sexp, map, hash]
 
 type ('e, 's) prog =
