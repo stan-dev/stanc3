@@ -210,7 +210,7 @@ and gen_fun_app ppf f es =
     in
     let converted_es = List.map ~f:convert_hof_vars es in
     let extra = suffix_args f |> List.map ~f:to_var in
-    let is_hof_call = converted_es = es in
+    let is_hof_call = not (converted_es = es) in
     let msgs = "pstream__" |> to_var in
     (* Here, because these signatures are written in C++ such that they
        wanted to have optional arguments and piggyback on C++ default
@@ -222,7 +222,7 @@ and gen_fun_app ppf f es =
     *)
     let args =
       match (is_hof_call, f, converted_es @ extra) with
-      | true, "algebrasolver", f :: x :: y :: dat :: datint :: tl ->
+      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
           f :: x :: y :: dat :: datint :: msgs :: tl
       | ( true
         , "integrate_ode_bdf"
@@ -234,7 +234,8 @@ and gen_fun_app ppf f es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl
-      | true, _, args | false, _, args -> args
+      | true, _, args -> args @ [msgs]
+      | false, _, args -> args
     in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
       (list ~sep:comma pp_expr) args
