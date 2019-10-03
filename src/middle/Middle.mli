@@ -107,6 +107,12 @@ val for_scalar :
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
 
+val for_scalar_unsized :
+  (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
 val for_scalar_inv :
      mtype_loc_ad with_expr sizedtype
   -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
@@ -121,6 +127,8 @@ val for_eigen :
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
 
+val pull_indices : 'a with_expr -> 'a with_expr index list
+
 val assign_indexed :
      unsizedtype
   -> string
@@ -131,3 +139,5 @@ val assign_indexed :
 
 val eigen_size :
   mtype_loc_ad with_expr sizedtype -> mtype_loc_ad with_expr list
+
+val is_user_ident : string -> bool

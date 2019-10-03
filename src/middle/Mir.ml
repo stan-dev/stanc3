@@ -207,6 +207,7 @@ type internal_fn =
   | FnPrint
   | FnReject
   | FnResizeToMatch
+  | FnNaN
 [@@deriving sexp]
 
 type flag_vars = EmitGeneratedQuantities | EmitTransformedParameters

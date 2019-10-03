@@ -533,7 +533,8 @@ using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math; |}
 
-let pre_boilerplate =
+(* XXX probably move these to the Stan repo when these repos are joined. *)
+let custom_functions =
   {|
 template <typename T, typename S>
 std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
@@ -566,8 +567,8 @@ resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  pf ppf "@[<v>@ %s@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes pre_boilerplate p.prog_name usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ %a@ }@ @]"
+    version includes p.prog_name custom_functions usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf

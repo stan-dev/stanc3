@@ -3,9 +3,6 @@ open Middle
 open Fmt
 open Expression_gen
 
-let pp_call ppf (name, pp_arg, args) =
-  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
-
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 

@@ -199,6 +199,28 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
+let make_fill vident pst loc =
+  let rhs = internal_funapp FnNaN [] {mtype=UReal; mloc=loc; madlevel=DataOnly} in
+  let ut = (remove_possible_size pst) in
+  let var = {expr=Var vident; emeta={internal_meta with mtype=ut; mloc=loc}} in
+  let bodyfn var =
+    {stmt=Assignment((vident, ut, pull_indices var), rhs); smeta=loc}
+  in
+  for_scalar_unsized bodyfn var loc
+
+let rec contains_eigen = function
+  | UArray t -> contains_eigen t
+  | UMatrix | URowVector | UVector -> true
+  | _ -> false
+
+let add_fill no_fill_required = function
+  | {stmt=Decl { decl_id; decl_type;_ }; smeta} as decl
+    when not (Set.mem no_fill_required decl_id)
+      && is_user_ident decl_id
+      && contains_eigen (remove_possible_size decl_type) ->
+    [decl; make_fill decl_id decl_type smeta]
+  | s -> [s]
+
 let trans_prog (p : typed_prog) =
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
@@ -222,6 +244,10 @@ let trans_prog (p : typed_prog) =
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x )
   in
+  let data_and_params = List.map ~f:fst constrained_params
+                        @ List.map ~f:fst p.input_vars
+  in
+  let add_fills = List.concat_map ~f:(add_fill (String.Set.of_list data_and_params)) in
   let tparam_start {stmt; _} =
     match stmt with
     | IfElse (cond, _, _)
@@ -246,14 +272,17 @@ let trans_prog (p : typed_prog) =
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
     @ gq_writes
+  |> add_fills
   in
   let p =
     { p with
       log_prob=
         add_reads log_prob p.output_vars param_read
         |> constrain_in_params p.output_vars
+        |> add_fills
     ; prog_name= escape_name p.prog_name
     ; prepare_data= init_pos @ add_reads p.prepare_data p.input_vars data_read
+                    |> add_fills
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read

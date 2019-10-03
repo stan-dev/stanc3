@@ -225,8 +225,8 @@ let%expect_test "making vector for loop" =
       (Block
        ((NRFunApp StanLib print ((Indexed (Var hi) ((Single (Var sym1__)))))))))) |}]
 
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
+(** [for_scalar sizedtype bodyfn var smeta] generates a For statement that loops
+    over the scalars in the underlying [sizedtype].
 
     We can call [bodyfn] directly on scalars, make a direct For loop
     around Eigen types, or for Arrays we call mkfor but inserting a
@@ -241,6 +241,16 @@ let rec for_scalar st bodyfn var smeta =
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+
+(* XXX this is broken - matrices with a single index are doing row stuff now, but this is asking for scalar *)
+let rec for_scalar_unsized bodyfn var smeta =
+  let upper = internal_funapp FnLength [var] {internal_meta with mloc=smeta} in
+  match var.emeta.mtype with
+  | UInt | UReal -> bodyfn var
+  | UVector | URowVector -> mkfor upper bodyfn var smeta
+  | UMatrix -> mkfor
+  | UArray _ -> mkfor upper (fun e -> for_scalar_unsized bodyfn e smeta) var smeta
+  | _ -> raise_s [%message "Can't iterate over " (var: expr_typed_located)]
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
 let for_scalar_inv st bodyfn var smeta =
@@ -321,3 +331,5 @@ let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
+
+let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
