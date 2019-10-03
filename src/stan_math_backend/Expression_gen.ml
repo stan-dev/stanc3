@@ -202,18 +202,43 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
+    let to_var s = {expr= Var s; emeta= internal_meta} in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
           {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
-    let extra =
-      (suffix_args f @ if es = converted_es then [] else ["pstream__"])
-      |> List.map ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+    let extra = suffix_args f |> List.map ~f:to_var in
+    let is_hof_call = not (converted_es = es) in
+    let msgs = "pstream__" |> to_var in
+    (* Here, because these signatures are written in C++ such that they
+       wanted to have optional arguments and piggyback on C++ default
+       arguments and not write the necessary overloads, we have to
+       reorder the arguments as pstream__ does not always come last
+       in a way that is specific to the function name. If you are a C++
+       developer please don't add more of these - just add the
+       overloads.
+    *)
+    let args =
+      match (is_hof_call, f, converted_es @ extra) with
+      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
+          f :: x :: y :: dat :: datint :: msgs :: tl
+      | ( true
+        , "integrate_ode_bdf"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
+       |( true
+        , "integrate_ode_adams"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
+       |( true
+        , "integrate_ode_rk45"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
+          f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl
+      | true, _, args -> args @ [msgs]
+      | false, _, args -> args
     in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) (converted_es @ extra)
+      (list ~sep:comma pp_expr) args
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
