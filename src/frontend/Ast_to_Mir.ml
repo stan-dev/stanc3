@@ -134,7 +134,7 @@ let constrainaction_fname c =
 
 type decl_context = {dconstrain: constrainaction option; dadlevel: autodifftype}
 
-let constraint_to_string t (c : constrainaction) =
+let check_constraint_to_string t (c : constrainaction) =
   match t with
   | Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
@@ -159,6 +159,11 @@ let constraint_to_string t (c : constrainaction) =
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
+
+let constrain_constraint_to_string t (c : constrainaction) =
+  match t with
+  | CholeskyCorr -> "cholesky_corr"
+  | _ -> check_constraint_to_string t c
 
 let constraint_forl = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
@@ -240,7 +245,7 @@ let remove_possibly_exn pst action loc =
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in
   let mkstring = mkstring decl_var.emeta.mloc in
-  match Option.map ~f:(constraint_to_string t) dconstrain with
+  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
   | None | Some "" -> []
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
@@ -286,7 +291,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
   | LowerUpper (lb, ub) ->
       check_decl decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl decl_type' decl_id (Upper ub) smeta adlevel
-  | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
+  | _ ->
+      [chk (mkstring smeta (check_constraint_to_string decl_trans Check)) args]
 
 let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     initial_value =
