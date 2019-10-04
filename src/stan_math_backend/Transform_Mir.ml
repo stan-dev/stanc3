@@ -93,8 +93,8 @@ let rec base_ut_to_string = function
         [%message "Another place where it's weird to get " (t : unsizedtype)]
 
 let param_read smeta
-    (decl_id, {out_constrained_st= cst; out_unconstrained_st= ucst; out_block})
-    =
+    ( decl_id
+    , {out_constrained_st= cst; out_unconstrained_st= ucst; out_block; _} ) =
   if not (out_block = Parameters) then []
   else
     let decl_id, decl =
@@ -202,7 +202,7 @@ let rec contains_var_expr is_vident accum {expr; _} =
 *)
 let constrain_in_params outvars stmts =
   let is_target_var = function
-    | name, {out_unconstrained_st; out_constrained_st; out_block= Parameters}
+    | name, {out_unconstrained_st; out_constrained_st; out_block= Parameters; _}
       when not (out_unconstrained_st = out_constrained_st) ->
         Some name
     | _ -> None
