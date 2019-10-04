@@ -280,7 +280,6 @@ let is_distribution_name ?(infix = "") s =
   && List.exists
        ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
        distribution_suffices
-  && is_stan_math_function_name s
 
 let is_propto_distribution s =
   is_distribution_name ~infix:proportional_to_distribution_infix s
