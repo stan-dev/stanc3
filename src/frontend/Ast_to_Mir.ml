@@ -399,12 +399,21 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = dist_name_suffix udf_names distribution.name in
+      let kind =
+        let possible_names =
+          List.map ~f:(( ^ ) distribution.name)
+            ("" :: Utils.distribution_suffices)
+          |> String.Set.of_list
+        in
+        if List.exists ~f:(Set.mem possible_names) udf_names then UserDefined
+        else StanLib
+      in
       let name =
         distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
       in
       let add_dist =
         TargetPE
-          { expr= FunApp (StanLib, name, trans_exprs (arg :: args))
+          { expr= FunApp (kind, name, trans_exprs (arg :: args))
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}
           }
       in

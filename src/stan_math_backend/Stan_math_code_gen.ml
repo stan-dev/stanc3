@@ -96,13 +96,15 @@ let pp_located_error_b ppf (body_stmts, err_msg) =
     , {stmt= Block body_stmts; smeta= Locations.no_span_num}
     , err_msg )
 
+(* XXX refactor this please - one idea might be to have different functions for
+   printing user defined distributions vs rngs vs regular functions.
+*)
 let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
-  let extra = if is_user_dist fdname then ["lp__"; "lp_accum__"] else [] in
-  let prefix_extra_args =
-    if String.is_suffix fdname ~suffix:"_rng" then ["base_rng__"] else []
-  in
-  let prefix_extra_templates =
-    if String.is_suffix fdname ~suffix:"_rng" then ["RNG"] else []
+  let is_dist = is_user_dist fdname in
+  let is_rng = String.is_suffix fdname ~suffix:"_rng" in
+  let extra = if is_dist then ["lp__"; "lp_accum__"] else [] in
+  let prefix_extra_templates, prefix_extra_args =
+    if is_rng then (["RNG"], ["base_rng__"]) else ([], [])
   in
   let argtypetemplates =
     (* TODO: If one contains ints, we don't need to template it *)
@@ -118,21 +120,24 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       argtypetemplates ;
     text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
     (* needed?*)
-    text "const static bool propto__ = true;" ;
-    text "(void) propto__;" ;
+    if not is_dist then (
+      text "const static bool propto__ = true;" ;
+      text "(void) propto__;" ) ;
     text
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
     pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
     pf ppf "@ "
   in
+  let templates =
+    (if is_dist then ["bool propto__"] else [])
+    @ List.map ~f:(( ^ ) "typename ")
+        (prefix_extra_templates @ argtypetemplates @ extra_templates)
+  in
   let pp_sig ppf name =
-    ( match prefix_extra_templates @ argtypetemplates @ extra_templates with
+    ( match templates with
     | [] -> ()
-    | a ->
-        pf ppf "@[<hov>template <%a>@]@ "
-          (list ~sep:comma (fmt "typename %s"))
-          a ) ;
+    | a -> pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) a ) ;
     pp_returntype ppf fdargs fdrt ;
     let arg_strs =
       mk_extra_args prefix_extra_templates prefix_extra_args

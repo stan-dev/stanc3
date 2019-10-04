@@ -6,10 +6,14 @@ let option_or_else ~if_none x = Option.first_some x if_none
 let proportional_to_distribution_infix = "_propto"
 let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
 
+(* XXX Refactor this out into full Distribution node in MIR *)
 let is_distribution_name ?(infix = "") s =
-  List.exists
-    ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-    distribution_suffices
+  (not
+     ( String.is_suffix ~suffix:"_cdf_log" s
+     || String.is_suffix ~suffix:"_ccdf_log" s ))
+  && List.exists
+       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
+       distribution_suffices
 
 let is_propto_distribution s =
   is_distribution_name ~infix:proportional_to_distribution_infix s

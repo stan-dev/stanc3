@@ -76,15 +76,17 @@ let pp_expr_type ppf e =
 
 let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
 
-let is_user_dist s =
-  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) user_dist_suffices
+let ends_with_any suffices s =
+  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
 
-let suffix_args f =
-  if ends_with "_rng" f then ["base_rng__"]
-  else if is_user_dist f then ["lp__"; "lp_accum__"]
-  else []
+let is_user_dist s = ends_with_any user_dist_suffices s
+let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
-let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
+let demangle_propto_name f =
+  if Utils.is_propto_distribution f then
+    Utils.stdlib_distribution_name f ^ "<propto__>"
+  else if Utils.is_distribution_name f then f ^ "<false>"
+  else f
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -165,11 +167,11 @@ and gen_misc_special_math_app f =
       Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "max" | "min" ->
+  | ("max" | "min") as f ->
       Some
         (fun ppf es ->
-          if List.length es = 2 then pp_binary_f ppf f es
-          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
+          let f = match es with [_; _] -> "std::" ^ f | _ -> f in
+          pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
       Some
         (fun ppf es ->
@@ -194,18 +196,6 @@ and read_data ut ppf es =
         raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
-
-and gen_distribution_app f =
-  if Utils.is_propto_distribution f then
-    Some
-      (fun ppf ->
-        pf ppf "%s<propto__>(@[<hov>%a@])"
-          (Utils.stdlib_distribution_name f)
-          (list ~sep:comma pp_expr) )
-  else if Utils.is_distribution_name f then
-    Some
-      (fun ppf -> pf ppf "%s<false>(@[<hov>%a@])" f (list ~sep:comma pp_expr))
-  else None
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
@@ -245,13 +235,13 @@ and gen_fun_app ppf f es =
       | true, _, args -> args @ [msgs]
       | false, _, args -> args
     in
-    pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
+    pf ppf "%s(@[<hov>%a@])"
+      (demangle_propto_name (stan_namespace_qualify f))
       (list ~sep:comma pp_expr) args
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
-    ; gen_misc_special_math_app f
-    ; gen_distribution_app f ]
+    ; gen_misc_special_math_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
@@ -263,9 +253,14 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_user_defined_fun ppf (f, es) =
-  let extra_args = gen_extra_fun_args f in
+  let extra_args =
+    suffix_args f
+    @ (if is_user_dist f then ["lp__"; "lp_accum__"] else [])
+    @ ["pstream__"]
+  in
   let sep = if List.is_empty es then "" else ", " in
-  pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
+  pf ppf "%s(@[<hov>%a%s@])" (demangle_propto_name f) (list ~sep:comma pp_expr)
+    es
     (sep ^ String.concat ~sep:", " extra_args)
 
 and pp_compiler_internal_fn ut f ppf es =
