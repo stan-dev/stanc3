@@ -97,10 +97,7 @@ let pp_located_error_b ppf (body_stmts, err_msg) =
     , err_msg )
 
 let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
-  let extra =
-    if String.is_suffix fdname ~suffix:"_lp" then ["lp__"; "lp_accum__"]
-    else []
-  in
+  let extra = if is_user_dist fdname then ["lp__"; "lp_accum__"] else [] in
   let prefix_extra_args =
     if String.is_suffix fdname ~suffix:"_rng" then ["base_rng__"] else []
   in

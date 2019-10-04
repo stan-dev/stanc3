@@ -140,7 +140,7 @@ let constraint_to_string t (c : constrainaction) =
   | PositiveOrdered -> "positive_ordered"
   | Simplex -> "simplex"
   | UnitVector -> "unit_vector"
-  | CholeskyCorr -> "cholesky_corr"
+  | CholeskyCorr -> "cholesky_factor_corr"
   | CholeskyCov -> "cholesky_factor"
   | Correlation -> "corr_matrix"
   | Covariance -> "cov_matrix"

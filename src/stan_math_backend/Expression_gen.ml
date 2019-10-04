@@ -74,10 +74,14 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
 
+let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
+
+let is_user_dist s =
+  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) user_dist_suffices
+
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
-  else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
-    (* Should this also be _lpdf and _lpmf?*)
+  else if is_user_dist f then ["lp__"; "lp_accum__"]
   else []
 
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
