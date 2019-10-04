@@ -169,7 +169,9 @@ let constraint_forl = function
       for_eigen
 
 let extract_transform_args = function
-  | Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | Lower a | Upper a -> [a]
+  | Offset a -> [{a with expr= Lit (Int, "0")}; a]
+  | Multiplier a -> [a; {a with expr= Lit (Int, "1")}]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
