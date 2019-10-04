@@ -550,30 +550,37 @@ using namespace stan::math; |}
 let pre_boilerplate =
   {|
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 |}
 

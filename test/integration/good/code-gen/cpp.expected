@@ -4,30 +4,37 @@
 #include <stan/model/model_header.hpp>
 
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 
 namespace eight_schools_ncp_model_namespace {
@@ -462,30 +469,37 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 
 namespace mother_model_namespace {
