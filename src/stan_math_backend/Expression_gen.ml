@@ -79,7 +79,10 @@ let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
 let ends_with_any suffices s =
   List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
 
-let is_user_dist s = ends_with_any user_dist_suffices s
+let is_user_dist s =
+  ends_with_any user_dist_suffices s
+  && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
+
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name f =
