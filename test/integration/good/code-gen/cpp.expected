@@ -227,6 +227,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
 
     (void) function__;  // suppress unused var warning
 
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
     
     try {
       double mu;
@@ -4215,6 +4218,9 @@ class mother_model : public model_base_crtp<mother_model> {
 
     (void) function__;  // suppress unused var warning
 
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
     
     try {
       double p_real;

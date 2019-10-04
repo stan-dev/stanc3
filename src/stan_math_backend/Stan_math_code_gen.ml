@@ -297,7 +297,10 @@ let pp_write_array ppf p =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (p.prog_name, "write_array")
-    ; strf "%a" pp_unused "function__" ]
+    ; strf "%a" pp_unused "function__"
+    ; "double lp__ = 0.0;"
+    ; "(void) lp__;  // dummy to suppress unused var warning"
+    ; "stan::math::accumulator<double> lp_accum__;" ]
   in
   pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 

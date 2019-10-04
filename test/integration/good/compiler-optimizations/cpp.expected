@@ -1020,6 +1020,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     (void) function__;  // suppress unused var warning
 
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
     
     try {
       double sym78__;
