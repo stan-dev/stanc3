@@ -29,6 +29,9 @@ let is_row_vector e = e.emeta.mtype = URowVector
 (* stub *)
 let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
 
+let pp_call ppf (name, pp_arg, args) =
+  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
+
 let rec stantype_prim_str = function
   | UInt -> "int"
   | UArray t -> stantype_prim_str t
@@ -157,6 +160,8 @@ and gen_misc_special_math_app f =
       Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
+  | "integrate_ode" ->
+      Some (fun ppf es -> pp_call ppf ("integrate_ode_rk45", pp_expr, es))
   | "max" | "min" ->
       Some
         (fun ppf es ->
@@ -254,7 +259,7 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
         (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
-and pp_ordinary_fn ppf f es =
+and pp_user_defined_fun ppf f es =
   let extra_args = gen_extra_fun_args f in
   let sep = if List.is_empty es then "" else ", " in
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
@@ -323,7 +328,7 @@ and pp_expr ppf e =
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
       pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
-  | FunApp (UserDefined, f, es) -> pp_ordinary_fn ppf f es
+  | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf f es
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->

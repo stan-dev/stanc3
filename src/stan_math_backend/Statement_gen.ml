@@ -3,9 +3,6 @@ open Middle
 open Fmt
 open Expression_gen
 
-let pp_call ppf (name, pp_arg, args) =
-  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
-
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
@@ -144,8 +141,7 @@ let rec pp_statement (ppf : Format.formatter)
         (extra_args @ args)
   | NRFunApp (StanLib, fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
-  | NRFunApp (UserDefined, fname, args) ->
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+  | NRFunApp (UserDefined, fname, args) -> pp_user_defined_fun ppf fname args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e

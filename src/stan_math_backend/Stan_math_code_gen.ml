@@ -522,7 +522,6 @@ using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::assign;
 using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
