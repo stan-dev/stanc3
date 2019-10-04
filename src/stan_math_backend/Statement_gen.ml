@@ -141,7 +141,8 @@ let rec pp_statement (ppf : Format.formatter)
         (extra_args @ args)
   | NRFunApp (StanLib, fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
-  | NRFunApp (UserDefined, fname, args) -> pp_user_defined_fun ppf fname args
+  | NRFunApp (UserDefined, fname, args) ->
+      pf ppf "%a;" pp_user_defined_fun (fname, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e

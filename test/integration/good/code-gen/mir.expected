@@ -216,6 +216,25 @@
           (smeta <opaque>)))))
       (smeta <opaque>)))
     (fdloc <opaque>))
+   ((fdrt (UReal)) (fdname foo_rng)
+    (fdargs ((AutoDiffable mu UReal) (AutoDiffable sigma UReal)))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Return
+            (((expr
+               (FunApp StanLib normal_rng
+                (((expr (Var mu))
+                  (emeta
+                   ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                 ((expr (Var sigma))
+                  (emeta
+                   ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
    ((fdrt ()) (fdname unit_normal_lp) (fdargs ((AutoDiffable u UReal)))
     (fdbody
      ((stmt
@@ -11540,27 +11559,27 @@
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
 
-Warning: deprecated language construct used in 'mother.stan', line 60, column 21:
+Warning: deprecated language construct used in 'mother.stan', line 63, column 21:
    -------------------------------------------------
-    58:  
-    59:    void unit_normal_lp(real u) {
-    60:      increment_log_prob(normal_log(u,0,1));
+    61:  
+    62:    void unit_normal_lp(real u) {
+    63:      increment_log_prob(normal_log(u,0,1));
                               ^
-    61:      u ~ uniform(-100,100);
-    62:    }
+    64:      u ~ uniform(-100,100);
+    65:    }
    -------------------------------------------------
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in 'mother.stan', line 184, column 20:
+Warning: deprecated language construct used in 'mother.stan', line 187, column 20:
    -------------------------------------------------
-   182:  
-   183:    real foo_lp(real x) {
-   184:      return x + get_lp();
+   185:  
+   186:    real foo_lp(real x) {
+   187:      return x + get_lp();
                              ^
-   185:    }
-   186:  
+   188:    }
+   189:  
    -------------------------------------------------
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
