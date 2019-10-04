@@ -232,9 +232,28 @@ let all_declarative_sigs = distributions @ math_sigs
 let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
+(* Name mangling helper functions for distributions *)
+let proportional_to_distribution_infix = "_propto"
+let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
+
+let remove_propto_infix suffix ~name =
+  name
+  |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
+  |> Option.map ~f:(fun x -> x ^ suffix)
+
+let stdlib_distribution_name s =
+  List.map ~f:(remove_propto_infix ~name:s) distribution_suffices
+  |> List.filter_opt |> List.hd |> Option.value ~default:s
+
+let%expect_test "propto name mangling" =
+  stdlib_distribution_name "normal_propto_lpdf" |> print_string ;
+  stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string ;
+  stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string ;
+  [%expect {| normal_lpdf; normal_lpdf; normal |}]
+
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
-  let name = Utils.stdlib_distribution_name name in
+  let name = stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
@@ -250,8 +269,21 @@ let stan_math_returntype name args =
             (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
-  let name = Utils.stdlib_distribution_name name in
+  let name = stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
+
+(* XXX Refactor this out into full Distribution node in MIR *)
+let is_distribution_name ?(infix = "") s =
+  (not
+     ( String.is_suffix ~suffix:"_cdf_log" s
+     || String.is_suffix ~suffix:"_ccdf_log" s ))
+  && List.exists
+       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
+       distribution_suffices
+  && is_stan_math_function_name s
+
+let is_propto_distribution s =
+  is_distribution_name ~infix:proportional_to_distribution_infix s
 
 let assignmentoperator_to_stan_math_fn = function
   | Plus -> Some "assign_add"
@@ -295,7 +327,7 @@ let operator_stan_math_return_type op arg_tys =
   |> List.hd
 
 let get_sigs name =
-  let name = Utils.stdlib_distribution_name name in
+  let name = stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
 let pp_math_sig ppf (rt, args) =

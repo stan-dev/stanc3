@@ -336,7 +336,7 @@ let unwrap_block_or_skip = function
 let dist_name_suffix udf_names name =
   let is_udf_name s = List.exists ~f:(( = ) s) udf_names in
   match
-    Utils.distribution_suffices
+    Middle.distribution_suffices
     |> List.filter ~f:(fun sfx ->
            is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
        )
@@ -408,14 +408,14 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name)
-            ("" :: Utils.distribution_suffices)
+            ("" :: Middle.distribution_suffices)
           |> String.Set.of_list
         in
         if List.exists ~f:(Set.mem possible_names) udf_names then UserDefined
         else StanLib
       in
       let name =
-        distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
+        distribution.name ^ Middle.proportional_to_distribution_infix ^ suffix
       in
       let add_dist =
         TargetPE

@@ -85,10 +85,9 @@ let is_user_dist s =
 
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
-let demangle_propto_name f =
-  if Utils.is_propto_distribution f then
-    Utils.stdlib_distribution_name f ^ "<propto__>"
-  else if Utils.is_distribution_name f || is_user_dist f then f ^ "<false>"
+let demangle_propto_name udf f =
+  if is_propto_distribution f then stdlib_distribution_name f ^ "<propto__>"
+  else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
   else f
 
 let rec pp_index ppf = function
@@ -239,7 +238,7 @@ and gen_fun_app ppf f es =
       | false, _, args -> args
     in
     pf ppf "%s(@[<hov>%a@])"
-      (demangle_propto_name (stan_namespace_qualify f))
+      (demangle_propto_name false (stan_namespace_qualify f))
       (list ~sep:comma pp_expr) args
   in
   let pp =
@@ -262,8 +261,9 @@ and pp_user_defined_fun ppf (f, es) =
     @ ["pstream__"]
   in
   let sep = if List.is_empty es then "" else ", " in
-  pf ppf "%s(@[<hov>%a%s@])" (demangle_propto_name f) (list ~sep:comma pp_expr)
-    es
+  pf ppf "%s(@[<hov>%a%s@])"
+    (demangle_propto_name true f)
+    (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
 and pp_compiler_internal_fn adlevel ut f ppf es =
