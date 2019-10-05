@@ -49,6 +49,39 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
+        stage("Try to compile all good integration models") {
+            agent { label 'linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                writeFile(file="cmdstan/make/local", text="O=0\nCXXFLAGS+=-o/dev/null -S")
+                sh """
+          cd performance-tests-cmdstan
+          cd cmdstan; make -j${env.PARALLEL} build
+          cp "\$(readlink -f ../bin/stanc)" cmdstan/bin/stanc
+          git clone --depth 1 https://github.com/stan-dev/stanc3
+          CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good
+               """
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    excludeResponseTime: true,
+                    errorFailedThreshold: 100,
+                    errorUnstableThreshold: 100
+            }
+            post { always {
+                runShell("rm -rf ./*")
+            } }
+        }
         stage("Run all models end-to-end") {
             agent { label 'linux' }
             steps {
