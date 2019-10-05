@@ -60,7 +60,7 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           cd cmdstan; make -j${env.PARALLEL} build
-          cp "\$(readlink -f ../bin/stanc)" cmdstan/bin/stanc
+          cp ../bin/stanc cmdstan/bin/stanc
           git clone --depth 1 https://github.com/stan-dev/stanc3
           CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good
                """
