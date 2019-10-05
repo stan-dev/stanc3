@@ -472,30 +472,37 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 
 namespace glm_model_namespace {
@@ -508,7 +515,6 @@ using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::assign;
 using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
@@ -621,7 +627,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 38;
-        y_v_d[(sym1__ - 1)] = context__.vals_r("y_v_d")[(pos__ - 1)];
+        assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
@@ -631,7 +637,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 39;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 39;
-        X_rv_d[(sym1__ - 1)] = context__.vals_r("X_rv_d")[(pos__ - 1)];
+        assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
       y_vi_d = std::vector<int>(n, 0);
@@ -641,7 +647,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 40;
-        y_vi_d[(sym1__ - 1)] = context__.vals_i("y_vi_d")[(pos__ - 1)];
+        assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
       
@@ -834,6 +840,9 @@ class glm_model : public model_base_crtp<glm_model> {
 
     (void) function__;  // suppress unused var warning
 
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
     
     try {
       Eigen::Matrix<double, -1, 1> alpha_v;
@@ -932,7 +941,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
-        alpha_v[(sym1__ - 1)] = context__.vals_r("alpha_v")[(pos__ - 1)];
+        assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("alpha_v")[(pos__ - 1)], "assigning variable alpha_v");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> beta;
@@ -943,7 +952,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
-        beta[(sym1__ - 1)] = context__.vals_r("beta")[(pos__ - 1)];
+        assign(beta, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> cuts;
@@ -954,7 +963,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 4;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
-        cuts[(sym1__ - 1)] = context__.vals_r("cuts")[(pos__ - 1)];
+        assign(cuts, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
         current_statement__ = 4;
         pos__ = (pos__ + 1);}
       double sigma;
@@ -1011,7 +1020,7 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 10;
-        X_rv_p[(sym1__ - 1)] = context__.vals_r("X_rv_p")[(pos__ - 1)];
+        assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_p")[(pos__ - 1)], "assigning variable X_rv_p");
         current_statement__ = 10;
         pos__ = (pos__ + 1);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
