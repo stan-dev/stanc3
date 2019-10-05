@@ -3,12 +3,29 @@ open Middle
 
 let opencl_triggers =
   String.Map.of_alist_exn
-    [ ("normal_id_glm_lpdf", ([0;1],[1]))
-    ; ("bernoulli_logit_glm_lpmf", ([0;1],[1]))
-    ; ("categorical_logit_glm_lpmf", ([0;1],[]))
-    ; ("neg_binomial_2_log_glm_lpmf", ([0;1],[1]))
-    ; ("ordered_logistic_glm_lpmf", ([0;1],[1]))
-    ; ("poisson_log_glm_lpmf", ([0;1],[1])) ]
+    [ ("normal_id_glm_lpdf",
+        ([0;1],
+          [ (* Array of conditions under which to move to OpenCL *)
+            ([1],[]) (* Argument 1 is data *)
+          ]
+        )
+      )
+    ; ("bernoulli_logit_glm_lpmf",
+        ([0;1], [([1],[])])
+      )
+    ; ("categorical_logit_glm_lpmf",
+        ([0;1], [([-1],[])]) (* Always use OpenCL *)
+      )
+    ; ("neg_binomial_2_log_glm_lpmf",
+        ([0;1], [([1],[])])
+      )
+    ; ("ordered_logistic_glm_lpmf",
+        ([0;1], [([1],[])])
+      )
+    ; ("poisson_log_glm_lpmf",
+        ([0;1], [([1],[])])
+      ) 
+    ]
 
 let rec switch_expr_to_opencl _available_cl_vars e =
   let is_avail = List.mem _available_cl_vars ~equal:( = ) in
@@ -19,12 +36,46 @@ let rec switch_expr_to_opencl _available_cl_vars e =
   in
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let (cl_args, _mandatory_data) = Map.find_exn opencl_triggers f in
-      let maybe_to_cl index arg =
+      let (cl_args, req_args) = Map.find_exn opencl_triggers f in 
+      (* let data_type_match _a = true     
+      in
+      let rec data_types_match t = 
+        match t with
+        | [] -> true
+        | hd :: tl -> if data_type_match hd then true else data_types_match tl
+      in *)
+      let check_if_data arg = 
+        match arg.expr with 
+          | Var s when is_avail s -> true
+          | _ -> false
+      in
+      let rec nth_arg_type arg i = 
+        match arg with 
+        | [] -> false
+        | hd :: tl -> if i=0 then check_if_data hd else nth_arg_type tl (i-1)
+      in
+      let req_met (data_arg, _type_arg) = 
+        match data_arg with
+        | [-1] -> true (*data_types_match _type_arg*) (*no data requirements, straight to matching data types*)
+        | hd :: _tl -> 
+          if nth_arg_type args hd then true else false
+        | [] -> true (*if the list is empty that means that all  passed *)
+      in
+      let rec triggers_match _md = 
+        match _md with
+        | hd :: tl -> if req_met hd then true else triggers_match tl
+        | [] -> false        
+      in
+      let move_cl_args index arg =
         if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
       in
-      let mapped_args = List.mapi args ~f:maybe_to_cl in
-      {e with expr= FunApp (StanLib, f, mapped_args)}
+      let mapped_args = 
+        if triggers_match req_args then
+          List.mapi args ~f:move_cl_args
+        else
+          args
+      in
+      {e with expr= FunApp (StanLib, f, mapped_args)}      
   | x -> {e with expr= map_expr (switch_expr_to_opencl _available_cl_vars) x}
   (* let is_avail = List.mem available_cl_vars ~equal:( = ) in
   let to_cl e =

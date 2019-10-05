@@ -508,21 +508,39 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'glm.stan', line 12, column 2 to column 17)",
+                                                      " (in 'glm.stan', line 12, column 2 to column 20)",
                                                       " (in 'glm.stan', line 13, column 2 to column 17)",
-                                                      " (in 'glm.stan', line 14, column 2 to column 22)",
-                                                      " (in 'glm.stan', line 15, column 2 to column 13)",
-                                                      " (in 'glm.stan', line 16, column 2 to column 11)",
-                                                      " (in 'glm.stan', line 17, column 2 to column 19)",
-                                                      " (in 'glm.stan', line 18, column 2 to column 23)",
-                                                      " (in 'glm.stan', line 22, column 2 to column 62)",
-                                                      " (in 'glm.stan', line 23, column 2 to column 62)",
-                                                      " (in 'glm.stan', line 25, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 26, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 28, column 2 to column 57)",
-                                                      " (in 'glm.stan', line 29, column 2 to column 57)",
-                                                      " (in 'glm.stan', line 31, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 32, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 14, column 2 to column 17)",
+                                                      " (in 'glm.stan', line 15, column 2 to column 22)",
+                                                      " (in 'glm.stan', line 16, column 2 to column 13)",
+                                                      " (in 'glm.stan', line 17, column 2 to column 11)",
+                                                      " (in 'glm.stan', line 18, column 2 to column 19)",
+                                                      " (in 'glm.stan', line 19, column 2 to column 22)",
+                                                      " (in 'glm.stan', line 20, column 2 to column 23)",
+                                                      " (in 'glm.stan', line 24, column 2 to column 62)",
+                                                      " (in 'glm.stan', line 25, column 2 to column 62)",
+                                                      " (in 'glm.stan', line 27, column 2 to column 61)",
+                                                      " (in 'glm.stan', line 28, column 2 to column 61)",
+                                                      " (in 'glm.stan', line 30, column 2 to column 57)",
+                                                      " (in 'glm.stan', line 31, column 2 to column 57)",
+                                                      " (in 'glm.stan', line 33, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 34, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 36, column 2 to column 60)",
+                                                      " (in 'glm.stan', line 37, column 2 to column 60)",
+                                                      " (in 'glm.stan', line 39, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 40, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 42, column 2 to column 61)",
+                                                      " (in 'glm.stan', line 43, column 2 to column 61)",
+                                                      " (in 'glm.stan', line 45, column 2 to column 64)",
+                                                      " (in 'glm.stan', line 46, column 2 to column 64)",
+                                                      " (in 'glm.stan', line 48, column 2 to column 66)",
+                                                      " (in 'glm.stan', line 49, column 2 to column 66)",
+                                                      " (in 'glm.stan', line 51, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 52, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 54, column 2 to column 67)",
+                                                      " (in 'glm.stan', line 55, column 2 to column 67)",
+                                                      " (in 'glm.stan', line 57, column 2 to column 70)",
+                                                      " (in 'glm.stan', line 58, column 2 to column 70)",
                                                       " (in 'glm.stan', line 2, column 2 to column 17)",
                                                       " (in 'glm.stan', line 3, column 2 to column 17)",
                                                       " (in 'glm.stan', line 4, column 2 to column 19)",
@@ -562,67 +580,67 @@ class glm_model : public model_base_crtp<glm_model> {
       
       pos__ = 1;
       
-      current_statement__ = 17;
+      current_statement__ = 35;
       pos__ = 1;
-      current_statement__ = 17;
+      current_statement__ = 35;
       k = context__.vals_i("k")[(pos__ - 1)];
       
-      current_statement__ = 18;
+      current_statement__ = 36;
       pos__ = 1;
-      current_statement__ = 18;
+      current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 19;
+      current_statement__ = 37;
       pos__ = 1;
-      current_statement__ = 19;
+      current_statement__ = 37;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 19;
+        current_statement__ = 37;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          current_statement__ = 19;
+          current_statement__ = 37;
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
-          current_statement__ = 19;
+          current_statement__ = 37;
           pos__ = (pos__ + 1);}}
       y_v = Eigen::Matrix<double, -1, 1>(n);
       
-      current_statement__ = 20;
+      current_statement__ = 38;
       pos__ = 1;
-      current_statement__ = 20;
+      current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 20;
+        current_statement__ = 38;
         y_v[(sym1__ - 1)] = context__.vals_r("y_v")[(pos__ - 1)];
-        current_statement__ = 20;
+        current_statement__ = 38;
         pos__ = (pos__ + 1);}
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 21;
+      current_statement__ = 39;
       pos__ = 1;
-      current_statement__ = 21;
+      current_statement__ = 39;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 21;
+        current_statement__ = 39;
         X_rv_d[(sym1__ - 1)] = context__.vals_r("X_rv_d")[(pos__ - 1)];
-        current_statement__ = 21;
+        current_statement__ = 39;
         pos__ = (pos__ + 1);}
       y_vi = std::vector<int>(n, 0);
       
-      current_statement__ = 22;
+      current_statement__ = 40;
       pos__ = 1;
-      current_statement__ = 22;
+      current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 22;
+        current_statement__ = 40;
         y_vi[(sym1__ - 1)] = context__.vals_i("y_vi")[(pos__ - 1)];
-        current_statement__ = 22;
+        current_statement__ = 40;
         pos__ = (pos__ + 1);}
       
-      current_statement__ = 23;
+      current_statement__ = 41;
       pos__ = 1;
-      current_statement__ = 23;
+      current_statement__ = 41;
       y_s = context__.vals_i("y_s")[(pos__ - 1)];
-      current_statement__ = 17;
-      current_statement__ = 17;
+      current_statement__ = 35;
+      current_statement__ = 35;
       check_greater_or_equal(function__, "k", k, 1);
-      current_statement__ = 18;
-      current_statement__ = 18;
+      current_statement__ = 36;
+      current_statement__ = 36;
       check_greater_or_equal(function__, "n", n, 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
@@ -633,9 +651,11 @@ class glm_model : public model_base_crtp<glm_model> {
     num_params_r__ = 0U;
     num_params_r__ += k;
     num_params_r__ += k;
+    num_params_r__ += k;
     num_params_r__ += 1;
     num_params_r__ += 1;
     num_params_r__ += 1;
+    num_params_r__ += n * k;
     num_params_r__ += n * k;
     num_params_r__ += n;
     
@@ -655,65 +675,119 @@ class glm_model : public model_base_crtp<glm_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      
+      current_statement__ = 2;
+      alpha_v = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 2;
+      current_statement__ = 3;
       beta = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 4;
       cuts = in__.vector(k);
       local_scalar_t__ sigma;
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       sigma = in__.scalar();
-      current_statement__ = 4;
+      current_statement__ = 5;
       if (jacobian__) {
-        current_statement__ = 4;
+        current_statement__ = 5;
         sigma = lb_constrain(sigma, 0, lp__);
       } else {
-        current_statement__ = 4;
+        current_statement__ = 5;
         sigma = lb_constrain(sigma, 0);
       }
       local_scalar_t__ alpha;
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       alpha = in__.scalar();
       local_scalar_t__ phi;
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       phi = in__.scalar();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       X_p = in__.matrix(n, k);
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      
+      current_statement__ = 9;
+      beta_m = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       
-      current_statement__ = 8;
+      current_statement__ = 10;
       X_rv_p = in__.row_vector(n);
       {
-        current_statement__ = 9;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_d, alpha, beta, sigma));
-        current_statement__ = 10;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_p, alpha, beta, sigma));
         current_statement__ = 11;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_d, alpha, beta));
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_d, alpha, beta, sigma));
         current_statement__ = 12;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_p, alpha, beta));
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_p, alpha, beta, sigma));
         current_statement__ = 13;
-        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_d, alpha, beta));
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_d, alpha, beta));
         current_statement__ = 14;
-        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_p, alpha, beta));
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_p, alpha, beta));
         current_statement__ = 15;
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_d, alpha, beta));
+        current_statement__ = 16;
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_p, alpha, beta));
+        current_statement__ = 17;
         lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi, X_d, alpha,
                                                           beta, phi));
-        current_statement__ = 16;
+        current_statement__ = 18;
         lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi, X_p, alpha,
                                                           beta, phi));
+        current_statement__ = 19;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_d, beta, cuts));
+        current_statement__ = 20;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_p, beta, cuts));
+        current_statement__ = 21;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_rv_d, beta,
+                                                        cuts));
+        current_statement__ = 22;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_rv_p, beta,
+                                                        cuts));
+        current_statement__ = 23;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_d, beta, cuts));
+        current_statement__ = 24;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_p, beta, cuts));
+        current_statement__ = 25;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_rv_d, beta,
+                                                        cuts));
+        current_statement__ = 26;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_rv_p, beta,
+                                                        cuts));
+        current_statement__ = 27;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_d, alpha_v,
+                                                         beta_m));
+        current_statement__ = 28;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_p, alpha_v,
+                                                         beta_m));
+        current_statement__ = 29;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_rv_d,
+                                                         alpha_v, beta_m));
+        current_statement__ = 30;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_rv_p,
+                                                         alpha_v, beta_m));
+        current_statement__ = 31;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_d, alpha_v,
+                                                         beta_m));
+        current_statement__ = 32;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_p, alpha_v,
+                                                         beta_m));
+        current_statement__ = 33;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_rv_d,
+                                                         alpha_v, beta_m));
+        current_statement__ = 34;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_rv_p,
+                                                         alpha_v, beta_m));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
@@ -741,40 +815,52 @@ class glm_model : public model_base_crtp<glm_model> {
 
     
     try {
+      Eigen::Matrix<double, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 2;
+      alpha_v = in__.vector(k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 2;
+      current_statement__ = 3;
       beta = in__.vector(k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 4;
       cuts = in__.vector(k);
       double sigma;
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       sigma = in__.scalar();
-      current_statement__ = 4;
+      current_statement__ = 5;
       sigma = lb_constrain(sigma, 0);
       double alpha;
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       alpha = in__.scalar();
       double phi;
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       phi = in__.scalar();
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       X_p = in__.matrix(n, k);
+      Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 9;
+      beta_m = in__.matrix(n, k);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 8;
+      current_statement__ = 10;
       X_rv_p = in__.row_vector(n);
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(alpha_v[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.push_back(beta[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -785,6 +871,10 @@ class glm_model : public model_base_crtp<glm_model> {
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
         }}
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
@@ -813,72 +903,98 @@ class glm_model : public model_base_crtp<glm_model> {
       int pos__;
       
       pos__ = 1;
-      Eigen::Matrix<double, -1, 1> beta;
-      beta = Eigen::Matrix<double, -1, 1>(k);
+      Eigen::Matrix<double, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
       current_statement__ = 2;
       pos__ = 1;
       current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
-        beta[(sym1__ - 1)] = context__.vals_r("beta")[(pos__ - 1)];
+        alpha_v[(sym1__ - 1)] = context__.vals_r("alpha_v")[(pos__ - 1)];
         current_statement__ = 2;
+        pos__ = (pos__ + 1);}
+      Eigen::Matrix<double, -1, 1> beta;
+      beta = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 3;
+      pos__ = 1;
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 3;
+        beta[(sym1__ - 1)] = context__.vals_r("beta")[(pos__ - 1)];
+        current_statement__ = 3;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 4;
       pos__ = 1;
-      current_statement__ = 3;
+      current_statement__ = 4;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
+        current_statement__ = 4;
         cuts[(sym1__ - 1)] = context__.vals_r("cuts")[(pos__ - 1)];
-        current_statement__ = 3;
+        current_statement__ = 4;
         pos__ = (pos__ + 1);}
       double sigma;
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       pos__ = 1;
-      current_statement__ = 4;
+      current_statement__ = 5;
       sigma = context__.vals_r("sigma")[(pos__ - 1)];
-      current_statement__ = 4;
+      current_statement__ = 5;
       sigma = lb_free(sigma, 0);
       double alpha;
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       pos__ = 1;
-      current_statement__ = 5;
+      current_statement__ = 6;
       alpha = context__.vals_r("alpha")[(pos__ - 1)];
       double phi;
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       pos__ = 1;
-      current_statement__ = 6;
+      current_statement__ = 7;
       phi = context__.vals_r("phi")[(pos__ - 1)];
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       pos__ = 1;
-      current_statement__ = 7;
+      current_statement__ = 8;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
+        current_statement__ = 8;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          current_statement__ = 7;
+          current_statement__ = 8;
           assign(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
-          current_statement__ = 7;
+          current_statement__ = 8;
+          pos__ = (pos__ + 1);}}
+      Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 9;
+      pos__ = 1;
+      current_statement__ = 9;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 9;
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          current_statement__ = 9;
+          assign(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("beta_m")[(pos__ - 1)], "assigning variable beta_m");
+          current_statement__ = 9;
           pos__ = (pos__ + 1);}}
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 8;
+      current_statement__ = 10;
       pos__ = 1;
-      current_statement__ = 8;
+      current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 8;
+        current_statement__ = 10;
         X_rv_p[(sym1__ - 1)] = context__.vals_r("X_rv_p")[(pos__ - 1)];
-        current_statement__ = 8;
+        current_statement__ = 10;
         pos__ = (pos__ + 1);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(alpha_v[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.push_back(beta[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -889,6 +1005,10 @@ class glm_model : public model_base_crtp<glm_model> {
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
         }}
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
@@ -903,12 +1023,14 @@ class glm_model : public model_base_crtp<glm_model> {
   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
+    names__.push_back("alpha_v");
     names__.push_back("beta");
     names__.push_back("cuts");
     names__.push_back("sigma");
     names__.push_back("alpha");
     names__.push_back("phi");
     names__.push_back("X_p");
+    names__.push_back("beta_m");
     names__.push_back("X_rv_p");
     } // get_param_names() 
     
@@ -921,10 +1043,18 @@ class glm_model : public model_base_crtp<glm_model> {
     dims__.push_back(k);
     dimss__.push_back(dims__);
     dims__.resize(0);
+    dims__.push_back(k);
     dimss__.push_back(dims__);
     dims__.resize(0);
     dimss__.push_back(dims__);
     dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(n);
+    
+    dims__.push_back(k);
     dimss__.push_back(dims__);
     dims__.resize(0);
     dims__.push_back(n);
@@ -944,6 +1074,10 @@ class glm_model : public model_base_crtp<glm_model> {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
+        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
         param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
       }}
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -958,6 +1092,13 @@ class glm_model : public model_base_crtp<glm_model> {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           {
             param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
           }}
       }}
     for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
@@ -980,6 +1121,10 @@ class glm_model : public model_base_crtp<glm_model> {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
+        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
         param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
       }}
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -994,6 +1139,13 @@ class glm_model : public model_base_crtp<glm_model> {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           {
             param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
           }}
       }}
     for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
@@ -1012,13 +1164,13 @@ class glm_model : public model_base_crtp<glm_model> {
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
