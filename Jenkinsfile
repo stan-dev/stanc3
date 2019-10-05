@@ -56,7 +56,8 @@ pipeline {
                 sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                writeFile(file:"cmdstan/make/local", text:"O=0\nCXXFLAGS+=-o/dev/null -S")
+                writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                          text:"O=0\nCXXFLAGS+=-o/dev/null -S")
                 sh """
           cd performance-tests-cmdstan
           cd cmdstan; make -j${env.PARALLEL} build; cd ..
