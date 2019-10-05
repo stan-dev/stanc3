@@ -20,6 +20,10 @@ def tagName() {
 }
 pipeline {
     agent none
+    parameters {
+        booleanParam(name:"compile_all", defaultValue: false,
+                     description:"Try compiling all models in test/integration/good")
+    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -48,6 +52,34 @@ pipeline {
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
+        }
+        stage("Try to compile all good integration models") {
+            when { expression { params.compile_all } }
+            agent { label 'linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                          text:"O=0\nCXXFLAGS+=-o/dev/null -S -Wno-unused-command-line-argument")
+                sh """
+          cd performance-tests-cmdstan
+          cd cmdstan; make -j${env.PARALLEL} build; cd ..
+          cp ../bin/stanc cmdstan/bin/stanc
+          git clone --depth 1 https://github.com/stan-dev/stanc3
+          CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
+               """
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
+            }
+            post { always {
+                runShell("rm -rf ./*")
+            } }
         }
         stage("Run all models end-to-end") {
             agent { label 'linux' }
