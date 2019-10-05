@@ -1,7 +1,7 @@
 open Core_kernel
 open Middle
 
-let opencl_triggers =
+(* let opencl_triggers =
   String.Map.of_alist_exn
     [ ("normal_id_glm_lpdf", [0; 1])
     ; ("bernoulli_logit_glm_lpmf", [0; 1])
@@ -42,7 +42,7 @@ let%expect_test "replaces normal" =
   |> Fmt.strf "%a" Pretty.pp_expr_typed_located
   |> print_endline ;
   [%expect
-    {| normal_id_glm_lpdf(y_opencl__, x_opencl__, alpha, beta, sigma) |}]
+    {| normal_id_glm_lpdf(y_opencl__, x_opencl__, alpha, beta, sigma) |}] *)
 
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
@@ -237,15 +237,15 @@ let rec insert_before f to_insert = function
       if f hd then to_insert @ (hd :: tl)
       else hd :: insert_before f to_insert tl
 
-let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
+(* let is_opencl_var = String.is_suffix ~suffix:opencl_suffix *)
 
-let rec collect_vars_expr is_target accum e =
+(* let rec collect_vars_expr is_target accum e =
   Set.union accum
     ( match e.expr with
     | Var s when is_target s -> String.Set.of_list [s]
-    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x )
+    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x ) *)
 
-let collect_opencl_vars s =
+(* let collect_opencl_vars s =
   let rec go accum s =
     fold_statement (collect_vars_expr is_opencl_var) go accum s.stmt
   in
@@ -257,14 +257,14 @@ let%expect_test "collect vars expr" =
   let fnapp = {expr= FunApp (StanLib, "print", args); emeta= internal_meta} in
   {stmt= TargetPE fnapp; smeta= no_span}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
-  [%expect {| (w_opencl__ x_opencl__) |}]
+  [%expect {| (w_opencl__ x_opencl__) |}] *)
 
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let trans_prog (p : typed_prog) use_opencl =
+let trans_prog (p : typed_prog) =
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; Assignment ((pos, UInt, []), loop_bottom) ]
@@ -305,7 +305,7 @@ let trans_prog (p : typed_prog) use_opencl =
         true
     | _ -> false
   in
-  let translate_to_open_cl stmts =
+  (* let translate_to_open_cl stmts =
     if use_opencl then
       let data_var_idents = List.map ~f:fst p.input_vars in
       let rec trans_stmt_to_opencl s =
@@ -316,11 +316,11 @@ let trans_prog (p : typed_prog) use_opencl =
               trans_stmt_to_opencl s.stmt }
       in
       List.map stmts ~f:trans_stmt_to_opencl
-    else []
-  in
+    else stmts
+  in *)
   let gq =
     ( add_reads p.generate_quantities p.output_vars param_read
-    |> translate_to_open_cl
+    (* |> translate_to_open_cl *)
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
@@ -329,19 +329,17 @@ let trans_prog (p : typed_prog) use_opencl =
   let log_prob =
     add_reads log_prob p.output_vars param_read
     |> constrain_in_params p.output_vars
-    |> translate_to_open_cl
+    (* |> translate_to_open_cl *)
   in
   let generate_quantities = gq in
-  let opencl_vars =
-    if use_opencl then
-      String.Set.union_list
-        (List.concat_map
-           ~f:(List.map ~f:collect_opencl_vars)
-           [log_prob; generate_quantities])
-      |> String.Set.to_list
-    else []
-  in
-  let to_matrix_cl_stmts =
+  (* let opencl_vars =
+    String.Set.union_list
+      (List.concat_map
+          ~f:(List.map ~f:collect_opencl_vars)
+          [log_prob; generate_quantities])
+    |> String.Set.to_list
+  in *)
+  (* let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
@@ -358,7 +356,7 @@ let trans_prog (p : typed_prog) use_opencl =
                 , to_matrix_cl
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
-  in
+  in *)
   let p =
     { p with
       log_prob
@@ -366,7 +364,6 @@ let trans_prog (p : typed_prog) use_opencl =
     ; prepare_data=
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
-        @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
