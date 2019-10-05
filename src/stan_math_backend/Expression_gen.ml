@@ -86,7 +86,7 @@ let is_user_dist s =
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
-  if f = "multiply_log" then f
+  if f = "multiply_log" || f = "binomial_coefficient_log" then f
   else if is_propto_distribution f then
     stdlib_distribution_name f ^ "<propto__>"
   else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
