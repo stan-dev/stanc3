@@ -63,7 +63,7 @@ pipeline {
           cd cmdstan; make -j${env.PARALLEL} build; cd ..
           cp ../bin/stanc cmdstan/bin/stanc
           git clone --depth 1 https://github.com/stan-dev/stanc3
-          CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good
+          CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
                """
                 xunit([GoogleTest(
                     deleteOutputFiles: false,
@@ -71,13 +71,6 @@ pipeline {
                     pattern: 'performance-tests-cmdstan/performance.xml',
                     skipNoTestFiles: false,
                     stopProcessingIfError: false)])
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false,
-                    excludeResponseTime: true,
-                    errorFailedThreshold: 100,
-                    errorUnstableThreshold: 100
             }
             post { always {
                 runShell("rm -rf ./*")
