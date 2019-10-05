@@ -274,6 +274,27 @@ let constrain_in_params outvars stmts =
   in
   List.map ~f:change_constrain_target stmts
 
+let fn_name_map =
+  String.Map.of_alist_exn [("integrate_ode", "integrate_ode_rk45")]
+
+let rec map_fn_names s =
+  let rec map_fn_names_expr e =
+    let expr =
+      match e.expr with
+      | FunApp (k, f, a) when Map.mem fn_name_map f ->
+          FunApp (k, Map.find_exn fn_name_map f, a)
+      | expr -> map_expr map_fn_names_expr expr
+    in
+    {e with expr}
+  in
+  let stmt =
+    match s.stmt with
+    | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
+        NRFunApp (k, Map.find_exn fn_name_map f, a)
+    | stmt -> map_statement map_fn_names_expr map_fn_names stmt
+  in
+  {s with stmt}
+
 let rec insert_before f to_insert = function
   | [] -> to_insert
   | hd :: tl ->
@@ -308,6 +329,7 @@ let%expect_test "insert before" =
   [%expect {| (1 2 3 4 5 999 6) |}]
 
 let trans_prog (p : typed_prog) use_opencl =
+  let p = map_prog Fn.id map_fn_names p in
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; Assignment ((pos, UInt, []), loop_bottom) ]

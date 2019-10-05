@@ -3,9 +3,6 @@ open Middle
 open Fmt
 open Expression_gen
 
-let pp_call ppf (name, pp_arg, args) =
-  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
-
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
@@ -90,10 +87,10 @@ let rec pp_statement (ppf : Format.formatter)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
       pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
-  | Assignment ((assignee, ut, idcs), rhs)
-    when List.for_all ~f:is_single_index idcs
-         && not (is_indexing_matrix (ut, idcs)) ->
-      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
+  (* | Assignment ((assignee, ut, idcs), rhs)
+   *   when List.for_all ~f:is_single_index idcs
+   *        && not (is_indexing_matrix (ut, idcs)) ->
+   *     pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs *)
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
@@ -150,7 +147,7 @@ let rec pp_statement (ppf : Format.formatter)
   | NRFunApp (StanLib, fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined, fname, args) ->
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+      pf ppf "%a;" pp_user_defined_fun (fname, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
