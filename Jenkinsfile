@@ -20,6 +20,10 @@ def tagName() {
 }
 pipeline {
     agent none
+    parameters {
+        booleanParam(name:"compile_all", defaultValue: false,
+                     description:"Try compiling all models in test/integration/good")
+    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -50,6 +54,7 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Try to compile all good integration models") {
+            when { expression { params.compile_all } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
