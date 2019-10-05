@@ -206,7 +206,7 @@ let use_file filename =
         Dependence_analysis.mir_uninitialized_variables mir
       in
       print_warn_uninitialized uninitialized_vars ) ;
-    let tx_mir = Transform_Mir.trans_prog mir in
+    let tx_mir = Transform_Mir.trans_prog mir !use_opencl in
     if !dump_tx_mir then
       Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
     let opt_mir =
