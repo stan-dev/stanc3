@@ -59,7 +59,7 @@ pipeline {
                 writeFile(file:"cmdstan/make/local", text:"O=0\nCXXFLAGS+=-o/dev/null -S")
                 sh """
           cd performance-tests-cmdstan
-          cd cmdstan; make -j${env.PARALLEL} build
+          cd cmdstan; make -j${env.PARALLEL} build; cd ..
           cp ../bin/stanc cmdstan/bin/stanc
           git clone --depth 1 https://github.com/stan-dev/stanc3
           CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good
