@@ -86,39 +86,6 @@ let rec switch_expr_to_opencl _available_cl_vars e =
       in
       {e with expr= FunApp (StanLib, f, mapped_args)}      
   | x -> {e with expr= map_expr (switch_expr_to_opencl _available_cl_vars) x}
-(*
-
-
-let rec switch_expr_to_opencl available_cl_vars e =
-  let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl e =
-    match e.expr with
-    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
-  in
-  match e.expr with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let cl_args = Map.find_exn opencl_triggers f in
-      let maybe_to_cl index arg =
-        if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
-      in
-      let mapped_args = List.mapi args ~f:maybe_to_cl in
-      {e with expr= FunApp (StanLib, f, mapped_args)}
-  | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
-
-let%expect_test "replaces normal" =
-  let mkvar s = {expr= Var s; emeta= internal_meta} in
-  { expr=
-      FunApp
-        ( StanLib
-        , "normal_id_glm_lpdf"
-        , List.map ~f:mkvar ["y"; "x"; "alpha"; "beta"; "sigma"] )
-  ; emeta= internal_meta }
-  |> switch_expr_to_opencl ["y"; "x"]
-  |> Fmt.strf "%a" Pretty.pp_expr_typed_located
-  |> print_endline ;
-  [%expect
-    {| normal_id_glm_lpdf(y_opencl__, x_opencl__, alpha, beta, sigma) |}] *)
 
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
@@ -313,15 +280,15 @@ let rec insert_before f to_insert = function
       if f hd then to_insert @ (hd :: tl)
       else hd :: insert_before f to_insert tl
 
-(* let is_opencl_var = String.is_suffix ~suffix:opencl_suffix *)
+let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
 
-(* let rec collect_vars_expr is_target accum e =
+let rec collect_vars_expr is_target accum e =
   Set.union accum
     ( match e.expr with
     | Var s when is_target s -> String.Set.of_list [s]
-    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x ) *)
+    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x )
 
-(* let collect_opencl_vars s =
+let collect_opencl_vars s =
   let rec go accum s =
     fold_statement (collect_vars_expr is_opencl_var) go accum s.stmt
   in
@@ -333,7 +300,7 @@ let%expect_test "collect vars expr" =
   let fnapp = {expr= FunApp (StanLib, "print", args); emeta= internal_meta} in
   {stmt= TargetPE fnapp; smeta= no_span}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
-  [%expect {| (w_opencl__ x_opencl__) |}] *)
+  [%expect {| (w_opencl__ x_opencl__) |}]
 
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
@@ -408,14 +375,14 @@ let trans_prog (p : typed_prog) use_opencl =
     |> translate_to_open_cl
   in
   let generate_quantities = gq in
-  (* let opencl_vars =
+  let opencl_vars =
     String.Set.union_list
       (List.concat_map
           ~f:(List.map ~f:collect_opencl_vars)
           [log_prob; generate_quantities])
     |> String.Set.to_list
-  in *)
-  (* let to_matrix_cl_stmts =
+  in
+  let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
@@ -432,7 +399,7 @@ let trans_prog (p : typed_prog) use_opencl =
                 , to_matrix_cl
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
-  in *)
+  in
   let p =
     { p with
       log_prob
@@ -440,6 +407,7 @@ let trans_prog (p : typed_prog) use_opencl =
     ; prepare_data=
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
+        @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read

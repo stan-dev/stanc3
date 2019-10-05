@@ -106,6 +106,10 @@ class glm_model : public model_base_crtp<glm_model> {
   Eigen::Matrix<double, 1, -1> X_rv_d;
   std::vector<int> y_vi_d;
   int y_s_d;
+  matrix_cl<double> X_d_opencl__;
+  matrix_cl<double> y_s_d_opencl__;
+  matrix_cl<double> y_v_d_opencl__;
+  matrix_cl<double> y_vi_d_opencl__;
  
  public:
   ~glm_model() { }
@@ -187,6 +191,14 @@ class glm_model : public model_base_crtp<glm_model> {
       current_statement__ = 36;
       current_statement__ = 36;
       check_greater_or_equal(function__, "n", n, 0);
+      
+      X_d_opencl__ = to_matrix_cl(X_d);
+      
+      y_s_d_opencl__ = to_matrix_cl(y_s_d);
+      
+      y_v_d_opencl__ = to_matrix_cl(y_v_d);
+      
+      y_vi_d_opencl__ = to_matrix_cl(y_vi_d);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
