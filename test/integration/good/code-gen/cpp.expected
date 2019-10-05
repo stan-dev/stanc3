@@ -517,37 +517,37 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'glm.stan', line 18, column 2 to column 19)",
                                                       " (in 'glm.stan', line 19, column 2 to column 22)",
                                                       " (in 'glm.stan', line 20, column 2 to column 23)",
-                                                      " (in 'glm.stan', line 24, column 2 to column 62)",
-                                                      " (in 'glm.stan', line 25, column 2 to column 62)",
-                                                      " (in 'glm.stan', line 27, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 28, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 30, column 2 to column 57)",
-                                                      " (in 'glm.stan', line 31, column 2 to column 57)",
-                                                      " (in 'glm.stan', line 33, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 34, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 36, column 2 to column 60)",
-                                                      " (in 'glm.stan', line 37, column 2 to column 60)",
-                                                      " (in 'glm.stan', line 39, column 2 to column 63)",
-                                                      " (in 'glm.stan', line 40, column 2 to column 63)",
-                                                      " (in 'glm.stan', line 42, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 43, column 2 to column 61)",
-                                                      " (in 'glm.stan', line 45, column 2 to column 64)",
-                                                      " (in 'glm.stan', line 46, column 2 to column 64)",
-                                                      " (in 'glm.stan', line 48, column 2 to column 66)",
-                                                      " (in 'glm.stan', line 49, column 2 to column 66)",
-                                                      " (in 'glm.stan', line 51, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 52, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 54, column 2 to column 67)",
-                                                      " (in 'glm.stan', line 55, column 2 to column 67)",
-                                                      " (in 'glm.stan', line 57, column 2 to column 70)",
-                                                      " (in 'glm.stan', line 58, column 2 to column 70)",
+                                                      " (in 'glm.stan', line 24, column 2 to column 64)",
+                                                      " (in 'glm.stan', line 25, column 2 to column 64)",
+                                                      " (in 'glm.stan', line 27, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 28, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 30, column 2 to column 59)",
+                                                      " (in 'glm.stan', line 31, column 2 to column 59)",
+                                                      " (in 'glm.stan', line 33, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 34, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 36, column 2 to column 62)",
+                                                      " (in 'glm.stan', line 37, column 2 to column 62)",
+                                                      " (in 'glm.stan', line 39, column 2 to column 65)",
+                                                      " (in 'glm.stan', line 40, column 2 to column 65)",
+                                                      " (in 'glm.stan', line 42, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 43, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 45, column 2 to column 66)",
+                                                      " (in 'glm.stan', line 46, column 2 to column 66)",
+                                                      " (in 'glm.stan', line 48, column 2 to column 68)",
+                                                      " (in 'glm.stan', line 49, column 2 to column 68)",
+                                                      " (in 'glm.stan', line 51, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 52, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 54, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 55, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 57, column 2 to column 72)",
+                                                      " (in 'glm.stan', line 58, column 2 to column 72)",
                                                       " (in 'glm.stan', line 2, column 2 to column 17)",
                                                       " (in 'glm.stan', line 3, column 2 to column 17)",
                                                       " (in 'glm.stan', line 4, column 2 to column 19)",
-                                                      " (in 'glm.stan', line 5, column 2 to column 16)",
+                                                      " (in 'glm.stan', line 5, column 2 to column 18)",
                                                       " (in 'glm.stan', line 6, column 2 to column 23)",
-                                                      " (in 'glm.stan', line 7, column 2 to column 14)",
-                                                      " (in 'glm.stan', line 8, column 2 to column 10)"};
+                                                      " (in 'glm.stan', line 7, column 2 to column 16)",
+                                                      " (in 'glm.stan', line 8, column 2 to column 12)"};
 
 
 class glm_model : public model_base_crtp<glm_model> {
@@ -557,10 +557,10 @@ class glm_model : public model_base_crtp<glm_model> {
   int k;
   int n;
   Eigen::Matrix<double, -1, -1> X_d;
-  Eigen::Matrix<double, -1, 1> y_v;
+  Eigen::Matrix<double, -1, 1> y_v_d;
   Eigen::Matrix<double, 1, -1> X_rv_d;
-  std::vector<int> y_vi;
-  int y_s;
+  std::vector<int> y_vi_d;
+  int y_s_d;
  
  public:
   ~glm_model() { }
@@ -601,14 +601,14 @@ class glm_model : public model_base_crtp<glm_model> {
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
-      y_v = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
       current_statement__ = 38;
       pos__ = 1;
       current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 38;
-        y_v[(sym1__ - 1)] = context__.vals_r("y_v")[(pos__ - 1)];
+        y_v_d[(sym1__ - 1)] = context__.vals_r("y_v_d")[(pos__ - 1)];
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
@@ -621,21 +621,21 @@ class glm_model : public model_base_crtp<glm_model> {
         X_rv_d[(sym1__ - 1)] = context__.vals_r("X_rv_d")[(pos__ - 1)];
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
-      y_vi = std::vector<int>(n, 0);
+      y_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 40;
       pos__ = 1;
       current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 40;
-        y_vi[(sym1__ - 1)] = context__.vals_i("y_vi")[(pos__ - 1)];
+        y_vi_d[(sym1__ - 1)] = context__.vals_i("y_vi_d")[(pos__ - 1)];
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
       
       current_statement__ = 41;
       pos__ = 1;
       current_statement__ = 41;
-      y_s = context__.vals_i("y_s")[(pos__ - 1)];
+      y_s_d = context__.vals_i("y_s_d")[(pos__ - 1)];
       current_statement__ = 35;
       current_statement__ = 35;
       check_greater_or_equal(function__, "k", k, 1);
@@ -727,66 +727,74 @@ class glm_model : public model_base_crtp<glm_model> {
       X_rv_p = in__.row_vector(n);
       {
         current_statement__ = 11;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_d, alpha, beta, sigma));
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_d, alpha, beta,
+                                                 sigma));
         current_statement__ = 12;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v, X_p, alpha, beta, sigma));
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_p, alpha, beta,
+                                                 sigma));
         current_statement__ = 13;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_d, alpha, beta));
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_d, alpha,
+                                                       beta));
         current_statement__ = 14;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi, X_p, alpha, beta));
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_p, alpha,
+                                                       beta));
         current_statement__ = 15;
-        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_d, alpha, beta));
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_d, alpha, beta));
         current_statement__ = 16;
-        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi, X_p, alpha, beta));
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_p, alpha, beta));
         current_statement__ = 17;
-        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi, X_d, alpha,
+        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_d, alpha,
                                                           beta, phi));
         current_statement__ = 18;
-        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi, X_p, alpha,
+        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_p, alpha,
                                                           beta, phi));
         current_statement__ = 19;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_d, beta, cuts));
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_d, beta,
+                                                        cuts));
         current_statement__ = 20;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_p, beta, cuts));
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_p, beta,
+                                                        cuts));
         current_statement__ = 21;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_rv_d, beta,
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_d, beta,
                                                         cuts));
         current_statement__ = 22;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s, X_rv_p, beta,
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_p, beta,
                                                         cuts));
         current_statement__ = 23;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_d, beta, cuts));
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_d, beta,
+                                                        cuts));
         current_statement__ = 24;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_p, beta, cuts));
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_p, beta,
+                                                        cuts));
         current_statement__ = 25;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_rv_d, beta,
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_d, beta,
                                                         cuts));
         current_statement__ = 26;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi, X_rv_p, beta,
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_p, beta,
                                                         cuts));
         current_statement__ = 27;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_d, alpha_v,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_d, alpha_v,
                                                          beta_m));
         current_statement__ = 28;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_p, alpha_v,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_p, alpha_v,
                                                          beta_m));
         current_statement__ = 29;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_rv_d,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_d,
                                                          alpha_v, beta_m));
         current_statement__ = 30;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s, X_rv_p,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_p,
                                                          alpha_v, beta_m));
         current_statement__ = 31;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_d, alpha_v,
-                                                         beta_m));
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_d,
+                                                         alpha_v, beta_m));
         current_statement__ = 32;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_p, alpha_v,
-                                                         beta_m));
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_p,
+                                                         alpha_v, beta_m));
         current_statement__ = 33;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_rv_d,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_d,
                                                          alpha_v, beta_m));
         current_statement__ = 34;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi, X_rv_p,
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p,
                                                          alpha_v, beta_m));
       }
     } catch (const std::exception& e) {

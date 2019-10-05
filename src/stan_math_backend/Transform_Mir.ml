@@ -14,52 +14,61 @@ let opencl_triggers =
         ([0;1], [([1],[])])
       )
     ; ("categorical_logit_glm_lpmf",
-        ([0;1], [([-1],[])]) (* Always use OpenCL *)
+        ([0;1], [([-1],[(1,UMatrix)])]) (* Always use OpenCL, when argument 1 is a matrix *)
       )
     ; ("neg_binomial_2_log_glm_lpmf",
         ([0;1], [([1],[])])
       )
     ; ("ordered_logistic_glm_lpmf",
-        ([0;1], [([1],[])])
+        ([0;1], [([1],[(1,UMatrix)])])
       )
     ; ("poisson_log_glm_lpmf",
         ([0;1], [([1],[])])
       ) 
     ]
+let opencl_suffix = "_opencl__"
+let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl _available_cl_vars e =
   let is_avail = List.mem _available_cl_vars ~equal:( = ) in
   let to_cl e =
     match e.expr with
-    | Var s when is_avail s -> {e with expr= Var (s ^ "_opencl__")}
-    | _ -> {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
+    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
+    | _ -> to_matrix_cl e
   in
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let (cl_args, req_args) = Map.find_exn opencl_triggers f in 
-      (* let data_type_match _a = true     
+      let check_if_type arg t = 
+        arg.emeta.mtype = t
+      in
+      let rec nth_arg_type arg i t = 
+        match arg with 
+        | [] -> false
+        | hd :: tl -> if i=0 then check_if_type hd t else nth_arg_type tl (i-1) t
       in
       let rec data_types_match t = 
         match t with
-        | [] -> true
-        | hd :: tl -> if data_type_match hd then true else data_types_match tl
-      in *)
+        | (i,t) :: tl -> 
+          if nth_arg_type args i t then data_types_match tl else false
+        | [] -> true (* No type requirements or end of list *)
+      in
       let check_if_data arg = 
         match arg.expr with 
           | Var s when is_avail s -> true
           | _ -> false
       in
-      let rec nth_arg_type arg i = 
+      let rec nth_arg_data arg i = 
         match arg with 
         | [] -> false
-        | hd :: tl -> if i=0 then check_if_data hd else nth_arg_type tl (i-1)
+        | hd :: tl -> if i=0 then check_if_data hd else nth_arg_data tl (i-1)
       in
-      let req_met (data_arg, _type_arg) = 
+      let req_met (data_arg, type_arg) = 
         match data_arg with
-        | [-1] -> true (*data_types_match _type_arg*) (*no data requirements, straight to matching data types*)
+        | [-1] -> data_types_match type_arg (*no data requirements, straight to matching data types*)
         | hd :: _tl -> 
-          if nth_arg_type args hd then true else false
-        | [] -> true (*if the list is empty that means that all  passed *)
+          if nth_arg_data args hd then data_types_match type_arg else false
+        | [] -> true (*if the list is empty that means that all requirements are satisfied *)
       in
       let rec triggers_match _md = 
         match _md with
@@ -77,24 +86,8 @@ let rec switch_expr_to_opencl _available_cl_vars e =
       in
       {e with expr= FunApp (StanLib, f, mapped_args)}      
   | x -> {e with expr= map_expr (switch_expr_to_opencl _available_cl_vars) x}
-  (* let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl e =
-    match e.expr with
-    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
-  in *)
-  (* match e.expr with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let cl_args = Map.find_exn opencl_triggers f in
-      let maybe_to_cl index arg =
-        if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
-      in
-      let mapped_args = List.mapi args ~f:maybe_to_cl in
-      {e with expr= FunApp (StanLib, f, mapped_args)}
-  | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x} *)
 (*
-let opencl_suffix = "_opencl__"
-let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
+
 
 let rec switch_expr_to_opencl available_cl_vars e =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
