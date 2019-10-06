@@ -3,29 +3,19 @@ open Middle
 
 let opencl_triggers =
   String.Map.of_alist_exn
-    [ ("normal_id_glm_lpdf",
-        ([0;1],
-          [ (* Array of conditions under which to move to OpenCL *)
-            ([1],[]) (* Argument 1 is data *)
-          ]
-        )
-      )
-    ; ("bernoulli_logit_glm_lpmf",
-        ([0;1], [([1],[])])
-      )
-    ; ("categorical_logit_glm_lpmf",
-        ([0;1], [([1],[(1,UMatrix)])]) (* Additional requirement of argument 1 being a matrix *)
-      )
-    ; ("neg_binomial_2_log_glm_lpmf",
-        ([0;1], [([1],[])])
-      )
-    ; ("ordered_logistic_glm_lpmf",
-        ([0;1], [([1],[(1,UMatrix)])])
-      )
-    ; ("poisson_log_glm_lpmf",
-        ([0;1], [([1],[])])
-      ) 
-    ]
+    [ ( "normal_id_glm_lpdf"
+      , ( [0; 1]
+        , [ (* Array of conditions under which to move to OpenCL *) ([1], [])
+          (* Argument 1 is data *)
+           ] ) )
+    ; ("bernoulli_logit_glm_lpmf", ([0; 1], [([1], [])]))
+    ; ( "categorical_logit_glm_lpmf"
+      , ([0; 1], [([1], [(1, UMatrix)])])
+        (* Additional requirement of argument 1 being a matrix *) )
+    ; ("neg_binomial_2_log_glm_lpmf", ([0; 1], [([1], [])]))
+    ; ("ordered_logistic_glm_lpmf", ([0; 1], [([1], [(1, UMatrix)])]))
+    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [])])) ]
+
 let opencl_suffix = "_opencl__"
 let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
 
@@ -38,52 +28,50 @@ let rec switch_expr_to_opencl _available_cl_vars e =
   in
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let (cl_args, req_args) = Map.find_exn opencl_triggers f in 
-      let check_if_type arg t = 
-        arg.emeta.mtype = t
-      in
-      let rec nth_arg_type arg i t = 
-        match arg with 
+      let cl_args, req_args = Map.find_exn opencl_triggers f in
+      let check_if_type arg t = arg.emeta.mtype = t in
+      let rec nth_arg_type arg i t =
+        match arg with
         | [] -> false
-        | hd :: tl -> if i=0 then check_if_type hd t else nth_arg_type tl (i-1) t
+        | hd :: tl ->
+            if i = 0 then check_if_type hd t else nth_arg_type tl (i - 1) t
       in
-      let rec data_types_match t = 
+      let rec data_types_match t =
         match t with
-        | (i,t) :: tl -> 
-          if nth_arg_type args i t then data_types_match tl else false
-        | [] -> true (* No type requirements or end of list *)
+        | (i, t) :: tl ->
+            if nth_arg_type args i t then data_types_match tl else false
+        | [] -> true
+        (* No type requirements or end of list *)
       in
-      let check_if_data arg = 
-        match arg.expr with 
-          | Var s when is_avail s -> true
-          | _ -> false
+      let check_if_data arg =
+        match arg.expr with Var s when is_avail s -> true | _ -> false
       in
-      let rec nth_arg_data arg i = 
-        match arg with 
+      let rec nth_arg_data arg i =
+        match arg with
         | [] -> false
-        | hd :: tl -> if i=0 then check_if_data hd else nth_arg_data tl (i-1)
+        | hd :: tl ->
+            if i = 0 then check_if_data hd else nth_arg_data tl (i - 1)
       in
-      let rec req_met (data_arg, type_arg) = 
+      let rec req_met (data_arg, type_arg) =
         match data_arg with
-         | hd :: tl -> 
-          if nth_arg_data args hd then req_met (tl, type_arg)  else false
-        | [] -> data_types_match type_arg (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
+        | hd :: tl ->
+            if nth_arg_data args hd then req_met (tl, type_arg) else false
+        | [] -> data_types_match type_arg
+        (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
       in
-      let rec triggers_match _md = 
+      let rec triggers_match _md =
         match _md with
         | hd :: tl -> if req_met hd then true else triggers_match tl
-        | [] -> false        
+        | [] -> false
       in
       let move_cl_args index arg =
         if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
       in
-      let mapped_args = 
-        if triggers_match req_args then
-          List.mapi args ~f:move_cl_args
-        else
-          args
+      let mapped_args =
+        if triggers_match req_args then List.mapi args ~f:move_cl_args
+        else args
       in
-      {e with expr= FunApp (StanLib, f, mapped_args)}      
+      {e with expr= FunApp (StanLib, f, mapped_args)}
   | x -> {e with expr= map_expr (switch_expr_to_opencl _available_cl_vars) x}
 
 let pos = "pos__"
@@ -399,8 +387,8 @@ let trans_prog (p : typed_prog) use_opencl =
   let opencl_vars =
     String.Set.union_list
       (List.concat_map
-          ~f:(List.map ~f:collect_opencl_vars)
-          [log_prob; generate_quantities])
+         ~f:(List.map ~f:collect_opencl_vars)
+         [log_prob; generate_quantities])
     |> String.Set.to_list
   in
   let to_matrix_cl_stmts =
