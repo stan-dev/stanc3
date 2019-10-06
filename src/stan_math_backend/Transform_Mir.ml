@@ -6,24 +6,24 @@ let opencl_triggers =
     [ ("normal_id_glm_lpdf",
         ([0;1],
           [ (* Array of conditions under which to move to OpenCL *)
-            ([0;1],[]) (* Argument 1 is data *)
+            ([1],[]) (* Argument 1 is data *)
           ]
         )
       )
     ; ("bernoulli_logit_glm_lpmf",
-        ([0;1], [([0;1],[])])
+        ([0;1], [([1],[])])
       )
     ; ("categorical_logit_glm_lpmf",
-        ([0;1], [([0;1],[(1,UMatrix)])]) (* Always use OpenCL, when argument 1 is a matrix *)
+        ([0;1], [([1],[(1,UMatrix)])]) (* Additional requirement of argument 1 being a matrix *)
       )
     ; ("neg_binomial_2_log_glm_lpmf",
-        ([0;1], [([0;1],[])])
+        ([0;1], [([1],[])])
       )
     ; ("ordered_logistic_glm_lpmf",
-        ([0;1], [([0;1],[(1,UMatrix)])])
+        ([0;1], [([1],[(1,UMatrix)])])
       )
     ; ("poisson_log_glm_lpmf",
-        ([0;1], [([0;1],[])])
+        ([0;1], [([1],[])])
       ) 
     ]
 let opencl_suffix = "_opencl__"
@@ -65,8 +65,7 @@ let rec switch_expr_to_opencl _available_cl_vars e =
       in
       let rec req_met (data_arg, type_arg) = 
         match data_arg with
-        | [-1] -> data_types_match type_arg (*no data requirements, straight to matching data types*)
-        | hd :: tl -> 
+         | hd :: tl -> 
           if nth_arg_data args hd then req_met (tl, type_arg)  else false
         | [] -> data_types_match type_arg (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
       in
