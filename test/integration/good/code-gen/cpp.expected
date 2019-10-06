@@ -527,46 +527,48 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'glm.stan', line 12, column 2 to column 20)",
-                                                      " (in 'glm.stan', line 13, column 2 to column 17)",
+                                                      " (in 'glm.stan', line 13, column 2 to column 20)",
                                                       " (in 'glm.stan', line 14, column 2 to column 17)",
-                                                      " (in 'glm.stan', line 15, column 2 to column 22)",
-                                                      " (in 'glm.stan', line 16, column 2 to column 13)",
-                                                      " (in 'glm.stan', line 17, column 2 to column 11)",
-                                                      " (in 'glm.stan', line 18, column 2 to column 19)",
-                                                      " (in 'glm.stan', line 19, column 2 to column 22)",
-                                                      " (in 'glm.stan', line 20, column 2 to column 23)",
-                                                      " (in 'glm.stan', line 24, column 2 to column 64)",
+                                                      " (in 'glm.stan', line 15, column 2 to column 17)",
+                                                      " (in 'glm.stan', line 16, column 2 to column 22)",
+                                                      " (in 'glm.stan', line 17, column 2 to column 13)",
+                                                      " (in 'glm.stan', line 18, column 2 to column 11)",
+                                                      " (in 'glm.stan', line 19, column 2 to column 19)",
+                                                      " (in 'glm.stan', line 20, column 2 to column 22)",
+                                                      " (in 'glm.stan', line 21, column 2 to column 23)",
                                                       " (in 'glm.stan', line 25, column 2 to column 64)",
-                                                      " (in 'glm.stan', line 27, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 26, column 2 to column 64)",
                                                       " (in 'glm.stan', line 28, column 2 to column 63)",
-                                                      " (in 'glm.stan', line 30, column 2 to column 59)",
+                                                      " (in 'glm.stan', line 29, column 2 to column 63)",
                                                       " (in 'glm.stan', line 31, column 2 to column 59)",
-                                                      " (in 'glm.stan', line 33, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 32, column 2 to column 59)",
                                                       " (in 'glm.stan', line 34, column 2 to column 71)",
-                                                      " (in 'glm.stan', line 36, column 2 to column 62)",
+                                                      " (in 'glm.stan', line 35, column 2 to column 71)",
                                                       " (in 'glm.stan', line 37, column 2 to column 62)",
-                                                      " (in 'glm.stan', line 39, column 2 to column 65)",
+                                                      " (in 'glm.stan', line 38, column 2 to column 62)",
                                                       " (in 'glm.stan', line 40, column 2 to column 65)",
-                                                      " (in 'glm.stan', line 42, column 2 to column 63)",
+                                                      " (in 'glm.stan', line 41, column 2 to column 65)",
                                                       " (in 'glm.stan', line 43, column 2 to column 63)",
-                                                      " (in 'glm.stan', line 45, column 2 to column 66)",
+                                                      " (in 'glm.stan', line 44, column 2 to column 63)",
                                                       " (in 'glm.stan', line 46, column 2 to column 66)",
-                                                      " (in 'glm.stan', line 48, column 2 to column 68)",
+                                                      " (in 'glm.stan', line 47, column 2 to column 66)",
                                                       " (in 'glm.stan', line 49, column 2 to column 68)",
-                                                      " (in 'glm.stan', line 51, column 2 to column 71)",
+                                                      " (in 'glm.stan', line 50, column 2 to column 68)",
                                                       " (in 'glm.stan', line 52, column 2 to column 71)",
-                                                      " (in 'glm.stan', line 54, column 2 to column 69)",
+                                                      " (in 'glm.stan', line 53, column 2 to column 71)",
                                                       " (in 'glm.stan', line 55, column 2 to column 69)",
-                                                      " (in 'glm.stan', line 57, column 2 to column 72)",
+                                                      " (in 'glm.stan', line 56, column 2 to column 69)",
                                                       " (in 'glm.stan', line 58, column 2 to column 72)",
+                                                      " (in 'glm.stan', line 59, column 2 to column 72)",
+                                                      " (in 'glm.stan', line 61, column 2 to column 73)",
                                                       " (in 'glm.stan', line 2, column 2 to column 17)",
                                                       " (in 'glm.stan', line 3, column 2 to column 17)",
                                                       " (in 'glm.stan', line 4, column 2 to column 19)",
                                                       " (in 'glm.stan', line 5, column 2 to column 18)",
                                                       " (in 'glm.stan', line 6, column 2 to column 23)",
                                                       " (in 'glm.stan', line 7, column 2 to column 16)",
-                                                      " (in 'glm.stan', line 8, column 2 to column 12)"};
+                                                      " (in 'glm.stan', line 8, column 2 to column 17)",
+                                                      " (in 'glm.stan', line 9, column 2 to column 12)"};
 
 
 class glm_model : public model_base_crtp<glm_model> {
@@ -579,6 +581,7 @@ class glm_model : public model_base_crtp<glm_model> {
   Eigen::Matrix<double, -1, 1> y_v_d;
   Eigen::Matrix<double, 1, -1> X_rv_d;
   std::vector<int> y_vi_d;
+  std::vector<int> y2_vi_d;
   int y_s_d;
  
  public:
@@ -599,67 +602,77 @@ class glm_model : public model_base_crtp<glm_model> {
       
       pos__ = 1;
       
-      current_statement__ = 35;
+      current_statement__ = 36;
       pos__ = 1;
-      current_statement__ = 35;
+      current_statement__ = 36;
       k = context__.vals_i("k")[(pos__ - 1)];
       
-      current_statement__ = 36;
+      current_statement__ = 37;
       pos__ = 1;
-      current_statement__ = 36;
+      current_statement__ = 37;
       n = context__.vals_i("n")[(pos__ - 1)];
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 37;
+      current_statement__ = 38;
       pos__ = 1;
-      current_statement__ = 37;
+      current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 37;
+        current_statement__ = 38;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          current_statement__ = 37;
+          current_statement__ = 38;
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
-          current_statement__ = 37;
+          current_statement__ = 38;
           pos__ = (pos__ + 1);}}
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
-      current_statement__ = 38;
+      current_statement__ = 39;
       pos__ = 1;
-      current_statement__ = 38;
+      current_statement__ = 39;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 38;
+        current_statement__ = 39;
         assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
-        current_statement__ = 38;
+        current_statement__ = 39;
         pos__ = (pos__ + 1);}
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 39;
+      current_statement__ = 40;
       pos__ = 1;
-      current_statement__ = 39;
+      current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 39;
+        current_statement__ = 40;
         assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
-        current_statement__ = 39;
+        current_statement__ = 40;
         pos__ = (pos__ + 1);}
       y_vi_d = std::vector<int>(n, 0);
       
-      current_statement__ = 40;
+      current_statement__ = 41;
       pos__ = 1;
-      current_statement__ = 40;
+      current_statement__ = 41;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 40;
+        current_statement__ = 41;
         assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
-        current_statement__ = 40;
+        current_statement__ = 41;
+        pos__ = (pos__ + 1);}
+      y2_vi_d = std::vector<int>(n, 0);
+      
+      current_statement__ = 42;
+      pos__ = 1;
+      current_statement__ = 42;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 42;
+        assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
+        current_statement__ = 42;
         pos__ = (pos__ + 1);}
       
-      current_statement__ = 41;
+      current_statement__ = 43;
       pos__ = 1;
-      current_statement__ = 41;
+      current_statement__ = 43;
       y_s_d = context__.vals_i("y_s_d")[(pos__ - 1)];
-      current_statement__ = 35;
-      current_statement__ = 35;
+      current_statement__ = 36;
+      current_statement__ = 36;
       check_greater_or_equal(function__, "k", k, 1);
-      current_statement__ = 36;
-      current_statement__ = 36;
+      current_statement__ = 37;
+      current_statement__ = 37;
       check_greater_or_equal(function__, "n", n, 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
@@ -814,6 +827,9 @@ class glm_model : public model_base_crtp<glm_model> {
                                                          alpha_v, beta_m));
         current_statement__ = 34;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p,
+                                                         alpha_v, beta_m));
+        current_statement__ = 35;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y2_vi_d, X_rv_p,
                                                          alpha_v, beta_m));
       }
     } catch (const std::exception& e) {

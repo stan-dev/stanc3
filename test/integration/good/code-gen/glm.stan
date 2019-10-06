@@ -5,6 +5,7 @@ data {
   vector[n] y_v_d;
   row_vector[n] X_rv_d;
   int y_vi_d[n];
+  int y2_vi_d[n];
   int y_s_d;
 }
 
@@ -56,4 +57,6 @@ model {
 
   target += categorical_logit_glm_lpmf(y_vi_d| X_rv_d, alpha_v, beta_m);
   target += categorical_logit_glm_lpmf(y_vi_d| X_rv_p, alpha_v, beta_m);
+
+  target += categorical_logit_glm_lpmf(y2_vi_d| X_rv_p, alpha_v, beta_m);
 }

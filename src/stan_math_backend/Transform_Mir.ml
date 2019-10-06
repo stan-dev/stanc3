@@ -6,24 +6,24 @@ let opencl_triggers =
     [ ("normal_id_glm_lpdf",
         ([0;1],
           [ (* Array of conditions under which to move to OpenCL *)
-            ([1],[]) (* Argument 1 is data *)
+            ([0;1],[]) (* Argument 1 is data *)
           ]
         )
       )
     ; ("bernoulli_logit_glm_lpmf",
-        ([0;1], [([1],[])])
+        ([0;1], [([0;1],[])])
       )
     ; ("categorical_logit_glm_lpmf",
-        ([0;1], [([-1],[(1,UMatrix)])]) (* Always use OpenCL, when argument 1 is a matrix *)
+        ([0;1], [([0;1],[(1,UMatrix)])]) (* Always use OpenCL, when argument 1 is a matrix *)
       )
     ; ("neg_binomial_2_log_glm_lpmf",
-        ([0;1], [([1],[])])
+        ([0;1], [([0;1],[])])
       )
     ; ("ordered_logistic_glm_lpmf",
-        ([0;1], [([1],[(1,UMatrix)])])
+        ([0;1], [([0;1],[(1,UMatrix)])])
       )
     ; ("poisson_log_glm_lpmf",
-        ([0;1], [([1],[])])
+        ([0;1], [([0;1],[])])
       ) 
     ]
 let opencl_suffix = "_opencl__"
@@ -63,12 +63,12 @@ let rec switch_expr_to_opencl _available_cl_vars e =
         | [] -> false
         | hd :: tl -> if i=0 then check_if_data hd else nth_arg_data tl (i-1)
       in
-      let req_met (data_arg, type_arg) = 
+      let rec req_met (data_arg, type_arg) = 
         match data_arg with
         | [-1] -> data_types_match type_arg (*no data requirements, straight to matching data types*)
-        | hd :: _tl -> 
-          if nth_arg_data args hd then data_types_match type_arg else false
-        | [] -> true (*if the list is empty that means that all requirements are satisfied *)
+        | hd :: tl -> 
+          if nth_arg_data args hd then req_met (tl, type_arg)  else false
+        | [] -> data_types_match type_arg (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
       in
       let rec triggers_match _md = 
         match _md with
@@ -397,14 +397,14 @@ let trans_prog (p : typed_prog) use_opencl =
     |> translate_to_open_cl
   in
   let generate_quantities = gq in
-  (* let opencl_vars =
+  let opencl_vars =
     String.Set.union_list
       (List.concat_map
           ~f:(List.map ~f:collect_opencl_vars)
           [log_prob; generate_quantities])
     |> String.Set.to_list
-  in *)
-  (* let to_matrix_cl_stmts =
+  in
+  let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
@@ -421,7 +421,7 @@ let trans_prog (p : typed_prog) use_opencl =
                 , to_matrix_cl
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
-  in *)
+  in
   let p =
     { p with
       log_prob
@@ -429,7 +429,7 @@ let trans_prog (p : typed_prog) use_opencl =
     ; prepare_data=
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
-        (* @ to_matrix_cl_stmts *)
+        @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
