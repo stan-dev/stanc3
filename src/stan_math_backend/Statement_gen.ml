@@ -43,10 +43,10 @@ let rec integer_el_type = function
   | SArray (st, _) -> integer_el_type st
 
 let pp_decl ppf (vident, ut, adtype) =
-  let pp_type = 
-    if Transform_Mir.is_opencl_var vident then fun ppf _ ->
+  let pp_type = pp_unsizedtype_local
+    (* if Transform_Mir.is_opencl_var vident then fun ppf _ ->
       pf ppf "matrix_cl<double>"
-    else pp_unsizedtype_local
+    else pp_unsizedtype_local *)
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 

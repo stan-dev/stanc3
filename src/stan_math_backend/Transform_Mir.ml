@@ -397,14 +397,14 @@ let trans_prog (p : typed_prog) use_opencl =
     |> translate_to_open_cl
   in
   let generate_quantities = gq in
-  let opencl_vars =
+  (* let opencl_vars =
     String.Set.union_list
       (List.concat_map
           ~f:(List.map ~f:collect_opencl_vars)
           [log_prob; generate_quantities])
     |> String.Set.to_list
-  in
-  let to_matrix_cl_stmts =
+  in *)
+  (* let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
@@ -421,7 +421,7 @@ let trans_prog (p : typed_prog) use_opencl =
                 , to_matrix_cl
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
-  in
+  in *)
   let p =
     { p with
       log_prob
@@ -429,7 +429,7 @@ let trans_prog (p : typed_prog) use_opencl =
     ; prepare_data=
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
-        @ to_matrix_cl_stmts
+        (* @ to_matrix_cl_stmts *)
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
