@@ -1052,6 +1052,20 @@ Semantic error in 'experiment.stan', line 12, column 4 to column 11:
 
 A non-returning function was expected but a returning function 'foo' was supplied.
 
+  $ ../../../../install/default/bin/stanc fun-return-typ3.stan
+Uncaught exception:
+  
+  ("Expecting a block or skip, not"
+   (x ((NRFunApp CompilerInternal FnReject__ ((Lit Str ""))))))
+
+Raised at file "src/error.ml" (inlined), line 9, characters 14-30
+Called from file "src/error.ml", line 11, characters 19-40
+Called from file "src/frontend/Ast_to_Mir.ml", line 532, characters 12-144
+Called from file "src/list.ml", line 557, characters 34-40
+Called from file "src/frontend/Ast_to_Mir.ml" (inlined), line 561, characters 22-76
+Called from file "src/frontend/Ast_to_Mir.ml", line 653, characters 21-64
+Called from file "src/stanc/stanc.ml", line 195, characters 14-54
+Called from file "src/stanc/stanc.ml", line 240, characters 9-16
   $ ../../../../install/default/bin/stanc fun-return-type1.stan
 
 Semantic error in 'fun-return-type1.stan', line 2, column 2 to column 72:

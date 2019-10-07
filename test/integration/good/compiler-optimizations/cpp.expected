@@ -4,30 +4,37 @@
 #include <stan/model/model_header.hpp>
 
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 
 namespace optimizations_model_namespace {
@@ -40,7 +47,6 @@ using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::assign;
 using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
@@ -143,17 +149,14 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 16, column 8 to column 18)"};
 
-template <typename T0__, typename T1__, typename T2__, typename T3__>
+template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+typename T_lp_accum__>
 void
-nrfun_lp(const T0__& x, const T1__& y, const T2__& lp__,
-         const T3__& lp_accum__, std::ostream* pstream__) {
+nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__,
+         T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+          T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -179,10 +182,11 @@ nrfun_lp(const T0__& x, const T1__& y, const T2__& lp__,
 }
 
 struct nrfun_lp_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
+template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+typename T_lp_accum__>
 void
-operator()(const T0__& x, const T1__& y, const T2__& lp__,
-           const T3__& lp_accum__, std::ostream* pstream__)  const 
+operator()(const T0__& x, const T1__& y, T_lp__& lp__,
+           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 }
@@ -229,15 +233,11 @@ return rfun(y, pstream__);
 }
 };
 
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-rfun_lp(const T0__& lp__, const T1__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+double
+rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+  using local_scalar_t__ = double;
   typedef local_scalar_t__ fun_return_scalar_t__;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -256,10 +256,9 @@ rfun_lp(const T0__& lp__, const T1__& lp_accum__, std::ostream* pstream__) {
 }
 
 struct rfun_lp_functor__ {
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-operator()(const T0__& lp__, const T1__& lp_accum__, std::ostream* pstream__)  const 
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+double
+operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return rfun_lp(lp__, lp_accum__, pstream__);
 }
@@ -1021,6 +1020,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     (void) function__;  // suppress unused var warning
 
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
     
     try {
       double sym78__;
@@ -1067,8 +1069,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       x_cov_in__ = Eigen::Matrix<double, -1, 1>(3);
       
       sym68__ = in__.vector(3);
-      sym64__ = cov_matrix_constrain(sym68__, 2);
-      x_cov = sym64__;
+      assign(sym64__, nil_index_list(), cov_matrix_constrain(sym68__, 2), "assigning variable sym64__");
+      assign(x_cov, nil_index_list(), sym64__, "assigning variable x_cov");
       vars__.push_back(sym66__);
       vars__.push_back(sym66__);
       {
@@ -1286,14 +1288,14 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         {
           {
             current_statement__ = 5;
-            x_vector[(1 - 1)] = context__.vals_r("x_vector")[(1 - 1)];
+            assign(x_vector, cons_list(index_uni(1), nil_index_list()), context__.vals_r("x_vector")[(1 - 1)], "assigning variable x_vector");
             current_statement__ = 5;
             pos__ = 2;
           }
           {
             {
               current_statement__ = 5;
-              x_vector[(2 - 1)] = context__.vals_r("x_vector")[(pos__ - 1)];
+              assign(x_vector, cons_list(index_uni(2), nil_index_list()), context__.vals_r("x_vector")[(pos__ - 1)], "assigning variable x_vector");
             }
           }
         }
@@ -1345,7 +1347,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
       current_statement__ = 6;
-      x_cov = cov_matrix_free(x_cov);
+      assign(x_cov, nil_index_list(), cov_matrix_free(x_cov), "assigning variable x_cov");
       vars__.push_back(sym49__);
       vars__.push_back(sym48__);
       {
@@ -1410,7 +1412,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  sym41__ = cov_matrix_free(x_cov);
+                  assign(sym41__, nil_index_list(), cov_matrix_free(x_cov), "assigning variable sym41__");
                   vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                 }
                 {
@@ -1426,7 +1428,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    sym41__ = cov_matrix_free(x_cov);
+                    assign(sym41__, nil_index_list(), cov_matrix_free(
+                           x_cov), "assigning variable sym41__");
                     vars__.push_back(rvalue(cov_matrix_free(sym41__), cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "FnUnconstrain__(sym41__, \"cov_matrix\")"));
                   }
                   {

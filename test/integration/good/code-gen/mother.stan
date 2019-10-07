@@ -55,6 +55,9 @@ functions {
   real foo_lccdf(int y, real lambda) {
     return 1.0;
   }
+  real foo_rng(real mu, real sigma) {
+    return normal_rng(mu, sigma);
+  }
 
   void unit_normal_lp(real u) {
     increment_log_prob(normal_log(u,0,1));

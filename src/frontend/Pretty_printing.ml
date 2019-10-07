@@ -75,7 +75,7 @@ and pp_unsizedtype ppf = function
 and pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 
 and pp_argtype ppf = function
-  | at, ut -> Fmt.append pp_autodifftype pp_unsizedtype ppf (at, ut)
+  | at, ut -> Fmt.pair ~sep:Fmt.nop pp_autodifftype pp_unsizedtype ppf (at, ut)
 
 and pp_returntype ppf = function
   | ReturnType x -> pp_unsizedtype ppf x

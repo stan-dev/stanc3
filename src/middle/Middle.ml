@@ -5,7 +5,6 @@ include Mir_utils
 open Core_kernel
 module Validation = Validation
 module Pretty = Mir_pretty_printer
-module Utils = Utils
 
 (* -- Locations and spans --------------------------------------------------- *)
 
@@ -333,3 +332,13 @@ let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
   | SInt | SReal -> []
 
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
+
+let all_but_last_n l n =
+  List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->
+      if n = 0 then (ele :: accum, n) else (accum, n - 1) )
+  |> fst
+
+let%expect_test "all but last n" =
+  let l = all_but_last_n [1; 2; 3; 4] 2 in
+  print_s [%sexp (l : int list)] ;
+  [%expect {| (1 2) |}]
