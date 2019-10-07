@@ -3500,9 +3500,16 @@ class mother_model : public model_base_crtp<mother_model> {
       {
         double z;
         
+        current_statement__ = 242;
+        z = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
         
+        current_statement__ = 243;
+        for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+          current_statement__ = 243;
+          assign(blocked_tdata_vs, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable blocked_tdata_vs");}
         current_statement__ = 244;
         for (size_t sym1__ = 1; sym1__ <= stan::length(blocked_tdata_vs);
              ++sym1__) {
@@ -4303,9 +4310,13 @@ class mother_model : public model_base_crtp<mother_model> {
         local_scalar_t__ r1;
         
         current_statement__ = 144;
+        r1 = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 144;
         r1 = foo_bar1(p_real, pstream__);
         local_scalar_t__ r2;
         
+        current_statement__ = 145;
+        r2 = std::numeric_limits<double>::quiet_NaN();
         current_statement__ = 145;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 146;

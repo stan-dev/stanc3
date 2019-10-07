@@ -254,8 +254,10 @@ let rec add_fill no_fill_required = function
         [%message
           "Unsized type initialization to NaN not yet implemented - consider \
            adding this to resize_to_match"]
-  | {stmt= Block ls | SList ls; _} ->
-      List.concat_map ~f:(add_fill no_fill_required) ls
+  | {stmt= Block ls; _} as s ->
+      [{s with stmt= Block (List.concat_map ~f:(add_fill no_fill_required) ls)}]
+  | {stmt= SList ls; _} as s ->
+      [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
   | s -> [s]
 
 let trans_prog (p : typed_prog) =
