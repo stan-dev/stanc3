@@ -313,8 +313,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
       rhs
     |> Option.to_list
   in
-  if String.is_suffix ~suffix:"__" decl_id then decl :: rhs_assignment
-  else
+  if is_user_ident decl_id then
     let checks =
       match dconstrain with
       | Some Check -> check_decl dt decl_id transform smeta dadlevel
@@ -327,6 +326,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
       | _ -> []
     in
     (decl :: rhs_assignment) @ constrain_stmts @ checks
+  else decl :: rhs_assignment
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
