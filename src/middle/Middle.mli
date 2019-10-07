@@ -106,12 +106,6 @@ val for_scalar :
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
 
-val for_scalar_unsized :
-  (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
-  -> mtype_loc_ad with_expr
-  -> location_span
-  -> (mtype_loc_ad, location_span) stmt_with
-
 val for_scalar_inv :
      mtype_loc_ad with_expr sizedtype
   -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
@@ -140,7 +134,6 @@ val eigen_size :
   mtype_loc_ad with_expr sizedtype -> mtype_loc_ad with_expr list
 
 val is_user_ident : string -> bool
-
 val is_propto_distribution : string -> bool
 val stdlib_distribution_name : string -> string
 val distribution_suffices : string list

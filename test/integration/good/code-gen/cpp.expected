@@ -3356,84 +3356,83 @@ class mother_model : public model_base_crtp<mother_model> {
       td_c = foo_bar1(td_b, pstream__);
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
-      current_statement__ = 192;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_ar_mat); ++sym13__) {
-        current_statement__ = 192;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(td_ar_mat[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 192;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(td_ar_mat[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 192;
-            assign(td_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
-                   ), "assigning variable td_ar_mat");}}}
+      current_statement__ = 202;
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        current_statement__ = 202;
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          current_statement__ = 202;
+          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
+            current_statement__ = 202;
+            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
+              current_statement__ = 202;
+              assign(td_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable td_ar_mat");}}}}
       td_simplex = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 193;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_simplex); ++sym13__) {
-        current_statement__ = 193;
-        td_simplex[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 203;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 203;
+        assign(td_simplex, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable td_simplex");}
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 194;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_1d_simplex);
-           ++sym13__) {
-        current_statement__ = 194;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(td_1d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 194;
-          td_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 204;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 204;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 204;
+          assign(td_1d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable td_1d_simplex");}}
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 195;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_3d_simplex);
-           ++sym13__) {
-        current_statement__ = 195;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(td_3d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 195;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(td_3d_simplex[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 195;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(td_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 195;
-              td_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 205;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 205;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 205;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 205;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 205;
+              assign(td_3d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable td_3d_simplex");}}}}
       td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
       
-      current_statement__ = 196;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_cfcov_54);
-           ++sym13__) {
-        current_statement__ = 196;
-        assign(td_cfcov_54, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable td_cfcov_54");}
+      current_statement__ = 206;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 206;
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          current_statement__ = 206;
+          assign(td_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable td_cfcov_54");}}
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
-<<<<<<< HEAD
-      current_statement__ = 197;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(td_cfcov_33);
-           ++sym13__) {
-        current_statement__ = 197;
-        assign(td_cfcov_33, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable td_cfcov_33");}
-      current_statement__ = 198;
-=======
+      current_statement__ = 207;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 207;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 207;
+          assign(td_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable td_cfcov_33");}}
       x = Eigen::Matrix<double, -1, 1>(2);
       
+      current_statement__ = 208;
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        current_statement__ = 208;
+        assign(x, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable x");}
       y = Eigen::Matrix<double, -1, 1>(2);
       
+      current_statement__ = 209;
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        current_statement__ = 209;
+        assign(y, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable y");}
       dat = std::vector<double>(0, 0);
       
       dat_int = std::vector<int>(0, 0);
       
       current_statement__ = 212;
->>>>>>> c07f156fcc029152cf4f2529b130856a9dd4ab92
       td_int = (primitive_value(1) || primitive_value(2));
       current_statement__ = 213;
       td_int = (primitive_value(1) && primitive_value(2));
@@ -4001,180 +4000,155 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
-      current_statement__ = 21;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_vec); ++sym13__) {
-        current_statement__ = 21;
-        tp_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 23;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 23;
+        assign(tp_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_vec");}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
-      current_statement__ = 22;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_vec); ++sym13__) {
-        current_statement__ = 22;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 22;
-          tp_1d_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 24;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 24;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 24;
+          assign(tp_1d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
-      current_statement__ = 23;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_vec); ++sym13__) {
-        current_statement__ = 23;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 23;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 23;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 23;
-              tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 25;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 25;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 25;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 25;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 25;
+              assign(tp_3d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_vec");}}}}
       Eigen::Matrix<local_scalar_t__, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       
-      current_statement__ = 24;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_row_vec); ++sym13__) {
-        current_statement__ = 24;
-        tp_row_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 26;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 26;
+        assign(tp_row_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_row_vec");}
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       
-      current_statement__ = 25;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_row_vec);
-           ++sym13__) {
-        current_statement__ = 25;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 25;
-          tp_1d_row_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 27;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 27;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 27;
+          assign(tp_1d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_row_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       
-      current_statement__ = 26;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_row_vec);
-           ++sym13__) {
-        current_statement__ = 26;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 26;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 26;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 26;
-              tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 28;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 28;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 28;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 28;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 28;
+              assign(tp_3d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_row_vec");}}}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       
-      current_statement__ = 27;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_ar_mat); ++sym13__) {
-        current_statement__ = 27;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_ar_mat[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 27;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_ar_mat[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 27;
-            assign(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
-                   ), "assigning variable tp_ar_mat");}}}
+      current_statement__ = 29;
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        current_statement__ = 29;
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          current_statement__ = 29;
+          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
+            current_statement__ = 29;
+            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
+              current_statement__ = 29;
+              assign(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_ar_mat");}}}}
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
-      current_statement__ = 28;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_simplex); ++sym13__) {
-        current_statement__ = 28;
-        tp_simplex[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 30;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 30;
+        assign(tp_simplex, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_simplex");}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
-      current_statement__ = 29;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_simplex);
-           ++sym13__) {
-        current_statement__ = 29;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 29;
-          tp_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 31;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 31;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 31;
+          assign(tp_1d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_simplex");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
-      current_statement__ = 30;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_simplex);
-           ++sym13__) {
-        current_statement__ = 30;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 30;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 30;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 30;
-              tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 32;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 32;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 32;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 32;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 32;
+              assign(tp_3d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_simplex");}}}}
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       
-      current_statement__ = 31;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_54);
-           ++sym13__) {
-        current_statement__ = 31;
-        assign(tp_cfcov_54, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable tp_cfcov_54");}
+      current_statement__ = 33;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 33;
+        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+          current_statement__ = 33;
+          assign(tp_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_cfcov_54");}}
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       
-      current_statement__ = 32;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_33);
-           ++sym13__) {
-        current_statement__ = 32;
-        assign(tp_cfcov_33, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable tp_cfcov_33");}
+      current_statement__ = 34;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 34;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 34;
+          assign(tp_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_cfcov_33");}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       
-<<<<<<< HEAD
-      current_statement__ = 33;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_33_ar);
-           ++sym13__) {
-        current_statement__ = 33;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_cfcov_33_ar[(sym13__ - 1)]);
-             ++sym14__) {
-          current_statement__ = 33;
-          assign(tp_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable tp_cfcov_33_ar");}}
-      current_statement__ = 34;
-=======
+      current_statement__ = 35;
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        current_statement__ = 35;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 35;
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            current_statement__ = 35;
+            assign(tp_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable tp_cfcov_33_ar");}}}
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p;
       theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
+      current_statement__ = 36;
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        current_statement__ = 36;
+        assign(theta_p, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable theta_p");}
       current_statement__ = 37;
-<<<<<<< HEAD
->>>>>>> c07f156fcc029152cf4f2529b130856a9dd4ab92
-      tp_real_1d_ar = p_real_1d_ar;
-=======
       assign(tp_real_1d_ar, nil_index_list(), p_real_1d_ar, "assigning variable tp_real_1d_ar");
->>>>>>> 3d4ab091696b4eefa50e903b78fb58cd98e01b05
       current_statement__ = 38;
       assign(tp_real_3d_ar, nil_index_list(), p_real_3d_ar, "assigning variable tp_real_3d_ar");
       current_statement__ = 39;
@@ -4657,173 +4631,153 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 21;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_vec); ++sym13__) {
-        current_statement__ = 21;
-        tp_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 23;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 23;
+        assign(tp_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_vec");}
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 22;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_vec); ++sym13__) {
-        current_statement__ = 22;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 22;
-          tp_1d_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 24;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 24;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 24;
+          assign(tp_1d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 23;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_vec); ++sym13__) {
-        current_statement__ = 23;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 23;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 23;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 23;
-              tp_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 25;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 25;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 25;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 25;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 25;
+              assign(tp_3d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_vec");}}}}
       Eigen::Matrix<double, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
-      current_statement__ = 24;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_row_vec); ++sym13__) {
-        current_statement__ = 24;
-        tp_row_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 26;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 26;
+        assign(tp_row_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_row_vec");}
       std::vector<Eigen::Matrix<double, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
-      current_statement__ = 25;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_row_vec);
-           ++sym13__) {
-        current_statement__ = 25;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 25;
-          tp_1d_row_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 27;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 27;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 27;
+          assign(tp_1d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_row_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
-      current_statement__ = 26;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_row_vec);
-           ++sym13__) {
-        current_statement__ = 26;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 26;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 26;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 26;
-              tp_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 28;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 28;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 28;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 28;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 28;
+              assign(tp_3d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_row_vec");}}}}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
-      current_statement__ = 27;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_ar_mat); ++sym13__) {
-        current_statement__ = 27;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_ar_mat[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 27;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_ar_mat[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 27;
-            assign(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
-                   ), "assigning variable tp_ar_mat");}}}
+      current_statement__ = 29;
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        current_statement__ = 29;
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          current_statement__ = 29;
+          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
+            current_statement__ = 29;
+            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
+              current_statement__ = 29;
+              assign(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_ar_mat");}}}}
       Eigen::Matrix<double, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 28;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_simplex); ++sym13__) {
-        current_statement__ = 28;
-        tp_simplex[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 30;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 30;
+        assign(tp_simplex, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable tp_simplex");}
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 29;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_1d_simplex);
-           ++sym13__) {
-        current_statement__ = 29;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_1d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 29;
-          tp_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 31;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 31;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 31;
+          assign(tp_1d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_1d_simplex");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 30;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_3d_simplex);
-           ++sym13__) {
-        current_statement__ = 30;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_3d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 30;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 30;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 30;
-              tp_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 32;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 32;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 32;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 32;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 32;
+              assign(tp_3d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable tp_3d_simplex");}}}}
       Eigen::Matrix<double, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
-      current_statement__ = 31;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_54);
-           ++sym13__) {
-        current_statement__ = 31;
-        assign(tp_cfcov_54, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable tp_cfcov_54");}
+      current_statement__ = 33;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 33;
+        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+          current_statement__ = 33;
+          assign(tp_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_cfcov_54");}}
       Eigen::Matrix<double, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
-      current_statement__ = 32;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_33);
-           ++sym13__) {
-        current_statement__ = 32;
-        assign(tp_cfcov_33, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable tp_cfcov_33");}
+      current_statement__ = 34;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 34;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 34;
+          assign(tp_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tp_cfcov_33");}}
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
-<<<<<<< HEAD
-      current_statement__ = 33;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(tp_cfcov_33_ar);
-           ++sym13__) {
-        current_statement__ = 33;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(tp_cfcov_33_ar[(sym13__ - 1)]);
-             ++sym14__) {
-          current_statement__ = 33;
-          assign(tp_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable tp_cfcov_33_ar");}}
-=======
+      current_statement__ = 35;
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        current_statement__ = 35;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 35;
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            current_statement__ = 35;
+            assign(tp_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable tp_cfcov_33_ar");}}}
       Eigen::Matrix<double, -1, 1> theta_p;
       theta_p = Eigen::Matrix<double, -1, 1>(2);
       
->>>>>>> c07f156fcc029152cf4f2529b130856a9dd4ab92
+      current_statement__ = 36;
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        current_statement__ = 36;
+        assign(theta_p, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable theta_p");}
       vars__.push_back(p_real);
       for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
         vars__.push_back(offset_multiplier[(sym13__ - 1)]);}
@@ -5048,167 +5002,145 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> gq_vec;
       gq_vec = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 62;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_vec); ++sym13__) {
-        current_statement__ = 62;
-        gq_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 72;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 72;
+        assign(gq_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable gq_vec");}
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
       gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 63;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_1d_vec); ++sym13__) {
-        current_statement__ = 63;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_1d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 63;
-          gq_1d_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 73;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 73;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 73;
+          assign(gq_1d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable gq_1d_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
       gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 64;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_3d_vec); ++sym13__) {
-        current_statement__ = 64;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_3d_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 64;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(gq_3d_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 64;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(gq_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 64;
-              gq_3d_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 74;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 74;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 74;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 74;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 74;
+              assign(gq_3d_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable gq_3d_vec");}}}}
       Eigen::Matrix<double, 1, -1> gq_row_vec;
       gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
-      current_statement__ = 65;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_row_vec); ++sym13__) {
-        current_statement__ = 65;
-        gq_row_vec[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 75;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 75;
+        assign(gq_row_vec, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable gq_row_vec");}
       std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
       gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
-      current_statement__ = 66;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_1d_row_vec);
-           ++sym13__) {
-        current_statement__ = 66;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_1d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 66;
-          gq_1d_row_vec[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 76;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 76;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 76;
+          assign(gq_1d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable gq_1d_row_vec");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
       gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
-      current_statement__ = 67;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_3d_row_vec);
-           ++sym13__) {
-        current_statement__ = 67;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_3d_row_vec[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 67;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(gq_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 67;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(gq_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 67;
-              gq_3d_row_vec[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 77;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 77;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 77;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 77;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 77;
+              assign(gq_3d_row_vec, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable gq_3d_row_vec");}}}}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
       gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
-      current_statement__ = 68;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_ar_mat); ++sym13__) {
-        current_statement__ = 68;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_ar_mat[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 68;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(gq_ar_mat[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 68;
-            assign(gq_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
-                   ), "assigning variable gq_ar_mat");}}}
+      current_statement__ = 78;
+      for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
+        current_statement__ = 78;
+        for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
+          current_statement__ = 78;
+          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
+            current_statement__ = 78;
+            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
+              current_statement__ = 78;
+              assign(gq_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable gq_ar_mat");}}}}
       Eigen::Matrix<double, -1, 1> gq_simplex;
       gq_simplex = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 69;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_simplex); ++sym13__) {
-        current_statement__ = 69;
-        gq_simplex[(sym13__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-        );}
+      current_statement__ = 79;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 79;
+        assign(gq_simplex, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable gq_simplex");}
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
       gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 70;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_1d_simplex);
-           ++sym13__) {
-        current_statement__ = 70;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_1d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 70;
-          gq_1d_simplex[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 80;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 80;
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 80;
+          assign(gq_1d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable gq_1d_simplex");}}
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
       gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 71;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_3d_simplex);
-           ++sym13__) {
-        current_statement__ = 71;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_3d_simplex[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 71;
-          for (size_t sym15__ = 1;
-               sym15__ <= stan::length(gq_3d_simplex[(sym13__ - 1)][(sym14__ - 1)]);
-               ++sym15__) {
-            current_statement__ = 71;
-            for (size_t sym16__ = 1;
-                 sym16__ <= stan::length(gq_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)]);
-                 ++sym16__) {
-              current_statement__ = 71;
-              gq_3d_simplex[(sym13__ - 1)][(sym14__ - 1)][(sym15__ - 1)][(sym16__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-              );}}}}
+      current_statement__ = 81;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 81;
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
+          current_statement__ = 81;
+          for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
+            current_statement__ = 81;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 81;
+              assign(gq_3d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                     ), "assigning variable gq_3d_simplex");}}}}
       Eigen::Matrix<double, -1, -1> gq_cfcov_54;
       gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
-      current_statement__ = 72;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_cfcov_54);
-           ++sym13__) {
-        current_statement__ = 72;
-        assign(gq_cfcov_54, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable gq_cfcov_54");}
+      current_statement__ = 82;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 82;
+        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+          current_statement__ = 82;
+          assign(gq_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable gq_cfcov_54");}}
       Eigen::Matrix<double, -1, -1> gq_cfcov_33;
       gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
-      current_statement__ = 73;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_cfcov_33);
-           ++sym13__) {
-        current_statement__ = 73;
-        assign(gq_cfcov_33, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
-               ), "assigning variable gq_cfcov_33");}
+      current_statement__ = 83;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 83;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 83;
+          assign(gq_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable gq_cfcov_33");}}
       std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
       gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      current_statement__ = 74;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(gq_cfcov_33_ar);
-           ++sym13__) {
-        current_statement__ = 74;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(gq_cfcov_33_ar[(sym13__ - 1)]);
-             ++sym14__) {
-          current_statement__ = 74;
-          assign(gq_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable gq_cfcov_33_ar");}}
+      current_statement__ = 84;
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
+        current_statement__ = 84;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 84;
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            current_statement__ = 84;
+            assign(gq_cfcov_33_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable gq_cfcov_33_ar");}}}
       std::vector<int> indices;
       indices = std::vector<int>(3, 0);
       
@@ -5217,113 +5149,109 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
       indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
-      current_statement__ = 76;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(indexing_mat);
-           ++sym13__) {
-        current_statement__ = 76;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(indexing_mat[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 76;
-          assign(indexing_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable indexing_mat");}}
+      current_statement__ = 86;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 86;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 86;
+          for (size_t sym15__ = 1; sym15__ <= 4; ++sym15__) {
+            current_statement__ = 86;
+            assign(indexing_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable indexing_mat");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
       idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
       
-      current_statement__ = 77;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res1); ++sym13__) {
-        current_statement__ = 77;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res1[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 77;
-          assign(idx_res1, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res1");}}
+      current_statement__ = 87;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 87;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 87;
+          for (size_t sym15__ = 1; sym15__ <= 4; ++sym15__) {
+            current_statement__ = 87;
+            assign(idx_res1, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res1");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res2;
       idx_res2 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
-      current_statement__ = 78;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res2); ++sym13__) {
-        current_statement__ = 78;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res2[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 78;
-          assign(idx_res2, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res2");}}
+      current_statement__ = 88;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 88;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 88;
+          for (size_t sym15__ = 1; sym15__ <= 4; ++sym15__) {
+            current_statement__ = 88;
+            assign(idx_res2, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res2");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res3;
       idx_res3 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      current_statement__ = 79;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res3); ++sym13__) {
-        current_statement__ = 79;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res3[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 79;
-          assign(idx_res3, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res3");}}
+      current_statement__ = 89;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 89;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 89;
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            current_statement__ = 89;
+            assign(idx_res3, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res3");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
       idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
       
-      current_statement__ = 80;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res11); ++sym13__) {
-        current_statement__ = 80;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res11[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 80;
-          assign(idx_res11, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res11");}}
+      current_statement__ = 90;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 90;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 90;
+          for (size_t sym15__ = 1; sym15__ <= 4; ++sym15__) {
+            current_statement__ = 90;
+            assign(idx_res11, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res11");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
       idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
-      current_statement__ = 81;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res21); ++sym13__) {
-        current_statement__ = 81;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res21[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 81;
-          assign(idx_res21, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res21");}}
+      current_statement__ = 91;
+      for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
+        current_statement__ = 91;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 91;
+          for (size_t sym15__ = 1; sym15__ <= 4; ++sym15__) {
+            current_statement__ = 91;
+            assign(idx_res21, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res21");}}}
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
       idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      current_statement__ = 82;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res31); ++sym13__) {
-        current_statement__ = 82;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res31[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 82;
-          assign(idx_res31, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
-                 ), "assigning variable idx_res31");}}
+      current_statement__ = 92;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 92;
+        for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
+          current_statement__ = 92;
+          for (size_t sym15__ = 1; sym15__ <= 3; ++sym15__) {
+            current_statement__ = 92;
+            assign(idx_res31, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable idx_res31");}}}
       std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
       idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
       
-      current_statement__ = 83;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res4); ++sym13__) {
-        current_statement__ = 83;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res4[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 83;
-          idx_res4[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
+      current_statement__ = 93;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 93;
+        for (size_t sym14__ = 1; sym14__ <= 4; ++sym14__) {
+          current_statement__ = 93;
+          assign(idx_res4, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable idx_res4");}}
       std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
       idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
       
-<<<<<<< HEAD
-      current_statement__ = 84;
-      for (size_t sym13__ = 1; sym13__ <= stan::length(idx_res5); ++sym13__) {
-        current_statement__ = 84;
-        for (size_t sym14__ = 1;
-             sym14__ <= stan::length(idx_res5[(sym13__ - 1)]); ++sym14__) {
-          current_statement__ = 84;
-          idx_res5[(sym13__ - 1)][(sym14__ - 1)] = std::numeric_limits<double>::quiet_NaN(
-          );}}
-      current_statement__ = 85;
-=======
+      current_statement__ = 94;
+      for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+        current_statement__ = 94;
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          current_statement__ = 94;
+          assign(idx_res5, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable idx_res5");}}
       current_statement__ = 95;
-<<<<<<< HEAD
->>>>>>> c07f156fcc029152cf4f2529b130856a9dd4ab92
-      gq_real_1d_ar = rvalue(p_1d_simplex, cons_list(index_omni(), cons_list(index_uni(1), nil_index_list())), "p_1d_simplex");
-=======
       assign(gq_real_1d_ar, nil_index_list(), rvalue(p_1d_simplex, cons_list(index_omni(), cons_list(index_uni(1), nil_index_list())), "p_1d_simplex"), "assigning variable gq_real_1d_ar");
->>>>>>> 3d4ab091696b4eefa50e903b78fb58cd98e01b05
       current_statement__ = 96;
       assign(gq_real_3d_ar, nil_index_list(), p_real_3d_ar, "assigning variable gq_real_3d_ar");
       current_statement__ = 97;

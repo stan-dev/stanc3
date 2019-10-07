@@ -241,16 +241,6 @@ let rec for_scalar st bodyfn var smeta =
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
-(* XXX this is broken - matrices with a single index are doing row stuff now, but this is asking for scalar *)
-let rec for_scalar_unsized bodyfn var smeta =
-  let upper = internal_funapp FnLength [var] {internal_meta with mloc=smeta} in
-  match var.emeta.mtype with
-  | UInt | UReal -> bodyfn var
-  | UVector | URowVector -> mkfor upper bodyfn var smeta
-  | UMatrix -> mkfor
-  | UArray _ -> mkfor upper (fun e -> for_scalar_unsized bodyfn e smeta) var smeta
-  | _ -> raise_s [%message "Can't iterate over " (var: expr_typed_located)]
-
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
 let for_scalar_inv st bodyfn var smeta =
   let invert_index_order = function

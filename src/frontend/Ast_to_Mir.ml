@@ -322,7 +322,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     let constrain_stmts =
       match dconstrain with
       | Some Constrain | Some Unconstrain ->
-        constrain_decl dt dconstrain transform decl_id decl_var smeta
+          constrain_decl dt dconstrain transform decl_id decl_var smeta
       | _ -> []
     in
     (decl :: rhs_assignment) @ constrain_stmts @ checks

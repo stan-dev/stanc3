@@ -25,7 +25,6 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
 let is_matrix e = e.emeta.mtype = UMatrix
 let is_row_vector e = e.emeta.mtype = URowVector
-
 let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
 
 let pp_call ppf (name, pp_arg, args) =
@@ -92,11 +91,12 @@ let demangle_propto_name udf f =
   else f
 
 let fn_renames =
-  List.map ~f:(fun (k, v) -> string_of_internal_fn k, v)
-    [(FnLength, "stan::length")
+  List.map
+    ~f:(fun (k, v) -> (string_of_internal_fn k, v))
+    [ (FnLength, "stan::length")
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "resize_to_match")
-    ; (FnNaN, "std::numeric_limits<double>::quiet_NaN")]
+    ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   |> String.Map.of_alist_exn
 
 let rec pp_index ppf = function
@@ -187,10 +187,9 @@ and gen_misc_special_math_app f =
       Some
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else
-            pp_call ppf (f, pp_expr, es))
-  | f when Map.mem fn_renames f -> Some (fun ppf es ->
-      pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
+          else pp_call ppf (f, pp_expr, es) )
+  | f when Map.mem fn_renames f ->
+      Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
 
 and read_data ut ppf es =
