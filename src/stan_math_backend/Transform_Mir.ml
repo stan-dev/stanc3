@@ -242,7 +242,10 @@ let add_fill no_fill_required = function
   | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
     when (not (Set.mem no_fill_required decl_id))
          && is_user_ident decl_id
-         && contains_eigen (remove_size st) ->
+         && (contains_eigen (remove_size st) || is_scalar st) ->
+      (* I *think* we only need to initialize eigen types and scalars because we already construct
+       std::vectors with 0s.
+    *)
       [decl; make_fill decl_id st smeta]
   | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
     when (not (Set.mem no_fill_required decl_id))

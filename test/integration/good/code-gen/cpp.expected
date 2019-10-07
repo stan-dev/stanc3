@@ -3339,6 +3339,8 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 195;
             pos__ = (pos__ + 1);}}}
       
+      current_statement__ = 196;
+      td_int = std::numeric_limits<double>::quiet_NaN();
       td_1d = std::vector<int>(N, 0);
       
       td_1dk = std::vector<int>(M, 0);
@@ -3347,11 +3349,17 @@ class mother_model : public model_base_crtp<mother_model> {
       assign(td_1dk, nil_index_list(), rep_array(1, M), "assigning variable td_1dk");
       
       current_statement__ = 199;
+      td_a = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 199;
       td_a = N;
       
       current_statement__ = 200;
+      td_b = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 200;
       td_b = (N * J);
       
+      current_statement__ = 201;
+      td_c = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 201;
       td_c = foo_bar1(td_b, pstream__);
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
@@ -4988,9 +4996,13 @@ class mother_model : public model_base_crtp<mother_model> {
       double gq_r1;
       
       current_statement__ = 68;
+      gq_r1 = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 68;
       gq_r1 = foo_bar1(p_real, pstream__);
       double gq_r2;
       
+      current_statement__ = 69;
+      gq_r2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 69;
       gq_r2 = foo_bar1(J, pstream__);
       std::vector<double> gq_real_1d_ar;
