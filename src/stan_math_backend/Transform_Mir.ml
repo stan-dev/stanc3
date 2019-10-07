@@ -19,8 +19,8 @@ let opencl_triggers =
 let opencl_suffix = "_opencl__"
 let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
 
-let rec switch_expr_to_opencl _available_cl_vars e =
-  let is_avail = List.mem _available_cl_vars ~equal:( = ) in
+let rec switch_expr_to_opencl available_cl_vars e =
+  let is_avail = List.mem available_cl_vars ~equal:( = ) in
   let to_cl e =
     match e.expr with
     | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
@@ -72,7 +72,7 @@ let rec switch_expr_to_opencl _available_cl_vars e =
         else args
       in
       {e with expr= FunApp (StanLib, f, mapped_args)}
-  | x -> {e with expr= map_expr (switch_expr_to_opencl _available_cl_vars) x}
+  | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
 
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
