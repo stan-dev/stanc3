@@ -238,7 +238,7 @@ let rec contains_eigen = function
   | UMatrix | URowVector | UVector -> true
   | _ -> false
 
-let add_fill no_fill_required = function
+let rec add_fill no_fill_required = function
   | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
     when (not (Set.mem no_fill_required decl_id))
          && is_user_ident decl_id
@@ -254,6 +254,8 @@ let add_fill no_fill_required = function
         [%message
           "Unsized type initialization to NaN not yet implemented - consider \
            adding this to resize_to_match"]
+  | {stmt= Block ls | SList ls; _} ->
+      List.concat_map ~f:(add_fill no_fill_required) ls
   | s -> [s]
 
 let trans_prog (p : typed_prog) =
