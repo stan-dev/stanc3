@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 
+let use_opencl = ref false
+
 let opencl_triggers =
   String.Map.of_alist_exn
     [ ( "normal_id_glm_lpdf"
@@ -29,38 +31,27 @@ let rec switch_expr_to_opencl available_cl_vars e =
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let cl_args, req_args = Map.find_exn opencl_triggers f in
-      let check_if_type arg t = arg.emeta.mtype = t in
-      let rec nth_arg_type arg i t =
-        match arg with
-        | [] -> false
-        | hd :: tl ->
-            if i = 0 then check_if_type hd t else nth_arg_type tl (i - 1) t
+      let check_type a t = 
+        a.emeta.mtype = t 
       in
       let rec data_types_match t =
         match t with
         | (i, t) :: tl ->
-            if nth_arg_type args i t then data_types_match tl else false
-        | [] -> true
-        (* No type requirements or end of list *)
+            if check_type (List.nth_exn args i) t then data_types_match tl else false
+        | [] -> true (* No type requirements or end of list *)
       in
       let check_if_data arg =
         match arg.expr with Var s when is_avail s -> true | _ -> false
       in
-      let rec nth_arg_data arg i =
-        match arg with
-        | [] -> false
-        | hd :: tl ->
-            if i = 0 then check_if_data hd else nth_arg_data tl (i - 1)
-      in
       let rec req_met (data_arg, type_arg) =
         match data_arg with
         | hd :: tl ->
-            if nth_arg_data args hd then req_met (tl, type_arg) else false
+            if check_if_data (List.nth_exn args hd) then req_met (tl, type_arg) else false
         | [] -> data_types_match type_arg
         (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
       in
-      let rec triggers_match _md =
-        match _md with
+      let rec triggers_match md =
+        match md with
         | hd :: tl -> if req_met hd then true else triggers_match tl
         | [] -> false
       in
@@ -355,7 +346,7 @@ let rec add_fill no_fill_required = function
       [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
   | s -> [s]
 
-let trans_prog (p : typed_prog) use_opencl =
+let trans_prog (p : typed_prog) =
   let p = map_prog Fn.id map_fn_names p in
   let init_pos =
     [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
@@ -404,7 +395,7 @@ let trans_prog (p : typed_prog) use_opencl =
     | _ -> false
   in
   let translate_to_open_cl stmts =
-    if use_opencl then
+    if !use_opencl then
       let data_var_idents = List.map ~f:fst p.input_vars in
       let rec trans_stmt_to_opencl s =
         { s with
