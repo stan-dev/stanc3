@@ -220,6 +220,46 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
+let make_fill vident st loc =
+  let rhs =
+    internal_funapp FnNaN [] {mtype= UReal; mloc= loc; madlevel= DataOnly}
+  in
+  let ut = remove_size st in
+  let var =
+    {expr= Var vident; emeta= {internal_meta with mtype= ut; mloc= loc}}
+  in
+  let bodyfn var =
+    {stmt= Assignment ((vident, ut, pull_indices var), rhs); smeta= loc}
+  in
+  for_scalar st bodyfn var loc
+
+let rec contains_eigen = function
+  | UArray t -> contains_eigen t
+  | UMatrix | URowVector | UVector -> true
+  | _ -> false
+
+let rec add_fill no_fill_required = function
+  | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
+    when (not (Set.mem no_fill_required decl_id))
+         && is_user_ident decl_id
+         && (contains_eigen (remove_size st) || is_scalar st) ->
+      (* I *think* we only need to initialize eigen types and scalars because we already construct
+       std::vectors with 0s.
+    *)
+      [decl; make_fill decl_id st smeta]
+  | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
+    when (not (Set.mem no_fill_required decl_id))
+         && is_user_ident decl_id && contains_eigen ut ->
+      raise_s
+        [%message
+          "Unsized type initialization to NaN not yet implemented - consider \
+           adding this to resize_to_match"]
+  | {stmt= Block ls; _} as s ->
+      [{s with stmt= Block (List.concat_map ~f:(add_fill no_fill_required) ls)}]
+  | {stmt= SList ls; _} as s ->
+      [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
+  | s -> [s]
+
 let trans_prog (p : typed_prog) =
   let p = map_prog Fn.id map_fn_names p in
   let init_pos =
@@ -243,6 +283,12 @@ let trans_prog (p : typed_prog) =
            | Parameters -> `Fst x
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x )
+  in
+  let data_and_params =
+    List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
+  in
+  let add_fills =
+    List.concat_map ~f:(add_fill (String.Set.of_list data_and_params))
   in
   let tparam_start {stmt; _} =
     match stmt with
@@ -268,14 +314,17 @@ let trans_prog (p : typed_prog) =
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
     @ gq_writes
+    |> add_fills
   in
   let p =
     { p with
       log_prob=
         add_reads log_prob p.output_vars param_read
         |> constrain_in_params p.output_vars
+        |> add_fills
     ; prog_name= escape_name p.prog_name
-    ; prepare_data= init_pos @ add_reads p.prepare_data p.input_vars data_read
+    ; prepare_data=
+        init_pos @ add_reads p.prepare_data p.input_vars data_read |> add_fills
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read

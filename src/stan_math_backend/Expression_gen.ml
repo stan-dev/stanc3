@@ -25,8 +25,6 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
 let is_matrix e = e.emeta.mtype = UMatrix
 let is_row_vector e = e.emeta.mtype = URowVector
-
-(* stub *)
 let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
 
 let pp_call ppf (name, pp_arg, args) =
@@ -91,6 +89,15 @@ let demangle_propto_name udf f =
     stdlib_distribution_name f ^ "<propto__>"
   else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
   else f
+
+let fn_renames =
+  List.map
+    ~f:(fun (k, v) -> (string_of_internal_fn k, v))
+    [ (FnLength, "stan::length")
+    ; (FnNegInf, "stan::math::negative_infinity")
+    ; (FnResizeToMatch, "resize_to_match")
+    ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
+  |> String.Map.of_alist_exn
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -171,7 +178,7 @@ and gen_misc_special_math_app f =
       Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | ("max" | "min") as f ->
+  | "max" | "min" ->
       Some
         (fun ppf es ->
           let f = match es with [_; _] -> "std::" ^ f | _ -> f in
@@ -180,13 +187,9 @@ and gen_misc_special_math_app f =
       Some
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
-  | f when f = string_of_internal_fn FnLength ->
-      Some (fun ppf -> gen_fun_app ppf "stan::length")
-  | f when f = string_of_internal_fn FnResizeToMatch ->
-      Some (fun ppf -> gen_fun_app ppf "resize_to_match__")
-  | f when f = string_of_internal_fn FnNegInf ->
-      Some (fun ppf -> gen_fun_app ppf "stan::math::negative_infinity")
+          else pp_call ppf (f, pp_expr, es) )
+  | f when Map.mem fn_renames f ->
+      Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
 
 and read_data ut ppf es =
@@ -239,9 +242,8 @@ and gen_fun_app ppf f es =
       | true, _, args -> args @ [msgs]
       | false, _, args -> args
     in
-    pf ppf "%s(@[<hov>%a@])"
-      (demangle_propto_name false (stan_namespace_qualify f))
-      (list ~sep:comma pp_expr) args
+    let f = stan_namespace_qualify f |> demangle_propto_name false in
+    pp_call ppf (f, pp_expr, args)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
