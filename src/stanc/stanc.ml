@@ -23,6 +23,7 @@ let dump_tx_mir = ref false
 let dump_stan_math_sigs = ref false
 let optimize = ref false
 let dump_opt_mir = ref false
+let dump_opt_mir_pretty = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -57,7 +58,11 @@ let options =
     ; ( "--debug-optimized-mir"
       , Arg.Set dump_opt_mir
       , " For debugging purposes: print the MIR after it's been \
-         optimized.Only has an effect when optimizations are turned on." )
+         optimized. Only has an effect when optimizations are turned on." )
+    ; ( "--debug-optimized-mir-pretty"
+      , Arg.Set dump_opt_mir
+      , " For debugging purposes: pretty print the MIR after it's been \
+         optimized. Only has an effect when optimizations are turned on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
@@ -211,6 +216,8 @@ let use_file filename =
           Optimize.optimization_suite (optimization_settings ()) tx_mir
         in
         if !dump_opt_mir then
+          Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.typed_prog)] ;
+        if !dump_opt_mir_pretty then
           Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
         opt )
       else tx_mir
