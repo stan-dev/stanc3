@@ -95,10 +95,10 @@ let rec eval_expr (e : Middle.expr_typed_located) =
           in
           let try_partially_evaluate_to e =
             match e with
-            | FunApp (StanLib, f', l') -> (
+            | FunApp (t, f', l') -> (
               match get_fun_or_op_rt_opt f' l' with
-              | Some _ -> FunApp (StanLib, f', l')
-              | None -> FunApp (StanLib, f, l) )
+              | Some _ -> FunApp (t, f', l')
+              | None -> FunApp (t, f, l) )
             | e -> e
           in
           try_partially_evaluate_to
@@ -602,19 +602,19 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               match op with
               | "PPlus__" | "PMinus__" | "PNot__" ->
                   apply_prefix_operator_int op (Int.of_string i)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{expr= Lit (Real, r); _}] -> (
               match op with
               | "PPlus__" | "PMinus__" ->
                   apply_prefix_operator_real op (Float.of_string r)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{expr= Lit (Int, i1); _}; {expr= Lit (Int, i2); _}] -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" | "Modulo__"
                |"Or__" | "And__" | "Equals__" | "NEquals__" | "Less__"
                |"Leq__" | "Greater__" | "Geq__" ->
                   apply_operator_int op (Int.of_string i1) (Int.of_string i2)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{expr= Lit (Real, i1); _}; {expr= Lit (Real, i2); _}]
              |op, [{expr= Lit (Int, i1); _}; {expr= Lit (Real, i2); _}]
              |op, [{expr= Lit (Real, i1); _}; {expr= Lit (Int, i2); _}] -> (
@@ -626,7 +626,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                |"Leq__" | "Greater__" | "Geq__" ->
                   apply_logical_operator_real op (Float.of_string i1)
                     (Float.of_string i2)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with
