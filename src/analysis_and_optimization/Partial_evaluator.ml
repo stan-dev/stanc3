@@ -95,10 +95,10 @@ let rec eval_expr (e : Middle.expr_typed_located) =
           in
           let try_partially_evaluate_to e =
             match e with
-            | FunApp (t, f', l') -> (
+            | FunApp (StanLib, f', l') -> (
               match get_fun_or_op_rt_opt f' l' with
-              | Some _ -> FunApp (t, f', l')
-              | None -> FunApp (t, f, l) )
+              | Some _ -> FunApp (StanLib, f', l')
+              | None -> FunApp (StanLib, f, l) )
             | e -> e
           in
           try_partially_evaluate_to
