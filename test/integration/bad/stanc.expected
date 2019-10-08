@@ -1064,8 +1064,8 @@ Called from file "src/frontend/Ast_to_Mir.ml", line 532, characters 12-144
 Called from file "src/list.ml", line 557, characters 34-40
 Called from file "src/frontend/Ast_to_Mir.ml" (inlined), line 561, characters 22-76
 Called from file "src/frontend/Ast_to_Mir.ml", line 653, characters 21-64
-Called from file "src/stanc/stanc.ml", line 199, characters 14-54
-Called from file "src/stanc/stanc.ml", line 244, characters 9-16
+Called from file "src/stanc/stanc.ml", line 198, characters 14-54
+Called from file "src/stanc/stanc.ml", line 243, characters 9-16
   $ ../../../../install/default/bin/stanc fun-return-type1.stan
 
 Semantic error in 'fun-return-type1.stan', line 2, column 2 to column 72:
