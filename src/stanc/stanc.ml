@@ -60,7 +60,7 @@ let options =
       , " For debugging purposes: print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
     ; ( "--debug-optimized-mir-pretty"
-      , Arg.Set dump_opt_mir
+      , Arg.Set dump_opt_mir_pretty
       , " For debugging purposes: pretty print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
     ; ( "--debug-transformed-mir"
