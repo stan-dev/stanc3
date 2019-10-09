@@ -8,3 +8,15 @@
 (alias
  (name runtest)
  (action (diff pretty.expected pretty.output)))
+
+
+(rule
+ (targets integrate_1d.output)
+ (deps (package stanc) (:stanfiles (glob_files */integrate_1d.stan)))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --auto-format" %{stanfiles}))))
+
+(alias
+ (name test_integrate)
+ (action (diff integrate_1d.expected integrate_1d.output)))

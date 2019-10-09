@@ -139,77 +139,77 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       pos__ = 1;
       
-      current_statement__ = 36;
+      current_statement__ = 35;
       pos__ = 1;
-      current_statement__ = 36;
+      current_statement__ = 35;
       k = context__.vals_i("k")[(pos__ - 1)];
       
-      current_statement__ = 37;
+      current_statement__ = 36;
       pos__ = 1;
-      current_statement__ = 37;
+      current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 38;
+      current_statement__ = 37;
       pos__ = 1;
-      current_statement__ = 38;
+      current_statement__ = 37;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 38;
+        current_statement__ = 37;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          current_statement__ = 38;
+          current_statement__ = 37;
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
-          current_statement__ = 38;
+          current_statement__ = 37;
           pos__ = (pos__ + 1);}}
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
-      current_statement__ = 39;
+      current_statement__ = 38;
       pos__ = 1;
-      current_statement__ = 39;
+      current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 39;
+        current_statement__ = 38;
         assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
-        current_statement__ = 39;
+        current_statement__ = 38;
         pos__ = (pos__ + 1);}
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 40;
+      current_statement__ = 39;
       pos__ = 1;
-      current_statement__ = 40;
+      current_statement__ = 39;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 40;
+        current_statement__ = 39;
         assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
-        current_statement__ = 40;
+        current_statement__ = 39;
         pos__ = (pos__ + 1);}
       y_vi_d = std::vector<int>(n, 0);
       
-      current_statement__ = 41;
+      current_statement__ = 40;
       pos__ = 1;
-      current_statement__ = 41;
+      current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 41;
+        current_statement__ = 40;
         assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
-        current_statement__ = 41;
+        current_statement__ = 40;
         pos__ = (pos__ + 1);}
       y2_vi_d = std::vector<int>(n, 0);
       
-      current_statement__ = 42;
+      current_statement__ = 41;
       pos__ = 1;
-      current_statement__ = 42;
+      current_statement__ = 41;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 42;
+        current_statement__ = 41;
         assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
-        current_statement__ = 42;
+        current_statement__ = 41;
         pos__ = (pos__ + 1);}
       
-      current_statement__ = 43;
+      current_statement__ = 42;
       pos__ = 1;
-      current_statement__ = 43;
+      current_statement__ = 42;
       y_s_d = context__.vals_i("y_s_d")[(pos__ - 1)];
-      current_statement__ = 36;
-      current_statement__ = 36;
+      current_statement__ = 35;
+      current_statement__ = 35;
       check_greater_or_equal(function__, "k", k, 1);
-      current_statement__ = 37;
-      current_statement__ = 37;
+      current_statement__ = 36;
+      current_statement__ = 36;
       check_greater_or_equal(function__, "n", n, 0);
       
       X_d_opencl__ = to_matrix_cl(X_d);
@@ -220,8 +220,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       y_vi_d_opencl__ = to_matrix_cl(y_vi_d);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -255,157 +254,156 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 2;
+      current_statement__ = 1;
       alpha_v = in__.vector(k);
-      current_statement__ = 2;
+      current_statement__ = 1;
       alpha_v = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 2;
       beta = in__.vector(k);
-      current_statement__ = 3;
+      current_statement__ = 2;
       beta = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 4;
+      current_statement__ = 3;
       cuts = in__.vector(k);
-      current_statement__ = 4;
+      current_statement__ = 3;
       cuts = in__.vector(k);
       local_scalar_t__ sigma;
       
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = in__.scalar();
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = in__.scalar();
-      current_statement__ = 5;
+      current_statement__ = 4;
       if (jacobian__) {
-        current_statement__ = 5;
+        current_statement__ = 4;
         sigma = lb_constrain(sigma, 0, lp__);
       } else {
-        current_statement__ = 5;
+        current_statement__ = 4;
         sigma = lb_constrain(sigma, 0);
       }
       local_scalar_t__ alpha;
       
-      current_statement__ = 6;
+      current_statement__ = 5;
       alpha = in__.scalar();
-      current_statement__ = 6;
+      current_statement__ = 5;
       alpha = in__.scalar();
       local_scalar_t__ phi;
       
-      current_statement__ = 7;
+      current_statement__ = 6;
       phi = in__.scalar();
-      current_statement__ = 7;
+      current_statement__ = 6;
       phi = in__.scalar();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
-      current_statement__ = 8;
+      current_statement__ = 7;
       X_p = in__.matrix(n, k);
-      current_statement__ = 8;
+      current_statement__ = 7;
       X_p = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
-      current_statement__ = 9;
+      current_statement__ = 8;
       beta_m = in__.matrix(n, k);
-      current_statement__ = 9;
+      current_statement__ = 8;
       beta_m = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       
-      current_statement__ = 10;
+      current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
-      current_statement__ = 10;
+      current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
       {
-        current_statement__ = 11;
+        current_statement__ = 10;
         lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d_opencl__,
                                                  X_d_opencl__, alpha, beta,
                                                  sigma));
-        current_statement__ = 12;
+        current_statement__ = 11;
         lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_p, alpha, beta,
                                                  sigma));
-        current_statement__ = 13;
+        current_statement__ = 12;
         lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d_opencl__,
                                                        X_d_opencl__, alpha,
                                                        beta));
-        current_statement__ = 14;
+        current_statement__ = 13;
         lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_p, alpha,
                                                        beta));
-        current_statement__ = 15;
+        current_statement__ = 14;
         lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d_opencl__,
                                                    X_d_opencl__, alpha, beta));
-        current_statement__ = 16;
+        current_statement__ = 15;
         lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_p, alpha, beta));
-        current_statement__ = 17;
+        current_statement__ = 16;
         lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d_opencl__,
                                                           X_d_opencl__,
                                                           alpha, beta, phi));
-        current_statement__ = 18;
+        current_statement__ = 17;
         lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_p, alpha,
                                                           beta, phi));
-        current_statement__ = 19;
+        current_statement__ = 18;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d_opencl__,
                                                         X_d_opencl__, beta,
                                                         cuts));
-        current_statement__ = 20;
+        current_statement__ = 19;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_p, beta,
                                                         cuts));
-        current_statement__ = 21;
+        current_statement__ = 20;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_d, beta,
                                                         cuts));
-        current_statement__ = 22;
+        current_statement__ = 21;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_p, beta,
                                                         cuts));
-        current_statement__ = 23;
+        current_statement__ = 22;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d_opencl__,
                                                         X_d_opencl__, beta,
                                                         cuts));
-        current_statement__ = 24;
+        current_statement__ = 23;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_p, beta,
                                                         cuts));
-        current_statement__ = 25;
+        current_statement__ = 24;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_d, beta,
                                                         cuts));
-        current_statement__ = 26;
+        current_statement__ = 25;
         lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_p, beta,
                                                         cuts));
-        current_statement__ = 27;
+        current_statement__ = 26;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d_opencl__,
                                                          X_d_opencl__,
                                                          alpha_v, beta_m));
-        current_statement__ = 28;
+        current_statement__ = 27;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_p, alpha_v,
                                                          beta_m));
-        current_statement__ = 29;
+        current_statement__ = 28;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_d,
                                                          alpha_v, beta_m));
-        current_statement__ = 30;
+        current_statement__ = 29;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_p,
                                                          alpha_v, beta_m));
-        current_statement__ = 31;
+        current_statement__ = 30;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d_opencl__,
                                                          X_d_opencl__,
                                                          alpha_v, beta_m));
-        current_statement__ = 32;
+        current_statement__ = 31;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_p,
                                                          alpha_v, beta_m));
-        current_statement__ = 33;
+        current_statement__ = 32;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_d,
                                                          alpha_v, beta_m));
-        current_statement__ = 34;
+        current_statement__ = 33;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p,
                                                          alpha_v, beta_m));
-        current_statement__ = 35;
+        current_statement__ = 34;
         lp_accum__.add(categorical_logit_glm_lpmf<false>(y2_vi_d, X_rv_p,
                                                          alpha_v, beta_m));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -435,46 +433,46 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 2;
+      current_statement__ = 1;
       alpha_v = in__.vector(k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 2;
       beta = in__.vector(k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 4;
+      current_statement__ = 3;
       cuts = in__.vector(k);
       double sigma;
       
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = in__.scalar();
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = lb_constrain(sigma, 0);
       double alpha;
       
-      current_statement__ = 6;
+      current_statement__ = 5;
       alpha = in__.scalar();
       double phi;
       
-      current_statement__ = 7;
+      current_statement__ = 6;
       phi = in__.scalar();
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 8;
+      current_statement__ = 7;
       X_p = in__.matrix(n, k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
-      current_statement__ = 9;
+      current_statement__ = 8;
       beta_m = in__.matrix(n, k);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 10;
+      current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.push_back(alpha_v[(sym1__ - 1)]);}
@@ -502,8 +500,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -523,58 +520,71 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 2;
+      current_statement__ = 1;
       pos__ = 1;
-      current_statement__ = 2;
+      current_statement__ = 1;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
+        current_statement__ = 1;
         assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("alpha_v")[(pos__ - 1)], "assigning variable alpha_v");
-        current_statement__ = 2;
+        current_statement__ = 1;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 3;
+      current_statement__ = 2;
       pos__ = 1;
-      current_statement__ = 3;
+      current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
+        current_statement__ = 2;
         assign(beta, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
-        current_statement__ = 3;
+        current_statement__ = 2;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
-      current_statement__ = 4;
+      current_statement__ = 3;
       pos__ = 1;
-      current_statement__ = 4;
+      current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
+        current_statement__ = 3;
         assign(cuts, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
-        current_statement__ = 4;
+        current_statement__ = 3;
         pos__ = (pos__ + 1);}
       double sigma;
       
-      current_statement__ = 5;
+      current_statement__ = 4;
       pos__ = 1;
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(pos__ - 1)];
-      current_statement__ = 5;
+      current_statement__ = 4;
       sigma = lb_free(sigma, 0);
       double alpha;
       
+      current_statement__ = 5;
+      pos__ = 1;
+      current_statement__ = 5;
+      alpha = context__.vals_r("alpha")[(pos__ - 1)];
+      double phi;
+      
       current_statement__ = 6;
       pos__ = 1;
       current_statement__ = 6;
-      alpha = context__.vals_r("alpha")[(pos__ - 1)];
-      double phi;
+      phi = context__.vals_r("phi")[(pos__ - 1)];
+      Eigen::Matrix<double, -1, -1> X_p;
+      X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 7;
       pos__ = 1;
       current_statement__ = 7;
-      phi = context__.vals_r("phi")[(pos__ - 1)];
-      Eigen::Matrix<double, -1, -1> X_p;
-      X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 7;
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          current_statement__ = 7;
+          assign(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
+          current_statement__ = 7;
+          pos__ = (pos__ + 1);}}
+      Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 8;
       pos__ = 1;
@@ -583,32 +593,19 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 8;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           current_statement__ = 8;
-          assign(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
-          current_statement__ = 8;
-          pos__ = (pos__ + 1);}}
-      Eigen::Matrix<double, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
-      
-      current_statement__ = 9;
-      pos__ = 1;
-      current_statement__ = 9;
-      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 9;
-        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          current_statement__ = 9;
           assign(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("beta_m")[(pos__ - 1)], "assigning variable beta_m");
-          current_statement__ = 9;
+          current_statement__ = 8;
           pos__ = (pos__ + 1);}}
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
-      current_statement__ = 10;
+      current_statement__ = 9;
       pos__ = 1;
-      current_statement__ = 10;
+      current_statement__ = 9;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
+        current_statement__ = 9;
         assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_p")[(pos__ - 1)], "assigning variable X_rv_p");
-        current_statement__ = 10;
+        current_statement__ = 9;
         pos__ = (pos__ + 1);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.push_back(alpha_v[(sym1__ - 1)]);}
@@ -630,8 +627,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
