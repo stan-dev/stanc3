@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stan2tfp eight_schools_ncp.stan
+  $ ../../../../install/default/bin/stan2tfp ../good/code-gen/eight_schools_ncp.stan
 
 import numpy as np__
 import tensorflow as tf__
