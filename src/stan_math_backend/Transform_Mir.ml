@@ -31,26 +31,19 @@ let rec switch_expr_to_opencl available_cl_vars e =
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let cl_args, req_args = Map.find_exn opencl_triggers f in
-      let check_type a t = 
-        a.emeta.mtype = t 
-      in
-      let rec data_types_match t =
-        match t with
-        | (i, t) :: tl ->
-            if check_type (List.nth_exn args i) t then data_types_match tl else false
-        | [] -> true (* No type requirements or end of list *)
-      in
-      let check_if_data ind =
-        match (List.nth_exn args ind).expr with Var s when is_avail s -> true | _ -> false
-      in
-      let req_met (data_arg, type_arg) =
-        if List.for_all ~f:check_if_data data_arg then
-          data_types_match type_arg
-        else
-          false
-      in
       let move_cl_args index arg =
         if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+      in
+      let check_type (i,t) = 
+        (List.nth_exn args i).emeta.mtype = t
+      in
+      let check_if_data ind =
+        match (List.nth_exn args ind).expr with
+        | Var s when is_avail s -> true
+        | _ -> false
+      in
+      let req_met (data_arg, type_arg) =
+        List.for_all ~f:check_if_data data_arg && List.for_all ~f:check_type type_arg
       in
       let mapped_args =
         if List.exists ~f:req_met req_args then 
