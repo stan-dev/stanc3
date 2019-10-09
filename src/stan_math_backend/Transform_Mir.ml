@@ -44,22 +44,19 @@ let rec switch_expr_to_opencl available_cl_vars e =
         match (List.nth_exn args ind).expr with Var s when is_avail s -> true | _ -> false
       in
       let req_met (data_arg, type_arg) =
-        if List.exists data_arg ~f:check_if_data then 
+        if List.for_all ~f:check_if_data data_arg then
           data_types_match type_arg
-        else 
+        else
           false
-      in
-      let rec triggers_match md =
-        match md with
-        | hd :: tl -> if req_met hd then true else triggers_match tl
-        | [] -> false
       in
       let move_cl_args index arg =
         if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
       in
       let mapped_args =
-        if triggers_match req_args then List.mapi args ~f:move_cl_args
-        else args
+        if List.exists ~f:req_met req_args then 
+          List.mapi args ~f:move_cl_args
+        else
+          args
       in
       {e with expr= FunApp (StanLib, f, mapped_args)}
   | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
