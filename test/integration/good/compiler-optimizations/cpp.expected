@@ -363,9 +363,6 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, 1> x_cov_in__;
       x_cov_in__ = Eigen::Matrix<double, -1, 1>(3);
       
-      Eigen::Matrix<double, -1, 1> x_cov_in__;
-      x_cov_in__ = Eigen::Matrix<double, -1, 1>(3);
-      
       {
         double x;
         
