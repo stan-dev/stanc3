@@ -527,6 +527,7 @@ let rec can_side_effect_expr (e : expr_typed_located) =
       String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
        || (t = CompilerInternal && f = string_of_internal_fn FnReadParam)
        || (t = CompilerInternal && f = string_of_internal_fn FnWriteParam)
+       || (t = CompilerInternal && f = string_of_internal_fn FnUnconstrain)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
