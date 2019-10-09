@@ -413,7 +413,7 @@ let trans_prog (p : typed_prog) =
   let log_prob =
     add_reads log_prob p.output_vars param_read
     |> constrain_in_params p.output_vars
-    |> translate_to_open_cl
+    |> translate_to_open_cl |> add_fills
   in
   let generate_quantities = gq in
   let opencl_vars =
@@ -443,10 +443,7 @@ let trans_prog (p : typed_prog) =
   in
   let p =
     { p with
-      log_prob=
-        add_reads log_prob p.output_vars param_read
-        |> constrain_in_params p.output_vars
-        |> add_fills
+      log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos

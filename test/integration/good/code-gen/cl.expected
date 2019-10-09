@@ -256,13 +256,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
-      current_statement__ = 1;
-      alpha_v = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
-      current_statement__ = 2;
-      beta = in__.vector(k);
       current_statement__ = 2;
       beta = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
@@ -270,12 +266,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 3;
       cuts = in__.vector(k);
-      current_statement__ = 3;
-      cuts = in__.vector(k);
       local_scalar_t__ sigma;
       
-      current_statement__ = 4;
-      sigma = in__.scalar();
       current_statement__ = 4;
       sigma = in__.scalar();
       current_statement__ = 4;
@@ -290,12 +282,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 5;
       alpha = in__.scalar();
-      current_statement__ = 5;
-      alpha = in__.scalar();
       local_scalar_t__ phi;
       
-      current_statement__ = 6;
-      phi = in__.scalar();
       current_statement__ = 6;
       phi = in__.scalar();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
@@ -303,20 +291,14 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
-      current_statement__ = 7;
-      X_p = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
-      current_statement__ = 8;
-      beta_m = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       
-      current_statement__ = 9;
-      X_rv_p = in__.row_vector(n);
       current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
       {
