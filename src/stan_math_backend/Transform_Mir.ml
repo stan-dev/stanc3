@@ -40,15 +40,14 @@ let rec switch_expr_to_opencl available_cl_vars e =
             if check_type (List.nth_exn args i) t then data_types_match tl else false
         | [] -> true (* No type requirements or end of list *)
       in
-      let check_if_data arg =
-        match arg.expr with Var s when is_avail s -> true | _ -> false
+      let check_if_data ind =
+        match (List.nth_exn args ind).expr with Var s when is_avail s -> true | _ -> false
       in
-      let rec req_met (data_arg, type_arg) =
-        match data_arg with
-        | hd :: tl ->
-            if check_if_data (List.nth_exn args hd) then req_met (tl, type_arg) else false
-        | [] -> data_types_match type_arg
-        (*if the list is empty that means that all requirements are satisfied, move to matching data types *)
+      let req_met (data_arg, type_arg) =
+        if List.exists data_arg ~f:check_if_data then 
+          data_types_match type_arg
+        else 
+          false
       in
       let rec triggers_match md =
         match md with
