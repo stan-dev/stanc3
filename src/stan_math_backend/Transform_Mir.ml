@@ -28,30 +28,35 @@ let rec switch_expr_to_opencl available_cl_vars e =
     | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
     | _ -> to_matrix_cl e
   in
+  let move_cl_args index arg cl_args =
+    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+  in
+  let check_type (i, t) args = (List.nth_exn args i).emeta.mtype = t in
+  let check_if_data ind args =
+    match (List.nth_exn args ind).expr with
+    | Var s when is_avail s -> true
+    | _ -> false
+  in
+  let req_met (data_arg, type_arg) args =
+    List.for_all ~f:(fun x -> check_if_data x args) data_arg
+    && List.for_all ~f:(fun x -> check_type x args) type_arg
+  in
+  let any_req_met args req_args =
+    List.exists ~f:(fun x -> req_met x args) req_args
+  in
+  let get_trigger f = Map.find_exn opencl_triggers f in
+  let first (a, _) = a in
+  let second (_, a) = a in
+  let cl_args f = first (get_trigger f) in
+  let req_args f = second (get_trigger f) in
+  let map_args args f =
+    if any_req_met args (req_args f) then
+      List.mapi args ~f:(fun i a -> move_cl_args i a (cl_args f))
+    else args
+  in
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let cl_args, req_args = Map.find_exn opencl_triggers f in
-      let move_cl_args index arg =
-        if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
-      in
-      let check_type (i,t) = 
-        (List.nth_exn args i).emeta.mtype = t
-      in
-      let check_if_data ind =
-        match (List.nth_exn args ind).expr with
-        | Var s when is_avail s -> true
-        | _ -> false
-      in
-      let req_met (data_arg, type_arg) =
-        List.for_all ~f:check_if_data data_arg && List.for_all ~f:check_type type_arg
-      in
-      let mapped_args =
-        if List.exists ~f:req_met req_args then 
-          List.mapi args ~f:move_cl_args
-        else
-          args
-      in
-      {e with expr= FunApp (StanLib, f, mapped_args)}
+      {e with expr= FunApp (StanLib, f, map_args args f)}
   | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
 
 let pos = "pos__"
@@ -444,8 +449,8 @@ let trans_prog (p : typed_prog) =
         |> add_fills
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
-        init_pos 
-        @ add_reads p.prepare_data p.input_vars data_read 
+        init_pos
+        @ add_reads p.prepare_data p.input_vars data_read
         @ to_matrix_cl_stmts
         |> add_fills
     ; transform_inits=
