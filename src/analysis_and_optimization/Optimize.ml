@@ -809,8 +809,11 @@ let optimize_ad_levels mir =
         (module Rev_Flowgraph)
         flowgraph_to_mir initial_ad_variables
     in
+    let insert_constraint_variables vars =
+      Set.Poly.union vars (Set.Poly.map ~f:(fun x -> x ^ "_in__") vars)
+    in
     let optimize_ad_levels_stmt_base i stmt =
-      let autodiffable_variables = (Map.find_exn ad_levels i).exit in
+      let autodiffable_variables = insert_constraint_variables (Map.find_exn ad_levels i).exit in
       match
         map_statement
           (update_expr_ad_levels autodiffable_variables)
