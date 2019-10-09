@@ -243,6 +243,7 @@ let constant_propagation_transfer
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
+    (can_side_effect_expr : Middle.expr_typed_located -> bool)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -258,7 +259,10 @@ let expression_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Assignment ((s, _, []), e) ->
-                Map.set m ~key:s ~data:(subst_expr m e)
+                if can_side_effect_expr e then
+                  m
+                else
+                  Map.set m ~key:s ~data:(subst_expr m e)
             | Middle.Decl {decl_id= s; _}
              |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
