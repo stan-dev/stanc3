@@ -173,8 +173,7 @@ nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__,
     current_statement__ = 7;
     lp_accum__.add(y);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside UDF nrfun_lp") + ": " + e.what()), locations_array__[current_statement__]);
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -216,8 +215,7 @@ rfun(const T0__& y, std::ostream* pstream__) {
     current_statement__ = 88;
     return (y + 2);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside UDF rfun") + ": " + e.what()), locations_array__[current_statement__]);
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -247,8 +245,7 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
     current_statement__ = 89;
     return 24;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside UDF rfun_lp") + ": " + e.what()), locations_array__[current_statement__]);
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -287,8 +284,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     try {
       
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -997,8 +993,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         lp_accum__.add(sym112__);
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1174,8 +1169,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       } else 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1444,8 +1438,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }

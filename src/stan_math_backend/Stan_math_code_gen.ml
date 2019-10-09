@@ -29,13 +29,11 @@ let pp_function__ ppf (prog_name, fname) =
     (strf "%s_namespace::%s" prog_name fname) ;
   pp_unused ppf "function__"
 
-let pp_located_msg ppf msg =
+let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%S) + ": " + e.what()), locations_array__[current_statement__]);
+    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
-    msg
 
 let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
@@ -77,10 +75,10 @@ let pp_returntype ppf arg_types rt =
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
-let pp_located_error ppf (pp_body_block, body, err_msg) =
+let pp_located_error ppf (pp_body_block, body) =
   pf ppf "@ try %a" pp_body_block body ;
   string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
+  pp_block ppf (pp_located, ())
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
@@ -90,11 +88,9 @@ let to_indexed assignee idcs =
   ; emeta= internal_meta }
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
-let pp_located_error_b ppf (body_stmts, err_msg) =
+let pp_located_error_b ppf body_stmts =
   pp_located_error ppf
-    ( pp_statement
-    , {stmt= Block body_stmts; smeta= Locations.no_span_num}
-    , err_msg )
+    (pp_statement, {stmt= Block body_stmts; smeta= Locations.no_span_num})
 
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
@@ -126,7 +122,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
     text
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
-    pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
+    pp_located_error ppf (pp_statement, fdbody) ;
     pf ppf "@ "
   in
   let templates =
@@ -228,9 +224,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error ppf
-          ( pp_block
-          , (list ~sep:cut pp_stmt_topdecl_size_only, p.prepare_data)
-          , "inside ctor" ) ;
+          (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, p.prepare_data)) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
@@ -281,7 +275,7 @@ let pp_get_dims ppf p =
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
   pp_method ppf rt name params intro
-    (fun ppf -> pp_located_error_b ppf (body, "inside " ^ name))
+    (fun ppf -> pp_located_error_b ppf body)
     ~outro
 
 let pp_write_array ppf p =
