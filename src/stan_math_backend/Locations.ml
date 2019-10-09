@@ -28,7 +28,7 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
     match Hashtbl.find location_to_label smeta with
     | Some i -> {stmt; smeta= i}
     | None ->
-        let new_label = Hashtbl.length label_to_location + 1 in
+        let new_label = Hashtbl.length label_to_location in
         Hashtbl.set label_to_location ~key:new_label ~data:smeta ;
         Hashtbl.set location_to_label ~key:smeta ~data:new_label ;
         {stmt; smeta= new_label}

@@ -55,6 +55,9 @@ functions {
   real foo_lccdf(int y, real lambda) {
     return 1.0;
   }
+  real foo_rng(real mu, real sigma) {
+    return normal_rng(mu, sigma);
+  }
 
   void unit_normal_lp(real u) {
     increment_log_prob(normal_log(u,0,1));
@@ -277,11 +280,31 @@ functions {
     matrix[40,50] ar_mat[60,70];
     ar_mat[1,1,1,1] = b;
   }
-  /* matrix foo_return_mat() { */
-  /*   return [ [1,2,3,4,5,6,7,8,9,10] */
-  /*            , [1,2,3,4,5,6,7,8,9,10] */
-  /*            , [1,2,3,4,5,6,7,8,9,10] ]; */
-  /* } */
+  matrix matfoo() {
+    return [ [1,2,3,4,5,6,7,8,9,10]
+             , [1,2,3,4,5,6,7,8,9,10]
+             , [1,2,3,4,5,6,7,8,9,10] ];
+  }
+  vector vecfoo() {
+    return [1,2,3,4,5,6,7,8,9,10]';
+  }
+  vector vecmufoo(real mu) {
+    vector[10] l = mu * vecfoo();
+    return l;
+  }
+  vector vecmubar(real mu) {
+    vector[10] l = mu * [1,2,3,4,5,6,7,8,9,10]';
+    return l[{1,2,3,4,5}];
+  }
+  vector algebra_system(vector x,
+                        vector y,
+                        real[] dat,
+                        int[] dat_int) {
+    vector[2] f_x;
+    f_x[1] = x[1] - y[1];
+    f_x[2] = x[2] - y[2];
+    return f_x;
+  }
 }
 data {
   int<lower=0> N;
@@ -319,6 +342,10 @@ transformed data {
   simplex[N] td_3d_simplex[N,M,K];
   cholesky_factor_cov[5,5] td_cfcov_54; // TODO: Change to 5,4
   cholesky_factor_cov[3] td_cfcov_33;
+  vector[2] x;
+  vector[2] y;
+  real dat[0];
+  int dat_int[0];
   td_int = 1 || 2;
   td_int = 1 && 2;
   for (i in 1:2) {
@@ -371,6 +398,8 @@ parameters {
   cholesky_factor_cov[5,4] p_cfcov_54;
   cholesky_factor_cov[3] p_cfcov_33;
   cholesky_factor_cov[3] p_cfcov_33_ar[K];
+  vector[2] x_p;
+  vector[2] y_p;
 }
 transformed parameters {
   real<lower=0> tp_real_1d_ar[N];
@@ -388,6 +417,7 @@ transformed parameters {
   cholesky_factor_cov[5,4] tp_cfcov_54;
   cholesky_factor_cov[3] tp_cfcov_33;
   cholesky_factor_cov[3] tp_cfcov_33_ar[K];
+  vector[2] theta_p;
 
   tp_real_1d_ar = p_real_1d_ar;
   tp_real_3d_ar = p_real_3d_ar;
@@ -412,6 +442,14 @@ transformed parameters {
   tp_row_vec = tp_1d_vec[1]';
   tp_1d_row_vec = p_1d_row_vec;
   tp_3d_row_vec = p_3d_row_vec;
+
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
 }
 model {
   real r1 = foo_bar1(p_real);
@@ -426,10 +464,10 @@ model {
     to_vector(p_1d_simplex[n]) ~ normal(0, 1);
     for (m in 1:M) {
       for (k in 1:K) {
-        to_vector(p_3d_vec[n, m, k]) ~ normal(0, 1);
-        to_vector(p_3d_row_vec[n, m, k]) ~ normal(0, 1);
-        to_vector(p_3d_simplex[n, m, k]) ~ normal(0, 1);
-        p_real_3d_ar[n, m, k] ~ normal(0, 1);
+        to_vector(p_3d_vec[n, m, k]) ~ normal(d_3d_vec[n, m, k], 1);
+        to_vector(p_3d_row_vec[n, m, k]) ~ normal(d_3d_row_vec[n, m, k], 1);
+        to_vector(p_3d_simplex[n, m, k]) ~ normal(d_3d_simplex[n, m, k], 1);
+        p_real_3d_ar[n, m, k] ~ normal(p_real_3d_ar[n, m, k], 1);
       }
     }
   }
@@ -441,7 +479,7 @@ model {
   for (k in 1:K) {
     to_vector(p_cfcov_33_ar[k]) ~ normal(0, 1);
   }
-  to_vector(p_vec) ~ normal(0, 1);
+  to_vector(p_vec) ~ normal(d_vec, 1);
   to_vector(p_row_vec) ~ normal(0, 1);
   to_vector(p_simplex) ~ normal(0, 1);
   to_vector(p_cfcov_54) ~ normal(0, 1);
@@ -499,7 +537,6 @@ generated quantities {
           gq_ar_mat[m, n, i, j] = 0.4;}}}}
 
   for (i in 1:N) gq_vec[i] = -1.0 * p_vec[i];
-
 
   // A fun thing about Stan is that we can test syntactic sugar in Stan itself:
   for (i in 1:3)

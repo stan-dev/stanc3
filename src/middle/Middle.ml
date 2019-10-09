@@ -9,7 +9,6 @@ include Mir_utils
 open Core_kernel
 module Validation = Validation
 module Pretty = Mir_pretty_printer
-module Utils = Utils
 
 (* -- Locations and spans --------------------------------------------------- *)
 
@@ -229,8 +228,8 @@ let%expect_test "making vector for loop" =
       (Block
        ((NRFunApp StanLib print ((Indexed (Var hi) ((Single (Var sym1__)))))))))) |}]
 
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
+(** [for_scalar sizedtype bodyfn var smeta] generates a For statement that loops
+    over the scalars in the underlying [sizedtype].
 
     We can call [bodyfn] directly on scalars, make a direct For loop
     around Eigen types, or for Arrays we call mkfor but inserting a
@@ -325,3 +324,15 @@ let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
+
+let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
+
+let all_but_last_n l n =
+  List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->
+      if n = 0 then (ele :: accum, n) else (accum, n - 1) )
+  |> fst
+
+let%expect_test "all but last n" =
+  let l = all_but_last_n [1; 2; 3; 4] 2 in
+  print_s [%sexp (l : int list)] ;
+  [%expect {| (1 2) |}]

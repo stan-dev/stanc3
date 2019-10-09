@@ -25,9 +25,10 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
 let is_matrix e = e.emeta.mtype = UMatrix
 let is_row_vector e = e.emeta.mtype = URowVector
-
-(* stub *)
 let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
+
+let pp_call ppf (name, pp_arg, args) =
+  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let rec stantype_prim_str = function
   | UInt -> "int"
@@ -71,12 +72,32 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
 
-let suffix_args f =
-  if ends_with "_rng" f then ["base_rng__"]
-  else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
-  else []
+let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
 
-let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
+let ends_with_any suffices s =
+  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
+
+let is_user_dist s =
+  ends_with_any user_dist_suffices s
+  && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
+
+let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
+
+let demangle_propto_name udf f =
+  if f = "multiply_log" || f = "binomial_coefficient_log" then f
+  else if is_propto_distribution f then
+    stdlib_distribution_name f ^ "<propto__>"
+  else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
+  else f
+
+let fn_renames =
+  List.map
+    ~f:(fun (k, v) -> (string_of_internal_fn k, v))
+    [ (FnLength, "stan::length")
+    ; (FnNegInf, "stan::math::negative_infinity")
+    ; (FnResizeToMatch, "resize_to_match")
+    ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
+  |> String.Map.of_alist_exn
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -160,19 +181,15 @@ and gen_misc_special_math_app f =
   | "max" | "min" ->
       Some
         (fun ppf es ->
-          if List.length es = 2 then pp_binary_f ppf f es
-          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
+          let f = match es with [_; _] -> "std::" ^ f | _ -> f in
+          pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
       Some
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
-  | f when f = string_of_internal_fn FnLength ->
-      Some (fun ppf -> gen_fun_app ppf "stan::length")
-  | f when f = string_of_internal_fn FnResizeToMatch ->
-      Some (fun ppf -> gen_fun_app ppf "resize_to_match")
-  | f when f = string_of_internal_fn FnNegInf ->
-      Some (fun ppf -> gen_fun_app ppf "stan::math::negative_infinity")
+          else pp_call ppf (f, pp_expr, es) )
+  | f when Map.mem fn_renames f ->
+      Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
 
 and read_data ut ppf es =
@@ -187,38 +204,50 @@ and read_data ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
-and gen_distribution_app f =
-  if Utils.is_propto_distribution f then
-    Some
-      (fun ppf ->
-        pf ppf "%s<propto__>(@[<hov>%a@])"
-          (Utils.stdlib_distribution_name f)
-          (list ~sep:comma pp_expr) )
-  else if Utils.is_distribution_name f then
-    Some
-      (fun ppf -> pf ppf "%s<false>(@[<hov>%a@])" f (list ~sep:comma pp_expr))
-  else None
-
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
+    let to_var s = {expr= Var s; emeta= internal_meta} in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
           {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
-    let extra =
-      (suffix_args f @ if es = converted_es then [] else ["pstream__"])
-      |> List.map ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+    let extra = suffix_args f |> List.map ~f:to_var in
+    let is_hof_call = not (converted_es = es) in
+    let msgs = "pstream__" |> to_var in
+    (* Here, because these signatures are written in C++ such that they
+       wanted to have optional arguments and piggyback on C++ default
+       arguments and not write the necessary overloads, we have to
+       reorder the arguments as pstream__ does not always come last
+       in a way that is specific to the function name. If you are a C++
+       developer please don't add more of these - just add the
+       overloads.
+    *)
+    let args =
+      match (is_hof_call, f, converted_es @ extra) with
+      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
+          f :: x :: y :: dat :: datint :: msgs :: tl
+      | ( true
+        , "integrate_ode_bdf"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
+       |( true
+        , "integrate_ode_adams"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
+       |( true
+        , "integrate_ode_rk45"
+        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
+          f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl
+      | true, _, args -> args @ [msgs]
+      | false, _, args -> args
     in
-    pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) (converted_es @ extra)
+    let f = stan_namespace_qualify f |> demangle_propto_name false in
+    pp_call ppf (f, pp_expr, args)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
-    ; gen_misc_special_math_app f
-    ; gen_distribution_app f ]
+    ; gen_misc_special_math_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
@@ -229,29 +258,43 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
         (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
-and pp_ordinary_fn ppf f es =
-  let extra_args = gen_extra_fun_args f in
+and pp_user_defined_fun ppf (f, es) =
+  let extra_args =
+    suffix_args f
+    @ (if is_user_dist f then ["lp__"; "lp_accum__"] else [])
+    @ ["pstream__"]
+  in
   let sep = if List.is_empty es then "" else ", " in
-  pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
+  pf ppf "%s(@[<hov>%a%s@])"
+    (demangle_propto_name true f)
+    (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn ut f ppf es =
-  let array_literal ppf es =
+and pp_compiler_internal_fn adlevel ut f ppf es =
+  let pp_array_literal ppf es =
     pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   in
   match internal_fn_of_string f with
-  | Some FnMakeArray -> array_literal ppf es
+  | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
-    match ut with
-    | URowVector -> pf ppf "stan::math::to_row_vector(%a)" array_literal es
-    | UMatrix ->
-        pf ppf "stan::math::to_matrix<%s>(%a)"
-          (local_scalar ut (promote_adtype es))
-          array_literal es
-    | _ ->
-        raise_s
-          [%message
-            "Unexpected type for row vector literal" (ut : unsizedtype)] )
+      let pp_wrapper ppf es =
+        match (es, adlevel) with
+        | {emeta= {mtype= UReal; _}; _} :: _, DataOnly ->
+            pf ppf "to_doubles__(%a)" pp_array_literal es
+        | {emeta= {mtype= UReal; _}; _} :: _, AutoDiffable ->
+            pf ppf "to_vars__(%a)" pp_array_literal es
+        | _ -> pp_array_literal ppf es
+      in
+      match ut with
+      | URowVector -> pf ppf "stan::math::to_row_vector(%a)" pp_wrapper es
+      | UMatrix ->
+          pf ppf "stan::math::to_matrix<%s>(%a)"
+            (local_scalar ut (promote_adtype es))
+            pp_array_literal es
+      | _ ->
+          raise_s
+            [%message
+              "Unexpected type for row vector literal" (ut : unsizedtype)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
@@ -297,8 +340,9 @@ and pp_expr ppf e =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
-  | FunApp (UserDefined, f, es) -> pp_ordinary_fn ppf f es
+      pp_compiler_internal_fn e.emeta.madlevel e.emeta.mtype
+        (stan_namespace_qualify f) ppf es
+  | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->

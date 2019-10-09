@@ -216,6 +216,25 @@
           (smeta <opaque>)))))
       (smeta <opaque>)))
     (fdloc <opaque>))
+   ((fdrt (UReal)) (fdname foo_rng)
+    (fdargs ((AutoDiffable mu UReal) (AutoDiffable sigma UReal)))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Return
+            (((expr
+               (FunApp StanLib normal_rng
+                (((expr (Var mu))
+                  (emeta
+                   ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                 ((expr (Var sigma))
+                  (emeta
+                   ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+              (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
    ((fdrt ()) (fdname unit_normal_lp) (fdargs ((AutoDiffable u UReal)))
     (fdbody
      ((stmt
@@ -1717,6 +1736,381 @@
              (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
           (smeta <opaque>)))))
       (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UMatrix)) (fdname matfoo) (fdargs ())
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Return
+            (((expr
+               (FunApp CompilerInternal FnMakeRowVec__
+                (((expr
+                   (FunApp CompilerInternal FnMakeRowVec__
+                    (((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 3))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 4))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 5))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 6))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 7))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 8))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 9))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 10))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                  (emeta
+                   ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr
+                   (FunApp CompilerInternal FnMakeRowVec__
+                    (((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 3))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 4))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 5))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 6))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 7))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 8))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 9))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 10))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                  (emeta
+                   ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr
+                   (FunApp CompilerInternal FnMakeRowVec__
+                    (((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 3))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 4))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 5))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 6))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 7))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 8))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 9))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 10))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                  (emeta
+                   ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly)))))))
+              (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UVector)) (fdname vecfoo) (fdargs ())
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Return
+            (((expr
+               (FunApp StanLib Transpose__
+                (((expr
+                   (FunApp CompilerInternal FnMakeRowVec__
+                    (((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 3))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 4))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 5))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 6))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 7))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 8))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 9))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                     ((expr (Lit Int 10))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                  (emeta
+                   ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly)))))))
+              (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UVector)) (fdname vecmufoo) (fdargs ((AutoDiffable mu UReal)))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id l)
+            (decl_type
+             (Sized
+              (SVector
+               ((expr (Lit Int 10))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (l UVector ())
+            ((expr
+              (FunApp StanLib Times__
+               (((expr (Var mu))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                ((expr (FunApp UserDefined vecfoo ()))
+                 (emeta
+                  ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta
+              ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+          (smeta <opaque>))
+         ((stmt
+           (Return
+            (((expr (Var l))
+              (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UVector)) (fdname vecmubar) (fdargs ((AutoDiffable mu UReal)))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id l)
+            (decl_type
+             (Sized
+              (SVector
+               ((expr (Lit Int 10))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment (l UVector ())
+            ((expr
+              (FunApp StanLib Times__
+               (((expr (Var mu))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                ((expr
+                  (FunApp StanLib Transpose__
+                   (((expr
+                      (FunApp CompilerInternal FnMakeRowVec__
+                       (((expr (Lit Int 1))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 2))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 3))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 4))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 5))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 6))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 7))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 8))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 9))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                        ((expr (Lit Int 10))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                     (emeta
+                      ((mtype URowVector) (mloc <opaque>)
+                       (madlevel DataOnly)))))))
+                 (emeta
+                  ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+             (emeta
+              ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+          (smeta <opaque>))
+         ((stmt
+           (Return
+            (((expr
+               (Indexed
+                ((expr (Var l))
+                 (emeta
+                  ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+                ((MultiIndex
+                  ((expr
+                    (FunApp CompilerInternal FnMakeArray__
+                     (((expr (Lit Int 1))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                      ((expr (Lit Int 2))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                      ((expr (Lit Int 3))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                      ((expr (Lit Int 4))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                      ((expr (Lit Int 5))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                   (emeta
+                    ((mtype (UArray UInt)) (mloc <opaque>)
+                     (madlevel DataOnly))))))))
+              (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UVector)) (fdname algebra_system)
+    (fdargs
+     ((AutoDiffable x UVector) (AutoDiffable y UVector)
+      (AutoDiffable dat (UArray UReal)) (AutoDiffable dat_int (UArray UInt))))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id f_x)
+            (decl_type
+             (Sized
+              (SVector
+               ((expr (Lit Int 2))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment
+            (f_x UVector
+             ((Single
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+            ((expr
+              (FunApp StanLib Minus__
+               (((expr
+                  (Indexed
+                   ((expr (Var x))
+                    (emeta
+                     ((mtype UVector) (mloc <opaque>)
+                      (madlevel AutoDiffable))))
+                   ((Single
+                     ((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                ((expr
+                  (Indexed
+                   ((expr (Var y))
+                    (emeta
+                     ((mtype UVector) (mloc <opaque>)
+                      (madlevel AutoDiffable))))
+                   ((Single
+                     ((expr (Lit Int 1))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment
+            (f_x UVector
+             ((Single
+               ((expr (Lit Int 2))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+            ((expr
+              (FunApp StanLib Minus__
+               (((expr
+                  (Indexed
+                   ((expr (Var x))
+                    (emeta
+                     ((mtype UVector) (mloc <opaque>)
+                      (madlevel AutoDiffable))))
+                   ((Single
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                ((expr
+                  (Indexed
+                   ((expr (Var y))
+                    (emeta
+                     ((mtype UVector) (mloc <opaque>)
+                      (madlevel AutoDiffable))))
+                   ((Single
+                     ((expr (Lit Int 2))
+                      (emeta
+                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                 (emeta
+                  ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+          (smeta <opaque>))
+         ((stmt
+           (Return
+            (((expr (Var f_x))
+              (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
     (fdloc <opaque>))))
  (input_vars
   ((N SInt) (M SInt) (K SInt)
@@ -2196,6 +2590,38 @@
          ((expr (Lit Int 3))
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
          ((expr (Lit Int 3))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id x)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id y)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id dat)
+      (decl_type
+       (Sized
+        (SArray SReal
+         ((expr (Lit Int 0))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id dat_int)
+      (decl_type
+       (Sized
+        (SArray SInt
+         ((expr (Lit Int 0))
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
@@ -4153,6 +4579,22 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
+     (Decl (decl_adtype AutoDiffable) (decl_id x_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype AutoDiffable) (decl_id y_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_1d_ar)
       (decl_type
        (Sized
@@ -4329,6 +4771,14 @@
           ((expr (Lit Int 3))
            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
          ((expr (Var K))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype AutoDiffable) (decl_id theta_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
@@ -4548,6 +4998,198 @@
        (emeta
         ((mtype (UArray (UArray (UArray URowVector)))) (mloc <opaque>)
          (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
     (smeta <opaque>))
    ((stmt
      (For (loopvar sym2__)
@@ -5206,9 +5848,32 @@
                                        (emeta
                                         ((mtype UVector) (mloc <opaque>)
                                          (madlevel AutoDiffable))))
-                                      ((expr (Lit Int 0))
+                                      ((expr
+                                        (Indexed
+                                         ((expr (Var d_3d_vec))
+                                          (emeta
+                                           ((mtype
+                                             (UArray
+                                              (UArray (UArray UVector))))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var n))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var m))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var k))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
-                                        ((mtype UInt) (mloc <opaque>)
+                                        ((mtype UVector) (mloc <opaque>)
                                          (madlevel DataOnly))))
                                       ((expr (Lit Int 1))
                                        (emeta
@@ -5259,9 +5924,32 @@
                                        (emeta
                                         ((mtype UVector) (mloc <opaque>)
                                          (madlevel AutoDiffable))))
-                                      ((expr (Lit Int 0))
+                                      ((expr
+                                        (Indexed
+                                         ((expr (Var d_3d_row_vec))
+                                          (emeta
+                                           ((mtype
+                                             (UArray
+                                              (UArray (UArray URowVector))))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var n))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var m))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var k))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
-                                        ((mtype UInt) (mloc <opaque>)
+                                        ((mtype URowVector) (mloc <opaque>)
                                          (madlevel DataOnly))))
                                       ((expr (Lit Int 1))
                                        (emeta
@@ -5310,9 +5998,32 @@
                                        (emeta
                                         ((mtype UVector) (mloc <opaque>)
                                          (madlevel AutoDiffable))))
-                                      ((expr (Lit Int 0))
+                                      ((expr
+                                        (Indexed
+                                         ((expr (Var d_3d_simplex))
+                                          (emeta
+                                           ((mtype
+                                             (UArray
+                                              (UArray (UArray UVector))))
+                                            (mloc <opaque>)
+                                            (madlevel DataOnly))))
+                                         ((Single
+                                           ((expr (Var n))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var m))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var k))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
-                                        ((mtype UInt) (mloc <opaque>)
+                                        ((mtype UVector) (mloc <opaque>)
                                          (madlevel DataOnly))))
                                       ((expr (Lit Int 1))
                                        (emeta
@@ -5352,10 +6063,32 @@
                                        (emeta
                                         ((mtype UReal) (mloc <opaque>)
                                          (madlevel AutoDiffable))))
-                                      ((expr (Lit Int 0))
+                                      ((expr
+                                        (Indexed
+                                         ((expr (Var p_real_3d_ar))
+                                          (emeta
+                                           ((mtype
+                                             (UArray (UArray (UArray UReal))))
+                                            (mloc <opaque>)
+                                            (madlevel AutoDiffable))))
+                                         ((Single
+                                           ((expr (Var n))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var m))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly)))))
+                                          (Single
+                                           ((expr (Var k))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))))
                                        (emeta
-                                        ((mtype UInt) (mloc <opaque>)
-                                         (madlevel DataOnly))))
+                                        ((mtype UReal) (mloc <opaque>)
+                                         (madlevel AutoDiffable))))
                                       ((expr (Lit Int 1))
                                        (emeta
                                         ((mtype UInt) (mloc <opaque>)
@@ -5495,8 +6228,8 @@
                     ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable)))))))
                (emeta
                 ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
-              ((expr (Lit Int 0))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+              ((expr (Var d_vec))
+               (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
               ((expr (Lit Int 1))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
            (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
@@ -6330,6 +7063,22 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id x_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id y_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
      (Decl (decl_adtype DataOnly) (decl_id tp_real_1d_ar)
       (decl_type
        (Sized
@@ -6506,6 +7255,14 @@
           ((expr (Lit Int 3))
            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
          ((expr (Var K))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id theta_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
@@ -6739,6 +7496,198 @@
        (emeta
         ((mtype (UArray (UArray (UArray URowVector)))) (mloc <opaque>)
          (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+    (smeta <opaque>))
+   ((stmt
+     (Assignment (theta_p UVector ())
+      ((expr
+        (FunApp StanLib algebra_solver
+         (((expr (Var algebra_system))
+           (emeta
+            ((mtype
+              (UFun
+               ((AutoDiffable UVector) (AutoDiffable UVector)
+                (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
+               (ReturnType UVector)))
+             (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var x_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var y_p))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+          ((expr (Var dat))
+           (emeta
+            ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Var dat_int))
+           (emeta
+            ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Real 0.01))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+          ((expr (Lit Int 10))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+       (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
     (smeta <opaque>))
    ((stmt
      (IfElse
@@ -9063,6 +10012,22 @@
                (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly))))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id x_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id y_p)
+      (decl_type
+       (Sized
+        (SVector
+         ((expr (Lit Int 2))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))))
  (output_vars
   ((p_real
@@ -9514,6 +10479,26 @@
        ((expr (Var K))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block Parameters) (out_trans CholeskyCov)))
+   (x_p
+    ((out_unconstrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (y_p
+    ((out_unconstrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
    (tp_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -9944,6 +10929,16 @@
        ((expr (Var K))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans CholeskyCov)))
+   (theta_p
+    ((out_unconstrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_constrained_st
+      (SVector
+       ((expr (Lit Int 2))
+        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (gq_r1
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block GeneratedQuantities) (out_trans Identity)))
@@ -10564,27 +11559,27 @@
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
 
-Warning: deprecated language construct used in 'mother.stan', line 60, column 21:
+Warning: deprecated language construct used in 'mother.stan', line 63, column 21:
    -------------------------------------------------
-    58:  
-    59:    void unit_normal_lp(real u) {
-    60:      increment_log_prob(normal_log(u,0,1));
+    61:  
+    62:    void unit_normal_lp(real u) {
+    63:      increment_log_prob(normal_log(u,0,1));
                               ^
-    61:      u ~ uniform(-100,100);
-    62:    }
+    64:      u ~ uniform(-100,100);
+    65:    }
    -------------------------------------------------
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in 'mother.stan', line 184, column 20:
+Warning: deprecated language construct used in 'mother.stan', line 187, column 20:
    -------------------------------------------------
-   182:  
-   183:    real foo_lp(real x) {
-   184:      return x + get_lp();
+   185:  
+   186:    real foo_lp(real x) {
+   187:      return x + get_lp();
                              ^
-   185:    }
-   186:  
+   188:    }
+   189:  
    -------------------------------------------------
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.

@@ -2,7 +2,6 @@ open Core_kernel
 include module type of Mir
 module Pretty : module type of Mir_pretty_printer
 module Validation : module type of Validation
-module Utils : module type of Utils
 
 val string_of_location :
   ?print_file:bool -> ?print_line:bool -> location -> string
@@ -121,6 +120,8 @@ val for_eigen :
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
 
+val pull_indices : 'a with_expr -> 'a with_expr index list
+
 val assign_indexed :
      unsizedtype
   -> string
@@ -134,3 +135,9 @@ val eigen_size :
 
 val cleanup_empty_stmts : ('e, 's) stmt_with list -> ('e, 's) stmt_with list
 val map_prog_stmts : ('s list -> 's list) -> ('e, 's) prog -> ('e, 's) prog
+val is_user_ident : string -> bool
+val is_propto_distribution : string -> bool
+val stdlib_distribution_name : string -> string
+val distribution_suffices : string list
+val is_distribution_name : ?infix:string -> string -> bool
+val proportional_to_distribution_infix : string

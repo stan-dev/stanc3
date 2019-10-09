@@ -29,13 +29,11 @@ let pp_function__ ppf (prog_name, fname) =
     (strf "%s_namespace::%s" prog_name fname) ;
   pp_unused ppf "function__"
 
-let pp_located_msg ppf msg =
+let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%S) + ": " + e.what()), locations_array__[current_statement__]);
+    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
-    msg
 
 let maybe_templated_arg_types (args : fun_arg_decl list) =
   let is_autodiff (adtype, _, _) =
@@ -77,10 +75,10 @@ let pp_returntype ppf arg_types rt =
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
-let pp_located_error ppf (pp_body_block, body, err_msg) =
+let pp_located_error ppf (pp_body_block, body) =
   pf ppf "@ try %a" pp_body_block body ;
   string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
+  pp_block ppf (pp_located, ())
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
@@ -90,22 +88,27 @@ let to_indexed assignee idcs =
   ; emeta= internal_meta }
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
-let pp_located_error_b ppf (body_stmts, err_msg) =
+let pp_located_error_b ppf body_stmts =
   pp_located_error ppf
-    ( pp_statement
-    , {stmt= Block body_stmts; smeta= Locations.no_span_num}
-    , err_msg )
+    (pp_statement, {stmt= Block body_stmts; smeta= Locations.no_span_num})
 
+(* XXX refactor this please - one idea might be to have different functions for
+   printing user defined distributions vs rngs vs regular functions.
+*)
 let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
-  let extra =
-    if String.is_suffix fdname ~suffix:"_lp" then
-      List.map ~f:(fun n -> (AutoDiffable, n, UReal)) ["lp__"; "lp_accum__"]
-    else []
+  let is_dist = is_user_dist fdname in
+  let is_rng = String.is_suffix fdname ~suffix:"_rng" in
+  let extra = if is_dist then ["lp__"; "lp_accum__"] else [] in
+  let prefix_extra_templates, prefix_extra_args =
+    if is_rng then (["RNG"], ["base_rng__"]) else ([], [])
   in
-  let fdargs = fdargs @ extra in
   let argtypetemplates =
     (* TODO: If one contains ints, we don't need to template it *)
     List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
+  in
+  let extra_templates = List.map ~f:(( ^ ) "T_") extra in
+  let mk_extra_args templates args =
+    List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
   in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
@@ -113,26 +116,31 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       argtypetemplates ;
     text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
     (* needed?*)
-    text "const static bool propto__ = true;" ;
-    text "(void) propto__;" ;
+    if not is_dist then (
+      text "const static bool propto__ = true;" ;
+      text "(void) propto__;" ) ;
     text
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
-    pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
+    pp_located_error ppf (pp_statement, fdbody) ;
     pf ppf "@ "
   in
+  let templates =
+    (if is_dist then ["bool propto__"] else [])
+    @ List.map ~f:(( ^ ) "typename ")
+        (prefix_extra_templates @ argtypetemplates @ extra_templates)
+  in
   let pp_sig ppf name =
-    ( match argtypetemplates with
+    ( match templates with
     | [] -> ()
-    | a ->
-        pf ppf "@[<hov>template <%a>@]@ "
-          (list ~sep:comma (fmt "typename %s"))
-          a ) ;
+    | a -> pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) a ) ;
     pp_returntype ppf fdargs fdrt ;
     let arg_strs =
-      List.map
-        ~f:(fun a -> strf "%a" pp_arg a)
-        (List.zip_exn argtypetemplates fdargs)
+      mk_extra_args prefix_extra_templates prefix_extra_args
+      @ List.map
+          ~f:(fun a -> strf "%a" pp_arg a)
+          (List.zip_exn argtypetemplates fdargs)
+      @ mk_extra_args extra_templates extra
       @ ["std::ostream* pstream__"]
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
@@ -144,7 +152,10 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
         fdname pp_sig "operator()" pp_call_str
-        (fdname, List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"])
+        ( fdname
+        , prefix_extra_args
+          @ List.map ~f:(fun (_, name, _) -> name) fdargs
+          @ extra @ ["pstream__"] )
 
 let version = "// Code generated by %%NAME%% %%VERSION%%"
 let includes = "#include <stan/model/model_header.hpp>"
@@ -213,9 +224,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error ppf
-          ( pp_block
-          , (list ~sep:cut pp_stmt_topdecl_size_only, p.prepare_data)
-          , "inside ctor" ) ;
+          (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, p.prepare_data)) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
@@ -266,7 +275,7 @@ let pp_get_dims ppf p =
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
   pp_method ppf rt name params intro
-    (fun ppf -> pp_located_error_b ppf (body, "inside " ^ name))
+    (fun ppf -> pp_located_error_b ppf body)
     ~outro
 
 let pp_write_array ppf p =
@@ -282,7 +291,10 @@ let pp_write_array ppf p =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (p.prog_name, "write_array")
-    ; strf "%a" pp_unused "function__" ]
+    ; strf "%a" pp_unused "function__"
+    ; "double lp__ = 0.0;"
+    ; "(void) lp__;  // dummy to suppress unused var warning"
+    ; "stan::math::accumulator<double> lp_accum__;" ]
   in
   pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 
@@ -522,7 +534,6 @@ using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::assign;
 using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
@@ -533,41 +544,49 @@ using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math; |}
 
-let pre_boilerplate =
+(* XXX probably move these to the Stan repo when these repos are joined. *)
+let custom_functions =
   {|
 template <typename T, typename S>
-std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, -1>
-resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, 1, -1>
-resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
   dst.resize(src.size());
   return dst;
 }
 
 template <typename T>
 Eigen::Matrix<T, -1, 1>
-resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
   dst.resize(src.size());
   return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
 }
 |}
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  pf ppf "@[<v>@ %s@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes pre_boilerplate p.prog_name usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ %a@ }@ @]"
+    version includes p.prog_name custom_functions usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf

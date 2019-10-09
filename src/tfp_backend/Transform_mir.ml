@@ -4,9 +4,9 @@ open Middle
 let dist_prefix = "tfd__."
 
 let remove_stan_dist_suffix s =
-  let s = Utils.stdlib_distribution_name s in
+  let s = stdlib_distribution_name s in
   List.filter_map
-    (("_rng" :: Utils.distribution_suffices) @ [""])
+    (("_rng" :: distribution_suffices) @ [""])
     ~f:(fun suffix -> String.chop_suffix ~suffix s)
   |> List.hd_exn
 
@@ -24,9 +24,7 @@ let rec translate_funapps {expr; emeta} =
   let e expr = {expr; emeta} in
   match expr with
   | FunApp (StanLib, fname, args) ->
-      let prefix =
-        if Utils.is_distribution_name fname then dist_prefix else ""
-      in
+      let prefix = if is_distribution_name fname then dist_prefix else "" in
       let fname = remove_stan_dist_suffix fname in
       let fname, args = map_functions fname args in
       FunApp (StanLib, prefix ^ fname, args) |> e

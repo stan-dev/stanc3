@@ -134,13 +134,13 @@ let constrainaction_fname c =
 
 type decl_context = {dconstrain: constrainaction option; dadlevel: autodifftype}
 
-let constraint_to_string t (c : constrainaction) =
+let check_constraint_to_string t (c : constrainaction) =
   match t with
   | Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
   | Simplex -> "simplex"
   | UnitVector -> "unit_vector"
-  | CholeskyCorr -> "cholesky_corr"
+  | CholeskyCorr -> "cholesky_factor_corr"
   | CholeskyCov -> "cholesky_factor"
   | Correlation -> "corr_matrix"
   | Covariance -> "cov_matrix"
@@ -160,6 +160,11 @@ let constraint_to_string t (c : constrainaction) =
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
 
+let constrain_constraint_to_string t (c : constrainaction) =
+  match t with
+  | CholeskyCorr -> "cholesky_corr"
+  | _ -> check_constraint_to_string t c
+
 let constraint_forl = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
    |Upper _ | LowerUpper _ ->
@@ -169,7 +174,9 @@ let constraint_forl = function
       for_eigen
 
 let extract_transform_args = function
-  | Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | Lower a | Upper a -> [a]
+  | Offset a -> [{a with expr= Lit (Int, "0")}; a]
+  | Multiplier a -> [a; {a with expr= Lit (Int, "1")}]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
@@ -238,7 +245,7 @@ let remove_possibly_exn pst action loc =
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
   let st = remove_possibly_exn decl_type "constrain" smeta in
   let mkstring = mkstring decl_var.emeta.mloc in
-  match Option.map ~f:(constraint_to_string t) dconstrain with
+  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
   | None | Some "" -> []
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
@@ -284,7 +291,8 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
   | LowerUpper (lb, ub) ->
       check_decl decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl decl_type' decl_id (Upper ub) smeta adlevel
-  | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
+  | _ ->
+      [chk (mkstring smeta (check_constraint_to_string decl_trans Check)) args]
 
 let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     initial_value =
@@ -305,8 +313,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
       rhs
     |> Option.to_list
   in
-  if String.is_suffix ~suffix:"__" decl_id then decl :: rhs_assignment
-  else
+  if is_user_ident decl_id then
     let checks =
       match dconstrain with
       | Some Check -> check_decl dt decl_id transform smeta dadlevel
@@ -319,6 +326,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
       | _ -> []
     in
     (decl :: rhs_assignment) @ constrain_stmts @ checks
+  else decl :: rhs_assignment
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
@@ -328,7 +336,7 @@ let unwrap_block_or_skip = function
 let dist_name_suffix udf_names name =
   let is_udf_name s = List.exists ~f:(( = ) s) udf_names in
   match
-    Utils.distribution_suffices
+    Middle.distribution_suffices
     |> List.filter ~f:(fun sfx ->
            is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
        )
@@ -397,12 +405,21 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = dist_name_suffix udf_names distribution.name in
+      let kind =
+        let possible_names =
+          List.map ~f:(( ^ ) distribution.name)
+            ("" :: Middle.distribution_suffices)
+          |> String.Set.of_list
+        in
+        if List.exists ~f:(Set.mem possible_names) udf_names then UserDefined
+        else StanLib
+      in
       let name =
-        distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
+        distribution.name ^ Middle.proportional_to_distribution_infix ^ suffix
       in
       let add_dist =
         TargetPE
-          { expr= FunApp (StanLib, name, trans_exprs (arg :: args))
+          { expr= FunApp (kind, name, trans_exprs (arg :: args))
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}
           }
       in
