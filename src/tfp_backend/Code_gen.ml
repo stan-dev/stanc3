@@ -199,11 +199,23 @@ let pp_bijectors ppf p =
   in
   pp_method ppf "parameter_bijectors" ["self"] [] ppbody
 
+let pp_param_names ppf p =
+  let param_names =
+    List.filter_map
+      ~f:(function name, {out_block= Parameters; _} -> Some name | _ -> None)
+      p.output_vars
+  in
+  let ppbody ppf =
+    pf ppf "return [@[<hov>%a@]]" (list ~sep:comma (fmt "%S")) param_names
+  in
+  pp_method ppf "parameter_names" ["self"] [] ppbody
+
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_shapes p ;
-  pf ppf "@ %a" pp_bijectors p
+  pf ppf "@ %a" pp_bijectors p ;
+  pf ppf "@ %a" pp_param_names p
 
 let pp_fundef ppf {fdname; fdargs; fdbody; _} =
   pp_method ppf fdname
@@ -216,14 +228,15 @@ let imports =
 import numpy as np__
 import tensorflow as tf__
 import tensorflow_probability as tfp__
-tfd__ = tfp.distributions
-tfb__ = tfp.bijectors
+tfd__ = tfp__.distributions
+tfb__ = tfp__.bijectors
 from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : typed_prog) =
   pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
-    (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p
+    (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
+  pf ppf "@ model = %s" p.prog_name
 
 (* Major work to do:
 1. Work awareness of distributions and bijectors into the type system

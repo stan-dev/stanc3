@@ -1,10 +1,10 @@
 (rule
- (targets tfp.output)
+ (targets eight_schools.py.output)
  (deps (package stanc) (:stanfiles ../good/code-gen/eight_schools_ncp.stan))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} %{bin:stan2tfp} %{stanfiles}))))
+   (run %{bin:stan2tfp} %{stanfiles}))))
 
 (alias
  (name runtest)
- (action (diff tfp.expected tfp.output)))
+ (action (diff eight_schools.py eight_schools.py.output)))

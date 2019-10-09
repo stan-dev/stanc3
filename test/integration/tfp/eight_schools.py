@@ -1,10 +1,9 @@
-  $ ../../../../install/default/bin/stan2tfp ../good/code-gen/eight_schools_ncp.stan
 
 import numpy as np__
 import tensorflow as tf__
 import tensorflow_probability as tfp__
-tfd__ = tfp.distributions
-tfb__ = tfp.bijectors
+tfd__ = tfp__.distributions
+tfb__ = tfp__.bijectors
 from tensorflow.python.ops.parallel_for import pfor as pfor__
 
 class eight_schools_ncp_model(tfd__.Distribution):
@@ -51,3 +50,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
             tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
                          tfb__.Exp()]), tfb__.Identity()]
      
+  def parameter_names(self):
+    return ["mu", "tau", "theta_tilde"]
+     
+model = eight_schools_ncp_model
