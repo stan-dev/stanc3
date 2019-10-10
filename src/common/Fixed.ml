@@ -4,7 +4,7 @@ module type S = sig
   module Pattern : Pattern.S
 
   (** The fixed-point of `Pattern.t` *)
-  type 'a t = {meta: 'a; pattern: 'a t Pattern.t}
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
 
   val fix : 'a * 'a t Pattern.t -> 'a t
@@ -68,7 +68,7 @@ module type S = sig
 end
 
 module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
-  type 'a t = {meta: 'a; pattern: 'a t Pattern.t}
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
 
   let fix (meta, pattern) = {meta; pattern}
@@ -113,7 +113,7 @@ module type S2 = sig
   module First : S
   module Pattern : Pattern.S2
 
-  type ('a, 'b) t = {meta: 'b; pattern: ('a First.t, ('a, 'b) t) Pattern.t}
+  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, map, fold, hash, sexp]
 
   val fix : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
@@ -174,7 +174,7 @@ end
 
 module Make2 (First : S) (Pattern : Pattern.S2) :
   S2 with module First := First and module Pattern := Pattern = struct
-  type ('a, 'b) t = {meta: 'b; pattern: ('a First.t, ('a, 'b) t) Pattern.t}
+  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving map, fold, compare, hash, sexp]
 
   let unfix {meta; pattern} = (meta, pattern)

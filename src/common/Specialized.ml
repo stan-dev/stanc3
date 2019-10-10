@@ -41,9 +41,9 @@ module type Unspecialized2 = sig
 end
 
 module Make (X : Unspecialized) (Meta : Meta) :
-  S with type t = Meta.t X.t and module Meta := Meta = struct
+  S with type t = (Meta.t sexp_opaque[@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
-    type t = Meta.t X.t [@@deriving hash]
+    type t = (Meta.t sexp_opaque[@compare.ignore]) X.t [@@deriving hash]
 
     let pp ppf x = X.pp Meta.pp ppf x
     let compare x y = X.compare Meta.compare x y
@@ -63,9 +63,9 @@ module Make (X : Unspecialized) (Meta : Meta) :
 end
 
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
-  S with type t = (First.Meta.t, Meta.t) X.t and module Meta := Meta = struct
+  S with type t = (First.Meta.t sexp_opaque[@compare.ignore], Meta.t sexp_opaque[@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
-    type t = (First.Meta.t, Meta.t) X.t [@@deriving hash]
+    type t = (First.Meta.t sexp_opaque[@compare.ignore], Meta.t sexp_opaque[@compare.ignore]) X.t [@@deriving hash]
 
     let pp ppf x = X.pp First.Meta.pp Meta.pp ppf x
     let compare x y = X.compare First.Meta.compare Meta.compare x y
