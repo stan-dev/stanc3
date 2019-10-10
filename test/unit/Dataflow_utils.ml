@@ -54,11 +54,11 @@ let%expect_test "Loop test" =
        (3
         ((For (loopvar i)
           (lower
-           ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (upper
-           ((expr (Lit Int 2))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 4))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -72,13 +72,13 @@ let%expect_test "Loop test" =
            ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (5
         ((NRFunApp CompilerInternal FnPrint__
-          (((expr
+          (((pattern
              (FunApp StanLib Plus__
-              (((expr (Lit Int 3))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Int 4))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+              (((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 4))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 10) (included_from ())))
           (end_loc

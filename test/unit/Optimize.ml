@@ -249,16 +249,16 @@ let%expect_test "list collapsing" =
            (Block
             (((stmt
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var x))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-              (smeta <opaque>))
+                (((pattern (Var x))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (meta <opaque>))
              ((stmt
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var y))
-                  (emeta
-                   ((mtype UMatrix) (mloc <opaque>) (madlevel AutoDiffable)))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>)))
+                (((pattern (Var y))
+                  (meta
+                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              (meta <opaque>)))))
+          (meta <opaque>)))
         (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
@@ -266,15 +266,15 @@ let%expect_test "list collapsing" =
            (Block
             (((stmt
                (Return
-                (((expr
+                (((pattern
                    (FunApp StanLib Pow__
-                    (((expr (Var z))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                     ((expr (Lit Int 2))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>)))
+                    (((pattern (Var z))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              (meta <opaque>)))))
+          (meta <opaque>)))
         (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
@@ -283,122 +283,122 @@ let%expect_test "list collapsing" =
           (((stmt
              (For (loopvar sym1__)
               (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
                ((stmt
                  (Block
                   (((stmt
                      (NRFunApp CompilerInternal FnPrint__
-                      (((expr (Lit Int 3))
-                        (emeta
-                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>))
+                      (((pattern (Lit Int 3))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>))
                    ((stmt
                      (NRFunApp CompilerInternal FnPrint__
-                      (((expr
+                      (((pattern
                          (FunApp CompilerInternal FnMakeRowVec__
-                          (((expr
+                          (((pattern
                              (FunApp CompilerInternal FnMakeRowVec__
-                              (((expr (Lit Int 3))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly))))
-                               ((expr (Lit Int 2))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly)))))))
-                            (emeta
-                             ((mtype URowVector) (mloc <opaque>)
-                              (madlevel DataOnly))))
-                           ((expr
+                              (((pattern (Lit Int 3))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 2))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly))))
+                           ((pattern
                              (FunApp CompilerInternal FnMakeRowVec__
-                              (((expr (Lit Int 4))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly))))
-                               ((expr (Lit Int 6))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly)))))))
-                            (emeta
-                             ((mtype URowVector) (mloc <opaque>)
-                              (madlevel DataOnly)))))))
-                        (emeta
-                         ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
+                              (((pattern (Lit Int 4))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))
+                               ((pattern (Lit Int 6))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly)))))))
+                        (meta
+                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>))
            ((stmt
              (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
               (decl_type (Unsized UReal))))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (For (loopvar sym3__)
               (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
                ((stmt
                  (Block
                   (((stmt
                      (Assignment (sym4__ UReal ())
-                      ((expr
+                      ((pattern
                         (FunApp StanLib Pow__
-                         (((expr (Lit Int 53))
-                           (emeta
-                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                          ((expr (Lit Int 2))
-                           (emeta
-                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
-                    (smeta <opaque>))
-                   ((stmt Break) (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
+                         (((pattern (Lit Int 53))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 2))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((stmt Break) (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnReject__
-              (((expr (Var sym4__))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))))
+              (((pattern (Var sym4__))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+            (meta <opaque>)))))
+        (meta <opaque>))))
      (generate_quantities
       (((stmt
          (IfElse
-          ((expr (Var emit_transformed_parameters__))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt Skip) (smeta <opaque>)) (((stmt (Block ())) (smeta <opaque>)))))
-        (smeta <opaque>))
+          ((pattern (Var emit_transformed_parameters__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((stmt Skip) (meta <opaque>)) (((stmt (Block ())) (meta <opaque>)))))
+        (meta <opaque>))
        ((stmt
          (IfElse
-          ((expr
+          ((pattern
             (FunApp StanLib PNot__
-             (((expr
+             (((pattern
                 (EOr
-                 ((expr (Var emit_transformed_parameters__))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                 ((expr (Var emit_generated_quantities__))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt (Return ())) (smeta <opaque>)) ()))
-        (smeta <opaque>))
+                 ((pattern (Var emit_transformed_parameters__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Var emit_generated_quantities__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((stmt (Return ())) (meta <opaque>)) ()))
+        (meta <opaque>))
        ((stmt
          (IfElse
-          ((expr
+          ((pattern
             (FunApp StanLib PNot__
-             (((expr (Var emit_generated_quantities__))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt (Return ())) (smeta <opaque>)) ()))
-        (smeta <opaque>))))
+             (((pattern (Var emit_generated_quantities__))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((stmt (Return ())) (meta <opaque>)) ()))
+        (meta <opaque>))))
      (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
 
@@ -3145,15 +3145,15 @@ let%expect_test "block fixing" =
         (((stmt
            (IfElse
             ((expr (Lit Int 0))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((stmt
               (While
                ((expr (Lit Int 0))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-               ((stmt (Block ())) (smeta <opaque>))))
-             (smeta <opaque>))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((stmt (Block ())) (meta <opaque>))))
+             (meta <opaque>))
             ()))
-          (smeta <opaque>))))
+          (meta <opaque>))))
        (generate_quantities
         (((stmt
            (IfElse
@@ -3162,22 +3162,22 @@ let%expect_test "block fixing" =
                (((expr
                   (EOr
                    ((expr (Var emit_transformed_parameters__))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((expr (Var emit_generated_quantities__))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((stmt (Return ())) (smeta <opaque>)) ()))
-          (smeta <opaque>))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((stmt (Return ())) (meta <opaque>)) ()))
+          (meta <opaque>))
          ((stmt
            (IfElse
             ((expr
               (FunApp StanLib PNot__
                (((expr (Var emit_generated_quantities__))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((stmt (Return ())) (smeta <opaque>)) ()))
-          (smeta <opaque>))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((stmt (Return ())) (meta <opaque>)) ()))
+          (meta <opaque>))))
        (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
@@ -3348,100 +3348,100 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((stmt
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
-        (smeta <opaque>))
+        (meta <opaque>))
        ((stmt
          (Block
           (((stmt
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (Decl (decl_adtype AutoDiffable) (decl_id y)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (Decl (decl_adtype AutoDiffable) (decl_id z)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (Decl (decl_adtype DataOnly) (decl_id z_data)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (IfElse
               ((expr
                 (FunApp StanLib Greater__
                  (((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((expr (Lit Int 2))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((stmt
                 (Assignment (y UReal ())
                  ((expr
                    (FunApp StanLib Plus__
                     (((expr (Var y))
-                      (emeta
-                       ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                      (meta
+                       ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((expr (Var x))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-               (smeta <opaque>))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+               (meta <opaque>))
               (((stmt
                  (Assignment (y UReal ())
                   ((expr
                     (FunApp StanLib Plus__
                      (((expr (Var y))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((expr (Var w))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>)))))
+            (meta <opaque>))
            ((stmt
              (IfElse
               ((expr
                 (FunApp StanLib Greater__
                  (((expr (Lit Int 2))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((stmt
                 (Assignment (z UReal ())
                  ((expr (Var y))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-               (smeta <opaque>))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+               (meta <opaque>))
               ()))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (IfElse
               ((expr
                 (FunApp StanLib Greater__
                  (((expr (Lit Int 3))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((stmt
                 (Assignment (z_data UReal ())
                  ((expr (Var x))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-               (smeta <opaque>))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta <opaque>))
               ()))
-            (smeta <opaque>))
+            (meta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnPrint__
               (((expr (Var z))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-            (smeta <opaque>))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+            (meta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnPrint__
               (((expr (Var z_data))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))) |}]
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta <opaque>)))))
+        (meta <opaque>))) |}]
 
 let%expect_test "adlevel_optimization 2" =
   Gensym.reset_danger_use_cautiously () ;

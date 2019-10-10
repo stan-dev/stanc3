@@ -44,12 +44,10 @@ let parse parse_fun lexbuf =
         in
         Parsing
           ( message
-          , Option.value_exn
-              (Location_span.of_positions_opt
-                 (Lexing.lexeme_start_p
-                    (Stack.top_exn Preprocessor.include_stack))
-                 (Lexing.lexeme_end_p
-                    (Stack.top_exn Preprocessor.include_stack))) )
+          , Option.value_exn (Location_span.of_positions_opt
+              (Lexing.lexeme_start_p (Stack.top_exn Preprocessor.include_stack))
+              (Lexing.lexeme_end_p (Stack.top_exn Preprocessor.include_stack)))
+          )
         |> Result.Error
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
@@ -64,10 +62,7 @@ let parse parse_fun lexbuf =
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
             else ""
         in
-        Parsing
-          ( message
-          , Option.value_exn (Location_span.of_positions_opt start_pos end_pos)
-          )
+        Parsing (message, Location_span.of_positions_exn start_pos end_pos)
         |> Result.Error
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
