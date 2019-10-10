@@ -218,7 +218,7 @@ let use_file filename =
         opt )
       else tx_mir
     in
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 

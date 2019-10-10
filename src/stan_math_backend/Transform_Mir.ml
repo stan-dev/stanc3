@@ -385,12 +385,9 @@ let trans_prog (p : typed_prog) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let data_var_idents = List.map ~f:fst p.input_vars in
+      let switch_expr = switch_expr_to_opencl data_var_idents in
       let rec trans_stmt_to_opencl s =
-        { s with
-          stmt=
-            map_statement
-              (switch_expr_to_opencl data_var_idents)
-              trans_stmt_to_opencl s.stmt }
+        {s with stmt= map_statement switch_expr trans_stmt_to_opencl s.stmt}
       in
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
