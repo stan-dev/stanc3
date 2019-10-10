@@ -233,21 +233,23 @@ let fn_name_map =
 
 let rec map_fn_names s =
   let rec map_fn_names_expr e =
-    let expr =
-      match e.expr with
-      | FunApp (k, f, a) when Map.mem fn_name_map f ->
-          FunApp (k, Map.find_exn fn_name_map f, a)
-      | expr -> map_expr map_fn_names_expr expr
+    let pattern =
+      Expr.Fixed.(
+        match pattern_of e with
+        | FunApp (k, f, a) when Map.mem fn_name_map f ->
+            Pattern.FunApp (k, Map.find_exn fn_name_map f, a)
+        | expr -> Pattern.map map_fn_names_expr expr)
     in
-    {e with expr}
+    {e with pattern}
   in
   let stmt =
-    match s.stmt with
-    | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
-        NRFunApp (k, Map.find_exn fn_name_map f, a)
-    | stmt -> map_statement map_fn_names_expr map_fn_names stmt
+    Stmt.Fixed.(
+      match pattern_of s with
+      | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp (k, Map.find_exn fn_name_map f, a)
+      | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
-  {s with stmt}
+  {s with pattern= stmt}
 
 let rec insert_before f to_insert = function
   | [] -> to_insert
@@ -262,46 +264,58 @@ let%expect_test "insert before" =
 
 let make_fill vident st loc =
   let rhs =
-    internal_funapp FnNaN [] {mtype= UReal; mloc= loc; madlevel= DataOnly}
+    Expr.(
+      Helpers.internal_funapp FnNaN []
+      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
   in
-  let ut = remove_size st in
+  let ut = SizedType.to_unsized st in
   let var =
-    {expr= Var vident; emeta= {internal_meta with mtype= ut; mloc= loc}}
+    Expr.(
+      let meta = {Typed.Meta.empty with type_= ut; loc} in
+      Fixed.fix (meta, Var vident))
   in
   let bodyfn var =
-    {stmt= Assignment ((vident, ut, pull_indices var), rhs); smeta= loc}
+    Stmt.Fixed.
+      {pattern= Assignment ((vident, ut, pull_indices var), rhs); meta= loc}
   in
   for_scalar st bodyfn var loc
 
 let rec contains_eigen = function
-  | UArray t -> contains_eigen t
+  | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | _ -> false
 
 let rec add_fill no_fill_required = function
-  | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
+  | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
+    decl
     when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id
-         && (contains_eigen (remove_size st) || is_scalar st) ->
+         && Utils.is_user_ident decl_id
+         && (contains_eigen (SizedType.to_unsized st) || SizedType.is_scalar st)
+    ->
       (* I *think* we only need to initialize eigen types and scalars because we already construct
        std::vectors with 0s.
     *)
-      [decl; make_fill decl_id st smeta]
-  | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
+      [decl; make_fill decl_id st meta]
+  | {pattern= Decl {decl_id; decl_type= Unsized ut; _}; _}
     when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id && contains_eigen ut ->
+         && Utils.is_user_ident decl_id
+         && contains_eigen ut ->
       raise_s
         [%message
           "Unsized type initialization to NaN not yet implemented - consider \
            adding this to resize_to_match"]
-  | {stmt= Block ls; _} as s ->
-      [{s with stmt= Block (List.concat_map ~f:(add_fill no_fill_required) ls)}]
-  | {stmt= SList ls; _} as s ->
-      [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
+  | {pattern= Block ls; _} as s ->
+      [ { s with
+          pattern= Block (List.concat_map ~f:(add_fill no_fill_required) ls) }
+      ]
+  | {pattern= SList ls; _} as s ->
+      [ { s with
+          pattern= SList (List.concat_map ~f:(add_fill no_fill_required) ls) }
+      ]
   | s -> [s]
 
-let trans_prog (p : typed_prog) =
-  let p = map_prog Fn.id map_fn_names p in
+let trans_prog (p : Program.Typed.t) =
+  let p = Program.map Fn.id map_fn_names p in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
@@ -332,8 +346,8 @@ let trans_prog (p : typed_prog) =
   let add_fills =
     List.concat_map ~f:(add_fill (String.Set.of_list data_and_params))
   in
-  let tparam_start {stmt; _} =
-    match stmt with
+  let tparam_start stmt =
+    match Stmt.Fixed.pattern_of stmt with
     | IfElse (cond, _, _)
       when contains_var_expr (( = ) "emit_transformed_parameters__") false cond
       ->

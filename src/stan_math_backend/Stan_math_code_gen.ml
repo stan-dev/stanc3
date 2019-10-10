@@ -91,12 +91,13 @@ let to_indexed assignee idcs =
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf body_stmts =
   pp_located_error ppf
-    (pp_statement, {stmt= Block body_stmts; smeta= Locations.no_span_num})
+    ( pp_statement
+    , Stmt.Fixed.{pattern= Block body_stmts; meta= Locations.no_span_num} )
 
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
+let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
   let extra = if is_dist then ["lp__"; "lp_accum__"] else [] in
@@ -150,7 +151,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   match Stmt.Fixed.pattern_of fdbody with
   | Skip -> pf ppf ";@ "
   | _ ->
-      pf ppf "{@;<1 2>@[<v>%a@]@,}" (pp_body argtypetemplates fdname) fdbody ;
+      pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
         fdname pp_sig "operator()" pp_call_str
         ( fdname
@@ -298,7 +299,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   let intro =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
-    ; strf "%a" pp_function__ (p.prog_name, "write_array")
+    ; strf "%a" pp_function__ (prog_name, "write_array")
     ; strf "%a" pp_unused "function__"
     ; "double lp__ = 0.0;"
     ; "(void) lp__;  // dummy to suppress unused var warning"

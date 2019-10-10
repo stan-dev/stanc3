@@ -27,6 +27,7 @@ let is_scalar e =
 
 let is_matrix e = Expr.Typed.type_of e = UMatrix
 let is_row_vector e = Expr.Typed.type_of e = URowVector
+let pretty_print e = Fmt.to_to_string Expr.Typed.pp e
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
@@ -87,15 +88,16 @@ let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
-  else if is_propto_distribution f then
-    stdlib_distribution_name f ^ "<propto__>"
-  else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
+  else if Utils.is_propto_distribution f then
+    Utils.stdlib_distribution_name f ^ "<propto__>"
+  else if Utils.is_distribution_name f || (udf && is_user_dist f) then
+    f ^ "<false>"
   else f
 
 let fn_renames =
   List.map
-    ~f:(fun (k, v) -> (string_of_internal_fn k, v))
-    [ (FnLength, "stan::length")
+    ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
+    [ (Internal_fun.FnLength, "stan::length")
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
@@ -210,7 +212,7 @@ and read_data ut ppf es =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
-    let to_var s = {expr= Var s; emeta= internal_meta} in
+    let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
@@ -283,14 +285,16 @@ and pp_compiler_internal_fn adlevel ut f ppf es =
   | Some FnMakeRowVec -> (
       let pp_wrapper ppf es =
         match (es, adlevel) with
-        | {emeta= {mtype= UReal; _}; _} :: _, DataOnly ->
+        | ( Expr.({Fixed.meta= Typed.Meta.({type_= UReal; _}); _}) :: _
+          , UnsizedType.DataOnly ) ->
             pf ppf "to_doubles__(%a)" pp_array_literal es
-        | {emeta= {mtype= UReal; _}; _} :: _, AutoDiffable ->
+        | {meta= {type_= UReal; _}; _} :: _, AutoDiffable ->
             pf ppf "to_vars__(%a)" pp_array_literal es
         | _ -> pp_array_literal ppf es
       in
       match ut with
-      | URowVector -> pf ppf "stan::math::to_row_vector(%a)" pp_wrapper es
+      | UnsizedType.URowVector ->
+          pf ppf "stan::math::to_row_vector(%a)" pp_wrapper es
       | UMatrix ->
           pf ppf "stan::math::to_matrix<%s>(%a)"
             (local_scalar ut (promote_adtype es))
@@ -298,7 +302,7 @@ and pp_compiler_internal_fn adlevel ut f ppf es =
       | _ ->
           raise_s
             [%message
-              "Unexpected type for row vector literal" (ut : unsizedtype)] )
+              "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
@@ -341,8 +345,9 @@ and pp_expr ppf e =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn e.emeta.madlevel e.emeta.mtype
-        (stan_namespace_qualify f) ppf es
+      Expr.Typed.(
+        pp_compiler_internal_fn (adlevel_of e) (type_of e)
+          (stan_namespace_qualify f) ppf es)
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
