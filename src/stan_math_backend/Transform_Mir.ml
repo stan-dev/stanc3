@@ -42,14 +42,15 @@ let rec switch_expr_to_opencl available_cl_vars e =
     && List.for_all ~f:(check_type args) type_arg
   in
   let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
-  let map_args args (cl_args, req_args) =
-    if any_req_met args req_args then List.mapi args ~f:(move_cl_args cl_args)
-    else args
+  let maybe_map_args args (cl_args, req_args) =
+    match any_req_met args req_args with
+    | true -> List.mapi args ~f:(move_cl_args cl_args)
+    | false -> args
   in
   match e.expr with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let trigger = Map.find_exn opencl_triggers f in
-      {e with expr= FunApp (StanLib, f, map_args args trigger)}
+      {e with expr= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
 
 let pos = "pos__"
