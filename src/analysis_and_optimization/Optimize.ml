@@ -520,16 +520,15 @@ let propagation
 let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
 
-let expression_propagation =
-  propagation Monotone_framework.expression_propagation_transfer
-
-let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
-
 let rec can_side_effect_expr (e : expr_typed_located) =
   match e.expr with
   | Var _ | Lit (_, _) -> false
-  | FunApp (_, f, es) ->
-      String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
+  | FunApp (t, f, es) ->
+      String.suffix f 3 = "_lp"
+      || List.exists ~f:can_side_effect_expr es
+      || (t = CompilerInternal && f = string_of_internal_fn FnReadParam)
+      || (t = CompilerInternal && f = string_of_internal_fn FnWriteParam)
+      || (t = CompilerInternal && f = string_of_internal_fn FnUnconstrain)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
@@ -540,6 +539,12 @@ and can_side_effect_idx (i : expr_typed_located index) =
   | All -> false
   | Single e | Upfrom e | MultiIndex e -> can_side_effect_expr e
   | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+
+let expression_propagation =
+  propagation
+    (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
+
+let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
@@ -807,8 +812,13 @@ let optimize_ad_levels mir =
         (module Rev_Flowgraph)
         flowgraph_to_mir initial_ad_variables
     in
+    let insert_constraint_variables vars =
+      Set.Poly.union vars (Set.Poly.map ~f:(fun x -> x ^ "_in__") vars)
+    in
     let optimize_ad_levels_stmt_base i stmt =
-      let autodiffable_variables = (Map.find_exn ad_levels i).exit in
+      let autodiffable_variables =
+        insert_constraint_variables (Map.find_exn ad_levels i).exit
+      in
       match
         map_statement
           (update_expr_ad_levels autodiffable_variables)

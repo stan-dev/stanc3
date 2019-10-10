@@ -151,7 +151,7 @@ let rec pp_statement (ppf : Format.formatter)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
-  | Skip -> ()
+  | Skip -> string ppf ";"
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
       pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block_s ifbranch

@@ -118,7 +118,13 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
     text
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
-    pp_located_error ppf (pp_statement, fdbody) ;
+    let blocked_fdbody =
+      match fdbody.stmt with
+      | SList stmts -> {stmt= Block stmts; smeta= fdbody.smeta}
+      | Block _ -> fdbody
+      | _ -> {stmt= Block [fdbody]; smeta= fdbody.smeta}
+    in
+    pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ "
   in
   let templates =
