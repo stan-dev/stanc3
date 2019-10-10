@@ -103,7 +103,10 @@ let options =
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str
             )
       , " Takes a comma-separated list of directories that may contain a file \
-         in an #include directive (default = \"\")" ) ]
+         in an #include directive (default = \"\")" )
+    ; ( "--use-opencl"
+      , Arg.Set Transform_Mir.use_opencl
+      , " If set, try to use matrix_cl signatures." ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
@@ -215,7 +218,7 @@ let use_file filename =
         opt )
       else tx_mir
     in
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
