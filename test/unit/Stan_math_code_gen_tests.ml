@@ -5,17 +5,19 @@ open Fmt
 open Stan_math_code_gen
 
 let%expect_test "udf" =
-  let with_no_loc stmt = {stmt; smeta= Locations.no_span_num} in
-  let w e = {expr= e; emeta= internal_meta} in
+  let with_no_loc stmt =
+    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
+  in
+  let w e = Expr.(Fixed.fix (Typed.Meta.empty, e)) in
   { fdrt= None
   ; fdname= "sars"
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
-      Return
+      Stmt.Fixed.Pattern.Return
         (Some
            (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
-      |> with_no_loc |> List.return |> Block |> with_no_loc
-  ; fdloc= no_span }
+      |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
+  ; fdloc= Location_span.empty }
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|

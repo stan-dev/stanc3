@@ -25,19 +25,17 @@ let%expect_test "Loop test" =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
-    build_statement_map
-      (fun s -> s.stmt)
-      (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span}
+    Stmt.Fixed.(
+      build_statement_map pattern_of meta_of @@ fix (Location_span.empty, block))
   in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
       ( statement_map
         : ( label
-          , (mtype_loc_ad with_expr, label) statement * location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   print_s [%sexp (exits : label Set.Poly.t)] ;
   print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)] ;
@@ -119,12 +117,10 @@ let%expect_test "Loop passthrough" =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
-    build_statement_map
-      (fun s -> s.stmt)
-      (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span}
+    Stmt.Fixed.(
+      build_statement_map pattern_of meta_of @@ fix (Location_span.empty, block))
   in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
@@ -169,17 +165,17 @@ let example1_program =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
-  {stmt= block; smeta= Middle.no_span}
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  Stmt.Fixed.fix (Location_span.empty, block)
 
 let example1_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example1_program
+  Stmt.Fixed.(build_statement_map pattern_of meta_of example1_program)
 
 let%expect_test "Statement label map example" =
   print_s
     [%sexp
       ( Map.Poly.map example1_statement_map ~f:fst
-        : (label, (expr_typed_located, label) statement) Map.Poly.t )] ;
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t )] ;
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
@@ -233,7 +229,7 @@ let%expect_test "Controlflow graph example" =
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun stmt meta -> {stmt; smeta= meta})
+      (fun stmt meta -> Stmt.Fixed.fix (meta, stmt))
       example1_statement_map 1
   in
   stmt = example1_program
@@ -250,19 +246,20 @@ let example3_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.fix (Location_span.empty, blocks)
 
 let example3_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example3_program
+  Stmt.Fixed.(build_statement_map pattern_of meta_of example3_program)
 
 let%expect_test "Statement label map example 3" =
   print_s
     [%sexp
       ( example3_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|
@@ -335,19 +332,20 @@ let example4_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.fix (Location_span.empty, blocks)
 
 let example4_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example4_program
+  Stmt.Fixed.(build_statement_map pattern_of meta_of example4_program)
 
 let%expect_test "Statement label map example 4" =
   print_s
     [%sexp
       ( example4_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|
@@ -426,19 +424,20 @@ let example5_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.fix (Location_span.empty, blocks)
 
 let example5_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example5_program
+  Stmt.Fixed.(build_statement_map pattern_of meta_of example5_program)
 
 let%expect_test "Statement label map example 5" =
   print_s
     [%sexp
       ( example5_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|

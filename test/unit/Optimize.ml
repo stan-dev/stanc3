@@ -2,7 +2,7 @@ open Core_kernel
 open Frontend
 open Analysis_and_optimization.Optimize
 open Middle
-open Middle.Pretty
+open Common
 open Analysis_and_optimization.Mir_utils
 
 let semantic_check_program ast =
@@ -12,7 +12,7 @@ let semantic_check_program ast =
           (Option.value_exn (Result.ok ast))))
 
 let%expect_test "map_rec_stmt_loc" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -30,12 +30,12 @@ let%expect_test "map_rec_stmt_loc" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f = function
-    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        NRFunApp (CompilerInternal, "FnPrint__", [s; s])
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
+        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
     | x -> x
   in
-  let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -55,7 +55,7 @@ let%expect_test "map_rec_stmt_loc" =
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -73,16 +73,17 @@ let%expect_test "map_rec_state_stmt_loc" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f i = function
-    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
+        Stmt.Fixed.Pattern.
+          (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      {stmt= SList mir.log_prob; smeta= Middle.no_span}
+      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty}
   in
   let mir = {mir with log_prob= [mir_stmt]} in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   print_endline (string_of_int num) ;
   [%expect
     {|
@@ -105,7 +106,7 @@ let%expect_test "map_rec_state_stmt_loc" =
       3 |}]
 
 let%expect_test "inline functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -127,7 +128,7 @@ let%expect_test "inline functions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -166,7 +167,7 @@ let%expect_test "inline functions" =
       } |}]
 
 let%expect_test "inline functions 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -185,7 +186,7 @@ let%expect_test "inline functions 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -214,7 +215,7 @@ let%expect_test "inline functions 2" =
       } |}]
 
 let%expect_test "list collapsing" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -237,7 +238,7 @@ let%expect_test "list collapsing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  print_s [%sexp (mir : Middle.Program.Typed.t)] ;
   [%expect
     {|
     ((functions_block
@@ -402,7 +403,7 @@ let%expect_test "list collapsing" =
     |}]
 
 let%expect_test "do not inline recursive functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -420,7 +421,7 @@ let%expect_test "do not inline recursive functions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -447,7 +448,7 @@ let%expect_test "do not inline recursive functions" =
       } |}]
 
 let%expect_test "inline function in for loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -469,7 +470,7 @@ let%expect_test "inline function in for loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -523,7 +524,7 @@ let%expect_test "inline function in for loop" =
 (* TODO: check test results from here *)
 
 let%expect_test "inline function in for loop 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -545,7 +546,7 @@ let%expect_test "inline function in for loop 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -609,7 +610,7 @@ let%expect_test "inline function in for loop 2" =
       } |}]
 
 let%expect_test "inline function in while loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -631,7 +632,7 @@ let%expect_test "inline function in while loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -675,7 +676,7 @@ let%expect_test "inline function in while loop" =
       } |}]
 
 let%expect_test "inline function in if then else" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -697,7 +698,7 @@ let%expect_test "inline function in if then else" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -736,7 +737,7 @@ let%expect_test "inline function in if then else" =
     |}]
 
 let%expect_test "inline function in ternary if " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -762,7 +763,7 @@ let%expect_test "inline function in ternary if " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -820,7 +821,7 @@ let%expect_test "inline function in ternary if " =
       } |}]
 
 let%expect_test "inline function multiple returns " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -841,7 +842,7 @@ let%expect_test "inline function multiple returns " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -879,7 +880,7 @@ let%expect_test "inline function multiple returns " =
       } |}]
 
 let%expect_test "inline function indices " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -898,7 +899,7 @@ let%expect_test "inline function indices " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -936,7 +937,7 @@ let%expect_test "inline function indices " =
       } |}]
 
 let%expect_test "inline function and " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -955,7 +956,7 @@ let%expect_test "inline function and " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -994,7 +995,7 @@ let%expect_test "inline function and " =
       } |}]
 
 let%expect_test "inline function or " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1012,7 +1013,7 @@ let%expect_test "inline function or " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -1051,7 +1052,7 @@ let%expect_test "inline function or " =
       } |}]
 
 let%expect_test "unroll nested loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1064,7 +1065,7 @@ let%expect_test "unroll nested loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1093,7 +1094,7 @@ let%expect_test "unroll nested loop" =
       } |}]
 
 let%expect_test "unroll nested loop 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1107,7 +1108,7 @@ let%expect_test "unroll nested loop 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1291,7 +1292,7 @@ let%expect_test "unroll nested loop 2" =
       } |}]
 
 let%expect_test "unroll nested loop 3" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1305,7 +1306,7 @@ let%expect_test "unroll nested loop 3" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1387,7 +1388,7 @@ let%expect_test "unroll nested loop 3" =
       } |}]
 
 let%expect_test "unroll nested loop with break" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1402,7 +1403,7 @@ let%expect_test "unroll nested loop with break" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1427,7 +1428,7 @@ let%expect_test "unroll nested loop with break" =
       } |}]
 
 let%expect_test "constant propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1447,7 +1448,7 @@ let%expect_test "constant propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     prepare_data {
@@ -1469,7 +1470,7 @@ let%expect_test "constant propagation" =
     } |}]
 
 let%expect_test "constant propagation, local scope" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1492,7 +1493,7 @@ let%expect_test "constant propagation, local scope" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     prepare_data {
@@ -1517,7 +1518,7 @@ let%expect_test "constant propagation, local scope" =
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1539,7 +1540,7 @@ let%expect_test "constant propagation, model block local scope" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     log_prob {
@@ -1565,7 +1566,7 @@ let%expect_test "constant propagation, model block local scope" =
     } |}]
 
 let%expect_test "expression propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1584,7 +1585,7 @@ let%expect_test "expression propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
@@ -1605,7 +1606,7 @@ let%expect_test "expression propagation" =
       } |}]
 
 let%expect_test "copy propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1626,7 +1627,7 @@ let%expect_test "copy propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = copy_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
@@ -1649,7 +1650,7 @@ let%expect_test "copy propagation" =
       } |}]
 
 let%expect_test "dead code elimination" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1670,7 +1671,7 @@ let%expect_test "dead code elimination" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
@@ -1692,7 +1693,7 @@ let%expect_test "dead code elimination" =
       } |}]
 
 let%expect_test "dead code elimination decl" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1711,7 +1712,7 @@ let%expect_test "dead code elimination decl" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1729,7 +1730,7 @@ let%expect_test "dead code elimination decl" =
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1743,7 +1744,7 @@ let%expect_test "dead code elimination, for loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1758,7 +1759,7 @@ let%expect_test "dead code elimination, for loop" =
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1776,7 +1777,7 @@ let%expect_test "dead code elimination, while loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1792,7 +1793,7 @@ let%expect_test "dead code elimination, while loop" =
       } |}]
 
 let%expect_test "dead code elimination, if then" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1820,7 +1821,7 @@ let%expect_test "dead code elimination, if then" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1841,7 +1842,7 @@ let%expect_test "dead code elimination, if then" =
       } |}]
 
 let%expect_test "dead code elimination, nested" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1857,7 +1858,7 @@ let%expect_test "dead code elimination, nested" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1872,7 +1873,7 @@ let%expect_test "dead code elimination, nested" =
       } |}]
 
 let%expect_test "partial evaluation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1889,7 +1890,7 @@ let%expect_test "partial evaluation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1908,7 +1909,7 @@ let%expect_test "partial evaluation" =
       } |}]
 
 let%expect_test "try partially evaluate" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1925,7 +1926,7 @@ let%expect_test "try partially evaluate" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1944,7 +1945,7 @@ let%expect_test "try partially evaluate" =
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1959,7 +1960,7 @@ let%expect_test "partially evaluate with equality check" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1976,7 +1977,7 @@ let%expect_test "partially evaluate with equality check" =
       } |}]
 
 let%expect_test "partially evaluate functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2115,7 +2116,7 @@ model {
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2289,7 +2290,7 @@ model {
       } |}]
 
 let%expect_test "lazy code motion" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2304,7 +2305,7 @@ let%expect_test "lazy code motion" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     log_prob {
@@ -2330,7 +2331,7 @@ let%expect_test "lazy code motion" =
     } |}]
 
 let%expect_test "lazy code motion, 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2344,7 +2345,7 @@ let%expect_test "lazy code motion, 2" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2373,7 +2374,7 @@ let%expect_test "lazy code motion, 2" =
       } |}]
 
 let%expect_test "lazy code motion, 3" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2388,7 +2389,7 @@ let%expect_test "lazy code motion, 3" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2415,7 +2416,7 @@ let%expect_test "lazy code motion, 3" =
       } |}]
 
 let%expect_test "lazy code motion, 4" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2443,7 +2444,7 @@ let%expect_test "lazy code motion, 4" =
   let mir = list_collapsing mir in
   (* TODO: make sure that these
      temporaries do not get assigned level DataOnly unless appropriate *)
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2487,7 +2488,7 @@ let%expect_test "lazy code motion, 4" =
       } |}]
 
 let%expect_test "lazy code motion, 5" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2513,7 +2514,7 @@ let%expect_test "lazy code motion, 5" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2561,7 +2562,7 @@ let%expect_test "lazy code motion, 5" =
       } |}]
 
 let%expect_test "lazy code motion, 6" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2578,7 +2579,7 @@ let%expect_test "lazy code motion, 6" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2608,7 +2609,7 @@ let%expect_test "lazy code motion, 6" =
       } |}]
 
 let%expect_test "lazy code motion, 7" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2643,7 +2644,7 @@ let%expect_test "lazy code motion, 7" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2715,7 +2716,7 @@ let%expect_test "lazy code motion, 7" =
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2735,7 +2736,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -2775,7 +2776,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       } |}]
 
 let%expect_test "lazy code motion, 9" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2789,7 +2790,7 @@ let%expect_test "lazy code motion, 9" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2816,7 +2817,7 @@ let%expect_test "lazy code motion, 9" =
       } |}]
 
 let%expect_test "lazy code motion, 10" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2833,7 +2834,7 @@ let%expect_test "lazy code motion, 10" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2860,7 +2861,7 @@ let%expect_test "lazy code motion, 10" =
       } |}]
 
 let%expect_test "lazy code motion, 11" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2880,7 +2881,7 @@ let%expect_test "lazy code motion, 11" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2910,7 +2911,7 @@ let%expect_test "lazy code motion, 11" =
       } |}]
 
 let%expect_test "lazy code motion, 12" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2927,7 +2928,7 @@ let%expect_test "lazy code motion, 12" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2958,7 +2959,7 @@ let%expect_test "lazy code motion, 12" =
       } |}]
 
 let%expect_test "lazy code motion, 13" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2983,7 +2984,7 @@ let%expect_test "lazy code motion, 13" =
   let mir = one_step_loop_unrolling mir in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -3046,7 +3047,7 @@ let%expect_test "lazy code motion, 13" =
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3069,7 +3070,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -3110,7 +3111,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       } |}]
 
 let%expect_test "block fixing" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3122,17 +3123,21 @@ let%expect_test "block fixing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir =
     { mir with
-      Middle.log_prob=
-        [ { stmt=
-              IfElse
-                ( zero
-                , { stmt= While (zero, {stmt= SList []; smeta= no_span})
-                  ; smeta= no_span }
-                , None )
-          ; smeta= no_span } ] }
+      Middle.Program.log_prob=
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.Helpers.zero
+                  , { pattern=
+                        While
+                          ( Expr.Helpers.zero
+                          , {pattern= SList []; meta= Location_span.empty} )
+                    ; meta= Location_span.empty }
+                  , None )
+            ; meta= Location_span.empty } ] }
   in
   let mir = block_fixing mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  print_s [%sexp (mir : Program.Typed.t)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3176,7 +3181,7 @@ let%expect_test "block fixing" =
        (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3191,7 +3196,7 @@ let%expect_test "one-step loop unrolling" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = one_step_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
@@ -3237,7 +3242,7 @@ let%expect_test "one-step loop unrolling" =
       } |}]
 
 let%expect_test "adlevel_optimization" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3267,7 +3272,7 @@ let%expect_test "adlevel_optimization" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -3308,7 +3313,7 @@ let%expect_test "adlevel_optimization" =
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3338,13 +3343,7 @@ let%expect_test "adlevel_optimization expressions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  print_s
-    [%sexp
-      ( mir.log_prob
-        : ( mtype_loc_ad
-          , (location_span sexp_opaque[@compare.ignore]) )
-          stmt_with
-          list )] ;
+  print_s [%sexp (mir.log_prob : Stmt.Located.t list)] ;
   [%expect
     {|
       (((stmt
@@ -3445,7 +3444,7 @@ let%expect_test "adlevel_optimization expressions" =
         (smeta <opaque>))) |}]
 
 let%expect_test "adlevel_optimization 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3476,7 +3475,7 @@ let%expect_test "adlevel_optimization 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
