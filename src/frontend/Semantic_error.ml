@@ -1,43 +1,43 @@
 open Core_kernel
 open Middle
-open Middle.Pretty
 
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
   type t =
-    | MismatchedReturnTypes of returntype * returntype
+    | MismatchedReturnTypes of UnsizedType.returntype * UnsizedType.returntype
     | MismatchedArrayTypes
     | InvalidRowVectorTypes
-    | IntExpected of string * unsizedtype
-    | IntOrRealExpected of string * unsizedtype
-    | IntIntArrayOrRangeExpected of unsizedtype
-    | IntOrRealContainerExpected of unsizedtype
-    | ArrayVectorRowVectorMatrixExpected of unsizedtype
-    | IllTypedAssignment of Ast.assignmentoperator * unsizedtype * unsizedtype
-    | IllTypedTernaryIf of unsizedtype * unsizedtype * unsizedtype
+    | IntExpected of string * UnsizedType.t
+    | IntOrRealExpected of string * UnsizedType.t
+    | IntIntArrayOrRangeExpected of UnsizedType.t
+    | IntOrRealContainerExpected of UnsizedType.t
+    | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
+    | IllTypedAssignment of
+        Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
+    | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
-    | IllTypedStanLibFunctionApp of string * unsizedtype list
+    | IllTypedStanLibFunctionApp of string * UnsizedType.t list
     | IllTypedUserDefinedFunctionApp of
         string
-        * (autodifftype * unsizedtype) list
-        * returntype
-        * unsizedtype list
-    | IllTypedBinaryOperator of operator * unsizedtype * unsizedtype
-    | IllTypedPrefixOperator of operator * unsizedtype
-    | IllTypedPostfixOperator of operator * unsizedtype
-    | NotIndexable of unsizedtype
+        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * UnsizedType.returntype
+        * UnsizedType.t list
+    | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
+    | IllTypedPrefixOperator of Operator.t * UnsizedType.t
+    | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | NotIndexable of UnsizedType.t
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
         Fmt.pf ppf
           "Branches of function definition need to have the same return type. \
            Instead, found return types %a and %a."
-          pp_returntype rt1 pp_returntype rt2
+          UnsizedType.pp_returntype rt1 UnsizedType.pp_returntype rt2
     | MismatchedArrayTypes ->
         Fmt.pf ppf "Array expression must have entries of consistent type."
     | InvalidRowVectorTypes ->
@@ -46,50 +46,51 @@ module TypeError = struct
            row_vector entries."
     | IntExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int. Instead found type %a." name
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
-          name pp_unsizedtype ut
+          name UnsizedType.pp ut
     | IntOrRealContainerExpected ut ->
         Fmt.pf ppf
           "A (container of) real or int was expected. Instead found type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | IntIntArrayOrRangeExpected ut ->
         Fmt.pf ppf
           "Index must be of type int or int[] or must be a range. Instead \
            found type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | ArrayVectorRowVectorMatrixExpected ut ->
         Fmt.pf ppf
           "Foreach-loop must be over array, vector, row_vector or matrix. \
            Instead found expression of type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
         Fmt.pf ppf
           "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
            has type %a and rhs has type %a. Available signatures:@]%s"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
-          pp_unsizedtype lt pp_unsizedtype rt
-          ( pretty_print_math_lib_assignmentoperator_sigs op
+          UnsizedType.pp lt UnsizedType.pp rt
+          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
+              op
           |> Option.value ~default:"no matching signatures" )
     | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator %s: lhs has \
            type %a and rhs has type %a"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
-          pp_unsizedtype lt pp_unsizedtype rt
+          UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedTernaryIf (ut1, ut2, ut3) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to ? : operator. Available \
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %a, %a, %a."
-          (pretty_print_math_sigs "if_else")
-          pp_unsizedtype ut1 pp_unsizedtype ut2 pp_unsizedtype ut3
+          (Stan_math_signatures.pretty_print_math_sigs "if_else")
+          UnsizedType.pp ut1 UnsizedType.pp ut2 UnsizedType.pp ut3
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
            be indexed. Instead, found type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | ReturningFnExpectedNonReturningFound fn_name ->
         Fmt.pf ppf
           "A returning function was expected but a non-returning function \
@@ -126,42 +127,45 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a.@]"
           name
-          (pretty_print_math_sigs name)
-          Fmt.(list pp_unsizedtype ~sep:comma)
+          (Stan_math_signatures.pretty_print_math_sigs name)
+          Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
            signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
-          name pp_unsizedtype
+          name UnsizedType.pp
           (UFun (listed_tys, return_ty))
-          Fmt.(list pp_unsizedtype ~sep:comma)
+          Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
            signatures: %s@[<h>Instead supplied arguments of incompatible \
            type: %a, %a.@]"
-          pp_operator op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
-          pp_unsizedtype lt pp_unsizedtype rt
+          Operator.pp op
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
+          UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
-          pp_operator op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
-          pp_unsizedtype ut
+          Operator.pp op
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
+          UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a."
-          pp_operator op
-          (pretty_print_math_lib_operator_sigs op |> String.concat ~sep:"\n")
-          pp_unsizedtype ut
+          Operator.pp op
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n" )
+          UnsizedType.pp ut
 end
 
 module IdentifierError = struct
@@ -233,12 +237,12 @@ module StatementError = struct
     | NonDataVariableSizeDecl
     | NonIntBounds
     | TransformedParamsInt
-    | MismatchFunDefDecl of string * unsizedtype option
+    | MismatchFunDefDecl of string * UnsizedType.t option
     | FunDeclExists of string
     | FunDeclNoDefn
     | NonRealProbFunDef
-    | ProbDensityNonRealVariate of unsizedtype option
-    | ProbMassNonIntVariate of unsizedtype option
+    | ProbDensityNonRealVariate of UnsizedType.t option
+    | ProbMassNonIntVariate of UnsizedType.t option
     | DuplicateArgNames
     | IncompatibleReturnType
 
@@ -294,7 +298,7 @@ module StatementError = struct
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
     | MismatchFunDefDecl (name, Some ut) ->
         Fmt.pf ppf "Function '%s' has already been declared to have type %a"
-          name pp_unsizedtype ut
+          name UnsizedType.pp ut
     | MismatchFunDefDecl (name, None) ->
         Fmt.pf ppf
           "Function '%s' has already been declared but type cannot be \
@@ -314,7 +318,7 @@ module StatementError = struct
         Fmt.pf ppf
           "Probability density functions require real variates (first \
            argument). Instead found type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | ProbDensityNonRealVariate _ ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
@@ -323,7 +327,7 @@ module StatementError = struct
         Fmt.pf ppf
           "Probability mass functions require integer variates (first \
            argument). Instead found type %a."
-          pp_unsizedtype ut
+          UnsizedType.pp ut
     | ProbMassNonIntVariate _ ->
         Fmt.pf ppf
           "Probability mass functions require integer variates (first \
@@ -337,10 +341,10 @@ module StatementError = struct
 end
 
 type t =
-  | TypeError of location_span * TypeError.t
-  | IdentifierError of location_span * IdentifierError.t
-  | ExpressionError of location_span * ExpressionError.t
-  | StatementError of location_span * StatementError.t
+  | TypeError of Location_span.t * TypeError.t
+  | IdentifierError of Location_span.t * IdentifierError.t
+  | ExpressionError of Location_span.t * ExpressionError.t
+  | StatementError of Location_span.t * StatementError.t
 
 let pp ppf = function
   | TypeError (_, err) -> TypeError.pp ppf err
