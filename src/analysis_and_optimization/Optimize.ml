@@ -8,14 +8,15 @@ open Mir_utils
    Apply the transformation to each function body and to the rest of the program as one
    block.
 *)
-let transform_program (mir : Program.Typed.t) (transform : Stmt.Located.t -> Stmt.Located.t) :
-    Program.Typed.t =
+let transform_program (mir : Program.Typed.t)
+    (transform : Stmt.Located.t -> Stmt.Located.t) : Program.Typed.t =
   let packed_prog_body =
     transform
-      { pattern =
+      { pattern=
           SList
             (List.map
-               ~f:(fun x -> Stmt.Fixed.{pattern= SList x; meta= Location_span.empty})
+               ~f:(fun x ->
+                 Stmt.Fixed.{pattern= SList x; meta= Location_span.empty} )
                [ mir.prepare_data; mir.transform_inits; mir.log_prob
                ; mir.generate_quantities ])
       ; meta= Location_span.empty }
@@ -65,7 +66,9 @@ let transform_program_blockwise (mir : Program.Typed.t)
   ; log_prob= transform' mir.log_prob
   ; generate_quantities= transform' mir.generate_quantities }
 
-let map_no_loc l = List.map ~f:(fun s -> Stmt.Fixed.{pattern= s; meta= Location_span.empty}) l
+let map_no_loc l =
+  List.map ~f:(fun s -> Stmt.Fixed.{pattern= s; meta= Location_span.empty}) l
+
 let slist_no_loc l = Stmt.Fixed.Pattern.SList (map_no_loc l)
 let block_no_loc l = Stmt.Fixed.Pattern.Block (map_no_loc l)
 
@@ -79,16 +82,18 @@ let replace_fresh_local_vars s' =
         ( Stmt.Fixed.Pattern.Decl {decl_adtype; decl_id= fresh_name; decl_type}
         , Map.Poly.set m ~key:decl_id
             ~data:
-              Expr.Fixed.{ pattern = Var fresh_name
-              ; meta=
-                  Expr.Typed.Meta.{ type_ = Type.to_unsized decl_type
-                  ; adlevel= decl_adtype
-                  ; loc= Location_span.empty } } )
+              Expr.Fixed.
+                { pattern= Var fresh_name
+                ; meta=
+                    Expr.Typed.Meta.
+                      { type_= Type.to_unsized decl_type
+                      ; adlevel= decl_adtype
+                      ; loc= Location_span.empty } } )
     | Assignment ((var_name, ut, l), e) ->
         let var_name =
           match Map.Poly.find m var_name with
           | None -> var_name
-          | Some Expr.Fixed.{pattern = Var var_name; _} -> var_name
+          | Some Expr.Fixed.({pattern= Var var_name; _}) -> var_name
           | Some e -> raise_s [%sexp (e : Expr.Typed.t)]
         in
         (Stmt.Fixed.Pattern.Assignment ((var_name, ut, l), e), m)
@@ -102,7 +107,9 @@ let replace_fresh_local_vars_triple (d_list, s_list, e) =
     slist_no_loc
       ([slist_no_loc d_list] @ [slist_no_loc s_list] @ [Return (Some e)])
   in
-  let s = (replace_fresh_local_vars {pattern= s; meta= Location_span.empty}).pattern in
+  let s =
+    (replace_fresh_local_vars {pattern= s; meta= Location_span.empty}).pattern
+  in
   match s with
   | SList
       [ {pattern= SList d_list; _}
@@ -112,41 +119,39 @@ let replace_fresh_local_vars_triple (d_list, s_list, e) =
       , List.map ~f:(fun x -> x.pattern) s_list
       , e )
   | _ ->
-      raise_s
-        [%sexp
-          ( s
-            : ( Expr.Typed.t
-              , Stmt.Located.t )
-              Stmt.Fixed.Pattern.t )]
+      raise_s [%sexp (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)]
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
 (* TODO: only handle early returns if that's necessary *)
-let handle_early_returns opt_triple b = 
+let handle_early_returns opt_triple b =
   let f = function
     | Stmt.Fixed.Pattern.Return opt_ret -> (
       match (opt_triple, opt_ret) with
       | None, None -> Stmt.Fixed.Pattern.Break
       | Some (Some _, _, name), Some e ->
           SList
-            [ Stmt.Fixed.{ pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
-              ; meta= Location_span.empty }
+            [ Stmt.Fixed.
+                { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
+                ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
       | _, _ -> raise_s [%sexp ("" : string)] )
     | x -> x
   in
   Stmt.Fixed.Pattern.For
-    { loopvar= Gensym.generate()
+    { loopvar= Gensym.generate ()
     ; lower=
-        Expr.Fixed.{ pattern = Lit (Int, "1")
-        ; meta = Expr.Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
+        Expr.Fixed.
+          { pattern= Lit (Int, "1")
+          ; meta=
+              Expr.Typed.Meta.
+                {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
     ; upper=
-        { pattern = Lit (Int, "1")
-        ; meta = {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
+        { pattern= Lit (Int, "1")
+        ; meta= {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
     ; body= map_rec_stmt_loc f b }
-
 
 let rec inline_function_expression adt fim e =
   match Expr.Fixed.pattern_of e with
@@ -173,13 +178,15 @@ let rec inline_function_expression adt fim e =
                     { decl_adtype= adt
                     ; decl_id= x
                     ; decl_type= Option.value_exn rt } ]
-              , [ (subst_args_stmt args es {pattern= b; meta= Location_span.empty})
+              , [ (subst_args_stmt args es
+                     {pattern= b; meta= Location_span.empty})
                     .pattern ]
               , { pattern= Var x
                 ; meta=
-                    Expr.Typed.Meta.{ type_= Type.to_unsized (Option.value_exn rt)
-                    ; adlevel= adt
-                    ; loc= Location_span.empty } } )
+                    Expr.Typed.Meta.
+                      { type_= Type.to_unsized (Option.value_exn rt)
+                      ; adlevel= adt
+                      ; loc= Location_span.empty } } )
           in
           let d_list = d_list @ d_list2 in
           let s_list = s_list @ s_list2 in
@@ -190,11 +197,13 @@ let rec inline_function_expression adt fim e =
       let dl3, sl3, e3 = inline_function_expression adt fim e3 in
       ( dl1 @ dl2 @ dl3
       , sl1
-        @ [ Stmt.Fixed.(Pattern.IfElse
-              ( e1
-              , {pattern= block_no_loc sl2; meta= Location_span.empty}
-              , Some {pattern= block_no_loc sl3; meta= Location_span.empty} ) )]
-      , {e with pattern = TernaryIf (e1, e2, e3)} )
+        @ [ Stmt.Fixed.(
+              Pattern.IfElse
+                ( e1
+                , {pattern= block_no_loc sl2; meta= Location_span.empty}
+                , Some {pattern= block_no_loc sl3; meta= Location_span.empty}
+                )) ]
+      , {e with pattern= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
       let dl, sl, e' = inline_function_expression adt fim e' in
       let dsi_list = List.map ~f:(inline_function_index adt fim) i_list in
@@ -210,17 +219,24 @@ let rec inline_function_expression adt fim e =
       let dl1, sl1, e1 = inline_function_expression adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression adt fim e2 in
       let sl2 =
-        [Stmt.Fixed.(Pattern.IfElse (e1, {pattern= Block (map_no_loc sl2); meta= Location_span.empty}, None))]
+        [ Stmt.Fixed.(
+            Pattern.IfElse
+              ( e1
+              , {pattern= Block (map_no_loc sl2); meta= Location_span.empty}
+              , None )) ]
       in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EAnd (e1, e2)})
   | EOr (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression adt fim e2 in
       let sl2 =
-        [ Stmt.Fixed.(Pattern.IfElse
-            ( e1
-            , {pattern= Skip; meta= Location_span.empty}
-            , Some {pattern= Block (map_no_loc sl2); meta= Location_span.empty} )) ]
+        [ Stmt.Fixed.(
+            Pattern.IfElse
+              ( e1
+              , {pattern= Skip; meta= Location_span.empty}
+              , Some
+                  {pattern= Block (map_no_loc sl2); meta= Location_span.empty}
+              )) ]
       in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
@@ -241,107 +257,114 @@ and inline_function_index adt fim i =
       let dl, sl, e = inline_function_expression adt fim e in
       (dl, sl, MultiIndex e)
 
-let rec inline_function_statement adt fim Stmt.Fixed.{pattern; meta} =
-  Stmt.Fixed.{ pattern =
-      ( match pattern with
-      | Assignment ((x, ut, l), e2) ->
-          let e1 = {e2 with pattern= Indexed ({e2 with pattern= Var x}, l)} in
-          (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
-          let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-          let dl2, sl2, e2 = inline_function_expression adt fim e2 in
-          let x, l =
-            match Expr.Fixed.pattern_of e1 with
-            | Var x -> (x, [])
-            | Indexed ({pattern= Var x; _}, l) -> (x, l)
-            | _ as w -> raise_s [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)]
-          in
-          slist_concat_no_loc
-            (dl2 @ dl1 @ sl2 @ sl1)
-            (Assignment ((x, ut, l), e2))
-      | TargetPE e ->
-          let d, s, e = inline_function_expression adt fim e in
-          slist_concat_no_loc (d @ s) (TargetPE e)
-      | NRFunApp (t, s, es) ->
-          let dse_list = List.map ~f:(inline_function_expression adt fim) es in
-          (* function arguments are evaluated from right to left in C++, so we need to reverse *)
-          let d_list =
-            List.concat
-              (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
-          in
-          let s_list =
-            List.concat
-              (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
-          in
-          let es = List.map ~f:(function _, _, x -> x) dse_list in
-          slist_concat_no_loc (d_list @ s_list)
-            ( match Map.find fim s with
-            | None -> NRFunApp (t, s, es)
-            | Some (_, args, b) ->
-                let b = replace_fresh_local_vars b in
-                let b = handle_early_returns None b in
-                (subst_args_stmt args es {pattern= b; meta= Location_span.empty}).pattern
-            )
-      | Return e -> (
-        match e with
-        | None -> Return None
-        | Some e ->
+let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
+  Stmt.Fixed.
+    { pattern=
+        ( match pattern with
+        | Assignment ((x, ut, l), e2) ->
+            let e1 =
+              {e2 with pattern= Indexed ({e2 with pattern= Var x}, l)}
+            in
+            (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
+            let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+            let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+            let x, l =
+              match Expr.Fixed.pattern_of e1 with
+              | Var x -> (x, [])
+              | Indexed ({pattern= Var x; _}, l) -> (x, l)
+              | _ as w ->
+                  raise_s [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)]
+            in
+            slist_concat_no_loc
+              (dl2 @ dl1 @ sl2 @ sl1)
+              (Assignment ((x, ut, l), e2))
+        | TargetPE e ->
             let d, s, e = inline_function_expression adt fim e in
-            slist_concat_no_loc (d @ s) (Return (Some e)) )
-      | IfElse (e, s1, s2) ->
-          let d, s, e = inline_function_expression adt fim e in
-          slist_concat_no_loc (d @ s)
-            (IfElse
-               ( e
-               , inline_function_statement adt fim s1
-               , Option.map ~f:(inline_function_statement adt fim) s2 ))
-      | While (e, s) ->
-          let d', s', e = inline_function_expression adt fim e in
-          slist_concat_no_loc (d' @ s')
-            (While
-               ( e
-               , match s' with
-                 | [] -> inline_function_statement adt fim s
-                 | _ ->
-                     { pattern=
-                         Block
-                           ( [inline_function_statement adt fim s]
-                           @ map_no_loc s' )
-                     ; meta= Location_span.empty } ))
-      | For {loopvar; lower; upper; body} ->
-          let d_lower, s_lower, lower =
-            inline_function_expression adt fim lower
-          in
-          let d_upper, s_upper, upper =
-            inline_function_expression adt fim upper
-          in
-          slist_concat_no_loc
-            (d_lower @ d_upper @ s_lower @ s_upper)
-            (For
-               { loopvar
-               ; lower
-               ; upper
-               ; body=
-                   ( match s_upper with
-                   | [] -> inline_function_statement adt fim body
+            slist_concat_no_loc (d @ s) (TargetPE e)
+        | NRFunApp (t, s, es) ->
+            let dse_list =
+              List.map ~f:(inline_function_expression adt fim) es
+            in
+            (* function arguments are evaluated from right to left in C++, so we need to reverse *)
+            let d_list =
+              List.concat
+                (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
+            in
+            let s_list =
+              List.concat
+                (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
+            in
+            let es = List.map ~f:(function _, _, x -> x) dse_list in
+            slist_concat_no_loc (d_list @ s_list)
+              ( match Map.find fim s with
+              | None -> NRFunApp (t, s, es)
+              | Some (_, args, b) ->
+                  let b = replace_fresh_local_vars b in
+                  let b = handle_early_returns None b in
+                  (subst_args_stmt args es
+                     {pattern= b; meta= Location_span.empty})
+                    .pattern )
+        | Return e -> (
+          match e with
+          | None -> Return None
+          | Some e ->
+              let d, s, e = inline_function_expression adt fim e in
+              slist_concat_no_loc (d @ s) (Return (Some e)) )
+        | IfElse (e, s1, s2) ->
+            let d, s, e = inline_function_expression adt fim e in
+            slist_concat_no_loc (d @ s)
+              (IfElse
+                 ( e
+                 , inline_function_statement adt fim s1
+                 , Option.map ~f:(inline_function_statement adt fim) s2 ))
+        | While (e, s) ->
+            let d', s', e = inline_function_expression adt fim e in
+            slist_concat_no_loc (d' @ s')
+              (While
+                 ( e
+                 , match s' with
+                   | [] -> inline_function_statement adt fim s
                    | _ ->
                        { pattern=
                            Block
-                             ( [inline_function_statement adt fim body]
-                             @ map_no_loc s_upper )
-                       ; meta= Location_span.empty } ) })
-      | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
-      | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
-      | Decl r -> Decl r
-      | Skip -> Skip
-      | Break -> Break
-      | Continue -> Continue )
-  ; meta }
+                             ( [inline_function_statement adt fim s]
+                             @ map_no_loc s' )
+                       ; meta= Location_span.empty } ))
+        | For {loopvar; lower; upper; body} ->
+            let d_lower, s_lower, lower =
+              inline_function_expression adt fim lower
+            in
+            let d_upper, s_upper, upper =
+              inline_function_expression adt fim upper
+            in
+            slist_concat_no_loc
+              (d_lower @ d_upper @ s_lower @ s_upper)
+              (For
+                 { loopvar
+                 ; lower
+                 ; upper
+                 ; body=
+                     ( match s_upper with
+                     | [] -> inline_function_statement adt fim body
+                     | _ ->
+                         { pattern=
+                             Block
+                               ( [inline_function_statement adt fim body]
+                               @ map_no_loc s_upper )
+                         ; meta= Location_span.empty } ) })
+        | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
+        | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
+        | Decl r -> Decl r
+        | Skip -> Skip
+        | Break -> Break
+        | Continue -> Continue )
+    ; meta }
 
 let create_function_inline_map adt l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum fundef =
-    match fundef with Program.{fdname; fdargs; fdbody; fdrt; _} -> (
+    match fundef with Program.({fdname; fdargs; fdbody; fdrt; _}) -> (
       match
         Map.add accum ~key:fdname
           ~data:
@@ -364,10 +387,13 @@ let function_inlining (mir : Program.Typed.t) =
     create_function_inline_map UnsizedType.AutoDiffable mir.functions_block
   in
   let dataonly_inline_function_statements =
-    List.map ~f:(inline_function_statement UnsizedType.DataOnly dataonly_inline_map)
+    List.map
+      ~f:(inline_function_statement UnsizedType.DataOnly dataonly_inline_map)
   in
   let autodiffable_inline_function_statements =
-    List.map ~f:(inline_function_statement UnsizedType.AutoDiffable autodiff_inline_map)
+    List.map
+      ~f:
+        (inline_function_statement UnsizedType.AutoDiffable autodiff_inline_map)
   in
   { mir with
     prepare_data= dataonly_inline_function_statements mir.prepare_data
@@ -377,7 +403,7 @@ let function_inlining (mir : Program.Typed.t) =
   ; generate_quantities=
       dataonly_inline_function_statements mir.generate_quantities }
 
-let rec contains_top_break_or_continue Stmt.Fixed.{pattern; _} =
+let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Break | Continue -> true
   | Assignment (_, _)
@@ -408,10 +434,13 @@ let unroll_static_loops_statement =
             let range =
               List.map
                 ~f:(fun i ->
-                  Expr.Fixed.{ pattern= Lit (Int, Int.to_string i)
-                  ; meta=
-                      Expr.Typed.Meta.{type_= UInt; loc= Location_span.empty; adlevel= DataOnly}
-                  } )
+                  Expr.Fixed.
+                    { pattern= Lit (Int, Int.to_string i)
+                    ; meta=
+                        Expr.Typed.Meta.
+                          { type_= UInt
+                          ; loc= Location_span.empty
+                          ; adlevel= DataOnly } } )
                 (List.range ~start:`inclusive ~stop:`inclusive
                    (Int.of_string low) (Int.of_string up))
             in
@@ -438,7 +467,8 @@ let unroll_loop_one_step_statement =
         if contains_top_break_or_continue body then stmt
         else
           IfElse
-            ( Expr.Fixed.{lower with pattern= FunApp (StanLib, "Leq__", [lower; upper])}
+            ( Expr.Fixed.
+                {lower with pattern= FunApp (StanLib, "Leq__", [lower; upper])}
             , { pattern=
                   Block
                     [ subst_args_stmt [loopvar] [lower]
@@ -451,8 +481,9 @@ let unroll_loop_one_step_statement =
                                 { lower with
                                   pattern=
                                     FunApp
-                                      (StanLib, "Plus__", [lower; Expr.Helpers.loop_bottom])
-                                }
+                                      ( StanLib
+                                      , "Plus__"
+                                      , [lower; Expr.Helpers.loop_bottom] ) }
                             ; upper
                             ; body } } ]
               ; meta= Location_span.empty }
@@ -476,7 +507,7 @@ let collapse_lists_statement =
   let rec collapse_lists l =
     match l with
     | [] -> []
-    | Stmt.Fixed.{pattern= SList l'; _} :: rest -> l' @ collapse_lists rest
+    | Stmt.Fixed.({pattern= SList l'; _}) :: rest -> l' @ collapse_lists rest
     | x :: rest -> x :: collapse_lists rest
   in
   let f = function
@@ -495,9 +526,7 @@ let propagation
       -> (module
           Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = ( string
-                                   , Middle.Expr.Typed.t )
-                                   Map.Poly.t
+             and type properties = (string, Middle.Expr.Typed.t) Map.Poly.t
                                    option)) (mir : Program.Typed.t) =
   let transform s =
     let flowgraph, flowgraph_to_mir =
@@ -544,7 +573,9 @@ and can_side_effect_idx (i : Expr.Typed.t Index.t) =
   | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
 
 let is_skip_break_continue s =
-  match s with Stmt.Fixed.Pattern.Skip | Break | Continue -> true | _ -> false
+  match s with
+  | Stmt.Fixed.Pattern.Skip | Break | Continue -> true
+  | _ -> false
 
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : Program.Typed.t) =
@@ -640,28 +671,35 @@ let lazy_code_motion (mir : Program.Typed.t) =
         (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
       match stmt with
       | IfElse (e, b1, Some b2) ->
-          Stmt.Fixed.(Pattern.IfElse
-            ( e
-            , {pattern= Block [b1; {pattern= Skip; meta= Location_span.empty}]; meta= Location_span.empty}
-            , Some
-                {pattern= Block [b2; {pattern= Skip; meta= Location_span.empty}]; meta= Location_span.empty}
-            ))
+          Stmt.Fixed.(
+            Pattern.IfElse
+              ( e
+              , { pattern=
+                    Block [b1; {pattern= Skip; meta= Location_span.empty}]
+                ; meta= Location_span.empty }
+              , Some
+                  { pattern=
+                      Block [b2; {pattern= Skip; meta= Location_span.empty}]
+                  ; meta= Location_span.empty } ))
       | IfElse (e, b, None) ->
           IfElse
             ( e
-            , {pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]; meta= Location_span.empty}
+            , { pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]
+              ; meta= Location_span.empty }
             , Some {pattern= Skip; meta= Location_span.empty} )
       | While (e, b) ->
           While
-            (e, {pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]; meta= Location_span.empty})
+            ( e
+            , { pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]
+              ; meta= Location_span.empty } )
       | For {loopvar; lower; upper; body= b} ->
           For
             { loopvar
             ; lower
             ; upper
             ; body=
-                {pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]; meta= Location_span.empty}
-            }
+                { pattern= Block [b; {pattern= Skip; meta= Location_span.empty}]
+                ; meta= Location_span.empty } }
       | _ -> stmt
     in
     map_rec_stmt_loc preprocess_flowgraph_base
@@ -686,12 +724,13 @@ let lazy_code_motion (mir : Program.Typed.t) =
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
-          Stmt.Fixed.{ pattern=
-              Pattern.Decl
-                { decl_adtype= Expr.Typed.adlevel_of key
-                ; decl_id= data
-                ; decl_type= Type.Unsized(Expr.Typed.type_of key) }
-          ; meta= Location_span.empty }
+          Stmt.Fixed.
+            { pattern=
+                Pattern.Decl
+                  { decl_adtype= Expr.Typed.adlevel_of key
+                  ; decl_id= data
+                  ; decl_type= Type.Unsized (Expr.Typed.type_of key) }
+            ; meta= Location_span.empty }
           :: accum )
     in
     let lazy_code_motion_base i stmt =
@@ -716,10 +755,11 @@ let lazy_code_motion (mir : Program.Typed.t) =
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
-            Stmt.Fixed.{ pattern=
-                Assignment
-                  ((Map.find_exn expression_map e, e.meta.type_, []), e)
-            ; meta= Location_span.empty } )
+            Stmt.Fixed.
+              { pattern=
+                  Assignment
+                    ((Map.find_exn expression_map e, e.meta.type_, []), e)
+              ; meta= Location_span.empty } )
           to_assign_in_s
       in
       let expr_subst_stmt_except_initial_assign m =
@@ -727,9 +767,8 @@ let lazy_code_motion (mir : Program.Typed.t) =
           match stmt with
           | Stmt.Fixed.Pattern.Assignment ((x, _, []), e')
             when Map.mem m e'
-                 && Expr.Typed.equal {e' with pattern = Var x}
-                      (Map.find_exn m e')
-                    ->
+                 && Expr.Typed.equal {e' with pattern= Var x}
+                      (Map.find_exn m e') ->
               expr_subst_stmt_base (Map.remove m e') stmt
           | _ -> expr_subst_stmt_base m stmt
         in
@@ -746,20 +785,22 @@ let lazy_code_motion (mir : Program.Typed.t) =
                   {key with pattern= Var data} )))
       in
       if List.length assignments_to_add_to_s = 0 then
-        (f Stmt.Fixed.{ pattern=stmt; meta= Location_span.empty}).pattern
+        (f Stmt.Fixed.{pattern= stmt; meta= Location_span.empty}).pattern
       else
         SList
           (List.map ~f
-             (assignments_to_add_to_s @ [{pattern=stmt; meta= Location_span.empty}]))
+             ( assignments_to_add_to_s
+             @ [{pattern= stmt; meta= Location_span.empty}] ))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
     in
-    Stmt.Fixed.{ pattern=
-        SList
-          ( declarations_list
-          @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
-    ; meta= Location_span.empty }
+    Stmt.Fixed.
+      { pattern=
+          SList
+            ( declarations_list
+            @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
+      ; meta= Location_span.empty }
   in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
@@ -768,10 +809,13 @@ let block_fixing mir =
     (map_rec_stmt_loc (fun stmt ->
          match stmt with
          | IfElse
-             (e, {pattern= SList l; meta}, Some {pattern= SList l'; meta= smeta'})
-           ->
+             ( e
+             , {pattern= SList l; meta}
+             , Some {pattern= SList l'; meta= smeta'} ) ->
              IfElse
-               (e, {pattern= Block l; meta}, Some {pattern= Block l'; meta= smeta'})
+               ( e
+               , {pattern= Block l; meta}
+               , Some {pattern= Block l'; meta= smeta'} )
          | IfElse (e, {pattern= SList l; meta}, b) ->
              IfElse (e, {pattern= Block l; meta}, b)
          | IfElse (e, b, Some {pattern= SList l'; meta= smeta'}) ->
@@ -799,7 +843,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     let initial_ad_variables =
       Set.Poly.of_list
         (List.filter_map
-           ~f:(fun (v, Program.{out_block; _}) ->
+           ~f:(fun (v, Program.({out_block; _})) ->
              match out_block with Parameters -> Some v | _ -> None )
            mir.output_vars)
     in
@@ -819,7 +863,8 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       with
       | Decl {decl_id; decl_type; _}
         when Set.mem autodiffable_variables decl_id ->
-          Stmt.Fixed.Pattern.Decl {decl_adtype= AutoDiffable; decl_id; decl_type}
+          Stmt.Fixed.Pattern.Decl
+            {decl_adtype= AutoDiffable; decl_id; decl_type}
       | Decl {decl_id; decl_type; _} ->
           Decl {decl_adtype= DataOnly; decl_id; decl_type}
       | s -> s
