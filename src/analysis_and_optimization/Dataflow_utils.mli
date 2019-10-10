@@ -1,16 +1,13 @@
 open Core_kernel
-open Common
 open Middle
 open Dataflow_types
 
 val union_maps_left :
-     ('a, 'b, 'c) Map_intf.Map.t
-  -> ('a, 'b, 'c) Map_intf.Map.t
-  -> ('a, 'b, 'c) Map_intf.Map.t
+  ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
 (** Union maps, preserving the left element in a collision *)
 
 val build_cf_graphs :
-     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
@@ -27,7 +24,7 @@ val build_cf_graphs :
 *)
 
 val build_cf_graph :
-     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
@@ -37,7 +34,7 @@ val build_cf_graph :
 *)
 
 val build_predecessor_graph :
-     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the
@@ -48,8 +45,8 @@ val build_predecessor_graph :
 *)
 
 val build_recursive_statement :
-     (('e, 's) statement -> 'm -> 's)
-  -> (label, ('e, label) statement * 'm) Map.Poly.t
+     (('e, 's) Stmt.Fixed.Pattern.t -> 'm -> 's)
+  -> (label, ('e, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> label
   -> 's
 (**
@@ -58,10 +55,10 @@ val build_recursive_statement :
 *)
 
 val build_statement_map :
-     ('s -> ('e, 's) statement)
+     ('s -> ('e, 's) Stmt.Fixed.Pattern.t)
   -> ('s -> 'm)
   -> 's
-  -> (label, ('e, label) statement * 'm) Map.Poly.t
+  -> (label, ('e, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
 (**
    The statement map is built by traversing substatements recursively to replace
    substatements with their labels while building up the substatements' statement maps.

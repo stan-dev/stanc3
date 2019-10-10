@@ -102,6 +102,22 @@ module Located = struct
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
   let loc_of x = Fixed.meta_of x
+
+  (** This module acts as a temporary replace for the `stmt_loc_num` type that
+  is currently used within `analysis_and_optimization`. 
+  
+  The original intent of the type was to provide explicit sharing of subterms.
+  My feeling is that ultimately we either want to:
+  - use the recursive type directly and rely on OCaml for sharing
+  - provide the same interface as other `Specialized` modules so that
+    the analysis code isn't aware of the particular representation we are using.
+  *)
+  module Non_recursive = struct
+    type t =
+      { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
+      ; meta: Meta.t sexp_opaque [@compare.ignore] }
+    [@@deriving compare, sexp, hash]
+  end
 end
 
 (** Statements with location information and labels. Contained expressions have

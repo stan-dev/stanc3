@@ -71,5 +71,5 @@ type optimization_settings =
   ; optimize_ad_levels: bool }
 
 val optimization_suite :
-  optimization_settings -> Middle.typed_prog -> Middle.typed_prog
+  optimization_settings -> Program.Typed.t -> Program.Typed.t
 (** Perform all optimizations in this module on the MIR in an appropriate order. *)

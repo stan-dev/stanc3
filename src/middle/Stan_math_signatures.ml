@@ -1,7 +1,6 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
 
-
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
@@ -45,7 +44,10 @@ let rec expand_arg = function
 
 type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
 
-let is_primitive = function UnsizedType.UReal -> true | UInt -> true | _ -> false
+let is_primitive = function
+  | UnsizedType.UReal -> true
+  | UInt -> true
+  | _ -> false
 
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
@@ -255,7 +257,8 @@ let stan_math_returntype name args =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
-      ~f:(fun x -> UnsizedType.check_compatible_arguments_mod_conv name (snd x) args)
+      ~f:(fun x ->
+        UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
       namematches
   in
   if List.length filteredmatches = 0 then None
@@ -327,8 +330,7 @@ let get_sigs name =
   let name = stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
-let pp_math_sig ppf (rt, args) =
-  UnsizedType.pp ppf (UFun (args, rt))
+let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt))
 
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
@@ -398,7 +400,9 @@ let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
 
 let add_nullary name = add_unqualified (name, UnsizedType.ReturnType UReal, [])
-let add_binary name = add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
+
+let add_binary name =
+  add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
 
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])

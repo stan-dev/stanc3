@@ -15,6 +15,7 @@ type t =
   | FnPrint
   | FnReject
   | FnResizeToMatch
+  | FnNaN
 [@@deriving sexp]
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"

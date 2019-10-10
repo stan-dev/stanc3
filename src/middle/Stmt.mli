@@ -61,6 +61,13 @@ module Located : sig
      and type t = (Expr.Typed.Meta.t, Meta.t) Fixed.t
 
   val loc_of : t -> Location_span.t
+
+  module Non_recursive : sig
+    type t =
+      { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
+      ; meta: Meta.t sexp_opaque [@compare.ignore] }
+    [@@deriving compare, sexp, hash]
+  end
 end
 
 module Labelled : sig

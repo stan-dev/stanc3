@@ -4,49 +4,43 @@ open Dataflow_types
 open Mir_utils
 
 (** Union maps, preserving the left element in a collision *)
-let union_maps_left' m1 m2 =
+let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
+    ('a, 'b) Map.Poly.t =
   let f ~key:_ opt =
     match opt with
     | `Left v -> Some v
     | `Right v -> Some v
     | `Both (v1, _) -> Some v1
   in
-  Map.merge m1 m2 ~f
+  Map.Poly.merge m1 m2 ~f
 
 (**
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
 *)
-let branching_traverse_statement (stmt : ('e, 'a) statement)
-    ~(join : 'f -> 'f -> 'f) ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
-    'f * ('e, 'c) statement =
-  match stmt with
-  | IfElse (pred, then_s, else_s_opt) ->
-      let s', c = f state then_s in
-      Option.value_map else_s_opt
-        ~default:(s', IfElse (pred, c, None))
-        ~f:(fun else_s ->
-          let s'', c' = f state else_s in
-          (join s' s'', IfElse (pred, c, Some c')) )
-  | _ as s -> fwd_traverse_statement s ~init:state ~f
+let branching_traverse_statement stmt ~join ~init ~f =
+  Stmt.Fixed.Pattern.(
+    match stmt with
+    | IfElse (pred, then_s, else_s_opt) ->
+        let s', c = f init then_s in
+        Option.value_map else_s_opt
+          ~default:(s', IfElse (pred, c, None))
+          ~f:(fun else_s ->
+            let s'', c' = f init else_s in
+            (join s' s'', IfElse (pred, c, Some c')) )
+    | _ as s -> fwd_traverse_statement s ~init ~f)
 
 (** Like a branching traversal, but doesn't return an updated statement.
 *)
-let branching_fold_statement (stmt : ('e, 'a) statement)
-    ~(join : 'f -> 'f -> 'f) ~init:(state : 'f) ~(f : 'f -> 'a -> 'f) : 'f =
+let branching_fold_statement stmt ~join ~init ~f =
   fst
-    (branching_traverse_statement stmt ~join ~init:state ~f:(fun s a ->
-         (f s a, ()) ))
+    (branching_traverse_statement stmt ~join ~init ~f:(fun s a -> (f s a, ())))
 
 (**
    See interface file
 *)
-let build_statement_map (extract : 's -> ('e, 's) statement)
-    (metadata : 's -> 'm) (stmt : 's) :
-    (label, ('e, label) statement * 'm) Map.Poly.t =
-  let rec build_statement_map_rec (next_label : label)
-      (map : (label, ('e, label) statement * 'm) Map.Poly.t) (stmt : 's) :
-      (label * (label, ('e, label) statement * 'm) Map.Poly.t) * label =
+let build_statement_map extract metadata stmt =
+  let rec build_statement_map_rec next_label map stmt =
     let this_label = next_label in
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec label map stmt in
@@ -67,12 +61,10 @@ let build_statement_map (extract : 's -> ('e, 's) statement)
 (**
    See interface file
 *)
-let rec build_recursive_statement (rebuild : ('e, 's) statement -> 'm -> 's)
-    (statement_map : (label, ('e, label) statement * 'm) Map.Poly.t)
-    (label : label) : 's =
+let rec build_recursive_statement rebuild statement_map label =
   let stmt_ints, meta = Map.Poly.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
-  let stmt = map_statement (fun x -> x) build_stmt stmt_ints in
+  let stmt = Stmt.Fixed.Pattern.map Fn.id build_stmt stmt_ints in
   rebuild stmt meta
 
 (** Represents the state required to build control flow information during an MIR
@@ -105,9 +97,9 @@ let join_cf_states (state1 : cf_state) (state2 : cf_state) : cf_state =
   ; exits= Set.Poly.union state1.exits state2.exits }
 
 (** Check if the statement controls the execution of its substatements. *)
-let is_ctrl_flow (stmt : ('e, 's) statement) : bool =
-  match stmt with
-  | IfElse _ -> true
+let is_ctrl_flow pattern =
+  match pattern with
+  | Stmt.Fixed.Pattern.IfElse _ -> true
   | While _ -> true
   | For _ -> true
   | _ -> false
@@ -117,12 +109,7 @@ let is_ctrl_flow (stmt : ('e, 's) statement) : bool =
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
 *)
-let build_cf_graphs
-    (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
-    label Set.Poly.t
-    * (label, label Set.Poly.t) Map.Poly.t
-    * (label, label Set.Poly.t) Map.Poly.t =
+let build_cf_graphs statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
       (label : label) : cf_state * (label, cf_edges) Map.Poly.t =
@@ -231,17 +218,11 @@ let build_cf_graphs
   , Map.Poly.map edges ~f:(fun e -> e.parents) )
 
 (** See interface file *)
-let build_cf_graph
-    (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
-    (label, label Set.Poly.t) Map.Poly.t =
+let build_cf_graph statement_map =
   let _, _, cf_graph = build_cf_graphs statement_map in
   cf_graph
 
 (** See interface file *)
-let build_predecessor_graph
-    (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
-    label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t =
+let build_predecessor_graph statement_map =
   let exits, pred_graph, _ = build_cf_graphs statement_map in
   (exits, pred_graph)

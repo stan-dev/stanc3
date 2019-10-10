@@ -25,7 +25,7 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
 
 let node_immediate_dependencies
     (statement_map :
-      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+      (label, (Expr.Typed.t, label)Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t)
     (label : label) : label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
@@ -40,7 +40,7 @@ let node_immediate_dependencies
 *)
 let rec node_dependencies_rec
     (statement_map :
-      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+      (label, (Expr.Typed.t, label)Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t)
     (visited : label Set.Poly.t) (label : label) : label Set.Poly.t =
   if Set.Poly.mem visited label then visited
   else
@@ -50,13 +50,13 @@ let rec node_dependencies_rec
 
 let node_dependencies
     (statement_map :
-      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t)
     (label : label) : label Set.Poly.t =
   node_dependencies_rec statement_map Set.Poly.empty label
 
 let node_vars_dependencies
     (statement_map :
-      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t)
     (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t =
   let _, info = Map.Poly.find_exn statement_map label in
   let var_deps =
@@ -75,7 +75,7 @@ let node_vars_dependencies
 *)
 let all_node_dependencies
     (statement_map :
-      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t)
     : (label, label Set.Poly.t) Map.Poly.t =
   let immediate_map =
     Map.mapi statement_map ~f:(fun ~key:label ~data:_ ->
@@ -102,7 +102,7 @@ let all_node_dependencies
 
 let reaching_defns
     (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
     (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
   Map.Poly.mapi statement_map ~f:(fun ~key:_ ~data:_ ->
       (* TODO: figure out how to call RDs *)
@@ -110,8 +110,8 @@ let reaching_defns
 
 let build_dep_info_map
     (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
-    (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
+    (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t =
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = reaching_defns statement_map in
   Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, _) ->
@@ -122,7 +122,7 @@ let build_dep_info_map
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit } ) )
 
-let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
+let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt stmt
@@ -152,17 +152,17 @@ let all_labels
   step_fix Flowgraph.initials
 
 let prog_rhs_variables
-    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (labels : int Set.Poly.t) : string Set.Poly.t =
   let label_vars label =
     Set.Poly.map
       ~f:(fun (VVar s, _) -> s)
-      (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).stmtn)
+      (stmt_rhs_var_set (Map.Poly.find_exn flowgraph_to_mir label).pattern)
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations (sw : ('e, 'm) stmt_with) : string Set.Poly.t =
-  match sw.stmt with
+let rec var_declarations (sw : ('e, 'm) Stmt.Fixed.t) : string Set.Poly.t =
+  match Stmt.Fixed.pattern_of sw with
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
   | IfElse (_, s1, Some s2) ->
@@ -172,7 +172,7 @@ let rec var_declarations (sw : ('e, 'm) stmt_with) : string Set.Poly.t =
   | _ -> Set.Poly.empty
 
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
-    (stmt : stmt_loc) : (location_span * string) Set.Poly.t =
+    (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt stmt
   in
@@ -188,8 +188,8 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
         let stmt = Map.Poly.find_exn flowgraph_to_mir label in
         let rhs =
           Set.Poly.map
-            ~f:(fun (VVar s, {mloc; _}) -> (mloc, s))
-            (stmt_rhs_var_set stmt.stmtn)
+            ~f:(fun (VVar s, {loc; _}) -> (loc, s))
+            (stmt_rhs_var_set stmt.pattern)
         in
         let uninitialized (_, var) = not (Set.Poly.mem inits.entry var) in
         let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
@@ -198,9 +198,9 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
   Set.Poly.filter uninitialized ~f:(fun (_, v) ->
       not (Set.Poly.mem exceptions v) )
 
-let mir_uninitialized_variables (mir : typed_prog) :
-    (location_span * string) Set.Poly.t =
-  let flag_variables = List.map ~f:string_of_flag_var all_flag_vars in
+let mir_uninitialized_variables (mir : Program.Typed.t) :
+    (Location_span.t * string) Set.Poly.t =
+  let flag_variables = List.map ~f:Flag_vars.to_string Flag_vars.enumerate in
   let data_vars =
     Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v))
   in
@@ -226,13 +226,13 @@ let mir_uninitialized_variables (mir : typed_prog) :
   Set.Poly.union_list
     [ (* prepare_data scope: data *)
       stmt_uninitialized_variables globals_data
-        {stmt= SList mir.prepare_data; smeta= no_span}
+        {pattern= SList mir.prepare_data; meta= Location_span.empty}
       (* log_prob scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
-        {stmt= SList mir.log_prob; smeta= no_span}
+        {pattern= SList mir.log_prob; meta= Location_span.empty}
       (* gen quant scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
-        {stmt= SList mir.generate_quantities; smeta= no_span}
+        {pattern= SList mir.generate_quantities; meta= Location_span.empty}
       (* functions scope: arguments *)
     ; Set.Poly.union_list
         (List.map mir.functions_block ~f:(fun {fdbody; fdargs; _} ->
@@ -244,11 +244,11 @@ let mir_uninitialized_variables (mir : typed_prog) :
                (Set.Poly.union arg_vars globals)
                fdbody )) ]
 
-let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
-    (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
-  let log_prob_stmt = {smeta= Middle.no_span; stmt= SList mir.log_prob} in
+let log_prob_build_dep_info_map (mir : Program.Typed.t) :
+    (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info) Map.Poly.t =
+  let log_prob_stmt = Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   let statement_map =
-    build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) log_prob_stmt
+    build_statement_map Stmt.Fixed.pattern_of Stmt.Fixed.pattern_of log_prob_stmt
   in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir log_prob_stmt in
@@ -262,12 +262,12 @@ let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
 
 let stmt_map_dependency_graph
     (statement_map :
-      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let dep_info_map = build_dep_info_map statement_map in
   all_node_dependencies dep_info_map
 
-let log_prob_dependency_graph (mir : Middle.typed_prog) :
+let log_prob_dependency_graph (mir : Program.Typed.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map

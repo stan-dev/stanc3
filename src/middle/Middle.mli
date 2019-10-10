@@ -2,6 +2,7 @@ module Location : module type of Location
 module Location_span : module type of Location_span
 module Operator : module type of Operator
 module Fun_kind : module type of Fun_kind
+module Flag_vars : module type of Flag_vars
 module Internal_fun : module type of Internal_fun
 module Index : module type of Index
 module Expr : module type of Expr

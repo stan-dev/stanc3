@@ -16,7 +16,7 @@ Since the type `t` is now concrete (i.e. not a type _constructor_) we can
 construct a `Comparable.S` giving us `Map` and `Set` specialized to the type.
 *)
 module type S = sig
-  type t [@@deriving compare, sexp]
+  type t [@@deriving compare, hash, sexp]
 
   module Meta : Meta
   include Pretty.S with type t := t
@@ -43,7 +43,7 @@ end
 module Make (X : Unspecialized) (Meta : Meta) :
   S with type t = Meta.t X.t and module Meta := Meta = struct
   module Basic = struct
-    type t = Meta.t X.t
+    type t = Meta.t X.t [@@deriving hash]
 
     let pp ppf x = X.pp Meta.pp ppf x
     let compare x y = X.compare Meta.compare x y
@@ -65,7 +65,7 @@ end
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
   S with type t = (First.Meta.t, Meta.t) X.t and module Meta := Meta = struct
   module Basic = struct
-    type nonrec t = (First.Meta.t, Meta.t) X.t
+    type t = (First.Meta.t, Meta.t) X.t [@@deriving hash]
 
     let pp ppf x = X.pp First.Meta.pp Meta.pp ppf x
     let compare x y = X.compare First.Meta.compare Meta.compare x y
