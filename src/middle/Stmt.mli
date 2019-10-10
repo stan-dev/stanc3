@@ -123,4 +123,33 @@ module Helpers : sig
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
+
+  val for_scalar :
+       Expr.Typed.t SizedType.t
+    -> (Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> Located.t
+
+  val for_scalar_inv :
+       Expr.Typed.t SizedType.t
+    -> (Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> Located.t
+
+  val for_eigen :
+       Expr.Typed.t SizedType.t
+    -> (Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> Located.t
+
+  val assign_indexed :
+       UnsizedType.t
+    -> string
+    -> 'a
+    -> ('b Expr.Fixed.t -> 'b Expr.Fixed.t)
+    -> 'b Expr.Fixed.t
+    -> ('b, 'a) Fixed.t
 end

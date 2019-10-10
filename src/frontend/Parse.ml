@@ -4,7 +4,7 @@
 open Core_kernel
 open Middle
 
-type syntax_error = Parsing of string * location_span
+type syntax_error = Parsing of string * Location_span.t
 
 let syntax_error_message = function Parsing (msg, _) -> msg
 let syntax_error_location = function Parsing (_, loc) -> loc
@@ -12,8 +12,8 @@ let syntax_error_location = function Parsing (_, loc) -> loc
 let pp_syntax_error ppf = function
   | Parsing (msg, loc_span) ->
       Fmt.pf ppf "\nSyntax error in %s, parsing error:\n%a"
-        (string_of_location_span loc_span)
-        Pretty.pp_message_with_location (msg, loc_span.end_loc)
+        (Location_span.to_string loc_span)
+        Location.pp_with_message_exn (msg, loc_span.end_loc)
 
 let render_syntax_error = Fmt.to_to_string pp_syntax_error
 
@@ -44,10 +44,12 @@ let parse parse_fun lexbuf =
         in
         Parsing
           ( message
-          , Errors.loc_span_of_pos
-              (Lexing.lexeme_start_p (Stack.top_exn Preprocessor.include_stack))
-              (Lexing.lexeme_end_p (Stack.top_exn Preprocessor.include_stack))
-          )
+          , Option.value_exn
+              (Location_span.of_positions_opt
+                 (Lexing.lexeme_start_p
+                    (Stack.top_exn Preprocessor.include_stack))
+                 (Lexing.lexeme_end_p
+                    (Stack.top_exn Preprocessor.include_stack))) )
         |> Result.Error
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
@@ -62,7 +64,10 @@ let parse parse_fun lexbuf =
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
             else ""
         in
-        Parsing (message, Errors.loc_span_of_pos start_pos end_pos)
+        Parsing
+          ( message
+          , Option.value_exn (Location_span.of_positions_opt start_pos end_pos)
+          )
         |> Result.Error
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)

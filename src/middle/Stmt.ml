@@ -257,6 +257,64 @@ module Helpers = struct
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.fix (meta, pattern)
 
+  (** [for_eigen unsizedtype...] generates a For statement that loops
+    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
+    overarrays and running bodyfn on any eign types found within.
+
+    We can call [bodyfn] directly on scalars and Eigen types;
+    for Arrays we call mkfor but insert a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
+  let rec for_eigen st bodyfn var smeta =
+    match st with
+    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
+        bodyfn var
+    | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+
+  (** [for_scalar unsizedtype...] generates a For statement that loops
+    over the scalars in the underlying [unsizedtype].
+
+    We can call [bodyfn] directly on scalars, make a direct For loop
+    around Eigen types, or for Arrays we call mkfor but inserting a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
+  let rec for_scalar st bodyfn var smeta =
+    match st with
+    | SizedType.SInt | SReal -> bodyfn var
+    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+    | SMatrix (d1, d2) ->
+        mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+    | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+
+  (** Exactly like for_scalar, but iterating through array dimensions in the 
+  inverted order.*)
+  let for_scalar_inv st bodyfn var smeta =
+    (* (var : Expr.Typed.t) (smeta : Location_span.t) : Located.t = *)
+    let invert_index_order e =
+      match Expr.Fixed.pattern_of e with
+      | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
+      | _ -> e
+    in
+    let rec go st bodyfn var smeta =
+      match st with
+      | SizedType.SArray (t, d) ->
+          let bodyfn' var = mkfor d bodyfn var smeta in
+          go t bodyfn' var smeta
+      | SMatrix (d1, d2) ->
+          let bodyfn' var = mkfor d1 bodyfn var smeta in
+          go (SRowVector d2) bodyfn' var smeta
+      | _ -> for_scalar st bodyfn var smeta
+    in
+    go st (Fn.compose bodyfn invert_index_order) var smeta
+
+  let assign_indexed decl_type vident smeta varfn var =
+    let indices = Expr.Helpers.collect_indices var in
+    Fixed.fix (smeta, Assignment ((vident, decl_type, indices), varfn var))
+
   (* 
     let mock_stmt stmt = {stmt; smeta= no_span}
   let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}

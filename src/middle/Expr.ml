@@ -216,6 +216,14 @@ module Helpers = struct
     in
     Fixed.fix (meta, pattern)
 
+  let collect_indices expr =
+    let rec aux accu expr =
+      match Fixed.pattern_of expr with
+      | Indexed (e, idxs) -> aux (List.rev idxs :: accu) e
+      | _ -> accu
+    in
+    aux [] expr |> List.rev |> List.concat
+
   (* let%expect_test "infer type of indexed" =
   [ (UnsizedType.UArray UMatrix, [Index.Single loop_bottom; Single loop_bottom])
   ; (UArray (UArray UMatrix), [Single loop_bottom])

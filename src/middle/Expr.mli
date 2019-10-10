@@ -97,4 +97,5 @@ module Helpers : sig
   val contains_fn : Internal_fun.t -> ?init:bool -> 'a Fixed.t -> bool
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
+  val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
 end

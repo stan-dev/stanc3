@@ -1,6 +1,5 @@
 open Core_kernel
 open Middle
-open Eigen_helpers
 
 let pos = "pos__"
 
@@ -30,7 +29,8 @@ let data_read smeta (decl_id, st) =
           |> swrap ]
     in
     SList
-      ( assign_indexed (SizedType.to_unsized st) decl_id smeta readfnapp var
+      ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
+          readfnapp var
       :: pos_increment )
     |> swrap
   in
@@ -38,7 +38,7 @@ let data_read smeta (decl_id, st) =
     Stmt.Fixed.Pattern.Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom)
     |> swrap
   in
-  [pos_reset; for_scalar_inv st bodyfn decl_var smeta]
+  [pos_reset; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta]
 
 let rec base_type = function
   | SizedType.SArray (t, _) -> base_type t
@@ -58,8 +58,9 @@ let rec base_ut_to_string = function
 
 let param_read smeta
     ( decl_id
-    , Program.({out_constrained_st= cst; out_unconstrained_st= ucst; out_block})
-    ) =
+    , Program.({ out_constrained_st= cst
+               ; out_unconstrained_st= ucst
+               ; out_block; _ }) ) =
   if not (out_block = Parameters) then []
   else
     let decl_id, decl =
@@ -88,13 +89,13 @@ let param_read smeta
             ( { Fixed.pattern=
                   Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
               ; meta= Typed.Meta.empty }
-            :: eigen_size ucst )
+            :: SizedType.dims_of ucst )
             Typed.Meta.{var.meta with type_= base_type ucst})
       in
-      Eigen_helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
+      Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
         readfnapp var
     in
-    decl @ [for_eigen ucst bodyfn unconstrained_decl_var smeta]
+    decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta]
 
 let escape_name str =
   str
@@ -174,7 +175,7 @@ let gen_write (decl_id, sizedtype) =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
   in
   let expr = Expr.Fixed.fix (meta, Var decl_id) in
-  for_scalar_inv sizedtype bodyfn expr Location_span.empty
+  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
 let rec contains_var_expr is_vident accum expr =
   accum
@@ -194,7 +195,7 @@ let constrain_in_params outvars stmts =
     | ( name
       , { Program.out_unconstrained_st
         ; out_constrained_st
-        ; out_block= Parameters } )
+        ; out_block= Parameters; _ } )
       when not (out_unconstrained_st = out_constrained_st) ->
         Some name
     | _ -> None
@@ -276,9 +277,11 @@ let make_fill vident st loc =
   in
   let bodyfn var =
     Stmt.Fixed.
-      {pattern= Assignment ((vident, ut, pull_indices var), rhs); meta= loc}
+      { pattern=
+          Assignment ((vident, ut, Expr.Helpers.collect_indices var), rhs)
+      ; meta= loc }
   in
-  for_scalar st bodyfn var loc
+  Stmt.Helpers.for_scalar st bodyfn var loc
 
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t

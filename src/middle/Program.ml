@@ -13,10 +13,30 @@ type 'a fun_def =
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
-type 'a outvar =
-  { out_unconstrained_st: 'a SizedType.t
-  ; out_constrained_st: 'a SizedType.t
-  ; out_block: io_block }
+(** Transformations (constraints) for global variable declarations *)
+type 'e transformation =
+  | Identity
+  | Lower of 'e
+  | Upper of 'e
+  | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
+  | OffsetMultiplier of 'e * 'e
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+[@@deriving sexp, compare, map, hash]
+
+type 'e outvar =
+  { out_unconstrained_st: 'e SizedType.t
+  ; out_constrained_st: 'e SizedType.t
+  ; out_block: io_block
+  ; out_trans: 'e transformation }
 [@@deriving sexp, map, hash]
 
 type ('a, 'b) t =
@@ -74,7 +94,7 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
   pp_block "transform_inits" pp_s ppf transform_inits
 
 let pp_output_var pp_e ppf
-    (name, {out_unconstrained_st; out_constrained_st; out_block}) =
+    (name, {out_unconstrained_st; out_constrained_st; out_block; _}) =
   Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (SizedType.pp pp_e)
     out_constrained_st name (SizedType.pp pp_e) out_unconstrained_st
 

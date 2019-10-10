@@ -50,3 +50,10 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
 
 let is_scalar = function SInt | SReal -> true | _ -> false
+
+let rec dims_of st =
+  match st with
+  | SArray (t, _) -> dims_of t
+  | SMatrix (d1, d2) -> [d1; d2]
+  | SRowVector dim | SVector dim -> [dim]
+  | SInt | SReal -> []
