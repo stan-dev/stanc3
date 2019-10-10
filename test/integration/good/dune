@@ -8,3 +8,4 @@
 (alias
  (name runtest)
  (action (diff pretty.expected pretty.output)))
+ 
