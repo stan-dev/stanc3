@@ -1,6 +1,58 @@
 open Core_kernel
 open Middle
 
+let use_opencl = ref false
+
+let opencl_triggers =
+  String.Map.of_alist_exn
+    [ ( "normal_id_glm_lpdf"
+      , ( [0; 1]
+        , [ (* Array of conditions under which to move to OpenCL *) ([1], [])
+          (* Argument 1 is data *)
+           ] ) )
+    ; ("bernoulli_logit_glm_lpmf", ([0; 1], [([1], [])]))
+    ; ( "categorical_logit_glm_lpmf"
+      , ([0; 1], [([1], [(1, UMatrix)])])
+        (* Additional requirement of argument 1 being a matrix *) )
+    ; ("neg_binomial_2_log_glm_lpmf", ([0; 1], [([1], [])]))
+    ; ("ordered_logistic_glm_lpmf", ([0; 1], [([1], [(1, UMatrix)])]))
+    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [])])) ]
+
+let opencl_suffix = "_opencl__"
+let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
+
+let rec switch_expr_to_opencl available_cl_vars e =
+  let is_avail = List.mem available_cl_vars ~equal:( = ) in
+  let to_cl e =
+    match e.expr with
+    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
+    | _ -> to_matrix_cl e
+  in
+  let move_cl_args cl_args index arg =
+    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+  in
+  let check_type args (i, t) = (List.nth_exn args i).emeta.mtype = t in
+  let check_if_data args ind =
+    match (List.nth_exn args ind).expr with
+    | Var s when is_avail s -> true
+    | _ -> false
+  in
+  let req_met args (data_arg, type_arg) =
+    List.for_all ~f:(check_if_data args) data_arg
+    && List.for_all ~f:(check_type args) type_arg
+  in
+  let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
+  let maybe_map_args args (cl_args, req_args) =
+    match any_req_met args req_args with
+    | true -> List.mapi args ~f:(move_cl_args cl_args)
+    | false -> args
+  in
+  match e.expr with
+  | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
+      let trigger = Map.find_exn opencl_triggers f in
+      {e with expr= FunApp (StanLib, f, maybe_map_args args trigger)}
+  | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
+
 let pos = "pos__"
 let is_scalar = function SInt | SReal -> true | _ -> false
 
@@ -215,6 +267,28 @@ let rec insert_before f to_insert = function
       if f hd then to_insert @ (hd :: tl)
       else hd :: insert_before f to_insert tl
 
+let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
+
+let rec collect_vars_expr is_target accum e =
+  Set.union accum
+    ( match e.expr with
+    | Var s when is_target s -> String.Set.of_list [s]
+    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x )
+
+let collect_opencl_vars s =
+  let rec go accum s =
+    fold_statement (collect_vars_expr is_opencl_var) go accum s.stmt
+  in
+  go String.Set.empty s
+
+let%expect_test "collect vars expr" =
+  let mkvar s = {expr= Var s; emeta= internal_meta} in
+  let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
+  let fnapp = {expr= FunApp (StanLib, "print", args); emeta= internal_meta} in
+  {stmt= TargetPE fnapp; smeta= no_span}
+  |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
+  [%expect {| (w_opencl__ x_opencl__) |}]
+
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
   [%sexp (l : int list)] |> print_s ;
@@ -308,27 +382,69 @@ let trans_prog (p : typed_prog) =
         true
     | _ -> false
   in
+  let translate_to_open_cl stmts =
+    if !use_opencl then
+      let data_var_idents = List.map ~f:fst p.input_vars in
+      let switch_expr = switch_expr_to_opencl data_var_idents in
+      let rec trans_stmt_to_opencl s =
+        {s with stmt= map_statement switch_expr trans_stmt_to_opencl s.stmt}
+      in
+      List.map stmts ~f:trans_stmt_to_opencl
+    else stmts
+  in
   let gq =
     ( add_reads p.generate_quantities p.output_vars param_read
+    |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
     @ gq_writes
     |> add_fills
   in
+  let log_prob =
+    add_reads log_prob p.output_vars param_read
+    |> constrain_in_params p.output_vars
+    |> translate_to_open_cl |> add_fills
+  in
+  let generate_quantities = gq in
+  let opencl_vars =
+    String.Set.union_list
+      (List.concat_map
+         ~f:(List.map ~f:collect_opencl_vars)
+         [log_prob; generate_quantities])
+    |> String.Set.to_list
+  in
+  let to_matrix_cl_stmts =
+    List.concat_map opencl_vars ~f:(fun vident ->
+        let vident_sans_opencl =
+          String.chop_suffix_exn ~suffix:opencl_suffix vident
+        in
+        [ { stmt=
+              Decl
+                { decl_adtype= DataOnly
+                ; decl_id= vident
+                ; decl_type= Unsized UMatrix }
+          ; smeta= no_span }
+        ; { stmt=
+              Assignment
+                ( (vident, UMatrix, [])
+                , to_matrix_cl
+                    {expr= Var vident_sans_opencl; emeta= internal_meta} )
+          ; smeta= no_span } ] )
+  in
   let p =
     { p with
-      log_prob=
-        add_reads log_prob p.output_vars param_read
-        |> constrain_in_params p.output_vars
-        |> add_fills
+      log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
-        init_pos @ add_reads p.prepare_data p.input_vars data_read |> add_fills
+        init_pos
+        @ add_reads p.prepare_data p.input_vars data_read
+        @ to_matrix_cl_stmts
+        |> add_fills
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
         @ List.map ~f:gen_write constrained_params
-    ; generate_quantities= gq }
+    ; generate_quantities }
   in
   map_prog Fn.id ensure_body_in_block p

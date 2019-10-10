@@ -259,10 +259,8 @@ let expression_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Assignment ((s, _, []), e) ->
-                if can_side_effect_expr e then
-                  m
-                else
-                  Map.set m ~key:s ~data:(subst_expr m e)
+                if can_side_effect_expr e then m
+                else Map.set m ~key:s ~data:(subst_expr m e)
             | Middle.Decl {decl_id= s; _}
              |Middle.Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
