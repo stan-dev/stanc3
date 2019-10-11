@@ -18,7 +18,9 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
+let types_match e1 e2 =
+  e1.emeta.mtype = e2.emeta.mtype && e1.emeta.madlevel = e2.emeta.madlevel
+
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
