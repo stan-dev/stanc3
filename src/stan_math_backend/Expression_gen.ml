@@ -184,10 +184,15 @@ and gen_misc_special_math_app f =
           let f = match es with [_; _] -> "std::" ^ f | _ -> f in
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
+      let std_prefix_data_scalar f = function
+        | [{emeta= {madlevel= DataOnly; mtype= UInt | UReal; _}; _}] ->
+            "std::" ^ f
+        | _ -> f
+      in
       Some
         (fun ppf es ->
-          if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pp_call ppf (f, pp_expr, es) )
+          let f = std_prefix_data_scalar f es in
+          pp_call ppf (f, pp_expr, es) )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
