@@ -87,7 +87,7 @@ let options =
       , Arg.Unit
           (fun _ ->
             print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 1 )
+            exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.Set_string Semantic_check.model_name
