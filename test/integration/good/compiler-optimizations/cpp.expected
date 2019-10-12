@@ -194,9 +194,9 @@ return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 rfun(const T0__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -228,7 +228,7 @@ rfun(const T0__& y, std::ostream* pstream__) {
 
 struct rfun_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& y, std::ostream* pstream__)  const 
 {
 return rfun(y, pstream__);

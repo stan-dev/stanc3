@@ -965,13 +965,13 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 302, column 39 to line 307, column 3)"};
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) ;
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -996,7 +996,7 @@ foo(const T0__& n, std::ostream* pstream__) {
 
 struct foo_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& n, std::ostream* pstream__)  const 
 {
 return foo(n, pstream__);
@@ -1089,9 +1089,9 @@ return foo_bar0(pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_bar1(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1111,7 +1111,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
@@ -1292,7 +1292,7 @@ typename T_lp_accum__>
 void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1322,9 +1322,9 @@ return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_1(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1515,7 +1515,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
 
 struct foo_1_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_1(a, pstream__);
@@ -1523,9 +1523,9 @@ return foo_1(a, pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_2(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1557,7 +1557,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
 
 struct foo_2_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_2(a, pstream__);
@@ -1599,10 +1599,10 @@ return foo_3(t, n, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1621,7 +1621,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -1632,7 +1632,7 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2882,9 +2882,9 @@ return vecfoo(pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 vecmufoo(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2909,7 +2909,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmufoo_functor__ {
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmufoo(mu, pstream__);
@@ -2917,9 +2917,9 @@ return vecmufoo(mu, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 vecmubar(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2945,7 +2945,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmubar_functor__ {
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmubar(mu, pstream__);

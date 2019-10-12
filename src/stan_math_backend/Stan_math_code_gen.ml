@@ -49,13 +49,10 @@ let%expect_test "arg types templated correctly" =
 let promoted_arg_type ppf argtypetemplates =
   match argtypetemplates with
   | [] -> pf ppf "double"
-  | [a] -> pf ppf "%s" a
   | a ->
       let rec promote_args_chunked ppf args =
         let go ppf tl =
-          match tl with
-          | _ :: _ -> pf ppf ", %a" promote_args_chunked tl
-          | _ -> ()
+          match tl with [] -> () | _ -> pf ppf ", %a" promote_args_chunked tl
         in
         pf ppf "typename boost::math::tools::promote_args<%a%a>::type"
           (list ~sep:comma string) (List.hd_exn args) go (List.tl_exn args)
