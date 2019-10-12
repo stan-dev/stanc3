@@ -18,7 +18,9 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
+let types_match e1 e2 =
+  e1.emeta.mtype = e2.emeta.mtype && e1.emeta.madlevel = e2.emeta.madlevel
+
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
@@ -347,7 +349,9 @@ and pp_expr ppf e =
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       let promoted ppf (t, e) =
-        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_expr_type t pp_expr e
+        pf ppf "stan::math::promote_scalar<%s>(%a)"
+          (local_scalar t.emeta.mtype t.emeta.madlevel)
+          pp_expr e
       in
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
