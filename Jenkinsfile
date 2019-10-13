@@ -12,6 +12,9 @@ def runShell(String command){
 def buildTagImage(String registry, String repository, String dockerfile_path){
     def function = """#!/bin/bash
 
+        # Always up to date with latest
+        docker pull $registry/$repository
+
         #Save base location
         base_location=\$(pwd)
 
