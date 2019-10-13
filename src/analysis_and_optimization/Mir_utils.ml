@@ -206,7 +206,7 @@ let subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base_helper g h b =
   match b with
-  | Assignment ((x, l), e2) -> Assignment ((x, List.map ~f:h l), g e2)
+  | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
   | x -> map_statement g (fun y -> y) x
 
 let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)

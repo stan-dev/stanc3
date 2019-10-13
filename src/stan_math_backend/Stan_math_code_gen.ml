@@ -48,16 +48,27 @@ let%expect_test "arg types templated correctly" =
   |> maybe_templated_arg_types |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
 
+let promoted_arg_type ppf argtypetemplates =
+  match argtypetemplates with
+  | [] -> pf ppf "double"
+  | [a] -> pf ppf "%s" a
+  | a ->
+      let rec promote_args_chunked ppf args =
+        let go ppf tl =
+          match tl with
+          | _ :: _ -> pf ppf ", %a" promote_args_chunked tl
+          | _ -> ()
+        in
+        pf ppf "typename boost::math::tools::promote_args<%a%a>::type"
+          (list ~sep:comma string) (List.hd_exn args) go (List.tl_exn args)
+      in
+      promote_args_chunked ppf (List.chunks_of ~length:5 a)
+
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
   let scalar =
-    match arg_types with
-    | [] -> "double"
-    | a ->
-        strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
-          (list ~sep:comma string)
-          (maybe_templated_arg_types a)
+    strf "%a" promoted_arg_type (maybe_templated_arg_types arg_types)
   in
   match rt with
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
@@ -98,14 +109,8 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
-    let local_scalar ppf () =
-      match argtypetemplates with
-      | [] -> pf ppf "double"
-      | a ->
-          pf ppf "typename boost::math::tools::promote_args<%a>::type"
-            (list ~sep:comma string) a
-    in
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," local_scalar () ;
+    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," promoted_arg_type
+      argtypetemplates ;
     text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
     (* needed?*)
     text "const static bool propto__ = true;" ;
@@ -181,7 +186,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  pf ppf "%s(@[<hov 0>%a) : prob_grad(0) @]" p.prog_name
+  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.prog_name
     (list ~sep:comma string) params ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
@@ -419,9 +424,31 @@ let pp_log_prob ppf p =
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   pp_method_b ppf "T__" "log_prob" params intro p.log_prob ~outro
 
+let pp_outvar_metadata ppf (method_name, outvars) =
+  let intro = ["stringstream s__;"] in
+  let outro = ["return s__.str();"] in
+  let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
+  let ppbody ppf = pf ppf "s__ << %s;" json_str in
+  pp_method ppf "std::string" method_name [] intro ~outro ppbody
+
+let pp_unconstrained_types ppf {output_vars; _} =
+  let grab_unconstrained (name, {out_unconstrained_st; out_block; _}) =
+    (name, out_unconstrained_st, out_block)
+  in
+  let outvars = List.map ~f:grab_unconstrained output_vars in
+  pp_outvar_metadata ppf ("get_unconstrained_sizedtypes", outvars)
+
+let pp_constrained_types ppf {output_vars; _} =
+  let grab_constrained (name, {out_constrained_st; out_block; _}) =
+    (name, out_constrained_st, out_block)
+  in
+  let outvars = List.map ~f:grab_constrained output_vars in
+  pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
+
 let pp_overloads ppf () =
   pf ppf
     {|
+    // Begin method overload boilerplate
     template <typename RNG>
     void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
@@ -451,24 +478,40 @@ let pp_overloads ppf () =
       std::vector<int> vec_params_i;
       return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
 |}
 
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
-  pf ppf "@ %a" pp_get_param_names p ;
-  pf ppf "@ %a" pp_get_dims p ;
   pf ppf "@ %a" pp_write_array p ;
+  pf ppf "@ %a" pp_transform_inits p ;
+  (* Begin metadata methods *)
+  pf ppf "@ %a" pp_get_param_names p ;
+  (* Post-data metadata methods *)
+  pf ppf "@ %a" pp_get_dims p ;
   pf ppf "@ %a" pp_constrained_param_names p ;
   pf ppf "@ %a" pp_unconstrained_param_names p ;
-  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_constrained_types p ;
+  pf ppf "@ %a" pp_unconstrained_types p ;
+  (* Boilerplate *)
   pf ppf "@ %a" pp_overloads ()
 
 let pp_model ppf (p : Locations.typed_prog_num) =
-  pf ppf "class %s : public prob_grad {" p.prog_name ;
+  pf ppf "class %s : public model_base_crtp<%s> {" p.prog_name p.prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
-  pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
+  pf ppf "@ @ std::string model_name() const { return \"%s\"; }" p.prog_name ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 let usings =
@@ -479,7 +522,7 @@ using std::stringstream;
 using std::vector;
 using stan::io::dump;
 using stan::math::lgamma;
-using stan::model::prob_grad;
+using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::assign;
 using stan::model::cons_list;
@@ -492,11 +535,53 @@ using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math; |}
 
+let pre_boilerplate =
+  {|#include <vector>
+#include <Eigen/Dense>
+
+template <typename T, typename S>
+std::vector<T> resize_to_match(std::vector<T>& dst, const std::vector<S>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, -1>
+resize_to_match(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+  dst.resize(src.rows(), src.cols());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, 1, -1>
+resize_to_match(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, 1>
+resize_to_match(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+|}
+
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
-  let p = Transform_Mir.trans_prog p in
   let p, s = Locations.prepare_prog p in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
+    pre_boilerplate version includes p.prog_name usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
-  pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name
+  pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
+  pf ppf
+    {|
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+|}

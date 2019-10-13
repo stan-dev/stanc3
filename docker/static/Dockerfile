@@ -32,7 +32,7 @@ RUN eval $(opam env)
 
 #Copy script & Install build dependencies
 COPY ./scripts/install_build_deps.sh ./
-RUN bash -x install_build_deps.sh
+RUN opam update; bash -x install_build_deps.sh
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]

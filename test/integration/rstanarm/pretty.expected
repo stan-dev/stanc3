@@ -5075,7 +5075,7 @@ transformed parameters {
     if (K > 1) 
       theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
     else 
-      theta[j, 1] = R2[j] * sqrt_Nm1[j] * Delta_y;
+      theta[j][1] = R2[j] * sqrt_Nm1[j] * Delta_y;
     sigma[j] = Delta_y * sqrt(1 - R2[j]);
     if (has_intercept == 1) {
       if (prior_dist_for_intercept == 0) 

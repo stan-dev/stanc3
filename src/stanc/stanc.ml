@@ -16,6 +16,8 @@ let model_file = ref ""
 let pretty_print_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
+let dump_mir_pretty = ref false
+let dump_tx_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
 
@@ -42,7 +44,14 @@ let options =
       )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
-      , " For debugging purposes: print the MIR." )
+      , " For debugging purposes: print the MIR as an S-expression." )
+    ; ( "--debug-mir-pretty"
+      , Arg.Set dump_mir_pretty
+      , " For debugging purposes: pretty-print the MIR." )
+    ; ( "--debug-transformed-mir"
+      , Arg.Set dump_tx_mir
+      , " For debugging purposes: print the MIR after the backend has \
+         transformed it." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -122,7 +131,12 @@ let use_file filename =
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
+    if !dump_mir_pretty then
+      Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+    let tx_mir = Transform_Mir.trans_prog mir in
+    if !dump_tx_mir then
+      Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
+    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog tx_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
