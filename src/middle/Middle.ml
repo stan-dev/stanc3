@@ -62,12 +62,6 @@ let operator_return_type_from_string op_name argtypes =
 let operator_return_type op =
   operator_return_type_from_string (string_of_operator op)
 
-let rec sexp_of_expr_typed_located {expr; _} =
-  sexp_of_expr sexp_of_expr_typed_located expr
-
-let rec sexp_of_stmt_loc {stmt; _} =
-  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
-
 let rec expr_contains_fn fname accum e =
   accum
   ||
@@ -219,10 +213,30 @@ let%expect_test "making vector for loop" =
   |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
   [%expect
     {|
-    (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 1))
-     (body
-      (Block
-       ((NRFunApp StanLib print ((Indexed (Var hi) ((Single (Var sym1__)))))))))) |}]
+    ((stmt
+      (For (loopvar sym1__)
+       (lower
+        ((expr (Lit Int 1))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (upper
+        ((expr (Lit Int 1))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (body
+        ((stmt
+          (Block
+           (((stmt
+              (NRFunApp StanLib print
+               (((expr
+                  (Indexed
+                   ((expr (Var hi))
+                    (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
+                   ((Single
+                     ((expr (Var sym1__))
+                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+             (smeta <opaque>)))))
+         (smeta <opaque>)))))
+     (smeta <opaque>)) |}]
 
 (** [for_scalar sizedtype bodyfn var smeta] generates a For statement that loops
     over the scalars in the underlying [sizedtype].
@@ -273,22 +287,97 @@ let%expect_test "inverted for" =
   |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
   [%expect
     {|
-    (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 3))
-     (body
-      (Block
-       ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 2))
-         (body
+    ((stmt
+      (For (loopvar sym1__)
+       (lower
+        ((expr (Lit Int 1))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (upper
+        ((expr (Lit Int 3))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (body
+        ((stmt
           (Block
-           ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 5))
-             (body
-              (Block
-               ((For (loopvar sym4__) (lower (Lit Int 1)) (upper (Lit Int 4))
-                 (body
+           (((stmt
+              (For (loopvar sym2__)
+               (lower
+                ((expr (Lit Int 1))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               (upper
+                ((expr (Lit Int 2))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               (body
+                ((stmt
                   (Block
-                   ((NRFunApp StanLib print
-                     ((Indexed (Var hi)
-                       ((Single (Var sym4__)) (Single (Var sym3__))
-                        (Single (Var sym2__)) (Single (Var sym1__)))))))))))))))))))))) |}]
+                   (((stmt
+                      (For (loopvar sym3__)
+                       (lower
+                        ((expr (Lit Int 1))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                       (upper
+                        ((expr (Lit Int 5))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                       (body
+                        ((stmt
+                          (Block
+                           (((stmt
+                              (For (loopvar sym4__)
+                               (lower
+                                ((expr (Lit Int 1))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly)))))
+                               (upper
+                                ((expr (Lit Int 4))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly)))))
+                               (body
+                                ((stmt
+                                  (Block
+                                   (((stmt
+                                      (NRFunApp StanLib print
+                                       (((expr
+                                          (Indexed
+                                           ((expr (Var hi))
+                                            (emeta
+                                             ((mtype (UArray (UArray UMatrix)))
+                                              (mloc <opaque>)
+                                              (madlevel DataOnly))))
+                                           ((Single
+                                             ((expr (Var sym4__))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly)))))
+                                            (Single
+                                             ((expr (Var sym3__))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly)))))
+                                            (Single
+                                             ((expr (Var sym2__))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly)))))
+                                            (Single
+                                             ((expr (Var sym1__))
+                                              (emeta
+                                               ((mtype UInt) (mloc <opaque>)
+                                                (madlevel DataOnly))))))))
+                                         (emeta
+                                          ((mtype UReal) (mloc <opaque>)
+                                           (madlevel DataOnly)))))))
+                                     (smeta <opaque>)))))
+                                 (smeta <opaque>)))))
+                             (smeta <opaque>)))))
+                         (smeta <opaque>)))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>)))))
+             (smeta <opaque>)))))
+         (smeta <opaque>)))))
+     (smeta <opaque>)) |}]
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating

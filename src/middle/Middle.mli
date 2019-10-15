@@ -23,8 +23,6 @@ val loop_bottom : Mir.mtype_loc_ad Mir.with_expr
 val remove_size : 'a Mir.sizedtype -> Mir.unsizedtype
 val zero : Mir.mtype_loc_ad Mir.with_expr
 val remove_possible_size : 'a possiblysizedtype -> unsizedtype
-val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
-val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
 val gensym_reset_danger_use_cautiously : unit -> unit
