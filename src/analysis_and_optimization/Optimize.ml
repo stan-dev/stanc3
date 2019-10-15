@@ -551,16 +551,15 @@ let propagation
 let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
 
-let expression_propagation =
-  propagation Monotone_framework.expression_propagation_transfer
-
-let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
-
 let rec can_side_effect_expr (e : Expr.Typed.t) =
   match Expr.Fixed.pattern_of e with
   | Var _ | Lit (_, _) -> false
-  | FunApp (_, f, es) ->
-      String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
+  | FunApp (t, f, es) ->
+      String.suffix f 3 = "_lp"
+      || List.exists ~f:can_side_effect_expr es
+      || (t = CompilerInternal && f = Internal_fun.to_string FnReadParam)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnWriteParam)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnUnconstrain)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
@@ -571,6 +570,12 @@ and can_side_effect_idx (i : Expr.Typed.t Index.t) =
   | All -> false
   | Single e | Upfrom e | MultiIndex e -> can_side_effect_expr e
   | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+
+let expression_propagation =
+  propagation
+    (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
+
+let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 
 let is_skip_break_continue s =
   match s with
@@ -853,8 +858,13 @@ let optimize_ad_levels (mir : Program.Typed.t) =
         (module Rev_Flowgraph)
         flowgraph_to_mir initial_ad_variables
     in
+    let insert_constraint_variables vars =
+      Set.Poly.union vars (Set.Poly.map ~f:(fun x -> x ^ "_in__") vars)
+    in
     let optimize_ad_levels_stmt_base i stmt =
-      let autodiffable_variables = (Map.find_exn ad_levels i).exit in
+      let autodiffable_variables =
+        insert_constraint_variables (Map.find_exn ad_levels i).exit
+      in
       match
         Stmt.Fixed.Pattern.map
           (update_expr_ad_levels autodiffable_variables)

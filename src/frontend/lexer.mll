@@ -26,12 +26,13 @@ let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal?
 let real_constant2 = '.' ['0'-'9']+ exp_literal?
 let real_constant3 = integer_constant exp_literal
 let real_constant = real_constant1 | real_constant2 | real_constant3
-let space = ' ' | '\t' | '\012' | '\r'
-let non_space_or_newline = [^' ' '\t' '\012' '\r' '\n']
+let space = ' ' | '\t' | '\012'
+let newline = '\r' | '\n' | '\r'*'\n'
+let non_space_or_newline =  [^ ' ' '\t' '\012' '\r' '\n' ]
 
 rule token = parse
 (* White space, line numers and comments *)
-    '\n'                      { lexer_logger "newline" ;
+  | newline                   { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
@@ -39,7 +40,7 @@ rule token = parse
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
-    ( ( space | '\n')+)
+    ( ( space | newline)+)
     ( '"' [^ '"']* '"'
     | non_space_or_newline*
     as fname)                 { lexer_logger ("include " ^ fname) ;
@@ -202,7 +203,7 @@ and multiline_comment = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment = parse
-  | '\n'   { incr_linenum lexbuf }
+  | newline   { incr_linenum lexbuf }
   | eof    { () }
   | _      { singleline_comment lexbuf }
 

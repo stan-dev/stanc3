@@ -629,23 +629,22 @@ let rec eval_expr (e : Expr.Typed.t) =
               match op with
               | "PPlus__" | "PMinus__" | "PNot__" ->
                   apply_prefix_operator_int op (Int.of_string i)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Real, r); _}] -> (
               match op with
               | "PPlus__" | "PMinus__" ->
                   apply_prefix_operator_real op (Float.of_string r)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}] -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" | "Modulo__"
                |"Or__" | "And__" | "Equals__" | "NEquals__" | "Less__"
                |"Leq__" | "Greater__" | "Geq__" ->
                   apply_operator_int op (Int.of_string i1) (Int.of_string i2)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
              |op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
-             |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
-            -> (
+             |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}] -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
                   apply_arithmetic_operator_real op (Float.of_string i1)
@@ -654,7 +653,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                |"Leq__" | "Greater__" | "Geq__" ->
                   apply_logical_operator_real op (Float.of_string i1)
                     (Float.of_string i2)
-              | _ -> FunApp (StanLib, op, l) )
+              | _ -> FunApp (t, op, l) )
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with

@@ -965,13 +965,13 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 302, column 39 to line 307, column 3)"};
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) ;
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -996,7 +996,7 @@ foo(const T0__& n, std::ostream* pstream__) {
 
 struct foo_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& n, std::ostream* pstream__)  const 
 {
 return foo(n, pstream__);
@@ -1089,9 +1089,9 @@ return foo_bar0(pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_bar1(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1111,7 +1111,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
@@ -1292,7 +1292,7 @@ typename T_lp_accum__>
 void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1322,9 +1322,9 @@ return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_1(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1515,7 +1515,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
 
 struct foo_1_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_1(a, pstream__);
@@ -1523,9 +1523,9 @@ return foo_1(a, pstream__);
 };
 
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_2(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1557,7 +1557,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
 
 struct foo_2_functor__ {
 template <typename T0__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_2(a, pstream__);
@@ -1599,10 +1599,10 @@ return foo_3(t, n, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1621,7 +1621,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-T0__
+typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -1632,7 +1632,7 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2882,9 +2882,9 @@ return vecfoo(pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 vecmufoo(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2909,7 +2909,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmufoo_functor__ {
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmufoo(mu, pstream__);
@@ -2917,9 +2917,9 @@ return vecmufoo(mu, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 vecmubar(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = T0__;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2945,7 +2945,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmubar_functor__ {
 template <typename T0__>
-Eigen::Matrix<T0__, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmubar(mu, pstream__);
@@ -7376,4 +7376,811 @@ Warning: deprecated language construct used in 'mother.stan', line 187, column 2
    -------------------------------------------------
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+
+  $ ../../../../../install/default/bin/stanc --print-cpp optimize_glm.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace optimize_glm_model_namespace {
+
+template <typename T, typename S>
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, -1>
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+  dst.resize(src.rows(), src.cols());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, 1, -1>
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, 1>
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
+}
+
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
+using namespace stan::math; 
+
+static int current_statement__ = 0;
+static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'optimize_glm.stan', line 13, column 2 to column 20)",
+                                                      " (in 'optimize_glm.stan', line 14, column 2 to column 17)",
+                                                      " (in 'optimize_glm.stan', line 15, column 2 to column 17)",
+                                                      " (in 'optimize_glm.stan', line 16, column 2 to column 22)",
+                                                      " (in 'optimize_glm.stan', line 17, column 2 to column 13)",
+                                                      " (in 'optimize_glm.stan', line 18, column 2 to column 11)",
+                                                      " (in 'optimize_glm.stan', line 19, column 2 to column 19)",
+                                                      " (in 'optimize_glm.stan', line 20, column 2 to column 22)",
+                                                      " (in 'optimize_glm.stan', line 21, column 2 to column 23)",
+                                                      " (in 'optimize_glm.stan', line 25, column 2 to column 64)",
+                                                      " (in 'optimize_glm.stan', line 26, column 2 to column 64)",
+                                                      " (in 'optimize_glm.stan', line 28, column 2 to column 63)",
+                                                      " (in 'optimize_glm.stan', line 29, column 2 to column 63)",
+                                                      " (in 'optimize_glm.stan', line 31, column 2 to column 59)",
+                                                      " (in 'optimize_glm.stan', line 32, column 2 to column 59)",
+                                                      " (in 'optimize_glm.stan', line 34, column 2 to column 71)",
+                                                      " (in 'optimize_glm.stan', line 35, column 2 to column 71)",
+                                                      " (in 'optimize_glm.stan', line 37, column 2 to column 62)",
+                                                      " (in 'optimize_glm.stan', line 38, column 2 to column 62)",
+                                                      " (in 'optimize_glm.stan', line 40, column 2 to column 65)",
+                                                      " (in 'optimize_glm.stan', line 41, column 2 to column 65)",
+                                                      " (in 'optimize_glm.stan', line 43, column 2 to column 63)",
+                                                      " (in 'optimize_glm.stan', line 44, column 2 to column 63)",
+                                                      " (in 'optimize_glm.stan', line 46, column 2 to column 66)",
+                                                      " (in 'optimize_glm.stan', line 47, column 2 to column 66)",
+                                                      " (in 'optimize_glm.stan', line 49, column 2 to column 68)",
+                                                      " (in 'optimize_glm.stan', line 50, column 2 to column 68)",
+                                                      " (in 'optimize_glm.stan', line 52, column 2 to column 71)",
+                                                      " (in 'optimize_glm.stan', line 53, column 2 to column 71)",
+                                                      " (in 'optimize_glm.stan', line 55, column 2 to column 69)",
+                                                      " (in 'optimize_glm.stan', line 56, column 2 to column 69)",
+                                                      " (in 'optimize_glm.stan', line 58, column 2 to column 72)",
+                                                      " (in 'optimize_glm.stan', line 59, column 2 to column 72)",
+                                                      " (in 'optimize_glm.stan', line 61, column 2 to column 73)",
+                                                      " (in 'optimize_glm.stan', line 2, column 2 to column 17)",
+                                                      " (in 'optimize_glm.stan', line 3, column 2 to column 17)",
+                                                      " (in 'optimize_glm.stan', line 4, column 2 to column 19)",
+                                                      " (in 'optimize_glm.stan', line 5, column 2 to column 18)",
+                                                      " (in 'optimize_glm.stan', line 6, column 2 to column 23)",
+                                                      " (in 'optimize_glm.stan', line 7, column 2 to column 16)",
+                                                      " (in 'optimize_glm.stan', line 8, column 2 to column 17)",
+                                                      " (in 'optimize_glm.stan', line 9, column 2 to column 12)"};
+
+
+class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
+
+ private:
+  int pos__;
+  int k;
+  int n;
+  Eigen::Matrix<double, -1, -1> X_d;
+  Eigen::Matrix<double, -1, 1> y_v_d;
+  Eigen::Matrix<double, 1, -1> X_rv_d;
+  std::vector<int> y_vi_d;
+  std::vector<int> y2_vi_d;
+  int y_s_d;
+ 
+ public:
+  ~optimize_glm_model() { }
+  
+  std::string model_name() const { return "optimize_glm_model"; }
+  
+  optimize_glm_model(stan::io::var_context& context__,
+                     unsigned int random_seed__ = 0,
+                     std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    typedef double local_scalar_t__;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static const char* function__ = "optimize_glm_model_namespace::optimize_glm_model";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      
+      pos__ = 1;
+      
+      current_statement__ = 35;
+      pos__ = 1;
+      current_statement__ = 35;
+      k = context__.vals_i("k")[(pos__ - 1)];
+      
+      current_statement__ = 36;
+      pos__ = 1;
+      current_statement__ = 36;
+      n = context__.vals_i("n")[(pos__ - 1)];
+      X_d = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 37;
+      pos__ = 1;
+      current_statement__ = 37;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 37;
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          current_statement__ = 37;
+          assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
+          current_statement__ = 37;
+          pos__ = (pos__ + 1);}}
+      y_v_d = Eigen::Matrix<double, -1, 1>(n);
+      
+      current_statement__ = 38;
+      pos__ = 1;
+      current_statement__ = 38;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 38;
+        assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
+        current_statement__ = 38;
+        pos__ = (pos__ + 1);}
+      X_rv_d = Eigen::Matrix<double, 1, -1>(n);
+      
+      current_statement__ = 39;
+      pos__ = 1;
+      current_statement__ = 39;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 39;
+        assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
+        current_statement__ = 39;
+        pos__ = (pos__ + 1);}
+      y_vi_d = std::vector<int>(n, 0);
+      
+      current_statement__ = 40;
+      pos__ = 1;
+      current_statement__ = 40;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 40;
+        assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
+        current_statement__ = 40;
+        pos__ = (pos__ + 1);}
+      y2_vi_d = std::vector<int>(n, 0);
+      
+      current_statement__ = 41;
+      pos__ = 1;
+      current_statement__ = 41;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 41;
+        assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
+        current_statement__ = 41;
+        pos__ = (pos__ + 1);}
+      
+      current_statement__ = 42;
+      pos__ = 1;
+      current_statement__ = 42;
+      y_s_d = context__.vals_i("y_s_d")[(pos__ - 1)];
+      current_statement__ = 35;
+      current_statement__ = 35;
+      check_greater_or_equal(function__, "k", k, 1);
+      current_statement__ = 36;
+      current_statement__ = 36;
+      check_greater_or_equal(function__, "n", n, 0);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    num_params_r__ += k;
+    num_params_r__ += k;
+    num_params_r__ += k;
+    num_params_r__ += 1;
+    num_params_r__ += 1;
+    num_params_r__ += 1;
+    num_params_r__ += n * k;
+    num_params_r__ += n * k;
+    num_params_r__ += n;
+    
+  }
+  template <bool propto__, bool jacobian__, typename T__>
+  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+               std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    static const char* function__ = "optimize_glm_model_namespace::log_prob";
+(void) function__;  // suppress unused var warning
+
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    
+    try {
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      
+      current_statement__ = 1;
+      alpha_v = in__.vector(k);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      
+      current_statement__ = 2;
+      beta = in__.vector(k);
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
+      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      
+      current_statement__ = 3;
+      cuts = in__.vector(k);
+      local_scalar_t__ sigma;
+      
+      current_statement__ = 4;
+      sigma = in__.scalar();
+      current_statement__ = 4;
+      if (jacobian__) {
+        current_statement__ = 4;
+        sigma = lb_constrain(sigma, 0, lp__);
+      } else {
+        current_statement__ = 4;
+        sigma = lb_constrain(sigma, 0);
+      }
+      local_scalar_t__ alpha;
+      
+      current_statement__ = 5;
+      alpha = in__.scalar();
+      local_scalar_t__ phi;
+      
+      current_statement__ = 6;
+      phi = in__.scalar();
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
+      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      
+      current_statement__ = 7;
+      X_p = in__.matrix(n, k);
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      
+      current_statement__ = 8;
+      beta_m = in__.matrix(n, k);
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
+      
+      current_statement__ = 9;
+      X_rv_p = in__.row_vector(n);
+      {
+        current_statement__ = 10;
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_d, alpha, beta,
+                                                 sigma));
+        current_statement__ = 11;
+        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_p, alpha, beta,
+                                                 sigma));
+        current_statement__ = 12;
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_d, alpha,
+                                                       beta));
+        current_statement__ = 13;
+        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_p, alpha,
+                                                       beta));
+        current_statement__ = 14;
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_d, alpha, beta));
+        current_statement__ = 15;
+        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_p, alpha, beta));
+        current_statement__ = 16;
+        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_d, alpha,
+                                                          beta, phi));
+        current_statement__ = 17;
+        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_p, alpha,
+                                                          beta, phi));
+        current_statement__ = 18;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_d, beta,
+                                                        cuts));
+        current_statement__ = 19;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_p, beta,
+                                                        cuts));
+        current_statement__ = 20;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_d, beta,
+                                                        cuts));
+        current_statement__ = 21;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_p, beta,
+                                                        cuts));
+        current_statement__ = 22;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_d, beta,
+                                                        cuts));
+        current_statement__ = 23;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_p, beta,
+                                                        cuts));
+        current_statement__ = 24;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_d, beta,
+                                                        cuts));
+        current_statement__ = 25;
+        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_p, beta,
+                                                        cuts));
+        current_statement__ = 26;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_d, alpha_v,
+                                                         beta_m));
+        current_statement__ = 27;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_p, alpha_v,
+                                                         beta_m));
+        current_statement__ = 28;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_d,
+                                                         alpha_v, beta_m));
+        current_statement__ = 29;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_p,
+                                                         alpha_v, beta_m));
+        current_statement__ = 30;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_d,
+                                                         alpha_v, beta_m));
+        current_statement__ = 31;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_p,
+                                                         alpha_v, beta_m));
+        current_statement__ = 32;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_d,
+                                                         alpha_v, beta_m));
+        current_statement__ = 33;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p,
+                                                         alpha_v, beta_m));
+        current_statement__ = 34;
+        lp_accum__.add(categorical_logit_glm_lpmf<false>(y2_vi_d, X_rv_p,
+                                                         alpha_v, beta_m));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  template <typename RNG>
+  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__, std::vector<double>& vars__,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
+                   std::ostream* pstream__ = 0) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "optimize_glm_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
+    
+    try {
+      Eigen::Matrix<double, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 1;
+      alpha_v = in__.vector(k);
+      Eigen::Matrix<double, -1, 1> beta;
+      beta = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 2;
+      beta = in__.vector(k);
+      Eigen::Matrix<double, -1, 1> cuts;
+      cuts = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 3;
+      cuts = in__.vector(k);
+      double sigma;
+      
+      current_statement__ = 4;
+      sigma = in__.scalar();
+      current_statement__ = 4;
+      sigma = lb_constrain(sigma, 0);
+      double alpha;
+      
+      current_statement__ = 5;
+      alpha = in__.scalar();
+      double phi;
+      
+      current_statement__ = 6;
+      phi = in__.scalar();
+      Eigen::Matrix<double, -1, -1> X_p;
+      X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 7;
+      X_p = in__.matrix(n, k);
+      Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 8;
+      beta_m = in__.matrix(n, k);
+      Eigen::Matrix<double, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
+      
+      current_statement__ = 9;
+      X_rv_p = in__.row_vector(n);
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(alpha_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(beta[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(cuts[(sym1__ - 1)]);}
+      vars__.push_back(sigma);
+      vars__.push_back(alpha);
+      vars__.push_back(phi);
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        vars__.push_back(X_rv_p[(sym1__ - 1)]);}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& vars__, std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      
+      pos__ = 1;
+      Eigen::Matrix<double, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 1;
+      pos__ = 1;
+      current_statement__ = 1;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 1;
+        assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("alpha_v")[(pos__ - 1)], "assigning variable alpha_v");
+        current_statement__ = 1;
+        pos__ = (pos__ + 1);}
+      Eigen::Matrix<double, -1, 1> beta;
+      beta = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 2;
+      pos__ = 1;
+      current_statement__ = 2;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 2;
+        assign(beta, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
+        current_statement__ = 2;
+        pos__ = (pos__ + 1);}
+      Eigen::Matrix<double, -1, 1> cuts;
+      cuts = Eigen::Matrix<double, -1, 1>(k);
+      
+      current_statement__ = 3;
+      pos__ = 1;
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 3;
+        assign(cuts, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
+        current_statement__ = 3;
+        pos__ = (pos__ + 1);}
+      double sigma;
+      
+      current_statement__ = 4;
+      pos__ = 1;
+      current_statement__ = 4;
+      sigma = context__.vals_r("sigma")[(pos__ - 1)];
+      current_statement__ = 4;
+      sigma = lb_free(sigma, 0);
+      double alpha;
+      
+      current_statement__ = 5;
+      pos__ = 1;
+      current_statement__ = 5;
+      alpha = context__.vals_r("alpha")[(pos__ - 1)];
+      double phi;
+      
+      current_statement__ = 6;
+      pos__ = 1;
+      current_statement__ = 6;
+      phi = context__.vals_r("phi")[(pos__ - 1)];
+      Eigen::Matrix<double, -1, -1> X_p;
+      X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 7;
+      pos__ = 1;
+      current_statement__ = 7;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 7;
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          current_statement__ = 7;
+          assign(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
+          current_statement__ = 7;
+          pos__ = (pos__ + 1);}}
+      Eigen::Matrix<double, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      
+      current_statement__ = 8;
+      pos__ = 1;
+      current_statement__ = 8;
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        current_statement__ = 8;
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          current_statement__ = 8;
+          assign(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("beta_m")[(pos__ - 1)], "assigning variable beta_m");
+          current_statement__ = 8;
+          pos__ = (pos__ + 1);}}
+      Eigen::Matrix<double, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
+      
+      current_statement__ = 9;
+      pos__ = 1;
+      current_statement__ = 9;
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        current_statement__ = 9;
+        assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_p")[(pos__ - 1)], "assigning variable X_rv_p");
+        current_statement__ = 9;
+        pos__ = (pos__ + 1);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(alpha_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(beta[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        vars__.push_back(cuts[(sym1__ - 1)]);}
+      vars__.push_back(sigma);
+      vars__.push_back(alpha);
+      vars__.push_back(phi);
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+        vars__.push_back(X_rv_p[(sym1__ - 1)]);}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("alpha_v");
+    names__.push_back("beta");
+    names__.push_back("cuts");
+    names__.push_back("sigma");
+    names__.push_back("alpha");
+    names__.push_back("phi");
+    names__.push_back("X_p");
+    names__.push_back("beta_m");
+    names__.push_back("X_rv_p");
+    } // get_param_names() 
+    
+  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dims__.push_back(k);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(k);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(k);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(n);
+    
+    dims__.push_back(k);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(n);
+    
+    dims__.push_back(k);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(n);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
+    
+  void constrained_param_names(std::vector<std::string>& param_names__,
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym1__));
+      }}
+    param_names__.push_back(std::string() + "sigma");
+    param_names__.push_back(std::string() + "alpha");
+    param_names__.push_back(std::string() + "phi");
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym1__));
+      }}
+    param_names__.push_back(std::string() + "sigma");
+    param_names__.push_back(std::string() + "alpha");
+    param_names__.push_back(std::string() + "phi");
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  std::string get_constrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  std::string get_unconstrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+};
+}
+typedef optimize_glm_model_namespace::optimize_glm_model stan_model;
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
 
