@@ -9,10 +9,19 @@ module type Meta = sig
   val empty : t
 end
 
-(* Signature of modules derived from `Fixed.S` or `Fixed.S2` with a module,
-with a signature matching `Meta`, providing a specific type of meta-data.
+module type Unspecialized = sig
+  type 'a t [@@deriving compare, map, fold, hash, sexp]
 
-Since the type `t` is now concrete (i.e. not a type _constructor_) we can
+  include Pretty.S1 with type 'a t := 'a t
+end
+
+module type Unspecialized2 = sig
+  type ('a, 'b) t [@@deriving compare, map, fold, hash, sexp]
+
+  include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
+end
+
+(* Since the type `t` is now concrete (i.e. not a type _constructor_) we can
 construct a `Comparable.S` giving us `Map` and `Set` specialized to the type.
 *)
 module type S = sig
@@ -28,27 +37,14 @@ module type S = sig
      and type comparator_witness := comparator_witness
 end
 
-module type Unspecialized = sig
-  type 'a t [@@deriving compare, map, fold, hash, sexp]
 
-  include Pretty.S1 with type 'a t := 'a t
-end
-
-module type Unspecialized2 = sig
-  type ('a, 'b) t [@@deriving compare, map, fold, hash, sexp]
-
-  include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
-end
 
 module Make (X : Unspecialized) (Meta : Meta) :
-  S with type t = (Meta.t sexp_opaque[@compare.ignore]) X.t and module Meta := Meta = struct
+  S with type t = (Meta.t [@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
-    type t = (Meta.t sexp_opaque[@compare.ignore]) X.t [@@deriving hash]
+    type t = (Meta.t [@compare.ignore])  X.t [@@deriving hash,sexp,compare]
 
-    let pp ppf x = X.pp Meta.pp ppf x
-    let compare x y = X.compare Meta.compare x y
-    let sexp_of_t x = X.sexp_of_t Meta.sexp_of_t x
-    let t_of_sexp x = X.t_of_sexp Meta.t_of_sexp x
+    let pp ppf x = X.pp Meta.pp ppf x    
 
     include Comparator.Make (struct
       type nonrec t = t
@@ -63,14 +59,13 @@ module Make (X : Unspecialized) (Meta : Meta) :
 end
 
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
-  S with type t = (First.Meta.t sexp_opaque[@compare.ignore], Meta.t sexp_opaque[@compare.ignore]) X.t and module Meta := Meta = struct
+  S with type t = (First.Meta.t [@compare.ignore], Meta.t [@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
-    type t = (First.Meta.t sexp_opaque[@compare.ignore], Meta.t sexp_opaque[@compare.ignore]) X.t [@@deriving hash]
+    type t = (First.Meta.t [@compare.ignore], Meta.t [@compare.ignore]) X.t [@@deriving hash, sexp, compare]
 
     let pp ppf x = X.pp First.Meta.pp Meta.pp ppf x
-    let compare x y = X.compare First.Meta.compare Meta.compare x y
-    let sexp_of_t x = X.sexp_of_t First.Meta.sexp_of_t Meta.sexp_of_t x
-    let t_of_sexp x = X.t_of_sexp First.Meta.t_of_sexp Meta.t_of_sexp x
+    
+    
 
     include Comparator.Make (struct
       type nonrec t = t

@@ -4,7 +4,7 @@ module type S = sig
   module Pattern : Pattern.S
 
   (** The fixed-point of `Pattern.t` *)
-  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a }
   [@@deriving compare, map, fold, hash, sexp]
 
   val fix : 'a * 'a t Pattern.t -> 'a t
@@ -40,7 +40,8 @@ module type S = sig
   Note that the function 'f' supplied to `fold_pattern` accepts a tuple 
   rather than our type `'a t` since the type of the pattern has been transformed
   to `'r t Pattern.t` and is no longer 'compatible' with the original type of 
-  meta data `'a`.
+  meta data `'a`. That is, a tuple `('a * 'b t Pattern.t)` has two type 
+  variables where as  `'a t` has one.
   *)
 
   val rewrite_bottom_up : f:('a t -> 'a t) -> 'a t -> 'a t
@@ -68,7 +69,7 @@ module type S = sig
 end
 
 module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
-  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a }
   [@@deriving compare, map, fold, hash, sexp]
 
   let fix (meta, pattern) = {meta; pattern}
@@ -113,7 +114,7 @@ module type S2 = sig
   module First : S
   module Pattern : Pattern.S2
 
-  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
+  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b }
   [@@deriving compare, map, fold, hash, sexp]
 
   val fix : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
@@ -174,7 +175,8 @@ end
 
 module Make2 (First : S) (Pattern : Pattern.S2) :
   S2 with module First := First and module Pattern := Pattern = struct
-  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
+
+  type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b }
   [@@deriving map, fold, compare, hash, sexp]
 
   let unfix {meta; pattern} = (meta, pattern)

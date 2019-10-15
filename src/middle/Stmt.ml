@@ -315,43 +315,4 @@ module Helpers = struct
     let indices = Expr.Helpers.collect_indices var in
     Fixed.fix (smeta, Assignment ((vident, decl_type, indices), varfn var))
 
-  (* 
-    let mock_stmt stmt = {stmt; smeta= no_span}
-  let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
-
-  let mock_for i body =
-    For
-      { loopvar= "lv"
-      ; lower= mir_int 0
-      ; upper= mir_int i
-      ; body= mock_stmt (Block [body]) }
-    |> mock_stmt
-
-  let%test "contains fn" =
-    let f =
-      mock_for 8
-        (mock_for 9
-          (mock_stmt
-              (Assignment
-                (("v", UInt, []), internal_funapp FnReadData [] internal_meta))))
-    in
-    contains_fn
-      (string_of_internal_fn FnReadData)
-      (mock_stmt (Block [f; mock_stmt Break]))
-
-  let%test "contains nrfn" =
-    let f =
-      mock_for 8
-        (mock_for 9
-          (mock_stmt
-              (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
-    in
-    contains_fn
-      (string_of_internal_fn FnWriteParam)
-      (mock_stmt
-        (Block
-            [ mock_stmt
-                (NRFunApp
-                  (CompilerInternal, string_of_internal_fn FnWriteParam, []))
-            ; f ])) *)
 end

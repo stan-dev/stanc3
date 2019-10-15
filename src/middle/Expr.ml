@@ -216,129 +216,25 @@ module Helpers = struct
     in
     Fixed.fix (meta, pattern)
 
+  (** TODO: Make me tail recursive *)
   let rec collect_indices expr =
     match Fixed.pattern_of expr with
     | Indexed (obj, indices) -> collect_indices obj @ indices
     | _ -> []
 
-  (* let%expect_test "infer type of indexed" =
-  [ (UnsizedType.UArray UMatrix, [Index.Single loop_bottom; Single loop_bottom])
-  ; (UArray (UArray UMatrix), [Single loop_bottom])
-  ; (UArray UMatrix, [Single loop_bottom])
-  ; (UArray UMatrix, [Upfrom loop_bottom; Single loop_bottom])
-  ; ( UArray UMatrix
-    , [Single loop_bottom; Single loop_bottom; Single loop_bottom] )
-  ; ( UArray UMatrix
-    , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
-  |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
-  |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp ))
-  |> print_endline ;
-  [%expect {|
-    vector, matrix[], matrix, vector[], real, real[] |}]
+  let%expect_test "infer type of indexed" =
+    [ (UnsizedType.UArray UMatrix, [Index.Single loop_bottom; Single loop_bottom])
+    ; (UArray (UArray UMatrix), [Single loop_bottom])
+    ; (UArray UMatrix, [Single loop_bottom])
+    ; (UArray UMatrix, [Upfrom loop_bottom; Single loop_bottom])
+    ; ( UArray UMatrix
+      , [Single loop_bottom; Single loop_bottom; Single loop_bottom] )
+    ; ( UArray UMatrix
+      , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
+    |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
+    |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp ))
+    |> print_endline ;
+    [%expect {|
+      vector, matrix[], matrix, vector[], real, real[] |}]
 
-
-  
-
-
-
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
-
-    We can call [bodyfn] directly on scalars, make a direct For loop
-    around Eigen types, or for Arrays we call mkfor but inserting a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_scalar st bodyfn var smeta =
-  match st with
-  | SInt | SReal -> bodyfn var
-  | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-  | SMatrix (d1, d2) ->
-      mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-  | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
-
-(* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
-let for_scalar_inv st bodyfn var smeta =
-  let invert_index_order = function
-    | {expr= Indexed (obj, indices); emeta} ->
-        {expr= Indexed (obj, List.rev indices); emeta}
-    | e -> e
-  in
-  let rec go st bodyfn var smeta =
-    match st with
-    | SArray (t, d) ->
-        let bodyfn' var = mkfor d bodyfn var smeta in
-        go t bodyfn' var smeta
-    | SMatrix (d1, d2) ->
-        let bodyfn' var = mkfor d1 bodyfn var smeta in
-        go (SRowVector d2) bodyfn' var smeta
-    | _ -> for_scalar st bodyfn var smeta
-  in
-  go st (Fn.compose bodyfn invert_index_order) var smeta
-
-let%expect_test "inverted for" =
-  let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
-  let bodyfn var =
-    {stmt= NRFunApp (StanLib, "print", [var]); smeta= no_span}
-  in
-  for_scalar_inv
-    (SArray (SArray (SMatrix (int 2, int 3), int 5), int 4))
-    bodyfn
-    {expr= Var "hi"; emeta= {internal_meta with mtype= UArray (UArray UMatrix)}}
-    no_span
-  |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
-  [%expect
-    {|
-    (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 3))
-     (body
-      (Block
-       ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 2))
-         (body
-          (Block
-           ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 5))
-             (body
-              (Block
-               ((For (loopvar sym4__) (lower (Lit Int 1)) (upper (Lit Int 4))
-                 (body
-                  (Block
-                   ((NRFunApp StanLib print
-                     ((Indexed (Var hi)
-                       ((Single (Var sym4__)) (Single (Var sym3__))
-                        (Single (Var sym2__)) (Single (Var sym1__)))))))))))))))))))))) |}]
-
-(** [for_eigen unsizedtype...] generates a For statement that loops
-    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.
-
-    We can call [bodyfn] directly on scalars and Eigen types;
-    for Arrays we call mkfor but insert a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-let rec for_eigen st bodyfn var smeta =
-  match st with
-  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
-  | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
-
-let rec pull_indices {expr; _} =
-  match expr with
-  | Indexed (obj, indices) -> pull_indices obj @ indices
-  | _ -> []
-
-let assign_indexed decl_type vident smeta varfn var =
-  let indices = pull_indices var in
-  {stmt= Assignment ((vident, decl_type, indices), varfn var); smeta}
-
-let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
-  match st with
-  | SArray (t, _) -> eigen_size t
-  | SMatrix (d1, d2) -> [d1; d2]
-  | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal -> []
-  
-  
-  
-  *)
 end
