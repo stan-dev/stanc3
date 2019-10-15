@@ -182,95 +182,95 @@ let%expect_test "Statement label map example" =
        (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
        (4
         (Assignment (i UInt ())
-         ((expr (Lit Int 0))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+         ((pattern (Lit Int 0))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
        (5
         (IfElse
-         ((expr
+         ((pattern
            (FunApp StanLib Less__
-            (((expr (Var i))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-             ((expr (Lit Int 0))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            (((pattern (Var i))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          6 (8)))
        (6 (Block (7)))
        (7
         (NRFunApp CompilerInternal FnPrint__
-         (((expr (Var i))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (8 (Block (9)))
        (9
         (For (loopvar j)
          (lower
-          ((expr (Lit Int 1))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          (upper
-          ((expr (Lit Int 10))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          (body 10)))
        (10 (Block (11 14 17 22)))
        (11
         (IfElse
-         ((expr
+         ((pattern
            (FunApp StanLib Greater__
-            (((expr (Var j))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-             ((expr (Lit Int 9))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 9))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          12 ()))
        (12 (Block (13))) (13 Break)
        (14
         (IfElse
-         ((expr
+         ((pattern
            (EAnd
-            ((expr
+            ((pattern
               (FunApp StanLib Greater__
-               (((expr (Var j))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                ((expr (Lit Int 8))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((expr
+               (((pattern (Var j))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 8))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern
               (FunApp StanLib Less__
-               (((expr (Var i))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                ((expr
+               (((pattern (Var i))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
                   (FunApp StanLib PMinus__
-                   (((expr (Lit Int 1))
-                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                   (((pattern (Lit Int 1))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          15 ()))
        (15 (Block (16))) (16 Continue)
        (17
         (IfElse
-         ((expr
+         ((pattern
            (FunApp StanLib Greater__
-            (((expr (Var j))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-             ((expr (Lit Int 5))
-              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 5))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
         (NRFunApp CompilerInternal FnPrint__
-         (((expr (Lit Str Badger))
-           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-          ((expr
+         (((pattern (Lit Str Badger))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
             (FunApp StanLib Plus__
-             (((expr (Var i))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-              ((expr (Var j))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+             (((pattern (Var i))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var j))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (22
         (NRFunApp CompilerInternal FnPrint__
-         (((expr (Lit Str Fin))
-           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))))
+         (((pattern (Lit Str Fin))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
 
 let%expect_test "Predecessor graph example" =
@@ -350,8 +350,8 @@ let%expect_test "Statement label map example 3" =
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (4
         ((While
-          ((expr (Lit Int 42))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+          ((pattern (Lit Int 42))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           5)
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -365,8 +365,8 @@ let%expect_test "Statement label map example 3" =
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (6
         ((NRFunApp CompilerInternal FnPrint__
-          (((expr (Lit Str exit))
-            (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (((pattern (Lit Str exit))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 8) (included_from ())))
           (end_loc
@@ -441,11 +441,11 @@ let%expect_test "Statement label map example 4" =
        (4
         ((For (loopvar i)
           (lower
-           ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (upper
-           ((expr (Lit Int 6))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 6))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -540,11 +540,11 @@ let%expect_test "Statement label map example 5" =
        (4
         ((For (loopvar i)
           (lower
-           ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (upper
-           ((expr (Lit Int 6))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 6))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
