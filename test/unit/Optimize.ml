@@ -38,6 +38,18 @@ let%expect_test "map_rec_stmt_loc" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           FnPrint__(24, 24);
@@ -49,9 +61,18 @@ let%expect_test "map_rec_stmt_loc" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
@@ -87,6 +108,18 @@ let%expect_test "map_rec_state_stmt_loc" =
   print_endline (string_of_int num) ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           FnPrint__(24, 24);
@@ -98,9 +131,18 @@ let%expect_test "map_rec_state_stmt_loc" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       }
 
       3 |}]
@@ -144,6 +186,15 @@ let%expect_test "inline functions" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           for(sym1__ in 1:1) {
@@ -158,12 +209,21 @@ let%expect_test "inline functions" =
           FnReject__(sym4__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline functions 2" =
@@ -201,6 +261,19 @@ let%expect_test "inline functions 2" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+
+      }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -212,6 +285,14 @@ let%expect_test "inline functions 2" =
 
           }
         }
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "list collapsing" =
@@ -245,26 +326,25 @@ let%expect_test "list collapsing" =
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
-         ((stmt
+         ((pattern
            (Block
-            (((stmt
+            (((pattern
                (NRFunApp CompilerInternal FnPrint__
                 (((pattern (Var x))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta <opaque>))
-             ((stmt
+             ((pattern
                (NRFunApp CompilerInternal FnPrint__
                 (((pattern (Var y))
-                  (meta
-                   ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta <opaque>)))))
           (meta <opaque>)))
         (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
-         ((stmt
+         ((pattern
            (Block
-            (((stmt
+            (((pattern
                (Return
                 (((pattern
                    (FunApp StanLib Pow__
@@ -278,9 +358,9 @@ let%expect_test "list collapsing" =
         (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
-      (((stmt
+      (((pattern
          (Block
-          (((stmt
+          (((pattern
              (For (loopvar sym1__)
               (lower
                ((pattern (Lit Int 1))
@@ -289,15 +369,14 @@ let%expect_test "list collapsing" =
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
-               ((stmt
+               ((pattern
                  (Block
-                  (((stmt
+                  (((pattern
                      (NRFunApp CompilerInternal FnPrint__
                       (((pattern (Lit Int 3))
-                        (meta
-                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                     (meta <opaque>))
-                   ((stmt
+                   ((pattern
                      (NRFunApp CompilerInternal FnPrint__
                       (((pattern
                          (FunApp CompilerInternal FnMakeRowVec__
@@ -305,12 +384,10 @@ let%expect_test "list collapsing" =
                              (FunApp CompilerInternal FnMakeRowVec__
                               (((pattern (Lit Int 3))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>)
-                                  (adlevel DataOnly))))
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 2))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>)
-                                  (adlevel DataOnly)))))))
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                             (meta
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly))))
@@ -318,12 +395,10 @@ let%expect_test "list collapsing" =
                              (FunApp CompilerInternal FnMakeRowVec__
                               (((pattern (Lit Int 4))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>)
-                                  (adlevel DataOnly))))
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 6))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>)
-                                  (adlevel DataOnly)))))))
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                             (meta
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly)))))))
@@ -332,11 +407,11 @@ let%expect_test "list collapsing" =
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
               (decl_type (Unsized UReal))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (For (loopvar sym3__)
               (lower
                ((pattern (Lit Int 1))
@@ -345,9 +420,9 @@ let%expect_test "list collapsing" =
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
-               ((stmt
+               ((pattern
                  (Block
-                  (((stmt
+                  (((pattern
                      (Assignment (sym4__ UReal ())
                       ((pattern
                         (FunApp StanLib Pow__
@@ -357,26 +432,26 @@ let%expect_test "list collapsing" =
                           ((pattern (Lit Int 2))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                     (meta <opaque>))
-                   ((stmt Break) (meta <opaque>)))))
+                   ((pattern Break) (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (NRFunApp CompilerInternal FnReject__
               (((pattern (Var sym4__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
      (generate_quantities
-      (((stmt
+      (((pattern
          (IfElse
           ((pattern (Var emit_transformed_parameters__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((stmt Skip) (meta <opaque>)) (((stmt (Block ())) (meta <opaque>)))))
+          ((pattern Skip) (meta <opaque>))
+          (((pattern (Block ())) (meta <opaque>)))))
         (meta <opaque>))
-       ((stmt
+       ((pattern
          (IfElse
           ((pattern
             (FunApp StanLib PNot__
@@ -388,16 +463,16 @@ let%expect_test "list collapsing" =
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((stmt (Return ())) (meta <opaque>)) ()))
+          ((pattern (Return ())) (meta <opaque>)) ()))
         (meta <opaque>))
-       ((stmt
+       ((pattern
          (IfElse
           ((pattern
             (FunApp StanLib PNot__
              (((pattern (Var emit_generated_quantities__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((stmt (Return ())) (meta <opaque>)) ()))
+          ((pattern (Return ())) (meta <opaque>)) ()))
         (meta <opaque>))))
      (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
@@ -434,17 +509,35 @@ let%expect_test "do not inline recursive functions" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           FnReject__(g(53));
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function in for loop" =
@@ -487,6 +580,15 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -513,12 +615,21 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 (* TODO: check test results from here *)
@@ -563,6 +674,15 @@ let%expect_test "inline function in for loop 2" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym9__;
@@ -601,12 +721,21 @@ let%expect_test "inline function in for loop 2" =
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function in while loop" =
@@ -649,6 +778,15 @@ let%expect_test "inline function in while loop" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -667,12 +805,21 @@ let%expect_test "inline function in while loop" =
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function in if then else" =
@@ -715,6 +862,15 @@ let%expect_test "inline function in if then else" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -726,12 +882,21 @@ let%expect_test "inline function in if then else" =
           if(sym3__) FnPrint__("body");
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       }
 
     |}]
@@ -786,6 +951,15 @@ let%expect_test "inline function in ternary if " =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -812,12 +986,21 @@ let%expect_test "inline function in ternary if " =
           FnPrint__(sym3__ ?sym6__: sym9__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function multiple returns " =
@@ -856,6 +1039,15 @@ let%expect_test "inline function multiple returns " =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -871,12 +1063,21 @@ let%expect_test "inline function multiple returns " =
           FnPrint__(sym3__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function indices " =
@@ -910,6 +1111,15 @@ let%expect_test "inline function indices " =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           array[array[int, 2], 2] a;
@@ -928,12 +1138,21 @@ let%expect_test "inline function indices " =
           FnPrint__(a[sym3__, sym6__]);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function and " =
@@ -967,6 +1186,15 @@ let%expect_test "inline function and " =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -986,12 +1214,21 @@ let%expect_test "inline function and " =
           FnPrint__(sym3__ && sym6__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "inline function or " =
@@ -1024,6 +1261,15 @@ let%expect_test "inline function or " =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int sym3__;
@@ -1043,12 +1289,21 @@ let%expect_test "inline function or " =
           FnPrint__(sym3__ || sym6__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "unroll nested loop" =
@@ -1068,6 +1323,18 @@ let%expect_test "unroll nested loop" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           {
@@ -1088,9 +1355,18 @@ let%expect_test "unroll nested loop" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "unroll nested loop 2" =
@@ -1111,6 +1387,18 @@ let%expect_test "unroll nested loop 2" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           {
@@ -1286,9 +1574,18 @@ let%expect_test "unroll nested loop 2" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "unroll nested loop 3" =
@@ -1309,6 +1606,18 @@ let%expect_test "unroll nested loop 3" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           {
@@ -1382,9 +1691,18 @@ let%expect_test "unroll nested loop 3" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1406,6 +1724,18 @@ let%expect_test "unroll nested loop with break" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           {
@@ -1422,9 +1752,18 @@ let%expect_test "unroll nested loop with break" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "constant propagation" =
@@ -1451,12 +1790,21 @@ let%expect_test "constant propagation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
     prepare_data {
       data int i;
       i = 42;
       data int j;
       j = (2 + 42);
     }
+
     log_prob {
       {
         for(x in 1:42) {
@@ -1464,9 +1812,18 @@ let%expect_test "constant propagation" =
         }
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
+    }
+
+    transform_inits {
+
+    }
+
+    output_vars {
+
     } |}]
 
 let%expect_test "constant propagation, local scope" =
@@ -1496,6 +1853,14 @@ let%expect_test "constant propagation, local scope" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
     prepare_data {
       data int i;
       i = 42;
@@ -1504,6 +1869,7 @@ let%expect_test "constant propagation, local scope" =
         j = 2;
       }
     }
+
     log_prob {
       {
         int j;
@@ -1512,9 +1878,18 @@ let%expect_test "constant propagation, local scope" =
         }
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
+    }
+
+    transform_inits {
+
+    }
+
+    output_vars {
+
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
@@ -1543,6 +1918,18 @@ let%expect_test "constant propagation, model block local scope" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
+    prepare_data {
+
+    }
+
     log_prob {
       {
         int i;
@@ -1551,6 +1938,7 @@ let%expect_test "constant propagation, model block local scope" =
         j = 2;
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
@@ -1560,6 +1948,11 @@ let%expect_test "constant propagation, model block local scope" =
         FnPrint__((i + j));
       }
     }
+
+    transform_inits {
+
+    }
+
     output_vars {
       generated_quantities int i; //int
       generated_quantities int j; //int
@@ -1588,11 +1981,20 @@ let%expect_test "expression propagation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
       prepare_data {
         data int i;
         data int j;
         j = (2 + i);
       }
+
       log_prob {
         {
           for(x in 1:i) {
@@ -1600,9 +2002,18 @@ let%expect_test "expression propagation" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "copy propagation" =
@@ -1630,6 +2041,14 @@ let%expect_test "copy propagation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
       prepare_data {
         data int i;
         data int j;
@@ -1637,6 +2056,7 @@ let%expect_test "copy propagation" =
         data int k;
         k = (2 * i);
       }
+
       log_prob {
         {
           for(x in 1:i) {
@@ -1644,9 +2064,18 @@ let%expect_test "copy propagation" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination" =
@@ -1674,6 +2103,14 @@ let%expect_test "dead code elimination" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
       prepare_data {
         data array[int, 2] i;
         i = FnMakeArray__(3, 2);
@@ -1681,15 +2118,25 @@ let%expect_test "dead code elimination" =
         j = FnMakeArray__(3, 2);
         j[1] = 2;
       }
+
       log_prob {
         {
           FnPrint__(i);
           FnPrint__(j);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination decl" =
@@ -1715,11 +2162,24 @@ let%expect_test "dead code elimination decl" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int i;
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1727,6 +2187,14 @@ let%expect_test "dead code elimination decl" =
           data int i;
           FnPrint__(i);
         }
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
@@ -1747,15 +2215,36 @@ let%expect_test "dead code elimination, for loop" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
@@ -1780,6 +2269,18 @@ let%expect_test "dead code elimination, while loop" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int i;
@@ -1787,9 +2288,18 @@ let%expect_test "dead code elimination, while loop" =
           while(1) ;
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -1824,6 +2334,18 @@ let%expect_test "dead code elimination, if then" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int i;
@@ -1836,9 +2358,18 @@ let%expect_test "dead code elimination, if then" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "dead code elimination, nested" =
@@ -1861,15 +2392,36 @@ let%expect_test "dead code elimination, nested" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           int i;
           FnPrint__(i);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "partial evaluation" =
@@ -1893,6 +2445,18 @@ let%expect_test "partial evaluation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           if(0) {
@@ -1903,9 +2467,18 @@ let%expect_test "partial evaluation" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "try partially evaluate" =
@@ -1929,6 +2502,18 @@ let%expect_test "try partially evaluate" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           real x;
@@ -1939,9 +2524,18 @@ let%expect_test "try partially evaluate" =
           FnPrint__(log((exp(a) - exp(b))));
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
@@ -1963,6 +2557,18 @@ let%expect_test "partially evaluate with equality check" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         {
           vector[2] x;
@@ -1971,9 +2577,18 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_product(x, y));
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "partially evaluate functions" =
@@ -2119,6 +2734,18 @@ model {
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         matrix[3, 2] x_matrix;
         matrix[2, 4] y_matrix;
@@ -2254,6 +2881,7 @@ model {
           target += x_vector;
         }
       }
+
       generate_quantities {
         data matrix[3, 2] x_matrix;
         data matrix[2, 4] y_matrix;
@@ -2267,6 +2895,7 @@ model {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data matrix[3, 2] x_matrix;
         data matrix[2, 4] y_matrix;
@@ -2278,6 +2907,7 @@ model {
         data real theta_u;
         data real phi_u;
       }
+
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
         parameters matrix[2, 4] y_matrix; //matrix[2, 4]
@@ -2308,6 +2938,18 @@ let%expect_test "lazy code motion" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
+    prepare_data {
+
+    }
+
     log_prob {
       data real[] sym3__;
       {
@@ -2317,6 +2959,7 @@ let%expect_test "lazy code motion" =
         FnPrint__(sym3__);
       }
     }
+
     generate_quantities {
       data int sym2__;
       data int sym1__;
@@ -2328,6 +2971,14 @@ let%expect_test "lazy code motion" =
         return;
         ;
       } else ;
+    }
+
+    transform_inits {
+
+    }
+
+    output_vars {
+
     } |}]
 
 let%expect_test "lazy code motion, 2" =
@@ -2348,6 +2999,18 @@ let%expect_test "lazy code motion, 2" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym4__;
         data int sym3__;
@@ -2360,6 +3023,7 @@ let%expect_test "lazy code motion, 2" =
           }
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2371,6 +3035,14 @@ let%expect_test "lazy code motion, 2" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -2392,6 +3064,18 @@ let%expect_test "lazy code motion, 3" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym4__;
         data int sym3__;
@@ -2402,6 +3086,7 @@ let%expect_test "lazy code motion, 3" =
           FnPrint__((sym3__ + 7));
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2413,6 +3098,14 @@ let%expect_test "lazy code motion, 3" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 4" =
@@ -2447,6 +3140,18 @@ let%expect_test "lazy code motion, 4" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2474,6 +3179,7 @@ let%expect_test "lazy code motion, 4" =
           y = sym3__;
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2485,6 +3191,14 @@ let%expect_test "lazy code motion, 4" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -2517,6 +3231,18 @@ let%expect_test "lazy code motion, 5" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2548,6 +3274,7 @@ let%expect_test "lazy code motion, 5" =
           y = sym3__;
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2559,6 +3286,14 @@ let%expect_test "lazy code motion, 5" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -2582,6 +3317,18 @@ let%expect_test "lazy code motion, 6" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym4__;
         data int sym3__;
@@ -2595,6 +3342,7 @@ let%expect_test "lazy code motion, 6" =
           y = (4 + 3);
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2606,6 +3354,14 @@ let%expect_test "lazy code motion, 6" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 7" =
@@ -2647,6 +3403,18 @@ let%expect_test "lazy code motion, 7" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym4__;
         data int sym3__;
@@ -2702,6 +3470,7 @@ let%expect_test "lazy code motion, 7" =
           ;
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2713,6 +3482,14 @@ let%expect_test "lazy code motion, 7" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -2752,6 +3529,15 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           }
         }
       }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2762,6 +3548,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           FnPrint__(sym3__);
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2773,6 +3560,14 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 9" =
@@ -2793,6 +3588,18 @@ let%expect_test "lazy code motion, 9" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2803,6 +3610,7 @@ let%expect_test "lazy code motion, 9" =
           }
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2814,6 +3622,14 @@ let%expect_test "lazy code motion, 9" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -2837,6 +3653,18 @@ let%expect_test "lazy code motion, 10" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2847,6 +3675,7 @@ let%expect_test "lazy code motion, 10" =
           FnPrint__((x * 2));
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2858,6 +3687,14 @@ let%expect_test "lazy code motion, 10" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 11" =
@@ -2884,6 +3721,18 @@ let%expect_test "lazy code motion, 11" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym3__;
         {
@@ -2897,6 +3746,7 @@ let%expect_test "lazy code motion, 11" =
           }
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2908,6 +3758,14 @@ let%expect_test "lazy code motion, 11" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 12" =
@@ -2931,6 +3789,18 @@ let%expect_test "lazy code motion, 12" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym4__;
         data int sym3__;
@@ -2945,6 +3815,7 @@ let%expect_test "lazy code motion, 12" =
           }
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -2956,6 +3827,14 @@ let%expect_test "lazy code motion, 12" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "lazy code motion, 13" =
@@ -2987,6 +3866,18 @@ let%expect_test "lazy code motion, 13" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         data int sym10__;
         data int sym9__;
@@ -3032,6 +3923,7 @@ let%expect_test "lazy code motion, 13" =
           } else ;
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -3043,6 +3935,14 @@ let%expect_test "lazy code motion, 13" =
           return;
           ;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -3073,6 +3973,18 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         real sym7__;
         real sym6__;
@@ -3099,6 +4011,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
           } else ;
         }
       }
+
       generate_quantities {
         data int sym2__;
         data int sym1__;
@@ -3108,6 +4021,14 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
         if(PNot__(emit_generated_quantities__)) {
           return;
         } else ;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "block fixing" =
@@ -3142,41 +4063,41 @@ let%expect_test "block fixing" =
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
-        (((stmt
+        (((pattern
            (IfElse
-            ((expr (Lit Int 0))
+            ((pattern (Lit Int 0))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((stmt
+            ((pattern
               (While
-               ((expr (Lit Int 0))
+               ((pattern (Lit Int 0))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((stmt (Block ())) (meta <opaque>))))
+               ((pattern (Block ())) (meta <opaque>))))
              (meta <opaque>))
             ()))
           (meta <opaque>))))
        (generate_quantities
-        (((stmt
+        (((pattern
            (IfElse
-            ((expr
+            ((pattern
               (FunApp StanLib PNot__
-               (((expr
+               (((pattern
                   (EOr
-                   ((expr (Var emit_transformed_parameters__))
+                   ((pattern (Var emit_transformed_parameters__))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                   ((expr (Var emit_generated_quantities__))
+                   ((pattern (Var emit_generated_quantities__))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((stmt (Return ())) (meta <opaque>)) ()))
+            ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))
-         ((stmt
+         ((pattern
            (IfElse
-            ((expr
+            ((pattern
               (FunApp StanLib PNot__
-               (((expr (Var emit_generated_quantities__))
+               (((pattern (Var emit_generated_quantities__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((stmt (Return ())) (meta <opaque>)) ()))
+            ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))))
        (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
 
@@ -3199,6 +4120,14 @@ let%expect_test "one-step loop unrolling" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
       prepare_data {
         data int x;
         if((x <= 6)) {
@@ -3236,9 +4165,22 @@ let%expect_test "one-step loop unrolling" =
           }
         }
       }
+
+      log_prob {
+
+      }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
       } |}]
 
 let%expect_test "adlevel_optimization" =
@@ -3275,6 +4217,18 @@ let%expect_test "adlevel_optimization" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         real w;
         {
@@ -3289,6 +4243,7 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
+
       generate_quantities {
         data real w;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -3305,9 +4260,11 @@ let%expect_test "adlevel_optimization" =
         }
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data real w;
       }
+
       output_vars {
         parameters real w; //real
       } |}]
@@ -3346,99 +4303,96 @@ let%expect_test "adlevel_optimization expressions" =
   print_s [%sexp (mir.log_prob : Stmt.Located.t list)] ;
   [%expect
     {|
-      (((stmt
+      (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
         (meta <opaque>))
-       ((stmt
+       ((pattern
          (Block
-          (((stmt
+          (((pattern
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id y)
               (decl_type (Sized SReal))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id z)
               (decl_type (Sized SReal))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
               (decl_type (Sized SReal))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 1))
+                 (((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                  ((expr (Lit Int 2))
+                  ((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((stmt
+              ((pattern
                 (Assignment (y UReal ())
-                 ((expr
+                 ((pattern
                    (FunApp StanLib Plus__
-                    (((expr (Var y))
-                      (meta
-                       ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                     ((expr (Var x))
+                    (((pattern (Var y))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                     ((pattern (Var x))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
-              (((stmt
+              (((pattern
                  (Assignment (y UReal ())
-                  ((expr
+                  ((pattern
                     (FunApp StanLib Plus__
-                     (((expr (Var y))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                      ((expr (Var w))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                     (((pattern (Var y))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Var w))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 2))
+                 (((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                  ((expr (Lit Int 1))
+                  ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((stmt
+              ((pattern
                 (Assignment (z UReal ())
-                 ((expr (Var y))
+                 ((pattern (Var y))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               ()))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 3))
+                 (((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                  ((expr (Lit Int 1))
+                  ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((stmt
+              ((pattern
                 (Assignment (z_data UReal ())
-                 ((expr (Var x))
+                 ((pattern (Var x))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var z))
+              (((pattern (Var z))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>))
-           ((stmt
+           ((pattern
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var z_data))
+              (((pattern (Var z_data))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))
         (meta <opaque>))) |}]
@@ -3478,6 +4432,18 @@ let%expect_test "adlevel_optimization 2" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
       log_prob {
         real w;
         data real w_trans;
@@ -3494,6 +4460,7 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z_data);
         }
       }
+
       generate_quantities {
         data real w;
         data real w_trans;
@@ -3512,9 +4479,11 @@ let%expect_test "adlevel_optimization 2" =
         }
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data real w;
       }
+
       output_vars {
         parameters real w; //real
         transformed_parameters real w_trans; //real
