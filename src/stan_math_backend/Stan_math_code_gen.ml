@@ -118,9 +118,9 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
     pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match Stmt.Fixed.pattern_of fdbody with
-      | SList stmts ->  {fdbody with pattern = Block stmts}
+      | SList stmts -> {fdbody with pattern= Block stmts}
       | Block _ -> fdbody
-      | _ ->  {fdbody with pattern = Block [fdbody]}
+      | _ -> {fdbody with pattern= Block [fdbody]}
     in
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ "
@@ -405,7 +405,7 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
   in
   pp_method_b ppf "void" "transform_inits" params intro transform_inits
 
-let pp_log_prob ppf Program.{prog_name;log_prob;_} =
+let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
   let params =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"

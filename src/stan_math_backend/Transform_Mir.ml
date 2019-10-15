@@ -19,19 +19,22 @@ let opencl_triggers =
     ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [])])) ]
 
 let opencl_suffix = "_opencl__"
-let to_matrix_cl e = Expr.Fixed.{e with pattern = FunApp (StanLib, "to_matrix_cl", [e])}
+
+let to_matrix_cl e =
+  Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl available_cl_vars e =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
   let to_cl e =
     match Expr.Fixed.pattern_of e with
-    | Var s when is_avail s -> Expr.Fixed.{e with pattern = Var (s ^ opencl_suffix)}
+    | Var s when is_avail s ->
+        Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
     | _ -> to_matrix_cl e
   in
   let move_cl_args cl_args index arg =
     if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
   in
-  let check_type args (i, t) =  Expr.Typed.type_of (List.nth_exn args i) = t in
+  let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
   let check_if_data args ind =
     match Expr.Fixed.pattern_of (List.nth_exn args ind) with
     | Var s when is_avail s -> true
@@ -50,8 +53,11 @@ let rec switch_expr_to_opencl available_cl_vars e =
   match Expr.Fixed.pattern_of e with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let trigger = Map.find_exn opencl_triggers f in
-      {e with pattern = FunApp (StanLib, f, maybe_map_args args trigger)}
-  | x -> {e with pattern = Expr.Fixed.Pattern.map (switch_expr_to_opencl available_cl_vars) x}
+      {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+  | x ->
+      { e with
+        pattern=
+          Expr.Fixed.Pattern.map (switch_expr_to_opencl available_cl_vars) x }
 
 let pos = "pos__"
 
@@ -316,19 +322,26 @@ let rec collect_vars_expr is_target accum e =
   Set.union accum
     ( match Expr.Fixed.pattern_of e with
     | Var s when is_target s -> String.Set.of_list [s]
-    | x -> Expr.Fixed.Pattern.fold (collect_vars_expr is_target) String.Set.empty x )
+    | x ->
+        Expr.Fixed.Pattern.fold
+          (collect_vars_expr is_target)
+          String.Set.empty x )
 
 let collect_opencl_vars s =
   let rec go accum s =
-    Stmt.Fixed.(Pattern.fold (collect_vars_expr is_opencl_var) go accum @@ pattern_of s)
+    Stmt.Fixed.(
+      Pattern.fold (collect_vars_expr is_opencl_var) go accum @@ pattern_of s)
   in
   go String.Set.empty s
 
 let%expect_test "collect vars expr" =
   let mkvar s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
-  let fnapp = Expr.{Fixed.pattern= FunApp (StanLib, "print", args); meta= Typed.Meta.empty} in
-  Stmt.Fixed.{pattern = TargetPE fnapp; meta= Location_span.empty}
+  let fnapp =
+    Expr.
+      {Fixed.pattern= FunApp (StanLib, "print", args); meta= Typed.Meta.empty}
+  in
+  Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
   [%expect {| (w_opencl__ x_opencl__) |}]
 
@@ -447,7 +460,9 @@ let trans_prog (p : Program.Typed.t) =
       let data_var_idents = List.map ~f:fst p.input_vars in
       let switch_expr = switch_expr_to_opencl data_var_idents in
       let rec trans_stmt_to_opencl s =
-        Stmt.Fixed.{s with pattern = Pattern.map switch_expr trans_stmt_to_opencl s.pattern}
+        Stmt.Fixed.
+          { s with
+            pattern= Pattern.map switch_expr trans_stmt_to_opencl s.pattern }
       in
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
@@ -479,17 +494,19 @@ let trans_prog (p : Program.Typed.t) =
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
         in
-        [ Stmt.Fixed.{ pattern =
-              Decl
-                { decl_adtype= DataOnly
-                ; decl_id= vident
-                ; decl_type= Unsized UMatrix }
-          ; meta= Location_span.empty }
+        [ Stmt.Fixed.
+            { pattern=
+                Decl
+                  { decl_adtype= DataOnly
+                  ; decl_id= vident
+                  ; decl_type= Unsized UMatrix }
+            ; meta= Location_span.empty }
         ; { pattern=
               Assignment
                 ( (vident, UMatrix, [])
                 , to_matrix_cl
-                    {pattern = Var vident_sans_opencl; meta = Expr.Typed.Meta.empty} )
+                    { pattern= Var vident_sans_opencl
+                    ; meta= Expr.Typed.Meta.empty } )
           ; meta= Location_span.empty } ] )
   in
   let p =

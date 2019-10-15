@@ -314,5 +314,4 @@ module Helpers = struct
   let assign_indexed decl_type vident smeta varfn var =
     let indices = Expr.Helpers.collect_indices var in
     Fixed.fix (smeta, Assignment ((vident, decl_type, indices), varfn var))
-
 end

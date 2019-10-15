@@ -1,7 +1,6 @@
 open Core_kernel
 open Middle
 
-
 type state_t = Location_span.t list
 
 let no_span_num = 0
@@ -19,7 +18,7 @@ let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
         let meta = Stmt.Numbered.Meta.from_int i in
         {meta; pattern}
     | None ->
-        let new_label = Hashtbl.length label_to_location  in
+        let new_label = Hashtbl.length label_to_location in
         Hashtbl.set label_to_location ~key:new_label ~data:meta ;
         Hashtbl.set location_to_label ~key:meta ~data:new_label ;
         {pattern; meta= new_label}

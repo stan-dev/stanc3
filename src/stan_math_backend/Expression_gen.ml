@@ -18,12 +18,11 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = 
-  UnsizedType.equal (Expr.Typed.type_of e1) (Expr.Typed.type_of e2) &&
-  (UnsizedType.compare_autodifftype (Expr.Typed.adlevel_of e1) (Expr.Typed.adlevel_of e2) = 0)
-
-
-  
+let types_match e1 e2 =
+  UnsizedType.equal (Expr.Typed.type_of e1) (Expr.Typed.type_of e2)
+  && UnsizedType.compare_autodifftype (Expr.Typed.adlevel_of e1)
+       (Expr.Typed.adlevel_of e2)
+     = 0
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 

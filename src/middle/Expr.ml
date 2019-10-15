@@ -223,7 +223,8 @@ module Helpers = struct
     | _ -> []
 
   let%expect_test "infer type of indexed" =
-    [ (UnsizedType.UArray UMatrix, [Index.Single loop_bottom; Single loop_bottom])
+    [ ( UnsizedType.UArray UMatrix
+      , [Index.Single loop_bottom; Single loop_bottom] )
     ; (UArray (UArray UMatrix), [Single loop_bottom])
     ; (UArray UMatrix, [Single loop_bottom])
     ; (UArray UMatrix, [Upfrom loop_bottom; Single loop_bottom])
@@ -232,9 +233,8 @@ module Helpers = struct
     ; ( UArray UMatrix
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
-    |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp ))
+    |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline ;
     [%expect {|
       vector, matrix[], matrix, vector[], real, real[] |}]
-
 end

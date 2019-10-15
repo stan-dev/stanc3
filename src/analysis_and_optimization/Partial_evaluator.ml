@@ -644,7 +644,8 @@ let rec eval_expr (e : Expr.Typed.t) =
               | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
              |op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
-             |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}] -> (
+             |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
+            -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
                   apply_arithmetic_operator_real op (Float.of_string i1)

@@ -37,14 +37,13 @@ module type S = sig
      and type comparator_witness := comparator_witness
 end
 
-
-
 module Make (X : Unspecialized) (Meta : Meta) :
-  S with type t = (Meta.t [@compare.ignore]) X.t and module Meta := Meta = struct
+  S with type t = (Meta.t[@compare.ignore]) X.t and module Meta := Meta =
+struct
   module Basic = struct
-    type t = (Meta.t [@compare.ignore])  X.t [@@deriving hash,sexp,compare]
+    type t = (Meta.t[@compare.ignore]) X.t [@@deriving hash, sexp, compare]
 
-    let pp ppf x = X.pp Meta.pp ppf x    
+    let pp ppf x = X.pp Meta.pp ppf x
 
     include Comparator.Make (struct
       type nonrec t = t
@@ -59,13 +58,15 @@ module Make (X : Unspecialized) (Meta : Meta) :
 end
 
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
-  S with type t = (First.Meta.t [@compare.ignore], Meta.t [@compare.ignore]) X.t and module Meta := Meta = struct
+  S
+  with type t =
+              ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
+   and module Meta := Meta = struct
   module Basic = struct
-    type t = (First.Meta.t [@compare.ignore], Meta.t [@compare.ignore]) X.t [@@deriving hash, sexp, compare]
+    type t = ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
+    [@@deriving hash, sexp, compare]
 
     let pp ppf x = X.pp First.Meta.pp Meta.pp ppf x
-    
-    
 
     include Comparator.Make (struct
       type nonrec t = t

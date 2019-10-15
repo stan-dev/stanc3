@@ -218,18 +218,18 @@ let use_file filename =
       print_warn_uninitialized uninitialized_vars ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.Program.Typed.t)] ;
-    if !dump_tx_mir_pretty then
-      Program.Typed.pp Format.std_formatter tx_mir ;
+      Sexp.pp_hum Format.std_formatter
+        [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+    if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       if !optimize then (
         let opt =
           Optimize.optimization_suite (optimization_settings ()) tx_mir
         in
         if !dump_opt_mir then
-          Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.Program.Typed.t)] ;
-        if !dump_opt_mir_pretty then
-          Program.Typed.pp Format.std_formatter opt ;
+          Sexp.pp_hum Format.std_formatter
+            [%sexp (opt : Middle.Program.Typed.t)] ;
+        if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
       else tx_mir
     in
