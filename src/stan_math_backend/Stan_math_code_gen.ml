@@ -149,8 +149,8 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   | Skip -> pf ppf ";@ "
   | _ ->
       pp_block ppf (pp_body, fdbody) ;
-      pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
-        fdname pp_sig "operator()" pp_call_str
+      pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
+        functor_suffix pp_sig "operator()" pp_call_str
         ( fdname
         , prefix_extra_args
           @ List.map ~f:(fun (_, name, _) -> name) fdargs
@@ -564,15 +564,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
 }
 |}
 
+let namespace {prog_name; _} = prog_name ^ "_namespace"
+
+let pp_register_map_rect_functors ppf p =
+  let find_functors_expr accum {expr; _} =
+    match expr with
+    | FunApp (StanLib, "map_rect", {expr= Var f; _} :: _) -> f :: accum
+    | _ -> accum
+  in
+  let rec find_functors_stmt accum {stmt; _} =
+    fold_statement find_functors_expr find_functors_stmt accum stmt
+  in
+  let functors = fold_prog find_functors_expr find_functors_stmt [] p in
+  let pp_register_functor ppf (i, f) =
+    pf ppf "STAN_REGISTER_MAP_RECT(%d, %s::%s%s)" i (namespace p) f
+      functor_suffix
+  in
+  pf ppf "@ %a"
+    (list ~sep:cut pp_register_functor)
+    (List.mapi ~f:(fun i f -> (i + 1, f)) functors)
+
 let pp_prog ppf (p : typed_prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes p.prog_name custom_functions usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %a@ %a@ }@ @]" version
+    includes (namespace p) custom_functions usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf
     {|
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -581,4 +603,7 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-|}
+
+#endif
+|} ;
+  pf ppf "@[<v>%a@]" pp_register_map_rect_functors p

@@ -453,6 +453,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
 
 typedef eight_schools_ncp_model_namespace::eight_schools_ncp_model stan_model;
 
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -461,6 +463,10 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
+
+#endif
+
+
 
   $ ../../../../../install/default/bin/stanc --print-cpp mother.stan
 
@@ -523,255 +529,260 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'mother.stan', line 384, column 2 to column 14)",
-                                                      " (in 'mother.stan', line 385, column 2 to column 52)",
-                                                      " (in 'mother.stan', line 386, column 2 to column 32)",
-                                                      " (in 'mother.stan', line 387, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 388, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 389, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 390, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 391, column 2 to column 26)",
-                                                      " (in 'mother.stan', line 392, column 2 to column 32)",
-                                                      " (in 'mother.stan', line 393, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 394, column 2 to column 45)",
-                                                      " (in 'mother.stan', line 395, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 396, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 397, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 398, column 2 to column 38)",
-                                                      " (in 'mother.stan', line 399, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 400, column 2 to column 42)",
-                                                      " (in 'mother.stan', line 401, column 2 to column 16)",
-                                                      " (in 'mother.stan', line 402, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 392, column 2 to column 14)",
+                                                      " (in 'mother.stan', line 393, column 2 to column 52)",
+                                                      " (in 'mother.stan', line 394, column 2 to column 32)",
+                                                      " (in 'mother.stan', line 395, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 396, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 397, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 398, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 399, column 2 to column 26)",
+                                                      " (in 'mother.stan', line 400, column 2 to column 32)",
+                                                      " (in 'mother.stan', line 401, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 402, column 2 to column 45)",
+                                                      " (in 'mother.stan', line 403, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 404, column 2 to column 29)",
                                                       " (in 'mother.stan', line 405, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 406, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 407, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 408, column 2 to column 25)",
-                                                      " (in 'mother.stan', line 409, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 410, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 411, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 412, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 413, column 2 to column 46)",
-                                                      " (in 'mother.stan', line 414, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 415, column 2 to column 30)",
-                                                      " (in 'mother.stan', line 416, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 417, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 418, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 419, column 2 to column 43)",
-                                                      " (in 'mother.stan', line 420, column 2 to column 20)",
-                                                      " (in 'mother.stan', line 422, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 423, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 424, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 425, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 427, column 2 to column 25)",
-                                                      " (in 'mother.stan', line 428, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 429, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 431, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 432, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 433, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 439, column 10 to column 38)",
-                                                      " (in 'mother.stan', line 438, column 23 to line 439, column 39)",
-                                                      " (in 'mother.stan', line 438, column 8 to line 439, column 39)",
-                                                      " (in 'mother.stan', line 437, column 21 to line 439, column 40)",
-                                                      " (in 'mother.stan', line 437, column 6 to line 439, column 40)",
-                                                      " (in 'mother.stan', line 436, column 19 to line 439, column 41)",
-                                                      " (in 'mother.stan', line 436, column 4 to line 439, column 41)",
-                                                      " (in 'mother.stan', line 435, column 17 to line 439, column 42)",
-                                                      " (in 'mother.stan', line 435, column 2 to line 439, column 42)",
-                                                      " (in 'mother.stan', line 441, column 17 to column 45)",
-                                                      " (in 'mother.stan', line 441, column 2 to column 45)",
-                                                      " (in 'mother.stan', line 442, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 443, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 444, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 446, column 2 to column 63)",
-                                                      " (in 'mother.stan', line 447, column 2 to column 79)",
-                                                      " (in 'mother.stan', line 448, column 2 to column 81)",
-                                                      " (in 'mother.stan', line 449, column 2 to column 65)",
-                                                      " (in 'mother.stan', line 450, column 2 to column 81)",
-                                                      " (in 'mother.stan', line 451, column 2 to column 67)",
-                                                      " (in 'mother.stan', line 452, column 2 to column 83)",
-                                                      " (in 'mother.stan', line 489, column 2 to column 32)",
-                                                      " (in 'mother.stan', line 490, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 491, column 2 to column 35)",
-                                                      " (in 'mother.stan', line 492, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 493, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 494, column 2 to column 25)",
-                                                      " (in 'mother.stan', line 495, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 496, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 497, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 498, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 499, column 2 to column 46)",
-                                                      " (in 'mother.stan', line 500, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 501, column 2 to column 30)",
-                                                      " (in 'mother.stan', line 502, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 503, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 504, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 505, column 2 to column 43)",
-                                                      " (in 'mother.stan', line 506, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 507, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 406, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 407, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 408, column 2 to column 42)",
+                                                      " (in 'mother.stan', line 409, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 410, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 413, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 414, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 415, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 416, column 2 to column 25)",
+                                                      " (in 'mother.stan', line 417, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 418, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 419, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 420, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 421, column 2 to column 46)",
+                                                      " (in 'mother.stan', line 422, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 423, column 2 to column 30)",
+                                                      " (in 'mother.stan', line 424, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 425, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 426, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 427, column 2 to column 43)",
+                                                      " (in 'mother.stan', line 428, column 2 to column 20)",
+                                                      " (in 'mother.stan', line 430, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 431, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 432, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 433, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 435, column 2 to column 25)",
+                                                      " (in 'mother.stan', line 436, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 437, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 439, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 440, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 441, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 447, column 10 to column 38)",
+                                                      " (in 'mother.stan', line 446, column 23 to line 447, column 39)",
+                                                      " (in 'mother.stan', line 446, column 8 to line 447, column 39)",
+                                                      " (in 'mother.stan', line 445, column 21 to line 447, column 40)",
+                                                      " (in 'mother.stan', line 445, column 6 to line 447, column 40)",
+                                                      " (in 'mother.stan', line 444, column 19 to line 447, column 41)",
+                                                      " (in 'mother.stan', line 444, column 4 to line 447, column 41)",
+                                                      " (in 'mother.stan', line 443, column 17 to line 447, column 42)",
+                                                      " (in 'mother.stan', line 443, column 2 to line 447, column 42)",
+                                                      " (in 'mother.stan', line 449, column 17 to column 45)",
+                                                      " (in 'mother.stan', line 449, column 2 to column 45)",
+                                                      " (in 'mother.stan', line 450, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 451, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 452, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 454, column 2 to column 63)",
+                                                      " (in 'mother.stan', line 455, column 2 to column 79)",
+                                                      " (in 'mother.stan', line 456, column 2 to column 81)",
+                                                      " (in 'mother.stan', line 457, column 2 to column 65)",
+                                                      " (in 'mother.stan', line 458, column 2 to column 81)",
+                                                      " (in 'mother.stan', line 459, column 2 to column 67)",
+                                                      " (in 'mother.stan', line 460, column 2 to column 83)",
+                                                      " (in 'mother.stan', line 501, column 2 to column 32)",
+                                                      " (in 'mother.stan', line 502, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 503, column 2 to column 35)",
+                                                      " (in 'mother.stan', line 504, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 505, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 506, column 2 to column 25)",
+                                                      " (in 'mother.stan', line 507, column 2 to column 29)",
                                                       " (in 'mother.stan', line 508, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 509, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 510, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 511, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 512, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 513, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 514, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 515, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 517, column 2 to column 35)",
-                                                      " (in 'mother.stan', line 518, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 519, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 520, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 521, column 2 to column 25)",
-                                                      " (in 'mother.stan', line 522, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 523, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 525, column 2 to column 35)",
-                                                      " (in 'mother.stan', line 526, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 527, column 2 to column 31)",
-                                                      " (in 'mother.stan', line 529, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 530, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 531, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 537, column 10 to column 38)",
-                                                      " (in 'mother.stan', line 536, column 23 to line 537, column 39)",
-                                                      " (in 'mother.stan', line 536, column 8 to line 537, column 39)",
-                                                      " (in 'mother.stan', line 535, column 21 to line 537, column 40)",
-                                                      " (in 'mother.stan', line 535, column 6 to line 537, column 40)",
-                                                      " (in 'mother.stan', line 534, column 19 to line 537, column 41)",
-                                                      " (in 'mother.stan', line 534, column 4 to line 537, column 41)",
-                                                      " (in 'mother.stan', line 533, column 17 to line 537, column 42)",
-                                                      " (in 'mother.stan', line 533, column 2 to line 537, column 42)",
-                                                      " (in 'mother.stan', line 539, column 17 to column 45)",
-                                                      " (in 'mother.stan', line 539, column 2 to column 45)",
-                                                      " (in 'mother.stan', line 545, column 8 to column 49)",
-                                                      " (in 'mother.stan', line 544, column 6 to line 545, column 49)",
-                                                      " (in 'mother.stan', line 543, column 4 to line 545, column 49)",
-                                                      " (in 'mother.stan', line 542, column 2 to line 545, column 49)",
-                                                      " (in 'mother.stan', line 550, column 6 to column 60)",
-                                                      " (in 'mother.stan', line 549, column 4 to line 550, column 60)",
-                                                      " (in 'mother.stan', line 548, column 2 to line 550, column 60)",
-                                                      " (in 'mother.stan', line 552, column 2 to column 45)",
-                                                      " (in 'mother.stan', line 553, column 64 to column 97)",
-                                                      " (in 'mother.stan', line 553, column 2 to column 97)",
-                                                      " (in 'mother.stan', line 558, column 6 to column 51)",
-                                                      " (in 'mother.stan', line 557, column 4 to line 558, column 51)",
-                                                      " (in 'mother.stan', line 556, column 2 to line 558, column 51)",
-                                                      " (in 'mother.stan', line 559, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 561, column 58 to column 91)",
-                                                      " (in 'mother.stan', line 561, column 2 to column 91)",
-                                                      " (in 'mother.stan', line 567, column 8 to column 68)",
-                                                      " (in 'mother.stan', line 566, column 6 to line 567, column 68)",
-                                                      " (in 'mother.stan', line 565, column 4 to line 567, column 68)",
-                                                      " (in 'mother.stan', line 564, column 2 to line 567, column 68)",
-                                                      " (in 'mother.stan', line 568, column 2 to column 48)",
-                                                      " (in 'mother.stan', line 569, column 67 to column 100)",
-                                                      " (in 'mother.stan', line 569, column 2 to column 100)",
-                                                      " (in 'mother.stan', line 571, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 572, column 2 to column 38)",
-                                                      " (in 'mother.stan', line 455, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 456, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 457, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 458, column 2 to column 35)",
-                                                      " (in 'mother.stan', line 460, column 2 to column 41)",
-                                                      " (in 'mother.stan', line 462, column 4 to column 42)",
-                                                      " (in 'mother.stan', line 463, column 4 to column 46)",
-                                                      " (in 'mother.stan', line 464, column 4 to column 46)",
-                                                      " (in 'mother.stan', line 467, column 8 to column 68)",
-                                                      " (in 'mother.stan', line 468, column 8 to column 76)",
-                                                      " (in 'mother.stan', line 469, column 8 to column 76)",
-                                                      " (in 'mother.stan', line 470, column 8 to column 65)",
-                                                      " (in 'mother.stan', line 466, column 21 to line 471, column 7)",
-                                                      " (in 'mother.stan', line 466, column 6 to line 471, column 7)",
-                                                      " (in 'mother.stan', line 465, column 19 to line 472, column 5)",
-                                                      " (in 'mother.stan', line 465, column 4 to line 472, column 5)",
-                                                      " (in 'mother.stan', line 461, column 17 to line 473, column 3)",
-                                                      " (in 'mother.stan', line 461, column 2 to line 473, column 3)",
-                                                      " (in 'mother.stan', line 476, column 6 to column 47)",
-                                                      " (in 'mother.stan', line 475, column 19 to line 477, column 5)",
-                                                      " (in 'mother.stan', line 475, column 4 to line 477, column 5)",
-                                                      " (in 'mother.stan', line 474, column 17 to line 478, column 3)",
-                                                      " (in 'mother.stan', line 474, column 2 to line 478, column 3)",
-                                                      " (in 'mother.stan', line 480, column 4 to column 47)",
-                                                      " (in 'mother.stan', line 479, column 17 to line 481, column 3)",
-                                                      " (in 'mother.stan', line 479, column 2 to line 481, column 3)",
-                                                      " (in 'mother.stan', line 482, column 2 to column 38)",
-                                                      " (in 'mother.stan', line 483, column 2 to column 38)",
-                                                      " (in 'mother.stan', line 484, column 2 to column 38)",
-                                                      " (in 'mother.stan', line 485, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 486, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 310, column 2 to column 17)",
-                                                      " (in 'mother.stan', line 311, column 2 to column 17)",
-                                                      " (in 'mother.stan', line 312, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 313, column 2 to column 30)",
-                                                      " (in 'mother.stan', line 314, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 315, column 2 to column 32)",
-                                                      " (in 'mother.stan', line 316, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 317, column 2 to column 27)",
-                                                      " (in 'mother.stan', line 318, column 2 to column 18)",
-                                                      " (in 'mother.stan', line 319, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 320, column 2 to column 28)",
-                                                      " (in 'mother.stan', line 321, column 2 to column 26)",
-                                                      " (in 'mother.stan', line 322, column 2 to column 32)",
-                                                      " (in 'mother.stan', line 323, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 324, column 2 to column 45)",
-                                                      " (in 'mother.stan', line 325, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 326, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 327, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 328, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 509, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 510, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 511, column 2 to column 46)",
+                                                      " (in 'mother.stan', line 512, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 513, column 2 to column 30)",
+                                                      " (in 'mother.stan', line 514, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 515, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 516, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 517, column 2 to column 43)",
+                                                      " (in 'mother.stan', line 518, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 519, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 520, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 521, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 522, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 523, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 524, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 525, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 526, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 527, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 529, column 2 to column 35)",
+                                                      " (in 'mother.stan', line 530, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 531, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 532, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 533, column 2 to column 25)",
+                                                      " (in 'mother.stan', line 534, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 535, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 537, column 2 to column 35)",
+                                                      " (in 'mother.stan', line 538, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 539, column 2 to column 31)",
+                                                      " (in 'mother.stan', line 541, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 542, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 543, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 549, column 10 to column 38)",
+                                                      " (in 'mother.stan', line 548, column 23 to line 549, column 39)",
+                                                      " (in 'mother.stan', line 548, column 8 to line 549, column 39)",
+                                                      " (in 'mother.stan', line 547, column 21 to line 549, column 40)",
+                                                      " (in 'mother.stan', line 547, column 6 to line 549, column 40)",
+                                                      " (in 'mother.stan', line 546, column 19 to line 549, column 41)",
+                                                      " (in 'mother.stan', line 546, column 4 to line 549, column 41)",
+                                                      " (in 'mother.stan', line 545, column 17 to line 549, column 42)",
+                                                      " (in 'mother.stan', line 545, column 2 to line 549, column 42)",
+                                                      " (in 'mother.stan', line 551, column 17 to column 45)",
+                                                      " (in 'mother.stan', line 551, column 2 to column 45)",
+                                                      " (in 'mother.stan', line 557, column 8 to column 49)",
+                                                      " (in 'mother.stan', line 556, column 6 to line 557, column 49)",
+                                                      " (in 'mother.stan', line 555, column 4 to line 557, column 49)",
+                                                      " (in 'mother.stan', line 554, column 2 to line 557, column 49)",
+                                                      " (in 'mother.stan', line 562, column 6 to column 60)",
+                                                      " (in 'mother.stan', line 561, column 4 to line 562, column 60)",
+                                                      " (in 'mother.stan', line 560, column 2 to line 562, column 60)",
+                                                      " (in 'mother.stan', line 564, column 2 to column 45)",
+                                                      " (in 'mother.stan', line 565, column 64 to column 97)",
+                                                      " (in 'mother.stan', line 565, column 2 to column 97)",
+                                                      " (in 'mother.stan', line 570, column 6 to column 51)",
+                                                      " (in 'mother.stan', line 569, column 4 to line 570, column 51)",
+                                                      " (in 'mother.stan', line 568, column 2 to line 570, column 51)",
+                                                      " (in 'mother.stan', line 571, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 573, column 58 to column 91)",
+                                                      " (in 'mother.stan', line 573, column 2 to column 91)",
+                                                      " (in 'mother.stan', line 579, column 8 to column 68)",
+                                                      " (in 'mother.stan', line 578, column 6 to line 579, column 68)",
+                                                      " (in 'mother.stan', line 577, column 4 to line 579, column 68)",
+                                                      " (in 'mother.stan', line 576, column 2 to line 579, column 68)",
+                                                      " (in 'mother.stan', line 580, column 2 to column 48)",
+                                                      " (in 'mother.stan', line 581, column 67 to column 100)",
+                                                      " (in 'mother.stan', line 581, column 2 to column 100)",
+                                                      " (in 'mother.stan', line 583, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 584, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 463, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 464, column 2 to column 20)",
+                                                      " (in 'mother.stan', line 465, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 466, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 467, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 468, column 2 to column 35)",
+                                                      " (in 'mother.stan', line 470, column 2 to column 41)",
+                                                      " (in 'mother.stan', line 472, column 4 to column 42)",
+                                                      " (in 'mother.stan', line 473, column 4 to column 46)",
+                                                      " (in 'mother.stan', line 474, column 4 to column 46)",
+                                                      " (in 'mother.stan', line 477, column 8 to column 68)",
+                                                      " (in 'mother.stan', line 478, column 8 to column 76)",
+                                                      " (in 'mother.stan', line 479, column 8 to column 76)",
+                                                      " (in 'mother.stan', line 480, column 8 to column 65)",
+                                                      " (in 'mother.stan', line 476, column 21 to line 481, column 7)",
+                                                      " (in 'mother.stan', line 476, column 6 to line 481, column 7)",
+                                                      " (in 'mother.stan', line 475, column 19 to line 482, column 5)",
+                                                      " (in 'mother.stan', line 475, column 4 to line 482, column 5)",
+                                                      " (in 'mother.stan', line 471, column 17 to line 483, column 3)",
+                                                      " (in 'mother.stan', line 471, column 2 to line 483, column 3)",
+                                                      " (in 'mother.stan', line 486, column 6 to column 47)",
+                                                      " (in 'mother.stan', line 485, column 19 to line 487, column 5)",
+                                                      " (in 'mother.stan', line 485, column 4 to line 487, column 5)",
+                                                      " (in 'mother.stan', line 484, column 17 to line 488, column 3)",
+                                                      " (in 'mother.stan', line 484, column 2 to line 488, column 3)",
+                                                      " (in 'mother.stan', line 490, column 4 to column 47)",
+                                                      " (in 'mother.stan', line 489, column 17 to line 491, column 3)",
+                                                      " (in 'mother.stan', line 489, column 2 to line 491, column 3)",
+                                                      " (in 'mother.stan', line 492, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 493, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 494, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 495, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 496, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 498, column 2 to column 53)",
+                                                      " (in 'mother.stan', line 316, column 2 to column 17)",
+                                                      " (in 'mother.stan', line 317, column 2 to column 17)",
+                                                      " (in 'mother.stan', line 318, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 319, column 2 to column 30)",
+                                                      " (in 'mother.stan', line 320, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 321, column 2 to column 32)",
+                                                      " (in 'mother.stan', line 322, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 323, column 2 to column 27)",
+                                                      " (in 'mother.stan', line 324, column 2 to column 18)",
+                                                      " (in 'mother.stan', line 325, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 326, column 2 to column 28)",
+                                                      " (in 'mother.stan', line 327, column 2 to column 26)",
+                                                      " (in 'mother.stan', line 328, column 2 to column 32)",
                                                       " (in 'mother.stan', line 329, column 2 to column 36)",
-                                                      " (in 'mother.stan', line 330, column 2 to column 42)",
-                                                      " (in 'mother.stan', line 333, column 2 to column 13)",
-                                                      " (in 'mother.stan', line 334, column 2 to column 15)",
-                                                      " (in 'mother.stan', line 335, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 336, column 2 to column 15)",
-                                                      " (in 'mother.stan', line 337, column 2 to column 20)",
-                                                      " (in 'mother.stan', line 338, column 2 to column 29)",
-                                                      " (in 'mother.stan', line 339, column 2 to column 46)",
-                                                      " (in 'mother.stan', line 340, column 2 to column 24)",
-                                                      " (in 'mother.stan', line 341, column 2 to column 30)",
-                                                      " (in 'mother.stan', line 342, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 343, column 2 to column 39)",
-                                                      " (in 'mother.stan', line 344, column 2 to column 37)",
-                                                      " (in 'mother.stan', line 345, column 2 to column 14)",
-                                                      " (in 'mother.stan', line 346, column 2 to column 14)",
-                                                      " (in 'mother.stan', line 347, column 2 to column 14)",
-                                                      " (in 'mother.stan', line 348, column 2 to column 17)",
-                                                      " (in 'mother.stan', line 349, column 2 to column 18)",
-                                                      " (in 'mother.stan', line 350, column 2 to column 18)",
-                                                      " (in 'mother.stan', line 355, column 10 to column 38)",
-                                                      " (in 'mother.stan', line 354, column 23 to line 355, column 39)",
-                                                      " (in 'mother.stan', line 354, column 8 to line 355, column 39)",
-                                                      " (in 'mother.stan', line 353, column 21 to line 355, column 40)",
-                                                      " (in 'mother.stan', line 353, column 6 to line 355, column 40)",
-                                                      " (in 'mother.stan', line 352, column 19 to line 355, column 41)",
-                                                      " (in 'mother.stan', line 352, column 4 to line 355, column 41)",
-                                                      " (in 'mother.stan', line 351, column 17 to line 355, column 42)",
-                                                      " (in 'mother.stan', line 351, column 2 to line 355, column 42)",
-                                                      " (in 'mother.stan', line 357, column 4 to column 28)",
-                                                      " (in 'mother.stan', line 359, column 6 to column 36)",
-                                                      " (in 'mother.stan', line 362, column 10 to column 46)",
-                                                      " (in 'mother.stan', line 361, column 23 to line 362, column 47)",
-                                                      " (in 'mother.stan', line 361, column 8 to line 362, column 47)",
-                                                      " (in 'mother.stan', line 360, column 21 to line 362, column 48)",
-                                                      " (in 'mother.stan', line 360, column 6 to line 362, column 48)",
-                                                      " (in 'mother.stan', line 358, column 19 to line 362, column 49)",
-                                                      " (in 'mother.stan', line 358, column 4 to line 362, column 49)",
-                                                      " (in 'mother.stan', line 356, column 17 to line 362, column 50)",
-                                                      " (in 'mother.stan', line 356, column 2 to line 362, column 50)",
-                                                      " (in 'mother.stan', line 365, column 6 to column 40)",
-                                                      " (in 'mother.stan', line 366, column 6 to column 63)",
-                                                      " (in 'mother.stan', line 364, column 19 to line 367, column 5)",
-                                                      " (in 'mother.stan', line 364, column 4 to line 367, column 5)",
-                                                      " (in 'mother.stan', line 363, column 17 to line 367, column 6)",
-                                                      " (in 'mother.stan', line 363, column 2 to line 367, column 6)",
-                                                      " (in 'mother.stan', line 368, column 2 to column 62)",
-                                                      " (in 'mother.stan', line 369, column 2 to column 62)",
-                                                      " (in 'mother.stan', line 371, column 4 to column 11)",
-                                                      " (in 'mother.stan', line 372, column 4 to column 35)",
-                                                      " (in 'mother.stan', line 373, column 4 to line 375, column 5)",
-                                                      " (in 'mother.stan', line 374, column 6 to column 12)",
-                                                      " (in 'mother.stan', line 370, column 2 to line 376, column 3)",
-                                                      " (in 'mother.stan', line 378, column 2 to column 25)",
-                                                      " (in 'mother.stan', line 379, column 2 to column 34)",
-                                                      " (in 'mother.stan', line 380, column 2 to column 33)",
-                                                      " (in 'mother.stan', line 381, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 330, column 2 to column 45)",
+                                                      " (in 'mother.stan', line 331, column 2 to column 23)",
+                                                      " (in 'mother.stan', line 332, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 333, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 334, column 2 to column 38)",
+                                                      " (in 'mother.stan', line 335, column 2 to column 36)",
+                                                      " (in 'mother.stan', line 336, column 2 to column 42)",
+                                                      " (in 'mother.stan', line 339, column 2 to column 13)",
+                                                      " (in 'mother.stan', line 340, column 2 to column 15)",
+                                                      " (in 'mother.stan', line 341, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 342, column 2 to column 15)",
+                                                      " (in 'mother.stan', line 343, column 2 to column 20)",
+                                                      " (in 'mother.stan', line 344, column 2 to column 29)",
+                                                      " (in 'mother.stan', line 345, column 2 to column 46)",
+                                                      " (in 'mother.stan', line 346, column 2 to column 24)",
+                                                      " (in 'mother.stan', line 347, column 2 to column 30)",
+                                                      " (in 'mother.stan', line 348, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 349, column 2 to column 39)",
+                                                      " (in 'mother.stan', line 350, column 2 to column 37)",
+                                                      " (in 'mother.stan', line 351, column 2 to column 14)",
+                                                      " (in 'mother.stan', line 352, column 2 to column 14)",
+                                                      " (in 'mother.stan', line 353, column 2 to column 14)",
+                                                      " (in 'mother.stan', line 354, column 2 to column 17)",
+                                                      " (in 'mother.stan', line 355, column 2 to column 17)",
+                                                      " (in 'mother.stan', line 356, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 357, column 2 to column 18)",
+                                                      " (in 'mother.stan', line 358, column 2 to column 18)",
+                                                      " (in 'mother.stan', line 363, column 10 to column 38)",
+                                                      " (in 'mother.stan', line 362, column 23 to line 363, column 39)",
+                                                      " (in 'mother.stan', line 362, column 8 to line 363, column 39)",
+                                                      " (in 'mother.stan', line 361, column 21 to line 363, column 40)",
+                                                      " (in 'mother.stan', line 361, column 6 to line 363, column 40)",
+                                                      " (in 'mother.stan', line 360, column 19 to line 363, column 41)",
+                                                      " (in 'mother.stan', line 360, column 4 to line 363, column 41)",
+                                                      " (in 'mother.stan', line 359, column 17 to line 363, column 42)",
+                                                      " (in 'mother.stan', line 359, column 2 to line 363, column 42)",
+                                                      " (in 'mother.stan', line 365, column 4 to column 28)",
+                                                      " (in 'mother.stan', line 367, column 6 to column 36)",
+                                                      " (in 'mother.stan', line 370, column 10 to column 46)",
+                                                      " (in 'mother.stan', line 369, column 23 to line 370, column 47)",
+                                                      " (in 'mother.stan', line 369, column 8 to line 370, column 47)",
+                                                      " (in 'mother.stan', line 368, column 21 to line 370, column 48)",
+                                                      " (in 'mother.stan', line 368, column 6 to line 370, column 48)",
+                                                      " (in 'mother.stan', line 366, column 19 to line 370, column 49)",
+                                                      " (in 'mother.stan', line 366, column 4 to line 370, column 49)",
+                                                      " (in 'mother.stan', line 364, column 17 to line 370, column 50)",
+                                                      " (in 'mother.stan', line 364, column 2 to line 370, column 50)",
+                                                      " (in 'mother.stan', line 373, column 6 to column 40)",
+                                                      " (in 'mother.stan', line 374, column 6 to column 63)",
+                                                      " (in 'mother.stan', line 372, column 19 to line 375, column 5)",
+                                                      " (in 'mother.stan', line 372, column 4 to line 375, column 5)",
+                                                      " (in 'mother.stan', line 371, column 17 to line 375, column 6)",
+                                                      " (in 'mother.stan', line 371, column 2 to line 375, column 6)",
+                                                      " (in 'mother.stan', line 376, column 2 to column 62)",
+                                                      " (in 'mother.stan', line 377, column 2 to column 62)",
+                                                      " (in 'mother.stan', line 379, column 4 to column 11)",
+                                                      " (in 'mother.stan', line 380, column 4 to column 35)",
+                                                      " (in 'mother.stan', line 381, column 4 to line 383, column 5)",
+                                                      " (in 'mother.stan', line 382, column 6 to column 12)",
+                                                      " (in 'mother.stan', line 378, column 2 to line 384, column 3)",
+                                                      " (in 'mother.stan', line 386, column 2 to column 25)",
+                                                      " (in 'mother.stan', line 387, column 2 to column 34)",
+                                                      " (in 'mother.stan', line 388, column 2 to column 33)",
+                                                      " (in 'mother.stan', line 389, column 2 to column 36)",
                                                       " (in 'mother.stan', line 10, column 16 to column 17)",
                                                       " (in 'mother.stan', line 13, column 16 to column 25)",
                                                       " (in 'mother.stan', line 13, column 4 to column 25)",
@@ -962,7 +973,11 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 304, column 4 to column 25)",
                                                       " (in 'mother.stan', line 305, column 4 to column 25)",
                                                       " (in 'mother.stan', line 306, column 4 to column 15)",
-                                                      " (in 'mother.stan', line 302, column 39 to line 307, column 3)"};
+                                                      " (in 'mother.stan', line 302, column 39 to line 307, column 3)",
+                                                      " (in 'mother.stan', line 310, column 4 to column 19)",
+                                                      " (in 'mother.stan', line 311, column 4 to column 18)",
+                                                      " (in 'mother.stan', line 312, column 4 to column 16)",
+                                                      " (in 'mother.stan', line 309, column 78 to line 313, column 3)"};
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -979,12 +994,12 @@ foo(const T0__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 252;
+    current_statement__ = 257;
     if (logical_eq(n, 0)) {
-      current_statement__ = 251;
+      current_statement__ = 256;
       return 1;
     } 
-    current_statement__ = 253;
+    current_statement__ = 258;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1033,11 +1048,11 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, 0);
     
-    current_statement__ = 257;
+    current_statement__ = 262;
     assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)], "assigning variable dydt");
-    current_statement__ = 258;
+    current_statement__ = 263;
     assign(dydt, cons_list(index_uni(2), nil_index_list()), (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])), "assigning variable dydt");
-    current_statement__ = 259;
+    current_statement__ = 264;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1070,7 +1085,7 @@ foo_bar0(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 261;
+    current_statement__ = 266;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1099,7 +1114,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 263;
+    current_statement__ = 268;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1131,7 +1146,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 265;
+    current_statement__ = 270;
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1164,7 +1179,7 @@ foo_lpmf(const T0__& y, const T1__& lambda, T_lp__& lp__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 267;
+    current_statement__ = 272;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1199,7 +1214,7 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 269;
+    current_statement__ = 274;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1232,7 +1247,7 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 271;
+    current_statement__ = 276;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1266,7 +1281,7 @@ foo_rng(RNG& base_rng__, const T0__& mu, const T1__& sigma,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 273;
+    current_statement__ = 278;
     return normal_rng(mu, sigma, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1298,9 +1313,9 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 275;
+    current_statement__ = 280;
     lp_accum__.add(normal_log<false>(u, 0, 1));
-    current_statement__ = 276;
+    current_statement__ = 281;
     lp_accum__.add(uniform_log<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1332,33 +1347,33 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 279;
+    current_statement__ = 284;
     while (1) {
       break;
     }
-    current_statement__ = 281;
+    current_statement__ = 286;
     while (0) {
       continue;
     }
-    current_statement__ = 283;
+    current_statement__ = 288;
     for (size_t i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 285;
-    for (size_t i = 1; i <= 10; ++i) { continue;}
     current_statement__ = 290;
+    for (size_t i = 1; i <= 10; ++i) { continue;}
+    current_statement__ = 295;
     while (1) {
       int b;
       
-      current_statement__ = 287;
+      current_statement__ = 292;
       b = 5;
       break;
     }
-    current_statement__ = 297;
+    current_statement__ = 302;
     while (1) {
-      current_statement__ = 295;
+      current_statement__ = 300;
       if (0) {
         break;
       } else {
-        current_statement__ = 293;
+        current_statement__ = 298;
         if (1) {
           break;
         } else {
@@ -1366,144 +1381,144 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 300;
+    current_statement__ = 305;
     while (1) {
-      current_statement__ = 299;
+      current_statement__ = 304;
       while (0) {
         break;
       }
     }
-    current_statement__ = 304;
+    current_statement__ = 309;
     while (1) {
-      current_statement__ = 302;
+      current_statement__ = 307;
       for (size_t i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 319;
+    current_statement__ = 324;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, 0));
       
       int z;
       
-      current_statement__ = 307;
+      current_statement__ = 312;
       for (size_t sym2__ = 1; sym2__ <= stan::length(vs); ++sym2__) {
         std::vector<int> v;
-        current_statement__ = 307;
+        current_statement__ = 312;
         v = vs[(sym2__ - 1)];
-        current_statement__ = 308;
+        current_statement__ = 313;
         z = 0;
         break;}
-      current_statement__ = 310;
+      current_statement__ = 315;
       for (size_t sym3__ = 1; sym3__ <= stan::length(vs); ++sym3__) {
         std::vector<int> v;
-        current_statement__ = 310;
+        current_statement__ = 315;
         v = vs[(sym3__ - 1)];
-        current_statement__ = 311;
+        current_statement__ = 316;
         z = 0;
         continue;}
-      current_statement__ = 313;
+      current_statement__ = 318;
       for (size_t sym4__ = 1; sym4__ <= stan::length(vs); ++sym4__) {
         std::vector<int> v;
-        current_statement__ = 313;
+        current_statement__ = 318;
         v = vs[(sym4__ - 1)];
-        current_statement__ = 314;
+        current_statement__ = 319;
         for (size_t sym5__ = 1; sym5__ <= stan::length(v); ++sym5__) {
           int vv;
-          current_statement__ = 314;
+          current_statement__ = 319;
           vv = v[(sym5__ - 1)];
-          current_statement__ = 315;
+          current_statement__ = 320;
           z = 0;
           break;}
-        current_statement__ = 317;
+        current_statement__ = 322;
         z = 1;}
     }
-    current_statement__ = 329;
+    current_statement__ = 334;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, -1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       
-      current_statement__ = 322;
+      current_statement__ = 327;
       for (size_t sym6__ = 1; sym6__ <= stan::length(vs); ++sym6__) {
         double v;
-        current_statement__ = 322;
+        current_statement__ = 327;
         v = rvalue(vs, cons_list(index_uni(sym6__), nil_index_list()), "vs");
-        current_statement__ = 323;
+        current_statement__ = 328;
         z = 0;
         break;}
-      current_statement__ = 325;
+      current_statement__ = 330;
       for (size_t sym7__ = 1; sym7__ <= stan::length(vs); ++sym7__) {
         double v;
-        current_statement__ = 325;
+        current_statement__ = 330;
         v = rvalue(vs, cons_list(index_uni(sym7__), nil_index_list()), "vs");
-        current_statement__ = 326;
+        current_statement__ = 331;
         z = 3.1;
         continue;}
     }
-    current_statement__ = 339;
+    current_statement__ = 344;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, -1, 1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
-      current_statement__ = 332;
+      current_statement__ = 337;
       for (size_t sym8__ = 1; sym8__ <= stan::length(vs); ++sym8__) {
         double v;
-        current_statement__ = 332;
+        current_statement__ = 337;
         v = vs[(sym8__ - 1)];
-        current_statement__ = 333;
+        current_statement__ = 338;
         z = 0;
         break;}
-      current_statement__ = 335;
+      current_statement__ = 340;
       for (size_t sym9__ = 1; sym9__ <= stan::length(vs); ++sym9__) {
         double v;
-        current_statement__ = 335;
+        current_statement__ = 340;
         v = vs[(sym9__ - 1)];
-        current_statement__ = 336;
+        current_statement__ = 341;
         z = 3.2;
         continue;}
     }
-    current_statement__ = 349;
+    current_statement__ = 354;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, 1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       
-      current_statement__ = 342;
+      current_statement__ = 347;
       for (size_t sym10__ = 1; sym10__ <= stan::length(vs); ++sym10__) {
         double v;
-        current_statement__ = 342;
+        current_statement__ = 347;
         v = vs[(sym10__ - 1)];
-        current_statement__ = 343;
+        current_statement__ = 348;
         z = 0;
         break;}
-      current_statement__ = 345;
+      current_statement__ = 350;
       for (size_t sym11__ = 1; sym11__ <= stan::length(vs); ++sym11__) {
         double v;
-        current_statement__ = 345;
+        current_statement__ = 350;
         v = vs[(sym11__ - 1)];
-        current_statement__ = 346;
+        current_statement__ = 351;
         z = 3.3;
         continue;}
     }
-    current_statement__ = 357;
+    current_statement__ = 362;
     while (1) {
       int b;
       
-      current_statement__ = 351;
+      current_statement__ = 356;
       b = 5;
       {
         int c;
         
-        current_statement__ = 353;
+        current_statement__ = 358;
         c = 6;
         break;
       }
     }
-    current_statement__ = 358;
+    current_statement__ = 363;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1538,14 +1553,14 @@ foo_2(const T0__& a, std::ostream* pstream__) {
     
     int y;
     
-    current_statement__ = 362;
+    current_statement__ = 367;
     for (size_t sym12__ = 1; sym12__ <= stan::length(vs); ++sym12__) {
       int v;
-      current_statement__ = 362;
+      current_statement__ = 367;
       v = vs[(sym12__ - 1)];
-      current_statement__ = 363;
+      current_statement__ = 368;
       y = v;}
-    current_statement__ = 364;
+    current_statement__ = 369;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1577,7 +1592,7 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 366;
+    current_statement__ = 371;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1608,7 +1623,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 368;
+    current_statement__ = 373;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1640,7 +1655,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 370;
+    current_statement__ = 375;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -1682,13 +1697,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     
     local_scalar_t__ avg_scale;
     
-    current_statement__ = 374;
+    current_statement__ = 379;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 375;
+    current_statement__ = 380;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 377;
+    current_statement__ = 382;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 376;
+      current_statement__ = 381;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -1698,9 +1713,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 379;
+    current_statement__ = 384;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 378;
+      current_statement__ = 383;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -1710,7 +1725,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 380;
+    current_statement__ = 385;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1749,7 +1764,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 382;
+    current_statement__ = 387;
     return transpose(stan::math::to_row_vector({1, 2, 3}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1790,7 +1805,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 384;
+    current_statement__ = 389;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1831,7 +1846,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 386;
+    current_statement__ = 391;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1872,15 +1887,15 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const T1__& invert,
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     
-    current_statement__ = 389;
+    current_statement__ = 394;
     assign(o, nil_index_list(), mat, "assigning variable o");
-    current_statement__ = 390;
+    current_statement__ = 395;
     assign(o, cons_list(index_uni(1), nil_index_list()), stan::model::deep_copy(
            rvalue(o, cons_list(index_uni(2), nil_index_list()), "o")), "assigning variable o");
-    current_statement__ = 391;
+    current_statement__ = 396;
     assign(o, cons_list(index_min_max(3, 4), nil_index_list()), stan::model::deep_copy(
            rvalue(o, cons_list(index_min_max(1, 2), nil_index_list()), "o")), "assigning variable o");
-    current_statement__ = 392;
+    current_statement__ = 397;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1932,7 +1947,7 @@ f0(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 394;
+    current_statement__ = 399;
     if (pstream__) {
       stan_print(pstream__, "hi");
       stan_print(pstream__, "\n");
@@ -2000,7 +2015,7 @@ f1(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 396;
+    current_statement__ = 401;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2068,7 +2083,7 @@ f2(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 398;
+    current_statement__ = 403;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2136,7 +2151,7 @@ f3(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 400;
+    current_statement__ = 405;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2204,7 +2219,7 @@ f4(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 402;
+    current_statement__ = 407;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2272,7 +2287,7 @@ f5(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 404;
+    current_statement__ = 409;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2340,7 +2355,7 @@ f6(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 406;
+    current_statement__ = 411;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2408,7 +2423,7 @@ f7(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 408;
+    current_statement__ = 413;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2476,7 +2491,7 @@ f8(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 410;
+    current_statement__ = 415;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2544,7 +2559,7 @@ f9(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 412;
+    current_statement__ = 417;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2612,7 +2627,7 @@ f10(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 414;
+    current_statement__ = 419;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2680,7 +2695,7 @@ f11(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 416;
+    current_statement__ = 421;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2748,7 +2763,7 @@ f12(const T0__& a1, const std::vector<T1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 418;
+    current_statement__ = 423;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2802,7 +2817,7 @@ foo_6(std::ostream* pstream__) {
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     
-    current_statement__ = 424;
+    current_statement__ = 429;
     assign(ar_mat, cons_list(index_uni(1), cons_list(index_uni(1), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())))), b, "assigning variable ar_mat");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2830,7 +2845,7 @@ matfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 426;
+    current_statement__ = 431;
     return stan::math::to_matrix<double>({stan::math::to_row_vector({
                                           1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
                                           stan::math::to_row_vector({
@@ -2863,7 +2878,7 @@ vecfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 428;
+    current_statement__ = 433;
     return transpose(stan::math::to_row_vector({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2895,9 +2910,9 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
-    current_statement__ = 430;
+    current_statement__ = 435;
     assign(l, nil_index_list(), multiply(mu, vecfoo(pstream__)), "assigning variable l");
-    current_statement__ = 431;
+    current_statement__ = 436;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2930,10 +2945,10 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
-    current_statement__ = 433;
+    current_statement__ = 438;
     assign(l, nil_index_list(), multiply(mu, transpose(stan::math::to_row_vector({
            1, 2, 3, 4, 5, 6, 7, 8, 9, 10}))), "assigning variable l");
-    current_statement__ = 434;
+    current_statement__ = 439;
     return rvalue(l, cons_list(index_multi({1, 2, 3, 4, 5}), nil_index_list()), "l");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2973,11 +2988,11 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     
-    current_statement__ = 437;
+    current_statement__ = 442;
     assign(f_x, cons_list(index_uni(1), nil_index_list()), (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
-    current_statement__ = 438;
+    current_statement__ = 443;
     assign(f_x, cons_list(index_uni(2), nil_index_list()), (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
-    current_statement__ = 439;
+    current_statement__ = 444;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2996,6 +3011,52 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const std::vector<T3__>& dat_int, std::ostream* pstream__)  const 
 {
 return algebra_system(x, y, dat, dat_int, pstream__);
+}
+};
+
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, 1>
+binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
+          const Eigen::Matrix<T1__, -1, 1>& theta,
+          const std::vector<T2__>& x_r, const std::vector<T3__>& x_i,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__,
+          T3__>::type;
+  typedef local_scalar_t__ fun_return_scalar_t__;
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
+    lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
+    
+    current_statement__ = 447;
+    assign(lpmf, cons_list(index_uni(1), nil_index_list()), 0.0, "assigning variable lpmf");
+    current_statement__ = 448;
+    return lpmf;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct binomialf_functor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
+           const Eigen::Matrix<T1__, -1, 1>& theta,
+           const std::vector<T2__>& x_r, const std::vector<T3__>& x_i,
+           std::ostream* pstream__)  const 
+{
+return binomialf(phi, theta, x_r, x_i, pstream__);
 }
 };
 
@@ -3040,6 +3101,8 @@ class mother_model : public model_base_crtp<mother_model> {
   Eigen::Matrix<double, -1, 1> y;
   std::vector<double> dat;
   std::vector<int> dat_int;
+  std::vector<std::vector<double>> x_r;
+  std::vector<std::vector<int>> x_i;
  
  public:
   ~mother_model() { }
@@ -3060,60 +3123,31 @@ class mother_model : public model_base_crtp<mother_model> {
       
       pos__ = 1;
       
-      current_statement__ = 174;
+      current_statement__ = 177;
       pos__ = 1;
-      current_statement__ = 174;
+      current_statement__ = 177;
       N = context__.vals_i("N")[(pos__ - 1)];
       
-      current_statement__ = 175;
+      current_statement__ = 178;
       pos__ = 1;
-      current_statement__ = 175;
+      current_statement__ = 178;
       M = context__.vals_i("M")[(pos__ - 1)];
       
-      current_statement__ = 176;
+      current_statement__ = 179;
       pos__ = 1;
-      current_statement__ = 176;
+      current_statement__ = 179;
       K = context__.vals_i("K")[(pos__ - 1)];
       d_int_1d_ar = std::vector<int>(N, 0);
       
-      current_statement__ = 177;
+      current_statement__ = 180;
       pos__ = 1;
-      current_statement__ = 177;
+      current_statement__ = 180;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 177;
+        current_statement__ = 180;
         assign(d_int_1d_ar, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_i("d_int_1d_ar")[(pos__ - 1)], "assigning variable d_int_1d_ar");
-        current_statement__ = 177;
+        current_statement__ = 180;
         pos__ = (pos__ + 1);}
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, 0)));
-      
-      current_statement__ = 178;
-      pos__ = 1;
-      current_statement__ = 178;
-      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
-        current_statement__ = 178;
-        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
-          current_statement__ = 178;
-          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
-            current_statement__ = 178;
-            assign(d_int_3d_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_i("d_int_3d_ar")[(pos__ - 1)], "assigning variable d_int_3d_ar");
-            current_statement__ = 178;
-            pos__ = (pos__ + 1);}}}
-      
-      current_statement__ = 179;
-      pos__ = 1;
-      current_statement__ = 179;
-      J = context__.vals_r("J")[(pos__ - 1)];
-      d_real_1d_ar = std::vector<double>(N, 0);
-      
-      current_statement__ = 180;
-      pos__ = 1;
-      current_statement__ = 180;
-      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 180;
-        assign(d_real_1d_ar, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_real_1d_ar")[(pos__ - 1)], "assigning variable d_real_1d_ar");
-        current_statement__ = 180;
-        pos__ = (pos__ + 1);}
-      d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
       current_statement__ = 181;
       pos__ = 1;
@@ -3124,58 +3158,49 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 181;
           for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
             current_statement__ = 181;
-            assign(d_real_3d_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_r("d_real_3d_ar")[(pos__ - 1)], "assigning variable d_real_3d_ar");
+            assign(d_int_3d_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_i("d_int_3d_ar")[(pos__ - 1)], "assigning variable d_int_3d_ar");
             current_statement__ = 181;
             pos__ = (pos__ + 1);}}}
-      d_vec = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 182;
       pos__ = 1;
       current_statement__ = 182;
-      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 182;
-        assign(d_vec, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_vec")[(pos__ - 1)], "assigning variable d_vec");
-        current_statement__ = 182;
-        pos__ = (pos__ + 1);}
-      d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      J = context__.vals_r("J")[(pos__ - 1)];
+      d_real_1d_ar = std::vector<double>(N, 0);
       
       current_statement__ = 183;
       pos__ = 1;
       current_statement__ = 183;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
         current_statement__ = 183;
-        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
-          current_statement__ = 183;
-          assign(d_1d_vec, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_1d_vec")[(pos__ - 1)], "assigning variable d_1d_vec");
-          current_statement__ = 183;
-          pos__ = (pos__ + 1);}}
-      d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+        assign(d_real_1d_ar, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_real_1d_ar")[(pos__ - 1)], "assigning variable d_real_1d_ar");
+        current_statement__ = 183;
+        pos__ = (pos__ + 1);}
+      d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
       current_statement__ = 184;
       pos__ = 1;
       current_statement__ = 184;
-      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= K; ++sym13__) {
         current_statement__ = 184;
-        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+        for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
           current_statement__ = 184;
-          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+          for (size_t sym15__ = 1; sym15__ <= N; ++sym15__) {
             current_statement__ = 184;
-            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
-              current_statement__ = 184;
-              assign(d_3d_vec, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_3d_vec")[(pos__ - 1)], "assigning variable d_3d_vec");
-              current_statement__ = 184;
-              pos__ = (pos__ + 1);}}}}
-      d_row_vec = Eigen::Matrix<double, 1, -1>(N);
+            assign(d_real_3d_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_r("d_real_3d_ar")[(pos__ - 1)], "assigning variable d_real_3d_ar");
+            current_statement__ = 184;
+            pos__ = (pos__ + 1);}}}
+      d_vec = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 185;
       pos__ = 1;
       current_statement__ = 185;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
         current_statement__ = 185;
-        assign(d_row_vec, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_row_vec")[(pos__ - 1)], "assigning variable d_row_vec");
+        assign(d_vec, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_vec")[(pos__ - 1)], "assigning variable d_vec");
         current_statement__ = 185;
         pos__ = (pos__ + 1);}
-      d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 186;
       pos__ = 1;
@@ -3184,10 +3209,10 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 186;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
           current_statement__ = 186;
-          assign(d_1d_row_vec, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_1d_row_vec")[(pos__ - 1)], "assigning variable d_1d_row_vec");
+          assign(d_1d_vec, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_1d_vec")[(pos__ - 1)], "assigning variable d_1d_vec");
           current_statement__ = 186;
           pos__ = (pos__ + 1);}}
-      d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       current_statement__ = 187;
       pos__ = 1;
@@ -3200,243 +3225,285 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 187;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
               current_statement__ = 187;
-              assign(d_3d_row_vec, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_3d_row_vec")[(pos__ - 1)], "assigning variable d_3d_row_vec");
+              assign(d_3d_vec, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_3d_vec")[(pos__ - 1)], "assigning variable d_3d_vec");
               current_statement__ = 187;
               pos__ = (pos__ + 1);}}}}
-      d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      d_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
       current_statement__ = 188;
       pos__ = 1;
       current_statement__ = 188;
-      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
         current_statement__ = 188;
-        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
-          current_statement__ = 188;
-          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
-            current_statement__ = 188;
-            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
-              current_statement__ = 188;
-              assign(d_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_ar_mat")[(pos__ - 1)], "assigning variable d_ar_mat");
-              current_statement__ = 188;
-              pos__ = (pos__ + 1);}}}}
-      d_simplex = Eigen::Matrix<double, -1, 1>(N);
+        assign(d_row_vec, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_row_vec")[(pos__ - 1)], "assigning variable d_row_vec");
+        current_statement__ = 188;
+        pos__ = (pos__ + 1);}
+      d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
       current_statement__ = 189;
       pos__ = 1;
       current_statement__ = 189;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
         current_statement__ = 189;
-        assign(d_simplex, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_simplex")[(pos__ - 1)], "assigning variable d_simplex");
-        current_statement__ = 189;
-        pos__ = (pos__ + 1);}
-      d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+        for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
+          current_statement__ = 189;
+          assign(d_1d_row_vec, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_1d_row_vec")[(pos__ - 1)], "assigning variable d_1d_row_vec");
+          current_statement__ = 189;
+          pos__ = (pos__ + 1);}}
+      d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
       current_statement__ = 190;
       pos__ = 1;
       current_statement__ = 190;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
         current_statement__ = 190;
+        for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
+          current_statement__ = 190;
+          for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
+            current_statement__ = 190;
+            for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
+              current_statement__ = 190;
+              assign(d_3d_row_vec, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_3d_row_vec")[(pos__ - 1)], "assigning variable d_3d_row_vec");
+              current_statement__ = 190;
+              pos__ = (pos__ + 1);}}}}
+      d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      
+      current_statement__ = 191;
+      pos__ = 1;
+      current_statement__ = 191;
+      for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
+        current_statement__ = 191;
+        for (size_t sym14__ = 1; sym14__ <= 2; ++sym14__) {
+          current_statement__ = 191;
+          for (size_t sym15__ = 1; sym15__ <= 5; ++sym15__) {
+            current_statement__ = 191;
+            for (size_t sym16__ = 1; sym16__ <= 4; ++sym16__) {
+              current_statement__ = 191;
+              assign(d_ar_mat, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_ar_mat")[(pos__ - 1)], "assigning variable d_ar_mat");
+              current_statement__ = 191;
+              pos__ = (pos__ + 1);}}}}
+      d_simplex = Eigen::Matrix<double, -1, 1>(N);
+      
+      current_statement__ = 192;
+      pos__ = 1;
+      current_statement__ = 192;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 192;
+        assign(d_simplex, cons_list(index_uni(sym13__), nil_index_list()), context__.vals_r("d_simplex")[(pos__ - 1)], "assigning variable d_simplex");
+        current_statement__ = 192;
+        pos__ = (pos__ + 1);}
+      d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      
+      current_statement__ = 193;
+      pos__ = 1;
+      current_statement__ = 193;
+      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
+        current_statement__ = 193;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
-          current_statement__ = 190;
+          current_statement__ = 193;
           assign(d_1d_simplex, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_1d_simplex")[(pos__ - 1)], "assigning variable d_1d_simplex");
-          current_statement__ = 190;
+          current_statement__ = 193;
           pos__ = (pos__ + 1);}}
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 191;
+      current_statement__ = 194;
       pos__ = 1;
-      current_statement__ = 191;
+      current_statement__ = 194;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 191;
+        current_statement__ = 194;
         for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
-          current_statement__ = 191;
+          current_statement__ = 194;
           for (size_t sym15__ = 1; sym15__ <= M; ++sym15__) {
-            current_statement__ = 191;
+            current_statement__ = 194;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
-              current_statement__ = 191;
+              current_statement__ = 194;
               assign(d_3d_simplex, cons_list(index_uni(sym16__), cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())))), context__.vals_r("d_3d_simplex")[(pos__ - 1)], "assigning variable d_3d_simplex");
-              current_statement__ = 191;
+              current_statement__ = 194;
               pos__ = (pos__ + 1);}}}}
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
-      current_statement__ = 192;
+      current_statement__ = 195;
       pos__ = 1;
-      current_statement__ = 192;
+      current_statement__ = 195;
       for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
-        current_statement__ = 192;
+        current_statement__ = 195;
         for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
-          current_statement__ = 192;
+          current_statement__ = 195;
           assign(d_cfcov_54, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_cfcov_54")[(pos__ - 1)], "assigning variable d_cfcov_54");
-          current_statement__ = 192;
+          current_statement__ = 195;
           pos__ = (pos__ + 1);}}
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
-      current_statement__ = 193;
+      current_statement__ = 196;
       pos__ = 1;
-      current_statement__ = 193;
+      current_statement__ = 196;
       for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
-        current_statement__ = 193;
+        current_statement__ = 196;
         for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
-          current_statement__ = 193;
+          current_statement__ = 196;
           assign(d_cfcov_33, cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list())), context__.vals_r("d_cfcov_33")[(pos__ - 1)], "assigning variable d_cfcov_33");
-          current_statement__ = 193;
+          current_statement__ = 196;
           pos__ = (pos__ + 1);}}
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      current_statement__ = 194;
+      current_statement__ = 197;
       pos__ = 1;
-      current_statement__ = 194;
+      current_statement__ = 197;
       for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
-        current_statement__ = 194;
+        current_statement__ = 197;
         for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
-          current_statement__ = 194;
+          current_statement__ = 197;
           for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
-            current_statement__ = 194;
+            current_statement__ = 197;
             assign(d_cfcov_33_ar, cons_list(index_uni(sym15__), cons_list(index_uni(sym14__), cons_list(index_uni(sym13__), nil_index_list()))), context__.vals_r("d_cfcov_33_ar")[(pos__ - 1)], "assigning variable d_cfcov_33_ar");
-            current_statement__ = 194;
+            current_statement__ = 197;
             pos__ = (pos__ + 1);}}}
       
-      current_statement__ = 195;
+      current_statement__ = 198;
       td_int = std::numeric_limits<double>::quiet_NaN();
       td_1d = std::vector<int>(N, 0);
       
       td_1dk = std::vector<int>(M, 0);
       
-      current_statement__ = 197;
+      current_statement__ = 200;
       assign(td_1dk, nil_index_list(), rep_array(1, M), "assigning variable td_1dk");
       
-      current_statement__ = 198;
+      current_statement__ = 201;
       td_a = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 198;
+      current_statement__ = 201;
       td_a = N;
       
-      current_statement__ = 199;
+      current_statement__ = 202;
       td_b = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 199;
+      current_statement__ = 202;
       td_b = (N * J);
       
-      current_statement__ = 200;
+      current_statement__ = 203;
       td_c = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 200;
+      current_statement__ = 203;
       td_c = foo_bar1(td_b, pstream__);
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
-      current_statement__ = 201;
+      current_statement__ = 204;
       for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
-        current_statement__ = 201;
+        current_statement__ = 204;
         for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
-          current_statement__ = 201;
+          current_statement__ = 204;
           for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
-            current_statement__ = 201;
+            current_statement__ = 204;
             for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
-              current_statement__ = 201;
+              current_statement__ = 204;
               assign(td_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
                      ), "assigning variable td_ar_mat");}}}}
       td_simplex = Eigen::Matrix<double, -1, 1>(N);
       
-      current_statement__ = 202;
+      current_statement__ = 205;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 202;
+        current_statement__ = 205;
         assign(td_simplex, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable td_simplex");}
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 203;
+      current_statement__ = 206;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 203;
+        current_statement__ = 206;
         for (size_t sym14__ = 1; sym14__ <= N; ++sym14__) {
-          current_statement__ = 203;
+          current_statement__ = 206;
           assign(td_1d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_1d_simplex");}}
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
-      current_statement__ = 204;
+      current_statement__ = 207;
       for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 204;
+        current_statement__ = 207;
         for (size_t sym14__ = 1; sym14__ <= M; ++sym14__) {
-          current_statement__ = 204;
+          current_statement__ = 207;
           for (size_t sym15__ = 1; sym15__ <= K; ++sym15__) {
-            current_statement__ = 204;
+            current_statement__ = 207;
             for (size_t sym16__ = 1; sym16__ <= N; ++sym16__) {
-              current_statement__ = 204;
+              current_statement__ = 207;
               assign(td_3d_simplex, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
                      ), "assigning variable td_3d_simplex");}}}}
       td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
       
-      current_statement__ = 205;
+      current_statement__ = 208;
       for (size_t sym13__ = 1; sym13__ <= 5; ++sym13__) {
-        current_statement__ = 205;
+        current_statement__ = 208;
         for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
-          current_statement__ = 205;
+          current_statement__ = 208;
           assign(td_cfcov_54, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_cfcov_54");}}
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
-      current_statement__ = 206;
+      current_statement__ = 209;
       for (size_t sym13__ = 1; sym13__ <= 3; ++sym13__) {
-        current_statement__ = 206;
+        current_statement__ = 209;
         for (size_t sym14__ = 1; sym14__ <= 3; ++sym14__) {
-          current_statement__ = 206;
+          current_statement__ = 209;
           assign(td_cfcov_33, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_cfcov_33");}}
       x = Eigen::Matrix<double, -1, 1>(2);
       
-      current_statement__ = 207;
+      current_statement__ = 210;
       for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
-        current_statement__ = 207;
+        current_statement__ = 210;
         assign(x, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable x");}
       y = Eigen::Matrix<double, -1, 1>(2);
       
-      current_statement__ = 208;
+      current_statement__ = 211;
       for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
-        current_statement__ = 208;
+        current_statement__ = 211;
         assign(y, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable y");}
       dat = std::vector<double>(0, 0);
       
       dat_int = std::vector<int>(0, 0);
       
-      current_statement__ = 211;
+      x_r = std::vector<std::vector<double>>(0, std::vector<double>(0, 0));
+      
+      x_i = std::vector<std::vector<int>>(0, std::vector<int>(0, 0));
+      
+      current_statement__ = 216;
       td_int = (primitive_value(1) || primitive_value(2));
-      current_statement__ = 212;
+      current_statement__ = 217;
       td_int = (primitive_value(1) && primitive_value(2));
-      current_statement__ = 221;
+      current_statement__ = 226;
       for (size_t i = 1; i <= 2; ++i) {
-        current_statement__ = 219;
+        current_statement__ = 224;
         for (size_t j = 1; j <= 3; ++j) {
-          current_statement__ = 217;
+          current_statement__ = 222;
           for (size_t m = 1; m <= 4; ++m) {
-            current_statement__ = 215;
+            current_statement__ = 220;
             for (size_t n = 1; n <= 5; ++n) {
-              current_statement__ = 213;
+              current_statement__ = 218;
               assign(td_ar_mat, cons_list(index_uni(m), cons_list(index_uni(n), cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())))), 0.4, "assigning variable td_ar_mat");
             }}}}
-      current_statement__ = 232;
+      current_statement__ = 237;
       for (size_t i = 1; i <= N; ++i) {
-        current_statement__ = 222;
+        current_statement__ = 227;
         assign(td_simplex, cons_list(index_uni(i), nil_index_list()), (1.0 / N), "assigning variable td_simplex");
-        current_statement__ = 230;
+        current_statement__ = 235;
         for (size_t n = 1; n <= N; ++n) {
-          current_statement__ = 223;
-          assign(td_1d_simplex, cons_list(index_uni(n), cons_list(index_uni(i), nil_index_list())), (1.0 / N), "assigning variable td_1d_simplex");
           current_statement__ = 228;
+          assign(td_1d_simplex, cons_list(index_uni(n), cons_list(index_uni(i), nil_index_list())), (1.0 / N), "assigning variable td_1d_simplex");
+          current_statement__ = 233;
           for (size_t m = 1; m <= M; ++m) {
-            current_statement__ = 226;
+            current_statement__ = 231;
             for (size_t k = 1; k <= K; ++k) {
-              current_statement__ = 224;
+              current_statement__ = 229;
               assign(td_3d_simplex, cons_list(index_uni(n), cons_list(index_uni(m), cons_list(index_uni(k), cons_list(index_uni(i), nil_index_list())))), (1.0 / N), "assigning variable td_3d_simplex");
             }}}}
-      current_statement__ = 238;
+      current_statement__ = 243;
       for (size_t i = 1; i <= 4; ++i) {
-        current_statement__ = 236;
+        current_statement__ = 241;
         for (size_t j = 1; j <= 5; ++j) {
           Eigen::Matrix<double, -1, -1> l_mat;
           l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
           
-          current_statement__ = 233;
+          current_statement__ = 238;
           assign(l_mat, nil_index_list(), d_ar_mat[(i - 1)][(j - 1)], "assigning variable l_mat");
-          current_statement__ = 234;
+          current_statement__ = 239;
           if (pstream__) {
             stan_print(pstream__, "ar dim1: ");
             stan_print(pstream__, i);
@@ -3446,171 +3513,171 @@ class mother_model : public model_base_crtp<mother_model> {
             stan_print(pstream__, l_mat);
             stan_print(pstream__, "\n");
           }}}
-      current_statement__ = 239;
+      current_statement__ = 244;
       assign(td_cfcov_54, nil_index_list(), diag_matrix(rep_vector(1,
                                                                    rows(
                                                                    td_cfcov_54))), "assigning variable td_cfcov_54");
-      current_statement__ = 240;
+      current_statement__ = 245;
       assign(td_cfcov_33, nil_index_list(), diag_matrix(rep_vector(1,
                                                                    rows(
                                                                    td_cfcov_33))), "assigning variable td_cfcov_33");
       {
         double z;
         
-        current_statement__ = 241;
+        current_statement__ = 246;
         z = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
         
-        current_statement__ = 242;
+        current_statement__ = 247;
         for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
-          current_statement__ = 242;
+          current_statement__ = 247;
           assign(blocked_tdata_vs, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable blocked_tdata_vs");}
-        current_statement__ = 243;
+        current_statement__ = 248;
         for (size_t sym1__ = 1; sym1__ <= stan::length(blocked_tdata_vs);
              ++sym1__) {
           double v;
-          current_statement__ = 243;
+          current_statement__ = 248;
           v = blocked_tdata_vs[(sym1__ - 1)];
-          current_statement__ = 244;
+          current_statement__ = 249;
           z = 0;}
       }
-      current_statement__ = 246;
+      current_statement__ = 251;
       assign(td_1dk, nil_index_list(), rvalue(td_1d, cons_list(index_multi(stan::model::deep_copy(
              td_1dk)), nil_index_list()), "td_1d"), "assigning variable td_1dk");
-      current_statement__ = 247;
+      current_statement__ = 252;
       assign(td_simplex, nil_index_list(), rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_omni(), nil_index_list())), "td_1d_simplex"), "assigning variable td_simplex");
-      current_statement__ = 248;
+      current_statement__ = 253;
       assign(td_simplex, nil_index_list(), rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_omni(), nil_index_list())), "td_1d_simplex"), "assigning variable td_simplex");
-      current_statement__ = 249;
+      current_statement__ = 254;
       assign(td_simplex, nil_index_list(), rvalue(td_1d_simplex, cons_list(index_uni(1), cons_list(index_min_max(1, N), nil_index_list())), "td_1d_simplex"), "assigning variable td_simplex");
-      current_statement__ = 174;
-      current_statement__ = 174;
-      check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 175;
-      current_statement__ = 175;
-      check_greater_or_equal(function__, "M", M, 0);
-      current_statement__ = 176;
-      current_statement__ = 176;
-      check_greater_or_equal(function__, "K", K, 0);
-      current_statement__ = 176;
-      current_statement__ = 176;
-      check_less_or_equal(function__, "K", K, (N * M));
       current_statement__ = 177;
+      current_statement__ = 177;
+      check_greater_or_equal(function__, "N", N, 0);
+      current_statement__ = 178;
+      current_statement__ = 178;
+      check_greater_or_equal(function__, "M", M, 0);
+      current_statement__ = 179;
+      current_statement__ = 179;
+      check_greater_or_equal(function__, "K", K, 0);
+      current_statement__ = 179;
+      current_statement__ = 179;
+      check_less_or_equal(function__, "K", K, (N * M));
+      current_statement__ = 180;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 177;
-        current_statement__ = 177;
+        current_statement__ = 180;
+        current_statement__ = 180;
         check_less_or_equal(function__, "d_int_1d_ar[sym1__]",
                             d_int_1d_ar[(sym1__ - 1)], N);}
-      current_statement__ = 178;
+      current_statement__ = 181;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 178;
+        current_statement__ = 181;
         for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 178;
+          current_statement__ = 181;
           for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 178;
-            current_statement__ = 178;
+            current_statement__ = 181;
+            current_statement__ = 181;
             check_less_or_equal(function__,
                                 "d_int_3d_ar[sym1__, sym2__, sym3__]",
                                 d_int_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
                                 N);}}}
-      current_statement__ = 179;
-      current_statement__ = 179;
+      current_statement__ = 182;
+      current_statement__ = 182;
       check_greater_or_equal(function__, "J", J, -2.0);
-      current_statement__ = 179;
-      current_statement__ = 179;
+      current_statement__ = 182;
+      current_statement__ = 182;
       check_less_or_equal(function__, "J", J, 2.0);
-      current_statement__ = 188;
+      current_statement__ = 191;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 188;
+        current_statement__ = 191;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 188;
-          current_statement__ = 188;
+          current_statement__ = 191;
+          current_statement__ = 191;
           check_greater_or_equal(function__, "d_ar_mat[sym1__, sym2__]",
                                  d_ar_mat[(sym1__ - 1)][(sym2__ - 1)], 0);}}
-      current_statement__ = 188;
+      current_statement__ = 191;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 188;
+        current_statement__ = 191;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 188;
-          current_statement__ = 188;
+          current_statement__ = 191;
+          current_statement__ = 191;
           check_less_or_equal(function__, "d_ar_mat[sym1__, sym2__]",
                               d_ar_mat[(sym1__ - 1)][(sym2__ - 1)], 1);}}
-      current_statement__ = 189;
-      current_statement__ = 189;
+      current_statement__ = 192;
+      current_statement__ = 192;
       check_simplex(function__, "d_simplex", d_simplex);
-      current_statement__ = 190;
+      current_statement__ = 193;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 190;
-        current_statement__ = 190;
+        current_statement__ = 193;
+        current_statement__ = 193;
         check_simplex(function__, "d_1d_simplex[sym1__]",
                       d_1d_simplex[(sym1__ - 1)]);}
-      current_statement__ = 191;
+      current_statement__ = 194;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 191;
+        current_statement__ = 194;
         for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 191;
+          current_statement__ = 194;
           for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 191;
-            current_statement__ = 191;
+            current_statement__ = 194;
+            current_statement__ = 194;
             check_simplex(function__, "d_3d_simplex[sym1__, sym2__, sym3__]",
                           d_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);
           }}}
-      current_statement__ = 192;
-      current_statement__ = 192;
+      current_statement__ = 195;
+      current_statement__ = 195;
       check_cholesky_factor(function__, "d_cfcov_54", d_cfcov_54);
-      current_statement__ = 193;
-      current_statement__ = 193;
+      current_statement__ = 196;
+      current_statement__ = 196;
       check_cholesky_factor(function__, "d_cfcov_33", d_cfcov_33);
-      current_statement__ = 194;
+      current_statement__ = 197;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 194;
-        current_statement__ = 194;
+        current_statement__ = 197;
+        current_statement__ = 197;
         check_cholesky_factor(function__, "d_cfcov_33_ar[sym1__]",
                               d_cfcov_33_ar[(sym1__ - 1)]);}
-      current_statement__ = 201;
+      current_statement__ = 204;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 201;
+        current_statement__ = 204;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 201;
-          current_statement__ = 201;
+          current_statement__ = 204;
+          current_statement__ = 204;
           check_greater_or_equal(function__, "td_ar_mat[sym1__, sym2__]",
                                  td_ar_mat[(sym1__ - 1)][(sym2__ - 1)], 0);}}
-      current_statement__ = 201;
+      current_statement__ = 204;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 201;
+        current_statement__ = 204;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 201;
-          current_statement__ = 201;
+          current_statement__ = 204;
+          current_statement__ = 204;
           check_less_or_equal(function__, "td_ar_mat[sym1__, sym2__]",
                               td_ar_mat[(sym1__ - 1)][(sym2__ - 1)], 1);}}
-      current_statement__ = 202;
-      current_statement__ = 202;
+      current_statement__ = 205;
+      current_statement__ = 205;
       check_simplex(function__, "td_simplex", td_simplex);
-      current_statement__ = 203;
+      current_statement__ = 206;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 203;
-        current_statement__ = 203;
+        current_statement__ = 206;
+        current_statement__ = 206;
         check_simplex(function__, "td_1d_simplex[sym1__]",
                       td_1d_simplex[(sym1__ - 1)]);}
-      current_statement__ = 204;
+      current_statement__ = 207;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 204;
+        current_statement__ = 207;
         for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 204;
+          current_statement__ = 207;
           for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 204;
-            current_statement__ = 204;
+            current_statement__ = 207;
+            current_statement__ = 207;
             check_simplex(function__,
                           "td_3d_simplex[sym1__, sym2__, sym3__]",
                           td_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);
           }}}
-      current_statement__ = 205;
-      current_statement__ = 205;
+      current_statement__ = 208;
+      current_statement__ = 208;
       check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
-      current_statement__ = 206;
-      current_statement__ = 206;
+      current_statement__ = 209;
+      current_statement__ = 209;
       check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4263,77 +4330,97 @@ class mother_model : public model_base_crtp<mother_model> {
         check_cholesky_factor(function__, "tp_cfcov_33_ar[sym2__]",
                               tp_cfcov_33_ar[(sym2__ - 1)]);}
       {
-        local_scalar_t__ r1;
+        Eigen::Matrix<local_scalar_t__, -1, 1> tmp;
+        tmp = Eigen::Matrix<local_scalar_t__, -1, 1>(0);
         
         current_statement__ = 143;
+        for (size_t sym13__ = 1; sym13__ <= 0; ++sym13__) {
+          current_statement__ = 143;
+          assign(tmp, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+                 ), "assigning variable tmp");}
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tmp2;
+        tmp2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, Eigen::Matrix<local_scalar_t__, -1, 1>(0));
+        
+        current_statement__ = 144;
+        for (size_t sym13__ = 1; sym13__ <= 0; ++sym13__) {
+          current_statement__ = 144;
+          for (size_t sym14__ = 1; sym14__ <= 0; ++sym14__) {
+            current_statement__ = 144;
+            assign(tmp2, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable tmp2");}}
+        local_scalar_t__ r1;
+        
+        current_statement__ = 145;
         r1 = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 143;
+        current_statement__ = 145;
         r1 = foo_bar1(p_real, pstream__);
         local_scalar_t__ r2;
         
-        current_statement__ = 144;
-        r2 = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 144;
-        r2 = foo_bar1(J, pstream__);
-        current_statement__ = 145;
-        lp_accum__.add(normal_log<propto__>(p_real, 0, 1));
         current_statement__ = 146;
-        lp_accum__.add(normal_log<propto__>(offset_multiplier, 0, 1));
+        r2 = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 146;
+        r2 = foo_bar1(J, pstream__);
         current_statement__ = 147;
+        lp_accum__.add(normal_log<propto__>(p_real, 0, 1));
+        current_statement__ = 148;
+        lp_accum__.add(normal_log<propto__>(offset_multiplier, 0, 1));
+        current_statement__ = 149;
         lp_accum__.add(normal_log<propto__>(to_vector(p_real_1d_ar), 0, 1));
-        current_statement__ = 160;
+        current_statement__ = 162;
         for (size_t n = 1; n <= N; ++n) {
-          current_statement__ = 148;
+          current_statement__ = 150;
           lp_accum__.add(normal_log<propto__>(to_vector(p_1d_vec[(n - 1)]),
                                               0, 1));
-          current_statement__ = 149;
+          current_statement__ = 151;
           lp_accum__.add(normal_log<propto__>(to_vector(p_1d_row_vec[(n - 1)]),
                                               0, 1));
-          current_statement__ = 150;
+          current_statement__ = 152;
           lp_accum__.add(normal_log<propto__>(to_vector(p_1d_simplex[(n - 1)]),
                                               0, 1));
-          current_statement__ = 158;
+          current_statement__ = 160;
           for (size_t m = 1; m <= M; ++m) {
-            current_statement__ = 156;
+            current_statement__ = 158;
             for (size_t k = 1; k <= K; ++k) {
-              current_statement__ = 151;
+              current_statement__ = 153;
               lp_accum__.add(normal_log<propto__>(to_vector(p_3d_vec[(n - 1)][(m - 1)][(k - 1)]),
                                                   d_3d_vec[(n - 1)][(m - 1)][(k - 1)],
                                                   1));
-              current_statement__ = 152;
+              current_statement__ = 154;
               lp_accum__.add(normal_log<propto__>(to_vector(p_3d_row_vec[(n - 1)][(m - 1)][(k - 1)]),
                                                   d_3d_row_vec[(n - 1)][(m - 1)][(k - 1)],
                                                   1));
-              current_statement__ = 153;
+              current_statement__ = 155;
               lp_accum__.add(normal_log<propto__>(to_vector(p_3d_simplex[(n - 1)][(m - 1)][(k - 1)]),
                                                   d_3d_simplex[(n - 1)][(m - 1)][(k - 1)],
                                                   1));
-              current_statement__ = 154;
+              current_statement__ = 156;
               lp_accum__.add(normal_log<propto__>(p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)],
                                                   p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)],
                                                   1));}}}
-        current_statement__ = 165;
+        current_statement__ = 167;
         for (size_t i = 1; i <= 4; ++i) {
-          current_statement__ = 163;
+          current_statement__ = 165;
           for (size_t j = 1; j <= 5; ++j) {
-            current_statement__ = 161;
+            current_statement__ = 163;
             lp_accum__.add(normal_log<propto__>(to_vector(p_ar_mat[(i - 1)][(j - 1)]),
                                                 0, 1));}}
-        current_statement__ = 168;
+        current_statement__ = 170;
         for (size_t k = 1; k <= K; ++k) {
-          current_statement__ = 166;
+          current_statement__ = 168;
           lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_33_ar[(k - 1)]),
                                               0, 1));}
-        current_statement__ = 169;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_vec), d_vec, 1));
-        current_statement__ = 170;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_row_vec), 0, 1));
         current_statement__ = 171;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_simplex), 0, 1));
+        lp_accum__.add(normal_log<propto__>(to_vector(p_vec), d_vec, 1));
         current_statement__ = 172;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_54), 0, 1));
+        lp_accum__.add(normal_log<propto__>(to_vector(p_row_vec), 0, 1));
         current_statement__ = 173;
+        lp_accum__.add(normal_log<propto__>(to_vector(p_simplex), 0, 1));
+        current_statement__ = 174;
+        lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_54), 0, 1));
+        current_statement__ = 175;
         lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_33), 0, 1));
+        current_statement__ = 176;
+        lp_accum__.add(map_rect<1, binomialf_functor__>(tmp, tmp2, x_r, x_i));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7342,6 +7429,8 @@ class mother_model : public model_base_crtp<mother_model> {
 }
 typedef mother_model_namespace::mother_model stan_model;
 
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -7351,6 +7440,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+#endif
+
+
+STAN_REGISTER_MAP_RECT(1, mother_model_namespace::binomialf)
 
 Warning: deprecated language construct used in 'mother.stan', line 63, column 21:
    -------------------------------------------------
@@ -8175,6 +8268,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 }
 typedef optimize_glm_model_namespace::optimize_glm_model stan_model;
 
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -8183,4 +8278,8 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
+
+#endif
+
+
 

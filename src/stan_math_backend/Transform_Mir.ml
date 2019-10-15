@@ -312,18 +312,21 @@ let rec contains_eigen = function
   | UMatrix | URowVector | UVector -> true
   | _ -> false
 
+let type_needs_fill decl_id ut =
+  is_user_ident decl_id
+  && (contains_eigen ut || match ut with UInt | UReal -> true | _ -> false)
+
 let rec add_fill no_fill_required = function
   | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
     when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id
-         && (contains_eigen (remove_size st) || is_scalar st) ->
+         && type_needs_fill decl_id (remove_size st) ->
       (* I *think* we only need to initialize eigen types and scalars because we already construct
        std::vectors with 0s.
     *)
       [decl; make_fill decl_id st smeta]
   | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
-    when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id && contains_eigen ut ->
+    when (not (Set.mem no_fill_required decl_id)) && type_needs_fill decl_id ut
+    ->
       raise_s
         [%message
           "Unsized type initialization to NaN not yet implemented - consider \
@@ -432,6 +435,18 @@ let trans_prog (p : typed_prog) =
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
   in
+  let concat_map_fun_def f fds =
+    List.map fds ~f:(fun ({fdbody; _} as fd) ->
+        let stmt =
+          match fdbody.stmt with
+          | Block ls -> Block (List.concat_map ~f ls)
+          | _ ->
+              raise_s
+                [%message
+                  "Expect fun defs to all have a block as top-level statement."]
+        in
+        {fd with fdbody= {fdbody with stmt}} )
+  in
   let p =
     { p with
       log_prob
@@ -445,6 +460,10 @@ let trans_prog (p : typed_prog) =
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
         @ List.map ~f:gen_write constrained_params
-    ; generate_quantities }
+    ; generate_quantities
+    ; functions_block=
+        concat_map_fun_def
+          (add_fill (String.Set.of_list data_and_params))
+          p.functions_block }
   in
   map_prog Fn.id ensure_body_in_block p
