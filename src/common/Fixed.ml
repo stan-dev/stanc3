@@ -1,9 +1,12 @@
+(** This module defines the signatures and `Make` functors for the 'fixed point'
+    (or two-level) type we use for our intermediate representations
+*)
 open Core_kernel
 
+(** The fixed-point of `Pattern.t` annotated with some meta-data *)
 module type S = sig
   module Pattern : Pattern.S
 
-  (** The fixed-point of `Pattern.t` *)
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
 
@@ -68,6 +71,9 @@ module type S = sig
   argument. *)
 end
 
+(** Functor  which creates the fixed-point of the type defined in the `Pattern`
+module argument 
+*)
 module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
@@ -110,6 +116,10 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
     {t with pattern= Pattern.map (rewrite_top_down ~f) t.pattern}
 end
 
+(** Nested fixed-point type where an element of the `Pattern` is itself
+a fixed-point type. We use this to represent statements which contain 
+expressions.
+*)
 module type S2 = sig
   module First : S
   module Pattern : Pattern.S2

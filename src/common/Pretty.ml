@@ -1,3 +1,6 @@
+(** Named signatures for types that can be pretty-printed.
+*)
+
 module type S = sig
   type t
 
