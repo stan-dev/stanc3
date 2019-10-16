@@ -149,9 +149,6 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "eight_schools_ncp_model_namespace::log_prob";
@@ -987,8 +984,6 @@ foo(const int& n, std::ostream* pstream__) {
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 257;
@@ -1032,8 +1027,6 @@ sho(const T0__& t, const std::vector<T1__>& y,
           T2__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     std::vector<local_scalar_t__> dydt;
@@ -1070,8 +1063,6 @@ foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 266;
@@ -1098,8 +1089,6 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 268;
@@ -1129,8 +1118,6 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
           T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 270;
@@ -1159,8 +1146,6 @@ typename boost::math::tools::promote_args<T1__>::type
 foo_lpmf(const int& y, const T1__& lambda, T_lp__& lp__,
          T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 272;
@@ -1190,8 +1175,6 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 274;
@@ -1219,8 +1202,6 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 276;
@@ -1251,8 +1232,6 @@ foo_rng(RNG& base_rng__, const T0__& mu, const T1__& sigma,
           T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 278;
@@ -1282,8 +1261,6 @@ void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 280;
@@ -1314,8 +1291,6 @@ foo_1(const int& a, std::ostream* pstream__) {
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 284;
@@ -1543,8 +1518,6 @@ foo_2(const int& a, std::ostream* pstream__) {
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     std::vector<int> vs;
@@ -1585,8 +1558,6 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 371;
@@ -1614,8 +1585,6 @@ typename boost::math::tools::promote_args<T0__>::type
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 373;
@@ -1645,8 +1614,6 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 375;
@@ -1682,8 +1649,6 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     local_scalar_t__ abs_diff;
@@ -1754,8 +1719,6 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
           T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 387;
@@ -1794,8 +1757,6 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
           T4__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 389;
@@ -1834,8 +1795,6 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
           T2__,
           T3__,
           T4__, typename boost::math::tools::promote_args<T5__>::type>::type;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 391;
@@ -1869,8 +1828,6 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
@@ -1934,8 +1891,6 @@ f0(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 399;
@@ -1987,8 +1942,6 @@ f1(const int& a1, const std::vector<int>& a2,
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 401;
@@ -2037,8 +1990,6 @@ f2(const int& a1, const std::vector<int>& a2,
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 403;
@@ -2087,8 +2038,6 @@ f3(const int& a1, const std::vector<int>& a2,
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 405;
@@ -2146,8 +2095,6 @@ f4(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 407;
@@ -2207,8 +2154,6 @@ f5(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 409;
@@ -2268,8 +2213,6 @@ f6(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 411;
@@ -2329,8 +2272,6 @@ f7(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 413;
@@ -2390,8 +2331,6 @@ f8(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 415;
@@ -2451,8 +2390,6 @@ f9(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 417;
@@ -2512,8 +2449,6 @@ f10(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 419;
@@ -2573,8 +2508,6 @@ f11(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 421;
@@ -2634,8 +2567,6 @@ f12(const int& a1, const std::vector<int>& a2,
           T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 423;
@@ -2675,8 +2606,6 @@ foo_6(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int a;
@@ -2727,8 +2656,6 @@ matfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 431;
@@ -2759,8 +2686,6 @@ vecfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 433;
@@ -2787,8 +2712,6 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
@@ -2826,8 +2749,6 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
@@ -2872,8 +2793,6 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
           T2__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
@@ -2921,8 +2840,6 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
           T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
@@ -3615,9 +3532,6 @@ class mother_model : public model_base_crtp<mother_model> {
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "mother_model_namespace::log_prob";
@@ -7606,9 +7520,6 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "optimize_glm_model_namespace::log_prob";

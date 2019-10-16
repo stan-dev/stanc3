@@ -155,8 +155,6 @@ void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym34__;
@@ -196,8 +194,6 @@ rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym37__;
@@ -234,8 +230,6 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = int;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     {
@@ -300,9 +294,6 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "optimizations_model_namespace::log_prob";

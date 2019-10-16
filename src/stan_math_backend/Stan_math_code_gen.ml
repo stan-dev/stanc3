@@ -142,9 +142,6 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
     if not is_dist then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
-    text
-      "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-    pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match fdbody.stmt with
       | SList stmts -> {stmt= Block stmts; smeta= fdbody.smeta}
@@ -433,10 +430,8 @@ let pp_log_prob ppf p =
     ; "std::ostream* pstream__ = 0" ]
   in
   let intro =
-    [ "typedef T__ local_scalar_t__;"
-    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
-    ; strf "%a" pp_unused "DUMMY_VAR__"
-    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    [ "typedef T__ local_scalar_t__;"; "T__ lp__(0.0);"
+    ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (p.prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
