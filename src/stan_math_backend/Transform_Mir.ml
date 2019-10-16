@@ -403,9 +403,6 @@ let trans_prog (p : typed_prog) =
   let data_and_params =
     List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
-  let add_fills ls =
-    List.map ~f:(add_fill (String.Set.of_list data_and_params)) ls
-  in
   let tparam_start {stmt; _} =
     match stmt with
     | IfElse (cond, _, _)
@@ -434,21 +431,19 @@ let trans_prog (p : typed_prog) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
-  let gq =
+  let generate_quantities =
     ( add_reads p.generate_quantities p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
     @ gq_writes
-    |> add_fills
   in
   let log_prob =
     add_reads log_prob p.output_vars param_read
     |> constrain_in_params p.output_vars
-    |> translate_to_open_cl |> add_fills
+    |> translate_to_open_cl
   in
-  let generate_quantities = gq in
   let opencl_vars =
     String.Set.union_list
       (List.concat_map
@@ -482,17 +477,13 @@ let trans_prog (p : typed_prog) =
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
         @ to_matrix_cl_stmts
-        |> add_fills
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
         @ List.map ~f:gen_write constrained_params
-    ; generate_quantities
-    ; functions_block=
-        List.map
-          ~f:(map_fun_def (add_fill (String.Set.of_list data_and_params)))
-          p.functions_block }
+    ; generate_quantities }
   in
   p
   |> map_prog Fn.id ensure_body_in_block
+  |> map_prog Fn.id (add_fill (String.Set.of_list data_and_params))
   |> map_prog_stmt_lists flatten_slists_list
