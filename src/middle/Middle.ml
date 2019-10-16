@@ -3,6 +3,8 @@ include Stan_math_signatures
 include Type_conversion
 include Mir_utils
 open Core_kernel
+module NonEmptyList = NonEmptyList
+module Check = Check
 module Validation = Validation
 module Pretty = Mir_pretty_printer
 

@@ -1,38 +1,34 @@
 include Core_kernel
 
-module type Infix = sig
-  type 'a t
-
-  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
-end
 
 module type S = sig
-  type error
+  module Error : sig type t end 
+  module Warning : sig type t end
   type 'a t
+  include Applicative.S with type 'a t := 'a t
+  include Monad.S with type 'a t := 'a t
 
-  val map : 'a t -> f:('a -> 'b) -> 'b t
-  val pure : 'a -> 'a t
-  val apply : 'a t -> f:('a -> 'b) t -> 'b t
   val apply_const : 'a t -> 'b t -> 'b t
-  val bind : 'a t -> f:('a -> 'b t) -> 'b t
   val liftA2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
   val liftA3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
-  val sequence : 'a t list -> 'a list t
+
   val ok : 'a -> 'a t
-  val error : error -> _ t
+  val error : ?warn:Warning.t -> Error.t -> _ t
+  val warn : warn:Warning.t -> 'a -> 'a t 
+
   val is_error : 'a t -> bool
+  val is_warning : 'a t -> bool
   val is_success : 'a t -> bool
-  val get_errors_opt : 'a t -> error list option
-  val get_first_error_opt : 'a t -> error option
-  val get_success_opt : 'a t -> 'a option
+  
+  val get_errors_opt : 'a t -> (Error.t list * Warning.t list) option
+  val get_first_error_opt : 'a t -> Error.t option
+  val get_success_opt : 'a t -> ('a * Warning.t list) option
 
   val get_with :
-    'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
+    'a t -> with_ok:('a -> 'b) -> with_warnings:('a * Warning.t list -> 'b) -> with_errors:(Error.t list * Warning.t list -> 'b) -> 'b
 
-  val to_result : 'a t -> ('a, error list) result
+  val to_result : 'a t -> ('a * Warning.t list, Error.t list * Warning.t list) result
 
-  module Validation_infix : Infix with type 'a t := 'a t
-  include Infix with type 'a t := 'a t
 end
 
 (**
@@ -110,58 +106,98 @@ end
   liftM2 f m1 m2 === apply f a1 s2
   ```
 *)
-module Make (X : sig
+module Make (Warning : sig
   type t
-end) : S with type error := X.t = struct
-  type errors = NonEmpty of X.t * X.t list
+end) (Error : sig type t end) : S with module Warning := Warning and module Error := Error = struct
+  type 'a t = ('a, Warning.t NonEmptyList.t, Error.t NonEmptyList.t) Check.t
 
-  let append xs ys =
-    match (xs, ys) with
-    | NonEmpty (x, []), NonEmpty (y, []) -> NonEmpty (x, [y])
-    | NonEmpty (x, xs), NonEmpty (y, ys) -> NonEmpty (x, xs @ (y :: ys))
+  let with_warnings ws = function 
+    | Check.Ok x -> Check.Warn(x,ws)
+    | Check.Warn(x,vs) -> Check.Warn(x,NonEmptyList.append ws vs)
+    | Check.Error(x,vs) -> Check.Error(x,Option.map ~f:(NonEmptyList.append ws) vs)
 
-  type 'a t = ('a, errors) result
+  module Basic = struct
+    type nonrec 'a t = 'a t 
 
-  let map x ~f = match x with Ok x -> Ok (f x) | Error x -> Error x
-  let pure x = Ok x
+    let map = `Custom Check.map
 
-  let apply x ~f =
-    match (f, x) with
-    | Ok f, Ok x -> Ok (f x)
-    | Error e, Ok _ -> Error e
-    | Ok _, Error e -> Error e
-    | Error e1, Error e2 -> Error (append e1 e2)
+    let apply f x =
+      match (f, x) with
+      | Check.Ok f, Check.Ok x -> Check.Ok (f x)
+      | Ok f, Warn(x,ws) -> Warn(f x, ws)
+      | Ok _ ,Error(e,ws) -> Error(e,ws)
+      | Warn(f,ws),Ok x -> Warn(f x, ws)
+      | Warn(f,ws),Warn(x,vs) -> Warn(f x, NonEmptyList.append ws vs)
+      | Warn(_,ws), Error(e,vs) -> Error(e,Option.map ~f:(NonEmptyList.append ws) vs)
+      | Error(e,ws) , Ok _ -> Error(e,ws)
+      | Error(e,ws) , Warn(_,vs) -> Error(e, Option.map ~f:(fun ws -> NonEmptyList.append ws vs) ws)
+      | Error(es,ws) , Error(fs,vs) ->  
+          let ws' = 
+            match ws,vs with 
+            | Some x, Some y -> Some (NonEmptyList.append x y)
+            | Some x , _ -> Some x 
+            | _ , _ -> vs
+          in 
+          Error(NonEmptyList.append es fs, ws')
 
-  let apply_const a b = apply b ~f:(map a ~f:(fun _ x -> x))
-  let bind x ~f = match x with Ok x -> f x | Error e -> Error e
-  let liftA2 f x y = apply y ~f:(apply x ~f:(pure f))
-  let liftA3 f x y z = apply z ~f:(apply y ~f:(apply x ~f:(pure f)))
-  let consA next rest = liftA2 List.cons next rest
-  let sequence ts = List.fold_right ~init:(pure []) ~f:consA ts
+    let bind x ~f = 
+      match x with
+      | Check.Ok x -> f x  
+      | Check.Warn(x,ws) -> with_warnings ws @@ f x 
+      | Check.Error(e,ws) -> Error(e,ws)
 
-  module Validation_infix = struct let ( >>= ) x f = bind x ~f end
-  include Validation_infix
+    let return x = Check.Ok x
 
-  let ok x = pure x
-  let error x = Error (NonEmpty (x, []))
-  let is_error = function Error _ -> true | _ -> false
-  let is_success = function Ok _ -> true | _ -> false
+  end 
+    
+  include Applicative.Make(Basic)
+  include Monad.Make(Basic)
+
+
+  let apply_const a b = apply (map a ~f:(fun _ x -> x)) b
+  
+  let liftA2 f x y = apply (apply (return f) x) y
+  let liftA3 f x y z = apply (apply (apply (return f) x ) y) z 
+
+  let ok x = return x 
+  let error ?warn err  : 'a t= Check.Error(NonEmptyList.singleton err,Option.map ~f:NonEmptyList.singleton warn)
+  
+  let warn ~warn x : 'a t = Check.Warn(x, NonEmptyList.singleton warn)
+  
+  let is_error = function 
+    | Check.Error _ -> true 
+    | _ -> false 
+
+  let is_warning = function 
+    | Check.Warn _ -> true 
+    | _ -> false 
+  let is_success x = not @@ is_error x
+
+  
 
   let get_errors_opt = function
-    | Error (NonEmpty (x, xs)) -> Some (x :: xs)
+    | Check.Error(es ,  ws) -> Some NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
     | _ -> None
 
   let get_first_error_opt = function
-    | Error (NonEmpty (x, _)) -> Some x
+    | Check.Error (es,_) -> Some(NonEmptyList.hd es)
     | _ -> None
 
-  let get_success_opt = function Ok x -> Some x | _ -> None
+  let get_success_opt = function 
+    | Check.Ok x -> Some (x,[]) 
+    | Warn(x,ws) -> Some (x, NonEmptyList.to_list ws) 
+    | _ -> None
 
-  let get_with x ~with_ok ~with_errors =
+
+  let get_with x ~with_ok ~with_warnings ~with_errors =
     match x with
-    | Ok x -> with_ok x
-    | Error (NonEmpty (x, xs)) -> with_errors @@ (x :: xs)
+    | Check.Ok x -> with_ok x
+    | Warn(x,ws) -> with_warnings (x,NonEmptyList.to_list ws)
+    | Error(es,ws) -> with_errors NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
 
   let to_result x =
-    match x with Ok x -> Ok x | Error (NonEmpty (x, xs)) -> Error (x :: xs)
+    match x with 
+    | Check.Ok x -> Result.Ok (x,[]) 
+    | Warn(x,ws) -> Ok(x, NonEmptyList.to_list ws)
+    | Error (es,ws) -> Error NonEmptyList.(to_list es,Option.value_map ~default:[] ~f:to_list ws)
 end

@@ -1,8 +1,10 @@
 open Core_kernel
 include module type of Mir
 module Pretty : module type of Mir_pretty_printer
+module NonEmptyList : module type of NonEmptyList
+module Check : module type of Check
 module Validation : module type of Validation
-
+module Check : module type of Check
 val string_of_location :
   ?print_file:bool -> ?print_line:bool -> location -> string
 
