@@ -440,10 +440,8 @@ let trans_prog (p : typed_prog) =
         let stmt =
           match fdbody.stmt with
           | Block ls -> Block (List.concat_map ~f ls)
-          | _ ->
-              raise_s
-                [%message
-                  "Expect fun defs to all have a block as top-level statement."]
+          | Skip -> Skip
+          | _ -> Block (f fdbody)
         in
         {fd with fdbody= {fdbody with stmt}} )
   in

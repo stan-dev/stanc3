@@ -1553,6 +1553,8 @@ foo_2(const T0__& a, std::ostream* pstream__) {
     
     int y;
     
+    current_statement__ = 366;
+    y = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 367;
     for (size_t sym12__ = 1; sym12__ <= stan::length(vs); ++sym12__) {
       int v;
@@ -1695,8 +1697,12 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   try {
     local_scalar_t__ abs_diff;
     
+    current_statement__ = 377;
+    abs_diff = std::numeric_limits<double>::quiet_NaN();
     local_scalar_t__ avg_scale;
     
+    current_statement__ = 378;
+    avg_scale = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 379;
     abs_diff = stan::math::fabs((x - y));
     current_statement__ = 380;
@@ -1887,6 +1893,13 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const T1__& invert,
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     
+    current_statement__ = 393;
+    for (size_t sym13__ = 1; sym13__ <= rows(mat); ++sym13__) {
+      current_statement__ = 393;
+      for (size_t sym14__ = 1; sym14__ <= cols(mat); ++sym14__) {
+        current_statement__ = 393;
+        assign(o, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable o");}}
     current_statement__ = 394;
     assign(o, nil_index_list(), mat, "assigning variable o");
     current_statement__ = 395;
@@ -2809,14 +2822,29 @@ foo_6(std::ostream* pstream__) {
   try {
     int a;
     
+    current_statement__ = 425;
+    a = std::numeric_limits<double>::quiet_NaN();
     local_scalar_t__ b;
     
+    current_statement__ = 426;
+    b = std::numeric_limits<double>::quiet_NaN();
     std::vector<std::vector<local_scalar_t__>> c;
     c = std::vector<std::vector<local_scalar_t__>>(20, std::vector<local_scalar_t__>(30, 0));
     
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     
+    current_statement__ = 428;
+    for (size_t sym13__ = 1; sym13__ <= 60; ++sym13__) {
+      current_statement__ = 428;
+      for (size_t sym14__ = 1; sym14__ <= 70; ++sym14__) {
+        current_statement__ = 428;
+        for (size_t sym15__ = 1; sym15__ <= 40; ++sym15__) {
+          current_statement__ = 428;
+          for (size_t sym16__ = 1; sym16__ <= 50; ++sym16__) {
+            current_statement__ = 428;
+            assign(ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
+                   ), "assigning variable ar_mat");}}}}
     current_statement__ = 429;
     assign(ar_mat, cons_list(index_uni(1), cons_list(index_uni(1), cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())))), b, "assigning variable ar_mat");
   } catch (const std::exception& e) {
@@ -2911,6 +2939,11 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
     current_statement__ = 435;
+    for (size_t sym13__ = 1; sym13__ <= 10; ++sym13__) {
+      current_statement__ = 435;
+      assign(l, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+             ), "assigning variable l");}
+    current_statement__ = 435;
     assign(l, nil_index_list(), multiply(mu, vecfoo(pstream__)), "assigning variable l");
     current_statement__ = 436;
     return l;
@@ -2945,6 +2978,11 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
+    current_statement__ = 438;
+    for (size_t sym13__ = 1; sym13__ <= 10; ++sym13__) {
+      current_statement__ = 438;
+      assign(l, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+             ), "assigning variable l");}
     current_statement__ = 438;
     assign(l, nil_index_list(), multiply(mu, transpose(stan::math::to_row_vector({
            1, 2, 3, 4, 5, 6, 7, 8, 9, 10}))), "assigning variable l");
@@ -2988,6 +3026,11 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     
+    current_statement__ = 441;
+    for (size_t sym13__ = 1; sym13__ <= 2; ++sym13__) {
+      current_statement__ = 441;
+      assign(f_x, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+             ), "assigning variable f_x");}
     current_statement__ = 442;
     assign(f_x, cons_list(index_uni(1), nil_index_list()), (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
     current_statement__ = 443;
@@ -3035,6 +3078,11 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     
+    current_statement__ = 446;
+    for (size_t sym13__ = 1; sym13__ <= 1; ++sym13__) {
+      current_statement__ = 446;
+      assign(lpmf, cons_list(index_uni(sym13__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+             ), "assigning variable lpmf");}
     current_statement__ = 447;
     assign(lpmf, cons_list(index_uni(1), nil_index_list()), 0.0, "assigning variable lpmf");
     current_statement__ = 448;
@@ -4420,7 +4468,8 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 175;
         lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_33), 0, 1));
         current_statement__ = 176;
-        lp_accum__.add(map_rect<1, binomialf_functor__>(tmp, tmp2, x_r, x_i));
+        lp_accum__.add(map_rect<1, binomialf_functor__>(tmp, tmp2, x_r, x_i,
+                                                        pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7443,7 +7492,7 @@ stan::model::model_base& new_model(
 #endif
 
 
-STAN_REGISTER_MAP_RECT(1, mother_model_namespace::binomialf)
+STAN_REGISTER_MAP_RECT(1, mother_model_namespace::binomialf_functor__)
 
 Warning: deprecated language construct used in 'mother.stan', line 63, column 21:
    -------------------------------------------------
