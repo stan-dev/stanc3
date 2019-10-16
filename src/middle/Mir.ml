@@ -109,7 +109,7 @@ type 's fun_def =
   ; fdargs: fun_arg_decl
   ; fdbody: 's
   ; fdloc: location_span sexp_opaque [@compare.ignore] }
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, fold]
 
 type 'e lvalue = string * unsizedtype * 'e index list
 [@@deriving sexp, hash, map, fold]
@@ -158,14 +158,14 @@ type 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type 'e outvar =
   { out_unconstrained_st: 'e sizedtype
   ; out_constrained_st: 'e sizedtype
   ; out_block: io_block
   ; out_trans: 'e transformation }
-[@@deriving sexp, map, hash]
+[@@deriving sexp, map, hash, fold]
 
 type ('e, 's) prog =
   { functions_block: 's fun_def list
@@ -177,7 +177,7 @@ type ('e, 's) prog =
   ; output_vars: (string * 'e outvar) list
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp, map]
+[@@deriving sexp, map, fold]
 
 type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
 [@@deriving compare, sexp, hash]

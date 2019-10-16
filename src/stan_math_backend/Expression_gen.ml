@@ -105,6 +105,7 @@ let fn_renames =
    hash map of metadata available for each expression that we could put something like this in.
 *)
 let map_rect_counter = ref 0
+let functor_suffix = "_functor__"
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -217,7 +218,7 @@ and gen_fun_app ppf fname es =
     let to_var s = {expr= Var s; emeta= internal_meta} in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
-          {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
+          {e with expr= FunApp (StanLib, name ^ functor_suffix, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -248,7 +249,7 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | true, "map_rect", {expr= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
-          (strf "%s<%d, %s>" fname !map_rect_counter f, tl)
+          (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in

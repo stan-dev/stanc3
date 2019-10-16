@@ -1610,6 +1610,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 }
 typedef optimizations_model_namespace::optimizations_model stan_model;
 
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -1618,4 +1620,8 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
+
+#endif
+
+
 

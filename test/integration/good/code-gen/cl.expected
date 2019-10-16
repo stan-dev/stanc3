@@ -816,6 +816,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 }
 typedef optimize_glm_model_namespace::optimize_glm_model stan_model;
 
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -824,4 +826,8 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
+
+#endif
+
+
 
