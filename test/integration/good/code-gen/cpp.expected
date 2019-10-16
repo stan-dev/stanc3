@@ -981,7 +981,7 @@ foo(const int& n, std::ostream* pstream__) ;
 
 int
 foo(const int& n, std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1288,7 +1288,7 @@ return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 
 int
 foo_1(const int& a, std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1507,7 +1507,7 @@ return foo_1(a, pstream__);
 
 int
 foo_2(const int& a, std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1929,7 +1929,14 @@ f1(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+          T4__,
+          T5__,
+          T6__,
+          T7__, typename boost::math::tools::promote_args<T8__,
+          T9__,
+          T10__,
+          T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1977,7 +1984,14 @@ f2(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+          T4__,
+          T5__,
+          T6__,
+          T7__, typename boost::math::tools::promote_args<T8__,
+          T9__,
+          T10__,
+          T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2025,7 +2039,14 @@ f3(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+          T4__,
+          T5__,
+          T6__,
+          T7__, typename boost::math::tools::promote_args<T8__,
+          T9__,
+          T10__,
+          T11__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
   
