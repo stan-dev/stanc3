@@ -18,7 +18,9 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
+let types_match e1 e2 =
+  e1.emeta.mtype = e2.emeta.mtype && e1.emeta.madlevel = e2.emeta.madlevel
+
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
@@ -98,6 +100,12 @@ let fn_renames =
     ; (FnResizeToMatch, "resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   |> String.Map.of_alist_exn
+
+(* code smell - not sure how to refactor this. I was thinking ideally there'd be a stringly typed
+   hash map of metadata available for each expression that we could put something like this in.
+*)
+let map_rect_counter = ref 0
+let functor_suffix = "_functor__"
 
 let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
@@ -210,16 +218,16 @@ and read_data ut ppf es =
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app ppf f es =
+and gen_fun_app ppf fname es =
   let default ppf es =
     let to_var s = {expr= Var s; emeta= internal_meta} in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
-          {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
+          {e with expr= FunApp (StanLib, name ^ functor_suffix, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
-    let extra = suffix_args f |> List.map ~f:to_var in
+    let extra = suffix_args fname |> List.map ~f:to_var in
     let is_hof_call = not (converted_es = es) in
     let msgs = "pstream__" |> to_var in
     (* Here, because these signatures are written in C++ such that they
@@ -230,10 +238,10 @@ and gen_fun_app ppf f es =
        developer please don't add more of these - just add the
        overloads.
     *)
-    let args =
-      match (is_hof_call, f, converted_es @ extra) with
+    let fname, args =
+      match (is_hof_call, fname, converted_es @ extra) with
       | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
-          f :: x :: y :: dat :: datint :: msgs :: tl
+          (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
       | ( true
         , "integrate_ode_bdf"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
@@ -243,16 +251,19 @@ and gen_fun_app ppf f es =
        |( true
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
-          f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl
-      | true, _, args -> args @ [msgs]
-      | false, _, args -> args
+          (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
+      | true, "map_rect", {expr= FunApp (_, f, _); _} :: tl ->
+          incr map_rect_counter ;
+          (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
+      | true, _, args -> (fname, args @ [msgs])
+      | false, _, args -> (fname, args)
     in
-    let f = stan_namespace_qualify f |> demangle_propto_name false in
-    pp_call ppf (f, pp_expr, args)
+    let fname = stan_namespace_qualify fname |> demangle_propto_name false in
+    pp_call ppf (fname, pp_expr, args)
   in
   let pp =
-    [ Option.map ~f:gen_operator_app (operator_of_string f)
-    ; gen_misc_special_math_app f ]
+    [ Option.map ~f:gen_operator_app (operator_of_string fname)
+    ; gen_misc_special_math_app fname ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
@@ -352,7 +363,9 @@ and pp_expr ppf e =
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       let promoted ppf (t, e) =
-        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_expr_type t pp_expr e
+        pf ppf "stan::math::promote_scalar<%s>(%a)"
+          (local_scalar t.emeta.mtype t.emeta.madlevel)
+          pp_expr e
       in
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef

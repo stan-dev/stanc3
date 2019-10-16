@@ -2111,6 +2111,37 @@
               (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
           (smeta <opaque>)))))
       (smeta <opaque>)))
+    (fdloc <opaque>))
+   ((fdrt (UVector)) (fdname binomialf)
+    (fdargs
+     ((AutoDiffable phi UVector) (AutoDiffable theta UVector)
+      (DataOnly x_r (UArray UReal)) (DataOnly x_i (UArray UInt))))
+    (fdbody
+     ((stmt
+       (Block
+        (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id lpmf)
+            (decl_type
+             (Sized
+              (SVector
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+          (smeta <opaque>))
+         ((stmt
+           (Assignment
+            (lpmf UVector
+             ((Single
+               ((expr (Lit Int 1))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+            ((expr (Lit Real 0.0))
+             (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (smeta <opaque>))
+         ((stmt
+           (Return
+            (((expr (Var lpmf))
+              (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
+          (smeta <opaque>)))))
+      (smeta <opaque>)))
     (fdloc <opaque>))))
  (input_vars
   ((N SInt) (M SInt) (K SInt)
@@ -2621,6 +2652,28 @@
       (decl_type
        (Sized
         (SArray SInt
+         ((expr (Lit Int 0))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id x_r)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SReal
+          ((expr (Lit Int 0))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+         ((expr (Lit Int 0))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+    (smeta <opaque>))
+   ((stmt
+     (Decl (decl_adtype DataOnly) (decl_id x_i)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SInt
+          ((expr (Lit Int 0))
+           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
          ((expr (Lit Int 0))
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
@@ -5605,6 +5658,25 @@
    ((stmt
      (Block
       (((stmt
+         (Decl (decl_adtype AutoDiffable) (decl_id tmp)
+          (decl_type
+           (Sized
+            (SVector
+             ((expr (Lit Int 0))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+        (smeta <opaque>))
+       ((stmt
+         (Decl (decl_adtype AutoDiffable) (decl_id tmp2)
+          (decl_type
+           (Sized
+            (SArray
+             (SVector
+              ((expr (Lit Int 0))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+             ((expr (Lit Int 0))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+        (smeta <opaque>))
+       ((stmt
          (Decl (decl_adtype AutoDiffable) (decl_id r1)
           (decl_type (Sized SReal))))
         (smeta <opaque>))
@@ -6302,6 +6374,35 @@
               ((expr (Lit Int 1))
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
            (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+        (smeta <opaque>))
+       ((stmt
+         (TargetPE
+          ((expr
+            (FunApp StanLib map_rect
+             (((expr (Var binomialf))
+               (emeta
+                ((mtype
+                  (UFun
+                   ((AutoDiffable UVector) (AutoDiffable UVector)
+                    (DataOnly (UArray UReal)) (DataOnly (UArray UInt)))
+                   (ReturnType UVector)))
+                 (mloc <opaque>) (madlevel DataOnly))))
+              ((expr (Var tmp))
+               (emeta
+                ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+              ((expr (Var tmp2))
+               (emeta
+                ((mtype (UArray UVector)) (mloc <opaque>)
+                 (madlevel AutoDiffable))))
+              ((expr (Var x_r))
+               (emeta
+                ((mtype (UArray (UArray UReal))) (mloc <opaque>)
+                 (madlevel DataOnly))))
+              ((expr (Var x_i))
+               (emeta
+                ((mtype (UArray (UArray UInt))) (mloc <opaque>)
+                 (madlevel DataOnly)))))))
+           (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
         (smeta <opaque>)))))
     (smeta <opaque>))))
  (generate_quantities

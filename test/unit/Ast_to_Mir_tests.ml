@@ -43,47 +43,167 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      ((Block
-        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt)))
-         (IfElse
-          (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
-          (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
+      (((stmt
+         (Block
+          (((stmt
+             (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
+            (smeta <opaque>))
+           ((stmt
+             (IfElse
+              ((expr
+                (FunApp StanLib Less__
+                 (((expr (Var i))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                  ((expr
+                    (FunApp StanLib PMinus__
+                     (((expr (Lit Int 1))
+                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+              ((stmt
+                (NRFunApp CompilerInternal FnPrint__
+                 (((expr (Lit Str Badger))
+                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+               (smeta <opaque>))
+              ()))
+            (smeta <opaque>)))))
+        (smeta <opaque>))) |}]
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))) |}]
+    (((stmt
+       (Decl (decl_adtype DataOnly) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((expr (Lit Int 10))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((expr (Lit Int 20))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((expr (Lit Int 5))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+      (smeta <opaque>))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
   print_s [%sexp (m.log_prob : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype AutoDiffable) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
-          (body
+    (((stmt
+       (Decl (decl_adtype AutoDiffable) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((expr (Lit Int 10))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((expr (Lit Int 20))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((expr (Lit Int 5))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+      (smeta <opaque>))
+     ((stmt
+       (For (loopvar sym1__)
+        (lower
+         ((expr (Lit Int 1))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+        (upper
+         ((expr (Lit Int 5))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+        (body
+         ((stmt
            (Block
-            ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
-              (body
-               (Block
-                ((Assignment
-                  (mat (UArray UMatrix)
-                   ((Single (Var sym1__)) (Single (Var sym2__))
-                    (Single (Var sym3__))))
-                  (FunApp CompilerInternal FnConstrain__
-                   ((Indexed (Var mat)
-                     ((Single (Var sym1__)) (Single (Var sym2__))
-                      (Single (Var sym3__))))
-                    (Lit Str lb) (Lit Int 0))))))))))))))))) |}]
+            (((stmt
+               (For (loopvar sym2__)
+                (lower
+                 ((expr (Lit Int 1))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (upper
+                 ((expr (Lit Int 10))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                (body
+                 ((stmt
+                   (Block
+                    (((stmt
+                       (For (loopvar sym3__)
+                        (lower
+                         ((expr (Lit Int 1))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (upper
+                         ((expr (Lit Int 20))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                        (body
+                         ((stmt
+                           (Block
+                            (((stmt
+                               (Assignment
+                                (mat (UArray UMatrix)
+                                 ((Single
+                                   ((expr (Var sym1__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym2__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))
+                                  (Single
+                                   ((expr (Var sym3__))
+                                    (emeta
+                                     ((mtype UInt) (mloc <opaque>)
+                                      (madlevel DataOnly)))))))
+                                ((expr
+                                  (FunApp CompilerInternal FnConstrain__
+                                   (((expr
+                                      (Indexed
+                                       ((expr (Var mat))
+                                        (emeta
+                                         ((mtype (UArray UMatrix))
+                                          (mloc <opaque>)
+                                          (madlevel AutoDiffable))))
+                                       ((Single
+                                         ((expr (Var sym1__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym2__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
+                                         ((expr (Var sym3__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly))))))))
+                                     (emeta
+                                      ((mtype UReal) (mloc <opaque>)
+                                       (madlevel AutoDiffable))))
+                                    ((expr (Lit Str lb))
+                                     (emeta
+                                      ((mtype UReal) (mloc <opaque>)
+                                       (madlevel DataOnly))))
+                                    ((expr (Lit Int 0))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))))
+                                 (emeta
+                                  ((mtype UReal) (mloc <opaque>)
+                                   (madlevel AutoDiffable))))))
+                              (smeta <opaque>)))))
+                          (smeta <opaque>)))))
+                      (smeta <opaque>)))))
+                  (smeta <opaque>)))))
+              (smeta <opaque>)))))
+          (smeta <opaque>)))))
+      (smeta <opaque>))) |}]
 
 let%expect_test "gen quant" =
   let m =
@@ -92,19 +212,71 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((IfElse
-      (FunApp StanLib PNot__
-       ((EOr (Var emit_transformed_parameters__)
-         (Var emit_generated_quantities__))))
-      (Return ()) ())
-     (IfElse (FunApp StanLib PNot__ ((Var emit_generated_quantities__)))
-      (Return ()) ())
-     (Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((NRFunApp CompilerInternal FnCheck__
-          ((Lit Str greater_or_equal) (Lit Str mat[sym1__])
-           (Indexed (Var mat) ((Single (Var sym1__)))) (Lit Int 0)))))))) |}]
+    (((stmt
+       (IfElse
+        ((expr
+          (FunApp StanLib PNot__
+           (((expr
+              (EOr
+               ((expr (Var emit_transformed_parameters__))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+               ((expr (Var emit_generated_quantities__))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((stmt (Return ())) (smeta <opaque>)) ()))
+      (smeta <opaque>))
+     ((stmt
+       (IfElse
+        ((expr
+          (FunApp StanLib PNot__
+           (((expr (Var emit_generated_quantities__))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+        ((stmt (Return ())) (smeta <opaque>)) ()))
+      (smeta <opaque>))
+     ((stmt
+       (Decl (decl_adtype DataOnly) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((expr (Lit Int 10))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+            ((expr (Lit Int 20))
+             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((expr (Lit Int 5))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+      (smeta <opaque>))
+     ((stmt
+       (For (loopvar sym1__)
+        (lower
+         ((expr (Lit Int 1))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+        (upper
+         ((expr (Lit Int 5))
+          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+        (body
+         ((stmt
+           (Block
+            (((stmt
+               (NRFunApp CompilerInternal FnCheck__
+                (((expr (Lit Str greater_or_equal))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Lit Str mat[sym1__]))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr
+                   (Indexed
+                    ((expr (Var mat))
+                     (emeta
+                      ((mtype (UArray UMatrix)) (mloc <opaque>)
+                       (madlevel DataOnly))))
+                    ((Single
+                      ((expr (Var sym1__))
+                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                  (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly))))
+                 ((expr (Lit Int 0))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+              (smeta <opaque>)))))
+          (smeta <opaque>)))))
+      (smeta <opaque>))) |}]
