@@ -175,7 +175,49 @@ let rec ensure_body_in_block {stmt; smeta} =
         (map_statement (fun x -> x) ensure_body_in_block stmt)
   ; smeta }
 
-let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x]
+let rec flatten_slists_list ls =
+  let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x] in
+  let rec flatten_slists_stmt {stmt; smeta} =
+    let stmt =
+      match stmt with
+      | Block ls ->
+          Block
+            (List.concat_map
+               ~f:(Fn.compose flatten_slist flatten_slists_stmt)
+               ls)
+      | _ -> map_statement Fn.id flatten_slists_stmt stmt
+    in
+    {stmt; smeta}
+  in
+  List.concat_map ls ~f:(function
+    | {stmt= SList ls; _} -> flatten_slists_list ls
+    | x -> [x] )
+  |> List.map ~f:flatten_slists_stmt
+
+let%expect_test "Flatten slists" =
+  let e : 'e expr -> 'm with_expr = fun expr -> {expr; emeta= ()} in
+  let s stmt = {stmt; smeta= ()} in
+  let stmt =
+    [ SList
+        [ Block
+            [ SList
+                [ While (e (Var "hi"), Block [SList [Break |> s] |> s] |> s)
+                  |> s ]
+              |> s ]
+          |> s ]
+      |> s ]
+    |> flatten_slists_list
+  in
+  print_s [%sexp (stmt : (unit, unit) stmt_with list)] ;
+  [%expect
+    {|
+    (((stmt
+       (Block
+        (((stmt
+           (While ((expr (Var hi)) (emeta ()))
+            ((stmt (Block (((stmt Break) (smeta ()))))) (smeta ()))))
+          (smeta ())))))
+      (smeta ()))) |}]
 
 let add_reads stmts vars mkread =
   let var_names = String.Map.of_alist_exn vars in
@@ -184,7 +226,7 @@ let add_reads stmts vars mkread =
         s :: mkread smeta (decl_id, Map.find_exn var_names decl_id)
     | s -> [s]
   in
-  List.concat_map ~f:add_read_to_decl stmts |> List.concat_map ~f:flatten_slist
+  List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write (decl_id, sizedtype) =
   let bodyfn var =
@@ -323,19 +365,16 @@ let rec add_fill no_fill_required = function
       (* I *think* we only need to initialize eigen types and scalars because we already construct
        std::vectors with 0s.
     *)
-      [decl; make_fill decl_id st smeta]
-  | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
-    when (not (Set.mem no_fill_required decl_id)) && type_needs_fill decl_id ut
-    ->
-      raise_s
-        [%message
-          "Unsized type initialization to NaN not yet implemented - consider \
-           adding this to resize_to_match"]
-  | {stmt= Block ls; _} as s ->
-      [{s with stmt= Block (List.concat_map ~f:(add_fill no_fill_required) ls)}]
-  | {stmt= SList ls; _} as s ->
-      [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
-  | s -> [s]
+      {stmt= SList [decl; make_fill decl_id st smeta]; smeta}
+  | {stmt; smeta} ->
+      {stmt= map_statement Fn.id (add_fill no_fill_required) stmt; smeta}
+
+let map_prog_stmt_lists f p =
+  { p with
+    prepare_data= f p.prepare_data
+  ; log_prob= f p.log_prob
+  ; generate_quantities= f p.generate_quantities
+  ; transform_inits= f p.transform_inits }
 
 let trans_prog (p : typed_prog) =
   let p = map_prog Fn.id map_fn_names p in
@@ -364,8 +403,8 @@ let trans_prog (p : typed_prog) =
   let data_and_params =
     List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
-  let add_fills =
-    List.concat_map ~f:(add_fill (String.Set.of_list data_and_params))
+  let add_fills ls =
+    List.map ~f:(add_fill (String.Set.of_list data_and_params)) ls
   in
   let tparam_start {stmt; _} =
     match stmt with
@@ -435,16 +474,6 @@ let trans_prog (p : typed_prog) =
                     {expr= Var vident_sans_opencl; emeta= internal_meta} )
           ; smeta= no_span } ] )
   in
-  let concat_map_fun_def f fds =
-    List.map fds ~f:(fun ({fdbody; _} as fd) ->
-        let stmt =
-          match fdbody.stmt with
-          | Block ls -> Block (List.concat_map ~f ls)
-          | Skip -> Skip
-          | _ -> Block (f fdbody)
-        in
-        {fd with fdbody= {fdbody with stmt}} )
-  in
   let p =
     { p with
       log_prob
@@ -460,8 +489,10 @@ let trans_prog (p : typed_prog) =
         @ List.map ~f:gen_write constrained_params
     ; generate_quantities
     ; functions_block=
-        concat_map_fun_def
-          (add_fill (String.Set.of_list data_and_params))
+        List.map
+          ~f:(map_fun_def (add_fill (String.Set.of_list data_and_params)))
           p.functions_block }
   in
-  map_prog Fn.id ensure_body_in_block p
+  p
+  |> map_prog Fn.id ensure_body_in_block
+  |> map_prog_stmt_lists flatten_slists_list
