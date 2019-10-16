@@ -149,14 +149,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 16, column 8 to column 18)"};
 
-template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
-nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__,
-         T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
-  typedef local_scalar_t__ fun_return_scalar_t__;
+nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+         std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -183,21 +181,19 @@ nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__,
 }
 
 struct nrfun_lp_functor__ {
-template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
-operator()(const T0__& x, const T1__& y, T_lp__& lp__,
+operator()(const T0__& x, const int& y, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 }
 };
 
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-rfun(const T0__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  typedef local_scalar_t__ fun_return_scalar_t__;
+int
+rfun(const int& y, std::ostream* pstream__) {
+  using local_scalar_t__ = int;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -227,19 +223,17 @@ rfun(const T0__& y, std::ostream* pstream__) {
 }
 
 struct rfun_functor__ {
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& y, std::ostream* pstream__)  const 
+int
+operator()(const int& y, std::ostream* pstream__)  const 
 {
 return rfun(y, pstream__);
 }
 };
 
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-double
+int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
-  typedef local_scalar_t__ fun_return_scalar_t__;
+  using local_scalar_t__ = int;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -260,7 +254,7 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
 
 struct rfun_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-double
+int
 operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return rfun_lp(lp__, lp_accum__, pstream__);

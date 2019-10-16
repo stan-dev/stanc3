@@ -19,13 +19,11 @@ let%expect_test "udf" =
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__>
+    template <typename T1__>
     void
-    sars(const Eigen::Matrix<T0__, -1, -1>& x,
+    sars(const Eigen::Matrix<double, -1, -1>& x,
          const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-      using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-              T1__>::type;
-      typedef local_scalar_t__ fun_return_scalar_t__;
+      using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
       const static bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -42,9 +40,9 @@ let%expect_test "udf" =
     }
 
     struct sars_functor__ {
-    template <typename T0__, typename T1__>
+    template <typename T1__>
     void
-    operator()(const Eigen::Matrix<T0__, -1, -1>& x,
+    operator()(const Eigen::Matrix<double, -1, -1>& x,
                const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
     {
     return sars(x, y, pstream__);
