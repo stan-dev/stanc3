@@ -191,7 +191,7 @@ return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 
 int
 rfun(const int& y, std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -229,7 +229,7 @@ return rfun(y, pstream__);
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = int;
+  using local_scalar_t__ = double;
   
   try {
     {
