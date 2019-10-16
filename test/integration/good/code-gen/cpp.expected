@@ -1309,8 +1309,6 @@ foo_1(const int& a, std::ostream* pstream__) {
     while (1) {
       int b;
       
-      current_statement__ = 291;
-      b = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 292;
       b = 5;
       break;
@@ -1348,8 +1346,6 @@ foo_1(const int& a, std::ostream* pstream__) {
       
       int z;
       
-      current_statement__ = 311;
-      z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 312;
       for (size_t sym2__ = 1; sym2__ <= stan::length(vs); ++sym2__) {
         std::vector<int> v;
@@ -1481,15 +1477,11 @@ foo_1(const int& a, std::ostream* pstream__) {
     while (1) {
       int b;
       
-      current_statement__ = 355;
-      b = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 356;
       b = 5;
       {
         int c;
         
-        current_statement__ = 357;
-        c = std::numeric_limits<double>::quiet_NaN();
         current_statement__ = 358;
         c = 6;
         break;
@@ -1525,8 +1517,6 @@ foo_2(const int& a, std::ostream* pstream__) {
     
     int y;
     
-    current_statement__ = 366;
-    y = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 367;
     for (size_t sym12__ = 1; sym12__ <= stan::length(vs); ++sym12__) {
       int v;
@@ -2610,8 +2600,6 @@ foo_6(std::ostream* pstream__) {
   try {
     int a;
     
-    current_statement__ = 425;
-    a = std::numeric_limits<double>::quiet_NaN();
     local_scalar_t__ b;
     
     current_statement__ = 426;
@@ -3174,8 +3162,6 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 197;
             pos__ = (pos__ + 1);}}}
       
-      current_statement__ = 198;
-      td_int = std::numeric_limits<double>::quiet_NaN();
       td_1d = std::vector<int>(N, 0);
       
       td_1dk = std::vector<int>(M, 0);
@@ -3183,8 +3169,6 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 200;
       assign(td_1dk, nil_index_list(), rep_array(1, M), "assigning variable td_1dk");
       
-      current_statement__ = 201;
-      td_a = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 201;
       td_a = N;
       
