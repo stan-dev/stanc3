@@ -10,6 +10,7 @@ let semantic_check_program ast =
     (Result.ok
        (Semantic_check.semantic_check_program
           (Option.value_exn (Result.ok ast))))
+  |> fst
 
 let%expect_test "map_rec_stmt_loc" =
   gensym_reset_danger_use_cautiously () ;

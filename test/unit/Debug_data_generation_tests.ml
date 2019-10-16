@@ -15,7 +15,7 @@ let%expect_test "whole program data generation check" =
                     }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
@@ -44,7 +44,7 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
@@ -74,7 +74,7 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
@@ -109,7 +109,7 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
@@ -159,7 +159,7 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
@@ -205,7 +205,7 @@ let%expect_test "whole program data generation check" =
       }
       |}
   in
-  let ast =
+  let ast, _ =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program

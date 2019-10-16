@@ -35,6 +35,8 @@ val report_parsing_error : string * location_span -> unit
 val report_semantic_error : string * location_span -> unit
 (** A semantic error message used when handling a SemanticError *)
 
+val report_semantic_warning : string * location_span -> unit
+
 val warn_deprecated : Lexing.position * string -> unit
 (** Warn that a language construct is deprecated *)
 

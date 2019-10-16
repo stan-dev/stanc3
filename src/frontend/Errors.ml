@@ -134,6 +134,11 @@ let report_semantic_error (message, loc_span) =
     (string_of_location_span loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
+let report_semantic_warning (message, loc_span) =
+  Printf.eprintf "\nWarning: %s in %s:\n" "Semantic warning"
+    (string_of_location_span loc_span) ;
+  print_context_and_message message loc_span.begin_loc
+
 (** Switch to control whether warning messages should be printed to stderr (or discarded in case set to false) *)
 let print_warnings = ref true
 

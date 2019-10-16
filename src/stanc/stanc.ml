@@ -188,8 +188,17 @@ let use_file filename =
   let typed_ast =
     try
       match Semantic_check.semantic_check_program ast with
-      | Result.Ok prog -> prog
-      | Result.Error (error :: _) ->
+      | Result.Ok (prog, warnings) ->
+          List.iter warnings ~f:(fun w ->
+              let loc = Semantic_warning.location w
+              and msg = (Fmt.to_to_string Semantic_warning.pp) w in
+              Errors.report_semantic_warning (msg, loc) ) ;
+          prog
+      | Result.Error (error :: _, warnings) ->
+          List.iter warnings ~f:(fun w ->
+              let loc = Semantic_warning.location w
+              and msg = (Fmt.to_to_string Semantic_warning.pp) w in
+              Errors.report_semantic_warning (msg, loc) ) ;
           let loc = Semantic_error.location error
           and msg = (Fmt.to_to_string Semantic_error.pp) error in
           Errors.report_semantic_error (msg, loc) ;

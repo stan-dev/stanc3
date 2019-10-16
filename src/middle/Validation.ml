@@ -1,34 +1,41 @@
 include Core_kernel
 
-
 module type S = sig
-  module Error : sig type t end 
-  module Warning : sig type t end
+  module Error : sig
+    type t
+  end
+
+  module Warning : sig
+    type t
+  end
+
   type 'a t
+
   include Applicative.S with type 'a t := 'a t
   include Monad.S with type 'a t := 'a t
 
   val apply_const : 'a t -> 'b t -> 'b t
   val liftA2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
   val liftA3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
-
   val ok : 'a -> 'a t
   val error : ?warn:Warning.t -> Error.t -> _ t
-  val warn : warn:Warning.t -> 'a -> 'a t 
-
+  val warn : warn:Warning.t -> 'a -> 'a t
   val is_error : 'a t -> bool
   val is_warning : 'a t -> bool
   val is_success : 'a t -> bool
-  
   val get_errors_opt : 'a t -> (Error.t list * Warning.t list) option
   val get_first_error_opt : 'a t -> Error.t option
   val get_success_opt : 'a t -> ('a * Warning.t list) option
 
   val get_with :
-    'a t -> with_ok:('a -> 'b) -> with_warnings:('a * Warning.t list -> 'b) -> with_errors:(Error.t list * Warning.t list -> 'b) -> 'b
+       'a t
+    -> with_ok:('a -> 'b)
+    -> with_warnings:('a * Warning.t list -> 'b)
+    -> with_errors:(Error.t list * Warning.t list -> 'b)
+    -> 'b
 
-  val to_result : 'a t -> ('a * Warning.t list, Error.t list * Warning.t list) result
-
+  val to_result :
+    'a t -> ('a * Warning.t list, Error.t list * Warning.t list) result
 end
 
 (**
@@ -108,96 +115,97 @@ end
 *)
 module Make (Warning : sig
   type t
-end) (Error : sig type t end) : S with module Warning := Warning and module Error := Error = struct
+end) (Error : sig
+  type t
+end) : S with module Warning := Warning and module Error := Error = struct
   type 'a t = ('a, Warning.t NonEmptyList.t, Error.t NonEmptyList.t) Check.t
 
-  let with_warnings ws = function 
-    | Check.Ok x -> Check.Warn(x,ws)
-    | Check.Warn(x,vs) -> Check.Warn(x,NonEmptyList.append ws vs)
-    | Check.Error(x,vs) -> Check.Error(x,Option.map ~f:(NonEmptyList.append ws) vs)
+  let with_warnings ws = function
+    | Check.Ok x -> Check.Warn (x, ws)
+    | Check.Warn (x, vs) -> Check.Warn (x, NonEmptyList.append ws vs)
+    | Check.Error (x, vs) ->
+        Check.Error (x, Option.map ~f:(NonEmptyList.append ws) vs)
 
   module Basic = struct
-    type nonrec 'a t = 'a t 
+    type nonrec 'a t = 'a t
 
     let map = `Custom Check.map
 
     let apply f x =
       match (f, x) with
       | Check.Ok f, Check.Ok x -> Check.Ok (f x)
-      | Ok f, Warn(x,ws) -> Warn(f x, ws)
-      | Ok _ ,Error(e,ws) -> Error(e,ws)
-      | Warn(f,ws),Ok x -> Warn(f x, ws)
-      | Warn(f,ws),Warn(x,vs) -> Warn(f x, NonEmptyList.append ws vs)
-      | Warn(_,ws), Error(e,vs) -> Error(e,Option.map ~f:(NonEmptyList.append ws) vs)
-      | Error(e,ws) , Ok _ -> Error(e,ws)
-      | Error(e,ws) , Warn(_,vs) -> Error(e, Option.map ~f:(fun ws -> NonEmptyList.append ws vs) ws)
-      | Error(es,ws) , Error(fs,vs) ->  
-          let ws' = 
-            match ws,vs with 
+      | Ok f, Warn (x, ws) -> Warn (f x, ws)
+      | Ok _, Error (e, ws) -> Error (e, ws)
+      | Warn (f, ws), Ok x -> Warn (f x, ws)
+      | Warn (f, ws), Warn (x, vs) -> Warn (f x, NonEmptyList.append ws vs)
+      | Warn (_, ws), Error (e, vs) ->
+          Error (e, Option.map ~f:(NonEmptyList.append ws) vs)
+      | Error (e, ws), Ok _ -> Error (e, ws)
+      | Error (e, ws), Warn (_, vs) ->
+          Error (e, Option.map ~f:(fun ws -> NonEmptyList.append ws vs) ws)
+      | Error (es, ws), Error (fs, vs) ->
+          let ws' =
+            match (ws, vs) with
             | Some x, Some y -> Some (NonEmptyList.append x y)
-            | Some x , _ -> Some x 
-            | _ , _ -> vs
-          in 
-          Error(NonEmptyList.append es fs, ws')
+            | Some x, _ -> Some x
+            | _, _ -> vs
+          in
+          Error (NonEmptyList.append es fs, ws')
 
-    let bind x ~f = 
+    let bind x ~f =
       match x with
-      | Check.Ok x -> f x  
-      | Check.Warn(x,ws) -> with_warnings ws @@ f x 
-      | Check.Error(e,ws) -> Error(e,ws)
+      | Check.Ok x -> f x
+      | Check.Warn (x, ws) -> with_warnings ws @@ f x
+      | Check.Error (e, ws) -> Error (e, ws)
 
     let return x = Check.Ok x
+  end
 
-  end 
-    
-  include Applicative.Make(Basic)
-  include Monad.Make(Basic)
-
+  include Applicative.Make (Basic)
+  include Monad.Make (Basic)
 
   let apply_const a b = apply (map a ~f:(fun _ x -> x)) b
-  
   let liftA2 f x y = apply (apply (return f) x) y
-  let liftA3 f x y z = apply (apply (apply (return f) x ) y) z 
+  let liftA3 f x y z = apply (apply (apply (return f) x) y) z
+  let ok x = return x
 
-  let ok x = return x 
-  let error ?warn err  : 'a t= Check.Error(NonEmptyList.singleton err,Option.map ~f:NonEmptyList.singleton warn)
-  
-  let warn ~warn x : 'a t = Check.Warn(x, NonEmptyList.singleton warn)
-  
-  let is_error = function 
-    | Check.Error _ -> true 
-    | _ -> false 
+  let error ?warn err : 'a t =
+    Check.Error
+      (NonEmptyList.singleton err, Option.map ~f:NonEmptyList.singleton warn)
 
-  let is_warning = function 
-    | Check.Warn _ -> true 
-    | _ -> false 
+  let warn ~warn x : 'a t = Check.Warn (x, NonEmptyList.singleton warn)
+  let is_error = function Check.Error _ -> true | _ -> false
+  let is_warning = function Check.Warn _ -> true | _ -> false
   let is_success x = not @@ is_error x
 
-  
-
   let get_errors_opt = function
-    | Check.Error(es ,  ws) -> Some NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
+    | Check.Error (es, ws) ->
+        Some
+          NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
     | _ -> None
 
   let get_first_error_opt = function
-    | Check.Error (es,_) -> Some(NonEmptyList.hd es)
+    | Check.Error (es, _) -> Some (NonEmptyList.hd es)
     | _ -> None
 
-  let get_success_opt = function 
-    | Check.Ok x -> Some (x,[]) 
-    | Warn(x,ws) -> Some (x, NonEmptyList.to_list ws) 
+  let get_success_opt = function
+    | Check.Ok x -> Some (x, [])
+    | Warn (x, ws) -> Some (x, NonEmptyList.to_list ws)
     | _ -> None
-
 
   let get_with x ~with_ok ~with_warnings ~with_errors =
     match x with
     | Check.Ok x -> with_ok x
-    | Warn(x,ws) -> with_warnings (x,NonEmptyList.to_list ws)
-    | Error(es,ws) -> with_errors NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
+    | Warn (x, ws) -> with_warnings (x, NonEmptyList.to_list ws)
+    | Error (es, ws) ->
+        with_errors
+          NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
 
   let to_result x =
-    match x with 
-    | Check.Ok x -> Result.Ok (x,[]) 
-    | Warn(x,ws) -> Ok(x, NonEmptyList.to_list ws)
-    | Error (es,ws) -> Error NonEmptyList.(to_list es,Option.value_map ~default:[] ~f:to_list ws)
+    match x with
+    | Check.Ok x -> Result.Ok (x, [])
+    | Warn (x, ws) -> Ok (x, NonEmptyList.to_list ws)
+    | Error (es, ws) ->
+        Error
+          NonEmptyList.(to_list es, Option.value_map ~default:[] ~f:to_list ws)
 end

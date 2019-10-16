@@ -3,6 +3,7 @@ open Analysis_and_optimization
 
 let to_mir s =
   Frontend.Frontend_utils.typed_ast_of_string_exn s
+  |> fst
   |> Frontend.Ast_to_Mir.trans_prog "test prog"
 
 let print_tdata {Middle.prepare_data; _} =

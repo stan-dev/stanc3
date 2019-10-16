@@ -12,7 +12,7 @@ let%expect_test "Operator-assign example" =
           x[1] ./= r;
         }
       |}
-  |> trans_prog ""
+  |> fst |> trans_prog ""
   |> (fun {log_prob; _} -> log_prob)
   |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Pretty.pp_stmt_loc)
   |> print_endline ;
@@ -25,7 +25,7 @@ let%expect_test "Operator-assign example" =
       } |}]
 
 let mir_from_string s =
-  Frontend_utils.typed_ast_of_string_exn s |> trans_prog ""
+  Frontend_utils.typed_ast_of_string_exn s |> fst |> trans_prog ""
 
 let%expect_test "Prefix-Op-Example" =
   let mir =
