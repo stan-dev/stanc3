@@ -57,12 +57,10 @@ let%expect_test "arg types templated correctly" =
   |> print_endline ;
   [%expect {| T0__ |}]
 
-let pp_promoted_scalar ppf (rt, args) =
-  match (args, rt) with
-  | [], None -> pf ppf "double"
-  | [], Some ut -> pf ppf "%s" (stantype_prim_str ut)
-  | _, Some ut when contains_int ut -> pf ppf "int"
-  | _, _ ->
+let pp_promoted_scalar ppf args =
+  match args with
+  | [] -> pf ppf "double"
+  | _ ->
       let rec promote_args_chunked ppf args =
         let go ppf tl =
           match tl with [] -> () | _ -> pf ppf ", %a" promote_args_chunked tl
@@ -80,8 +78,10 @@ let pp_promoted_scalar ppf (rt, args) =
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar = strf "%a" pp_promoted_scalar (rt, arg_types) in
+  let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
+  | Some ut when contains_int ut ->
+      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
@@ -137,8 +137,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   let argtypetemplates, args = get_templates_and_args fdargs in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar
-      (fdrt, fdargs) ;
+    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     if not is_dist then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
