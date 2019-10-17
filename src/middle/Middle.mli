@@ -97,6 +97,13 @@ val stan_math_signatures :
 val manual_stan_math_signatures :
   (returntype * (autodifftype * unsizedtype) list) list String.Table.t
 
+val mkfor :
+     mtype_loc_ad with_expr
+  -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
 val for_scalar :
      mtype_loc_ad with_expr sizedtype
   -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
@@ -107,6 +114,12 @@ val for_scalar :
 val for_scalar_inv :
      mtype_loc_ad with_expr sizedtype
   -> (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
+  -> mtype_loc_ad with_expr
+  -> location_span
+  -> (mtype_loc_ad, location_span) stmt_with
+
+val for_each :
+     (mtype_loc_ad with_expr -> (mtype_loc_ad, location_span) stmt_with)
   -> mtype_loc_ad with_expr
   -> location_span
   -> (mtype_loc_ad, location_span) stmt_with
@@ -137,3 +150,4 @@ val stdlib_distribution_name : string -> string
 val distribution_suffices : string list
 val is_distribution_name : ?infix:string -> string -> bool
 val proportional_to_distribution_infix : string
+val infer_type_of_indexed : unsizedtype -> 'a index list -> unsizedtype
