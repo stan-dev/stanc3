@@ -15,6 +15,7 @@ data {
   real ts[10];
   int x_int[0];
   real t0;
+  real y[10,2];
 }
 parameters {
   real x[1];   
