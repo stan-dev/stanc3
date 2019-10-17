@@ -136,7 +136,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan
 
-Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
+Warning: Semantic warning in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
    -------------------------------------------------
     29:  transformed parameters {
     30:    vector[2] y_s_p;
@@ -146,14 +146,11 @@ Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
-((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[], data real, data real, data real) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], int[].
+Warning: Argument to 'algebra_solver' has an incompatible autodiff level.
 
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type_control.stan
 
-Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 80:
+Warning: Semantic warning in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 80:
    -------------------------------------------------
     29:  transformed parameters {
     30:    vector[2] y_s_p;
@@ -163,10 +160,7 @@ Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
-((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[], data real, data real, data real) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], int[], real, real, int.
+Warning: Argument to 'algebra_solver' has an incompatible autodiff level.
 
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 

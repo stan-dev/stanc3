@@ -238,54 +238,45 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../../install/default/bin/stanc bad_x_var_type.stan
 
-Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 27:
+Warning: Semantic warning in 'bad_x_var_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
-    24:  transformed parameters {
-    25:    real y_hat[10,2];
-    26:    y_hat = integrate_ode_adams(harm_osc_ode,  // system
+    25:  transformed parameters {
+    26:    real y_hat[10,2];
+    27:    y_hat = integrate_ode_adams(harm_osc_ode,  // system
                    ^
-    27:                       y0,            // initial state
-    28:                       t0,            // initial time
+    28:                       y0,            // initial state
+    29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+Warning: Argument to 'integrate_ode_adams' has an incompatible autodiff level.
 
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_adams_control.stan
 
-Semantic error in 'bad_x_var_type_adams_control.stan', line 26, column 10 to line 32, column 43:
+Warning: Semantic warning in 'bad_x_var_type_adams_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
-    24:  transformed parameters {
-    25:    real y_hat[10,2];
-    26:    y_hat = integrate_ode_adams(harm_osc_ode,  // system
+    25:  transformed parameters {
+    26:    real y_hat[10,2];
+    27:    y_hat = integrate_ode_adams(harm_osc_ode,  // system
                    ^
-    27:                       y0,            // initial state
-    28:                       t0,            // initial time
+    28:                       y0,            // initial state
+    29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+Warning: Argument to 'integrate_ode_adams' has an incompatible autodiff level.
 
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_control.stan
 
-Semantic error in 'bad_x_var_type_control.stan', line 26, column 10 to line 32, column 43:
+Warning: Semantic warning in 'bad_x_var_type_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
-    24:  transformed parameters {
-    25:    real y_hat[10,2];
-    26:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
+    25:  transformed parameters {
+    26:    real y_hat[10,2];
+    27:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
                    ^
-    27:                       y0,            // initial state
-    28:                       t0,            // initial time
+    28:                       y0,            // initial state
+    29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+Warning: Argument to 'integrate_ode_bdf' has an incompatible autodiff level.
 
   $ ../../../../../../install/default/bin/stanc bad_y_type.stan
 

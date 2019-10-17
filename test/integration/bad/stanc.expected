@@ -1327,7 +1327,7 @@ Warning: Argument to 'my_fun3' has an incompatible autodiff level.
 
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 
-Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
+Warning: Semantic warning in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
     13:    real[,] do_integration_nested(real[] y0, real t0, data real[] ts, real[] theta, matrix xmat_r) {
     14:      int x_i[0];
@@ -1337,10 +1337,20 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
     17:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+Warning: Argument to 'integrate_ode_rk45' has an incompatible autodiff level.
+
+
+Warning: Semantic warning in 'functions-bad22-ode.stan', line 21, column 11 to column 63:
+   -------------------------------------------------
+    19:      matrix[2,2] xmat_sub_r;
+    20:      xmat_sub_r = block(xmat_r, 1, 1, 2, 2);
+    21:      return(do_integration_nested(y0, t0, ts, theta, xmat_sub_r));
+                    ^
+    22:    }
+    23:  }
+   -------------------------------------------------
+
+Warning: Argument to 'do_integration_nested' has an incompatible autodiff level.
 
   $ ../../../../install/default/bin/stanc functions-bad23.stan
 
