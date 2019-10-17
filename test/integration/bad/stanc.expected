@@ -2513,7 +2513,10 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
      9:  }
    -------------------------------------------------
 
-~-statement expects a distribution name without '_lpdf' or '_lpmf' suffix.
+
+~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
+
 
   $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
 
