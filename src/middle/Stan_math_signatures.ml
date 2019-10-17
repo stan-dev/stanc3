@@ -254,8 +254,8 @@ let%expect_test "propto name mangling" =
 (* -- Querying stan_math_signatures -- *)
 
 let lookup_signatures name =
-  let name = stdlib_distribution_name name in
-  (name, Hashtbl.find_multi stan_math_signatures name)
+  let stanmath_name = stdlib_distribution_name name in
+  (stanmath_name, Hashtbl.find_multi stan_math_signatures stanmath_name)
 
 let stan_math_returntype name args =
   let name = stdlib_distribution_name name in
