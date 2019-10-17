@@ -1323,7 +1323,7 @@ Warning: Semantic warning in 'functions-bad21.stan', line 13, column 11 to colum
     15:  }
    -------------------------------------------------
 
-Warning: Argument to my_fun3 has an incompatible autodiff level.
+Warning: Argument to 'my_fun3' has an incompatible autodiff level.
 
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 
