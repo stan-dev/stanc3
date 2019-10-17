@@ -1313,7 +1313,7 @@ Function 'my_fun3' has already been declared to have type (real) => real
 
   $ ../../../../install/default/bin/stanc functions-bad21.stan
 
-Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
+Warning: Semantic warning in 'functions-bad21.stan', line 13, column 11 to column 21:
    -------------------------------------------------
     11:  }
     12:  model {
@@ -1323,9 +1323,7 @@ Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'my_fun3'. Available signatures:
-(data real) => real
-Instead supplied arguments of incompatible type: real.
+Warning: Argument to my_fun3 has an incompatible autodiff level.
 
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 
