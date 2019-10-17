@@ -4,7 +4,10 @@ type t
 
 val pp : Format.formatter -> t -> unit
 val location : t -> location_span
-val mismatched_argument_types : location_span -> unsizedtype -> unsizedtype -> t
+
+val mismatched_argument_types :
+  location_span -> unsizedtype -> unsizedtype -> t
+
 val mismatched_return_types : location_span -> returntype -> returntype -> t
 val mismatched_array_types : location_span -> t
 val invalid_row_vector_types : location_span -> t

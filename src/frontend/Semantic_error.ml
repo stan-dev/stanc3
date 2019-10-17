@@ -5,7 +5,7 @@ open Middle.Pretty
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
   type t =
-    | MismatchedArgumentTypes of unsizedtype * unsizedtype 
+    | MismatchedArgumentTypes of unsizedtype * unsizedtype
     | MismatchedReturnTypes of returntype * returntype
     | MismatchedArrayTypes
     | InvalidRowVectorTypes
@@ -363,6 +363,7 @@ let location = function
 
 let mismatched_argument_types loc ty1 ty2 =
   TypeError (loc, TypeError.MismatchedArgumentTypes (ty1, ty2))
+
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
 
