@@ -5,6 +5,7 @@ open Middle.Pretty
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
   type t =
+    | MismatchedArgumentTypes of unsizedtype * unsizedtype 
     | MismatchedReturnTypes of returntype * returntype
     | MismatchedArrayTypes
     | InvalidRowVectorTypes
@@ -33,6 +34,10 @@ module TypeError = struct
     | NotIndexable of unsizedtype
 
   let pp ppf = function
+    | MismatchedArgumentTypes (ty1, ty2) ->
+        Fmt.pf ppf
+          "Incompatible argument types. Cannot convert from type %a to %a."
+          pp_unsizedtype ty1 pp_unsizedtype ty2
     | MismatchedReturnTypes (rt1, rt2) ->
         Fmt.pf ppf
           "Branches of function definition need to have the same return type. \
@@ -356,6 +361,8 @@ let location = function
 
 (* -- Constructors ---------------------------------------------------------- *)
 
+let mismatched_argument_types loc ty1 ty2 =
+  TypeError (loc, TypeError.MismatchedArgumentTypes (ty1, ty2))
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
 

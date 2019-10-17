@@ -10,6 +10,17 @@ open Ast
 open Errors
 module Validate = Validation.Make (Semantic_warning) (Semantic_error)
 
+
+(* let validate_arg name (ad0,ty0) (ad1,ty1) = Validate.(
+  if check_of_same_type_mod_conv  name ty0 ty1 then 
+  else 
+    error @@ Semantic_error.ill
+)
+let validate_stan_math_type name args = 
+(* : returntype Validate.t =  *)
+  let stan_name,sigs = lookup_signatures name in 
+  0 *)
+
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
 
@@ -263,26 +274,70 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
 
 (* Regular function application *)
+
+let rec check_can_convert_type ~loc ty0 ty1 = Validate.(
+  match ty0 , ty1 with 
+  | _ , _ when compare_unsizedtype ty0 ty1 = 0 -> ok ()
+  | UReal, UInt -> ok ()
+
+  | UFun(_, rt0) , UFun(_, rt1) when compare_returntype rt0 rt1 <> 0 -> 
+      error @@ Semantic_error.mismatched_return_types loc rt0 rt1 
+  
+  | UFun(tys0, _) , UFun(tys1, _) -> 
+      List.map2_exn tys0 tys1
+        ~f:(fun (_,t0) (_,t1) -> check_can_convert_type ~loc t0 t1) 
+      |> List.fold ~f:( *>) ~init:(ok ())
+            
+  | _ -> 
+    error @@ Semantic_error.mismatched_argument_types loc ty0 ty1
+)
+
+let check_type ~loc name ty0 ty1 = Validate.(
+    if String.is_prefix name ~prefix:"assign_" then 
+      if compare_unsizedtype ty0 ty1 = 0 then 
+        ok ()
+      else 
+        error @@ Semantic_error.mismatched_argument_types loc ty0 ty1
+    else check_can_convert_type ~loc ty0 ty1
+
+)
+
+let check_adlevel ~loc name ad0 ad1 = Validate.(
+  match ad0,ad1 with 
+  | DataOnly, AutoDiffable -> warn ~warn:Semantic_warning.(warn_autodiff_level loc name ad0 ad1) ()
+  | _ -> ok ()
+)
+
+let check_type_adlevel ~loc name (ad0,ty0) (ad1,ty1) = Validate.(
+  check_adlevel ~loc name ad0 ad1 *> check_type ~loc name ty0 ty1
+)
+
+let check_arguments ~loc name sigtys return_ty argtys = Validate.(
+  if List.(length sigtys <> length argtys) then    
+    List.map ~f:snd argtys 
+    |> Semantic_error.illtyped_userdefined_fn_app loc name sigtys return_ty
+    |> error    
+  else 
+    List.map2_exn ~f:(check_type_adlevel ~loc name) sigtys argtys
+    |> List.fold ~f:( *>) ~init:(ok ())    
+)
+
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
     | Some (_, UFun (_, Void)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, rt))
-      when not
-             (check_compatible_arguments_mod_conv id.name listedtypes
-                (get_arg_types es)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             rt
-        |> error
-    | Some (_, UFun (_, ReturnType ut)) ->
-        mk_typed_expression
+
+    | Some (_ , UFun(sigtys,((ReturnType ut) as rty))) -> 
+        get_arg_types es
+        |> check_arguments ~loc id.name sigtys rty  
+        |> Validate.map ~f:(fun _ -> 
+            mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
           ~ad_level:(lub_ad_e es) ~type_:ut ~loc
-        |> ok
+        )
+
     | Some _ ->
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
@@ -801,19 +856,15 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void))
-      when check_compatible_arguments_mod_conv id.name listedtypes
-             (get_arg_types es) ->
-        mk_typed_statement
-          ~stmt:(NRFunApp (UserDefined, id, es))
-          ~return_type:NoReturnType ~loc
-        |> ok
-    | Some (_, UFun (listedtypes, Void)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             Void
-        |> error
+    | Some (_, UFun(sigtys,Void)) -> 
+        get_arg_types es 
+        |> check_arguments ~loc id.name sigtys Void 
+        |> Validate.map ~f:(fun _ -> 
+            mk_typed_statement
+              ~stmt:(NRFunApp (UserDefined, id, es))
+              ~return_type:NoReturnType ~loc
+        )
+
     | Some (_, UFun (_, ReturnType _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error

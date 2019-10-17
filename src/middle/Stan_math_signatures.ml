@@ -252,6 +252,11 @@ let%expect_test "propto name mangling" =
   [%expect {| normal_lpdf; normal_lpdf; normal |}]
 
 (* -- Querying stan_math_signatures -- *)
+
+let lookup_signatures name = 
+  let name = stdlib_distribution_name name in
+  (name,Hashtbl.find_multi stan_math_signatures name)
+
 let stan_math_returntype name args =
   let name = stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
