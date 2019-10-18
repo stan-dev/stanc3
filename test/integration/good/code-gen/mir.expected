@@ -410,14 +410,14 @@
                    (decl_type (Sized SInt))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym2__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp CompilerInternal FnLength__
                        (((expr (Var vs))
                          (emeta
                           ((mtype (UArray (UArray UInt))) (mloc <opaque>)
@@ -428,181 +428,196 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized (UArray UInt)))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype (UArray (UArray UInt)))
-                                 (mloc <opaque>) (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym2__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UInt ())
-                           ((expr (Lit Int 0))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Break) (smeta <opaque>)))))
-                     (smeta <opaque>)))))
-                 (smeta <opaque>))
-                ((stmt
-                  (For (loopvar sym3__)
-                   (lower
-                    ((expr (Lit Int 1))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                   (upper
-                    ((expr
-                      (FunApp StanLib FnLength__
-                       (((expr (Var vs))
-                         (emeta
-                          ((mtype (UArray (UArray UInt))) (mloc <opaque>)
-                           (madlevel DataOnly)))))))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                   (body
-                    ((stmt
-                      (Block
-                       (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized (UArray UInt)))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype (UArray (UArray UInt)))
-                                 (mloc <opaque>) (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym3__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UInt ())
-                           ((expr (Lit Int 0))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Continue) (smeta <opaque>)))))
-                     (smeta <opaque>)))))
-                 (smeta <opaque>))
-                ((stmt
-                  (For (loopvar sym4__)
-                   (lower
-                    ((expr (Lit Int 1))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                   (upper
-                    ((expr
-                      (FunApp StanLib FnLength__
-                       (((expr (Var vs))
-                         (emeta
-                          ((mtype (UArray (UArray UInt))) (mloc <opaque>)
-                           (madlevel DataOnly)))))))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                   (body
-                    ((stmt
-                      (Block
-                       (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized (UArray UInt)))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype (UArray (UArray UInt)))
-                                 (mloc <opaque>) (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym4__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (For (loopvar sym5__)
-                           (lower
-                            ((expr (Lit Int 1))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>)
-                               (madlevel DataOnly)))))
-                           (upper
-                            ((expr
-                              (FunApp StanLib FnLength__
-                               (((expr (Var v))
-                                 (emeta
-                                  ((mtype (UArray UInt)) (mloc <opaque>)
-                                   (madlevel DataOnly)))))))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>)
-                               (madlevel DataOnly)))))
-                           (body
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized (UArray UInt)))))
+                             (smeta <opaque>))
                             ((stmt
-                              (Block
-                               (((stmt
-                                  (Decl (decl_adtype DataOnly) (decl_id vv)
-                                   (decl_type (Unsized UInt))))
-                                 (smeta <opaque>))
+                              (Assignment (v (UArray UInt) ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype (UArray (UArray UInt)))
+                                     (mloc <opaque>) (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype (UArray UInt)) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UInt ())
+                               ((expr (Lit Int 0))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Break) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>))
+                ((stmt
+                  (For (loopvar sym1__)
+                   (lower
+                    ((expr (Lit Int 1))
+                     (emeta
+                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   (upper
+                    ((expr
+                      (FunApp CompilerInternal FnLength__
+                       (((expr (Var vs))
+                         (emeta
+                          ((mtype (UArray (UArray UInt))) (mloc <opaque>)
+                           (madlevel DataOnly)))))))
+                     (emeta
+                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   (body
+                    ((stmt
+                      (Block
+                       (((stmt
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized (UArray UInt)))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v (UArray UInt) ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype (UArray (UArray UInt)))
+                                     (mloc <opaque>) (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype (UArray UInt)) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UInt ())
+                               ((expr (Lit Int 0))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Continue) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>))
+                ((stmt
+                  (For (loopvar sym1__)
+                   (lower
+                    ((expr (Lit Int 1))
+                     (emeta
+                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   (upper
+                    ((expr
+                      (FunApp CompilerInternal FnLength__
+                       (((expr (Var vs))
+                         (emeta
+                          ((mtype (UArray (UArray UInt))) (mloc <opaque>)
+                           (madlevel DataOnly)))))))
+                     (emeta
+                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   (body
+                    ((stmt
+                      (Block
+                       (((stmt
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized (UArray UInt)))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v (UArray UInt) ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype (UArray (UArray UInt)))
+                                     (mloc <opaque>) (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype (UArray UInt)) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (For (loopvar sym1__)
+                               (lower
+                                ((expr (Lit Int 1))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly)))))
+                               (upper
+                                ((expr
+                                  (FunApp CompilerInternal FnLength__
+                                   (((expr (Var v))
+                                     (emeta
+                                      ((mtype (UArray UInt)) (mloc <opaque>)
+                                       (madlevel DataOnly)))))))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly)))))
+                               (body
                                 ((stmt
-                                  (Assignment (vv UInt ())
-                                   ((expr
-                                     (Indexed
-                                      ((expr (Var v))
-                                       (emeta
-                                        ((mtype (UArray UInt))
-                                         (mloc <opaque>) (madlevel DataOnly))))
-                                      ((Single
-                                        ((expr (Var sym5__))
-                                         (emeta
-                                          ((mtype UInt) (mloc <opaque>)
-                                           (madlevel DataOnly))))))))
-                                    (emeta
-                                     ((mtype UInt) (mloc <opaque>)
-                                      (madlevel DataOnly))))))
-                                 (smeta <opaque>))
-                                ((stmt
-                                  (Assignment (z UInt ())
-                                   ((expr (Lit Int 0))
-                                    (emeta
-                                     ((mtype UInt) (mloc <opaque>)
-                                      (madlevel DataOnly))))))
-                                 (smeta <opaque>))
-                                ((stmt Break) (smeta <opaque>)))))
+                                  (Block
+                                   (((stmt
+                                      (Block
+                                       (((stmt
+                                          (Decl (decl_adtype DataOnly)
+                                           (decl_id vv)
+                                           (decl_type (Unsized UInt))))
+                                         (smeta <opaque>))
+                                        ((stmt
+                                          (Assignment (vv UInt ())
+                                           ((expr
+                                             (Indexed
+                                              ((expr (Var v))
+                                               (emeta
+                                                ((mtype (UArray UInt))
+                                                 (mloc <opaque>)
+                                                 (madlevel DataOnly))))
+                                              ((Single
+                                                ((expr (Var sym1__))
+                                                 (emeta
+                                                  ((mtype UInt)
+                                                   (mloc <opaque>)
+                                                   (madlevel DataOnly))))))))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))
+                                         (smeta <opaque>))
+                                        ((stmt
+                                          (Assignment (z UInt ())
+                                           ((expr (Lit Int 0))
+                                            (emeta
+                                             ((mtype UInt) (mloc <opaque>)
+                                              (madlevel DataOnly))))))
+                                         (smeta <opaque>))
+                                        ((stmt Break) (smeta <opaque>)))))
+                                     (smeta <opaque>)))))
+                                 (smeta <opaque>)))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UInt ())
+                               ((expr (Lit Int 1))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
                              (smeta <opaque>)))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UInt ())
-                           ((expr (Lit Int 1))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
                          (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>)))))
@@ -631,14 +646,14 @@
                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym6__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp StanLib rows
                        (((expr (Var vs))
                          (emeta
                           ((mtype UMatrix) (mloc <opaque>)
@@ -649,45 +664,86 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype UMatrix) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym6__))
+                          (For (loopvar sym2__)
+                           (lower
+                            ((expr (Lit Int 1))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (upper
+                            ((expr
+                              (FunApp CompilerInternal FnLength__
+                               (((expr
+                                  (Indexed
+                                   ((expr (Var vs))
+                                    (emeta
+                                     ((mtype UMatrix) (mloc <opaque>)
+                                      (madlevel DataOnly))))
+                                   ((Single
+                                     ((expr (Var sym1__))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly))))))))
                                  (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Int 0))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Break) (smeta <opaque>)))))
+                                  ((mtype URowVector) (mloc <opaque>)
+                                   (madlevel DataOnly)))))))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (body
+                            ((stmt
+                              (Block
+                               (((stmt
+                                  (Block
+                                   (((stmt
+                                      (Decl (decl_adtype DataOnly)
+                                       (decl_id v)
+                                       (decl_type (Unsized UReal))))
+                                     (smeta <opaque>))
+                                    ((stmt
+                                      (Assignment (v UReal ())
+                                       ((expr
+                                         (Indexed
+                                          ((expr (Var vs))
+                                           (emeta
+                                            ((mtype UMatrix) (mloc <opaque>)
+                                             (madlevel DataOnly))))
+                                          ((Single
+                                            ((expr (Var sym1__))
+                                             (emeta
+                                              ((mtype UInt) (mloc <opaque>)
+                                               (madlevel DataOnly)))))
+                                           (Single
+                                            ((expr (Var sym2__))
+                                             (emeta
+                                              ((mtype UInt) (mloc <opaque>)
+                                               (madlevel DataOnly))))))))
+                                        (emeta
+                                         ((mtype UReal) (mloc <opaque>)
+                                          (madlevel DataOnly))))))
+                                     (smeta <opaque>))
+                                    ((stmt
+                                      (Assignment (z UReal ())
+                                       ((expr (Lit Int 0))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly))))))
+                                     (smeta <opaque>))
+                                    ((stmt Break) (smeta <opaque>)))))
+                                 (smeta <opaque>)))))
+                             (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym7__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp StanLib rows
                        (((expr (Var vs))
                          (emeta
                           ((mtype UMatrix) (mloc <opaque>)
@@ -698,34 +754,75 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype UMatrix) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym7__))
+                          (For (loopvar sym2__)
+                           (lower
+                            ((expr (Lit Int 1))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (upper
+                            ((expr
+                              (FunApp CompilerInternal FnLength__
+                               (((expr
+                                  (Indexed
+                                   ((expr (Var vs))
+                                    (emeta
+                                     ((mtype UMatrix) (mloc <opaque>)
+                                      (madlevel DataOnly))))
+                                   ((Single
+                                     ((expr (Var sym1__))
+                                      (emeta
+                                       ((mtype UInt) (mloc <opaque>)
+                                        (madlevel DataOnly))))))))
                                  (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Real 3.1))
-                            (emeta
-                             ((mtype UReal) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Continue) (smeta <opaque>)))))
+                                  ((mtype URowVector) (mloc <opaque>)
+                                   (madlevel DataOnly)))))))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>)
+                               (madlevel DataOnly)))))
+                           (body
+                            ((stmt
+                              (Block
+                               (((stmt
+                                  (Block
+                                   (((stmt
+                                      (Decl (decl_adtype DataOnly)
+                                       (decl_id v)
+                                       (decl_type (Unsized UReal))))
+                                     (smeta <opaque>))
+                                    ((stmt
+                                      (Assignment (v UReal ())
+                                       ((expr
+                                         (Indexed
+                                          ((expr (Var vs))
+                                           (emeta
+                                            ((mtype UMatrix) (mloc <opaque>)
+                                             (madlevel DataOnly))))
+                                          ((Single
+                                            ((expr (Var sym1__))
+                                             (emeta
+                                              ((mtype UInt) (mloc <opaque>)
+                                               (madlevel DataOnly)))))
+                                           (Single
+                                            ((expr (Var sym2__))
+                                             (emeta
+                                              ((mtype UInt) (mloc <opaque>)
+                                               (madlevel DataOnly))))))))
+                                        (emeta
+                                         ((mtype UReal) (mloc <opaque>)
+                                          (madlevel DataOnly))))))
+                                     (smeta <opaque>))
+                                    ((stmt
+                                      (Assignment (z UReal ())
+                                       ((expr (Lit Real 3.1))
+                                        (emeta
+                                         ((mtype UReal) (mloc <opaque>)
+                                          (madlevel DataOnly))))))
+                                     (smeta <opaque>))
+                                    ((stmt Continue) (smeta <opaque>)))))
+                                 (smeta <opaque>)))))
+                             (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>)))))
              (smeta <opaque>))))
@@ -750,14 +847,14 @@
                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym8__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp CompilerInternal FnLength__
                        (((expr (Var vs))
                          (emeta
                           ((mtype UVector) (mloc <opaque>)
@@ -768,45 +865,48 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype UVector) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym8__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Int 0))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Break) (smeta <opaque>)))))
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized UReal))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v UReal ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype UVector) (mloc <opaque>)
+                                     (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UReal ())
+                               ((expr (Lit Int 0))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Break) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym9__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp CompilerInternal FnLength__
                        (((expr (Var vs))
                          (emeta
                           ((mtype UVector) (mloc <opaque>)
@@ -817,34 +917,37 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype UVector) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym9__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Real 3.2))
-                            (emeta
-                             ((mtype UReal) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Continue) (smeta <opaque>)))))
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized UReal))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v UReal ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype UVector) (mloc <opaque>)
+                                     (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UReal ())
+                               ((expr (Lit Real 3.2))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Continue) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>)))))
              (smeta <opaque>))))
@@ -869,14 +972,14 @@
                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym10__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp CompilerInternal FnLength__
                        (((expr (Var vs))
                          (emeta
                           ((mtype URowVector) (mloc <opaque>)
@@ -887,45 +990,48 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype URowVector) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym10__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Int 0))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Break) (smeta <opaque>)))))
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized UReal))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v UReal ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype URowVector) (mloc <opaque>)
+                                     (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UReal ())
+                               ((expr (Lit Int 0))
+                                (emeta
+                                 ((mtype UInt) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Break) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>))
                 ((stmt
-                  (For (loopvar sym11__)
+                  (For (loopvar sym1__)
                    (lower
                     ((expr (Lit Int 1))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
                    (upper
                     ((expr
-                      (FunApp StanLib FnLength__
+                      (FunApp CompilerInternal FnLength__
                        (((expr (Var vs))
                          (emeta
                           ((mtype URowVector) (mloc <opaque>)
@@ -936,34 +1042,37 @@
                     ((stmt
                       (Block
                        (((stmt
-                          (Decl (decl_adtype DataOnly) (decl_id v)
-                           (decl_type (Unsized UReal))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (v UInt ())
-                           ((expr
-                             (Indexed
-                              ((expr (Var vs))
-                               (emeta
-                                ((mtype URowVector) (mloc <opaque>)
-                                 (madlevel DataOnly))))
-                              ((Single
-                                ((expr (Var sym11__))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (Assignment (z UReal ())
-                           ((expr (Lit Real 3.3))
-                            (emeta
-                             ((mtype UReal) (mloc <opaque>)
-                              (madlevel DataOnly))))))
-                         (smeta <opaque>))
-                        ((stmt Continue) (smeta <opaque>)))))
+                          (Block
+                           (((stmt
+                              (Decl (decl_adtype DataOnly) (decl_id v)
+                               (decl_type (Unsized UReal))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (v UReal ())
+                               ((expr
+                                 (Indexed
+                                  ((expr (Var vs))
+                                   (emeta
+                                    ((mtype URowVector) (mloc <opaque>)
+                                     (madlevel DataOnly))))
+                                  ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly))))))))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt
+                              (Assignment (z UReal ())
+                               ((expr (Lit Real 3.3))
+                                (emeta
+                                 ((mtype UReal) (mloc <opaque>)
+                                  (madlevel DataOnly))))))
+                             (smeta <opaque>))
+                            ((stmt Continue) (smeta <opaque>)))))
+                         (smeta <opaque>)))))
                      (smeta <opaque>)))))
                  (smeta <opaque>)))))
              (smeta <opaque>))))
@@ -1024,13 +1133,13 @@
             (decl_type (Sized SInt))))
           (smeta <opaque>))
          ((stmt
-           (For (loopvar sym12__)
+           (For (loopvar sym1__)
             (lower
              ((expr (Lit Int 1))
               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
             (upper
              ((expr
-               (FunApp StanLib FnLength__
+               (FunApp CompilerInternal FnLength__
                 (((expr (Var vs))
                   (emeta
                    ((mtype (UArray UInt)) (mloc <opaque>)
@@ -1040,29 +1149,33 @@
              ((stmt
                (Block
                 (((stmt
-                   (Decl (decl_adtype DataOnly) (decl_id v)
-                    (decl_type (Unsized UInt))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (Assignment (v UInt ())
-                    ((expr
-                      (Indexed
-                       ((expr (Var vs))
-                        (emeta
-                         ((mtype (UArray UInt)) (mloc <opaque>)
-                          (madlevel DataOnly))))
-                       ((Single
-                         ((expr (Var sym12__))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (Assignment (y UInt ())
-                    ((expr (Var v))
-                     (emeta
-                      ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                   (Block
+                    (((stmt
+                       (Decl (decl_adtype DataOnly) (decl_id v)
+                        (decl_type (Unsized UInt))))
+                      (smeta <opaque>))
+                     ((stmt
+                       (Assignment (v UInt ())
+                        ((expr
+                          (Indexed
+                           ((expr (Var vs))
+                            (emeta
+                             ((mtype (UArray UInt)) (mloc <opaque>)
+                              (madlevel DataOnly))))
+                           ((Single
+                             ((expr (Var sym1__))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>)
+                                (madlevel DataOnly))))))))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                      (smeta <opaque>))
+                     ((stmt
+                       (Assignment (y UInt ())
+                        ((expr (Var v))
+                         (emeta
+                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                      (smeta <opaque>)))))
                   (smeta <opaque>)))))
               (smeta <opaque>)))))
           (smeta <opaque>))
@@ -3053,7 +3166,7 @@
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
           (upper
            ((expr
-             (FunApp StanLib FnLength__
+             (FunApp CompilerInternal FnLength__
               (((expr (Var blocked_tdata_vs))
                 (emeta
                  ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly)))))))
@@ -3062,27 +3175,33 @@
            ((stmt
              (Block
               (((stmt
-                 (Decl (decl_adtype DataOnly) (decl_id v)
-                  (decl_type (Unsized UReal))))
-                (smeta <opaque>))
-               ((stmt
-                 (Assignment (v UInt ())
-                  ((expr
-                    (Indexed
-                     ((expr (Var blocked_tdata_vs))
-                      (emeta
-                       ((mtype URowVector) (mloc <opaque>)
-                        (madlevel DataOnly))))
-                     ((Single
-                       ((expr (Var sym1__))
-                        (emeta
-                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Assignment (z UReal ())
-                  ((expr (Lit Int 0))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                 (Block
+                  (((stmt
+                     (Decl (decl_adtype DataOnly) (decl_id v)
+                      (decl_type (Unsized UReal))))
+                    (smeta <opaque>))
+                   ((stmt
+                     (Assignment (v UReal ())
+                      ((expr
+                        (Indexed
+                         ((expr (Var blocked_tdata_vs))
+                          (emeta
+                           ((mtype URowVector) (mloc <opaque>)
+                            (madlevel DataOnly))))
+                         ((Single
+                           ((expr (Var sym1__))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>)
+                              (madlevel DataOnly))))))))
+                       (emeta
+                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>))
+                   ((stmt
+                     (Assignment (z UReal ())
+                      ((expr (Lit Int 0))
+                       (emeta
+                        ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                    (smeta <opaque>)))))
                 (smeta <opaque>)))))
             (smeta <opaque>)))))
         (smeta <opaque>)))))
@@ -3878,7 +3997,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -3892,7 +4011,7 @@
              (Assignment
               (offset_multiplier (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -3903,7 +4022,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel AutoDiffable))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -3929,7 +4048,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -3943,7 +4062,7 @@
              (Assignment
               (p_real_1d_ar (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -3954,7 +4073,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel AutoDiffable))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -3984,7 +4103,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -3995,7 +4114,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4006,7 +4125,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -4022,17 +4141,17 @@
                              (Assignment
                               (p_real_3d_ar (UArray (UArray (UArray UReal)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -4047,17 +4166,17 @@
                                         (mloc <opaque>)
                                         (madlevel AutoDiffable))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -4091,7 +4210,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4105,7 +4224,7 @@
              (Assignment
               (p_vec UVector
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -4116,7 +4235,7 @@
                        ((mtype UVector) (mloc <opaque>)
                         (madlevel AutoDiffable))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -4212,7 +4331,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4223,7 +4342,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4234,7 +4353,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -4247,7 +4366,7 @@
                        ((stmt
                          (Block
                           (((stmt
-                             (For (loopvar sym5__)
+                             (For (loopvar sym4__)
                               (lower
                                ((expr (Lit Int 1))
                                 (emeta
@@ -4265,6 +4384,11 @@
                                      (Assignment
                                       (p_ar_mat (UArray (UArray UMatrix))
                                        ((Single
+                                         ((expr (Var sym1__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
                                          ((expr (Var sym2__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
@@ -4276,11 +4400,6 @@
                                             (madlevel DataOnly)))))
                                         (Single
                                          ((expr (Var sym4__))
-                                          (emeta
-                                           ((mtype UInt) (mloc <opaque>)
-                                            (madlevel DataOnly)))))
-                                        (Single
-                                         ((expr (Var sym5__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
                                             (madlevel DataOnly)))))))
@@ -4296,6 +4415,12 @@
                                                 (mloc <opaque>)
                                                 (madlevel AutoDiffable))))
                                              ((Single
+                                               ((expr (Var sym1__))
+                                                (emeta
+                                                 ((mtype UInt)
+                                                  (mloc <opaque>)
+                                                  (madlevel DataOnly)))))
+                                              (Single
                                                ((expr (Var sym2__))
                                                 (emeta
                                                  ((mtype UInt)
@@ -4309,12 +4434,6 @@
                                                   (madlevel DataOnly)))))
                                               (Single
                                                ((expr (Var sym4__))
-                                                (emeta
-                                                 ((mtype UInt)
-                                                  (mloc <opaque>)
-                                                  (madlevel DataOnly)))))
-                                              (Single
-                                               ((expr (Var sym5__))
                                                 (emeta
                                                  ((mtype UInt)
                                                   (mloc <opaque>)
@@ -4376,7 +4495,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4390,7 +4509,7 @@
              (Assignment
               (p_1d_simplex (UArray UVector)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -4401,7 +4520,7 @@
                        ((mtype (UArray UVector)) (mloc <opaque>)
                         (madlevel AutoDiffable))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -4432,7 +4551,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4443,7 +4562,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4454,7 +4573,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -4471,17 +4590,17 @@
                               (p_3d_simplex
                                (UArray (UArray (UArray UVector)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -4496,17 +4615,17 @@
                                         (mloc <opaque>)
                                         (madlevel AutoDiffable))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -4589,7 +4708,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -4603,7 +4722,7 @@
              (Assignment
               (p_cfcov_33_ar (UArray UMatrix)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -4614,7 +4733,7 @@
                        ((mtype (UArray UMatrix)) (mloc <opaque>)
                         (madlevel AutoDiffable))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -5245,7 +5364,7 @@
        (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5259,7 +5378,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str greater_or_equal))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str tp_real_1d_ar[sym2__]))
+               ((expr (Lit Str tp_real_1d_ar[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -5268,7 +5387,7 @@
                     ((mtype (UArray UReal)) (mloc <opaque>)
                      (madlevel AutoDiffable))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta
@@ -5279,7 +5398,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5290,7 +5409,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5301,7 +5420,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -5321,7 +5440,7 @@
                                   (madlevel DataOnly))))
                                ((expr
                                  (Lit Str
-                                  "tp_real_3d_ar[sym2__, sym3__, sym4__]"))
+                                  "tp_real_3d_ar[sym1__, sym2__, sym3__]"))
                                 (emeta
                                  ((mtype UInt) (mloc <opaque>)
                                   (madlevel DataOnly))))
@@ -5332,17 +5451,17 @@
                                     ((mtype (UArray (UArray (UArray UReal))))
                                      (mloc <opaque>) (madlevel AutoDiffable))))
                                   ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
                                     ((expr (Var sym2__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly)))))
                                    (Single
                                     ((expr (Var sym3__))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly)))))
-                                   (Single
-                                    ((expr (Var sym4__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly))))))))
@@ -5372,7 +5491,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5383,7 +5502,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5398,7 +5517,7 @@
                       (((expr (Lit Str greater_or_equal))
                         (emeta
                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Str "tp_ar_mat[sym2__, sym3__]"))
+                       ((expr (Lit Str "tp_ar_mat[sym1__, sym2__]"))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                        ((expr
@@ -5408,12 +5527,12 @@
                             ((mtype (UArray (UArray UMatrix)))
                              (mloc <opaque>) (madlevel AutoDiffable))))
                           ((Single
-                            ((expr (Var sym2__))
+                            ((expr (Var sym1__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly)))))
                            (Single
-                            ((expr (Var sym3__))
+                            ((expr (Var sym2__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly))))))))
@@ -5429,7 +5548,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5440,7 +5559,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5455,7 +5574,7 @@
                       (((expr (Lit Str less_or_equal))
                         (emeta
                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Str "tp_ar_mat[sym2__, sym3__]"))
+                       ((expr (Lit Str "tp_ar_mat[sym1__, sym2__]"))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                        ((expr
@@ -5465,12 +5584,12 @@
                             ((mtype (UArray (UArray UMatrix)))
                              (mloc <opaque>) (madlevel AutoDiffable))))
                           ((Single
-                            ((expr (Var sym2__))
+                            ((expr (Var sym1__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly)))))
                            (Single
-                            ((expr (Var sym3__))
+                            ((expr (Var sym2__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly))))))))
@@ -5495,7 +5614,7 @@
         (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5509,7 +5628,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str simplex))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str tp_1d_simplex[sym2__]))
+               ((expr (Lit Str tp_1d_simplex[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -5518,7 +5637,7 @@
                     ((mtype (UArray UVector)) (mloc <opaque>)
                      (madlevel AutoDiffable))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta
@@ -5527,7 +5646,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5538,7 +5657,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5549,7 +5668,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -5569,7 +5688,7 @@
                                   (madlevel DataOnly))))
                                ((expr
                                  (Lit Str
-                                  "tp_3d_simplex[sym2__, sym3__, sym4__]"))
+                                  "tp_3d_simplex[sym1__, sym2__, sym3__]"))
                                 (emeta
                                  ((mtype UInt) (mloc <opaque>)
                                   (madlevel DataOnly))))
@@ -5581,17 +5700,17 @@
                                       (UArray (UArray (UArray UVector))))
                                      (mloc <opaque>) (madlevel AutoDiffable))))
                                   ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
                                     ((expr (Var sym2__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly)))))
                                    (Single
                                     ((expr (Var sym3__))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly)))))
-                                   (Single
-                                    ((expr (Var sym4__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly))))))))
@@ -5624,7 +5743,7 @@
         (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel AutoDiffable)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -5638,7 +5757,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str cholesky_factor))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str tp_cfcov_33_ar[sym2__]))
+               ((expr (Lit Str tp_cfcov_33_ar[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -5647,7 +5766,7 @@
                     ((mtype (UArray UMatrix)) (mloc <opaque>)
                      (madlevel AutoDiffable))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta
@@ -6418,7 +6537,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6432,7 +6551,7 @@
              (Assignment
               (offset_multiplier (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -6443,7 +6562,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -6468,7 +6587,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6482,7 +6601,7 @@
              (Assignment
               (p_real_1d_ar (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -6493,7 +6612,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -6522,7 +6641,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6533,7 +6652,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6544,7 +6663,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -6560,17 +6679,17 @@
                              (Assignment
                               (p_real_3d_ar (UArray (UArray (UArray UReal)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -6584,17 +6703,17 @@
                                          (UArray (UArray (UArray UReal))))
                                         (mloc <opaque>) (madlevel DataOnly))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -6628,7 +6747,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6642,7 +6761,7 @@
              (Assignment
               (p_vec UVector
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -6652,7 +6771,7 @@
                       (emeta
                        ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -6747,7 +6866,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6758,7 +6877,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6769,7 +6888,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -6782,7 +6901,7 @@
                        ((stmt
                          (Block
                           (((stmt
-                             (For (loopvar sym5__)
+                             (For (loopvar sym4__)
                               (lower
                                ((expr (Lit Int 1))
                                 (emeta
@@ -6800,6 +6919,11 @@
                                      (Assignment
                                       (p_ar_mat (UArray (UArray UMatrix))
                                        ((Single
+                                         ((expr (Var sym1__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
                                          ((expr (Var sym2__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
@@ -6811,11 +6935,6 @@
                                             (madlevel DataOnly)))))
                                         (Single
                                          ((expr (Var sym4__))
-                                          (emeta
-                                           ((mtype UInt) (mloc <opaque>)
-                                            (madlevel DataOnly)))))
-                                        (Single
-                                         ((expr (Var sym5__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
                                             (madlevel DataOnly)))))))
@@ -6831,6 +6950,12 @@
                                                 (mloc <opaque>)
                                                 (madlevel DataOnly))))
                                              ((Single
+                                               ((expr (Var sym1__))
+                                                (emeta
+                                                 ((mtype UInt)
+                                                  (mloc <opaque>)
+                                                  (madlevel DataOnly)))))
+                                              (Single
                                                ((expr (Var sym2__))
                                                 (emeta
                                                  ((mtype UInt)
@@ -6844,12 +6969,6 @@
                                                   (madlevel DataOnly)))))
                                               (Single
                                                ((expr (Var sym4__))
-                                                (emeta
-                                                 ((mtype UInt)
-                                                  (mloc <opaque>)
-                                                  (madlevel DataOnly)))))
-                                              (Single
-                                               ((expr (Var sym5__))
                                                 (emeta
                                                  ((mtype UInt)
                                                   (mloc <opaque>)
@@ -6911,7 +7030,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6925,7 +7044,7 @@
              (Assignment
               (p_1d_simplex (UArray UVector)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -6936,7 +7055,7 @@
                        ((mtype (UArray UVector)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -6966,7 +7085,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6977,7 +7096,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -6988,7 +7107,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -7005,17 +7124,17 @@
                               (p_3d_simplex
                                (UArray (UArray (UArray UVector)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -7029,17 +7148,17 @@
                                          (UArray (UArray (UArray UVector))))
                                         (mloc <opaque>) (madlevel DataOnly))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -7122,7 +7241,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -7136,7 +7255,7 @@
              (Assignment
               (p_cfcov_33_ar (UArray UMatrix)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnConstrain__
@@ -7147,7 +7266,7 @@
                        ((mtype (UArray UMatrix)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -8961,7 +9080,7 @@
        (emeta ((mtype (UArray UVector)) (mloc <opaque>) (madlevel DataOnly))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -8975,7 +9094,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str greater_or_equal))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str gq_real_1d_ar[sym2__]))
+               ((expr (Lit Str gq_real_1d_ar[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -8984,7 +9103,7 @@
                     ((mtype (UArray UReal)) (mloc <opaque>)
                      (madlevel DataOnly))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
@@ -8994,7 +9113,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9005,7 +9124,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9016,7 +9135,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -9036,7 +9155,7 @@
                                   (madlevel DataOnly))))
                                ((expr
                                  (Lit Str
-                                  "gq_real_3d_ar[sym2__, sym3__, sym4__]"))
+                                  "gq_real_3d_ar[sym1__, sym2__, sym3__]"))
                                 (emeta
                                  ((mtype UInt) (mloc <opaque>)
                                   (madlevel DataOnly))))
@@ -9047,17 +9166,17 @@
                                     ((mtype (UArray (UArray (UArray UReal))))
                                      (mloc <opaque>) (madlevel DataOnly))))
                                   ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
                                     ((expr (Var sym2__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly)))))
                                    (Single
                                     ((expr (Var sym3__))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly)))))
-                                   (Single
-                                    ((expr (Var sym4__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly))))))))
@@ -9087,7 +9206,7 @@
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9098,7 +9217,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9113,7 +9232,7 @@
                       (((expr (Lit Str greater_or_equal))
                         (emeta
                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Str "gq_ar_mat[sym2__, sym3__]"))
+                       ((expr (Lit Str "gq_ar_mat[sym1__, sym2__]"))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                        ((expr
@@ -9123,12 +9242,12 @@
                             ((mtype (UArray (UArray UMatrix)))
                              (mloc <opaque>) (madlevel DataOnly))))
                           ((Single
-                            ((expr (Var sym2__))
+                            ((expr (Var sym1__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly)))))
                            (Single
-                            ((expr (Var sym3__))
+                            ((expr (Var sym2__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly))))))))
@@ -9144,7 +9263,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9155,7 +9274,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9170,7 +9289,7 @@
                       (((expr (Lit Str less_or_equal))
                         (emeta
                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Str "gq_ar_mat[sym2__, sym3__]"))
+                       ((expr (Lit Str "gq_ar_mat[sym1__, sym2__]"))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                        ((expr
@@ -9180,12 +9299,12 @@
                             ((mtype (UArray (UArray UMatrix)))
                              (mloc <opaque>) (madlevel DataOnly))))
                           ((Single
-                            ((expr (Var sym2__))
+                            ((expr (Var sym1__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly)))))
                            (Single
-                            ((expr (Var sym3__))
+                            ((expr (Var sym2__))
                              (emeta
                               ((mtype UInt) (mloc <opaque>)
                                (madlevel DataOnly))))))))
@@ -9210,7 +9329,7 @@
         (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9224,7 +9343,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str simplex))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str gq_1d_simplex[sym2__]))
+               ((expr (Lit Str gq_1d_simplex[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -9233,7 +9352,7 @@
                     ((mtype (UArray UVector)) (mloc <opaque>)
                      (madlevel DataOnly))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta ((mtype UVector) (mloc <opaque>) (madlevel DataOnly)))))))
@@ -9241,7 +9360,7 @@
         (smeta <opaque>)))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9252,7 +9371,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9263,7 +9382,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -9283,7 +9402,7 @@
                                   (madlevel DataOnly))))
                                ((expr
                                  (Lit Str
-                                  "gq_3d_simplex[sym2__, sym3__, sym4__]"))
+                                  "gq_3d_simplex[sym1__, sym2__, sym3__]"))
                                 (emeta
                                  ((mtype UInt) (mloc <opaque>)
                                   (madlevel DataOnly))))
@@ -9295,17 +9414,17 @@
                                       (UArray (UArray (UArray UVector))))
                                      (mloc <opaque>) (madlevel DataOnly))))
                                   ((Single
+                                    ((expr (Var sym1__))
+                                     (emeta
+                                      ((mtype UInt) (mloc <opaque>)
+                                       (madlevel DataOnly)))))
+                                   (Single
                                     ((expr (Var sym2__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly)))))
                                    (Single
                                     ((expr (Var sym3__))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly)))))
-                                   (Single
-                                    ((expr (Var sym4__))
                                      (emeta
                                       ((mtype UInt) (mloc <opaque>)
                                        (madlevel DataOnly))))))))
@@ -9338,7 +9457,7 @@
         (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9352,7 +9471,7 @@
              (NRFunApp CompilerInternal FnCheck__
               (((expr (Lit Str cholesky_factor))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Str gq_cfcov_33_ar[sym2__]))
+               ((expr (Lit Str gq_cfcov_33_ar[sym1__]))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                ((expr
                  (Indexed
@@ -9361,7 +9480,7 @@
                     ((mtype (UArray UMatrix)) (mloc <opaque>)
                      (madlevel DataOnly))))
                   ((Single
-                    ((expr (Var sym2__))
+                    ((expr (Var sym1__))
                      (emeta
                       ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                 (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
@@ -9381,7 +9500,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9395,7 +9514,7 @@
              (Assignment
               (offset_multiplier (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnUnconstrain__
@@ -9406,7 +9525,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -9431,7 +9550,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9445,7 +9564,7 @@
              (Assignment
               (p_real_1d_ar (UArray UReal)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnUnconstrain__
@@ -9456,7 +9575,7 @@
                        ((mtype (UArray UReal)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -9485,7 +9604,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9496,7 +9615,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9507,7 +9626,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -9523,17 +9642,17 @@
                              (Assignment
                               (p_real_3d_ar (UArray (UArray (UArray UReal)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -9547,17 +9666,17 @@
                                          (UArray (UArray (UArray UReal))))
                                         (mloc <opaque>) (madlevel DataOnly))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -9591,7 +9710,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9605,7 +9724,7 @@
              (Assignment
               (p_vec UVector
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnUnconstrain__
@@ -9615,7 +9734,7 @@
                       (emeta
                        ((mtype UVector) (mloc <opaque>) (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -9710,7 +9829,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9721,7 +9840,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9732,7 +9851,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -9745,7 +9864,7 @@
                        ((stmt
                          (Block
                           (((stmt
-                             (For (loopvar sym5__)
+                             (For (loopvar sym4__)
                               (lower
                                ((expr (Lit Int 1))
                                 (emeta
@@ -9763,6 +9882,11 @@
                                      (Assignment
                                       (p_ar_mat (UArray (UArray UMatrix))
                                        ((Single
+                                         ((expr (Var sym1__))
+                                          (emeta
+                                           ((mtype UInt) (mloc <opaque>)
+                                            (madlevel DataOnly)))))
+                                        (Single
                                          ((expr (Var sym2__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
@@ -9774,11 +9898,6 @@
                                             (madlevel DataOnly)))))
                                         (Single
                                          ((expr (Var sym4__))
-                                          (emeta
-                                           ((mtype UInt) (mloc <opaque>)
-                                            (madlevel DataOnly)))))
-                                        (Single
-                                         ((expr (Var sym5__))
                                           (emeta
                                            ((mtype UInt) (mloc <opaque>)
                                             (madlevel DataOnly)))))))
@@ -9794,6 +9913,12 @@
                                                 (mloc <opaque>)
                                                 (madlevel DataOnly))))
                                              ((Single
+                                               ((expr (Var sym1__))
+                                                (emeta
+                                                 ((mtype UInt)
+                                                  (mloc <opaque>)
+                                                  (madlevel DataOnly)))))
+                                              (Single
                                                ((expr (Var sym2__))
                                                 (emeta
                                                  ((mtype UInt)
@@ -9807,12 +9932,6 @@
                                                   (madlevel DataOnly)))))
                                               (Single
                                                ((expr (Var sym4__))
-                                                (emeta
-                                                 ((mtype UInt)
-                                                  (mloc <opaque>)
-                                                  (madlevel DataOnly)))))
-                                              (Single
-                                               ((expr (Var sym5__))
                                                 (emeta
                                                  ((mtype UInt)
                                                   (mloc <opaque>)
@@ -9874,7 +9993,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9888,7 +10007,7 @@
              (Assignment
               (p_1d_simplex (UArray UVector)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnUnconstrain__
@@ -9899,7 +10018,7 @@
                        ((mtype (UArray UVector)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta
@@ -9929,7 +10048,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9940,7 +10059,7 @@
        ((stmt
          (Block
           (((stmt
-             (For (loopvar sym3__)
+             (For (loopvar sym2__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -9951,7 +10070,7 @@
                ((stmt
                  (Block
                   (((stmt
-                     (For (loopvar sym4__)
+                     (For (loopvar sym3__)
                       (lower
                        ((expr (Lit Int 1))
                         (emeta
@@ -9968,17 +10087,17 @@
                               (p_3d_simplex
                                (UArray (UArray (UArray UVector)))
                                ((Single
+                                 ((expr (Var sym1__))
+                                  (emeta
+                                   ((mtype UInt) (mloc <opaque>)
+                                    (madlevel DataOnly)))))
+                                (Single
                                  ((expr (Var sym2__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))
                                 (Single
                                  ((expr (Var sym3__))
-                                  (emeta
-                                   ((mtype UInt) (mloc <opaque>)
-                                    (madlevel DataOnly)))))
-                                (Single
-                                 ((expr (Var sym4__))
                                   (emeta
                                    ((mtype UInt) (mloc <opaque>)
                                     (madlevel DataOnly)))))))
@@ -9992,17 +10111,17 @@
                                          (UArray (UArray (UArray UVector))))
                                         (mloc <opaque>) (madlevel DataOnly))))
                                      ((Single
+                                       ((expr (Var sym1__))
+                                        (emeta
+                                         ((mtype UInt) (mloc <opaque>)
+                                          (madlevel DataOnly)))))
+                                      (Single
                                        ((expr (Var sym2__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly)))))
                                       (Single
                                        ((expr (Var sym3__))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly)))))
-                                      (Single
-                                       ((expr (Var sym4__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))))
@@ -10077,7 +10196,7 @@
           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
     (smeta <opaque>))
    ((stmt
-     (For (loopvar sym2__)
+     (For (loopvar sym1__)
       (lower
        ((expr (Lit Int 1))
         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -10091,7 +10210,7 @@
              (Assignment
               (p_cfcov_33_ar (UArray UMatrix)
                ((Single
-                 ((expr (Var sym2__))
+                 ((expr (Var sym1__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               ((expr
                 (FunApp CompilerInternal FnUnconstrain__
@@ -10102,7 +10221,7 @@
                        ((mtype (UArray UMatrix)) (mloc <opaque>)
                         (madlevel DataOnly))))
                      ((Single
-                       ((expr (Var sym2__))
+                       ((expr (Var sym1__))
                         (emeta
                          ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
                    (emeta

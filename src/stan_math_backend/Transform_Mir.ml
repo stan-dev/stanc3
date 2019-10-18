@@ -356,7 +356,7 @@ let rec contains_eigen = function
 
 let type_needs_fill decl_id ut =
   is_user_ident decl_id
-  && (contains_eigen ut || match ut with UInt | UReal -> true | _ -> false)
+  && (contains_eigen ut || match ut with UReal -> true | _ -> false)
 
 let rec add_fill no_fill_required = function
   | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
