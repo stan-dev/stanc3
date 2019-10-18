@@ -1621,7 +1621,7 @@ let check_fun_def_body_in_block = function
   | {stmt= FunDef {body= {stmt= Block _; _}; _}; _}
    |{stmt= FunDef {body= {stmt= Skip; _}; _}; _} ->
       Validate.ok ()
-  | {stmt= FunDef {body= {stmt= _; _}; _}; smeta} ->
+  | {stmt= FunDef {body= {stmt= _; smeta}; _}; _} ->
       Validate.error @@ Semantic_error.fn_decl_needs_block smeta.loc
   | _ -> Validate.ok ()
 
