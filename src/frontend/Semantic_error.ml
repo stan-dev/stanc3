@@ -236,6 +236,7 @@ module StatementError = struct
     | MismatchFunDefDecl of string * unsizedtype option
     | FunDeclExists of string
     | FunDeclNoDefn
+    | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of unsizedtype option
     | ProbMassNonIntVariate of unsizedtype option
@@ -308,6 +309,8 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
           name
     | FunDeclNoDefn ->
         Fmt.pf ppf "Some function is declared without specifying a definition."
+    | FunDeclNeedsBlock ->
+        Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
@@ -501,6 +504,9 @@ let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
 let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+
+let fn_decl_needs_block loc =
+  StatementError (loc, StatementError.FunDeclNeedsBlock)
 
 let non_real_prob_fn_def loc =
   StatementError (loc, StatementError.NonRealProbFunDef)

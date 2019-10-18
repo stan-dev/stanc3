@@ -72,6 +72,7 @@ val transformed_params_int : location_span -> t
 val mismatched_fn_def_decl : location_span -> string -> unsizedtype option -> t
 val fn_decl_exists : location_span -> string -> t
 val fn_decl_without_def : location_span -> t
+val fn_decl_needs_block : location_span -> t
 val non_real_prob_fn_def : location_span -> t
 val prob_density_non_real_variate : location_span -> unsizedtype option -> t
 val prob_mass_non_int_variate : location_span -> unsizedtype option -> t
