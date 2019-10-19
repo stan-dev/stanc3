@@ -457,53 +457,32 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
         ; body }
       |> swrap
   | Ast.ForEach (loopvar, iteratee, body) ->
-      let newsym = gensym () in
-      let wrap expr = {expr; emeta= {mloc; mtype= UInt; madlevel= DataOnly}} in
-      let iteratee' = trans_expr iteratee
-      and indexing_var = wrap (Var newsym) in
-      let indices =
-        let single_one =
-          Ast.Single
-            { Ast.expr= Ast.IntNumeral "1"
-            ; emeta= {iteratee.emeta with type_= UInt} }
-        in
-        match iteratee'.emeta.mtype with
-        | UMatrix -> [single_one; single_one]
-        | _ -> [single_one]
-      in
-      let decl_type =
-        Semantic_check.inferred_unsizedtype_of_indexed_exn
-          ~loc:iteratee'.emeta.mloc iteratee'.emeta.mtype indices
-      in
-      let decl_loopvar =
-        Decl
-          { decl_adtype= iteratee'.emeta.madlevel
-          ; decl_id= loopvar.name
-          ; decl_type= Unsized decl_type }
-      in
-      let decl_loopvar = {stmt= decl_loopvar; smeta} in
-      let assign_loopvar =
-        Assignment
-          ( (loopvar.name, UInt, [])
-          , Indexed (iteratee', [Single indexing_var]) |> wrap )
-      in
-      let assign_loopvar = {stmt= assign_loopvar; smeta} in
+      let iteratee' = trans_expr iteratee in
       let body_stmts =
         match trans_single_stmt body with
         | {stmt= Block body_stmts; _} -> body_stmts
         | b -> [b]
       in
-      let body =
-        {stmt= Block (decl_loopvar :: assign_loopvar :: body_stmts); smeta}
+      let decl_type =
+        match iteratee'.emeta.mtype with
+        | UMatrix -> UReal
+        | t -> infer_type_of_indexed t [Single loop_bottom]
       in
-      For
-        { loopvar= newsym
-        ; lower= loop_bottom
-        ; upper=
-            wrap
-            @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee'])
-        ; body }
-      |> swrap
+      let decl_loopvar =
+        { smeta
+        ; stmt=
+            Decl
+              { decl_adtype= iteratee'.emeta.madlevel
+              ; decl_id= loopvar.name
+              ; decl_type= Unsized decl_type } }
+      in
+      let assignment var =
+        {stmt= Assignment ((loopvar.name, decl_type, []), var); smeta}
+      in
+      let bodyfn var =
+        {stmt= Block (decl_loopvar :: assignment var :: body_stmts); smeta}
+      in
+      [for_each bodyfn iteratee' smeta]
   | Ast.FunDef _ ->
       raise_s
         [%message
