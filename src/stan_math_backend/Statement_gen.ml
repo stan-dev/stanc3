@@ -69,6 +69,10 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
+let pp_bool_expr ppf = function
+  | {emeta= {mtype= UReal; _}; _} as e -> pp_call ppf ("as_bool", pp_expr, [e])
+  | e -> pp_expr ppf e
+
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
@@ -154,10 +158,10 @@ let rec pp_statement (ppf : Format.formatter)
   | Skip -> string ppf ";"
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
-      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block_s ifbranch
+      pf ppf "if (@[<hov>%a@]) %a %a" pp_bool_expr cond pp_block_s ifbranch
         (option pp_else) elsebranch
   | While (cond, body) ->
-      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block_s body
+      pf ppf "while (@[<hov>%a@]) %a" pp_bool_expr cond pp_block_s body
   | For
       { body=
           {stmt= Assignment (_, {expr= FunApp (CompilerInternal, f, _); _}); _}
