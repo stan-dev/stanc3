@@ -57,6 +57,26 @@ let promote_adtype =
       | ad, _ -> ad )
     ~init:DataOnly
 
+let promote_unsizedtype es =
+  let rec fold_type accum mtype =
+    match (accum, mtype) with
+    | UReal, _ -> UReal
+    | _, UReal -> UReal
+    | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
+    | _, mtype -> mtype
+  in
+  es
+  |> List.map ~f:(fun {emeta= {mtype; _}; _} -> mtype)
+  |> List.reduce_exn ~f:fold_type
+
+let%expect_test "promote_unsized" =
+  let e mtype = {expr= Var "x"; emeta= {internal_meta with mtype}} in
+  let tests =
+    [[e UInt; e UReal]; [e UReal; e UInt]; [e (UArray UInt); e (UArray UReal)]]
+  in
+  print_s [%sexp (tests |> List.map ~f:promote_unsizedtype : unsizedtype list)] ;
+  [%expect {| (UReal UReal (UArray UReal)) |}]
+
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | UInt | UReal -> string ppf scalar
@@ -286,31 +306,26 @@ and pp_user_defined_fun ppf (f, es) =
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn adlevel ut f ppf es =
+and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
-    pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
+    let pp_add_method ppf () = pf ppf ")@,.add(" in
+    pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
+      pp_unsizedtype_local
+      (promote_adtype es, promote_unsizedtype es)
+      (list ~sep:pp_add_method pp_expr)
+      es
   in
   match internal_fn_of_string f with
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
-      let pp_wrapper ppf es =
-        match (es, adlevel) with
-        | {emeta= {mtype= UReal; _}; _} :: _, DataOnly ->
-            pf ppf "to_doubles__(%a)" pp_array_literal es
-        | {emeta= {mtype= UReal; _}; _} :: _, AutoDiffable ->
-            pf ppf "to_vars__(%a)" pp_array_literal es
-        | _ -> pp_array_literal ppf es
-      in
-      match ut with
-      | URowVector -> pf ppf "stan::math::to_row_vector(%a)" pp_wrapper es
-      | UMatrix ->
-          pf ppf "stan::math::to_matrix<%s>(%a)"
-            (local_scalar ut (promote_adtype es))
-            pp_array_literal es
-      | _ ->
-          raise_s
-            [%message
-              "Unexpected type for row vector literal" (ut : unsizedtype)] )
+    match ut with
+    | URowVector ->
+        pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
+    | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
+    | _ ->
+        raise_s
+          [%message
+            "Unexpected type for row vector literal" (ut : unsizedtype)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
@@ -356,8 +371,7 @@ and pp_expr ppf e =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn e.emeta.madlevel e.emeta.mtype
-        (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
