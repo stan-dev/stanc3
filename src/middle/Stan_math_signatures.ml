@@ -140,7 +140,9 @@ let distributions =
   ; ([Lpmf], "categorical_logit", [DVInt; DVector])
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "chi_square", [DVReal; DVReal])
-  ; ([Lpdf], "dirichlet", [DVector; DVector])
+  ;for i = 0 to 1
+     for j = 0 to 1
+    	([Lpdf], "dirichlet", [DVectors[i]; DVectors[j]])
   ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "exponential", [DVReal; DVReal])
@@ -632,7 +634,7 @@ let () =
     ( "csr_to_dense_matrix"
     , ReturnType UMatrix
     , [ UInt; UInt; UVector
-      ; bare_array_type (UInt, 1)
+      ; bare_array_type (UInt, 1)diri
       ; bare_array_type (UInt, 1) ] ) ;
   add_unqualified ("csr_extract_w", ReturnType UVector, [UMatrix]) ;
   add_unqualified
