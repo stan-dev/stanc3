@@ -9,10 +9,10 @@ let functions_requiring_namespace =
   String.Set.of_list
     [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
     ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
-    ; "asinh"; "atan"; "atan2"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"
-    ; "erfc"; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"
-    ; "log2"; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"
-    ; "trunc"; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
+    ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
+    ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
+    ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -192,10 +192,15 @@ and gen_misc_special_math_app f =
           let f = match es with [_; _] -> "std::" ^ f | _ -> f in
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
+      let std_prefix_data_scalar f = function
+        | [{emeta= {madlevel= DataOnly; mtype= UInt | UReal; _}; _}] ->
+            "std::" ^ f
+        | _ -> f
+      in
       Some
         (fun ppf es ->
-          if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pp_call ppf (f, pp_expr, es) )
+          let f = std_prefix_data_scalar f es in
+          pp_call ppf (f, pp_expr, es) )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
@@ -416,10 +421,10 @@ let%expect_test "pp_expr7" =
     (pp_unlocated
        (FunApp
           ( StanLib
-          , "atan2"
+          , "atan"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
-  [%expect {| stan::math::atan2(123, 1.2) |}]
+  [%expect {| stan::math::atan(123, 1.2) |}]
 
 let%expect_test "pp_expr9" =
   printf "%s"
