@@ -20,7 +20,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
   in
   match st with
   | SInt | SReal -> ()
-  | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
+  | st -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =
   let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
@@ -82,19 +82,16 @@ let rec pp_statement (ppf : Format.formatter)
   match stmt with
   | Assignment ((vident, _, []), ({emeta= {mtype= UInt; _}; _} as rhs))
    |Assignment ((vident, _, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
-      pf ppf "%s = %a;" vident pp_expr rhs
+      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((id, _, idcs), ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->
-      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
-      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
-  (* | Assignment ((assignee, ut, idcs), rhs)
-   *   when List.for_all ~f:is_single_index idcs
-   *        && not (is_indexing_matrix (ut, idcs)) ->
-   *     pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs *)
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
+        rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
@@ -154,7 +151,7 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "%a;" pp_user_defined_fun (fname, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
-  | Return e -> pf ppf "return %a;" (option pp_expr) e
+  | Return e -> pf ppf "@[<hov 4>return %a;@]" (option pp_expr) e
   | Skip -> string ppf ";"
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in

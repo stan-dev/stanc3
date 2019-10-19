@@ -308,8 +308,8 @@ and pp_user_defined_fun ppf (f, es) =
 
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
-    let pp_add_method ppf () = pf ppf ").add(" in
-    pf ppf "stan::math::array_builder<%a>().add(%a).array()"
+    let pp_add_method ppf () = pf ppf ")@,.add(" in
+    pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
       pp_unsizedtype_local
       (promote_adtype es, promote_unsizedtype es)
       (list ~sep:pp_add_method pp_expr)
@@ -319,8 +319,9 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
     match ut with
-    | URowVector -> pf ppf "stan::math::to_row_vector(%a)" pp_array_literal es
-    | UMatrix -> pf ppf "stan::math::to_matrix(%a)" pp_array_literal es
+    | URowVector ->
+        pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
+    | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
     | _ ->
         raise_s
           [%message
