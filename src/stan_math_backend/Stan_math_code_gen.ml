@@ -35,37 +35,53 @@ let pp_located ppf _ =
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
 
-let maybe_templated_arg_types args =
-  let is_autodiff (adtype, _, _) =
-    match adtype with UnsizedType.AutoDiffable -> true | _ -> false
-  in
-  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+let rec contains_int = function
+  | UnsizedType.UInt -> true
+  | UArray t -> contains_int t
+  | _ -> false
+
+let arg_needs_template = function
+  | UnsizedType.DataOnly, _, _ -> false
+  | _, _, t when contains_int t -> false
+  | _ -> true
+
+let maybe_templated_arg_types (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i a ->
+      match arg_needs_template a with
+      | true -> Some (sprintf "T%d__" i)
+      | false -> None )
 
 let%expect_test "arg types templated correctly" =
-  [(AutoDiffable, "xreal", UnsizedType.UReal); (DataOnly, "yint", UInt)]
-  |> maybe_templated_arg_types |> String.concat ~sep:"," |> print_endline ;
+  [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
+  |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
+  |> print_endline ;
   [%expect {| T0__ |}]
 
-let promoted_arg_type ppf argtypetemplates =
-  match argtypetemplates with
+let pp_promoted_scalar ppf args =
+  match args with
   | [] -> pf ppf "double"
-  | a ->
+  | _ ->
       let rec promote_args_chunked ppf args =
         let go ppf tl =
           match tl with [] -> () | _ -> pf ppf ", %a" promote_args_chunked tl
         in
-        pf ppf "typename boost::math::tools::promote_args<%a%a>::type"
-          (list ~sep:comma string) (List.hd_exn args) go (List.tl_exn args)
+        match args with
+        | [] -> pf ppf "double"
+        | hd :: tl ->
+            pf ppf "typename boost::math::tools::promote_args<%a%a>::type"
+              (list ~sep:comma string) hd go tl
       in
-      promote_args_chunked ppf (List.chunks_of ~length:5 a)
+      promote_args_chunked ppf
+        List.(
+          chunks_of ~length:5 (filter_opt (maybe_templated_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar =
-    strf "%a" promoted_arg_type (maybe_templated_arg_types arg_types)
-  in
+  let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
+  | Some ut when contains_int ut ->
+      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
@@ -77,14 +93,33 @@ let pp_located_error ppf (pp_body_block, body) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located, ())
 
-let pp_arg ppf (custom_scalar, (_, name, ut)) =
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
+let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
+  let scalar =
+    match custom_scalar_opt with
+    | Some scalar -> scalar
+    | None -> stantype_prim_str ut
+  in
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (scalar, ut) name
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf body_stmts =
   pp_located_error ppf
     ( pp_statement
     , Stmt.Fixed.{pattern= Block body_stmts; meta= Locations.no_span_num} )
+
+let typename = ( ^ ) "typename "
+
+let get_templates_and_args fdargs =
+  let argtypetemplates = maybe_templated_arg_types fdargs in
+  ( List.filter_opt argtypetemplates
+  , List.map
+      ~f:(fun a -> strf "%a" pp_arg a)
+      (List.zip_exn argtypetemplates fdargs) )
+
+let pp_template_decorator ppf = function
+  | [] -> ()
+  | templates ->
+      pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) templates
 
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
@@ -96,26 +131,17 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   let prefix_extra_templates, prefix_extra_args =
     if is_rng then (["RNG"], ["base_rng__"]) else ([], [])
   in
-  let argtypetemplates =
-    (* TODO: If one contains ints, we don't need to template it *)
-    List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
-  in
   let extra_templates = List.map ~f:(( ^ ) "T_") extra in
   let mk_extra_args templates args =
     List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
   in
+  let argtypetemplates, args = get_templates_and_args fdargs in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," promoted_arg_type
-      argtypetemplates ;
-    text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
-    (* needed?*)
+    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     if not is_dist then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
-    text
-      "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-    pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match Stmt.Fixed.pattern_of fdbody with
       | SList stmts -> {fdbody with pattern= Block stmts}
@@ -127,19 +153,16 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   in
   let templates =
     (if is_dist then ["bool propto__"] else [])
-    @ List.map ~f:(( ^ ) "typename ")
-        (prefix_extra_templates @ argtypetemplates @ extra_templates)
+    @ List.(
+        map ~f:typename
+          (prefix_extra_templates @ argtypetemplates @ extra_templates))
   in
   let pp_sig ppf name =
-    ( match templates with
-    | [] -> ()
-    | a -> pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma string) a ) ;
+    pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
     let arg_strs =
       mk_extra_args prefix_extra_templates prefix_extra_args
-      @ List.map
-          ~f:(fun a -> strf "%a" pp_arg a)
-          (List.zip_exn argtypetemplates fdargs)
+      @ args
       @ mk_extra_args extra_templates extra
       @ ["std::ostream* pstream__"]
     in
@@ -150,8 +173,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   | Skip -> pf ppf ";@ "
   | _ ->
       pp_block ppf (pp_body, fdbody) ;
-      pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
-        fdname pp_sig "operator()" pp_call_str
+      pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
+        functor_suffix pp_sig "operator()" pp_call_str
         ( fdname
         , prefix_extra_args
           @ List.map ~f:(fun (_, name, _) -> name) fdargs
@@ -412,10 +435,8 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "std::ostream* pstream__ = 0" ]
   in
   let intro =
-    [ "typedef T__ local_scalar_t__;"
-    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
-    ; strf "%a" pp_unused "DUMMY_VAR__"
-    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    [ "typedef T__ local_scalar_t__;"; "T__ lp__(0.0);"
+    ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
@@ -570,15 +591,39 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
 }
 |}
 
+let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
+
+let pp_register_map_rect_functors ppf p =
+  let find_functors_expr accum expr =
+    match Expr.Fixed.pattern_of expr with
+    | FunApp (StanLib, "map_rect", {pattern= Var f; _} :: _) -> f :: accum
+    | _ -> accum
+  in
+  let rec find_functors_stmt accum stmt =
+    Stmt.Fixed.(
+      Pattern.fold find_functors_expr find_functors_stmt accum
+      @@ pattern_of stmt)
+  in
+  let functors = Program.fold find_functors_expr find_functors_stmt [] p in
+  let pp_register_functor ppf (i, f) =
+    pf ppf "STAN_REGISTER_MAP_RECT(%d, %s::%s%s)" i (namespace p) f
+      functor_suffix
+  in
+  pf ppf "@ %a"
+    (list ~sep:cut pp_register_functor)
+    (List.mapi ~f:(fun i f -> (i + 1, f)) functors)
+
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes p.prog_name custom_functions usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %a@ %a@ }@ @]" version
+    includes (namespace p) custom_functions usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf
     {|
+#ifndef USING_R
+
 // Boilerplate
 stan::model::model_base& new_model(
         stan::io::var_context& data_context,
@@ -587,4 +632,7 @@ stan::model::model_base& new_model(
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
 }
-|}
+
+#endif
+|} ;
+  pf ppf "@[<v>%a@]" pp_register_map_rect_functors p

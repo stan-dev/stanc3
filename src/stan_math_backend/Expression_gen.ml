@@ -9,10 +9,10 @@ let functions_requiring_namespace =
   String.Set.of_list
     [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
     ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
-    ; "asinh"; "atan"; "atan2"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"
-    ; "erfc"; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"
-    ; "log2"; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"
-    ; "trunc"; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
+    ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
+    ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
+    ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -63,6 +63,27 @@ let promote_adtype =
       | _ -> accum )
     ~init:UnsizedType.DataOnly
 
+let promote_unsizedtype es =
+  let rec fold_type accum mtype =
+    match (accum, mtype) with
+    | UnsizedType.UReal, _ -> UnsizedType.UReal
+    | _, UnsizedType.UReal -> UReal
+    | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
+    | _, mtype -> mtype
+  in
+  List.map es ~f:Expr.Typed.type_of |> List.reduce_exn ~f:fold_type
+
+let%expect_test "promote_unsized" =
+  let e mtype =
+    Expr.{Fixed.pattern= Var "x"; meta= Typed.Meta.{empty with type_= mtype}}
+  in
+  let tests =
+    [[e UInt; e UReal]; [e UReal; e UInt]; [e (UArray UInt); e (UArray UReal)]]
+  in
+  print_s
+    [%sexp (tests |> List.map ~f:promote_unsizedtype : UnsizedType.t list)] ;
+  [%expect {| (UReal UReal (UArray UReal)) |}]
+
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal -> string ppf scalar
@@ -112,6 +133,7 @@ let fn_renames =
    hash map of metadata available for each expression that we could put something like this in.
 *)
 let map_rect_counter = ref 0
+let functor_suffix = "_functor__"
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -199,10 +221,17 @@ and gen_misc_special_math_app f =
           let f = match es with [_; _] -> "std::" ^ f | _ -> f in
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
+      let std_prefix_data_scalar f = function
+        | [ Expr.({ Fixed.meta=
+                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
+                  }) ] ->
+            "std::" ^ f
+        | _ -> f
+      in
       Some
         (fun ppf es ->
-          if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pp_call ppf (f, pp_expr, es) )
+          let f = std_prefix_data_scalar f es in
+          pp_call ppf (f, pp_expr, es) )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
@@ -226,7 +255,7 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ "_functor__", [])}
+          {e with pattern= FunApp (StanLib, name ^ functor_suffix, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -257,7 +286,7 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
-          (strf "%s<%d, %s>" fname !map_rect_counter f, tl)
+          (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in
@@ -289,33 +318,26 @@ and pp_user_defined_fun ppf (f, es) =
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn adlevel ut f ppf es =
+and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
-    pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
+    let pp_add_method ppf () = pf ppf ")@,.add(" in
+    pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
+      pp_unsizedtype_local
+      (promote_adtype es, promote_unsizedtype es)
+      (list ~sep:pp_add_method pp_expr)
+      es
   in
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
-      let pp_wrapper ppf es =
-        match (es, adlevel) with
-        | ( Expr.({Fixed.meta= Typed.Meta.({type_= UReal; _}); _}) :: _
-          , UnsizedType.DataOnly ) ->
-            pf ppf "to_doubles__(%a)" pp_array_literal es
-        | {meta= {type_= UReal; _}; _} :: _, AutoDiffable ->
-            pf ppf "to_vars__(%a)" pp_array_literal es
-        | _ -> pp_array_literal ppf es
-      in
-      match ut with
-      | UnsizedType.URowVector ->
-          pf ppf "stan::math::to_row_vector(%a)" pp_wrapper es
-      | UMatrix ->
-          pf ppf "stan::math::to_matrix<%s>(%a)"
-            (local_scalar ut (promote_adtype es))
-            pp_array_literal es
-      | _ ->
-          raise_s
-            [%message
-              "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
+    match ut with
+    | UnsizedType.URowVector ->
+        pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
+    | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
+    | _ ->
+        raise_s
+          [%message
+            "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
@@ -359,8 +381,7 @@ and pp_expr ppf e =
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
       Expr.Typed.(
-        pp_compiler_internal_fn (adlevel_of e) (type_of e)
-          (stan_namespace_qualify f) ppf es)
+        pp_compiler_internal_fn (type_of e) (stan_namespace_qualify f) ppf es)
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
@@ -429,10 +450,10 @@ let%expect_test "pp_expr7" =
     (pp_unlocated
        (FunApp
           ( StanLib
-          , "atan2"
+          , "atan"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
-  [%expect {| stan::math::atan2(123, 1.2) |}]
+  [%expect {| stan::math::atan(123, 1.2) |}]
 
 let%expect_test "pp_expr9" =
   printf "%s"

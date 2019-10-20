@@ -20,7 +20,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
   in
   match st with
   | SizedType.SInt | SReal -> ()
-  | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
+  | st -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =
   let int i =
@@ -72,31 +72,31 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (Internal_fun.of_string_opt fname) ~f:math_fn_translations))
 
+let pp_bool_expr ppf expr =
+  match Expr.Typed.type_of expr with
+  | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
+  | _ -> pp_expr ppf expr
+
 let rec pp_statement (ppf : Format.formatter) stmt =
-  let smeta = Stmt.Fixed.meta_of stmt in
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match Stmt.Fixed.pattern_of stmt with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf @@ Stmt.Fixed.meta_of stmt ) ;
   match Stmt.Fixed.pattern_of stmt with
-  (* | Assignment ((vident, _, []), ({emeta= {mtype= UInt; _}; _} as rhs))
-   |Assignment ((vident, _, []), ({emeta= {mtype= UReal; _}; _} as rhs)) -> *)
-  | Assignment ((vident, _, []), rhs)
-    when UnsizedType.is_scalar_type (Expr.Typed.type_of rhs) ->
-      pf ppf "%s = %a;" vident pp_expr rhs
+  | Assignment
+      ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
+   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
+      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((id, _, idcs), ({pattern= FunApp (CompilerInternal, f, _); _} as rhs))
     when Internal_fun.of_string_opt f = Some FnMakeArray ->
-      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
-      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
-  (* | Assignment ((assignee, ut, idcs), rhs)
-   *   when List.for_all ~f:is_single_index idcs
-   *        && not (is_indexing_matrix (ut, idcs)) ->
-   *     pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs *)
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
+        rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
@@ -154,7 +154,7 @@ let rec pp_statement (ppf : Format.formatter) stmt =
       in
       pp_statement ppf
         { pattern= NRFunApp (CompilerInternal, "check_" ^ check_name, args)
-        ; meta= smeta }
+        ; meta= Stmt.Fixed.meta_of stmt }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
       pf ppf "vars__.push_back(@[<hov>%a@]);" pp_expr var
@@ -168,14 +168,14 @@ let rec pp_statement (ppf : Format.formatter) stmt =
       pf ppf "%a;" pp_user_defined_fun (fname, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
-  | Return e -> pf ppf "return %a;" (option pp_expr) e
+  | Return e -> pf ppf "@[<hov 4>return %a;@]" (option pp_expr) e
   | Skip -> string ppf ";"
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
-      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block_s ifbranch
+      pf ppf "if (@[<hov>%a@]) %a %a" pp_bool_expr cond pp_block_s ifbranch
         (option pp_else) elsebranch
   | While (cond, body) ->
-      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block_s body
+      pf ppf "while (@[<hov>%a@]) %a" pp_bool_expr cond pp_block_s body
   | For
       { body=
           { pattern=

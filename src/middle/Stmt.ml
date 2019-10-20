@@ -224,18 +224,6 @@ module Numbered = struct
 end
 
 module Helpers = struct
-  let contains_fn fn ?(init = false) stmt =
-    let fstr = Internal_fun.to_string fn in
-    let rec aux accu stmt =
-      match Fixed.pattern_of stmt with
-      | NRFunApp (_, fname, _) when fname = fstr -> true
-      | stmt_pattern ->
-          Fixed.Pattern.fold_left ~init:accu stmt_pattern
-            ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
-            ~g:aux
-    in
-    aux init stmt
-
   (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
   let mkfor upper bodyfn iteratee meta =
@@ -256,6 +244,38 @@ module Helpers = struct
     let body = Fixed.fix (meta, stmt) in
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.fix (meta, pattern)
+
+  let rec for_each bodyfn iteratee smeta =
+    let len e =
+      let emeta = Expr.Fixed.meta_of e in
+      let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
+      Expr.Helpers.internal_funapp FnLength [e] emeta'
+    in
+    match Expr.Typed.type_of iteratee with
+    | UInt | UReal -> bodyfn iteratee
+    | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
+    | UMatrix ->
+        let emeta = Expr.Fixed.meta_of iteratee in
+        let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
+        let rows =
+          Expr.Fixed.fix (emeta', FunApp (StanLib, "rows", [iteratee]))
+        in
+        mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
+    | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
+    | UMathLibraryFunction | UFun _ ->
+        raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
+
+  let contains_fn fn ?(init = false) stmt =
+    let fstr = Internal_fun.to_string fn in
+    let rec aux accu stmt =
+      match Fixed.pattern_of stmt with
+      | NRFunApp (_, fname, _) when fname = fstr -> true
+      | stmt_pattern ->
+          Fixed.Pattern.fold_left ~init:accu stmt_pattern
+            ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
+            ~g:aux
+    in
+    aux init stmt
 
   (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating

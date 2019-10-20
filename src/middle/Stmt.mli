@@ -127,6 +127,9 @@ module Helpers : sig
     -> Location_span.t
     -> Located.t
 
+  val for_each :
+    (Expr.Typed.t -> Located.t) -> Expr.Typed.t -> Location_span.t -> Located.t
+
   val for_scalar :
        Expr.Typed.t SizedType.t
     -> (Expr.Typed.t -> Located.t)

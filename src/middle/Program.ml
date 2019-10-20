@@ -2,13 +2,16 @@ open Core_kernel
 open Common
 open Helpers
 
+type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
+[@@deriving sexp, hash, map]
+
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
   ; fdbody: 'a
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
-[@@deriving compare, hash, map, sexp, map]
+[@@deriving compare, hash, map, sexp, map, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
@@ -30,14 +33,14 @@ type 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
   ; out_trans: 'e transformation }
-[@@deriving sexp, map, hash]
+[@@deriving sexp, map, hash, fold]
 
 type ('a, 'b) t =
   { functions_block: 'b fun_def list
@@ -49,7 +52,7 @@ type ('a, 'b) t =
   ; output_vars: (string * 'a outvar) list
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp, map]
+[@@deriving sexp, map, fold]
 
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =

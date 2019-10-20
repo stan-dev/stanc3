@@ -1,5 +1,4 @@
 open Core_kernel
-open Common
 open Middle
 
 (* XXX fix exn *)
@@ -494,61 +493,38 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
         ; body }
       |> swrap
   | Ast.ForEach (loopvar, iteratee, body) ->
-      let newsym = Gensym.generate () in
-      let wrap expr =
-        Expr.(
-          let meta =
-            Typed.Meta.create ~loc:mloc ~type_:UInt ~adlevel:DataOnly ()
-          in
-          Fixed.fix (meta, expr))
-      in
-      let iteratee' = trans_expr iteratee
-      and indexing_var = wrap (Var newsym) in
-      let indices =
-        let single_one =
-          Ast.Single
-            { Ast.expr= Ast.IntNumeral "1"
-            ; emeta= {iteratee.emeta with type_= UInt} }
-        in
-        match iteratee'.meta.type_ with
-        | UMatrix -> [single_one; single_one]
-        | _ -> [single_one]
-      in
-      let decl_type =
-        Semantic_check.inferred_unsizedtype_of_indexed_exn
-          ~loc:iteratee'.meta.loc iteratee'.meta.type_ indices
-      in
-      let decl_loopvar =
-        Stmt.Fixed.Pattern.Decl
-          { decl_adtype= iteratee'.meta.adlevel
-          ; decl_id= loopvar.name
-          ; decl_type= Unsized decl_type }
-      in
-      let decl_loopvar = Stmt.Fixed.{pattern= decl_loopvar; meta= smeta} in
-      let assign_loopvar =
-        Stmt.Fixed.Pattern.Assignment
-          ( (loopvar.name, UInt, [])
-          , Indexed (iteratee', [Single indexing_var]) |> wrap )
-      in
-      let assign_loopvar = Stmt.Fixed.{pattern= assign_loopvar; meta= smeta} in
+      let iteratee' = trans_expr iteratee in
       let body_stmts =
         match trans_single_stmt body with
         | {pattern= Block body_stmts; _} -> body_stmts
         | b -> [b]
       in
-      let body =
+      let decl_type =
+        match Expr.Typed.type_of iteratee' with
+        | UMatrix -> UnsizedType.UReal
+        | t ->
+            Expr.Helpers.(infer_type_of_indexed t [Index.Single loop_bottom])
+      in
+      let decl_loopvar =
         Stmt.Fixed.
-          { pattern= Block (decl_loopvar :: assign_loopvar :: body_stmts)
+          { meta= smeta
+          ; pattern=
+              Decl
+                { decl_adtype= Expr.Typed.adlevel_of iteratee'
+                ; decl_id= loopvar.name
+                ; decl_type= Unsized decl_type } }
+      in
+      let assignment var =
+        Stmt.Fixed.
+          { pattern= Assignment ((loopvar.name, decl_type, []), var)
           ; meta= smeta }
       in
-      For
-        { loopvar= newsym
-        ; lower= Expr.Helpers.loop_bottom
-        ; upper=
-            wrap
-            @@ FunApp (StanLib, Internal_fun.to_string FnLength, [iteratee'])
-        ; body }
-      |> swrap
+      let bodyfn var =
+        Stmt.Fixed.
+          { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
+          ; meta= smeta }
+      in
+      [Stmt.Helpers.for_each bodyfn iteratee' smeta]
   | Ast.FunDef _ ->
       raise_s
         [%message
