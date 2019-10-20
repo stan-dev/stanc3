@@ -86,7 +86,7 @@ module NoMeta = struct
 
   include Specialized.Make2 (Fixed) (Expr.NoMeta) (Meta)
 
-  let remove_meta x = Fixed.map (fun _ -> ()) (fun _ -> ()) x
+  let remove_meta stmt = Fixed.map (fun _ -> ()) (fun _ -> ()) stmt
 end
 
 (** Statements with location information and types for contained expressions *)
@@ -101,7 +101,7 @@ module Located = struct
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
-  let loc_of x = Fixed.meta_of x
+  let loc_of stmt = Fixed.meta_of stmt
 
   (** This module acts as a temporary replace for the `stmt_loc_num` type that
   is currently used within `analysis_and_optimization`. 
@@ -139,8 +139,8 @@ module Labelled = struct
 
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of x = Meta.label @@ Fixed.meta_of x
-  let loc_of x = Meta.loc @@ Fixed.meta_of x
+  let label_of stmt = Meta.label @@ Fixed.meta_of stmt
+  let loc_of stmt = Meta.loc @@ Fixed.meta_of stmt
 
   let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
     let lbl = ref init in

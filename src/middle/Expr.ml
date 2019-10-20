@@ -60,7 +60,7 @@ module NoMeta = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let remove_meta x = Fixed.map (Fn.const ()) x
+  let remove_meta expr = Fixed.map (Fn.const ()) expr
 end
 
 (** Expressions with associated location and type *)
@@ -85,9 +85,9 @@ module Typed = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let type_of x = Meta.type_ @@ Fixed.meta_of x
-  let loc_of x = Meta.loc @@ Fixed.meta_of x
-  let adlevel_of x = Meta.adlevel @@ Fixed.meta_of x
+  let type_of expr = Meta.type_ @@ Fixed.meta_of expr
+  let loc_of expr = Meta.loc @@ Fixed.meta_of expr
+  let adlevel_of expr = Meta.adlevel @@ Fixed.meta_of expr
 end
 
 (** Expressions with associated location, type and label *)
@@ -115,10 +115,10 @@ module Labelled = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let label_of x = Meta.label @@ Fixed.meta_of x
-  let type_of x = Meta.type_ @@ Fixed.meta_of x
-  let loc_of x = Meta.loc @@ Fixed.meta_of x
-  let adlevel_of x = Meta.adlevel @@ Fixed.meta_of x
+  let label_of expr = Meta.label @@ Fixed.meta_of expr
+  let type_of expr = Meta.type_ @@ Fixed.meta_of expr
+  let loc_of expr = Meta.loc @@ Fixed.meta_of expr
+  let adlevel_of expr = Meta.adlevel @@ Fixed.meta_of expr
 
   (** Traverse a typed expression adding unique labels using locally mutable 
       state 
