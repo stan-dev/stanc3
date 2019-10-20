@@ -240,9 +240,6 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "optimize_glm_model_namespace::log_prob";

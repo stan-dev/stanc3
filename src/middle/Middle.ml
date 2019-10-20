@@ -137,7 +137,7 @@ let rec infer_type_of_indexed ut indices =
    |UMatrix, [Between _; Single _]
    |UMatrix, [MultiIndex _]
    |UMatrix, [Single _] ->
-      UVector
+      URowVector
   | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
   | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
   | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
@@ -156,7 +156,7 @@ let%expect_test "infer type of indexed" =
   |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma Pretty.pp_unsizedtype))
   |> print_endline ;
   [%expect {|
-    vector, matrix[], matrix, vector[], real, real[] |}]
+    row_vector, matrix[], matrix, row_vector[], real, real[] |}]
 
 (** [add_index expression index] returns an expression that (additionally)
   *  indexes into the input [expression] by [index].
@@ -254,6 +254,95 @@ let rec for_scalar st bodyfn var smeta =
   | SMatrix (d1, d2) ->
       mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+
+let rec for_each bodyfn iteratee smeta =
+  let len e = internal_funapp FnLength [e] {e.emeta with mtype= UInt} in
+  match iteratee.emeta.mtype with
+  | UInt | UReal -> bodyfn iteratee
+  | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
+  | UMatrix ->
+      let rows =
+        { expr= FunApp (StanLib, "rows", [iteratee])
+        ; emeta= {iteratee.emeta with mtype= UInt} }
+      in
+      mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
+  | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
+  | UMathLibraryFunction | UFun _ ->
+      raise_s [%message "can't iterate over " (iteratee : expr_typed_located)]
+
+let%expect_test "making matrix for each" =
+  let bodyfn var =
+    {stmt= NRFunApp (StanLib, "print", [var]); smeta= no_span}
+  in
+  let var_test =
+    {expr= Var "some_matrix"; emeta= {internal_meta with mtype= UMatrix}}
+  in
+  for_each bodyfn var_test no_span
+  |> sexp_of_stmt_loc |> Sexp.to_string_hum |> print_endline ;
+  (* |> Fmt.strf "%a" Mir_pretty_printer.pp_stmt_loc
+   * |> print_endline ; *)
+  [%expect
+    {|
+    ((stmt
+      (For (loopvar sym1__)
+       (lower
+        ((expr (Lit Int 1))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (upper
+        ((expr
+          (FunApp StanLib rows
+           (((expr (Var some_matrix))
+             (emeta ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (body
+        ((stmt
+          (Block
+           (((stmt
+              (For (loopvar sym2__)
+               (lower
+                ((expr (Lit Int 1))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               (upper
+                ((expr
+                  (FunApp CompilerInternal FnLength__
+                   (((expr
+                      (Indexed
+                       ((expr (Var some_matrix))
+                        (emeta
+                         ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly))))
+                       ((Single
+                         ((expr (Var sym1__))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                     (emeta
+                      ((mtype URowVector) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               (body
+                ((stmt
+                  (Block
+                   (((stmt
+                      (NRFunApp StanLib print
+                       (((expr
+                          (Indexed
+                           ((expr (Var some_matrix))
+                            (emeta
+                             ((mtype UMatrix) (mloc <opaque>)
+                              (madlevel DataOnly))))
+                           ((Single
+                             ((expr (Var sym1__))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                            (Single
+                             ((expr (Var sym2__))
+                              (emeta
+                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                         (emeta
+                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>)))))
+             (smeta <opaque>)))))
+         (smeta <opaque>)))))
+     (smeta <opaque>)) |}]
 
 (* Exactly like for_scalar, but iterating through array dimensions in the inverted order.*)
 let for_scalar_inv st bodyfn var smeta =

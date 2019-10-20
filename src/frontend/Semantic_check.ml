@@ -1617,6 +1617,14 @@ let semantic_check_ostatements_in_block ~cf block stmts_opt =
       |> List.rev |> Validate.sequence
       |> Validate.map ~f:Option.some )
 
+let check_fun_def_body_in_block = function
+  | {stmt= FunDef {body= {stmt= Block _; _}; _}; _}
+   |{stmt= FunDef {body= {stmt= Skip; _}; _}; _} ->
+      Validate.ok ()
+  | {stmt= FunDef {body= {stmt= _; smeta}; _}; _} ->
+      Validate.error @@ Semantic_error.fn_decl_needs_block smeta.loc
+  | _ -> Validate.ok ()
+
 let semantic_check_functions_have_defn function_block_stmts_opt =
   Validate.(
     if
@@ -1628,7 +1636,13 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
           (* TODO: insert better location in the error *)
           error @@ Semantic_error.fn_decl_without_def smeta.loc
       | _ -> fatal_error ~msg:"semantic_check_functions_have_defn" ()
-    else ok ())
+    else
+      match function_block_stmts_opt with
+      | Some [] | None -> ok ()
+      | Some ls ->
+          List.map ~f:check_fun_def_body_in_block ls
+          |> sequence
+          |> map ~f:(fun _ -> ()))
 
 (* The actual semantic checks for all AST nodes! *)
 let semantic_check_program
