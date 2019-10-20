@@ -170,7 +170,7 @@ let prog_rhs_variables
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations (sw : ('e, 'm) Stmt.Fixed.t) : string Set.Poly.t =
+let rec var_declarations sw : string Set.Poly.t =
   match Stmt.Fixed.pattern_of sw with
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
