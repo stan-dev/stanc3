@@ -43,8 +43,7 @@ let map_rec_stmt_loc_num flowgraph_to_mir f s =
     let find_node i = Map.find_exn flowgraph_to_mir i in
     let recurse i = map_rec_stmt_loc_num' i (find_node i) in
     Stmt.Fixed.
-      { pattern=
-          f cur_node (Stmt.Fixed.Pattern.map (fun x -> x) recurse stmt.pattern)
+      { pattern= f cur_node (Pattern.map Fn.id recurse stmt.pattern)
       ; meta= stmt.meta }
   in
   map_rec_stmt_loc_num' 1 s
@@ -72,7 +71,6 @@ let stmt_loc_of_stmt_loc_num flowgraph_to_mir s =
   map_rec_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
 
 let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
-  (* (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) s = *)
   (stmt_loc_of_stmt_loc_num flowgraph_to_mir
      Stmt.Located.{Non_recursive.pattern; meta= Meta.empty})
     .pattern
@@ -84,8 +82,6 @@ let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
 (** See interface file *)
 let fwd_traverse_statement stmt ~init ~f =
   Stmt.Fixed.Pattern.(
-    (* (stmt : ('e, 'a) statement) ~init:(state : 'f)
-    ~(f : 'f -> 'a -> 'f * 'c) : 'f * ('e, 'c) statement = *)
     match stmt with
     | IfElse (pred, then_s, else_s_opt) ->
         let s', c = f init then_s in
@@ -129,15 +125,12 @@ let fwd_traverse_statement stmt ~init ~f =
 
 (** See interface file *)
 let vexpr_of_expr_exn ex =
-  (* (ex : expr_typed_located) : vexpr = *)
   match Expr.Fixed.pattern_of ex with
   | Var s -> VVar s
   | _ -> raise (Failure "Non-var expression found, but var expected")
 
 (** See interface file *)
 let rec expr_var_set ex =
-  (* (ex : expr_typed_located) :
-    (vexpr * mtype_loc_ad) Set.Poly.t = *)
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_var_set)
   in
@@ -151,8 +144,6 @@ let rec expr_var_set ex =
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 and index_var_set ix =
-  (* (ix : expr_typed_located index) :
-    (vexpr * mtype_loc_ad) Set.Poly.t = *)
   match ix with
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr
@@ -182,7 +173,6 @@ let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
 
 (** See interface file *)
 let expr_assigned_var ex =
-  (* (ex : expr_typed_located) : vexpr = *)
   match Expr.Fixed.pattern_of ex with
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
@@ -190,7 +180,6 @@ let expr_assigned_var ex =
 
 (** See interface file *)
 let rec summation_terms rhs =
-  (* (rhs : expr_typed_located) : expr_typed_located list = *)
   match Expr.Fixed.pattern_of rhs with
   | FunApp (_, "Plus__", [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
@@ -201,8 +190,6 @@ let stmt_of_block b =
   Stmt.Fixed.{pattern= SList b; meta= Stmt.Located.Meta.empty}
 
 let rec subst_expr m e =
-  (* (m : (string, expr_typed_located) Map.Poly.t)
-    (e : expr_typed_located) = *)
   match Expr.Fixed.pattern_of e with
   | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
   | x -> Expr.Fixed.{e with pattern= Pattern.map (subst_expr m) x}
@@ -219,7 +206,6 @@ let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = map_rec_stmt_loc (subst_stmt_base m)
 
 let rec expr_subst_expr m e =
-  (* m (e : expr_typed_located) = *)
   match Map.find m e with
   | Some e' -> e'
   | None ->
@@ -233,7 +219,6 @@ let expr_subst_stmt_base m =
 let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 
 let rec expr_depth e =
-  (* (e : expr_typed_located) : int = *)
   match Expr.Fixed.pattern_of e with
   | Var _ | Lit (_, _) -> 0
   | FunApp (_, _, l) ->
@@ -256,7 +241,6 @@ let rec expr_depth e =
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
 
 and idx_depth i =
-  (* (i : expr_typed_located index) : int = *)
   match i with
   | All -> 0
   | Single e | Upfrom e | MultiIndex e -> expr_depth e
