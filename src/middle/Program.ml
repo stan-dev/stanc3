@@ -54,6 +54,13 @@ type ('a, 'b) t =
   ; prog_path: string }
 [@@deriving sexp, map, fold]
 
+let map_stmts f p =
+  { p with
+    prepare_data= f p.prepare_data
+  ; log_prob= f p.log_prob
+  ; generate_quantities= f p.generate_quantities
+  ; transform_inits= f p.transform_inits }
+
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp
@@ -215,50 +222,4 @@ module Numbered = struct
   let pp ppf x = pp Expr.Typed.pp Stmt.Numbered.pp ppf x
   let sexp_of_t = sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t
   let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Numbered.t_of_sexp
-end
-
-module Helpers = struct
-  open Stmt.Fixed
-  open Stmt.Fixed.Pattern
-
-  (** [cleanup_stmts statements] will do a few simple transformations like
-    removing Skips, collapsing empty blocks and SLists, etc. *)
-  let cleanup_empty_stmts stmts =
-    let cleanup_stmt s =
-      let ellide = {s with pattern= Skip} in
-      match s.pattern with
-      | Block [] | SList [] -> ellide
-      | For {body= {pattern= Skip; _}; _} -> ellide
-      | While (_, {pattern= Skip; _}) -> ellide
-      | Block [{pattern= Skip; _}] | SList [{pattern= Skip; _}] -> ellide
-      | _ -> s
-    in
-    let is_decl = function {pattern= Decl _; _} -> true | _ -> false in
-    let flatten_block s =
-      match s.pattern with
-      | SList ls | Block ls ->
-          if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
-      | _ -> [s]
-    in
-    let ellide_skip s = match s.pattern with Skip -> [] | _ -> [s] in
-    List.map stmts ~f:(rewrite_bottom_up ~f:Fn.id ~g:cleanup_stmt)
-    |> List.concat_map ~f:flatten_block
-    |> List.concat_map ~f:ellide_skip
-
-  let%expect_test "cleanup" =
-    let open Expr.Helpers in
-    let swrap pattern = {pattern; meta= Location_span.empty} in
-    let body = Block [Skip |> swrap] |> swrap in
-    let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
-    let res = [s |> swrap] |> cleanup_empty_stmts in
-    [%sexp (res : Stmt.Located.t list)] |> print_s ;
-    [%expect {|
-    () |}]
-
-  let map_stmts f p =
-    { p with
-      prepare_data= f p.prepare_data
-    ; log_prob= f p.log_prob
-    ; generate_quantities= f p.generate_quantities
-    ; transform_inits= f p.transform_inits }
 end

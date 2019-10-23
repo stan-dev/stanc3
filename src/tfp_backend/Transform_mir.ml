@@ -74,4 +74,4 @@ let trans_prog (p : Program.Typed.t) =
   in
   Program.map translate_funapps map_stmt p
   |> Program.map Fn.id remove_unused_stmts
-  |> Program.Helpers.(map_stmts cleanup_empty_stmts)
+  |> Program.map_stmts Analysis_and_optimization.Mir_utils.cleanup_empty_stmts

@@ -291,3 +291,41 @@ let rec update_expr_ad_levels autodiffable_variables
 
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)
+
+(** [cleanup_stmts statements] will do a few simple transformations like
+    removing Skips, collapsing empty blocks and SLists, etc. *)
+let cleanup_empty_stmts stmts =
+  let open Stmt.Fixed in
+  let open Stmt.Fixed.Pattern in
+  let cleanup_stmt s =
+    let ellide = {s with pattern= Skip} in
+    match s.pattern with
+    | Block [] | SList [] -> ellide
+    | For {body= {pattern= Skip; _}; _} -> ellide
+    | While (_, {pattern= Skip; _}) -> ellide
+    | Block [{pattern= Skip; _}] | SList [{pattern= Skip; _}] -> ellide
+    | _ -> s
+  in
+  let is_decl = function {pattern= Decl _; _} -> true | _ -> false in
+  let flatten_block s =
+    match s.pattern with
+    | SList ls | Block ls ->
+        if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
+    | _ -> [s]
+  in
+  let ellide_skip s = match s.pattern with Skip -> [] | _ -> [s] in
+  List.map stmts ~f:(rewrite_bottom_up ~f:Fn.id ~g:cleanup_stmt)
+  |> List.concat_map ~f:flatten_block
+  |> List.concat_map ~f:ellide_skip
+
+let%expect_test "cleanup" =
+  let open Expr.Helpers in
+  let open Stmt.Fixed in
+  let open Stmt.Fixed.Pattern in
+  let swrap pattern = {pattern; meta= Location_span.empty} in
+  let body = Block [Skip |> swrap] |> swrap in
+  let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
+  let res = [s |> swrap] |> cleanup_empty_stmts in
+  [%sexp (res : Stmt.Located.t list)] |> print_s ;
+  [%expect {|
+    () |}]
