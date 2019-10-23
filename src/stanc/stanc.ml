@@ -20,9 +20,11 @@ let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
 let dump_tx_mir = ref false
+let dump_tx_mir_pretty = ref false
+let dump_opt_mir = ref false
+let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
 let optimize = ref false
-let dump_opt_mir = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -56,11 +58,19 @@ let options =
       , " For debugging purposes: pretty-print the MIR." )
     ; ( "--debug-optimized-mir"
       , Arg.Set dump_opt_mir
-      , " For debugging purposes: print the MIR after it's been \
-         optimized.Only has an effect when optimizations are turned on." )
+      , " For debugging purposes: print the MIR after it's been optimized. \
+         Only has an effect when optimizations are turned on." )
+    ; ( "--debug-optimized-mir-pretty"
+      , Arg.Set dump_opt_mir_pretty
+      , " For debugging purposes: pretty print the MIR after it's been \
+         optimized. Only has an effect when optimizations are turned on." )
     ; ( "--debug-transformed-mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
+         transformed it." )
+    ; ( "--debug-transformed-mir-pretty"
+      , Arg.Set dump_tx_mir_pretty
+      , " For debugging purposes: pretty print the MIR after the backend has \
          transformed it." )
     ; ( "--dump-stan-math-signatures"
       , Arg.Set dump_stan_math_sigs
@@ -77,7 +87,7 @@ let options =
       , Arg.Unit
           (fun _ ->
             print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 1 )
+            exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.Set_string Semantic_check.model_name
@@ -103,7 +113,10 @@ let options =
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str
             )
       , " Takes a comma-separated list of directories that may contain a file \
-         in an #include directive (default = \"\")" ) ]
+         in an #include directive (default = \"\")" )
+    ; ( "--use-opencl"
+      , Arg.Set Transform_Mir.use_opencl
+      , " If set, try to use matrix_cl signatures." ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
@@ -122,8 +135,8 @@ let optimization_settings () : Optimize.optimization_settings =
   ; optimize_ad_levels= !optimize }
 
 let print_warn_uninitialized
-    (uninit_vars : (location_span * string) Set.Poly.t) =
-  let show_location_span {begin_loc; end_loc; _} =
+    (uninit_vars : (Location_span.t * string) Set.Poly.t) =
+  let show_location_span Location_span.({begin_loc; end_loc; _}) =
     let begin_line = string_of_int begin_loc.line_num in
     let begin_col = string_of_int begin_loc.col_num in
     let end_line = string_of_int end_loc.line_num in
@@ -142,7 +155,9 @@ let print_warn_uninitialized
     ^ "' may not have been initialized.\n"
   in
   let filtered_uninit_vars =
-    Set.Poly.filter ~f:(fun (span, _) -> span <> no_span) uninit_vars
+    Set.Poly.filter
+      ~f:(fun (span, _) -> span <> Location_span.empty)
+      uninit_vars
   in
   Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
       Out_channel.output_string stderr (show_var_info v_info) )
@@ -167,9 +182,8 @@ let use_file filename =
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
-    if !dump_mir_pretty then
-      Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
+    if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     ( if !warn_uninitialized then
       let uninitialized_vars =
         Dependence_analysis.mir_uninitialized_variables mir
@@ -177,18 +191,22 @@ let use_file filename =
       print_warn_uninitialized uninitialized_vars ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
-      Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
+      Sexp.pp_hum Format.std_formatter
+        [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+    if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       if !optimize then (
         let opt =
           Optimize.optimization_suite (optimization_settings ()) tx_mir
         in
         if !dump_opt_mir then
-          Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
+          Sexp.pp_hum Format.std_formatter
+            [%sexp (opt : Middle.Program.Typed.t)] ;
+        if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
       else tx_mir
     in
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
@@ -199,7 +217,7 @@ let main () =
   Arg.parse options add_file usage ;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
-    Middle.pretty_print_all_math_sigs Format.std_formatter () ;
+    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;

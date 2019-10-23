@@ -5,7 +5,7 @@ open Core_kernel
 type syntax_error
 
 val syntax_error_message : syntax_error -> string
-val syntax_error_location : syntax_error -> Middle.location_span
+val syntax_error_location : syntax_error -> Middle.Location_span.t
 val render_syntax_error : syntax_error -> string
 
 val parse_file :
