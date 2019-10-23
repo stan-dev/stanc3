@@ -34,9 +34,10 @@ let main () =
     |> Ast_to_Mir.trans_prog !Semantic_check.model_name
   in
   if !dump_mir then
-    mir |> Middle.sexp_of_typed_prog |> Sexp.to_string_hum |> print_endline ;
+    mir |> Middle.Program.Typed.sexp_of_t |> Sexp.to_string_hum
+    |> print_endline ;
   let mir = Transform_mir.trans_prog mir in
-  if !dump_transformed_mir then Fmt.pr "%a" Middle.Pretty.pp_typed_prog mir ;
+  if !dump_transformed_mir then Fmt.pr "%a" Middle.Program.Typed.pp mir ;
   Fmt.pr "%a" Code_gen.pp_prog mir
 
 let () = main ()
