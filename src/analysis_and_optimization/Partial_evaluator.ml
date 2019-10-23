@@ -4,9 +4,9 @@ open Core_kernel
 open Mir_utils
 open Middle
 
-let is_int i e =
+let is_int i Expr.Fixed.({pattern; _}) =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
-  match Expr.Fixed.pattern_of e with
+  match pattern with
   | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
       true
   | _ -> false
@@ -79,7 +79,7 @@ let is_multi_index = function
 let rec eval_expr (e : Expr.Typed.t) =
   { e with
     pattern=
-      ( match Expr.Fixed.pattern_of e with
+      ( match e.pattern with
       | Var _ | Lit (_, _) -> e.pattern
       | FunApp (t, f, l) ->
           let l = List.map ~f:eval_expr l in
@@ -761,7 +761,7 @@ let remove_trailing_alls_expr = function
 let rec simplify_indices_expr expr =
   Expr.Fixed.(
     let pattern =
-      pattern_of expr |> remove_trailing_alls_expr |> simplify_index_expr
+      expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
       |> Expr.Fixed.Pattern.map simplify_indices_expr
     in
     {expr with pattern})

@@ -49,9 +49,10 @@ let rec local_scalar ut ad =
   | _, AutoDiffable -> "local_scalar_t__"
 
 let minus_one e =
-  { Expr.Fixed.pattern=
+  { e with
+    Expr.Fixed.pattern=
       FunApp (StanLib, Operator.to_string Minus, [e; Expr.Helpers.loop_bottom])
-  ; meta= Expr.Fixed.meta_of e }
+  }
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
@@ -373,15 +374,14 @@ and pp_indexed_simple ppf (obj, idcs) =
       | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
-and pp_expr ppf e =
-  match Expr.Fixed.pattern_of e with
+and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
+  match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      Expr.Typed.(
-        pp_compiler_internal_fn (type_of e) (stan_namespace_qualify f) ppf es)
+      pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
@@ -396,7 +396,7 @@ and pp_expr ppf e =
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
-    match Expr.Fixed.pattern_of e with
+    match e.pattern with
     | FunApp (CompilerInternal, f, _)
       when Some Internal_fun.FnReadParam = Internal_fun.of_string_opt f ->
         pp_expr ppf e
@@ -411,12 +411,13 @@ and pp_expr ppf e =
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
-let dummy_locate e =
-  let meta =
-    Expr.Typed.Meta.create ~type_:UInt ~adlevel:DataOnly
-      ~loc:Location_span.empty ()
-  in
-  Expr.Fixed.fix (meta, e)
+let dummy_locate pattern =
+  Expr.(
+    Fixed.
+      { pattern
+      ; meta=
+          Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+      })
 
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 

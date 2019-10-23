@@ -170,8 +170,8 @@ let prog_rhs_variables
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations sw : string Set.Poly.t =
-  match Stmt.Fixed.pattern_of sw with
+let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
   | IfElse (_, s1, Some s2) ->
@@ -261,7 +261,9 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
     Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob}
   in
   let statement_map =
-    build_statement_map Stmt.Fixed.pattern_of Stmt.Fixed.pattern_of
+    build_statement_map
+      (fun Stmt.Fixed.({pattern; _}) -> pattern)
+      (fun Stmt.Fixed.({meta; _}) -> meta)
       log_prob_stmt
   in
   let _, preds, parents = build_cf_graphs statement_map in

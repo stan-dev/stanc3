@@ -76,18 +76,14 @@ module Typed = struct
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
 
-    let adlevel {adlevel; _} = adlevel
-    let type_ {type_; _} = type_
-    let loc {loc; _} = loc
     let pp _ _ = ()
-    let with_type ty meta = {meta with type_= ty}
   end
 
   include Specialized.Make (Fixed) (Meta)
 
-  let type_of expr = Meta.type_ @@ Fixed.meta_of expr
-  let loc_of expr = Meta.loc @@ Fixed.meta_of expr
-  let adlevel_of expr = Meta.adlevel @@ Fixed.meta_of expr
+  let type_of Fixed.({meta= Meta.({type_; _}); _}) = type_
+  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
+  let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
 end
 
 (** Expressions with associated location, type and label *)
@@ -106,19 +102,15 @@ module Labelled = struct
         ~label:Label.Int_label.(prev init)
         ()
 
-    let label {label; _} = label
-    let adlevel {adlevel; _} = adlevel
-    let type_ {type_; _} = type_
-    let loc {loc; _} = loc
     let pp _ _ = ()
   end
 
   include Specialized.Make (Fixed) (Meta)
 
-  let label_of expr = Meta.label @@ Fixed.meta_of expr
-  let type_of expr = Meta.type_ @@ Fixed.meta_of expr
-  let loc_of expr = Meta.loc @@ Fixed.meta_of expr
-  let adlevel_of expr = Meta.adlevel @@ Fixed.meta_of expr
+  let type_of Fixed.({meta= Meta.({type_; _}); _}) = type_
+  let label_of Fixed.({meta= Meta.({label; _}); _}) = label
+  let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
+  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
 
   (** Traverse a typed expression adding unique labels using locally mutable 
       state 
@@ -133,10 +125,11 @@ module Labelled = struct
       expr
 
   (** Build a map from expression labels to expressions *)
-  let rec associate ?init:(assocs = Label.Int_label.Map.empty) (expr : t) =
+  let rec associate ?init:(assocs = Label.Int_label.Map.empty)
+      ({pattern; _} as expr : t) =
     let assocs_result : t Label.Int_label.Map.t Map_intf.Or_duplicate.t =
       Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
-        (associate_pattern assocs @@ Fixed.pattern_of expr)
+        (associate_pattern assocs @@ pattern)
     in
     match assocs_result with `Ok x -> x | _ -> assocs
 
@@ -176,10 +169,10 @@ module Helpers = struct
 
   let contains_fn fn ?(init = false) e =
     let fstr = Internal_fun.to_string fn in
-    let rec aux accu e =
+    let rec aux accu Fixed.({pattern; _}) =
       accu
       ||
-      match Fixed.pattern_of e with
+      match pattern with
       | FunApp (_, name, _) when name = fstr -> true
       | x -> Fixed.Pattern.fold aux accu x
     in
@@ -209,16 +202,16 @@ module Helpers = struct
     let mtype = infer_type_of_indexed Typed.(type_of e) [i] in
     let meta = Typed.Meta.{e.meta with type_= mtype}
     and pattern =
-      match Fixed.pattern_of e with
+      match e.pattern with
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ -> raise_s [%message "These should go away with Ryan's LHS"]
     in
-    Fixed.fix (meta, pattern)
+    Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)
-  let rec collect_indices expr =
-    match Fixed.pattern_of expr with
+  let rec collect_indices Fixed.({pattern; _}) =
+    match pattern with
     | Indexed (obj, indices) -> collect_indices obj @ indices
     | _ -> []
 

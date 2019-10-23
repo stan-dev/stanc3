@@ -77,13 +77,14 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
-let rec pp_statement (ppf : Format.formatter) stmt =
+let rec pp_statement (ppf : Format.formatter)
+    (Stmt.Fixed.({pattern; meta}) as stmt) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
-  ( match Stmt.Fixed.pattern_of stmt with
+  ( match pattern with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
-  | _ -> Locations.pp_smeta ppf @@ Stmt.Fixed.meta_of stmt ) ;
-  match Stmt.Fixed.pattern_of stmt with
+  | _ -> Locations.pp_smeta ppf meta ) ;
+  match pattern with
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
@@ -107,7 +108,7 @@ let rec pp_statement (ppf : Format.formatter) stmt =
             Expr.Fixed.pattern=
               Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
         in
-        match Expr.Fixed.pattern_of e with
+        match e.pattern with
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
         | FunApp (CompilerInternal, _, _) -> e
         | (Indexed ({Expr.Fixed.pattern= Var v; _}, _) | Var v)
@@ -118,7 +119,7 @@ let rec pp_statement (ppf : Format.formatter) stmt =
         | _ -> recurse e
       in
       let rhs =
-        match Expr.Fixed.pattern_of rhs with
+        match rhs.pattern with
         | FunApp (CompilerInternal, f, _)
           when f = Internal_fun.to_string FnConstrain
                || f = Internal_fun.to_string FnUnconstrain ->
@@ -154,7 +155,7 @@ let rec pp_statement (ppf : Format.formatter) stmt =
       in
       pp_statement ppf
         { pattern= NRFunApp (CompilerInternal, "check_" ^ check_name, args)
-        ; meta= Stmt.Fixed.meta_of stmt }
+        ; meta= stmt.meta }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
       pf ppf "vars__.push_back(@[<hov>%a@]);" pp_expr var
@@ -192,6 +193,6 @@ let rec pp_statement (ppf : Format.formatter) stmt =
       pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
 and pp_block_s ppf body =
-  match Stmt.Fixed.pattern_of body with
+  match body.pattern with
   | Block ls -> pp_block ppf (list ~sep:cut pp_statement, ls)
   | _ -> pp_block ppf (pp_statement, body)

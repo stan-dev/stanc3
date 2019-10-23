@@ -124,18 +124,18 @@ let fwd_traverse_statement stmt ~init ~f =
     | Decl _ as s -> (init, s))
 
 (** See interface file *)
-let vexpr_of_expr_exn ex =
-  match Expr.Fixed.pattern_of ex with
+let vexpr_of_expr_exn Expr.Fixed.({pattern; _}) =
+  match pattern with
   | Var s -> VVar s
   | _ -> raise (Failure "Non-var expression found, but var expected")
 
 (** See interface file *)
-let rec expr_var_set ex =
+let rec expr_var_set Expr.Fixed.({pattern; meta}) =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_var_set)
   in
-  match Expr.Fixed.pattern_of ex with
-  | Var s -> Set.Poly.singleton (VVar s, ex.meta)
+  match pattern with
+  | Var s -> Set.Poly.singleton (VVar s, meta)
   | Lit _ -> Set.Poly.empty
   | FunApp (_, _, exprs) -> union_recur exprs
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
@@ -172,15 +172,15 @@ let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
 
 (** See interface file *)
-let expr_assigned_var ex =
-  match Expr.Fixed.pattern_of ex with
+let expr_assigned_var Expr.Fixed.({pattern; _}) =
+  match pattern with
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
   | _ -> raise (Failure "Unimplemented: analysis of assigning to non-var")
 
 (** See interface file *)
-let rec summation_terms rhs =
-  match Expr.Fixed.pattern_of rhs with
+let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
+  match pattern with
   | FunApp (_, "Plus__", [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
   | _ -> [rhs]
@@ -189,10 +189,10 @@ let rec summation_terms rhs =
 let stmt_of_block b =
   Stmt.Fixed.{pattern= SList b; meta= Stmt.Located.Meta.empty}
 
-let rec subst_expr m e =
-  match Expr.Fixed.pattern_of e with
+let rec subst_expr m (Expr.Fixed.({pattern; _}) as e) =
+  match pattern with
   | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | x -> Expr.Fixed.{e with pattern= Pattern.map (subst_expr m) x}
+  | _ -> Expr.Fixed.{e with pattern= Pattern.map (subst_expr m) pattern}
 
 let subst_idx m = Index.map (subst_expr m)
 
@@ -218,8 +218,8 @@ let expr_subst_stmt_base m =
 
 let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 
-let rec expr_depth e =
-  match Expr.Fixed.pattern_of e with
+let rec expr_depth Expr.Fixed.({pattern; _}) =
+  match pattern with
   | Var _ | Lit (_, _) -> 0
   | FunApp (_, _, l) ->
       1
@@ -251,8 +251,9 @@ let ad_level_sup l =
     UnsizedType.AutoDiffable
   else DataOnly
 
-let rec update_expr_ad_levels autodiffable_variables e =
-  match Expr.Fixed.pattern_of e with
+let rec update_expr_ad_levels autodiffable_variables
+    (Expr.Fixed.({pattern; _}) as e) =
+  match pattern with
   | Var x ->
       if Set.Poly.mem autodiffable_variables x then
         Expr.Typed.{e with meta= Meta.{e.meta with adlevel= AutoDiffable}}

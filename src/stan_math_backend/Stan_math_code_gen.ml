@@ -136,14 +136,14 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
     List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
   in
   let argtypetemplates, args = get_templates_and_args fdargs in
-  let pp_body ppf fdbody =
+  let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     let text = pf ppf "%s@;" in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     if not is_dist then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
     let blocked_fdbody =
-      match Stmt.Fixed.pattern_of fdbody with
+      match pattern with
       | SList stmts -> {fdbody with pattern= Block stmts}
       | Block _ -> fdbody
       | _ -> {fdbody with pattern= Block [fdbody]}
@@ -169,7 +169,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
   pp_sig ppf fdname ;
-  match Stmt.Fixed.pattern_of fdbody with
+  match Stmt.Fixed.(fdbody.pattern) with
   | Skip -> pf ppf ";@ "
   | _ ->
       pp_block ppf (pp_body, fdbody) ;
@@ -221,8 +221,8 @@ let pp_ctor ppf ({Program.prog_name; _} as p) =
       | ls -> Some ls )
     | _ -> None
   in
-  let pp_stmt_topdecl_size_only ppf s =
-    match Stmt.Fixed.pattern_of s with
+  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
+    match pattern with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
@@ -246,8 +246,8 @@ let pp_ctor ppf ({Program.prog_name; _} as p) =
     , p )
 
 let pp_model_private ppf {Program.prepare_data; _} =
-  let decl s =
-    match Stmt.Fixed.pattern_of s with
+  let decl Stmt.Fixed.({pattern; _}) =
+    match pattern with
     | Decl d ->
         Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)
     | _ -> None
@@ -594,15 +594,14 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
 let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
 
 let pp_register_map_rect_functors ppf p =
-  let find_functors_expr accum expr =
-    match Expr.Fixed.pattern_of expr with
+  let find_functors_expr accum Expr.Fixed.({pattern; _}) =
+    match pattern with
     | FunApp (StanLib, "map_rect", {pattern= Var f; _} :: _) -> f :: accum
     | _ -> accum
   in
   let rec find_functors_stmt accum stmt =
     Stmt.Fixed.(
-      Pattern.fold find_functors_expr find_functors_stmt accum
-      @@ pattern_of stmt)
+      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
   let functors = Program.fold find_functors_expr find_functors_stmt [] p in
   let pp_register_functor ppf (i, f) =

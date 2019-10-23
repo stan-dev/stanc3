@@ -70,7 +70,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
             raise_s [%message "Impossible!"]
       and meta = Expr.Typed.Meta.create ~type_ ~adlevel ~loc () in
-      Expr.Fixed.fix (meta, pattern)
+      {meta; pattern}
 
 and trans_idx = function
   | Ast.All -> All
@@ -291,14 +291,16 @@ let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
   let chk fn args =
     let check_id id =
       let id_str =
-        Expr.(Fixed.fix Typed.(Meta.empty, Lit (Str, Fmt.strf "%a" pp id)))
+        Expr.
+          { Fixed.pattern= Lit (Str, Fmt.strf "%a" Typed.pp id)
+          ; meta= Typed.Meta.empty }
       in
       let fname = Internal_fun.to_string FnCheck in
       let pattern =
         Stmt.Fixed.Pattern.NRFunApp
           (CompilerInternal, fname, fn :: id_str :: id :: args)
       in
-      Stmt.Fixed.fix (smeta, pattern)
+      Stmt.Fixed.{meta= smeta; pattern}
     in
     let mtype = SizedType.to_unsized decl_type in
     Stmt.Helpers.for_eigen decl_type check_id
@@ -386,7 +388,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt udf_names {declc with dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
-  let swrap stmt = [Stmt.Fixed.fix (smeta, stmt)] in
+  let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
@@ -653,7 +655,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
           IfElse (cond, {pattern= Return None; meta= Location_span.empty}, None)
       ; meta= Location_span.empty }
   in
-  let iexpr expr = Expr.(Fixed.fix (Typed.Meta.empty, expr)) in
+  let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
   let fnot e = FunApp (StanLib, Operator.to_string PNot, [e]) |> iexpr in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in

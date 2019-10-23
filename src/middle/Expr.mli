@@ -42,12 +42,6 @@ module Typed : sig
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
-
-    val empty : t
-    val adlevel : t -> UnsizedType.autodifftype
-    val type_ : t -> UnsizedType.t
-    val loc : t -> Location_span.t
-    val with_type : UnsizedType.t -> t -> t
   end
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
@@ -67,11 +61,6 @@ module Labelled : sig
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
-
-    val adlevel : t -> UnsizedType.autodifftype
-    val type_ : t -> UnsizedType.t
-    val loc : t -> Location_span.t
-    val label : t -> Label.Int_label.t
   end
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t

@@ -10,7 +10,9 @@ let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
-    Dataflow_utils.build_statement_map Stmt.Fixed.pattern_of Stmt.Fixed.meta_of
+    Dataflow_utils.build_statement_map
+      (fun Stmt.Fixed.({pattern; _}) -> pattern)
+      (fun Stmt.Fixed.({meta; _}) -> meta)
       stmt
   in
   let initials, successors =
@@ -389,7 +391,7 @@ let initialized_vars_transfer
 
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Expr.Typed.t) =
-  match Expr.Fixed.pattern_of e with
+  match e.pattern with
   | Var x -> Set.Poly.singleton x
   | Lit (_, _) -> Set.Poly.empty
   | FunApp (_, f, l) ->
@@ -477,7 +479,7 @@ let live_variables_transfer
 let rec used_subexpressions_expr (e : Expr.Typed.t) =
   Expr.Typed.Set.union
     (Expr.Typed.Set.singleton e)
-    ( match Expr.Fixed.pattern_of e with
+    ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
     | FunApp (_, _, l) ->
         Expr.Typed.Set.union_list (List.map ~f:used_subexpressions_expr l)

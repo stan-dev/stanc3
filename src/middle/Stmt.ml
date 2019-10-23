@@ -101,7 +101,7 @@ module Located = struct
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
-  let loc_of stmt = Fixed.meta_of stmt
+  let loc_of Fixed.({meta; _}) = meta
 
   (** This module acts as a temporary replace for the `stmt_loc_num` type that
   is currently used within `analysis_and_optimization`. 
@@ -132,15 +132,13 @@ module Labelled = struct
     let empty =
       create ~loc:Location_span.empty ~label:Label.Int_label.(prev init) ()
 
-    let label {label; _} = label
-    let loc {loc; _} = loc
     let pp _ _ = ()
   end
 
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of stmt = Meta.label @@ Fixed.meta_of stmt
-  let loc_of stmt = Meta.loc @@ Fixed.meta_of stmt
+  let label_of Fixed.({meta= Meta.({label; _}); _}) = label
+  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
 
   let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
     let lbl = ref init in
@@ -162,13 +160,13 @@ module Labelled = struct
   let empty =
     {exprs= Label.Int_label.Map.empty; stmts= Label.Int_label.Map.empty}
 
-  let rec associate ?init:(assocs = empty) (stmt : t) =
+  let rec associate ?init:(assocs = empty) ({pattern; _} as stmt : t) =
     associate_pattern
       { assocs with
         stmts=
           Label.Int_label.Map.add_exn assocs.stmts ~key:(label_of stmt)
             ~data:stmt }
-      (Fixed.pattern_of stmt)
+      pattern
 
   and associate_pattern assocs = function
     | Fixed.Pattern.Break | Skip | Continue | Return None -> assocs
@@ -231,7 +229,7 @@ module Helpers = struct
       let meta =
         Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
       in
-      let expr = Expr.Fixed.fix (meta, Var s) in
+      let expr = Expr.Fixed.{meta; pattern= Var s} in
       Index.Single expr
     in
     let loopvar, reset = Gensym.enter () in
@@ -241,13 +239,13 @@ module Helpers = struct
         [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))]
     in
     reset () ;
-    let body = Fixed.fix (meta, stmt) in
+    let body = Fixed.{meta; pattern= stmt} in
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
-    Fixed.fix (meta, pattern)
+    Fixed.{meta; pattern}
 
   let rec for_each bodyfn iteratee smeta =
-    let len e =
-      let emeta = Expr.Fixed.meta_of e in
+    let len (e : Expr.Typed.t) =
+      let emeta = e.meta in
       let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
       Expr.Helpers.internal_funapp FnLength [e] emeta'
     in
@@ -255,10 +253,11 @@ module Helpers = struct
     | UInt | UReal -> bodyfn iteratee
     | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMatrix ->
-        let emeta = Expr.Fixed.meta_of iteratee in
+        let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
-          Expr.Fixed.fix (emeta', FunApp (StanLib, "rows", [iteratee]))
+          Expr.Fixed.
+            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
@@ -267,8 +266,8 @@ module Helpers = struct
 
   let contains_fn fn ?(init = false) stmt =
     let fstr = Internal_fun.to_string fn in
-    let rec aux accu stmt =
-      match Fixed.pattern_of stmt with
+    let rec aux accu Fixed.({pattern; _}) =
+      match pattern with
       | NRFunApp (_, fname, _) when fname = fstr -> true
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
@@ -313,9 +312,8 @@ module Helpers = struct
   (** Exactly like for_scalar, but iterating through array dimensions in the 
   inverted order.*)
   let for_scalar_inv st bodyfn var smeta =
-    (* (var : Expr.Typed.t) (smeta : Location_span.t) : Located.t = *)
-    let invert_index_order e =
-      match Expr.Fixed.pattern_of e with
+    let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
+      match pattern with
       | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
       | _ -> e
     in
@@ -331,7 +329,7 @@ module Helpers = struct
     in
     go st (Fn.compose bodyfn invert_index_order) var smeta
 
-  let assign_indexed decl_type vident smeta varfn var =
+  let assign_indexed decl_type vident meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
-    Fixed.fix (smeta, Assignment ((vident, decl_type, indices), varfn var))
+    Fixed.{meta; pattern= Assignment ((vident, decl_type, indices), varfn var)}
 end

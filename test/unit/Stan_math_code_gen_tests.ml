@@ -8,7 +8,7 @@ let%expect_test "udf" =
   let with_no_loc stmt =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
   in
-  let w e = Expr.(Fixed.fix (Typed.Meta.empty, e)) in
+  let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   { fdrt= None
   ; fdname= "sars"
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]

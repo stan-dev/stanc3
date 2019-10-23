@@ -28,7 +28,10 @@ let%expect_test "Loop test" =
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
-      build_statement_map pattern_of meta_of @@ fix (Location_span.empty, block))
+      build_statement_map
+        (fun {pattern; _} -> pattern)
+        (fun {meta; _} -> meta)
+        {meta= Location_span.empty; pattern= block})
   in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
@@ -120,7 +123,10 @@ let%expect_test "Loop passthrough" =
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
-      build_statement_map pattern_of meta_of @@ fix (Location_span.empty, block))
+      build_statement_map
+        (fun {pattern; _} -> pattern)
+        (fun {meta; _} -> meta)
+        {meta= Location_span.empty; pattern= block})
   in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
@@ -166,10 +172,14 @@ let example1_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
-  Stmt.Fixed.fix (Location_span.empty, block)
+  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
 
 let example1_statement_map =
-  Stmt.Fixed.(build_statement_map pattern_of meta_of example1_program)
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example1_program)
 
 let%expect_test "Statement label map example" =
   print_s
@@ -300,7 +310,7 @@ let%expect_test "Controlflow graph example" =
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun stmt meta -> Stmt.Fixed.fix (meta, stmt))
+      (fun pattern meta -> Stmt.Fixed.{pattern; meta})
       example1_statement_map 1
   in
   stmt = example1_program
@@ -320,10 +330,14 @@ let example3_program =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.fix (Location_span.empty, blocks)
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example3_statement_map =
-  Stmt.Fixed.(build_statement_map pattern_of meta_of example3_program)
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example3_program)
 
 let%expect_test "Statement label map example 3" =
   print_s
@@ -411,10 +425,14 @@ let example4_program =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.fix (Location_span.empty, blocks)
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example4_statement_map =
-  Stmt.Fixed.(build_statement_map pattern_of meta_of example4_program)
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example4_program)
 
 let%expect_test "Statement label map example 4" =
   print_s
@@ -510,10 +528,14 @@ let example5_program =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.fix (Location_span.empty, blocks)
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example5_statement_map =
-  Stmt.Fixed.(build_statement_map pattern_of meta_of example5_program)
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example5_program)
 
 let%expect_test "Statement label map example 5" =
   print_s

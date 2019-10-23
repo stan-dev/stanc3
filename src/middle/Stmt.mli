@@ -81,9 +81,6 @@ module Labelled : sig
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
-
-    val label : t -> Int_label.t
-    val loc : t -> Location_span.t
   end
 
   include

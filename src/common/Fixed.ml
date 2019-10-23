@@ -10,11 +10,6 @@ module type S = sig
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
 
-  val fix : 'a * 'a t Pattern.t -> 'a t
-  val unfix : 'a t -> 'a * 'a t Pattern.t
-  val pattern_of : 'a t -> 'a t Pattern.t
-  val meta_of : 'a t -> 'a
-
   include Foldable.S with type 'a t := 'a t
   include Pretty.S1 with type 'a t := 'a t
 
@@ -78,11 +73,6 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, map, fold, hash, sexp]
 
-  let fix (meta, pattern) = {meta; pattern}
-  let unfix {meta; pattern} = (meta, pattern)
-  let pattern_of {pattern; _} = pattern
-  let meta_of {meta; _} = meta
-
   let rec pp f ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} f meta (Pattern.pp (pp f)) pattern
 
@@ -91,8 +81,7 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
                                 let fold = fold
   end)
 
-  let rec fold_pattern ~f t =
-    let meta, pattern = unfix t in
+  let rec fold_pattern ~f {meta; pattern} =
     let pattern' = Pattern.map (fold_pattern ~f) pattern in
     f (meta, pattern')
 
@@ -105,8 +94,7 @@ module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
 
   let rec unfold_pattern ~f x =
     let meta, pattern = f x in
-    let pattern' = Pattern.map (unfold_pattern ~f) pattern in
-    fix (meta, pattern')
+    {meta; pattern= Pattern.map (unfold_pattern ~f) pattern}
 
   (** For clarity this is written explicitly but it is equivalent to
   `unfold ~f:(Fn.compose unfix f) x` 
@@ -126,11 +114,6 @@ module type S2 = sig
 
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, map, fold, hash, sexp]
-
-  val fix : 'b * ('a First.t, ('a, 'b) t) Pattern.t -> ('a, 'b) t
-  val unfix : ('a, 'b) t -> 'b * ('a First.t, ('a, 'b) t) Pattern.t
-  val pattern_of : ('a, 'b) t -> ('a First.t, ('a, 'b) t) Pattern.t
-  val meta_of : ('a, 'b) t -> 'b
 
   include Foldable.S2 with type ('a, 'b) t := ('a, 'b) t
   include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -188,11 +171,6 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving map, fold, compare, hash, sexp]
 
-  let unfix {meta; pattern} = (meta, pattern)
-  let fix (meta, pattern) = {meta; pattern}
-  let pattern_of {pattern; _} = pattern
-  let meta_of {meta; _} = meta
-
   let rec pp f g ppf {pattern; meta} =
     Fmt.pf ppf {|%a%a|} g meta (Pattern.pp (First.pp f) (pp f g)) pattern
 
@@ -202,8 +180,7 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
     let fold = fold
   end)
 
-  let rec fold_pattern ~f ~g t =
-    let meta, pattern = unfix t in
+  let rec fold_pattern ~f ~g {meta; pattern} =
     let pattern' =
       Pattern.map (First.fold_pattern ~f) (fold_pattern ~f ~g) pattern
     in

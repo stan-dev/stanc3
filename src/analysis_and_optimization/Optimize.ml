@@ -153,8 +153,8 @@ let handle_early_returns opt_triple b =
         ; meta= {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
     ; body= map_rec_stmt_loc f b }
 
-let rec inline_function_expression adt fim e =
-  match Expr.Fixed.pattern_of e with
+let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
+  match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
   | FunApp (t, s, es) -> (
@@ -269,7 +269,7 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
             let dl1, sl1, e1 = inline_function_expression adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression adt fim e2 in
             let x, l =
-              match Expr.Fixed.pattern_of e1 with
+              match e1.pattern with
               | Var x -> (x, [])
               | Indexed ({pattern= Var x; _}, l) -> (x, l)
               | _ as w ->
@@ -552,7 +552,7 @@ let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
 
 let rec can_side_effect_expr (e : Expr.Typed.t) =
-  match Expr.Fixed.pattern_of e with
+  match e.pattern with
   | Var _ | Lit (_, _) -> false
   | FunApp (t, f, es) ->
       String.suffix f 3 = "_lp"
@@ -628,12 +628,14 @@ let dead_code_elimination (mir : Program.Typed.t) =
           if
             (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
             (not (can_side_effect_expr e))
-            && Stmt.Fixed.pattern_of b1 = Skip
-            && ( Option.map ~f:Stmt.Fixed.pattern_of b2 = Some Skip
-               || Option.map ~f:Stmt.Fixed.pattern_of b2 = None )
+            && b1.Stmt.Fixed.pattern = Skip
+            && ( Option.map ~f:(fun Stmt.Fixed.({pattern; _}) -> pattern) b2
+                 = Some Skip
+               || Option.map ~f:(fun Stmt.Fixed.({pattern; _}) -> pattern) b2
+                  = None )
           then Skip
           else
-            match Expr.Fixed.pattern_of e with
+            match e.pattern with
             | Lit (Int, "0") | Lit (Real, "0.0") -> (
               match b2 with Some x -> x.pattern | None -> Skip )
             | Lit (_, _) -> b1.pattern
@@ -641,7 +643,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
       | While (e, b) -> (
           if (not (can_side_effect_expr e)) && b.pattern = Break then Skip
           else
-            match Expr.Fixed.pattern_of e with
+            match e.pattern with
             | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
             | _ -> While (e, b) )
       | For {loopvar; lower; upper; body} ->
@@ -721,7 +723,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
     let expression_map =
       Set.fold (Monotone_framework.used_expressions_stmt s.pattern)
         ~init:Expr.Typed.Map.empty ~f:(fun accum e ->
-          match Expr.Fixed.pattern_of e with
+          match e.pattern with
           | Lit (_, _) -> accum
           | _ when can_side_effect_expr e -> accum
           | _ -> Map.set accum ~key:e ~data:(Gensym.generate ()) )
