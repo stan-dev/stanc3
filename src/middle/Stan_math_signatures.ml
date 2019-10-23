@@ -140,7 +140,7 @@ let distributions =
   ; ([Lpmf], "categorical_logit", [DVInt; DVector])
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "chi_square", [DVReal; DVReal])
-  ; ([Lpdf], "dirichlet", [DVector; DVector])
+  ; ([Lpdf], "dirichlet", [DVectors; DVectors])
   ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "exponential", [DVReal; DVReal])
