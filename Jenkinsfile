@@ -135,7 +135,10 @@ pipeline {
                 }
                 stage("TFP tests") {
                     agent {
-                        docker { image 'tensorflow/tensorflow:nightly-py3'}
+                        docker {
+                            image 'tensorflow/tensorflow:nightly-py3'
+                            args '-u root'
+                        }
                     }
                     steps {
                         sh "pip3 install --user tfp-nightly"
