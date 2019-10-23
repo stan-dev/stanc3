@@ -41,36 +41,36 @@ let with_indented_box ppf indentation offset f =
   ()
 
 let rec unwind_sized_array_type = function
-  | Middle.SArray (st, e) -> (
+  | Middle.SizedType.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
 let rec unwind_array_type = function
-  | Middle.UArray ut -> (
+  | Middle.UnsizedType.UArray ut -> (
     match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
 (** XXX this should use the MIR pretty printers after AST pretty printers
     are updated to use `Fmt`. *)
 let rec pp_autodifftype ppf = function
-  | Middle.DataOnly -> Fmt.pf ppf "data "
-  | Middle.AutoDiffable -> Fmt.pf ppf ""
+  | Middle.UnsizedType.DataOnly -> Fmt.pf ppf "data "
+  | AutoDiffable -> Fmt.pf ppf ""
 
 and pp_unsizedtype ppf = function
-  | Middle.UInt -> Fmt.pf ppf "int"
-  | Middle.UReal -> Fmt.pf ppf "real"
-  | Middle.UVector -> Fmt.pf ppf "vector"
-  | Middle.URowVector -> Fmt.pf ppf "row_vector"
-  | Middle.UMatrix -> Fmt.pf ppf "matrix"
-  | Middle.UArray ut ->
+  | Middle.UnsizedType.UInt -> Fmt.pf ppf "int"
+  | UReal -> Fmt.pf ppf "real"
+  | UVector -> Fmt.pf ppf "vector"
+  | URowVector -> Fmt.pf ppf "row_vector"
+  | UMatrix -> Fmt.pf ppf "matrix"
+  | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
-  | Middle.UFun (argtypes, rt) ->
+  | UFun (argtypes, rt) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
         Fmt.(list ~sep:comma_no_break pp_argtype)
         argtypes pp_returntype rt
-  | Middle.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
+  | UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
 
 and pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 
@@ -84,7 +84,7 @@ and pp_returntype ppf = function
 and pp_identifier ppf id = Fmt.pf ppf "%s" id.name
 
 and pp_operator ppf = function
-  | Middle.Plus | PPlus -> Fmt.pf ppf "+"
+  | Middle.Operator.Plus | PPlus -> Fmt.pf ppf "+"
   | Minus | PMinus -> Fmt.pf ppf "-"
   | Times -> Fmt.pf ppf "*"
   | Divide -> Fmt.pf ppf "/"
@@ -185,16 +185,16 @@ and pp_list_of_printables ppf l =
   Fmt.(list ~sep:comma_no_break pp_printable) ppf l
 
 and pp_sizedtype ppf = function
-  | Middle.SInt -> Fmt.pf ppf "int"
-  | Middle.SReal -> Fmt.pf ppf "real"
-  | Middle.SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
-  | Middle.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
-  | Middle.SMatrix (e1, e2) ->
+  | Middle.SizedType.SInt -> Fmt.pf ppf "int"
+  | SReal -> Fmt.pf ppf "real"
+  | SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
+  | SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
+  | SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
-  | Middle.Identity -> Fmt.pf ppf ""
+  | Middle.Program.Identity -> Fmt.pf ppf ""
   | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
   | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
   | LowerUpper (e1, e2) ->
@@ -215,17 +215,17 @@ and pp_transformation ppf = function
 and pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
     match pst with
-    | Middle.Sized st ->
-        Middle.Sized (Fn.compose fst unwind_sized_array_type st)
-    | Unsized (UArray t) -> discard_arrays (Middle.Unsized t)
-    | Unsized ut -> Middle.Unsized ut
+    | Middle.Type.Sized st ->
+        Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
+    | Unsized (UArray t) -> discard_arrays (Unsized t)
+    | Unsized ut -> Unsized ut
   in
   let pst = discard_arrays pst in
   let unsizedtype_fmt =
     match pst with
-    | Middle.Sized (SArray _ as st) ->
+    | Middle.Type.Sized (SArray _ as st) ->
         Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
-    | _ -> Fmt.const pp_unsizedtype (Middle.remove_possible_size pst)
+    | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst)
   in
   let sizes_fmt =
     match pst with
@@ -235,7 +235,9 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
-    | Sized (SArray _) | Unsized _ | Sized Middle.SInt | Sized SReal -> Fmt.nop
+    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
+      ->
+        Fmt.nop
   in
   let cov_sizes_fmt =
     match pst with
@@ -249,7 +251,8 @@ and pp_transformed_type ppf (pst, trans) =
     | _ -> Fmt.nop
   in
   match trans with
-  | Middle.Identity -> Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
+  | Middle.Program.Identity ->
+      Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
    |OffsetMultiplier _ ->
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt

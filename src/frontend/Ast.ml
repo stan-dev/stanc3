@@ -1,9 +1,11 @@
 (** Abstract syntax tree *)
 open Core_kernel
 
+open Middle
+
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: Middle.location_span sexp_opaque [@compare.ignore]}
+  {name: string; id_loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
@@ -22,9 +24,9 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
     substitute untyped_expression or typed_expression for 'e *)
 type ('e, 'f) expression =
   | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * Middle.operator * 'e
-  | PrefixOp of Middle.operator * 'e
-  | PostfixOp of 'e * Middle.operator
+  | BinOp of 'e * Operator.t * 'e
+  | PrefixOp of Operator.t * 'e
+  | PostfixOp of 'e * Operator.t
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
@@ -43,7 +45,7 @@ type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-type located_meta = {loc: Middle.location_span sexp_opaque [@compare.ignore]}
+type located_meta = {loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
 
 type untyped_expression = (located_meta, unit) expr_with
@@ -52,9 +54,9 @@ type untyped_expression = (located_meta, unit) expr_with
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
-  ; ad_level: Middle.autodifftype
-  ; type_: Middle.unsizedtype }
+  { loc: Location_span.t sexp_opaque [@compare.ignore]
+  ; ad_level: UnsizedType.autodifftype
+  ; type_: UnsizedType.t }
 [@@deriving sexp, compare, map, hash]
 
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
@@ -69,7 +71,7 @@ let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> raise_s [%message "Can't find location lub for empty list"]
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:Middle.merge_spans tl
+  | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
 let expr_ad_lub exprs =
   exprs
@@ -82,7 +84,7 @@ type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
-  | OperatorAssign of Middle.operator
+  | OperatorAssign of Operator.t
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -145,15 +147,17 @@ type ('e, 's, 'l, 'f) statement =
   | ForEach of identifier * 'e * 's
   | Block of 's list
   | VarDecl of
-      { decl_type: 'e Middle.possiblysizedtype
-      ; transformation: 'e Middle.transformation
+      { decl_type: 'e Middle.Type.t
+      ; transformation: 'e Middle.Program.transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
   | FunDef of
-      { returntype: Middle.returntype
+      { returntype: Middle.UnsizedType.returntype
       ; funname: identifier
-      ; arguments: (Middle.autodifftype * Middle.unsizedtype * identifier) list
+      ; arguments:
+          (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
+          list
       ; body: 's }
 [@@deriving sexp, hash, compare, map]
 
@@ -167,8 +171,8 @@ type ('e, 's, 'l, 'f) statement =
     AnyReturnType corresponds to statements which have an error in every branch  *)
 type statement_returntype =
   | NoReturnType
-  | Incomplete of Middle.returntype
-  | Complete of Middle.returntype
+  | Incomplete of Middle.UnsizedType.returntype
+  | Complete of Middle.UnsizedType.returntype
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
@@ -184,7 +188,7 @@ type untyped_statement =
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
+  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 

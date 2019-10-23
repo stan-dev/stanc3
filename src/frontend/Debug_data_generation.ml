@@ -7,7 +7,7 @@ let unwrap_num_exn m e =
   let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
   let e = Analysis_and_optimization.Mir_utils.subst_expr m e in
   let e = Analysis_and_optimization.Partial_evaluator.eval_expr e in
-  match e.expr with
+  match e.pattern with
   | Lit (_, s) -> Float.of_string s
   | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
 
@@ -17,7 +17,7 @@ let gen_num_int m t =
   let def_low, diff = (2, 4) in
   let low, up =
     match t with
-    | Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
+    | Program.Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
     | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
     | _ -> (def_low, def_low + diff)
@@ -29,7 +29,7 @@ let gen_num_real m t =
   let def_low, diff = (2., 5.) in
   let low, up =
     match t with
-    | Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
+    | Program.Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
     | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
     | _ -> (def_low, def_low +. diff)
@@ -44,28 +44,28 @@ let rec repeat_th n f =
 
 let wrap_int n =
   { expr= IntNumeral (Int.to_string n)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UInt} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UInt} }
 
 let int_two = wrap_int 2
 
 let wrap_real r =
   { expr= RealNumeral (Float.to_string r)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UReal} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UReal} }
 
 let wrap_row_vector l =
   { expr= RowVectorExpr l
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= URowVector} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= URowVector} }
 
 let wrap_vector l =
   { expr= PostfixOp (wrap_row_vector l, Transpose)
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UVector} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UVector} }
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
   { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
-  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UMatrix} }
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UMatrix} }
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -77,7 +77,7 @@ let gen_vector m n t =
     l
   in
   match t with
-  | Simplex ->
+  | Program.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
       let l = List.map l ~f:(fun x -> x /. sum) in
@@ -119,7 +119,7 @@ let gen_identity_matrix n m =
 
 let gen_matrix mm n m t =
   match t with
-  | CholeskyCorr | CholeskyCov | Correlation | Covariance ->
+  | Program.CholeskyCorr | CholeskyCov | Correlation | Covariance ->
       gen_identity_matrix n m
   | _ ->
       { int_two with
@@ -131,7 +131,7 @@ let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
 
 let rec generate_value m st t =
   match st with
-  | SInt -> gen_int m t
+  | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
   | SVector e -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t

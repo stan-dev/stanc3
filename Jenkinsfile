@@ -86,7 +86,7 @@ pipeline {
             steps {
                 unstash 'ubuntu-exe'
                 sh """
-          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+          git clone --single-branch --branch stan2 --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
                 sh """
           cd performance-tests-cmdstan

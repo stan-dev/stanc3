@@ -54,6 +54,14 @@ let%expect_test "Variable dependency example" =
   [%expect
     {|
       ((19 Reject ((VVar i) (VVar j)))
-       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j)))
-       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j))))
+       (21
+        (TargetTerm
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        ((VVar i) (VVar j)))
+       (21
+        (TargetTerm
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        ((VVar i) (VVar j))))
     |}]

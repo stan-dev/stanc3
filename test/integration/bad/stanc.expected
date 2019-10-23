@@ -1053,6 +1053,7 @@ Semantic error in 'experiment.stan', line 12, column 4 to column 11:
 A non-returning function was expected but a returning function 'foo' was supplied.
 
   $ ../../../../install/default/bin/stanc fun-return-typ3.stan
+<<<<<<< HEAD
 Uncaught exception:
   
   ("Expecting a block or skip, not"
@@ -1066,6 +1067,19 @@ Called from file "src/frontend/Ast_to_Mir.ml" (inlined), line 561, characters 22
 Called from file "src/frontend/Ast_to_Mir.ml", line 653, characters 21-64
 Called from file "src/stanc/stanc.ml", line 168, characters 14-54
 Called from file "src/stanc/stanc.ml", line 213, characters 9-16
+=======
+
+Semantic error in 'fun-return-typ3.stan', line 2, column 13 to column 24:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo() reject("");
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Function definitions must be wrapped in curly braces.
+
+>>>>>>> 742349dbfbaf39f61dd7a6131426c7402eaec5a2
   $ ../../../../install/default/bin/stanc fun-return-type1.stan
 
 Semantic error in 'fun-return-type1.stan', line 2, column 2 to column 72:
@@ -2508,7 +2522,10 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
      9:  }
    -------------------------------------------------
 
-~-statement expects a distribution name without '_lpdf' or '_lpmf' suffix.
+
+~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
+
 
   $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
 
