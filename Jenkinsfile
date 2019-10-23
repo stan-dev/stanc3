@@ -141,7 +141,7 @@ pipeline {
                         }
                     }
                     steps {
-                        sh "pip3 install --user tfp-nightly"
+                        sh "pip3 install tfp-nightly"
                         sh "python3 test/integration/tfp/tests.py"
                     }
                 }
