@@ -49,7 +49,6 @@ pipeline {
                     dune build @install
                 """)
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
@@ -139,7 +138,7 @@ pipeline {
                         docker { image 'tensorflow/tensorflow:nightly-py3'}
                     }
                     steps {
-                        sh "pip3 install tfp-nightly"
+                        sh "pip3 install --user tfp-nightly"
                         sh "python3 test/integration/tfp/tests.py"
                     }
                 }
@@ -164,6 +163,7 @@ pipeline {
                     time dune runtest --verbose
                 """)
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
                         stash name:'mac-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
@@ -210,6 +210,7 @@ pipeline {
                 """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
                         stash name:'linux-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
@@ -222,6 +223,7 @@ pipeline {
                         bat "bash -cl \"cd ..\""
                         bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                        bat "mv _build/default.windows/src/stan2tfp/stan2tfp.exe` bin/windows-stan2tfp"
                         stash name:'windows-exe', includes:'bin/*'
                     }
                 }
