@@ -49,6 +49,7 @@ pipeline {
                     dune build @install
                 """)
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
