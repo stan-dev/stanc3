@@ -19,80 +19,88 @@ let stan_namespace_qualify f =
 
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 =
-  e1.emeta.mtype = e2.emeta.mtype && e1.emeta.madlevel = e2.emeta.madlevel
+  UnsizedType.equal (Expr.Typed.type_of e1) (Expr.Typed.type_of e2)
+  && UnsizedType.compare_autodifftype (Expr.Typed.adlevel_of e1)
+       (Expr.Typed.adlevel_of e2)
+     = 0
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
-let is_matrix e = e.emeta.mtype = UMatrix
-let is_row_vector e = e.emeta.mtype = URowVector
-let pretty_print e = Fmt.strf "%a" Pretty.pp_expr_typed_located e
+let is_scalar e =
+  match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
+
+let is_matrix e = Expr.Typed.type_of e = UMatrix
+let is_row_vector e = Expr.Typed.type_of e = URowVector
+let pretty_print e = Fmt.to_to_string Expr.Typed.pp e
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let rec stantype_prim_str = function
-  | UInt -> "int"
+  | UnsizedType.UInt -> "int"
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
 let rec local_scalar ut ad =
   match (ut, ad) with
-  | UArray t, _ -> local_scalar t ad
-  | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
+  | UnsizedType.UArray t, _ -> local_scalar t ad
+  | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
 let minus_one e =
-  { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
-  ; emeta= e.emeta }
+  { e with
+    Expr.Fixed.pattern=
+      FunApp (StanLib, Operator.to_string Minus, [e; Expr.Helpers.loop_bottom])
+  }
 
-let is_single_index = function Single _ -> true | _ -> false
+let is_single_index = function Index.Single _ -> true | _ -> false
 
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
-      match (accum, expr) with
-      | _, {emeta= {madlevel= AutoDiffable; _}; _} -> AutoDiffable
-      | ad, _ -> ad )
-    ~init:DataOnly
+      match Expr.Typed.adlevel_of expr with
+      | AutoDiffable -> AutoDiffable
+      | _ -> accum )
+    ~init:UnsizedType.DataOnly
 
 let promote_unsizedtype es =
   let rec fold_type accum mtype =
     match (accum, mtype) with
-    | UReal, _ -> UReal
-    | _, UReal -> UReal
+    | UnsizedType.UReal, _ -> UnsizedType.UReal
+    | _, UnsizedType.UReal -> UReal
     | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
     | _, mtype -> mtype
   in
-  es
-  |> List.map ~f:(fun {emeta= {mtype; _}; _} -> mtype)
-  |> List.reduce_exn ~f:fold_type
+  List.map es ~f:Expr.Typed.type_of |> List.reduce_exn ~f:fold_type
 
 let%expect_test "promote_unsized" =
-  let e mtype = {expr= Var "x"; emeta= {internal_meta with mtype}} in
+  let e mtype =
+    Expr.{Fixed.pattern= Var "x"; meta= Typed.Meta.{empty with type_= mtype}}
+  in
   let tests =
     [[e UInt; e UReal]; [e UReal; e UInt]; [e (UArray UInt); e (UArray UReal)]]
   in
-  print_s [%sexp (tests |> List.map ~f:promote_unsizedtype : unsizedtype list)] ;
+  print_s
+    [%sexp (tests |> List.map ~f:promote_unsizedtype : UnsizedType.t list)] ;
   [%expect {| (UReal UReal (UArray UReal)) |}]
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | UInt | UReal -> string ppf scalar
+  | UnsizedType.UInt | UReal -> string ppf scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
+  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
   pp_unsizedtype_custom_scalar ppf (s, ut)
 
 let pp_expr_type ppf e =
-  pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
+  pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
 let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
 
@@ -107,15 +115,16 @@ let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
-  else if is_propto_distribution f then
-    stdlib_distribution_name f ^ "<propto__>"
-  else if is_distribution_name f || (udf && is_user_dist f) then f ^ "<false>"
+  else if Utils.is_propto_distribution f then
+    Utils.stdlib_distribution_name f ^ "<propto__>"
+  else if Utils.is_distribution_name f || (udf && is_user_dist f) then
+    f ^ "<false>"
   else f
 
 let fn_renames =
   List.map
-    ~f:(fun (k, v) -> (string_of_internal_fn k, v))
-    [ (FnLength, "stan::length")
+    ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
+    [ (Internal_fun.FnLength, "stan::length")
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
@@ -128,7 +137,7 @@ let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
 
 let rec pp_index ppf = function
-  | All -> pf ppf "index_omni()"
+  | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
   | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->
@@ -159,7 +168,8 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
     es
 
 and gen_operator_app = function
-  | Plus -> fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
+  | Operator.Plus ->
+      fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
   | PMinus ->
       fun ppf es ->
         pp_unary ppf
@@ -213,7 +223,9 @@ and gen_misc_special_math_app f =
           pp_call ppf (f, pp_expr, es) )
   | "ceil" ->
       let std_prefix_data_scalar f = function
-        | [{emeta= {madlevel= DataOnly; mtype= UInt | UReal; _}; _}] ->
+        | [ Expr.({ Fixed.meta=
+                      Typed.Meta.({adlevel= DataOnly; type_= UInt | UReal; _}); _
+                  }) ] ->
             "std::" ^ f
         | _ -> f
       in
@@ -228,22 +240,23 @@ and gen_misc_special_math_app f =
 and read_data ut ppf es =
   let i_or_r =
     match ut with
-    | UInt -> "i"
+    | UnsizedType.UInt -> "i"
     | UReal -> "r"
     | UVector | URowVector | UMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
-        raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
+        raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf fname es =
   let default ppf es =
-    let to_var s = {expr= Var s; emeta= internal_meta} in
+    let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
-      | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
-          {e with expr= FunApp (StanLib, name ^ functor_suffix, [])}
+      | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
+        as e ->
+          {e with pattern= FunApp (StanLib, name ^ functor_suffix, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -272,7 +285,7 @@ and gen_fun_app ppf fname es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-      | true, "map_rect", {expr= FunApp (_, f, _); _} :: tl ->
+      | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
@@ -282,17 +295,17 @@ and gen_fun_app ppf fname es =
     pp_call ppf (fname, pp_expr, args)
   in
   let pp =
-    [ Option.map ~f:gen_operator_app (operator_of_string fname)
+    [ Option.map ~f:gen_operator_app (Operator.of_string_opt fname)
     ; gen_misc_special_math_app fname ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
 
 and pp_constrain_funapp constrain_or_un_str ppf = function
-  | var :: {expr= Lit (Str, constraint_flavor); _} :: args ->
+  | var :: {Expr.Fixed.pattern= Lit (Str, constraint_flavor); _} :: args ->
       pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
         (list ~sep:comma pp_expr) (var :: args)
-  | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
+  | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, es) =
   let extra_args =
@@ -315,28 +328,25 @@ and pp_compiler_internal_fn ut f ppf es =
       (list ~sep:pp_add_method pp_expr)
       es
   in
-  match internal_fn_of_string f with
+  match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
     match ut with
-    | URowVector ->
+    | UnsizedType.URowVector ->
         pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
     | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
     | _ ->
         raise_s
           [%message
-            "Unexpected type for row vector literal" (ut : unsizedtype)] )
+            "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | {expr= Lit (Str, base_type); _} :: dims ->
+    | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
         pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
-    | _ ->
-        raise_s
-          [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
-    )
+    | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
@@ -344,18 +354,18 @@ and pp_indexed ppf (vident, indices, pretty) =
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
-    | Single e -> minus_one e
+    | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
         raise_s
           [%message
             "No non-Single indices allowed" ~obj
-              (idcs : expr_typed_located index list)
-              (e.emeta.mloc : location_span)]
+              (idcs : Expr.Typed.t Index.t list)
+              (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
         raise_s
           [%message
             "No non-Single indices allowed" ~obj
-              (idcs : expr_typed_located index list)]
+              (idcs : Expr.Typed.t Index.t list)]
   in
   pf ppf "%s%a" obj
     (fun ppf idcs ->
@@ -364,21 +374,21 @@ and pp_indexed_simple ppf (obj, idcs) =
       | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
-and pp_expr ppf e =
-  match e.expr with
+and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
+  match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       let promoted ppf (t, e) =
         pf ppf "stan::math::promote_scalar<%s>(%a)"
-          (local_scalar t.emeta.mtype t.emeta.madlevel)
+          Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
           pp_expr e
       in
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
@@ -386,22 +396,28 @@ and pp_expr ppf e =
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
-    match e.expr with
+    match e.pattern with
     | FunApp (CompilerInternal, f, _)
-      when Some FnReadParam = internal_fn_of_string f ->
+      when Some Internal_fun.FnReadParam = Internal_fun.of_string_opt f ->
         pp_expr ppf e
     | FunApp (CompilerInternal, f, _)
-      when Some FnReadData = internal_fn_of_string f ->
+      when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
       when List.for_all ~f:is_single_index idx
-           && not (is_indexing_matrix (e.emeta.mtype, idx)) ->
+           && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
+      ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
-let dummy_locate e =
-  {expr= e; emeta= {mtype= UInt; madlevel= DataOnly; mloc= no_span}}
+let dummy_locate pattern =
+  Expr.(
+    Fixed.
+      { pattern
+      ; meta=
+          Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+      })
 
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 

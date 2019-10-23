@@ -56,12 +56,12 @@ let%expect_test "Variable dependency example" =
       ((19 Reject ((VVar i) (VVar j)))
        (21
         (TargetTerm
-         ((expr (Lit Int 1))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((VVar i) (VVar j)))
        (21
         (TargetTerm
-         ((expr (Lit Int 1))
-          (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((VVar i) (VVar j))))
     |}]
