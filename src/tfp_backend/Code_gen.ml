@@ -202,7 +202,7 @@ let pp_param_names ppf p =
   let param_names =
     List.filter_map
       ~f:(function name, {out_block= Parameters; _} -> Some name | _ -> None)
-      p.output_vars
+      p.Program.output_vars
   in
   let ppbody ppf =
     pf ppf "return [@[<hov>%a@]]" (list ~sep:comma (fmt "%S")) param_names

@@ -29,7 +29,8 @@ let rec translate_funapps e =
         in
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
-        Expr.Fixed.Pattern.FunApp (StanLib, prefix ^ fname, args)
+        Expr.Fixed.Pattern.FunApp
+          (StanLib, prefix ^ fname, List.map ~f:translate_funapps args)
     | x -> Expr.Fixed.Pattern.map translate_funapps x
   in
   {e with pattern}
@@ -49,7 +50,7 @@ let%expect_test "nested dist prefixes translated" =
     {|
     ((pattern
       (FunApp StanLib tfd__.Normal
-       (((pattern (FunApp StanLib normal_lpdf ())) (meta ())))))
+       (((pattern (FunApp StanLib tfd__.Normal ())) (meta ())))))
      (meta ())) |}]
 
 (* temporary until we get rid of these from the MIR *)
