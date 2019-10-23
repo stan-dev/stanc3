@@ -888,6 +888,23 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   transform_program_blockwise mir transform
 
+(* Try to turn for loops into vectorized computation, if it's available. *)
+let vectorize =
+  let only_indexed_by vident e = match e.Expr.Fixed.pattern with
+    | Indexed i
+  in
+  let open Stmt.Fixed in
+  let open Stmt.Fixed.Pattern in
+  let vectorize_stmt s = match s.pattern with
+    | For { body={pattern=TargetPE e; _}; loopvar; _}
+      when Expr.Fixed.all
+          ~pred:(function
+              | Expr.Fixed.{pattern=Expr.Fixed.Pattern.Indexed ; _})
+      ->
+    | _ -> s
+  in
+  Program.map Fn.id (Stmt.Fixed.rewrite_top_down ~f:Fn.id ~g:vectorize_stmt)
+
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
 type optimization_settings =

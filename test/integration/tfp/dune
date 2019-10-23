@@ -8,3 +8,15 @@
 (alias
  (name runtest)
  (action (diff eight_schools.py eight_schools.py.output)))
+
+;; TODO: how to define all of these for any .stan files?
+(rule
+ (targets irt2pl.py.output)
+ (deps (package stanc) (:stanfiles ../good/stat_comp_benchmarks_models/irt_2pl.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:stan2tfp} %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff irt2pl.py irt2pl.py.output)))

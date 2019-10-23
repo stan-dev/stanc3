@@ -4,6 +4,7 @@ open Tfp_backend
 
 let dump_mir = ref false
 let dump_transformed_mir = ref false
+let dump_optimized_mir = ref false
 
 let options =
   Arg.align
@@ -38,6 +39,8 @@ let main () =
     |> print_endline ;
   let mir = Transform_mir.trans_prog mir in
   if !dump_transformed_mir then Fmt.pr "%a" Middle.Program.Typed.pp mir ;
+  let mir = Analysis_and_optimization.Optimize.dead_code_elimination mir in
+  if !dump_optimized_mir then Fmt.pr "%a" Middle.Program.Typed.pp mir ;
   Fmt.pr "%a" Code_gen.pp_prog mir
 
 let () = main ()
