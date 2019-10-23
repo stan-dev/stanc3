@@ -76,11 +76,13 @@ let pp_io_block ppf = function
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-let pp_block label pp_elem ppf elems =
-  Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
-    Fmt.(list ~sep:cut pp_elem)
-    elems ;
-  Format.pp_force_newline ppf ()
+let pp_block label pp_elem ppf = function
+  | [] -> ()
+  | elems ->
+      Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
+        Fmt.(list ~sep:cut pp_elem)
+        elems ;
+      Format.pp_force_newline ppf ()
 
 let pp_functions_block pp_s ppf {functions_block; _} =
   pp_block "functions" pp_s ppf functions_block
