@@ -20,20 +20,20 @@ let map_functions fname args =
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
       else raise_s [%message "Not sure how to handle " fname " yet!"]
 
-let rec translate_funapps e =
-  let pattern =
-    match e.Expr.Fixed.pattern with
+let translate_funapps e =
+  let open Expr.Fixed in
+  let f ({pattern; _} as expr) =
+    match pattern with
     | FunApp (StanLib, fname, args) ->
         let prefix =
           if Utils.is_distribution_name fname then dist_prefix else ""
         in
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
-        Expr.Fixed.Pattern.FunApp
-          (StanLib, prefix ^ fname, List.map ~f:translate_funapps args)
-    | x -> Expr.Fixed.Pattern.map translate_funapps x
+        {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
+    | _ -> expr
   in
-  {e with pattern}
+  rewrite_bottom_up ~f e
 
 let%expect_test "nested dist prefixes translated" =
   let open Expr.Fixed.Pattern in
