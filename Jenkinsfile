@@ -141,7 +141,7 @@ pipeline {
                         }
                     }
                     steps {
-                        sh "pip3 install tfp-nightly"
+                        sh "pip3 install tfp-nightly==0.9.0.dev20191023"
                         sh "python3 test/integration/tfp/tests.py"
                     }
                 }
