@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # !pip install -q tf-nightly-2.0-preview tfp-nightly
 
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 
 import tensorflow_probability as tfp
 
@@ -19,7 +19,7 @@ from tensorflow.python.ops.parallel_for import pfor
 def step_size_setter_fn(pkr, new_step_size):
   return pkr._replace(inner_results=pkr.inner_results._replace(step_size=new_step_size))
 
-@tf.function()
+@tf.function(experimental_compile=True)
 def stan(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
   initial_states = [tf.random.uniform(s, 0, 2, dtype, name="initializer") for s in model.parameter_shapes(nchain)]
   step_sizes = [1e-2 * tf.ones_like(i) for i in initial_states]
