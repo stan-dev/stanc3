@@ -221,40 +221,17 @@ module Helpers = struct
   open Stmt.Fixed
   open Stmt.Fixed.Pattern
 
-  (** [iter_stmt_transform transform stmts] will run the transform function
-    on the list of statements until the list of statements stops changing.
-
-    In our use case this could be replaced with a bottom-up map.
-*)
-  let iter_stmt_transform f stmts =
-    let old_stmts = ref stmts in
-    let new_stmts = ref (f stmts) in
-    (* The count here just enforces a hard limit on the number of iterations.
-     In principle, we should only use this function with monotonic update
-     functions, but in practice we may get that wrong from time to time and
-     this count keeps us from infinite loops.
-  *)
-    let count = ref 0 in
-    while Stdlib.( != ) !old_stmts !new_stmts && !count < 100 do
-      old_stmts := !new_stmts ;
-      new_stmts := f !old_stmts ;
-      count := !count + 1
-    done ;
-    !new_stmts
-
   (** [cleanup_stmts statements] will do a few simple transformations like
     removing Skips, collapsing empty blocks and SLists, etc. *)
-  let rec cleanup_stmts_one_pass stmts =
-    let rec cleanup_stmt s =
+  let cleanup_empty_stmts stmts =
+    let cleanup_stmt s =
       let ellide = {s with pattern= Skip} in
       match s.pattern with
       | Block [] | SList [] -> ellide
       | For {body= {pattern= Skip; _}; _} -> ellide
       | While (_, {pattern= Skip; _}) -> ellide
-      | SList ls -> {s with pattern= SList (cleanup_stmts_one_pass ls)}
-      | Block ls -> {s with pattern= Block (cleanup_stmts_one_pass ls)}
-      | _ ->
-          {s with pattern= Stmt.Fixed.Pattern.map Fn.id cleanup_stmt s.pattern}
+      | Block [{pattern= Skip; _}] | SList [{pattern= Skip; _}] -> ellide
+      | _ -> s
     in
     let is_decl = function {pattern= Decl _; _} -> true | _ -> false in
     let flatten_block s =
@@ -264,12 +241,9 @@ module Helpers = struct
       | _ -> [s]
     in
     let ellide_skip s = match s.pattern with Skip -> [] | _ -> [s] in
-    List.map stmts ~f:cleanup_stmt
+    List.map stmts ~f:(rewrite_bottom_up ~f:Fn.id ~g:cleanup_stmt)
     |> List.concat_map ~f:flatten_block
     |> List.concat_map ~f:ellide_skip
-
-  let cleanup_empty_stmts stmts =
-    iter_stmt_transform cleanup_stmts_one_pass stmts
 
   let%expect_test "cleanup" =
     let open Expr.Helpers in
