@@ -2,7 +2,6 @@
 module Foldable = Foldable
 
 (* Other signatures *)
-module NonEmptyList = NonEmptyList
 module Validation = Validation
 module Pretty = Pretty
 
