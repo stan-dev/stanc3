@@ -165,3 +165,6 @@ val expr_depth : Expr.Typed.t -> int
 val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
     in the first argument autodiffable *)
+
+val cleanup_empty_stmts :
+  ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list

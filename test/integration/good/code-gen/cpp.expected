@@ -61,14 +61,12 @@ static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'eight_schools_ncp.stan', line 8, column 2 to column 10)",
                                                       " (in 'eight_schools_ncp.stan', line 9, column 2 to column 20)",
-                                                      " (in 'eight_schools_ncp.stan', line 10, column 2 to column 22)",
-                                                      " (in 'eight_schools_ncp.stan', line 14, column 2 to column 16)",
-                                                      " (in 'eight_schools_ncp.stan', line 16, column 4 to column 41)",
-                                                      " (in 'eight_schools_ncp.stan', line 15, column 2 to line 16, column 41)",
-                                                      " (in 'eight_schools_ncp.stan', line 20, column 2 to column 20)",
-                                                      " (in 'eight_schools_ncp.stan', line 21, column 2 to column 21)",
-                                                      " (in 'eight_schools_ncp.stan', line 22, column 2 to column 29)",
-                                                      " (in 'eight_schools_ncp.stan', line 23, column 2 to column 27)",
+                                                      " (in 'eight_schools_ncp.stan', line 10, column 2 to column 24)",
+                                                      " (in 'eight_schools_ncp.stan', line 14, column 2 to column 43)",
+                                                      " (in 'eight_schools_ncp.stan', line 18, column 2 to column 20)",
+                                                      " (in 'eight_schools_ncp.stan', line 19, column 2 to column 21)",
+                                                      " (in 'eight_schools_ncp.stan', line 20, column 2 to column 29)",
+                                                      " (in 'eight_schools_ncp.stan', line 21, column 2 to column 27)",
                                                       " (in 'eight_schools_ncp.stan', line 2, column 2 to column 17)",
                                                       " (in 'eight_schools_ncp.stan', line 3, column 2 to column 12)",
                                                       " (in 'eight_schools_ncp.stan', line 4, column 2 to column 25)"};
@@ -101,37 +99,37 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       
       pos__ = 1;
       
-      current_statement__ = 11;
+      current_statement__ = 9;
       pos__ = 1;
-      current_statement__ = 11;
+      current_statement__ = 9;
       J = context__.vals_i("J")[(pos__ - 1)];
       y = std::vector<double>(J, 0);
       
-      current_statement__ = 12;
+      current_statement__ = 10;
       pos__ = 1;
-      current_statement__ = 12;
+      current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 12;
+        current_statement__ = 10;
         assign(y, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y")[(pos__ - 1)], "assigning variable y");
-        current_statement__ = 12;
+        current_statement__ = 10;
         pos__ = (pos__ + 1);}
       sigma = std::vector<double>(J, 0);
       
-      current_statement__ = 13;
+      current_statement__ = 11;
       pos__ = 1;
-      current_statement__ = 13;
+      current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 13;
+        current_statement__ = 11;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("sigma")[(pos__ - 1)], "assigning variable sigma");
-        current_statement__ = 13;
+        current_statement__ = 11;
         pos__ = (pos__ + 1);}
-      current_statement__ = 11;
-      current_statement__ = 11;
+      current_statement__ = 9;
+      current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
-      current_statement__ = 13;
+      current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 13;
-        current_statement__ = 13;
+        current_statement__ = 11;
+        current_statement__ = 11;
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
     } catch (const std::exception& e) {
@@ -173,30 +171,29 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         current_statement__ = 2;
         tau = lb_constrain(tau, 0);
       }
-      std::vector<local_scalar_t__> theta_tilde;
-      theta_tilde = std::vector<local_scalar_t__>(J, 0);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       
       current_statement__ = 3;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 3;
-        assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(
-               ), "assigning variable theta_tilde");}
-      std::vector<local_scalar_t__> theta;
-      theta = std::vector<local_scalar_t__>(J, 0);
+      theta_tilde = in__.vector(J);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta;
+      theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       
-      current_statement__ = 6;
-      for (size_t j = 1; j <= J; ++j) {
-        current_statement__ = 5;
-        assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * theta_tilde[(j - 1)])), "assigning variable theta");
-      }
+      current_statement__ = 4;
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 4;
+        assign(theta, cons_list(index_uni(sym1__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable theta");}
+      current_statement__ = 4;
+      assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)), "assigning variable theta");
       {
-        current_statement__ = 7;
+        current_statement__ = 5;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
-        current_statement__ = 8;
-        lp_accum__.add(cauchy_log<propto__>(tau, 0, 5));
-        current_statement__ = 9;
+        current_statement__ = 6;
+        lp_accum__.add(normal_log<propto__>(tau, 0, 5));
+        current_statement__ = 7;
         lp_accum__.add(normal_log<propto__>(theta_tilde, 0, 1));
-        current_statement__ = 10;
+        current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(y, theta, sigma));
       }
     } catch (const std::exception& e) {
@@ -237,17 +234,19 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       tau = in__.scalar();
       current_statement__ = 2;
       tau = lb_constrain(tau, 0);
-      std::vector<double> theta_tilde;
-      theta_tilde = std::vector<double>(J, 0);
+      Eigen::Matrix<double, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       
       current_statement__ = 3;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 3;
-        assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(
-               ), "assigning variable theta_tilde");}
-      std::vector<double> theta;
-      theta = std::vector<double>(J, 0);
+      theta_tilde = in__.vector(J);
+      Eigen::Matrix<double, -1, 1> theta;
+      theta = Eigen::Matrix<double, -1, 1>(J);
       
+      current_statement__ = 4;
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 4;
+        assign(theta, cons_list(index_uni(sym1__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
+               ), "assigning variable theta");}
       vars__.push_back(mu);
       vars__.push_back(tau);
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
@@ -255,11 +254,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 6;
-      for (size_t j = 1; j <= J; ++j) {
-        current_statement__ = 5;
-        assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * theta_tilde[(j - 1)])), "assigning variable theta");
-      }
+      current_statement__ = 4;
+      assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)), "assigning variable theta");
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(theta[(sym1__ - 1)]);}
       if (logical_negation(emit_generated_quantities__)) {
@@ -297,8 +293,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       tau = context__.vals_r("tau")[(pos__ - 1)];
       current_statement__ = 2;
       tau = lb_free(tau, 0);
-      std::vector<double> theta_tilde;
-      theta_tilde = std::vector<double>(J, 0);
+      Eigen::Matrix<double, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       
       current_statement__ = 3;
       pos__ = 1;
@@ -392,13 +388,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"}]";
+    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"}]";
+    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
