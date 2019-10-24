@@ -24,7 +24,7 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -119,7 +119,7 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -170,7 +170,7 @@ let example1_program =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   Stmt.Fixed.{meta= Location_span.empty; pattern= block}
 
@@ -325,7 +325,7 @@ let example3_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -420,7 +420,7 @@ let example4_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -523,7 +523,7 @@ let example5_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
+  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])

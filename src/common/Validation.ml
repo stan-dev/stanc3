@@ -1,38 +1,34 @@
 include Core_kernel
 
-module type Infix = sig
-  type 'a t
-
-  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
-end
-
 module type S = sig
-  type error
+  module Error : sig
+    type t
+  end
+
+  module Warning : sig
+    type t
+  end
+
   type 'a t
 
-  val map : 'a t -> f:('a -> 'b) -> 'b t
-  val pure : 'a -> 'a t
-  val apply : 'a t -> f:('a -> 'b) t -> 'b t
+  include Applicative.S with type 'a t := 'a t
+  include Monad.S with type 'a t := 'a t
+
   val apply_const : 'a t -> 'b t -> 'b t
-  val bind : 'a t -> f:('a -> 'b t) -> 'b t
   val liftA2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
   val liftA3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
-  val sequence : 'a t list -> 'a list t
   val ok : 'a -> 'a t
-  val error : error -> _ t
+  val error : ?warn:Warning.t -> Error.t -> _ t
+  val warn : warn:Warning.t -> 'a -> 'a t
   val is_error : 'a t -> bool
+  val is_warning : 'a t -> bool
   val is_success : 'a t -> bool
-  val get_errors_opt : 'a t -> error list option
-  val get_first_error_opt : 'a t -> error option
-  val get_success_opt : 'a t -> 'a option
+  val get_errors_opt : 'a t -> (Error.t list * Warning.t list) option
+  val get_first_error_opt : 'a t -> Error.t option
+  val get_success_opt : 'a t -> ('a * Warning.t list) option
 
-  val get_with :
-    'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
-
-  val to_result : 'a t -> ('a, error list) result
-
-  module Validation_infix : Infix with type 'a t := 'a t
-  include Infix with type 'a t := 'a t
+  val to_result :
+    'a t -> ('a * Warning.t list, Error.t list * Warning.t list) result
 end
 
 (**
@@ -44,7 +40,6 @@ end
   
   In some situations, it may be preferable to report _all_ of these errors to a 
   user in one go. `Validation` gives us this ability*.
-
   The implementation below is an example of an OCaml `functor` i.e. a module 
   that is _parametrized_ by another module. Our `Valiation.Make` functor is 
   parameterized over another module containing the type of errors.
@@ -63,7 +58,6 @@ end
   let apply x ~f = 
     match (f,x) with
   ```
-
   `apply` 'unwraps' the function and the value and performs different actions 
   depending on whether an error has occured. Because we have two arguments each 
   of which can be in two states, we have to check for four conditions:
@@ -110,58 +104,76 @@ end
   liftM2 f m1 m2 === apply f a1 s2
   ```
 *)
-module Make (X : sig
+module Make (Warning : sig
   type t
-end) : S with type error := X.t = struct
-  type errors = NonEmpty of X.t * X.t list
+end) (Error : sig
+  type t
+end) : S with module Warning := Warning and module Error := Error = struct
+  type 'a t =
+    ('a * Warning.t list, Error.t NonEmptyList.t * Warning.t list) result
 
-  let append xs ys =
-    match (xs, ys) with
-    | NonEmpty (x, []), NonEmpty (y, []) -> NonEmpty (x, [y])
-    | NonEmpty (x, xs), NonEmpty (y, ys) -> NonEmpty (x, xs @ (y :: ys))
+  module Basic = struct
+    type nonrec 'a t = 'a t
 
-  type 'a t = ('a, errors) result
+    let map_ x ~f =
+      match x with
+      | Result.Ok (x, ws) -> Ok (f x, ws)
+      | Error (x, ws) -> Error (x, ws)
 
-  let map x ~f = match x with Ok x -> Ok (f x) | Error x -> Error x
-  let pure x = Ok x
+    let map = `Custom map_
 
-  let apply x ~f =
-    match (f, x) with
-    | Ok f, Ok x -> Ok (f x)
-    | Error e, Ok _ -> Error e
-    | Ok _, Error e -> Error e
-    | Error e1, Error e2 -> Error (append e1 e2)
+    let apply f x =
+      match (f, x) with
+      | Result.Ok (f, ws), Result.Ok (x, vs) ->
+          Result.Ok (f x, List.append ws vs)
+      | Ok (_, ws), Error (e, vs) -> Error (e, List.append ws vs)
+      | Error (e, ws), Ok (_, vs) -> Error (e, List.append ws vs)
+      | Error (es, ws), Error (fs, vs) ->
+          Error (NonEmptyList.append es fs, List.append ws vs)
 
-  let apply_const a b = apply b ~f:(map a ~f:(fun _ x -> x))
-  let bind x ~f = match x with Ok x -> f x | Error e -> Error e
-  let liftA2 f x y = apply y ~f:(apply x ~f:(pure f))
-  let liftA3 f x y z = apply z ~f:(apply y ~f:(apply x ~f:(pure f)))
-  let consA next rest = liftA2 List.cons next rest
-  let sequence ts = List.fold_right ~init:(pure []) ~f:consA ts
+    let bind x ~f =
+      match x with
+      | Result.Ok (x, ws) -> (
+        match f x with
+        | Result.Ok (x, vs) -> Result.Ok (x, List.append ws vs)
+        | Error (e, vs) -> Error (e, List.append ws vs) )
+      | Error (e, ws) -> Error (e, ws)
 
-  module Validation_infix = struct let ( >>= ) x f = bind x ~f end
-  include Validation_infix
+    let return x = Result.Ok (x, [])
+  end
 
-  let ok x = pure x
-  let error x = Error (NonEmpty (x, []))
-  let is_error = function Error _ -> true | _ -> false
-  let is_success = function Ok _ -> true | _ -> false
+  include Applicative.Make (Basic)
+  include Monad.Make (Basic)
+
+  let apply_const a b = apply (map a ~f:(fun _ x -> x)) b
+  let liftA2 f x y = apply (apply (return f) x) y
+  let liftA3 f x y z = apply (apply (apply (return f) x) y) z
+  let ok x = return x
+
+  let error ?warn err : 'a t =
+    Result.Error
+      ( NonEmptyList.singleton err
+      , Option.value_map ~default:[] ~f:(fun x -> [x]) warn )
+
+  let warn ~warn x : 'a t = Result.Ok (x, [warn])
+  let is_error = function Result.Error _ -> true | _ -> false
+  let is_warning = function Result.Ok (_, _ :: _) -> true | _ -> false
+  let is_success = function Result.Ok (_, []) -> true | _ -> false
 
   let get_errors_opt = function
-    | Error (NonEmpty (x, xs)) -> Some (x :: xs)
+    | Result.Error (es, ws) -> Some (NonEmptyList.to_list es, ws)
     | _ -> None
 
   let get_first_error_opt = function
-    | Error (NonEmpty (x, _)) -> Some x
+    | Result.Error (es, _) -> Some (NonEmptyList.hd es)
     | _ -> None
 
-  let get_success_opt = function Ok x -> Some x | _ -> None
-
-  let get_with x ~with_ok ~with_errors =
-    match x with
-    | Ok x -> with_ok x
-    | Error (NonEmpty (x, xs)) -> with_errors @@ (x :: xs)
+  let get_success_opt = function
+    | Result.Ok (x, ws) -> Some (x, ws)
+    | _ -> None
 
   let to_result x =
-    match x with Ok x -> Ok x | Error (NonEmpty (x, xs)) -> Error (x :: xs)
+    match x with
+    | Result.Ok (x, ws) -> Result.Ok (x, ws)
+    | Error (es, ws) -> Error (NonEmptyList.to_list es, ws)
 end

@@ -8,7 +8,7 @@ open Symbol_table
 open Middle
 open Ast
 open Errors
-module Validate = Common.Validation.Make (Semantic_error)
+module Validate = Common.Validation.Make (Semantic_warning) (Semantic_error)
 
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
@@ -374,11 +374,21 @@ let semantic_check_binop loc op (le, re) =
 
 let to_exn v =
   v |> Validate.to_result
-  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
+  |> Result.map ~f:(fun (result, warnings) ->
+         ( result
+         , Fmt.(to_to_string @@ list ~sep:cut Semantic_warning.pp) warnings )
+     )
+  |> Result.map_error
+       ~f:
+         Fmt.(
+           to_to_string
+           @@ pair ~sep:cut
+                (list ~sep:cut Semantic_error.pp)
+                (list ~sep:cut Semantic_warning.pp))
   |> Result.ok_or_failwith
 
 let semantic_check_binop_exn loc op (le, re) =
-  semantic_check_binop loc op (le, re) |> to_exn
+  semantic_check_binop loc op (le, re) |> to_exn |> fst
 
 (* -- Prefix Operators ------------------------------------------------------ *)
 
@@ -528,7 +538,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
   aux Fn.id ut (List.map ~f:index_with_type indices)
 
 let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
-  inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
+  inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn |> fst
 
 let inferred_ad_type_of_indexed at uindices =
   lub_ad_type
@@ -546,7 +556,7 @@ let rec semantic_check_indexed ~loc ~cf e indices =
   Validate.(
     indices
     |> List.map ~f:(semantic_check_index cf)
-    |> sequence
+    |> all
     |> liftA2 tuple2 (semantic_check_expression cf e)
     >>= fun (ue, uindices) ->
     let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices in
@@ -653,7 +663,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       Validate.(
         es
         |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
+        |> all
         >>= fun ues ->
         semantic_check_array_expr ~loc:emeta.loc ues
         |> apply_const (semantic_check_array_expr_type ~loc:emeta.loc ues))
@@ -661,7 +671,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       Validate.(
         es
         |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
+        |> all
         >>= semantic_check_rowvector ~loc:emeta.loc)
   | Paren e ->
       semantic_check_expression cf e
@@ -678,7 +688,7 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
   Validate.(
     es
     |> List.map ~f:(semantic_check_expression cf)
-    |> sequence
+    |> all
     >>= fun ues ->
     semantic_check_fn ~is_cond_dist ~loc:emeta.loc id ues
     |> apply_const (semantic_check_identifier id)
@@ -860,7 +870,7 @@ let semantic_check_nr_fn_app ~loc ~cf id es =
   Validate.(
     es
     |> List.map ~f:(semantic_check_expression cf)
-    |> sequence
+    |> all
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
     >>= semantic_check_nr_fnkind ~loc id)
@@ -1068,7 +1078,7 @@ let semantic_check_sampling_cdf_defined ~loc id truncation args =
 let semantic_check_tilde ~loc ~cf distribution truncation arg args =
   Validate.(
     let ue = semantic_check_expression cf arg
-    and ues = List.map ~f:(semantic_check_expression cf) args |> sequence
+    and ues = List.map ~f:(semantic_check_expression cf) args |> all
     and ut = semantic_check_truncation cf truncation in
     liftA3 tuple3 ut ue ues
     |> apply_const (semantic_check_identifier distribution)
@@ -1129,7 +1139,7 @@ let semantic_check_print ~loc ~cf ps =
   Validate.(
     ps
     |> List.map ~f:(semantic_check_printable cf)
-    |> sequence
+    |> all
     |> map ~f:(fun ups ->
            mk_typed_statement ~stmt:(Print ups) ~return_type:NoReturnType ~loc
        ))
@@ -1140,7 +1150,7 @@ let semantic_check_reject ~loc ~cf ps =
   Validate.(
     ps
     |> List.map ~f:(semantic_check_printable cf)
-    |> sequence
+    |> all
     |> map ~f:(fun ups ->
            mk_typed_statement ~stmt:(Reject ups) ~return_type:AnyReturnType
              ~loc ))
@@ -1317,7 +1327,7 @@ and semantic_check_block ~loc ~cf stmts =
      do not count for the return type.
   *)
   let validated_stmts =
-    List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
+    List.map ~f:(semantic_check_statement cf) stmts |> Validate.all
   in
   Symbol_table.end_scope vm ;
   Validate.(
@@ -1535,7 +1545,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
           |> apply_const (semantic_check_unsizedtype ut)
           |> apply_const (semantic_check_identifier id)
           |> map ~f:(fun at -> (at, ut, id))) )
-    |> Validate.sequence
+    |> Validate.all
   in
   Validate.(
     uargs
@@ -1561,7 +1571,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.begin_scope vm ;
     List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
-    |> sequence
+    |> all
     |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
     >>= fun _ ->
     (* TODO: Bob was suggesting that function arguments must be allowed to
@@ -1647,7 +1657,7 @@ let semantic_check_ostatements_in_block ~cf block stmts_opt =
       List.fold ~init:[] stmts ~f:(fun accu stmt ->
           let s = semantic_check_statement cf' stmt in
           s :: accu )
-      |> List.rev |> Validate.sequence
+      |> List.rev |> Validate.all
       |> Validate.map ~f:Option.some )
 
 let check_fun_def_body_in_block = function
@@ -1674,7 +1684,7 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
       | Some [] | None -> ok ()
       | Some ls ->
           List.map ~f:check_fun_def_body_in_block ls
-          |> sequence
+          |> all
           |> map ~f:(fun _ -> ()))
 
 (* The actual semantic checks for all AST nodes! *)
@@ -1721,7 +1731,7 @@ let semantic_check_program
     ; modelblock= umb
     ; generatedquantitiesblock= ugb }
   in
-  let apply_to x f = Validate.apply ~f x in
+  let apply_to x f = Validate.apply f x in
   let check_correctness_invariant (decorated_ast : typed_program) :
       typed_program =
     if
@@ -1748,7 +1758,4 @@ let semantic_check_program
   Validate.(
     ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
     |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
-    |> check_correctness_invariant_validate
-    |> get_with
-         ~with_ok:(fun ok -> Result.Ok ok)
-         ~with_errors:(fun errs -> Result.Error errs))
+    |> check_correctness_invariant_validate |> to_result)

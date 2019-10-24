@@ -46,7 +46,7 @@ let example1_program =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
 
 let%expect_test "Dependency graph example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
@@ -176,7 +176,7 @@ let uninitialized_var_example =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
 
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)

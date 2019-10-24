@@ -45,7 +45,7 @@ let example1_program =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
 
 let%expect_test "Variable dependency example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)

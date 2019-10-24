@@ -190,8 +190,8 @@ let use_file filename =
   let typed_ast =
     try
       match Semantic_check.semantic_check_program ast with
-      | Result.Ok prog -> prog
-      | Result.Error (error :: _) ->
+      | Result.Ok (prog, _) -> prog
+      | Result.Error (error :: _, _) ->
           let loc = Semantic_error.location error
           and msg = (Fmt.to_to_string Semantic_error.pp) error in
           Errors.report_semantic_error (msg, loc) ;
