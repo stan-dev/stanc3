@@ -241,19 +241,9 @@ let remove_propto_infix suffix ~name =
   |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
   |> Option.map ~f:(fun x -> x ^ suffix)
 
-let stdlib_distribution_name s =
-  List.map ~f:(remove_propto_infix ~name:s) distribution_suffices
-  |> List.filter_opt |> List.hd |> Option.value ~default:s
-
-let%expect_test "propto name mangling" =
-  stdlib_distribution_name "normal_propto_lpdf" |> print_string ;
-  stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string ;
-  stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string ;
-  [%expect {| normal_lpdf; normal_lpdf; normal |}]
-
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
-  let name = stdlib_distribution_name name in
+  let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
@@ -270,7 +260,7 @@ let stan_math_returntype name args =
             (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
-  let name = stdlib_distribution_name name in
+  let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
 (* XXX Refactor this out into full Distribution node in MIR *)
@@ -327,7 +317,7 @@ let operator_stan_math_return_type op arg_tys =
   |> List.hd
 
 let get_sigs name =
-  let name = stdlib_distribution_name name in
+  let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
 let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt))

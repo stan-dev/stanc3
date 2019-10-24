@@ -54,6 +54,13 @@ type ('a, 'b) t =
   ; prog_path: string }
 [@@deriving sexp, map, fold]
 
+let map_stmts f p =
+  { p with
+    prepare_data= f p.prepare_data
+  ; log_prob= f p.log_prob
+  ; generate_quantities= f p.generate_quantities
+  ; transform_inits= f p.transform_inits }
+
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp

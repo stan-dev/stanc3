@@ -104,8 +104,8 @@ module Located = struct
   let loc_of Fixed.({meta; _}) = meta
 
   (** This module acts as a temporary replace for the `stmt_loc_num` type that
-  is currently used within `analysis_and_optimization`. 
-  
+  is currently used within `analysis_and_optimization`.
+
   The original intent of the type was to provide explicit sharing of subterms.
   My feeling is that ultimately we either want to:
   - use the recursive type directly and rely on OCaml for sharing
@@ -309,7 +309,7 @@ module Helpers = struct
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
-  (** Exactly like for_scalar, but iterating through array dimensions in the 
+  (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
   let for_scalar_inv st bodyfn var smeta =
     let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
