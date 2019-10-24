@@ -11,8 +11,7 @@ let remove_stan_dist_suffix s =
   |> List.hd_exn
 
 let capitalize_fnames = String.Set.of_list ["normal"; "cauchy"]
-
-let none = {Expr.Helpers.zero with Expr.Fixed.pattern=Var "None"}
+let none = {Expr.Helpers.zero with Expr.Fixed.pattern= Var "None"}
 
 let map_functions fname args =
   match fname with
@@ -78,3 +77,4 @@ let trans_prog (p : Program.Typed.t) =
   in
   Program.map translate_funapps map_stmt p
   |> Program.map Fn.id remove_unused_stmts
+  |> Analysis_and_optimization.Optimize.vectorize

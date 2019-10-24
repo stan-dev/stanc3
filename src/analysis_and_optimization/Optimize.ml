@@ -889,21 +889,37 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   transform_program_blockwise mir transform
 
 (* Try to turn for loops into vectorized computation, if it's available. *)
-let vectorize =
-  let only_indexed_by vident e = match e.Expr.Fixed.pattern with
-    | Indexed i
+let vectorize (mir : Program.Typed.t) =
+  let only_indexed_by vident accum (e : Expr.Typed.t) =
+    accum
+    &&
+    match e.Expr.Fixed.pattern with
+    | Expr.Fixed.Pattern.Indexed
+        (_, [Single {Expr.Fixed.pattern= Lit (_, _); _}]) ->
+        true
+    | Indexed (_, [Single {pattern= Var v; _}]) when v = vident -> true
+    | Indexed _ -> false
+    | _ -> true
   in
-  let open Stmt.Fixed in
+  let remove_index_of vident e =
+    let open Expr.Fixed in
+    match e.pattern with
+    | Indexed (obj, [Single {pattern= Var v; _}]) when v = vident -> obj
+    | _ -> e
+  in
   let open Stmt.Fixed.Pattern in
-  let vectorize_stmt s = match s.pattern with
-    | For { body={pattern=TargetPE e; _}; loopvar; _}
-      when Expr.Fixed.all
-          ~pred:(function
-              | Expr.Fixed.{pattern=Expr.Fixed.Pattern.Indexed ; _})
-      ->
+  let vectorize_stmt (s : Stmt.Located.t) =
+    match s.Stmt.Fixed.pattern with
+    | For {body= {pattern= TargetPE e; _}; loopvar; _}
+     |For {body= {pattern= Block [{pattern= TargetPE e; _}]; _}; loopvar; _}
+      when Expr.Fixed.Pattern.fold (only_indexed_by loopvar) true e.pattern ->
+        let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
+        {s with pattern= TargetPE e'}
     | _ -> s
   in
-  Program.map Fn.id (Stmt.Fixed.rewrite_top_down ~f:Fn.id ~g:vectorize_stmt)
+  Program.map Fn.id
+    (Stmt.Fixed.rewrite_top_down ~f:Fn.id ~g:vectorize_stmt)
+    mir
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)

@@ -54,6 +54,9 @@ val optimize_ad_levels : Program.Typed.t -> Program.Typed.t
     variables only ever get treated as autodiff variables if they have some
     dependency on a parameter *)
 
+val vectorize : Program.Typed.t -> Program.Typed.t
+(** Attempt naive automated vectorization of some forms of For loops *)
+
 (** Interface for turning individual optimizations on/off. Useful for testing
     and for top-level interface flags. *)
 type optimization_settings =

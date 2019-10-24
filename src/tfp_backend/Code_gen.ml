@@ -71,8 +71,8 @@ let rec pp_stmt ppf s =
      their arguments. I think these functions need to be named and
      defined inline in general because lambdas are limited.
   *)
-  | IfElse (_, _, _) | While (_, _) | For _ | NRFunApp (CompilerInternal, _, _)
-    ->
+  | For _ -> print_endline "FOR"
+  | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
