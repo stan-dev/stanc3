@@ -1,4 +1,5 @@
 open Core_kernel
+module Str = Re.Str
 
 (** Source code locations *)
 type t =

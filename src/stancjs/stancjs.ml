@@ -5,14 +5,14 @@ open Analysis_and_optimization
 open Middle
 
 let print_warn_uninitialized
-    (uninit_vars : (location_span * string) Set.Poly.t) =
+    (uninit_vars : (Location_span.t * string) Set.Poly.t) =
   let show_var_info (span, var_name) =
-    string_of_location_span span
+    Location_span.to_string span
     ^ ":\n" ^ "  Warning: The variable '" ^ var_name
     ^ "' may not have been initialized.\n"
   in
   let filtered_uninit_vars =
-    Set.filter ~f:(fun (span, _) -> span <> no_span) uninit_vars
+    Set.filter ~f:(fun (span, _) -> span <> Location_span.empty) uninit_vars
   in
   Set.iter filtered_uninit_vars ~f:(fun v_info ->
       Out_channel.output_string stderr (show_var_info v_info) )
