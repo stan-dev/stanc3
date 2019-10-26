@@ -3267,40 +3267,26 @@ class mother_model : public model_base_crtp<mother_model> {
             assign(d_cfcov_33_ar, cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list()))), context__.vals_r("d_cfcov_33_ar")[(pos__ - 1)], "assigning variable d_cfcov_33_ar");
             current_statement__ = 197;
             pos__ = (pos__ + 1);}}}
-      context__.validate_dims("data initialization","td_int","int",
-          context__.to_vec());
       
-      context__.validate_dims("data initialization","td_1d","int",
-          context__.to_vec(N));
       td_1d = std::vector<int>(N, 0);
       
-      context__.validate_dims("data initialization","td_1dk","int",
-          context__.to_vec(M));
       td_1dk = std::vector<int>(M, 0);
       
       current_statement__ = 200;
       assign(td_1dk, nil_index_list(), rep_array(1, M), "assigning variable td_1dk");
-      context__.validate_dims("data initialization","td_a","int",
-          context__.to_vec());
       
       current_statement__ = 201;
       td_a = N;
-      context__.validate_dims("data initialization","td_b","double",
-          context__.to_vec());
       
       current_statement__ = 202;
       td_b = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 202;
       td_b = (N * J);
-      context__.validate_dims("data initialization","td_c","double",
-          context__.to_vec());
       
       current_statement__ = 203;
       td_c = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 203;
       td_c = foo_bar1(td_b, pstream__);
-      context__.validate_dims("data initialization","td_ar_mat","double",
-          context__.to_vec(4, 5, 2, 3));
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
       current_statement__ = 204;
@@ -3314,8 +3300,6 @@ class mother_model : public model_base_crtp<mother_model> {
               current_statement__ = 204;
               assign(td_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
                      ), "assigning variable td_ar_mat");}}}}
-      context__.validate_dims("data initialization","td_simplex","double",
-          context__.to_vec(N));
       td_simplex = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 205;
@@ -3323,8 +3307,6 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 205;
         assign(td_simplex, cons_list(index_uni(sym1__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable td_simplex");}
-      context__.validate_dims("data initialization","td_1d_simplex","double",
-          context__.to_vec(N, N));
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 206;
@@ -3334,8 +3316,6 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 206;
           assign(td_1d_simplex, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_1d_simplex");}}
-      context__.validate_dims("data initialization","td_3d_simplex","double",
-          context__.to_vec(N, M, K, N));
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       current_statement__ = 207;
@@ -3349,8 +3329,6 @@ class mother_model : public model_base_crtp<mother_model> {
               current_statement__ = 207;
               assign(td_3d_simplex, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), std::numeric_limits<double>::quiet_NaN(
                      ), "assigning variable td_3d_simplex");}}}}
-      context__.validate_dims("data initialization","td_cfcov_54","double",
-          context__.to_vec(5, 5));
       td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
       
       current_statement__ = 208;
@@ -3360,8 +3338,6 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 208;
           assign(td_cfcov_54, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_cfcov_54");}}
-      context__.validate_dims("data initialization","td_cfcov_33","double",
-          context__.to_vec(3, 3));
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 209;
@@ -3371,8 +3347,6 @@ class mother_model : public model_base_crtp<mother_model> {
           current_statement__ = 209;
           assign(td_cfcov_33, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), std::numeric_limits<double>::quiet_NaN(
                  ), "assigning variable td_cfcov_33");}}
-      context__.validate_dims("data initialization","x","double",
-          context__.to_vec(2));
       x = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 210;
@@ -3380,8 +3354,6 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 210;
         assign(x, cons_list(index_uni(sym1__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable x");}
-      context__.validate_dims("data initialization","y","double",
-          context__.to_vec(2));
       y = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 211;
@@ -3389,20 +3361,12 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 211;
         assign(y, cons_list(index_uni(sym1__), nil_index_list()), std::numeric_limits<double>::quiet_NaN(
                ), "assigning variable y");}
-      context__.validate_dims("data initialization","dat","double",
-          context__.to_vec(0));
       dat = std::vector<double>(0, 0);
       
-      context__.validate_dims("data initialization","dat_int","int",
-          context__.to_vec(0));
       dat_int = std::vector<int>(0, 0);
       
-      context__.validate_dims("data initialization","x_r","double",
-          context__.to_vec(0, 0));
       x_r = std::vector<std::vector<double>>(0, std::vector<double>(0, 0));
       
-      context__.validate_dims("data initialization","x_i","int",
-          context__.to_vec(0, 0));
       x_i = std::vector<std::vector<int>>(0, std::vector<int>(0, 0));
       
       current_statement__ = 216;
