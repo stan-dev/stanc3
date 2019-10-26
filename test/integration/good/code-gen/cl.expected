@@ -138,16 +138,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","k","int",
+          context__.to_vec());
       
       current_statement__ = 35;
       pos__ = 1;
       current_statement__ = 35;
       k = context__.vals_i("k")[(pos__ - 1)];
+      context__.validate_dims("data initialization","n","int",
+          context__.to_vec());
       
       current_statement__ = 36;
       pos__ = 1;
       current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
+      context__.validate_dims("data initialization","X_d","double",
+          context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 37;
@@ -160,6 +166,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","y_v_d","double",
+          context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
       current_statement__ = 38;
@@ -170,6 +178,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","X_rv_d","double",
+          context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
       current_statement__ = 39;
@@ -180,6 +190,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y_vi_d","int",
+          context__.to_vec(n));
       y_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 40;
@@ -190,6 +202,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y2_vi_d","int",
+          context__.to_vec(n));
       y2_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 41;
@@ -200,6 +214,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
         current_statement__ = 41;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y_s_d","int",
+          context__.to_vec());
       
       current_statement__ = 42;
       pos__ = 1;
