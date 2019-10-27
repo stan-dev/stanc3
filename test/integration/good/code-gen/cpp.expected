@@ -98,11 +98,15 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","J","int",
+          context__.to_vec());
       
       current_statement__ = 9;
       pos__ = 1;
       current_statement__ = 9;
       J = context__.vals_i("J")[(pos__ - 1)];
+      context__.validate_dims("data initialization","y","double",
+          context__.to_vec(J));
       y = std::vector<double>(J, 0);
       
       current_statement__ = 10;
@@ -113,6 +117,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         assign(y, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y")[(pos__ - 1)], "assigning variable y");
         current_statement__ = 10;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","sigma","double",
+          context__.to_vec(J));
       sigma = std::vector<double>(J, 0);
       
       current_statement__ = 11;
@@ -2983,21 +2989,29 @@ class mother_model : public model_base_crtp<mother_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","N","int",
+          context__.to_vec());
       
       current_statement__ = 177;
       pos__ = 1;
       current_statement__ = 177;
       N = context__.vals_i("N")[(pos__ - 1)];
+      context__.validate_dims("data initialization","M","int",
+          context__.to_vec());
       
       current_statement__ = 178;
       pos__ = 1;
       current_statement__ = 178;
       M = context__.vals_i("M")[(pos__ - 1)];
+      context__.validate_dims("data initialization","K","int",
+          context__.to_vec());
       
       current_statement__ = 179;
       pos__ = 1;
       current_statement__ = 179;
       K = context__.vals_i("K")[(pos__ - 1)];
+      context__.validate_dims("data initialization","d_int_1d_ar","int",
+          context__.to_vec(N));
       d_int_1d_ar = std::vector<int>(N, 0);
       
       current_statement__ = 180;
@@ -3008,6 +3022,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(d_int_1d_ar, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("d_int_1d_ar")[(pos__ - 1)], "assigning variable d_int_1d_ar");
         current_statement__ = 180;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","d_int_3d_ar","int",
+          context__.to_vec(N, M, K));
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, 0)));
       
       current_statement__ = 181;
@@ -3022,11 +3038,15 @@ class mother_model : public model_base_crtp<mother_model> {
             assign(d_int_3d_ar, cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list()))), context__.vals_i("d_int_3d_ar")[(pos__ - 1)], "assigning variable d_int_3d_ar");
             current_statement__ = 181;
             pos__ = (pos__ + 1);}}}
+      context__.validate_dims("data initialization","J","double",
+          context__.to_vec());
       
       current_statement__ = 182;
       pos__ = 1;
       current_statement__ = 182;
       J = context__.vals_r("J")[(pos__ - 1)];
+      context__.validate_dims("data initialization","d_real_1d_ar","double",
+          context__.to_vec(N));
       d_real_1d_ar = std::vector<double>(N, 0);
       
       current_statement__ = 183;
@@ -3037,6 +3057,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(d_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("d_real_1d_ar")[(pos__ - 1)], "assigning variable d_real_1d_ar");
         current_statement__ = 183;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","d_real_3d_ar","double",
+          context__.to_vec(N, M, K));
       d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
       current_statement__ = 184;
@@ -3051,6 +3073,8 @@ class mother_model : public model_base_crtp<mother_model> {
             assign(d_real_3d_ar, cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list()))), context__.vals_r("d_real_3d_ar")[(pos__ - 1)], "assigning variable d_real_3d_ar");
             current_statement__ = 184;
             pos__ = (pos__ + 1);}}}
+      context__.validate_dims("data initialization","d_vec","double",
+          context__.to_vec(N));
       d_vec = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 185;
@@ -3061,6 +3085,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(d_vec, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("d_vec")[(pos__ - 1)], "assigning variable d_vec");
         current_statement__ = 185;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","d_1d_vec","double",
+          context__.to_vec(N, N));
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 186;
@@ -3073,6 +3099,8 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_vec, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("d_1d_vec")[(pos__ - 1)], "assigning variable d_1d_vec");
           current_statement__ = 186;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","d_3d_vec","double",
+          context__.to_vec(N, M, K, N));
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       current_statement__ = 187;
@@ -3089,6 +3117,8 @@ class mother_model : public model_base_crtp<mother_model> {
               assign(d_3d_vec, cons_list(index_uni(sym4__), cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())))), context__.vals_r("d_3d_vec")[(pos__ - 1)], "assigning variable d_3d_vec");
               current_statement__ = 187;
               pos__ = (pos__ + 1);}}}}
+      context__.validate_dims("data initialization","d_row_vec","double",
+          context__.to_vec(N));
       d_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
       current_statement__ = 188;
@@ -3099,6 +3129,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(d_row_vec, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("d_row_vec")[(pos__ - 1)], "assigning variable d_row_vec");
         current_statement__ = 188;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","d_1d_row_vec","double",
+          context__.to_vec(N, N));
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
       current_statement__ = 189;
@@ -3111,6 +3143,8 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_row_vec, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("d_1d_row_vec")[(pos__ - 1)], "assigning variable d_1d_row_vec");
           current_statement__ = 189;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","d_3d_row_vec","double",
+          context__.to_vec(N, M, K, N));
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
       current_statement__ = 190;
@@ -3127,6 +3161,8 @@ class mother_model : public model_base_crtp<mother_model> {
               assign(d_3d_row_vec, cons_list(index_uni(sym4__), cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())))), context__.vals_r("d_3d_row_vec")[(pos__ - 1)], "assigning variable d_3d_row_vec");
               current_statement__ = 190;
               pos__ = (pos__ + 1);}}}}
+      context__.validate_dims("data initialization","d_ar_mat","double",
+          context__.to_vec(4, 5, 2, 3));
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
       current_statement__ = 191;
@@ -3143,6 +3179,8 @@ class mother_model : public model_base_crtp<mother_model> {
               assign(d_ar_mat, cons_list(index_uni(sym4__), cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())))), context__.vals_r("d_ar_mat")[(pos__ - 1)], "assigning variable d_ar_mat");
               current_statement__ = 191;
               pos__ = (pos__ + 1);}}}}
+      context__.validate_dims("data initialization","d_simplex","double",
+          context__.to_vec(N));
       d_simplex = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 192;
@@ -3153,6 +3191,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(d_simplex, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("d_simplex")[(pos__ - 1)], "assigning variable d_simplex");
         current_statement__ = 192;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","d_1d_simplex","double",
+          context__.to_vec(N, N));
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 193;
@@ -3165,6 +3205,8 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_simplex, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("d_1d_simplex")[(pos__ - 1)], "assigning variable d_1d_simplex");
           current_statement__ = 193;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","d_3d_simplex","double",
+          context__.to_vec(N, M, K, N));
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       current_statement__ = 194;
@@ -3181,6 +3223,8 @@ class mother_model : public model_base_crtp<mother_model> {
               assign(d_3d_simplex, cons_list(index_uni(sym4__), cons_list(index_uni(sym3__), cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())))), context__.vals_r("d_3d_simplex")[(pos__ - 1)], "assigning variable d_3d_simplex");
               current_statement__ = 194;
               pos__ = (pos__ + 1);}}}}
+      context__.validate_dims("data initialization","d_cfcov_54","double",
+          context__.to_vec(5, 4));
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
       current_statement__ = 195;
@@ -3193,6 +3237,8 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_cfcov_54, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("d_cfcov_54")[(pos__ - 1)], "assigning variable d_cfcov_54");
           current_statement__ = 195;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","d_cfcov_33","double",
+          context__.to_vec(3, 3));
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 196;
@@ -3205,6 +3251,8 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_cfcov_33, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("d_cfcov_33")[(pos__ - 1)], "assigning variable d_cfcov_33");
           current_statement__ = 196;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","d_cfcov_33_ar","double",
+          context__.to_vec(K, 3, 3));
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
       current_statement__ = 197;
@@ -7471,16 +7519,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","k","int",
+          context__.to_vec());
       
       current_statement__ = 35;
       pos__ = 1;
       current_statement__ = 35;
       k = context__.vals_i("k")[(pos__ - 1)];
+      context__.validate_dims("data initialization","n","int",
+          context__.to_vec());
       
       current_statement__ = 36;
       pos__ = 1;
       current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
+      context__.validate_dims("data initialization","X_d","double",
+          context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 37;
@@ -7493,6 +7547,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
+      context__.validate_dims("data initialization","y_v_d","double",
+          context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
       current_statement__ = 38;
@@ -7503,6 +7559,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","X_rv_d","double",
+          context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
       current_statement__ = 39;
@@ -7513,6 +7571,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y_vi_d","int",
+          context__.to_vec(n));
       y_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 40;
@@ -7523,6 +7583,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y2_vi_d","int",
+          context__.to_vec(n));
       y2_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 41;
@@ -7533,6 +7595,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
         current_statement__ = 41;
         pos__ = (pos__ + 1);}
+      context__.validate_dims("data initialization","y_s_d","int",
+          context__.to_vec());
       
       current_statement__ = 42;
       pos__ = 1;
