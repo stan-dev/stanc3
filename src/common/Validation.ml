@@ -109,8 +109,7 @@ module Make (Warning : sig
 end) (Error : sig
   type t
 end) : S with module Warning := Warning and module Error := Error = struct
-  type 'a t =
-    ('a * Warning.t list, Error.t NonEmptyList.t * Warning.t list) result
+  type 'a t = ('a * Warning.t list, Error.t list * Warning.t list) result
 
   module Basic = struct
     type nonrec 'a t = 'a t
@@ -124,19 +123,17 @@ end) : S with module Warning := Warning and module Error := Error = struct
 
     let apply f x =
       match (f, x) with
-      | Result.Ok (f, ws), Result.Ok (x, vs) ->
-          Result.Ok (f x, List.append ws vs)
-      | Ok (_, ws), Error (e, vs) -> Error (e, List.append ws vs)
-      | Error (e, ws), Ok (_, vs) -> Error (e, List.append ws vs)
-      | Error (es, ws), Error (fs, vs) ->
-          Error (NonEmptyList.append es fs, List.append ws vs)
+      | Result.Ok (f, ws), Result.Ok (x, vs) -> Result.Ok (f x, ws @ vs)
+      | Ok (_, ws), Error (e, vs) -> Error (e, ws @ vs)
+      | Error (e, ws), Ok (_, vs) -> Error (e, ws @ vs)
+      | Error (es, ws), Error (fs, vs) -> Error (es @ fs, ws @ vs)
 
     let bind x ~f =
       match x with
       | Result.Ok (x, ws) -> (
         match f x with
-        | Result.Ok (x, vs) -> Result.Ok (x, List.append ws vs)
-        | Error (e, vs) -> Error (e, List.append ws vs) )
+        | Result.Ok (x, vs) -> Result.Ok (x, ws @ vs)
+        | Error (e, vs) -> Error (e, ws @ vs) )
       | Error (e, ws) -> Error (e, ws)
 
     let return x = Result.Ok (x, [])
@@ -151,9 +148,7 @@ end) : S with module Warning := Warning and module Error := Error = struct
   let ok x = return x
 
   let error ?warn err : 'a t =
-    Result.Error
-      ( NonEmptyList.singleton err
-      , Option.value_map ~default:[] ~f:(fun x -> [x]) warn )
+    Result.Error ([err], Option.value_map ~default:[] ~f:(fun x -> [x]) warn)
 
   let warn ~warn x : 'a t = Result.Ok (x, [warn])
   let is_error = function Result.Error _ -> true | _ -> false
@@ -161,11 +156,11 @@ end) : S with module Warning := Warning and module Error := Error = struct
   let is_success = function Result.Ok (_, []) -> true | _ -> false
 
   let get_errors_opt = function
-    | Result.Error (es, ws) -> Some (NonEmptyList.to_list es, ws)
+    | Result.Error (es, ws) -> Some (es, ws)
     | _ -> None
 
   let get_first_error_opt = function
-    | Result.Error (es, _) -> Some (NonEmptyList.hd es)
+    | Result.Error (e :: _, _) -> Some e
     | _ -> None
 
   let get_success_opt = function
@@ -175,5 +170,5 @@ end) : S with module Warning := Warning and module Error := Error = struct
   let to_result x =
     match x with
     | Result.Ok (x, ws) -> Result.Ok (x, ws)
-    | Error (es, ws) -> Error (NonEmptyList.to_list es, ws)
+    | Error (es, ws) -> Error (es, ws)
 end
