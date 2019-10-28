@@ -9,7 +9,7 @@ let semantic_check_program ast =
        (Semantic_check.semantic_check_program
           (Option.value_exn (Result.ok ast))))
 
-let example1_program =
+let example1_program, example1_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -45,9 +45,13 @@ let example1_program =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
+  let typed_ast, warnings = semantic_check_program ast in
+  (Ast_to_Mir.trans_prog "" typed_ast, warnings)
 
 let%expect_test "Variable dependency example" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example1_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = prog_factor_graph example1_program in
   print_s [%sexp (deps : (label * factor * vexpr Set.Poly.t) list)] ;

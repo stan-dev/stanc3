@@ -3,16 +3,19 @@ open Frontend
 open Frontend_utils
 
 let%expect_test "indexed type checking" =
-  {|
+  let prog, warnings =
+    {|
 transformed data {
     int indices[3] = {1, 2, 3};
     matrix[3, 4] mat[5];
     print(mat[indices, :, indices][2,1,1]);
 }
 |}
-  |> typed_ast_of_string_exn |> fst
-  |> Fmt.strf "@[<v>%a@]" Pretty_printing.pp_program
-  |> print_endline ;
+    |> typed_ast_of_string_exn
+  in
+  print_endline warnings ;
+  [%expect {| |}] ;
+  prog |> Fmt.strf "@[<v>%a@]" Pretty_printing.pp_program |> print_endline ;
   [%expect
     {|
     transformed data {

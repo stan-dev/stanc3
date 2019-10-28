@@ -15,12 +15,15 @@ let%expect_test "whole program data generation check" =
                     }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -44,12 +47,15 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -74,12 +80,15 @@ let%expect_test "whole program data generation check" =
                 }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -109,12 +118,15 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -159,12 +171,15 @@ let%expect_test "whole program data generation check" =
         }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect
@@ -205,12 +220,15 @@ let%expect_test "whole program data generation check" =
       }
       |}
   in
-  let ast, _ =
+  let ast, warnings =
     Option.value_exn
       (Result.ok
          (Semantic_check.semantic_check_program
             (Option.value_exn (Result.ok ast))))
   in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
   [%expect

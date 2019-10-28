@@ -10,7 +10,7 @@ let semantic_check_program ast =
        (Semantic_check.semantic_check_program
           (Option.value_exn (Result.ok ast))))
 
-let example1_program =
+let example1_program, example1_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -46,9 +46,13 @@ let example1_program =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
+  let ast, warnings = semantic_check_program ast in
+  (Ast_to_Mir.trans_prog "" ast, warnings)
 
 let%expect_test "Dependency graph example" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example1_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = log_prob_dependency_graph example1_program in
   print_s [%sexp (deps : (label, label Set.Poly.t) Map.Poly.t)] ;
@@ -128,7 +132,7 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
-let uninitialized_var_example =
+let uninitialized_var_example, uninitialized_var_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -176,9 +180,15 @@ let uninitialized_var_example =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast)
+  let ast, warnings = semantic_check_program ast in
+  (Ast_to_Mir.trans_prog "" ast, warnings)
 
 let%expect_test "Uninitialized variables example" =
+  Fmt.to_to_string
+    Fmt.(list ~sep:comma Semantic_warning.pp)
+    uninitialized_var_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = mir_uninitialized_variables uninitialized_var_example in
   print_s [%sexp (deps : (Location_span.t * string) Set.Poly.t)] ;

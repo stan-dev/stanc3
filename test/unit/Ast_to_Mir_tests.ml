@@ -4,15 +4,19 @@ open Core_kernel
 open Ast_to_Mir
 
 let%expect_test "Operator-assign example" =
-  Frontend_utils.typed_ast_of_string_exn
-    {|
+  let ast, warnings =
+    Frontend_utils.typed_ast_of_string_exn
+      {|
         model {
           real r;
           vector[2] x[4];
           x[1] ./= r;
         }
       |}
-  |> fst |> trans_prog ""
+  in
+  print_endline warnings ;
+  [%expect {| |}] ;
+  trans_prog "" ast
   |> (fun Program.({log_prob; _}) -> log_prob)
   |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
   |> print_endline ;

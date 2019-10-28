@@ -24,7 +24,11 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -119,7 +123,11 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) warnings
+  |> print_endline ;
+  [%expect {| |}] ;
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -134,7 +142,7 @@ let%expect_test "Loop passthrough" =
       (7 11 17 21)
     |}]
 
-let example1_program =
+let example1_program, example1_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -170,9 +178,10 @@ let example1_program =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
+  (Stmt.Fixed.{meta= Location_span.empty; pattern= block}, warnings)
 
 let example1_statement_map =
   Stmt.Fixed.(
@@ -182,6 +191,9 @@ let example1_statement_map =
       example1_program)
 
 let%expect_test "Statement label map example" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example1_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   print_s
     [%sexp
       ( Map.Poly.map example1_statement_map ~f:fst
@@ -315,7 +327,7 @@ let%test "Reconstructed recursive statement" =
   in
   stmt = example1_program
 
-let example3_program =
+let example3_program, example3_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -325,12 +337,13 @@ let example3_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  (Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}, warnings)
 
 let example3_statement_map =
   Stmt.Fixed.(
@@ -340,6 +353,9 @@ let example3_statement_map =
       example3_program)
 
 let%expect_test "Statement label map example 3" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example3_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   print_s
     [%sexp
       ( example3_statement_map
@@ -408,7 +424,7 @@ let%expect_test "Predecessor graph example 3" =
       ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
     |}]
 
-let example4_program =
+let example4_program, example4_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -420,12 +436,13 @@ let example4_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  (Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}, warnings)
 
 let example4_statement_map =
   Stmt.Fixed.(
@@ -435,6 +452,9 @@ let example4_statement_map =
       example4_program)
 
 let%expect_test "Statement label map example 4" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example4_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   print_s
     [%sexp
       ( example4_statement_map
@@ -510,7 +530,7 @@ let%expect_test "Predecessor graph example 4" =
       ((4) ((1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6))))
     |}]
 
-let example5_program =
+let example5_program, example5_warnings =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -523,12 +543,13 @@ let example5_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (fst @@ semantic_check_program ast) in
+  let typed_ast, warnings = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" typed_ast in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  (Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}, warnings)
 
 let example5_statement_map =
   Stmt.Fixed.(
@@ -538,6 +559,9 @@ let example5_statement_map =
       example5_program)
 
 let%expect_test "Statement label map example 5" =
+  Fmt.to_to_string Fmt.(list ~sep:comma Semantic_warning.pp) example5_warnings
+  |> print_endline ;
+  [%expect {| |}] ;
   print_s
     [%sexp
       ( example5_statement_map
