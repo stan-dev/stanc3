@@ -9,7 +9,7 @@ module type S = sig
     type t
   end
 
-  type 'a t
+  type +'a t
 
   include Applicative.S with type 'a t := 'a t
   include Monad.S with type 'a t := 'a t
