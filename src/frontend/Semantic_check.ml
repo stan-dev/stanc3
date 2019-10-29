@@ -601,7 +601,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
               \      Positive values rounded down, negative values rounded up \
                or down in platform-dependent way. At %s"
               Pretty_printing.pp_expression x Pretty_printing.pp_expression y
-              (string_of_location_span x.emeta.loc) ;
+              (Location_span.to_string x.emeta.loc) ;
             (x, y)
         | _ -> (x, y)
       in

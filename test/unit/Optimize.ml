@@ -2192,7 +2192,10 @@ model {
     {|
       Info: integer division implicitly rounds to integer. Found int division: 1 / 2.
             Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'string', line 99, column 25 to column 26Info: integer division implicitly rounds to integer. Found int division: 1. / 2
-            Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'string', line 100, column 25 to column 27log_prob {
+            Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'string', line 100, column 25 to column 27
+
+
+      log_prob {
         matrix[3, 2] x_matrix;
         matrix[2, 4] y_matrix;
         matrix[4, 2] z_matrix;
