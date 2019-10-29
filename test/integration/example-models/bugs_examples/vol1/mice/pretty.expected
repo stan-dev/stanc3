@@ -37,6 +37,8 @@ generated quantities {
   pos_control <- beta[4] - beta[1];
 }
 
+Info: integer division implicitly rounds to integer. Found int division: 1 / r
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'mice.stan', line 43, column 45 to column 46
 
 Warning: deprecated language construct used in 'mice.stan', line 1, column 0:
    -------------------------------------------------

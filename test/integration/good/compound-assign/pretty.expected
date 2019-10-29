@@ -239,6 +239,8 @@ generated quantities {
   print("z /= foo(y): ", z);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: a1 / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'divide_equals_print.stan', line 10, column 9 to column 11
   $ ../../../../../install/default/bin/stanc --auto-format divide_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
@@ -1227,6 +1229,8 @@ generated quantities {
   print("z += foo(y): ", z);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: a1 / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'plus_equals_prim_print.stan', line 10, column 9 to column 11
   $ ../../../../../install/default/bin/stanc --auto-format plus_equals_row_vector.stan
 functions {
   vector foo(vector a1) {

@@ -389,3 +389,5 @@ model {
     y[t] ~ normal(0, exp(h[t] / 2));
 }
 
+Info: integer division implicitly rounds to integer. Found int division: h[t] / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'stochastic-volatility.stan', line 19, column 25 to column 29

@@ -2155,6 +2155,13 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: d_int / d_real
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 21, column 26 to column 31Info: integer division implicitly rounds to integer. Found int division: d_real / d_int
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 22, column 26 to column 32Info: integer division implicitly rounds to integer. Found int division: d_real / d_int
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 65, column 27 to column 33Info: integer division implicitly rounds to integer. Found int division: d_int / d_real
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 66, column 27 to column 32Info: integer division implicitly rounds to integer. Found int division: p_real / d_int
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 69, column 27 to column 33Info: integer division implicitly rounds to integer. Found int division: d_int / p_real
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'operators_real.stan', line 71, column 27 to column 32
   $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;

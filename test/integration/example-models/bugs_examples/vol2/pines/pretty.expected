@@ -193,6 +193,9 @@ generated quantities {
   lambda = softmax(log_py)[1];
 }
 
+Info: integer division implicitly rounds to integer. Found int division: 1 / sqrt(
+tau[i])
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines-3.stan', line 23, column 15 to column 16
   $ ../../../../../../../install/default/bin/stanc --auto-format pines-4.stan
 data {
   int<lower=0> N;
@@ -236,6 +239,9 @@ model {
   target += log_sum_exp(log_p);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: 1 / sqrt(
+tau[i])
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines-4.stan', line 28, column 16 to column 17
 
 Warning: deprecated language construct used in 'pines-4.stan', line 12, column 9:
    -------------------------------------------------
@@ -468,6 +474,13 @@ generated quantities {
   pM2 <- bernoulli_rng(softmax(log_py)[2]);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: 1 / sqrt(
+tau[i])
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines.stan', line 29, column 16 to column 17Info: integer division implicitly rounds to integer. Found int division: 1 / 400.0
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines.stan', line 37, column 32 to column 33Info: integer division implicitly rounds to integer. Found int division: 1 / 400.0
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines.stan', line 38, column 32 to column 33Info: integer division implicitly rounds to integer. Found int division: 1 / 256.0
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines.stan', line 48, column 32 to column 33Info: integer division implicitly rounds to integer. Found int division: 1 / 256.0
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'pines.stan', line 49, column 31 to column 32
 
 Warning: deprecated language construct used in 'pines.stan', line 12, column 9:
    -------------------------------------------------

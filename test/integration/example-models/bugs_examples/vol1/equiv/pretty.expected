@@ -47,6 +47,11 @@ generated quantities {
   equiv <- step(theta - 0.8) - step(theta - 1.2);
 }
 
+Info: integer division implicitly rounds to integer. Found int division: 
+sign[T[n, p]] * phi / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'equiv.stan', line 39, column 19 to column 38Info: integer division implicitly rounds to integer. Found int division: 
+sign[p] * pi / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'equiv.stan', line 39, column 45 to column 57
 
 Warning: deprecated language construct used in 'equiv.stan', line 1, column 0:
    -------------------------------------------------
