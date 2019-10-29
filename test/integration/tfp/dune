@@ -1,0 +1,10 @@
+(rule
+ (targets eight_schools.py.output)
+ (deps (package stanc) (:stanfiles ../good/code-gen/eight_schools_ncp.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:stan2tfp} %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff eight_schools.py eight_schools.py.output)))

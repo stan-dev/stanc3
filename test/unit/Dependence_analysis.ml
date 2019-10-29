@@ -181,7 +181,7 @@ let uninitialized_var_example =
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = mir_uninitialized_variables uninitialized_var_example in
-  print_s [%sexp (deps : (location_span * string) Set.Poly.t)] ;
+  print_s [%sexp (deps : (Location_span.t * string) Set.Poly.t)] ;
   [%expect
     {|
       ((((begin_loc

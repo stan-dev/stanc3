@@ -20,7 +20,7 @@
  (name runtest)
  (action (diff mir.expected mir.output)))
 
- (rule
+(rule
  (targets cl.output)
  (deps (package stanc) (:stanfiles  optimize_glm.stan))
  (action

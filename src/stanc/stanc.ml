@@ -135,8 +135,8 @@ let optimization_settings () : Optimize.optimization_settings =
   ; optimize_ad_levels= !optimize }
 
 let print_warn_uninitialized
-    (uninit_vars : (location_span * string) Set.Poly.t) =
-  let show_location_span {begin_loc; end_loc; _} =
+    (uninit_vars : (Location_span.t * string) Set.Poly.t) =
+  let show_location_span Location_span.({begin_loc; end_loc; _}) =
     let begin_line = string_of_int begin_loc.line_num in
     let begin_col = string_of_int begin_loc.col_num in
     let end_line = string_of_int end_loc.line_num in
@@ -155,7 +155,9 @@ let print_warn_uninitialized
     ^ "' may not have been initialized.\n"
   in
   let filtered_uninit_vars =
-    Set.Poly.filter ~f:(fun (span, _) -> span <> no_span) uninit_vars
+    Set.Poly.filter
+      ~f:(fun (span, _) -> span <> Location_span.empty)
+      uninit_vars
   in
   Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
       Out_channel.output_string stderr (show_var_info v_info) )
@@ -169,47 +171,19 @@ let add_file filename =
 
 (** ad directives from the given file. *)
 let use_file filename =
-  let ast =
-    try
-      match Parse.parse_file Parser.Incremental.program filename with
-      | Result.Ok ast -> ast
-      | Result.Error err ->
-          let loc = Parse.syntax_error_location err
-          and msg = Parse.syntax_error_message err in
-          Errors.report_parsing_error (msg, loc) ;
-          exit 1
-    with Errors.SyntaxError err ->
-      Errors.report_syntax_error err ;
-      exit 1
-  in
+  let ast = Frontend_utils.get_ast_or_exit filename in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
-  let typed_ast =
-    try
-      match Semantic_check.semantic_check_program ast with
-      | Result.Ok prog -> prog
-      | Result.Error (error :: _) ->
-          let loc = Semantic_error.location error
-          and msg = (Fmt.to_to_string Semantic_error.pp) error in
-          Errors.report_semantic_error (msg, loc) ;
-          exit 1
-      | _ ->
-          Printf.eprintf "The impossible happened" ;
-          exit 1
-    with Errors.SemanticError err ->
-      Errors.report_semantic_error err ;
-      exit 1
-  in
+  let typed_ast = Frontend_utils.type_ast_or_exit ast in
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
-    if !dump_mir_pretty then
-      Middle.Pretty.pp_typed_prog Format.std_formatter mir ;
+      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
+    if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     ( if !warn_uninitialized then
       let uninitialized_vars =
         Dependence_analysis.mir_uninitialized_variables mir
@@ -217,18 +191,18 @@ let use_file filename =
       print_warn_uninitialized uninitialized_vars ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.typed_prog)] ;
-    if !dump_tx_mir_pretty then
-      Middle.Pretty.pp_typed_prog Format.std_formatter tx_mir ;
+      Sexp.pp_hum Format.std_formatter
+        [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+    if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       if !optimize then (
         let opt =
           Optimize.optimization_suite (optimization_settings ()) tx_mir
         in
         if !dump_opt_mir then
-          Sexp.pp_hum Format.std_formatter [%sexp (opt : Middle.typed_prog)] ;
-        if !dump_opt_mir_pretty then
-          Middle.Pretty.pp_typed_prog Format.std_formatter opt ;
+          Sexp.pp_hum Format.std_formatter
+            [%sexp (opt : Middle.Program.Typed.t)] ;
+        if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
       else tx_mir
     in
@@ -243,7 +217,7 @@ let main () =
   Arg.parse options add_file usage ;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
-    Middle.pretty_print_all_math_sigs Format.std_formatter () ;
+    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;

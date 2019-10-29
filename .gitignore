@@ -13,3 +13,5 @@ _opam
 .#*
 node_modules/*
 .vscode/**
+
+*.pyc

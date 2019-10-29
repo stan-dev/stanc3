@@ -12,30 +12,33 @@ let opencl_triggers =
            ] ) )
     ; ("bernoulli_logit_glm_lpmf", ([0; 1], [([1], [])]))
     ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UMatrix)])])
+      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])])
         (* Additional requirement of argument 1 being a matrix *) )
     ; ("neg_binomial_2_log_glm_lpmf", ([0; 1], [([1], [])]))
     ; ("ordered_logistic_glm_lpmf", ([0; 1], [([1], [(1, UMatrix)])]))
     ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [])])) ]
 
 let opencl_suffix = "_opencl__"
-let to_matrix_cl e = {e with expr= FunApp (StanLib, "to_matrix_cl", [e])}
 
-let rec switch_expr_to_opencl available_cl_vars e =
+let to_matrix_cl e =
+  Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
+
+let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
+    =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl e =
-    match e.expr with
-    | Var s when is_avail s -> {e with expr= Var (s ^ opencl_suffix)}
+  let to_cl (Expr.Fixed.({pattern; _}) as e) =
+    match pattern with
+    | Var s when is_avail s ->
+        Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
     | _ -> to_matrix_cl e
   in
   let move_cl_args cl_args index arg =
     if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
   in
-  let check_type args (i, t) = (List.nth_exn args i).emeta.mtype = t in
+  let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
   let check_if_data args ind =
-    match (List.nth_exn args ind).expr with
-    | Var s when is_avail s -> true
-    | _ -> false
+    let Expr.Fixed.({pattern; _}) = List.nth_exn args ind in
+    match pattern with Var s when is_avail s -> true | _ -> false
   in
   let req_met args (data_arg, type_arg) =
     List.for_all ~f:(check_if_data args) data_arg
@@ -47,51 +50,61 @@ let rec switch_expr_to_opencl available_cl_vars e =
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
-  match e.expr with
+  match pattern with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
       let trigger = Map.find_exn opencl_triggers f in
-      {e with expr= FunApp (StanLib, f, maybe_map_args args trigger)}
-  | x -> {e with expr= map_expr (switch_expr_to_opencl available_cl_vars) x}
+      {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+  | x ->
+      { e with
+        pattern=
+          Expr.Fixed.Pattern.map (switch_expr_to_opencl available_cl_vars) x }
 
 let pos = "pos__"
-let is_scalar = function SInt | SReal -> true | _ -> false
 
 let data_read smeta (decl_id, st) =
   let decl_var =
-    { expr= Var decl_id
-    ; emeta= {mloc= smeta; mtype= remove_size st; madlevel= DataOnly} }
+    { Expr.Fixed.pattern= Var decl_id
+    ; meta=
+        Expr.Typed.Meta.
+          {loc= smeta; type_= SizedType.to_unsized st; adlevel= DataOnly} }
   in
-  let swrap stmt = {stmt; smeta} in
+  let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
   let bodyfn var =
-    let pos_var = {expr= Var pos; emeta= internal_meta} in
+    let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
     let readfnapp var =
       let f =
-        internal_funapp FnReadData
-          [{var with expr= Lit (Str, decl_id)}]
-          var.emeta
+        Expr.Helpers.internal_funapp FnReadData
+          [{var with pattern= Lit (Str, decl_id)}]
+          var.meta
       in
-      {expr= Indexed (f, [Single pos_var]); emeta= {var.emeta with mtype= UInt}}
+      let meta = Expr.Typed.Meta.{var.meta with type_= UInt} in
+      {Expr.Fixed.pattern= Indexed (f, [Single pos_var]); meta}
     in
     let pos_increment =
-      if is_scalar st then []
+      if SizedType.is_scalar st then []
       else
-        [Assignment ((pos, UInt, []), binop pos_var Plus (mir_int 1)) |> swrap]
+        [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
+          |> swrap ]
     in
     SList
-      ( assign_indexed (remove_size st) decl_id smeta readfnapp var
+      ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
+          readfnapp var
       :: pos_increment )
     |> swrap
   in
-  let pos_reset = Assignment ((pos, UInt, []), loop_bottom) |> swrap in
-  [pos_reset; for_scalar_inv st bodyfn decl_var smeta]
+  let pos_reset =
+    Stmt.Fixed.Pattern.Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom)
+    |> swrap
+  in
+  [pos_reset; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta]
 
 let rec base_type = function
-  | SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> UReal
-  | x -> remove_size x
+  | SizedType.SArray (t, _) -> base_type t
+  | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
+  | x -> SizedType.to_unsized x
 
 let rec base_ut_to_string = function
-  | UMatrix -> "matrix"
+  | UnsizedType.UMatrix -> "matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "scalar"
@@ -99,11 +112,13 @@ let rec base_ut_to_string = function
   | UArray t -> base_ut_to_string t
   | t ->
       raise_s
-        [%message "Another place where it's weird to get " (t : unsizedtype)]
+        [%message "Another place where it's weird to get " (t : UnsizedType.t)]
 
 let param_read smeta
     ( decl_id
-    , {out_constrained_st= cst; out_unconstrained_st= ucst; out_block; _} ) =
+    , Program.({ out_constrained_st= cst
+               ; out_unconstrained_st= ucst
+               ; out_block; _ }) ) =
   if not (out_block = Parameters) then []
   else
     let decl_id, decl =
@@ -112,97 +127,166 @@ let param_read smeta
       | false ->
           let decl_id = decl_id ^ "_in__" in
           let d =
-            Decl {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
+            Stmt.Fixed.Pattern.Decl
+              {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
           in
-          (decl_id, [{stmt= d; smeta}])
+          (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
     in
     let unconstrained_decl_var =
-      { expr= Var decl_id
-      ; emeta= {mloc= smeta; mtype= remove_size cst; madlevel= AutoDiffable} }
+      let meta =
+        Expr.Typed.Meta.create ~loc:smeta
+          ~type_:SizedType.(to_unsized cst)
+          ~adlevel:AutoDiffable ()
+      in
+      Expr.Fixed.{meta; pattern= Var decl_id}
     in
     let bodyfn var =
-      let readfnapp var =
-        internal_funapp FnReadParam
-          ( { expr= Lit (Str, base_ut_to_string (remove_size ucst))
-            ; emeta= internal_meta }
-          :: eigen_size ucst )
-          {var.emeta with mtype= base_type ucst}
+      let readfnapp (var : Expr.Typed.t) =
+        Expr.(
+          Helpers.internal_funapp FnReadParam
+            ( { Fixed.pattern=
+                  Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
+              ; meta= Typed.Meta.empty }
+            :: SizedType.dims_of ucst )
+            Typed.Meta.{var.meta with type_= base_type ucst})
       in
-      assign_indexed (remove_size cst) decl_id smeta readfnapp var
+      Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
+        readfnapp var
     in
-    decl @ [for_eigen ucst bodyfn unconstrained_decl_var smeta]
+    decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta]
 
 let escape_name str =
   str
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-let rec add_jacobians {stmt; smeta} =
-  match stmt with
-  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, args); emeta})
-    when internal_fn_of_string f = Some FnConstrain ->
-      let var n = {expr= Var n; emeta= internal_meta} in
-      let assign rhs = {stmt= Assignment (lhs, rhs); smeta} in
-      { stmt=
+let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
+  match pattern with
+  | Assignment (lhs, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
+    when Internal_fun.of_string_opt f = Some FnConstrain ->
+      let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
+      let assign rhs =
+        Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
+      in
+      { Stmt.Fixed.pattern=
           IfElse
             ( var "jacobian__"
             , assign
-                {expr= FunApp (CompilerInternal, f, args @ [var "lp__"]); emeta}
-            , Some (assign {expr= FunApp (CompilerInternal, f, args); emeta})
-            )
-      ; smeta }
-  | _ -> {stmt= map_statement Fn.id add_jacobians stmt; smeta}
+                { Expr.Fixed.pattern=
+                    FunApp (CompilerInternal, f, args @ [var "lp__"])
+                ; meta= emeta }
+            , Some
+                (assign
+                   { Expr.Fixed.pattern= FunApp (CompilerInternal, f, args)
+                   ; meta= emeta }) )
+      ; meta= smeta }
+  | ptn ->
+      Stmt.Fixed.{pattern= Pattern.map Fn.id add_jacobians ptn; meta= smeta}
 
 (* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
    The blocks make sure that the program with the inserted location update is still well-formed C++ though.
    *)
-let rec ensure_body_in_block {stmt; smeta} =
-  let in_block {stmt; smeta} =
-    { stmt=
-        ( match stmt with
-        | Block l | SList l -> Block l
-        | stmt -> Block [{stmt; smeta}] )
-    ; smeta }
+let rec ensure_body_in_block (Stmt.Fixed.({pattern; _}) as stmt) =
+  let in_block stmt =
+    let pattern =
+      Stmt.Fixed.(
+        match stmt.pattern with
+        | Block l | SList l -> Pattern.Block l
+        | _ -> Block [stmt])
+    in
+    {stmt with pattern}
   in
-  let ensure_body_in_block_base stmt =
-    match stmt with
-    | IfElse (_, _, _) | While (_, _) | For _ ->
-        map_statement (fun x -> x) in_block stmt
-    | _ -> stmt
+  let ensure_body_in_block_base pattern =
+    Stmt.Fixed.Pattern.(
+      match pattern with
+      | IfElse (_, _, _) | While (_, _) | For _ -> map Fn.id in_block pattern
+      | _ -> pattern)
   in
-  { stmt=
-      ensure_body_in_block_base
-        (map_statement (fun x -> x) ensure_body_in_block stmt)
-  ; smeta }
+  let pattern =
+    ensure_body_in_block_base
+      Stmt.Fixed.(Pattern.map Fn.id ensure_body_in_block pattern)
+  in
+  {stmt with pattern}
 
-let flatten_slist = function {stmt= SList ls; _} -> ls | x -> [x]
+let rec flatten_slists_list ls =
+  let flatten_slist stmt =
+    Stmt.Fixed.(match stmt.pattern with SList ls -> ls | _ -> [stmt])
+  in
+  let rec flatten_slists_stmt stmt =
+    let pattern =
+      Stmt.Fixed.(
+        match stmt.pattern with
+        | Block ls ->
+            Pattern.Block
+              (List.concat_map
+                 ~f:(Fn.compose flatten_slist flatten_slists_stmt)
+                 ls)
+        | pattern -> Pattern.map Fn.id flatten_slists_stmt pattern)
+    in
+    {stmt with pattern}
+  in
+  List.concat_map ls ~f:(fun stmt ->
+      Stmt.Fixed.(
+        match stmt.pattern with
+        | SList ls -> flatten_slists_list ls
+        | _ -> [stmt]) )
+  |> List.map ~f:flatten_slists_stmt
+
+let%expect_test "Flatten slists" =
+  let e pattern = Expr.Fixed.{meta= (); pattern} in
+  let s pattern = Stmt.Fixed.{meta= (); pattern} in
+  let stmt =
+    Stmt.Fixed.Pattern.(
+      [ SList
+          [ Block
+              [ SList
+                  [ While (e (Var "hi"), Block [SList [Break |> s] |> s] |> s)
+                    |> s ]
+                |> s ]
+            |> s ]
+        |> s ]
+      |> flatten_slists_list)
+  in
+  print_s [%sexp (stmt : (unit, unit) Stmt.Fixed.t list)] ;
+  [%expect
+    {|
+    (((pattern
+       (Block
+        (((pattern
+           (While ((pattern (Var hi)) (meta ()))
+            ((pattern (Block (((pattern Break) (meta ()))))) (meta ()))))
+          (meta ())))))
+      (meta ()))) |}]
 
 let add_reads stmts vars mkread =
   let var_names = String.Map.of_alist_exn vars in
-  let add_read_to_decl = function
-    | {stmt= Decl {decl_id; _}; smeta} as s when Map.mem var_names decl_id ->
-        s :: mkread smeta (decl_id, Map.find_exn var_names decl_id)
-    | s -> [s]
+  let add_read_to_decl (Stmt.Fixed.({pattern; meta}) as stmt) =
+    match pattern with
+    | Decl {decl_id; _} when Map.mem var_names decl_id ->
+        stmt :: mkread meta (decl_id, Map.find_exn var_names decl_id)
+    | _ -> [stmt]
   in
-  List.concat_map ~f:add_read_to_decl stmts |> List.concat_map ~f:flatten_slist
+  List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write (decl_id, sizedtype) =
   let bodyfn var =
-    { stmt=
-        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
-    ; smeta= no_span }
+    { Stmt.Fixed.pattern=
+        NRFunApp (CompilerInternal, Internal_fun.to_string FnWriteParam, [var])
+    ; meta= Location_span.empty }
   in
-  for_scalar_inv sizedtype bodyfn
-    { expr= Var decl_id
-    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
-    no_span
+  let meta =
+    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+  in
+  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
-let rec contains_var_expr is_vident accum {expr; _} =
+let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
   ||
-  match expr with
+  match pattern with
   | Var v when is_vident v -> true
-  | _ -> fold_expr (contains_var_expr is_vident) false expr
+  | pattern ->
+      Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
 
 (* When a parameter's unconstrained type and its constrained type are different,
    we generate a new variable "<param_name>_in__" and read into that. We now need
@@ -211,7 +295,10 @@ let rec contains_var_expr is_vident accum {expr; _} =
 *)
 let constrain_in_params outvars stmts =
   let is_target_var = function
-    | name, {out_unconstrained_st; out_constrained_st; out_block= Parameters; _}
+    | ( name
+      , { Program.out_unconstrained_st
+        ; out_constrained_st
+        ; out_block= Parameters; _ } )
       when not (out_unconstrained_st = out_constrained_st) ->
         Some name
     | _ -> None
@@ -219,24 +306,29 @@ let constrain_in_params outvars stmts =
   let target_vars =
     List.filter_map outvars ~f:is_target_var |> String.Set.of_list
   in
-  let rec change_constrain_target s =
-    match s.stmt with
-    | Assignment (_, {expr= FunApp (CompilerInternal, f, args); _})
-      when ( internal_fn_of_string f = Some FnConstrain
-           || internal_fn_of_string f = Some FnUnconstrain )
+  let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
+    match pattern with
+    | Assignment (_, {pattern= FunApp (CompilerInternal, f, args); _})
+      when ( Internal_fun.of_string_opt f = Some FnConstrain
+           || Internal_fun.of_string_opt f = Some FnUnconstrain )
            && List.exists args
                 ~f:(contains_var_expr (Set.mem target_vars) false) ->
-        let rec change_var_expr e =
-          match e.expr with
+        let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
+          match pattern with
           | Var vident when Set.mem target_vars vident ->
-              {e with expr= Var (vident ^ "_in__")}
-          | _ -> {e with expr= map_expr change_var_expr e.expr}
+              {e with pattern= Var (vident ^ "_in__")}
+          | pattern ->
+              {e with pattern= Expr.Fixed.Pattern.map change_var_expr pattern}
         in
         let rec change_var_stmt s =
-          {s with stmt= map_statement change_var_expr change_var_stmt s.stmt}
+          Stmt.Fixed.
+            { s with
+              pattern= Pattern.map change_var_expr change_var_stmt s.pattern }
         in
         change_var_stmt s
-    | _ -> {s with stmt= map_statement Fn.id change_constrain_target s.stmt}
+    | pattern ->
+        Stmt.Fixed.
+          {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
   in
   List.map ~f:change_constrain_target stmts
 
@@ -245,21 +337,23 @@ let fn_name_map =
 
 let rec map_fn_names s =
   let rec map_fn_names_expr e =
-    let expr =
-      match e.expr with
-      | FunApp (k, f, a) when Map.mem fn_name_map f ->
-          FunApp (k, Map.find_exn fn_name_map f, a)
-      | expr -> map_expr map_fn_names_expr expr
+    let pattern =
+      Expr.Fixed.(
+        match e.pattern with
+        | FunApp (k, f, a) when Map.mem fn_name_map f ->
+            Pattern.FunApp (k, Map.find_exn fn_name_map f, a)
+        | expr -> Pattern.map map_fn_names_expr expr)
     in
-    {e with expr}
+    {e with pattern}
   in
   let stmt =
-    match s.stmt with
-    | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
-        NRFunApp (k, Map.find_exn fn_name_map f, a)
-    | stmt -> map_statement map_fn_names_expr map_fn_names stmt
+    Stmt.Fixed.(
+      match s.pattern with
+      | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp (k, Map.find_exn fn_name_map f, a)
+      | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
-  {s with stmt}
+  {s with pattern= stmt}
 
 let rec insert_before f to_insert = function
   | [] -> to_insert
@@ -269,23 +363,30 @@ let rec insert_before f to_insert = function
 
 let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
 
-let rec collect_vars_expr is_target accum e =
+let rec collect_vars_expr is_target accum Expr.Fixed.({pattern; _}) =
   Set.union accum
-    ( match e.expr with
+    ( match pattern with
     | Var s when is_target s -> String.Set.of_list [s]
-    | x -> fold_expr (collect_vars_expr is_target) String.Set.empty x )
+    | x ->
+        Expr.Fixed.Pattern.fold
+          (collect_vars_expr is_target)
+          String.Set.empty x )
 
 let collect_opencl_vars s =
   let rec go accum s =
-    fold_statement (collect_vars_expr is_opencl_var) go accum s.stmt
+    Stmt.Fixed.(
+      Pattern.fold (collect_vars_expr is_opencl_var) go accum s.pattern)
   in
   go String.Set.empty s
 
 let%expect_test "collect vars expr" =
-  let mkvar s = {expr= Var s; emeta= internal_meta} in
+  let mkvar s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
-  let fnapp = {expr= FunApp (StanLib, "print", args); emeta= internal_meta} in
-  {stmt= TargetPE fnapp; smeta= no_span}
+  let fnapp =
+    Expr.
+      {Fixed.pattern= FunApp (StanLib, "print", args); meta= Typed.Meta.empty}
+  in
+  Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
   [%expect {| (w_opencl__ x_opencl__) |}]
 
@@ -296,54 +397,65 @@ let%expect_test "insert before" =
 
 let make_fill vident st loc =
   let rhs =
-    internal_funapp FnNaN [] {mtype= UReal; mloc= loc; madlevel= DataOnly}
+    Expr.(
+      Helpers.internal_funapp FnNaN []
+      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
   in
-  let ut = remove_size st in
+  let ut = SizedType.to_unsized st in
   let var =
-    {expr= Var vident; emeta= {internal_meta with mtype= ut; mloc= loc}}
+    Expr.(
+      let meta = {Typed.Meta.empty with type_= ut; loc} in
+      Fixed.{meta; pattern= Var vident})
   in
   let bodyfn var =
-    {stmt= Assignment ((vident, ut, pull_indices var), rhs); smeta= loc}
+    Stmt.Fixed.
+      { pattern=
+          Assignment ((vident, ut, Expr.Helpers.collect_indices var), rhs)
+      ; meta= loc }
   in
-  for_scalar st bodyfn var loc
+  Stmt.Helpers.for_scalar st bodyfn var loc
 
 let rec contains_eigen = function
-  | UArray t -> contains_eigen t
+  | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | _ -> false
 
+let type_needs_fill decl_id ut =
+  Utils.is_user_ident decl_id
+  && (contains_eigen ut || match ut with UReal -> true | _ -> false)
+
 let rec add_fill no_fill_required = function
-  | {stmt= Decl {decl_id; decl_type= Sized st; _}; smeta} as decl
+  | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
+    decl
     when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id
-         && (contains_eigen (remove_size st) || is_scalar st) ->
+         && type_needs_fill decl_id (SizedType.to_unsized st) ->
       (* I *think* we only need to initialize eigen types and scalars because we already construct
        std::vectors with 0s.
     *)
-      [decl; make_fill decl_id st smeta]
-  | {stmt= Decl {decl_id; decl_type= Unsized ut; _}; _}
-    when (not (Set.mem no_fill_required decl_id))
-         && is_user_ident decl_id && contains_eigen ut ->
-      raise_s
-        [%message
-          "Unsized type initialization to NaN not yet implemented - consider \
-           adding this to resize_to_match"]
-  | {stmt= Block ls; _} as s ->
-      [{s with stmt= Block (List.concat_map ~f:(add_fill no_fill_required) ls)}]
-  | {stmt= SList ls; _} as s ->
-      [{s with stmt= SList (List.concat_map ~f:(add_fill no_fill_required) ls)}]
-  | s -> [s]
+      Stmt.Fixed.{pattern= SList [decl; make_fill decl_id st meta]; meta}
+  | {pattern; meta} ->
+      Stmt.Fixed.
+        {pattern= Pattern.map Fn.id (add_fill no_fill_required) pattern; meta}
 
-let trans_prog (p : typed_prog) =
-  let p = map_prog Fn.id map_fn_names p in
+let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
+  { p with
+    Program.prepare_data= f p.prepare_data
+  ; log_prob= f p.log_prob
+  ; generate_quantities= f p.generate_quantities
+  ; transform_inits= f p.transform_inits }
+
+let trans_prog (p : Program.Typed.t) =
+  let p = Program.map Fn.id map_fn_names p in
   let init_pos =
-    [ Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; Assignment ((pos, UInt, []), loop_bottom) ]
-    |> List.map ~f:(fun stmt -> {stmt; smeta= no_span})
+    [ Stmt.Fixed.Pattern.Decl
+        {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+    ; Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom) ]
+    |> List.map ~f:(fun pattern ->
+           Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
   let log_prob = List.map ~f:add_jacobians p.log_prob in
   let get_pname_cst = function
-    | name, {out_block= Parameters; out_constrained_st; _} ->
+    | name, {Program.out_block= Parameters; out_constrained_st; _} ->
         Some (name, out_constrained_st)
     | _ -> None
   in
@@ -361,21 +473,21 @@ let trans_prog (p : typed_prog) =
   let data_and_params =
     List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
-  let add_fills =
-    List.concat_map ~f:(add_fill (String.Set.of_list data_and_params))
+  let tparam_start stmt =
+    Stmt.Fixed.(
+      match stmt.pattern with
+      | IfElse (cond, _, _)
+        when contains_var_expr
+               (( = ) "emit_transformed_parameters__")
+               false cond ->
+          true
+      | _ -> false)
   in
-  let tparam_start {stmt; _} =
-    match stmt with
-    | IfElse (cond, _, _)
-      when contains_var_expr (( = ) "emit_transformed_parameters__") false cond
-      ->
-        true
-    | _ -> false
-  in
-  let gq_start {stmt; _} =
-    match stmt with
+  let gq_start Stmt.Fixed.({pattern; _}) =
+    match pattern with
     | IfElse
-        ( { expr= FunApp (_, _, [{expr= Var "emit_generated_quantities__"; _}]); _
+        ( { pattern=
+              FunApp (_, _, [{pattern= Var "emit_generated_quantities__"; _}]); _
           }
         , _
         , _ ) ->
@@ -387,26 +499,26 @@ let trans_prog (p : typed_prog) =
       let data_var_idents = List.map ~f:fst p.input_vars in
       let switch_expr = switch_expr_to_opencl data_var_idents in
       let rec trans_stmt_to_opencl s =
-        {s with stmt= map_statement switch_expr trans_stmt_to_opencl s.stmt}
+        Stmt.Fixed.
+          { s with
+            pattern= Pattern.map switch_expr trans_stmt_to_opencl s.pattern }
       in
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
-  let gq =
+  let generate_quantities =
     ( add_reads p.generate_quantities p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes )
     @ gq_writes
-    |> add_fills
   in
   let log_prob =
     add_reads log_prob p.output_vars param_read
     |> constrain_in_params p.output_vars
-    |> translate_to_open_cl |> add_fills
+    |> translate_to_open_cl
   in
-  let generate_quantities = gq in
   let opencl_vars =
     String.Set.union_list
       (List.concat_map
@@ -419,18 +531,20 @@ let trans_prog (p : typed_prog) =
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
         in
-        [ { stmt=
-              Decl
-                { decl_adtype= DataOnly
-                ; decl_id= vident
-                ; decl_type= Unsized UMatrix }
-          ; smeta= no_span }
-        ; { stmt=
+        [ Stmt.Fixed.
+            { pattern=
+                Decl
+                  { decl_adtype= DataOnly
+                  ; decl_id= vident
+                  ; decl_type= Unsized UMatrix }
+            ; meta= Location_span.empty }
+        ; { pattern=
               Assignment
                 ( (vident, UMatrix, [])
                 , to_matrix_cl
-                    {expr= Var vident_sans_opencl; emeta= internal_meta} )
-          ; smeta= no_span } ] )
+                    { pattern= Var vident_sans_opencl
+                    ; meta= Expr.Typed.Meta.empty } )
+          ; meta= Location_span.empty } ] )
   in
   let p =
     { p with
@@ -440,11 +554,14 @@ let trans_prog (p : typed_prog) =
         init_pos
         @ add_reads p.prepare_data p.input_vars data_read
         @ to_matrix_cl_stmts
-        |> add_fills
     ; transform_inits=
         init_pos
         @ add_reads p.transform_inits constrained_params data_read
         @ List.map ~f:gen_write constrained_params
     ; generate_quantities }
   in
-  map_prog Fn.id ensure_body_in_block p
+  Program.(
+    p
+    |> map Fn.id ensure_body_in_block
+    |> map Fn.id (add_fill (String.Set.of_list data_and_params))
+    |> map_prog_stmt_lists flatten_slists_list)

@@ -305,6 +305,12 @@ functions {
     f_x[2] = x[2] - y[2];
     return f_x;
   }
+
+  vector binomialf(vector phi, vector theta, data real[] x_r, data int[] x_i) {
+    vector[1] lpmf;
+    lpmf[1] = 0.0;
+    return lpmf;
+  }
 }
 data {
   int<lower=0> N;
@@ -346,6 +352,8 @@ transformed data {
   vector[2] y;
   real dat[0];
   int dat_int[0];
+  real x_r[0, 0];
+  int x_i[0, 0];
   td_int = 1 || 2;
   td_int = 1 && 2;
   for (i in 1:2) {
@@ -452,6 +460,8 @@ transformed parameters {
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
 }
 model {
+  vector[0] tmp;
+  vector[0] tmp2[0];
   real r1 = foo_bar1(p_real);
   real r2 = foo_bar1(J);
   p_real ~ normal(0,1);
@@ -484,6 +494,8 @@ model {
   to_vector(p_simplex) ~ normal(0, 1);
   to_vector(p_cfcov_54) ~ normal(0, 1);
   to_vector(p_cfcov_33) ~ normal(0, 1);
+
+  target += map_rect(binomialf, tmp, tmp2, x_r, x_i);
 }
 generated quantities {
   real gq_r1 = foo_bar1(p_real);
