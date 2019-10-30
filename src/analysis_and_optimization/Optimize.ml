@@ -942,6 +942,9 @@ let vectorize (mir : Program.Typed.t) =
       when Expr.Fixed.Pattern.fold
              (indexed_by_sizes_match loopvar upper)
              true e.pattern ->
+        (* TODO: Need to check that the resulting expression type checks,
+         somehow.
+      *)
         let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
         {s with pattern= TargetPE e'}
     | _ -> s

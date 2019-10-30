@@ -14,7 +14,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
-  | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
+  | Lit (_, s) -> pf ppf "tf__.cast(%s, dtype__)" s
   | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
@@ -86,7 +86,7 @@ let rec pp_cast prefix ppf (name, st) =
   match st with
   | SizedType.SArray (t, _) -> pp_cast prefix ppf (name, t)
   | SInt -> pf ppf "%s%s" prefix name
-  | _ -> pf ppf "tf__.cast(%a, tf__.float64)" (pp_cast prefix) (name, SInt)
+  | _ -> pf ppf "tf__.cast(%a, dtype__)" (pp_cast prefix) (name, SInt)
 
 let pp_init ppf p =
   let pp_save_data ppf (name, st) =
@@ -101,7 +101,7 @@ let pp_extract_data ppf p =
 
 let pp_log_prob_one_chain ppf p =
   let pp_extract_param ppf (idx, name) =
-    pf ppf "%s = tf__.cast(params[%d], tf__.float64)" name idx
+    pf ppf "%s = tf__.cast(params[%d], dtype__)" name idx
   in
   let grab_params idx = function
     | name, {Program.out_block= Parameters; _} -> [(idx, name)]
@@ -229,6 +229,7 @@ import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
+dtype__ = tf__.float64
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =

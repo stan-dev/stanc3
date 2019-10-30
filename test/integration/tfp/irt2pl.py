@@ -4,6 +4,7 @@ import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
+dtype__ = tf__.float64
 
 class irt_2pl_model(tfd__.Distribution):
 
@@ -18,25 +19,23 @@ class irt_2pl_model(tfd__.Distribution):
     I = self.I
     J = self.J
     y = self.y
-    sigma_theta = tf__.cast(params[0], tf__.float64)
-    theta = tf__.cast(params[1], tf__.float64)
-    sigma_a = tf__.cast(params[2], tf__.float64)
-    a = tf__.cast(params[3], tf__.float64)
-    mu_b = tf__.cast(params[4], tf__.float64)
-    sigma_b = tf__.cast(params[5], tf__.float64)
-    b = tf__.cast(params[6], tf__.float64)
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, tf__.float64),
-                                           tf__.cast(2, tf__.float64)).log_prob(sigma_theta))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
-                                           sigma_theta).log_prob(theta))
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, tf__.float64),
-                                           tf__.cast(2, tf__.float64)).log_prob(sigma_a))
-    target += tf__.reduce_sum(tfd__.LogNormal(tf__.cast(0, tf__.float64),
-                                              sigma_a).log_prob(a))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
-                                           tf__.cast(5, tf__.float64)).log_prob(mu_b))
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, tf__.float64),
-                                           tf__.cast(2, tf__.float64)).log_prob(sigma_b))
+    sigma_theta = tf__.cast(params[0], dtype__)
+    theta = tf__.cast(params[1], dtype__)
+    sigma_a = tf__.cast(params[2], dtype__)
+    a = tf__.cast(params[3], dtype__)
+    mu_b = tf__.cast(params[4], dtype__)
+    sigma_b = tf__.cast(params[5], dtype__)
+    b = tf__.cast(params[6], dtype__)
+    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
+                                           tf__.cast(2, dtype__)).log_prob(sigma_theta))
+    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__), sigma_theta).log_prob(theta))
+    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
+                                           tf__.cast(2, dtype__)).log_prob(sigma_a))
+    target += tf__.reduce_sum(tfd__.LogNormal(tf__.cast(0, dtype__), sigma_a).log_prob(a))
+    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
+                                           tf__.cast(5, dtype__)).log_prob(mu_b))
+    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
+                                           tf__.cast(2, dtype__)).log_prob(sigma_b))
     target += tf__.reduce_sum(tfd__.Normal(mu_b, sigma_b).log_prob(b))
     target += tf__.reduce_sum(tfd__.Bernoulli(a * theta - b).log_prob(y))
     return target
@@ -56,13 +55,13 @@ class irt_2pl_model(tfd__.Distribution):
     I = self.I
     J = self.J
     y = self.y
-    return [tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
+    return [tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
+            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
+            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
+            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity()]
      
   def parameter_names(self):

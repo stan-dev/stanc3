@@ -4,13 +4,14 @@ import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
+dtype__ = tf__.float64
 
 class eight_schools_ncp_model(tfd__.Distribution):
 
   def __init__(self, J, y, sigma):
     self.J = J
-    self.y = tf__.cast(y, tf__.float64)
-    self.sigma = tf__.cast(sigma, tf__.float64)
+    self.y = tf__.cast(y, dtype__)
+    self.sigma = tf__.cast(sigma, dtype__)
      
   
   def log_prob_one_chain(self, params):
@@ -18,16 +19,16 @@ class eight_schools_ncp_model(tfd__.Distribution):
     J = self.J
     y = self.y
     sigma = self.sigma
-    mu = tf__.cast(params[0], tf__.float64)
-    tau = tf__.cast(params[1], tf__.float64)
-    theta_tilde = tf__.cast(params[2], tf__.float64)
+    mu = tf__.cast(params[0], dtype__)
+    tau = tf__.cast(params[1], dtype__)
+    theta_tilde = tf__.cast(params[2], dtype__)
     theta = mu + tau * theta_tilde
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
-                                           tf__.cast(5, tf__.float64)).log_prob(mu))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
-                                           tf__.cast(5, tf__.float64)).log_prob(tau))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
-                                           tf__.cast(1, tf__.float64)).log_prob(theta_tilde))
+    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
+                                           tf__.cast(5, dtype__)).log_prob(mu))
+    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
+                                           tf__.cast(5, dtype__)).log_prob(tau))
+    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
+                                           tf__.cast(1, dtype__)).log_prob(theta_tilde))
     target += tf__.reduce_sum(tfd__.Normal(theta, sigma).log_prob(y))
     return target
      
@@ -46,7 +47,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     y = self.y
     sigma = self.sigma
     return [tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
+            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity()]
      
   def parameter_names(self):
