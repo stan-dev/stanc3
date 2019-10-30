@@ -37,7 +37,9 @@ class irt_2pl_model(tfd__.Distribution):
     target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
                                            tf__.cast(2, dtype__)).log_prob(sigma_b))
     target += tf__.reduce_sum(tfd__.Normal(mu_b, sigma_b).log_prob(b))
-    target += tf__.reduce_sum(tfd__.Bernoulli(a * theta - b).log_prob(y))
+    for(i in 1:I) {
+      target += tfd__.Bernoulli(y[i], (a[i] * (theta - b[i])));
+    }
     return target
      
   def log_prob(self, params):
@@ -64,7 +66,8 @@ class irt_2pl_model(tfd__.Distribution):
             tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity()]
      
-  def parameter_names(self):
+  @staticmethod
+  def parameter_names():
     return ["sigma_theta", "theta", "sigma_a", "a", "mu_b", "sigma_b", "b"]
      
 model = irt_2pl_model

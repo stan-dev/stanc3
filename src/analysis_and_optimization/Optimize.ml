@@ -897,18 +897,29 @@ let outer_size = function
 let compare_opt equal opt1 opt2 =
   Option.map2 opt1 opt2 ~f:equal |> Option.value ~default:false
 
-let rec typecheck_funapps accum e =
-  accum
-  &&
-  match e.Expr.Fixed.pattern with
-  | FunApp (Fun_kind.StanLib, f, args)
-    when Hashtbl.mem Stan_math_signatures.stan_math_signatures
-           (Utils.stdlib_distribution_name f) ->
-      Stan_math_signatures.get_fun_or_op_rt_opt
-        (Utils.stdlib_distribution_name f)
-        args
-      |> Option.is_some
-  | p -> Expr.Fixed.Pattern.fold typecheck_funapps accum p
+let to_stanlib_fnames f =
+  f |> Utils.stdlib_distribution_name
+  |> (fun f ->
+       match Operator.of_string_opt f with
+       | Some x -> Stan_math_signatures.operator_to_stan_math_fns x
+       | None -> [f] )
+  |> List.concat_map ~f:(fun f ->
+         if Hashtbl.mem Stan_math_signatures.stan_math_signatures f then [f]
+         else [] )
+
+let typecheck_funapps (e : Expr.Typed.t) =
+  (* XXX Broken. How d you use Pattern.all? *)
+  let is_valid_sig args f =
+    Stan_math_signatures.get_fun_or_op_rt_opt f args |> Option.is_some
+  in
+  Expr.Fixed.Pattern.all e.pattern ~init:true ~pred:(fun e ->
+      match e.Expr.Fixed.pattern with
+      | FunApp (Fun_kind.StanLib, f, args) ->
+        print_s [%message f (args: Expr.Typed.t list)] ;
+          List.exists ~f:(is_valid_sig args) (to_stanlib_fnames f)
+      | _ ->
+        print_s [%message (e : Expr.Typed.t)] ;
+        true )
 
 (* Try to turn for loops into vectorized computation, if it's available. *)
 let vectorize (mir : Program.Typed.t) =
@@ -955,8 +966,9 @@ let vectorize (mir : Program.Typed.t) =
       when Expr.Fixed.Pattern.fold
              (indexed_by_sizes_match loopvar upper)
              true e.pattern ->
+      print_s [%message "for " (s: Stmt.Located.t)] ;
         let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
-        if typecheck_funapps true e' then {s with pattern= TargetPE e'} else s
+        if typecheck_funapps e' then {s with pattern= TargetPE e'} else s
     | _ -> s
   in
   Program.map Fn.id

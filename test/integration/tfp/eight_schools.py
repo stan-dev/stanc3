@@ -22,7 +22,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     mu = tf__.cast(params[0], dtype__)
     tau = tf__.cast(params[1], dtype__)
     theta_tilde = tf__.cast(params[2], dtype__)
-    theta = mu + tau * theta_tilde
+    theta = (mu + (tau * theta_tilde))
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
                                            tf__.cast(5, dtype__)).log_prob(mu))
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
@@ -50,7 +50,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
             tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
                          tfb__.Exp()]), tfb__.Identity()]
      
-  def parameter_names(self):
+  @staticmethod
+  def parameter_names():
     return ["mu", "tau", "theta_tilde"]
      
 model = eight_schools_ncp_model

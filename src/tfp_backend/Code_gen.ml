@@ -24,7 +24,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
       , args )
     with
-    | op, [lhs; rhs] -> pf ppf "%a %s %a" pp_expr lhs op pp_expr rhs
+    | op, [lhs; rhs] -> pf ppf "(%a %s %a)" pp_expr lhs op pp_expr rhs
     | op, [unary] -> pf ppf "(%s%a)" op pp_expr unary
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
@@ -207,7 +207,8 @@ let pp_param_names ppf p =
   let ppbody ppf =
     pf ppf "return [@[<hov>%a@]]" (list ~sep:comma (fmt "%S")) param_names
   in
-  pp_method ppf "parameter_names" ["self"] [] ppbody
+  pf ppf "@staticmethod@ " ;
+  pp_method ppf "parameter_names" [] [] ppbody
 
 let pp_methods ppf p =
   pf ppf "@ %a" pp_init p ;

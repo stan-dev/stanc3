@@ -3619,17 +3619,21 @@ let%expect_test "adlevel_optimization 2" =
 let%expect_test "don't vectorize unvectorizable functions" =
   {|
 data {
-    int N;
+    int N; int K;
     int y[N];
     int yy[N, N];
+    vector[N] x;
+    vector[N] z[K];
 }
 model {
+    for (i in 1:N)
+      y[i] ~ bernoulli(0.5);
     for (i in 1:10)
       y[i] ~ bernoulli(0.5);
     for (i in 1:N)
-      y[i] ~ bernoulli(0.5);
-    for (i in 1:N)
       yy[i] ~ bernoulli(0.5);
+    for (i in 1:K)
+      0 ~ bernoulli(x - z[i]);
 } |}
   |> Frontend_utils.typed_ast_of_string_exn |> Ast_to_Mir.trans_prog ""
   |> vectorize
@@ -3639,22 +3643,29 @@ model {
     {|
     input_vars {
       int N;
+      int K;
       array[int, N] y;
-      array[array[int, N], N] yy; }
+      array[array[int, N], N] yy;
+      vector[N] x;
+      array[vector[N], K] z; }
 
     prepare_data {
       data int N;
+      data int K;
       data array[int, N] y;
-      data array[array[int, N], N] yy; }
+      data array[array[int, N], N] yy;
+      data vector[N] x;
+      data array[vector[N], K] z; }
 
     log_prob {
       {
+        target += bernoulli_propto_log(y, 0.5);
         for(i in 1:10) {
           target += bernoulli_propto_log(y[i], 0.5);
         }
-        target += bernoulli_propto_log(y, 0.5);
-        for(i in 1:N) {
-          target += bernoulli_propto_log(yy[i], 0.5);
+        target += bernoulli_propto_log(yy, 0.5);
+        for(i in 1:K) {
+          target += bernoulli_propto_log(0, (x - z[i]));
         }
       } }
 

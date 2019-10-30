@@ -18,7 +18,7 @@ parameters {
 
 model {
   sigma_theta ~ cauchy(0, 2);
-  theta ~ normal(0, sigma_theta); 
+  theta ~ normal(0, sigma_theta);
 
   sigma_a ~ cauchy(0, 2);
   a ~ lognormal(0, sigma_a);
