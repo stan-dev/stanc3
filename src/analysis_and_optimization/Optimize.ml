@@ -888,16 +888,40 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   transform_program_blockwise mir transform
 
+let outer_size = function
+  | SizedType.SArray (_, dim) | SMatrix (dim, _) | SVector dim | SRowVector dim
+    ->
+      dim
+  | s -> raise_s [%message (s : Expr.Typed.t SizedType.t) "has no outer dim"]
+
+let compare_opt equal opt1 opt2 =
+  Option.map2 opt1 opt2 ~f:equal |> Option.value ~default:false
+
 (* Try to turn for loops into vectorized computation, if it's available. *)
 let vectorize (mir : Program.Typed.t) =
-  let only_indexed_by vident accum (e : Expr.Typed.t) =
+  let sizes =
+    String.Map.of_alist_exn
+      ( mir.input_vars
+      @ List.map
+          ~f:(fun (n, {out_constrained_st= st; _}) -> (n, st))
+          mir.output_vars )
+  in
+  let outer_size_of = function
+    | {Expr.Fixed.pattern= Var vident; _} ->
+        Map.find sizes vident |> Option.map ~f:outer_size
+    | _ -> None
+  in
+  let indexed_by_sizes_match vident size accum (e : Expr.Typed.t) =
     accum
     &&
     match e.Expr.Fixed.pattern with
     | Expr.Fixed.Pattern.Indexed
         (_, [Single {Expr.Fixed.pattern= Lit (_, _); _}]) ->
         true
-    | Indexed (_, [Single {pattern= Var v; _}]) when v = vident -> true
+    | Indexed (obj, [Single {pattern= Var v; _}])
+      when v = vident
+           && compare_opt Expr.Typed.( = ) (outer_size_of obj) (Some size) ->
+        true
     | Indexed _ -> false
     | _ -> true
   in
@@ -910,9 +934,14 @@ let vectorize (mir : Program.Typed.t) =
   let open Stmt.Fixed.Pattern in
   let vectorize_stmt (s : Stmt.Located.t) =
     match s.Stmt.Fixed.pattern with
-    | For {body= {pattern= TargetPE e; _}; loopvar; _}
-     |For {body= {pattern= Block [{pattern= TargetPE e; _}]; _}; loopvar; _}
-      when Expr.Fixed.Pattern.fold (only_indexed_by loopvar) true e.pattern ->
+    | For {body= {pattern= TargetPE e; _}; loopvar; upper; _}
+     |For
+        { body= {pattern= Block [{pattern= TargetPE e; _}]; _}
+        ; loopvar
+        ; upper; _ }
+      when Expr.Fixed.Pattern.fold
+             (indexed_by_sizes_match loopvar upper)
+             true e.pattern ->
         let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
         {s with pattern= TargetPE e'}
     | _ -> s

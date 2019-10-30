@@ -71,7 +71,7 @@ let rec pp_stmt ppf s =
      their arguments. I think these functions need to be named and
      defined inline in general because lambdas are limited.
   *)
-  | For _ -> print_endline "FOR"
+  | For _ -> Stmt.Located.pp ppf s
   | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
@@ -229,7 +229,6 @@ import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
-from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =

@@ -4,7 +4,6 @@ import tensorflow as tf__
 import tensorflow_probability as tfp__
 tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
-from tensorflow.python.ops.parallel_for import pfor as pfor__
 
 class eight_schools_ncp_model(tfd__.Distribution):
 

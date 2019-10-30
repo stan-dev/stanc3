@@ -112,8 +112,8 @@ module Labelled = struct
   let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
   let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
 
-  (** Traverse a typed expression adding unique labels using locally mutable 
-      state 
+  (** Traverse a typed expression adding unique labels using locally mutable
+      state
   *)
   let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
     let lbl = ref init in
