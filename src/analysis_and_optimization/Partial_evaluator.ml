@@ -83,24 +83,11 @@ let rec eval_expr (e : Expr.Typed.t) =
       | Var _ | Lit (_, _) -> e.pattern
       | FunApp (t, f, l) ->
           let l = List.map ~f:eval_expr l in
-          let get_fun_or_op_rt_opt name l' =
-            let argument_types =
-              List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
-            in
-            Operator.of_string_opt name
-            |> Option.value_map
-                 ~f:(fun op ->
-                   Stan_math_signatures.operator_stan_math_return_type op
-                     argument_types )
-                 ~default:
-                   (Stan_math_signatures.stan_math_returntype name
-                      argument_types)
-          in
           let try_partially_evaluate_to e =
             Expr.Fixed.Pattern.(
               match e with
               | FunApp (StanLib, f', l') -> (
-                match get_fun_or_op_rt_opt f' l' with
+                match Stan_math_signatures.get_fun_or_op_rt_opt f' l' with
                 | Some _ -> FunApp (StanLib, f', l')
                 | None -> FunApp (StanLib, f, l) )
               | e -> e)

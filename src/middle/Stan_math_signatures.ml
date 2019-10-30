@@ -348,6 +348,15 @@ let pretty_print_math_lib_operator_sigs op =
 let pretty_print_math_lib_assignmentoperator_sigs op =
   assignmentoperator_to_stan_math_fn op |> Option.map ~f:pretty_print_math_sigs
 
+let get_fun_or_op_rt_opt name args =
+  let argument_types =
+    List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) args
+  in
+  Operator.of_string_opt name
+  |> Option.value_map
+       ~f:(fun op -> operator_stan_math_return_type op argument_types)
+       ~default:(stan_math_returntype name argument_types)
+
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types = function
   | 0 -> UnsizedType.UInt
