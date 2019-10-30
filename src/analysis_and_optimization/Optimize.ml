@@ -897,6 +897,19 @@ let outer_size = function
 let compare_opt equal opt1 opt2 =
   Option.map2 opt1 opt2 ~f:equal |> Option.value ~default:false
 
+let rec typecheck_funapps accum e =
+  accum
+  &&
+  match e.Expr.Fixed.pattern with
+  | FunApp (Fun_kind.StanLib, f, args)
+    when Hashtbl.mem Stan_math_signatures.stan_math_signatures
+           (Utils.stdlib_distribution_name f) ->
+      Stan_math_signatures.get_fun_or_op_rt_opt
+        (Utils.stdlib_distribution_name f)
+        args
+      |> Option.is_some
+  | p -> Expr.Fixed.Pattern.fold typecheck_funapps accum p
+
 (* Try to turn for loops into vectorized computation, if it's available. *)
 let vectorize (mir : Program.Typed.t) =
   let sizes =
@@ -942,11 +955,8 @@ let vectorize (mir : Program.Typed.t) =
       when Expr.Fixed.Pattern.fold
              (indexed_by_sizes_match loopvar upper)
              true e.pattern ->
-        (* TODO: Need to check that the resulting expression type checks,
-         somehow.
-      *)
         let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
-        {s with pattern= TargetPE e'}
+        if typecheck_funapps true e' then {s with pattern= TargetPE e'} else s
     | _ -> s
   in
   Program.map Fn.id

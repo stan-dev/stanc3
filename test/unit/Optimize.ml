@@ -3615,3 +3615,49 @@ let%expect_test "adlevel_optimization 2" =
         parameters real w; //real
         transformed_parameters real w_trans; //real
       } |}]
+
+let%expect_test "don't vectorize unvectorizable functions" =
+  {|
+data {
+    int N;
+    int y[N];
+    int yy[N, N];
+}
+model {
+    for (i in 1:10)
+      y[i] ~ bernoulli(0.5);
+    for (i in 1:N)
+      y[i] ~ bernoulli(0.5);
+    for (i in 1:N)
+      yy[i] ~ bernoulli(0.5);
+} |}
+  |> Frontend_utils.typed_ast_of_string_exn |> Ast_to_Mir.trans_prog ""
+  |> vectorize
+  |> Fmt.strf "%a" Program.Typed.pp
+  |> print_endline ;
+  [%expect
+    {|
+    input_vars {
+      int N;
+      array[int, N] y;
+      array[array[int, N], N] yy; }
+
+    prepare_data {
+      data int N;
+      data array[int, N] y;
+      data array[array[int, N], N] yy; }
+
+    log_prob {
+      {
+        for(i in 1:10) {
+          target += bernoulli_propto_log(y[i], 0.5);
+        }
+        target += bernoulli_propto_log(y, 0.5);
+        for(i in 1:N) {
+          target += bernoulli_propto_log(yy[i], 0.5);
+        }
+      } }
+
+    generate_quantities {
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return; } |}]
