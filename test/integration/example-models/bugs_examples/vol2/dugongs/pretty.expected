@@ -28,10 +28,11 @@ model {
 }
 
 
-"Info: Found int division at 'dugongs.stan', line 25, column 11 to column 12:
+Info: Found int division at 'dugongs.stan', line 25, column 11 to column 12:
 1 / sqrt(
 tau)
-Positive values rounded down, negative values rounded up or down in platform-dependent way."
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+          
 
 Warning: deprecated language construct used in 'dugongs.stan', line 25, column 9:
    -------------------------------------------------

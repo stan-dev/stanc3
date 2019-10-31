@@ -125,10 +125,11 @@ generated quantities {
 }
 
 
-"Info: Found int division at 'ipm.stan', line 181, column 12 to column 20:
+Info: Found int division at 'ipm.stan', line 181, column 12 to column 20:
 f[
 t - 1] / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way."
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+          
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_hoopoe.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
@@ -304,9 +305,10 @@ generated quantities {
 }
 
 
-"Info: Found int division at 'ipm_hoopoe.stan', line 265, column 13 to column 16:
+Info: Found int division at 'ipm_hoopoe.stan', line 265, column 13 to column 16:
 1.0 / ny_minus_1
-Positive values rounded down, negative values rounded up or down in platform-dependent way."
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+          
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_pred.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
@@ -470,10 +472,11 @@ generated quantities {
 }
 
 
-"Info: Found int division at 'ipm_pred.stan', line 182, column 12 to column 20:
+Info: Found int division at 'ipm_pred.stan', line 182, column 12 to column 20:
 f[
 t - 1] / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way."
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+          
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_prod.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
