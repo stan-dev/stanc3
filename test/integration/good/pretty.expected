@@ -2964,12 +2964,9 @@ model {
   target += h;
 }
 
-
 Info: Found int division at 'increment-target.stan', line 14, column 12 to column 16:
--
-e ^ 2 / 2
+  -e ^ 2 / 2
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
   $ ../../../../install/default/bin/stanc --auto-format increment_log_prob.stan
 transformed data {
   int n;
@@ -4926,23 +4923,18 @@ model {
   y ~ normal(0, 1);
 }
 
-
 Info: Found int division at 'validate_division_good.stan', line 5, column 6 to column 9:
-2.1 / 3
+  2.1 / 3
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
 Info: Found int division at 'validate_division_good.stan', line 6, column 6 to column 7:
-2 / 3.1
+  2 / 3.1
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
 Info: Found int division at 'validate_division_good.stan', line 20, column 7 to column 10:
-2.1 / 3
+  2.1 / 3
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
 Info: Found int division at 'validate_division_good.stan', line 21, column 7 to column 8:
-2 / 3.1
+  2 / 3.1
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -5230,20 +5222,15 @@ model {
   (-y) ~ normal(0, 1);
 }
 
-
 Info: Found int division at 'validate_jacobian_warning_good.stan', line 57, column 7 to column 8:
-1 / z
+  1 / z
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
 Info: Found int division at 'validate_jacobian_warning_good.stan', line 57, column 2 to column 3:
-1 / (
-1 / z)
+  1 / (1 / z)
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
 Info: Found int division at 'validate_jacobian_warning_good.stan', line 58, column 8 to column 9:
-z / 2
+  z / 2
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
 parameters {
   vector[1] y;

@@ -596,13 +596,11 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UReal, Divide | UReal, UInt, Divide ->
             Fmt.pr
-              {|
-Info: Found int division at %s:
-%a / %a
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-          |}
+              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
               (Location_span.to_string x.emeta.loc)
-              Pretty_printing.pp_expression x Pretty_printing.pp_expression y ;
+              Pretty_printing.pp_expression {expr; emeta}
+              "Positive values rounded down, negative values rounded up or \
+               down in platform-dependent way." ;
             (x, y)
         | _ -> (x, y)
       in

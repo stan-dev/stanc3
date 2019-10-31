@@ -2191,13 +2191,11 @@ model {
   [%expect
     {|
       Info: Found int division at 'string', line 99, column 25 to column 26:
-      1 / 2.
+        1 / 2.
       Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
       Info: Found int division at 'string', line 100, column 25 to column 27:
-      1. / 2
+        1. / 2
       Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
 
 
       log_prob {
