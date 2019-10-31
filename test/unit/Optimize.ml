@@ -2190,9 +2190,14 @@ model {
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      Info: integer division implicitly rounds to integer. Found int division: 1 / 2.
-            Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'string', line 99, column 25 to column 26Info: integer division implicitly rounds to integer. Found int division: 1. / 2
-            Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'string', line 100, column 25 to column 27
+      "Info: Found int division at 'string', line 99, column 25 to column 26:
+      1 / 2.
+      Positive values rounded down, negative values rounded up or down in platform-dependent way."
+
+      "Info: Found int division at 'string', line 100, column 25 to column 27:
+      1. / 2
+      Positive values rounded down, negative values rounded up or down in platform-dependent way."
+
 
 
       log_prob {

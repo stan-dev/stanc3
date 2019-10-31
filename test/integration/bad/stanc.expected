@@ -1592,9 +1592,11 @@ Identifier expected after sized type in local (or model block) variable declarat
 
 
   $ ../../../../install/default/bin/stanc lp-error.stan
-Info: integer division implicitly rounds to integer. Found int division: 
+
+"Info: Found int division at 'lp-error.stan', line 5, column 16 to column 19:
+
 y ^ 2 / 2
-      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'lp-error.stan', line 5, column 16 to column 19
+Positive values rounded down, negative values rounded up or down in platform-dependent way."
 
 Semantic error in 'lp-error.stan', line 5, column 2 to column 6:
    -------------------------------------------------

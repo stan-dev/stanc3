@@ -39,11 +39,16 @@ model {
   }
 }
 
-Info: integer division implicitly rounds to integer. Found int division: 1 / sqrt(
+
+"Info: Found int division at 'orange.stan', line 30, column 16 to column 17:
+1 / sqrt(
 tau[j])
-      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'orange.stan', line 30, column 16 to column 17Info: integer division implicitly rounds to integer. Found int division: 1 / sqrt(
+Positive values rounded down, negative values rounded up or down in platform-dependent way."
+
+"Info: Found int division at 'orange.stan', line 31, column 13 to column 14:
+1 / sqrt(
 tau_C)
-      Positive values rounded down, negative values rounded up or down in platform-dependent way. At 'orange.stan', line 31, column 13 to column 14
+Positive values rounded down, negative values rounded up or down in platform-dependent way."
 
 Warning: deprecated language construct used in 'orange.stan', line 4, column 0:
    -------------------------------------------------
