@@ -169,7 +169,7 @@ let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
   function
   | UFun (l, rt) ->
       (* fold over argument types accumulating errors with initial state
-        given by validating the return type *)
+       given by validating the return type *)
       List.fold
         ~f:(fun v0 (at, ut) ->
           Validate.(
@@ -591,9 +591,21 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       Validate.(liftA3 tuple3 pe te fe >>= semantic_check_ternary_if emeta.loc)
   | BinOp (e1, op, e2) ->
       let le = semantic_check_expression cf e1
-      and re = semantic_check_expression cf e2 in
+      and re = semantic_check_expression cf e2
+      and warn_int_division (x, y) =
+        match (x.emeta.type_, y.emeta.type_, op) with
+        | UInt, UReal, Divide | UReal, UInt, Divide ->
+            Fmt.pr
+              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
+              (Location_span.to_string x.emeta.loc)
+              Pretty_printing.pp_expression {expr; emeta}
+              "Positive values rounded down, negative values rounded up or \
+               down in platform-dependent way." ;
+            (x, y)
+        | _ -> (x, y)
+      in
       Validate.(
-        liftA2 tuple2 le re
+        liftA2 tuple2 le re |> map ~f:warn_int_division
         |> apply_const (semantic_check_operator op)
         >>= semantic_check_binop emeta.loc op)
   | PrefixOp (op, e) ->

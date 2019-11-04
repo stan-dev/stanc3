@@ -1,4 +1,16 @@
   $ ../../../../../install/default/bin/stanc --debug-mir mother.stan
+Info: Found int division at 'mother.stan', line 198, column 16 to column 35:
+  (fabs(x) + fabs(y)) / 2
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Info: Found int division at 'mother.stan', line 365, column 20 to column 23:
+  1.0 / N
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Info: Found int division at 'mother.stan', line 367, column 28 to column 31:
+  1.0 / N
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Info: Found int division at 'mother.stan', line 370, column 38 to column 41:
+  1.0 / N
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
 ((functions_block
   (((fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable n UInt)))
     (fdbody ((pattern Skip) (meta <opaque>))) (fdloc <opaque>))
