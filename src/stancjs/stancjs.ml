@@ -18,6 +18,7 @@ let print_warn_uninitialized
       Out_channel.output_string stderr (show_var_info v_info) )
 
 let stan2cpp model_name model_string =
+  Semantic_check.model_name := model_name ;
   let ast =
     try
       let r = Parse.parse_string Parser.Incremental.program model_string in
