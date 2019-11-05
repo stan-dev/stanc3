@@ -3663,7 +3663,9 @@ model {
         for(i in 1:10) {
           target += bernoulli_propto_log(y[i], 0.5);
         }
-        target += bernoulli_propto_log(yy, 0.5);
+        for(i in 1:N) {
+          target += bernoulli_propto_log(yy[i], 0.5);
+        }
         for(i in 1:K) {
           target += bernoulli_propto_log(0, (x - z[i]));
         }

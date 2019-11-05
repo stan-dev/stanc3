@@ -912,16 +912,31 @@ let typecheck_funapps (e : Expr.Typed.t) =
   let is_valid_sig args f =
     Stan_math_signatures.get_fun_or_op_rt_opt f args |> Option.is_some
   in
-  Expr.Fixed.Pattern.all e.pattern ~init:true ~pred:(fun e ->
-      match e.Expr.Fixed.pattern with
-      | FunApp (Fun_kind.StanLib, f, args) ->
-        print_s [%message f (args: Expr.Typed.t list)] ;
-          List.exists ~f:(is_valid_sig args) (to_stanlib_fnames f)
-      | _ ->
-        print_s [%message (e : Expr.Typed.t)] ;
-        true )
+  let rec funapp_check e =
+    match e.Expr.Fixed.pattern with
+    | FunApp (Fun_kind.StanLib, f, args) ->
+        List.for_all ~f:funapp_check args
+        && List.exists ~f:(is_valid_sig args) (to_stanlib_fnames f)
+    | e -> Expr.Fixed.Pattern.all e ~init:true ~pred:funapp_check
+  in
+  funapp_check e
+  && Expr.Fixed.Pattern.all e.pattern ~init:true ~pred:funapp_check
 
-(* Try to turn for loops into vectorized computation, if it's available. *)
+let%expect_test "typecheck recurses properly" =
+  let open Expr.Fixed in
+  let open Expr.Helpers in
+  let n =
+    { pattern= FunApp (StanLib, "normal_propto_lpdf", [int 0; int 1])
+    ; meta= Expr.Typed.Meta.empty }
+  in
+  { meta= Expr.Typed.Meta.empty
+  ; pattern= FunApp (StanLib, "bernoulli_propto_log", [n]) }
+  |> typecheck_funapps |> string_of_bool |> print_endline ;
+  [%expect {| false |}]
+
+(* Try to turn for loops into vectorized computation, if it's available.
+   Only works for For loops around TargetPE statements right now.
+*)
 let vectorize (mir : Program.Typed.t) =
   let sizes =
     String.Map.of_alist_exn
@@ -966,7 +981,6 @@ let vectorize (mir : Program.Typed.t) =
       when Expr.Fixed.Pattern.fold
              (indexed_by_sizes_match loopvar upper)
              true e.pattern ->
-      print_s [%message "for " (s: Stmt.Located.t)] ;
         let e' = Expr.Fixed.rewrite_top_down ~f:(remove_index_of loopvar) e in
         if typecheck_funapps e' then {s with pattern= TargetPE e'} else s
     | _ -> s
