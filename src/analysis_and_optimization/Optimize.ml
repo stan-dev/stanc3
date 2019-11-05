@@ -920,7 +920,6 @@ let typecheck_funapps (e : Expr.Typed.t) =
     | e -> Expr.Fixed.Pattern.all e ~init:true ~pred:funapp_check
   in
   funapp_check e
-  && Expr.Fixed.Pattern.all e.pattern ~init:true ~pred:funapp_check
 
 let%expect_test "typecheck recurses properly" =
   let open Expr.Fixed in
