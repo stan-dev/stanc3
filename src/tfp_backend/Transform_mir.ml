@@ -56,6 +56,47 @@ let%expect_test "nested dist prefixes translated" =
        (((pattern (FunApp StanLib tfd__.Normal ())) (meta ())))))
      (meta ())) |}]
 
+let minus_one e =
+  { e with
+    Expr.Fixed.pattern=
+      FunApp (StanLib, Operator.to_string Minus, [e; Expr.Helpers.loop_bottom])
+  }
+
+let one_to_zero_indexing e =
+  let open Expr.Fixed.Pattern in
+  let single_minus_one = function
+    | Index.Single e -> Index.Single (minus_one e)
+    | i -> i
+  in
+  match e.Expr.Fixed.pattern with
+  | Indexed (obj, idcs) ->
+      {e with pattern= Indexed (obj, List.map ~f:single_minus_one idcs)}
+  | _ -> e
+
+let int_to_real e =
+  match e.Expr.Fixed.pattern with
+  | Lit (Int, s) -> {e with pattern= Lit (Real, s)}
+  | _ -> e
+
+let real_transformation_args =
+  Program.map_transformation (Expr.Fixed.rewrite_top_down ~f:int_to_real)
+
+(* let rec stdlib_funapp_ints_to_real e =
+ *   let open Expr.Fixed in
+ *   let open Expr.Fixed.Pattern in
+ *   match e.pattern with
+ *   | FunApp(Fun_kind.StanLib, f, args) ->
+ *     {e with pattern=FunApp(Fun_kind.StanLib, f,
+ *                            List.map ~f:(Fn.compose stdlib_funapp_ints_to_real int_to_real) args)}
+ *   | _ -> {e with pattern=map stdlib_funapp_ints_to_real e.pattern} *)
+
+let map_transformations f p =
+  { p with
+    Program.output_vars=
+      List.map p.Program.output_vars ~f:(function
+          | n, ({Program.out_trans; _} as ov) ->
+          (n, {ov with out_trans= f out_trans}) ) }
+
 (* temporary until we get rid of these from the MIR *)
 let rec remove_unused_stmts s =
   let pattern =
@@ -69,6 +110,9 @@ let rec remove_unused_stmts s =
   in
   {s with pattern}
 
+let rewrite_expressions f =
+  Program.map f (Stmt.Fixed.rewrite_top_down ~f ~g:Fn.id)
+
 let trans_prog (p : Program.Typed.t) =
   let rec map_stmt {Stmt.Fixed.pattern; meta} =
     { Stmt.Fixed.pattern=
@@ -77,4 +121,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   Program.map translate_funapps map_stmt p
   |> Program.map Fn.id remove_unused_stmts
+  |> rewrite_expressions one_to_zero_indexing
+  |> rewrite_expressions int_to_real
+  |> map_transformations real_transformation_args
   |> Analysis_and_optimization.Optimize.vectorize

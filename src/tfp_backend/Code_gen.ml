@@ -5,7 +5,7 @@ open Fmt
 let is_multi_index = function Index.MultiIndex _ -> true | _ -> false
 
 let pp_call ppf (name, pp_arg, args) =
-  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
+  pf ppf "@[<hov 6>%s(@,%a@,)@]" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pystring_of_operator = function x -> strf "%a" Operator.pp x
@@ -14,17 +14,20 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
+  | Lit (Int, s) -> pf ppf "%s" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, dtype__)" s
   | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
-      pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
+      pf ppf "@[<hov 2>%a@,.log_prob(@,%a)@]" pp_call (f, pp_expr, dist_params)
+        pp_expr obs
   | FunApp (StanLib, f, args) when Operator.of_string_opt f |> Option.is_some
   -> (
     match
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
       , args )
     with
-    | op, [lhs; rhs] -> pf ppf "(%a %s %a)" pp_expr lhs op pp_expr rhs
+    | op, [lhs; rhs] ->
+        pf ppf "@[<hov2>(%a@ %s@ %a)@]" pp_expr lhs op pp_expr rhs
     | op, [unary] -> pf ppf "(%s%a)" op pp_expr unary
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
@@ -55,7 +58,8 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
       pf ppf "%a = %a" pp_expr indexed pp_expr rhs
-  | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
+  | TargetPE rhs ->
+      pf ppf "@[<hov 6>target += tf__.reduce_sum(@,%a)@]" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
@@ -71,7 +75,9 @@ let rec pp_stmt ppf s =
      their arguments. I think these functions need to be named and
      defined inline in general because lambdas are limited.
   *)
-  | For _ -> Stmt.Located.pp ppf s
+  | For {loopvar; lower; upper; body} ->
+      pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr
+        lower pp_expr upper pp_stmt body
   | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 

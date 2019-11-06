@@ -26,20 +26,29 @@ class irt_2pl_model(tfd__.Distribution):
     mu_b = tf__.cast(params[4], dtype__)
     sigma_b = tf__.cast(params[5], dtype__)
     b = tf__.cast(params[6], dtype__)
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
-                                           tf__.cast(2, dtype__)).log_prob(sigma_theta))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__), sigma_theta).log_prob(theta))
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
-                                           tf__.cast(2, dtype__)).log_prob(sigma_a))
-    target += tf__.reduce_sum(tfd__.LogNormal(tf__.cast(0, dtype__), sigma_a).log_prob(a))
-    target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, dtype__),
-                                           tf__.cast(5, dtype__)).log_prob(mu_b))
-    target += tf__.reduce_sum(tfd__.Cauchy(tf__.cast(0, dtype__),
-                                           tf__.cast(2, dtype__)).log_prob(sigma_b))
+    target += tf__.reduce_sum(
+          tfd__.Cauchy(tf__.cast(0, dtype__), tf__.cast(2, dtype__))
+            .log_prob(sigma_theta))
+    target += tf__.reduce_sum(
+          tfd__.Normal(tf__.cast(0, dtype__), sigma_theta).log_prob(theta))
+    target += tf__.reduce_sum(
+          tfd__.Cauchy(tf__.cast(0, dtype__), tf__.cast(2, dtype__))
+            .log_prob(sigma_a))
+    target += tf__.reduce_sum(
+          tfd__.LogNormal(tf__.cast(0, dtype__), sigma_a).log_prob(a))
+    target += tf__.reduce_sum(
+          tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(5, dtype__))
+            .log_prob(mu_b))
+    target += tf__.reduce_sum(
+          tfd__.Cauchy(tf__.cast(0, dtype__), tf__.cast(2, dtype__))
+            .log_prob(sigma_b))
     target += tf__.reduce_sum(tfd__.Normal(mu_b, sigma_b).log_prob(b))
-    for(i in 1:I) {
-      target += tfd__.Bernoulli(y[i], (a[i] * (theta - b[i])));
-    }
+    for i in range(tf__.cast(1, dtype__), I + 1):
+        target += tf__.reduce_sum(
+              tfd__.Bernoulli(
+                    (a[(i - tf__.cast(1, dtype__))] *
+                      (theta - b[(i - tf__.cast(1, dtype__))]))).log_prob(
+                y[(i - tf__.cast(1, dtype__))]))
     return target
      
   def log_prob(self, params):
