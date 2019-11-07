@@ -531,8 +531,10 @@ let trans_prog (p : Program.Typed.t) =
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
         in
-        let type_of_input_var = 
-          match List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal with 
+        let type_of_input_var =
+          match
+            List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
+          with
           | Some st -> SizedType.to_unsized st
           | None -> UnsizedType.UMatrix
         in
