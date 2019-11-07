@@ -49,7 +49,7 @@ let pp_decl ppf (vident, ut, adtype) =
   let pp_type =
     if Transform_Mir.is_opencl_var vident then fun ppf _ ->
       match ut with
-      | UnsizedType.UInt ->  pf ppf "matrix_cl<int>"
+      | UnsizedType.UInt
       | UArray UInt ->  pf ppf "matrix_cl<int>"
       | _ -> pf ppf "matrix_cl<double>"
     else pp_unsizedtype_local
