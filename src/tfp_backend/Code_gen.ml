@@ -177,6 +177,16 @@ let pp_bijector ppf trans =
     match trans with
     | Program.Identity -> []
     | Lower lb -> [("Exp", []); ("AffineScalar", [lb])]
+    | Upper ub ->
+        [("Exp", []); ("AffineScalar", [ub; Expr.Helpers.float (-1.)])]
+    | LowerUpper (lb, ub) ->
+        [ ("Sigmoid", [])
+        ; ("AffineScalar", [lb; Expr.Helpers.binop ub Operator.Minus lb]) ]
+    | Offset o -> [("AffineScalar", [o])]
+    | Multiplier m -> [("AffineScalar", [Expr.Helpers.zero; m])]
+    | OffsetMultiplier (o, m) -> [("AffineScalar", [o; m])]
+    | CholeskyCorr -> [("CorrelationCholesky", [])]
+    | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
           [%message
@@ -238,6 +248,6 @@ let pp_prog ppf (p : Program.Typed.t) =
   pf ppf "@ model = %s" p.prog_name
 
 (* Major work to do:
-1. Work awareness of distributions and bijectors into the type system
-2. Have backends present an environment that the frontend and middle can use for type checking and optimization.
+   1. Work awareness of distributions and bijectors into the type system
+   2. Have backends present an environment that the frontend and middle can use for type checking and optimization.
 *)
