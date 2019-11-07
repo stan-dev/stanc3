@@ -196,19 +196,27 @@ let%expect_test "dims" =
   |> print_endline ;
   [%expect {| z, x, y |}]
 
+let pp_validate_data ppf (name, st) =
+  if String.is_suffix ~suffix:"__" name then ()
+  else
+    pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
+      "data initialization" name
+      (stantype_prim_str (SizedType.to_unsized st))
+      pp_call
+      ("context__.to_vec", pp_expr, get_dims st)
+
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
    1. keep track of pos__
    1. run checks on resulting vident
 *)
-
-let pp_ctor ppf ({Program.prog_name; _} as p) =
+let pp_ctor ppf p =
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" prog_name
+  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
     (list ~sep:comma string) params ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
@@ -221,11 +229,14 @@ let pp_ctor ppf ({Program.prog_name; _} as p) =
       | ls -> Some ls )
     | _ -> None
   in
+  let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
-      | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
+      | Sized st ->
+          if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
+          pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
