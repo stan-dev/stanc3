@@ -87,7 +87,8 @@ let rec lub_ad_type = function
 
 let calculate_autodifftype at ut =
   match at with
-  | (Param | TParam | Model) when not (unsizedtype_contains_int ut) ->
+  | (Param | TParam | Model | Functions) when not (unsizedtype_contains_int ut)
+    ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 

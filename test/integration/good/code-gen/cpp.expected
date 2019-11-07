@@ -1422,7 +1422,7 @@ foo_1(const int& a, std::ostream* pstream__) {
              sym2__ <= stan::length(rvalue(vs, cons_list(index_uni(sym1__), nil_index_list()), "vs"));
              ++sym2__) {
           {
-            double v;
+            local_scalar_t__ v;
             current_statement__ = 327;
             v = rvalue(vs, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "vs");
             current_statement__ = 328;
@@ -1436,7 +1436,7 @@ foo_1(const int& a, std::ostream* pstream__) {
              sym2__ <= stan::length(rvalue(vs, cons_list(index_uni(sym1__), nil_index_list()), "vs"));
              ++sym2__) {
           {
-            double v;
+            local_scalar_t__ v;
             current_statement__ = 330;
             v = rvalue(vs, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "vs");
             current_statement__ = 331;
@@ -1461,7 +1461,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       current_statement__ = 337;
       for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
         {
-          double v;
+          local_scalar_t__ v;
           current_statement__ = 337;
           v = vs[(sym1__ - 1)];
           current_statement__ = 338;
@@ -1471,7 +1471,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       current_statement__ = 340;
       for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
         {
-          double v;
+          local_scalar_t__ v;
           current_statement__ = 340;
           v = vs[(sym1__ - 1)];
           current_statement__ = 341;
@@ -1496,7 +1496,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       current_statement__ = 347;
       for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
         {
-          double v;
+          local_scalar_t__ v;
           current_statement__ = 347;
           v = vs[(sym1__ - 1)];
           current_statement__ = 348;
@@ -1506,7 +1506,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       current_statement__ = 350;
       for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
         {
-          double v;
+          local_scalar_t__ v;
           current_statement__ = 350;
           v = vs[(sym1__ - 1)];
           current_statement__ = 351;
