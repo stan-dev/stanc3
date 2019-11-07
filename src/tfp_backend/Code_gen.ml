@@ -52,6 +52,20 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
       in
       pf ppf "%a%a" pp_expr obj pp_indexed indices
 
+(* Only necessary as long as we aren't inferring types, see
+   https://github.com/stan-dev/stanc3/issues/373
+*)
+let pp_expr_int ppf e = match e.Expr.Fixed.pattern with
+  | Lit (Int, s) | Lit(Real, s) -> string ppf s
+  | _ -> pp_expr ppf e
+
+let pp_method ppf name params intro ?(outro = []) ppbody =
+  pf ppf "@[<v 2>def %a:@," pp_call_str (name, params) ;
+  (list ~sep:cut string) ppf (intro @ [""]) ;
+  ppbody ppf ;
+  if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
+  pf ppf "@, @]"
+
 let rec pp_stmt ppf s =
   let fake_expr pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   match s.Stmt.Fixed.pattern with
@@ -59,7 +73,7 @@ let rec pp_stmt ppf s =
       let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
       pf ppf "%a = %a" pp_expr indexed pp_expr rhs
   | TargetPE rhs ->
-      pf ppf "@[<hov 6>target += tf__.reduce_sum(@,%a)@]" pp_expr rhs
+      pf ppf "@[<hov 2>target += tf__.reduce_sum(@,%a)@]" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
@@ -76,17 +90,19 @@ let rec pp_stmt ppf s =
      defined inline in general because lambdas are limited.
   *)
   | For {loopvar; lower; upper; body} ->
-      pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr
-        lower pp_expr upper pp_stmt body
+    let loop_sym = Common.Gensym.generate () in
+    let cond_name = (strf "cond_%s__" loop_sym) in
+    let body_name = (strf "body_%s__" loop_sym) in
+    pp_method ppf cond_name [loopvar; "_"] [] nop ;
+    pp_method ppf body_name [loopvar; "target"] []
+      ~outro:[strf "return [%s, target]" loopvar]
+      (fun ppf -> pp_stmt ppf body);
+    pf ppf "target += tf__.while_loop(%s, %s, [%a, 0])[1]"
+      cond_name body_name pp_expr lower
+      (* pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr_int
+       *   lower pp_expr_int upper pp_stmt body *)
   | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
-
-let pp_method ppf name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>def %a:@," pp_call_str (name, params) ;
-  (list ~sep:cut string) ppf (intro @ [""]) ;
-  ppbody ppf ;
-  if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
-  pf ppf "@, @]"
 
 let rec pp_cast prefix ppf (name, st) =
   match st with

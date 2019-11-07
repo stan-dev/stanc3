@@ -24,14 +24,13 @@ class eight_schools_ncp_model(tfd__.Distribution):
     theta_tilde = tf__.cast(params[2], dtype__)
     theta = (mu + (tau * theta_tilde))
     target += tf__.reduce_sum(
-          tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(5, dtype__))
-            .log_prob(mu))
+      tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(5, dtype__)).log_prob(mu))
     target += tf__.reduce_sum(
-          tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(5, dtype__))
-            .log_prob(tau))
+      tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(5, dtype__)).log_prob(
+        tau))
     target += tf__.reduce_sum(
-          tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(1, dtype__))
-            .log_prob(theta_tilde))
+      tfd__.Normal(tf__.cast(0, dtype__), tf__.cast(1, dtype__)).log_prob(
+        theta_tilde))
     target += tf__.reduce_sum(tfd__.Normal(theta, sigma).log_prob(y))
     return target
      

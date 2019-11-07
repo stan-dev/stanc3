@@ -18,6 +18,7 @@ let map_functions fname args =
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
   | "lognormal" -> ("LogNormal", args)
   | "bernoulli_logit" -> ("Bernoulli", args)
+  | f when f = (Operator.to_string Less)  -> ("tf__.less", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
