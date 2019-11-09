@@ -43,7 +43,7 @@ def stan(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
   mcmc_trace, pkr = tfp.mcmc.sample_chain(
       num_results = num_main_iters,
       num_burnin_steps = num_warmup_iters,
-      current_state=initial_states,
+      current_state=[bijector.forward(state) for bijector, state in zip(model.parameter_bijectors(),initial_states)],
       kernel=kernel)
 
   return mcmc_trace, pkr
