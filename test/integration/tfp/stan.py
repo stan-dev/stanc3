@@ -21,7 +21,7 @@ def step_size_setter_fn(pkr, new_step_size):
 
 @tf.function(experimental_compile=True)
 def stan(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
-  initial_states = [tf.random.uniform(s, 0, 2, dtype, name="initializer") for s in model.parameter_shapes(nchain)]
+  initial_states = [tf.random.uniform(s, -2, 2, dtype, name="initializer") for s in model.parameter_shapes(nchain)]
   step_sizes = [1e-2 * tf.ones_like(i) for i in initial_states]
   kernel = tfp.mcmc.TransformedTransitionKernel(
     tfp.mcmc.nuts.NoUTurnSampler(
