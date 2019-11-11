@@ -5,13 +5,13 @@ open Middle
 module Str = Re.Str
 
 (** Our type of syntax error information *)
-type parse_error =
+type syntax_error =
   | Lexing of string * Location.t
   | Include of string * Location.t
   | Parsing of string * Location_span.t
 
 (** Exception for Syntax Errors *)
-exception SyntaxError of parse_error
+exception SyntaxError of syntax_error
 
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring in location [loc]. *)
@@ -32,12 +32,6 @@ let pp_context_and_message ppf (message, loc) =
     (Location.context_to_string loc)
     message
 
-let pp_parsing_error ppf (message, loc_span) =
-  Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
-    (Location_span.to_string loc_span)
-    pp_context_and_message
-    (message, loc_span.end_loc)
-
 let pp_semantic_error ppf (message, loc_span) =
   Fmt.pf ppf "@[<v>@;Semantic error in %s:@;%a@]@."
     (Location_span.to_string loc_span)
@@ -46,7 +40,11 @@ let pp_semantic_error ppf (message, loc_span) =
 
 (** A syntax error message used when handling a SyntaxError *)
 let pp_syntax_error ppf = function
-  | Parsing (message, loc_span) -> pp_parsing_error ppf (message, loc_span)
+  | Parsing (message, loc_span) ->
+      Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
+        (Location_span.to_string loc_span)
+        pp_context_and_message
+        (message, loc_span.end_loc)
   | Lexing (_, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, lexing error:@,%a@]@."
         (Location.to_string {loc with col_num= loc.col_num - 1})
