@@ -15,10 +15,10 @@ let get_ast_or_exit filename =
     | Result.Error err ->
         let loc = Parse.syntax_error_location err
         and msg = Parse.syntax_error_message err in
-        Errors.report_parsing_error (msg, loc) ;
+        Errors.pp_parsing_error Fmt.stderr (msg, loc) ;
         exit 1
   with Errors.SyntaxError err ->
-    Errors.report_syntax_error err ;
+    Errors.pp_syntax_error Fmt.stderr err ;
     exit 1
 
 let type_ast_or_exit ast =
@@ -28,11 +28,11 @@ let type_ast_or_exit ast =
     | Result.Error (error :: _) ->
         let loc = Semantic_error.location error
         and msg = (Fmt.to_to_string Semantic_error.pp) error in
-        Errors.report_semantic_error (msg, loc) ;
+        Errors.pp_semantic_error Fmt.stderr (msg, loc) ;
         exit 1
     | _ ->
         Printf.eprintf "The impossible happened" ;
         exit 1
   with Errors.SemanticError err ->
-    Errors.report_semantic_error err ;
+    Errors.pp_semantic_error Fmt.stderr err ;
     exit 1

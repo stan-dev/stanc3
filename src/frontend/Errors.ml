@@ -27,37 +27,34 @@ let fatal_error ?(msg = "") _ =
 
 (** Return two lines before and after the specified location
     and print a message *)
-let print_context_and_message message loc =
-  ( match Location.context_to_string loc with
-  | None -> ()
-  | Some line -> Printf.eprintf "%s\n" line ) ;
-  Printf.eprintf "%s\n\n" message
+let pp_context_and_message ppf (message, loc) =
+  Fmt.pf ppf "@[<v>%a@,%s@,@]" (Fmt.option Fmt.string)
+    (Location.context_to_string loc)
+    message
+
+let pp_parsing_error ppf (message, loc_span) =
+  Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
+    (Location_span.to_string loc_span)
+    pp_context_and_message
+    (message, loc_span.end_loc)
+
+let pp_semantic_error ppf (message, loc_span) =
+  Fmt.pf ppf "@[<v>@;Semantic error in %s:@;%a@]@."
+    (Location_span.to_string loc_span)
+    pp_context_and_message
+    (message, loc_span.begin_loc)
 
 (** A syntax error message used when handling a SyntaxError *)
-let report_syntax_error = function
-  | Parsing (message, loc_span) ->
-      Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-        (Location_span.to_string loc_span) ;
-      print_context_and_message message loc_span.end_loc
+let pp_syntax_error ppf = function
+  | Parsing (message, loc_span) -> pp_parsing_error ppf (message, loc_span)
   | Lexing (_, loc) ->
-      Printf.eprintf "\nSyntax error in %s, lexing error:\n"
-        (Location.to_string {loc with col_num= loc.col_num - 1}) ;
-      print_context_and_message "Invalid character found." loc
+      Fmt.pf ppf "@[<v>@,Syntax error in %s, lexing error:@,%a@]@."
+        (Location.to_string {loc with col_num= loc.col_num - 1})
+        pp_context_and_message
+        ("Invalid character found.", loc)
   | Include (message, loc) ->
-      Printf.eprintf "\nSyntax error in %s, include error:\n"
-        (Location.to_string loc) ;
-      print_context_and_message message loc
-
-let report_parsing_error (message, loc_span) =
-  Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-    (Location_span.to_string loc_span) ;
-  print_context_and_message message loc_span.end_loc
-
-(** A semantic error message used when handling a SemanticError *)
-let report_semantic_error (message, loc_span) =
-  Printf.eprintf "\n%s in %s:\n" "Semantic error"
-    (Location_span.to_string loc_span) ;
-  print_context_and_message message loc_span.begin_loc
+      Fmt.pf ppf "@[<v>@,Syntax error in %s, include error:@,%a@]@."
+        (Location.to_string loc) pp_context_and_message (message, loc)
 
 (** Switch to control whether warning messages should be printed to stderr (or discarded in case set to false) *)
 let print_warnings = ref true
@@ -74,7 +71,7 @@ let warn_deprecated (pos, message) =
     Location.of_position_opt {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
     |> Option.value ~default:Location.empty
   in
-  if !print_warnings then (
-    Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
-    @@ Location.to_string loc ;
-    print_context_and_message message loc )
+  if !print_warnings then
+    Fmt.pf Fmt.stderr
+      "@[<v>@,Warning: deprecated language construct used in %s:@,%a@]@."
+      (Location.to_string loc) pp_context_and_message (message, loc)
