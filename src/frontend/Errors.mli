@@ -2,13 +2,13 @@
 open Middle
 
 (** Our type of syntax error information *)
-type parse_error =
+type syntax_error =
   | Lexing of string * Location.t
   | Include of string * Location.t
   | Parsing of string * Location_span.t
 
 (** Exception for Syntax Errors *)
-exception SyntaxError of parse_error
+exception SyntaxError of syntax_error
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
@@ -21,12 +21,10 @@ exception FatalError of string
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
 
-val report_syntax_error : parse_error -> unit
+val pp_syntax_error : Format.formatter -> syntax_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
-val report_parsing_error : string * Location_span.t -> unit
-
-val report_semantic_error : string * Location_span.t -> unit
+val pp_semantic_error : Format.formatter -> string * Location_span.t -> unit
 (** A semantic error message used when handling a SemanticError *)
 
 val warn_deprecated : Lexing.position * string -> unit
