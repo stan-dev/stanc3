@@ -26,7 +26,7 @@ class TestModels(unittest.TestCase):
                                delta=0.1)
 
     def test_normal_lub(self):
-        target_dist = normal_lub_model(**normal_lib_data.data)
+        target_dist = normal_lub_model(**normal_lub_data.data)
         mcmc_trace, _ = stan(target_dist)
         theta_lub, theta_ub, theta_lb = [merge_chains(x) for x in mcmc_trace]
 
