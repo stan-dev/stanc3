@@ -30,10 +30,10 @@ class TestModels(unittest.TestCase):
         mcmc_trace, _ = stan(target_dist)
         theta_lub, theta_ub, theta_lb = [merge_chains(x) for x in mcmc_trace]
 
-        self.assertLessEqual(theta_lub, 3)
-        self.assertGreaterEqual(theta_lub, -3)
-        self.assertGreaterEqual(theta_lb, 0)
-        self.assertLessEqual(theta_ub, 1)
+        self.assertTrue(np.all(theta_lub<=3))
+        self.assertTrue(np.all(theta_lub>=-3))
+        self.assertTrue(np.all(theta_lb>=0))
+        self.assertTrue(np.all(theta_ub<=1))
 
 
 if __name__ == '__main__':
