@@ -11,11 +11,7 @@
 
  (rule
  (targets normal_lub.py.output)
- (deps (package stanc) (:stanfiles ../good/code-gen/normal_lub.stan))
+ (deps (package stanc) (:stanfiles normal_lub.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
-
-(alias
- (name runtest)
- (action (diff normal_lub.py normal_lub.py.output)))
