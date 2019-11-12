@@ -1,7 +1,7 @@
 from eight_schools import eight_schools_ncp_model
 import eight_schools_data
 from normal_lub import normal_lub_model
-import normal_lib_data
+import normal_lub_data
 from stan import stan, merge_chains
 import unittest
 import numpy as np
