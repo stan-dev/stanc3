@@ -132,7 +132,7 @@ let optimization_settings () : Optimize.optimization_settings =
   ; dead_code_elimination= !optimize
   ; partial_evaluation= !optimize
   ; lazy_code_motion= !optimize
-  ; optimize_ad_levels= !optimize }
+  ; optimize_ad_levels= true }
 
 let print_warn_uninitialized
     (uninit_vars : (Location_span.t * string) Set.Poly.t) =
