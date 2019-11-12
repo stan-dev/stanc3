@@ -15,3 +15,7 @@
  (action
   (with-stdout-to %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff normal_lub.py normal_lub.py.output)))
