@@ -531,16 +531,23 @@ let trans_prog (p : Program.Typed.t) =
         let vident_sans_opencl =
           String.chop_suffix_exn ~suffix:opencl_suffix vident
         in
+        let type_of_input_var =
+          match
+            List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
+          with
+          | Some st -> SizedType.to_unsized st
+          | None -> UnsizedType.UMatrix
+        in
         [ Stmt.Fixed.
             { pattern=
                 Decl
                   { decl_adtype= DataOnly
                   ; decl_id= vident
-                  ; decl_type= Unsized UMatrix }
+                  ; decl_type= Type.Unsized type_of_input_var }
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment
-                ( (vident, UMatrix, [])
+                ( (vident, type_of_input_var, [])
                 , to_matrix_cl
                     { pattern= Var vident_sans_opencl
                     ; meta= Expr.Typed.Meta.empty } )

@@ -2,7 +2,7 @@ open Core_kernel
 
 let typed_ast_of_string_exn s =
   Parse.parse_string Parser.Incremental.program s
-  |> Result.map_error ~f:Parse.render_syntax_error
+  |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
   |> Result.ok_or_failwith |> Semantic_check.semantic_check_program
   |> Result.map_error
        ~f:(Fmt.to_to_string (Fmt.list ~sep:Fmt.cut Semantic_error.pp))
@@ -13,12 +13,10 @@ let get_ast_or_exit filename =
     match Parse.parse_file Parser.Incremental.program filename with
     | Result.Ok ast -> ast
     | Result.Error err ->
-        let loc = Parse.syntax_error_location err
-        and msg = Parse.syntax_error_message err in
-        Errors.report_parsing_error (msg, loc) ;
+        Errors.pp_syntax_error Fmt.stderr err ;
         exit 1
   with Errors.SyntaxError err ->
-    Errors.report_syntax_error err ;
+    Errors.pp_syntax_error Fmt.stderr err ;
     exit 1
 
 let type_ast_or_exit ast =
@@ -27,12 +25,12 @@ let type_ast_or_exit ast =
     | Result.Ok prog -> prog
     | Result.Error (error :: _) ->
         let loc = Semantic_error.location error
-        and msg = (Fmt.to_to_string Semantic_error.pp) error in
-        Errors.report_semantic_error (msg, loc) ;
+        and msg = Fmt.strf "%a" Semantic_error.pp error in
+        Errors.pp_semantic_error Fmt.stderr (msg, loc) ;
         exit 1
     | _ ->
         Printf.eprintf "The impossible happened" ;
         exit 1
   with Errors.SemanticError err ->
-    Errors.report_semantic_error err ;
+    Errors.pp_semantic_error Fmt.stderr err ;
     exit 1

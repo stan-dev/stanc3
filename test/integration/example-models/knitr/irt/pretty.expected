@@ -198,6 +198,9 @@ generated quantities {
   }
 }
 
+Info: Found int division at 'irt_1pl_fit_predict.stan', line 21, column 20 to column 28:
+  (j - 20) / 4.0
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'irt_1pl_fit_predict.stan', line 1, column 0:
    -------------------------------------------------
@@ -356,6 +359,9 @@ generated quantities {
   }
 }
 
+Info: Found int division at 'irt_1pl_predict.stan', line 21, column 20 to column 28:
+  (j - 20) / 4.0
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'irt_1pl_predict.stan', line 1, column 0:
    -------------------------------------------------
@@ -517,6 +523,9 @@ generated quantities {
   }
 }
 
+Info: Found int division at 'irt_2pl_power.stan', line 13, column 20 to column 28:
+  (j - 50) / 10.0
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'irt_2pl_power.stan', line 1, column 0:
    -------------------------------------------------
