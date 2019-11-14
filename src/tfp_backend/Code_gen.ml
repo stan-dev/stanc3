@@ -45,12 +45,10 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.strided_slice
 *)
       raise_s [%message "Multi-indices not supported yet"]
+  | Indexed (obj, []) -> pp_expr ppf obj
   | Indexed (obj, indices) ->
-      let pp_indexed ppf = function
-        | [] -> ()
-        | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
-      in
-      pf ppf "%a%a" pp_expr obj pp_indexed indices
+    pf ppf "tf__.gather(%a, %a)" pp_expr obj
+      (list ~sep:comma (Index.pp pp_expr)) indices
 
 (* Only necessary as long as we aren't inferring types, see
    https://github.com/stan-dev/stanc3/issues/373
@@ -91,16 +89,17 @@ let rec pp_stmt ppf s =
   *)
   | For {loopvar; lower; upper; body} ->
     let loop_sym = Common.Gensym.generate () in
-    let cond_name = (strf "cond_%s__" loop_sym) in
-    let body_name = (strf "body_%s__" loop_sym) in
-    pp_method ppf cond_name [loopvar; "_"] [] nop ;
+    let cond_name = (strf "cond_%s" loop_sym) in
+    let body_name = (strf "body_%s" loop_sym) in
+    pf ppf "@[<hov 2>%s = lambda %s, _: tf__.less(%s,@ %a@ + 1)@]@,"
+      cond_name loopvar loopvar pp_expr upper ;
     pp_method ppf body_name [loopvar; "target"] []
-      ~outro:[strf "return [%s, target]" loopvar]
-      (fun ppf -> pp_stmt ppf body);
-    pf ppf "target += tf__.while_loop(%s, %s, [%a, 0])[1]"
-      cond_name body_name pp_expr lower
-      (* pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr_int
-       *   lower pp_expr_int upper pp_stmt body *)
+      ~outro:[strf "return [%s + 1, target]" loopvar]
+      (fun ppf -> pp_stmt ppf body) ;
+    pf ppf "@,target += tf__.while_loop(%s, %s, [%a, 0])[1]"
+      cond_name body_name pp_expr {lower with meta={lower.meta with type_=UInt}}
+  (* pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr_int
+   *   lower pp_expr_int upper pp_stmt body *)
   | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
