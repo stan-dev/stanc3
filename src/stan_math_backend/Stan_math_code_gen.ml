@@ -267,7 +267,8 @@ let pp_model_private ppf {Program.prepare_data; _} =
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>%s %a const " rt pp_call_str (name, params) ;
+  pf ppf "@[<v 2>%s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
+    params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;

@@ -1062,7 +1062,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
-      assign(sym65__, nil_index_list(), cov_matrix_constrain(x_cov_in__, 2), "assigning variable sym65__");
+      assign(sym65__, nil_index_list(), cov_matrix_constrain(x_cov_in__, 2),
+        "assigning variable sym65__");
       assign(x_cov, nil_index_list(), sym65__, "assigning variable x_cov");
       vars__.push_back(theta);
       vars__.push_back(phi);
@@ -1072,16 +1073,28 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                  vars__.push_back(
+                    rvalue(x_matrix,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(1), nil_index_list())),
+                      "x_matrix"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "x_matrix"));
                   }
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(3),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "x_matrix"));
                   }
                 }
               }
@@ -1092,16 +1105,28 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(1),
+                          cons_list(index_uni(2), nil_index_list())),
+                        "x_matrix"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                      vars__.push_back(
+                        rvalue(x_matrix,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "x_matrix"));
                     }
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                      vars__.push_back(
+                        rvalue(x_matrix,
+                          cons_list(index_uni(3),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "x_matrix"));
                     }
                   }
                 }
@@ -1128,11 +1153,19 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(sym65__, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "sym65__"));
+                  vars__.push_back(
+                    rvalue(sym65__,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(1), nil_index_list())),
+                      "sym65__"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(sym65__, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "sym65__"));
+                    vars__.push_back(
+                      rvalue(sym65__,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "sym65__"));
                   }
                 }
               }
@@ -1143,11 +1176,19 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(sym65__, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "sym65__"));
+                    vars__.push_back(
+                      rvalue(sym65__,
+                        cons_list(index_uni(1),
+                          cons_list(index_uni(2), nil_index_list())),
+                        "sym65__"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(sym65__, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "sym65__"));
+                      vars__.push_back(
+                        rvalue(sym65__,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "sym65__"));
                     }
                   }
                 }
@@ -1156,7 +1197,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
       }
-      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
         {
           return ;
         }
@@ -1220,14 +1262,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   current_statement__ = 3;
-                  assign(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(1 - 1)], "assigning variable x_matrix");
+                  assign(x_matrix,
+                    cons_list(index_uni(1),
+                      cons_list(index_uni(1), nil_index_list())),
+                    context__.vals_r("x_matrix")[(1 - 1)],
+                    "assigning variable x_matrix");
                   current_statement__ = 3;
                   pos__ = 2;
                 }
                 {
                   {
                     current_statement__ = 3;
-                    assign(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+                    assign(x_matrix,
+                      cons_list(index_uni(2),
+                        cons_list(index_uni(1), nil_index_list())),
+                      context__.vals_r("x_matrix")[(pos__ - 1)],
+                      "assigning variable x_matrix");
                     current_statement__ = 3;
                     pos__ = (pos__ + 1);
                   }
@@ -1235,7 +1285,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 {
                   {
                     current_statement__ = 3;
-                    assign(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+                    assign(x_matrix,
+                      cons_list(index_uni(3),
+                        cons_list(index_uni(1), nil_index_list())),
+                      context__.vals_r("x_matrix")[(pos__ - 1)],
+                      "assigning variable x_matrix");
                     current_statement__ = 3;
                     pos__ = (pos__ + 1);
                   }
@@ -1248,14 +1302,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    assign(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+                    assign(x_matrix,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(2), nil_index_list())),
+                      context__.vals_r("x_matrix")[(pos__ - 1)],
+                      "assigning variable x_matrix");
                     current_statement__ = 3;
                     pos__ = (pos__ + 1);
                   }
                   {
                     {
                       current_statement__ = 3;
-                      assign(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+                      assign(x_matrix,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(2), nil_index_list())),
+                        context__.vals_r("x_matrix")[(pos__ - 1)],
+                        "assigning variable x_matrix");
                       current_statement__ = 3;
                       pos__ = (pos__ + 1);
                     }
@@ -1263,7 +1325,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   {
                     {
                       current_statement__ = 3;
-                      assign(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_matrix")[(pos__ - 1)], "assigning variable x_matrix");
+                      assign(x_matrix,
+                        cons_list(index_uni(3),
+                          cons_list(index_uni(2), nil_index_list())),
+                        context__.vals_r("x_matrix")[(pos__ - 1)],
+                        "assigning variable x_matrix");
                     }
                   }
                 }
@@ -1279,14 +1345,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         {
           {
             current_statement__ = 4;
-            assign(x_vector, cons_list(index_uni(1), nil_index_list()), context__.vals_r("x_vector")[(1 - 1)], "assigning variable x_vector");
+            assign(x_vector, cons_list(index_uni(1), nil_index_list()),
+              context__.vals_r("x_vector")[(1 - 1)],
+              "assigning variable x_vector");
             current_statement__ = 4;
             pos__ = 2;
           }
           {
             {
               current_statement__ = 4;
-              assign(x_vector, cons_list(index_uni(2), nil_index_list()), context__.vals_r("x_vector")[(pos__ - 1)], "assigning variable x_vector");
+              assign(x_vector, cons_list(index_uni(2), nil_index_list()),
+                context__.vals_r("x_vector")[(pos__ - 1)],
+                "assigning variable x_vector");
             }
           }
         }
@@ -1301,14 +1371,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   current_statement__ = 5;
-                  assign(x_cov, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_cov")[(1 - 1)], "assigning variable x_cov");
+                  assign(x_cov,
+                    cons_list(index_uni(1),
+                      cons_list(index_uni(1), nil_index_list())),
+                    context__.vals_r("x_cov")[(1 - 1)],
+                    "assigning variable x_cov");
                   current_statement__ = 5;
                   pos__ = 2;
                 }
                 {
                   {
                     current_statement__ = 5;
-                    assign(x_cov, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+                    assign(x_cov,
+                      cons_list(index_uni(2),
+                        cons_list(index_uni(1), nil_index_list())),
+                      context__.vals_r("x_cov")[(pos__ - 1)],
+                      "assigning variable x_cov");
                     current_statement__ = 5;
                     pos__ = (pos__ + 1);
                   }
@@ -1321,14 +1399,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    assign(x_cov, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+                    assign(x_cov,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(2), nil_index_list())),
+                      context__.vals_r("x_cov")[(pos__ - 1)],
+                      "assigning variable x_cov");
                     current_statement__ = 5;
                     pos__ = (pos__ + 1);
                   }
                   {
                     {
                       current_statement__ = 5;
-                      assign(x_cov, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), context__.vals_r("x_cov")[(pos__ - 1)], "assigning variable x_cov");
+                      assign(x_cov,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(2), nil_index_list())),
+                        context__.vals_r("x_cov")[(pos__ - 1)],
+                        "assigning variable x_cov");
                     }
                   }
                 }
@@ -1338,7 +1424,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
       current_statement__ = 5;
-      assign(x_cov, nil_index_list(), cov_matrix_free(x_cov), "assigning variable x_cov");
+      assign(x_cov, nil_index_list(), cov_matrix_free(x_cov),
+        "assigning variable x_cov");
       vars__.push_back(sym52__);
       vars__.push_back(sym51__);
       {
@@ -1347,16 +1434,28 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                  vars__.push_back(
+                    rvalue(x_matrix,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(1), nil_index_list())),
+                      "x_matrix"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "x_matrix"));
                   }
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(3),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "x_matrix"));
                   }
                 }
               }
@@ -1367,16 +1466,28 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(x_matrix, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                    vars__.push_back(
+                      rvalue(x_matrix,
+                        cons_list(index_uni(1),
+                          cons_list(index_uni(2), nil_index_list())),
+                        "x_matrix"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                      vars__.push_back(
+                        rvalue(x_matrix,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "x_matrix"));
                     }
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_matrix, cons_list(index_uni(3), cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                      vars__.push_back(
+                        rvalue(x_matrix,
+                          cons_list(index_uni(3),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "x_matrix"));
                     }
                   }
                 }
@@ -1403,11 +1514,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(rvalue(x_cov, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "x_cov"));
+                  vars__.push_back(
+                    rvalue(x_cov,
+                      cons_list(index_uni(1),
+                        cons_list(index_uni(1), nil_index_list())), "x_cov"));
                 }
                 {
                   {
-                    vars__.push_back(rvalue(x_cov, cons_list(index_uni(2), cons_list(index_uni(1), nil_index_list())), "x_cov"));
+                    vars__.push_back(
+                      rvalue(x_cov,
+                        cons_list(index_uni(2),
+                          cons_list(index_uni(1), nil_index_list())),
+                        "x_cov"));
                   }
                 }
               }
@@ -1418,11 +1536,19 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(rvalue(x_cov, cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "x_cov"));
+                    vars__.push_back(
+                      rvalue(x_cov,
+                        cons_list(index_uni(1),
+                          cons_list(index_uni(2), nil_index_list())),
+                        "x_cov"));
                   }
                   {
                     {
-                      vars__.push_back(rvalue(x_cov, cons_list(index_uni(2), cons_list(index_uni(2), nil_index_list())), "x_cov"));
+                      vars__.push_back(
+                        rvalue(x_cov,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          "x_cov"));
                     }
                   }
                 }
