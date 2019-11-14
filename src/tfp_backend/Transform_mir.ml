@@ -18,7 +18,7 @@ let map_functions fname args =
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
   | "lognormal" -> ("LogNormal", args)
   | "bernoulli_logit" -> ("Bernoulli", args)
-  | f when f = (Operator.to_string Less)  -> ("tf__.less", args)
+  | f when f = Operator.to_string Less -> ("tf__.less", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
@@ -83,19 +83,19 @@ let one_to_zero_indexing e =
 let rec int_to_real e =
   let open Expr.Fixed.Pattern in
   match e.Expr.Fixed.pattern with
-    | Lit (Int, s) -> {e with pattern=Lit (Real, s)}
-    | FunApp(fk, f, args) when Option.is_some (Operator.of_string_opt f) ->
+  | Lit (Int, s) -> {e with pattern= Lit (Real, s)}
+  | FunApp (fk, f, args) when Option.is_some (Operator.of_string_opt f) ->
       (* We don't want to convert operator arguments *)
-      {e with pattern= FunApp(fk, f, List.map ~f:int_to_real args)}
-    | ep -> {e with pattern=Expr.Fixed.Pattern.map int_to_real ep}
+      {e with pattern= FunApp (fk, f, List.map ~f:int_to_real args)}
+  | ep -> {e with pattern= Expr.Fixed.Pattern.map int_to_real ep}
 
 let rec int_to_real_stmt s =
   let open Stmt.Fixed.Pattern in
-    match s.Stmt.Fixed.pattern with
-    | For ({body;_ } as f )->
+  match s.Stmt.Fixed.pattern with
+  | For ({body; _} as f) ->
       (* We don't want to convert loop bounds*)
-      {s with pattern=For {f with body= int_to_real_stmt body}}
-    | sp -> {s with pattern=map int_to_real int_to_real_stmt sp}
+      {s with pattern= For {f with body= int_to_real_stmt body}}
+  | sp -> {s with pattern= map int_to_real int_to_real_stmt sp}
 
 let real_transformation_args =
   Program.map_transformation (Expr.Fixed.rewrite_top_down ~f:int_to_real)

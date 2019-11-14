@@ -47,14 +47,16 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
       raise_s [%message "Multi-indices not supported yet"]
   | Indexed (obj, []) -> pp_expr ppf obj
   | Indexed (obj, indices) ->
-    pf ppf "tf__.gather(%a, %a)" pp_expr obj
-      (list ~sep:comma (Index.pp pp_expr)) indices
+      pf ppf "tf__.gather(%a, %a)" pp_expr obj
+        (list ~sep:comma (Index.pp pp_expr))
+        indices
 
 (* Only necessary as long as we aren't inferring types, see
    https://github.com/stan-dev/stanc3/issues/373
 *)
-let pp_expr_int ppf e = match e.Expr.Fixed.pattern with
-  | Lit (Int, s) | Lit(Real, s) -> string ppf s
+let pp_expr_int ppf e =
+  match e.Expr.Fixed.pattern with
+  | Lit (Int, s) | Lit (Real, s) -> string ppf s
   | _ -> pp_expr ppf e
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
@@ -83,23 +85,16 @@ let rec pp_stmt ppf s =
   (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
    *     pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id *)
   | Decl _ -> ()
-  (* if else, for loop, while loop all need to create functions for
-     their arguments. I think these functions need to be named and
-     defined inline in general because lambdas are limited.
-  *)
   | For {loopvar; lower; upper; body} ->
-    let loop_sym = Common.Gensym.generate () in
-    let cond_name = (strf "cond_%s" loop_sym) in
-    let body_name = (strf "body_%s" loop_sym) in
-    pf ppf "@[<hov 2>%s = lambda %s, _: tf__.less(%s,@ %a@ + 1)@]@,"
-      cond_name loopvar loopvar pp_expr upper ;
-    pp_method ppf body_name [loopvar; "target"] []
-      ~outro:[strf "return [%s + 1, target]" loopvar]
-      (fun ppf -> pp_stmt ppf body) ;
-    pf ppf "@,target += tf__.while_loop(%s, %s, [%a, 0])[1]"
-      cond_name body_name pp_expr {lower with meta={lower.meta with type_=UInt}}
-  (* pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr_int
-   *   lower pp_expr_int upper pp_stmt body *)
+      let body_name = "body_" ^ Common.Gensym.generate () in
+      pp_method ppf body_name [loopvar] ["target = 0"] ~outro:["return target"]
+        (fun ppf -> pp_stmt ppf body ) ;
+      pf ppf
+        "@,@[<hov 2>target += tf__.reduce_sum(@,tf__.vectorized_map(@,%s,@ \
+         tf__.convert_to_tensor(list(range(%a, %a + 1)))))@]"
+        body_name pp_expr
+        {lower with meta= {lower.meta with type_= UInt}}
+        pp_expr upper
   | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
