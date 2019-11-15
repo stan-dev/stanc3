@@ -423,6 +423,19 @@ let () =
   add_unqualified ("add", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("add", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix]) ;
+  (* Embedded Laplace approximation *)
+  add_qualified
+    ( "laplace_marginal_bernoulli"
+    , ReturnType UReal
+    , [ (DataOnly, UArray UInt); (DataOnly, UArray UInt)
+      ; ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UVector); (DataOnly, UArray UVector)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType UMatrix ) )
+      ; (AutoDiffable, UVector); (DataOnly, UArray UVector)
+      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt)
+      ; (AutoDiffable, UVector); (DataOnly, UReal); (DataOnly, UInt) ] ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType UVector
@@ -1475,3 +1488,20 @@ let () =
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
           Hashtbl.add_multi stan_math_signatures ~key ~data ) )
+
+(*
+  add_qualified
+    ( "laplace_marginal_bernoulli"
+    , ReturnType UReal
+    , [ (DataOnly UArray UInt); (DataOnly UArray UInt)
+    ; (AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UVector)
+              ; (DataOnly, UArray UVector)
+              ; (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType UMatrix ) )
+      ; (AutoDiffable, UVector); (DataOnly, UArray UVector)
+      ; (DataOnly, UArray UReal); (DataOnly UArray UInt)
+      ; (AutoDiffable, UVector); (DataOnly UReal); (DataOnly UInt) ]);
+      *)
