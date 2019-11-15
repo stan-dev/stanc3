@@ -27,7 +27,7 @@ model {
     laplace_marginal_bernoulli(y, n_samples, K, phi, x, delta, delta_int,
                                theta0, 1e-3, 100);
 
-  // real y = integrate_1d(integrand, 0, 1, x, x_r, x_i);
-  // real z = integrate_1d(integrand, 0, 1, x, x_r, x_i, 1e-8);
-  // x ~ normal(y + z, 1.0);
+  target +=
+    laplace_marginal_bernoulli(y, n_samples, K, phi, x, delta, delta_int,
+                               theta0);
 }
