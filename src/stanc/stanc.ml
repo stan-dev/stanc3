@@ -16,6 +16,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let canonicalize_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
@@ -83,6 +84,9 @@ let options =
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
+    ; ( "--canonize"
+      , Arg.Tuple [Arg.Set canonicalize_program; Arg.Set pretty_print_program]
+      , " Prints the canonicalized program to the console" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -171,7 +175,12 @@ let add_file filename =
 
 (** ad directives from the given file. *)
 let use_file filename =
-  let ast = Frontend_utils.get_ast_or_exit filename in
+  let ast =
+    if !canonicalize_program then
+      Canonicalize.canonicalize_program
+        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
+    else Frontend_utils.get_ast_or_exit filename
+  in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
