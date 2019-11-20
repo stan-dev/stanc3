@@ -55,8 +55,9 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
 (* Only necessary as long as we aren't inferring types, see
    https://github.com/stan-dev/stanc3/issues/373
 *)
-let pp_expr_int ppf e = match e.Expr.Fixed.pattern with
-  | Lit (Int, s) | Lit(Real, s) -> string ppf s
+let pp_expr_int ppf e =
+  match e.Expr.Fixed.pattern with
+  | Lit (Int, s) | Lit (Real, s) -> string ppf s
   | _ -> pp_expr ppf e
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
@@ -90,19 +91,36 @@ let rec pp_stmt ppf s =
      defined inline in general because lambdas are limited.
   *)
   | For {loopvar; lower; upper; body} ->
-    let loop_sym = Common.Gensym.generate () in
-    let cond_name = (strf "cond_%s__" loop_sym) in
-    let body_name = (strf "body_%s__" loop_sym) in
-    pp_method ppf cond_name [loopvar; "_"] [] nop ;
-    pp_method ppf body_name [loopvar; "target"] []
-      ~outro:[strf "return [%s, target]" loopvar]
-      (fun ppf -> pp_stmt ppf body);
-    pf ppf "target += tf__.while_loop(%s, %s, [%a, 0])[1]"
-      cond_name body_name pp_expr lower
-      (* pf ppf "@[<hov 4>for %s in range(%a, %a + 1):@,%a@]" loopvar pp_expr_int
-       *   lower pp_expr_int upper pp_stmt body *)
-  | IfElse (_, _, _) | While (_, _) | NRFunApp (CompilerInternal, _, _) ->
-      raise_s [%message "Not implemented" (s : Stmt.Located.t)]
+      let indexed_vars = ref [] in
+      let rec pull_exprs_indexed_by i e =
+        match e.Expr.Fixed.pattern with
+        | Expr.Fixed.Pattern.Indexed
+            (({pattern= Var vident; _} as obj), [Single {pattern= Var l; _}])
+          when i = l ->
+            indexed_vars := vident :: !indexed_vars ;
+            obj
+        | ep ->
+            { e with
+              pattern= Expr.Fixed.Pattern.map (pull_exprs_indexed_by i) ep }
+      in
+      let body =
+        Stmt.Fixed.rewrite_bottom_up
+          ~f:(pull_exprs_indexed_by loopvar)
+          ~g:Fn.id body
+      in
+      let body_name = "body_" ^ Common.Gensym.generate () in
+      pp_method ppf body_name ["body_vars__"]
+        [ strf "@[<h>%a = body_vars__@]" (list ~sep:comma string)
+            (!indexed_vars @ [loopvar])
+        ; "target = 0" ]
+        ~outro:["return target"]
+        (fun ppf -> pp_stmt ppf body) ;
+      pf ppf
+        "@,@[<hov 2>target += tf__.reduce_sum(tf__.vectorized_map(%s, (%a, \
+         list(range(%a, %a + 1)))))@]"
+        body_name (list ~sep:comma string) !indexed_vars pp_expr lower pp_expr
+        upper
+  | _ -> raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
 let rec pp_cast prefix ppf (name, st) =
   match st with

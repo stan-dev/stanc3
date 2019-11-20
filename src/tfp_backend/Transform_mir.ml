@@ -18,7 +18,7 @@ let map_functions fname args =
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
   | "lognormal" -> ("LogNormal", args)
   | "bernoulli_logit" -> ("Bernoulli", args)
-  | f when f = (Operator.to_string Less)  -> ("tf__.less", args)
+  | f when f = Operator.to_string Less -> ("tf__.less", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
@@ -122,7 +122,6 @@ let trans_prog (p : Program.Typed.t) =
   in
   Program.map translate_funapps map_stmt p
   |> Program.map Fn.id remove_unused_stmts
-  |> rewrite_expressions one_to_zero_indexing
   |> rewrite_expressions int_to_real
   |> map_transformations real_transformation_args
   |> Analysis_and_optimization.Optimize.vectorize

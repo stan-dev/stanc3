@@ -43,12 +43,15 @@ class irt_2pl_model(tfd__.Distribution):
       tfd__.Cauchy(tf__.cast(0, dtype__), tf__.cast(2, dtype__)).log_prob(
         sigma_b))
     target += tf__.reduce_sum(tfd__.Normal(mu_b, sigma_b).log_prob(b))
-    for i in range(1, I + 1):
-        target += tf__.reduce_sum(
-          tfd__.Bernoulli(
-                (a[(i - tf__.cast(1, dtype__))] *
-                  (theta - b[(i - tf__.cast(1, dtype__))]))).log_prob(
-            y[(i - tf__.cast(1, dtype__))]))
+    def body_sym1__(body_vars__):
+      b, a, y, i = body_vars__
+      target = 0
+      target += tf__.reduce_sum(
+        tfd__.Bernoulli((a * (theta - b))).log_prob(y))
+      return target
+       
+    target += tf__.reduce_sum(tf__.vectorized_map(body_sym1__, (b, a,
+      y, list(range(tf__.cast(1, dtype__), I + 1)))))
     return target
      
   def log_prob(self, params):
