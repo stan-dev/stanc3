@@ -59,23 +59,5 @@ class TestModels(unittest.TestCase):
         stan_fit = test_positive_cont_fit.data
         self._compare_lp(target_dist, stan_fit)
 
-
-        # mcmc_trace, _ = stan(target_dist)
-        # loc_lognormal, scale_lognormal, chi_square_nu, exp_rate, \
-        #     gamma_alpha, gamma_beta, inv_gamma_alpha, inv_gamma_beta = [merge_chains(x) for x in mcmc_trace]
-
-        # self.assertAlmostEqual(significant_mean(loc_lognormal), 3, delta=1)
-        # self.assertAlmostEqual(significant_mean(scale_lognormal), 0.3, delta=0.1)
-
-        # self.assertAlmostEqual(significant_mean(chi_square_nu), 20, delta=3)
-
-        # self.assertAlmostEqual(significant_mean(exp_rate), 0.05, delta=0.01)
-
-        # self.assertAlmostEqual(significant_mean(gamma_alpha), 10, delta=2)
-        # self.assertAlmostEqual(significant_mean(gamma_beta), 0.5, delta=0.1)
-
-        # self.assertAlmostEqual(significant_mean(inv_gamma_alpha), 2, delta=1)
-        # self.assertAlmostEqual(significant_mean(inv_gamma_beta), 30, delta=3)
-
 if __name__ == '__main__':
     unittest.main()
