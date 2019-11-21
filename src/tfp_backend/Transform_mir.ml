@@ -10,11 +10,21 @@ let remove_stan_dist_suffix s =
     ~f:(fun suffix -> String.chop_suffix ~suffix s)
   |> List.hd_exn
 
-let capitalize_fnames = String.Set.of_list ["normal"; "cauchy"]
+let capitalize_fnames =
+  String.Set.of_list ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"]
+
+(* Bernoulli, Binomial, NegativeBinomial should be mapped to TFP with either probs= or logits= flags *)
+(* Poisson should be mapped to TFP with either rate or log_rate *)
+(* | "lkj_corr_cholesky" -> ("CholeskyLKJ", args) *)
 
 let map_functions fname args =
   match fname with
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
+  | "student_t" -> ("StudentT", args)
+  | "double_exponential" -> ("Laplace", args)
+  | "lognormal" -> ("LogNormal", args)
+  | "chi_square" -> ("Chi2", args)
+  | "inv_gamma" -> ("InverseGamma", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
