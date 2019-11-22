@@ -1,44 +1,31 @@
 open Core_kernel
 open Ast
 
-let deprecated_functions = String.Table.create ()
-let deprecated_distributions = String.Table.create ()
+let deprecated_functions =
+  String.Map.of_alist_exn
+    [ ("multiply_log", "lmultiply")
+    ; ("binomial_coefficient_log", "lchoose")
+    ; ("integrate_ode", "integrate_ode_rk45") ]
 
-let () =
-  Hashtbl.add_multi deprecated_functions ~key:"multiply_log" ~data:"lmultiply" ;
-  Hashtbl.add_multi deprecated_functions ~key:"binomial_coefficient_log"
-    ~data:"lchoose" ;
-  Hashtbl.add_multi deprecated_functions ~key:"integrate_ode"
-    ~data:"integrate_ode_rk45" ;
-  List.iter Middle.Stan_math_signatures.distributions
-    ~f:(fun (fnkinds, name, _) ->
-      List.iter fnkinds ~f:(function
-        | Lpdf ->
-            Hashtbl.add_multi deprecated_distributions ~key:(name ^ "_log")
-              ~data:(name ^ "_lpdf")
-        | Lpmf ->
-            Hashtbl.add_multi deprecated_distributions ~key:(name ^ "_log")
-              ~data:(name ^ "_lpmf")
-        | Cdf ->
-            Hashtbl.add_multi deprecated_distributions ~key:(name ^ "_cdf_log")
-              ~data:(name ^ "_lcdf")
-        | Ccdf ->
-            Hashtbl.add_multi deprecated_distributions
-              ~key:(name ^ "_ccdf_log") ~data:(name ^ "_lccdf")
-        | Rng | UnaryVectorized -> () ) )
+let deprecated_distributions =
+  String.Map.of_alist_exn
+    (List.concat_map Middle.Stan_math_signatures.distributions
+       ~f:(fun (fnkinds, name, _) ->
+         List.filter_map fnkinds ~f:(function
+           | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
+           | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
+           | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
+           | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
+           | Rng | UnaryVectorized -> None ) ))
 
 let is_distribution name =
-  Option.is_some (Hashtbl.find deprecated_distributions name)
+  Option.is_some (String.Map.find deprecated_distributions name)
 
 let rename_distribution name =
-  match Hashtbl.find deprecated_distributions name with
-  | None | Some [] -> name
-  | Some (rename :: _) -> rename
+  Option.value ~default:name (String.Map.find deprecated_distributions name)
 
 let rename_function name =
-  match Hashtbl.find deprecated_functions name with
-  | None | Some [] -> name
-  | Some (rename :: _) -> rename
+  Option.value ~default:name (String.Map.find deprecated_functions name)
 
 let rec replace_deprecated_expr {expr; emeta} =
   let expr =
