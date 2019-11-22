@@ -27,26 +27,11 @@ let rename_distribution name =
 let rename_function name =
   Option.value ~default:name (String.Map.find deprecated_functions name)
 
-let rec replace_deprecated_expr {expr; emeta} =
-  let expr =
-    match expr with
-    | GetLP -> GetTarget
-    | FunApp (f, {name; id_loc}, e) ->
-        if is_distribution name then
-          CondDistApp
-            ( f
-            , {name= rename_distribution name; id_loc}
-            , List.map ~f:replace_deprecated_expr e )
-        else
-          FunApp
-            ( f
-            , {name= rename_function name; id_loc}
-            , List.map ~f:replace_deprecated_expr e )
-    | _ -> map_expression replace_deprecated_expr ident expr
-  in
-  {expr; emeta}
-
-let replace_deprecated_lval = map_lval_with replace_deprecated_expr ident
+let distribution_suffix name =
+  String.is_suffix ~suffix:"_lpdf" name
+  || String.is_suffix ~suffix:"_lpmf" name
+  || String.is_suffix ~suffix:"_lcdf" name
+  || String.is_suffix ~suffix:"_lccdf" name
 
 let without_suffix name =
   if
@@ -54,6 +39,53 @@ let without_suffix name =
     || String.is_suffix ~suffix:"_lpmf" name
   then String.drop_suffix name 5
   else name
+
+let rec repair_syntax_expr {expr; emeta} =
+  let expr =
+    match expr with
+    | FunApp (f, {name; id_loc}, e) when distribution_suffix name ->
+        CondDistApp (f, {name; id_loc}, List.map ~f:repair_syntax_expr e)
+    | CondDistApp (f, {name; id_loc}, e) when not (distribution_suffix name) ->
+        FunApp (f, {name; id_loc}, List.map ~f:repair_syntax_expr e)
+    | _ -> map_expression repair_syntax_expr ident expr
+  in
+  {expr; emeta}
+
+let repair_syntax_lval = map_lval_with repair_syntax_expr ident
+
+let repair_syntax_stmt = function
+  | {stmt= Tilde {arg; distribution= {name; id_loc}; args; truncation}; smeta}
+    ->
+      { stmt=
+          Tilde
+            { arg= repair_syntax_expr arg
+            ; distribution= {name= without_suffix name; id_loc}
+            ; args= List.map ~f:repair_syntax_expr args
+            ; truncation= map_truncation repair_syntax_expr truncation }
+      ; smeta }
+  | stmt ->
+      map_statement_with repair_syntax_expr ident repair_syntax_lval ident stmt
+
+let rec replace_deprecated_expr {expr; emeta} =
+  let expr =
+    match expr with
+    | GetLP -> GetTarget
+    | FunApp (StanLib, {name; id_loc}, e) ->
+        if is_distribution name then
+          CondDistApp
+            ( StanLib
+            , {name= rename_distribution name; id_loc}
+            , List.map ~f:replace_deprecated_expr e )
+        else
+          FunApp
+            ( StanLib
+            , {name= rename_function name; id_loc}
+            , List.map ~f:replace_deprecated_expr e )
+    | _ -> map_expression replace_deprecated_expr ident expr
+  in
+  {expr; emeta}
+
+let replace_deprecated_lval = map_lval_with replace_deprecated_expr ident
 
 let rec replace_deprecated_stmt {stmt; smeta} =
   let stmt =
@@ -64,12 +96,6 @@ let rec replace_deprecated_stmt {stmt; smeta} =
           { assign_lhs= replace_deprecated_lval l
           ; assign_op= Assign
           ; assign_rhs= replace_deprecated_expr e }
-    | Tilde {arg; distribution= {name; id_loc}; args; truncation} ->
-        Tilde
-          { arg= replace_deprecated_expr arg
-          ; distribution= {name= without_suffix name; id_loc}
-          ; args= List.map ~f:replace_deprecated_expr args
-          ; truncation= map_truncation replace_deprecated_expr truncation }
     | stmt ->
         map_statement replace_deprecated_expr replace_deprecated_stmt
           replace_deprecated_lval ident stmt
@@ -102,5 +128,8 @@ and keep_parens {expr; emeta} =
 let parens_lval = map_lval_with no_parens ident
 let parens_stmt = map_statement_with no_parens ident parens_lval ident
 
-let canonicalize_program program : untyped_program =
+let repair_syntax : untyped_program -> untyped_program =
+  map_program repair_syntax_stmt
+
+let canonicalize_program program : typed_program =
   program |> map_program replace_deprecated_stmt |> map_program parens_stmt
