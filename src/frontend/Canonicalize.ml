@@ -70,6 +70,13 @@ let rec replace_deprecated_expr {expr; emeta} =
   let expr =
     match expr with
     | GetLP -> GetTarget
+    | FunApp (StanLib, {name= "abs"; id_loc}, [e])
+      when Middle.UnsizedType.is_real_type e.emeta.type_ ->
+        FunApp (StanLib, {name= "fabs"; id_loc}, [replace_deprecated_expr e])
+    | FunApp (StanLib, {name= "if_else"; _}, [c; t; e]) ->
+        Paren
+          (replace_deprecated_expr
+             {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
     | FunApp (StanLib, {name; id_loc}, e) ->
         if is_distribution name then
           CondDistApp
@@ -110,7 +117,14 @@ let rec no_parens {expr; emeta} =
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
   | Indexed (e, l) ->
-      { expr= Indexed (keep_parens e, List.map ~f:(map_index no_parens) l)
+      { expr=
+          Indexed
+            ( keep_parens e
+            , List.map
+                ~f:(function
+                  | Single e -> Single (no_parens e)
+                  | i -> map_index keep_parens i)
+                l )
       ; emeta }
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ ->
       {expr= map_expression no_parens ident expr; emeta}
@@ -126,7 +140,31 @@ and keep_parens {expr; emeta} =
   | _ -> no_parens {expr; emeta}
 
 let parens_lval = map_lval_with no_parens ident
-let parens_stmt = map_statement_with no_parens ident parens_lval ident
+
+let rec parens_stmt {stmt; smeta} =
+  let stmt =
+    match stmt with
+    | VarDecl
+        { decl_type= d
+        ; transformation= t
+        ; identifier
+        ; initial_value= init
+        ; is_global } ->
+        VarDecl
+          { decl_type= Middle.Type.map no_parens d
+          ; transformation= Middle.Program.map_transformation keep_parens t
+          ; identifier
+          ; initial_value= Option.map ~f:no_parens init
+          ; is_global }
+    | For {loop_variable; lower_bound; upper_bound; loop_body} ->
+        For
+          { loop_variable
+          ; lower_bound= keep_parens lower_bound
+          ; upper_bound= keep_parens upper_bound
+          ; loop_body= parens_stmt loop_body }
+    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
+  in
+  {stmt; smeta}
 
 let repair_syntax : untyped_program -> untyped_program =
   map_program repair_syntax_stmt
