@@ -38,6 +38,11 @@ let without_suffix name =
     String.is_suffix ~suffix:"_lpdf" name
     || String.is_suffix ~suffix:"_lpmf" name
   then String.drop_suffix name 5
+  else if
+    is_distribution name && not (is_distribution (name ^ "_log"))
+    (* technically, should also look for user-defined functions
+       but Semantic_check.mli does not export the symbol table *)
+  then String.drop_suffix name 4 (* "_log" *)
   else name
 
 let rec repair_syntax_expr {expr; emeta} =
