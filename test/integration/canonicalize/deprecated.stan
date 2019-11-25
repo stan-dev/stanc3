@@ -5,6 +5,9 @@ functions {
     dydt[2] <- -y[1] - theta[1] * y[2];
     return dydt;
   }
+  real normal_log_log(real a, real b, real c) {
+    return (a-b)/c;
+  }
 }
 transformed data {
   int a = -12;
@@ -24,8 +27,16 @@ model {
 
   c ~ poisson_lpmf(3.0);
   c ~ poisson_log(3.0);
-  x ~ normal_log(0, 1);
-  increment_log_prob(std_normal_lpdf(x));
+  c ~ poisson_log_log(3.0);
+  if (a) {
+    x ~ normal(0, 1);
+    x ~ normal_log(0, 1);
+    x ~ normal_log_log(0, 1);
+    increment_log_prob(std_normal_lpdf(x));
+  } else {
+    x ~ exponential(1);
+    x ~ exponential_log(1);
+  }
 
   target += normal_log(x, 0, 1)
     + normal_cdf_log(2, 0, 1)

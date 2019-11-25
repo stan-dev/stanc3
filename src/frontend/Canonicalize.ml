@@ -33,16 +33,31 @@ let distribution_suffix name =
   || String.is_suffix ~suffix:"_lcdf" name
   || String.is_suffix ~suffix:"_lccdf" name
 
-let without_suffix name =
+let userdef_distributions stmts =
+  List.filter_map
+    ~f:(function
+      | {stmt= FunDef {funname= {name; _}; _}; _} ->
+          if
+            String.is_suffix ~suffix:"_log_lpdf" name
+            || String.is_suffix ~suffix:"_log_lpmf" name
+          then Some (String.drop_suffix name 5)
+          else if String.is_suffix ~suffix:"_log_log" name then
+            Some (String.drop_suffix name 4)
+          else None
+      | _ -> None)
+    (Option.value ~default:[] stmts)
+
+let without_suffix user_dists name =
   if
     String.is_suffix ~suffix:"_lpdf" name
     || String.is_suffix ~suffix:"_lpmf" name
   then String.drop_suffix name 5
   else if
-    is_distribution name && not (is_distribution (name ^ "_log"))
-    (* technically, should also look for user-defined functions
-       but Semantic_check.mli does not export the symbol table *)
-  then String.drop_suffix name 4 (* "_log" *)
+    String.is_suffix ~suffix:"_log" name
+    && not
+         ( is_distribution (name ^ "_log")
+         || List.exists ~f:(( = ) name) user_dists )
+  then String.drop_suffix name 4
   else name
 
 let rec repair_syntax_expr {expr; emeta} =
@@ -58,18 +73,22 @@ let rec repair_syntax_expr {expr; emeta} =
 
 let repair_syntax_lval = map_lval_with repair_syntax_expr ident
 
-let repair_syntax_stmt = function
-  | {stmt= Tilde {arg; distribution= {name; id_loc}; args; truncation}; smeta}
-    ->
+let rec repair_syntax_stmt user_dists {stmt; smeta} =
+  match stmt with
+  | Tilde {arg; distribution= {name; id_loc}; args; truncation} ->
       { stmt=
           Tilde
             { arg= repair_syntax_expr arg
-            ; distribution= {name= without_suffix name; id_loc}
+            ; distribution= {name= without_suffix user_dists name; id_loc}
             ; args= List.map ~f:repair_syntax_expr args
             ; truncation= map_truncation repair_syntax_expr truncation }
       ; smeta }
-  | stmt ->
-      map_statement_with repair_syntax_expr ident repair_syntax_lval ident stmt
+  | _ ->
+      { stmt=
+          map_statement repair_syntax_expr
+            (repair_syntax_stmt user_dists)
+            repair_syntax_lval ident stmt
+      ; smeta }
 
 let rec replace_deprecated_expr {expr; emeta} =
   let expr =
@@ -108,7 +127,7 @@ let rec replace_deprecated_stmt {stmt; smeta} =
           { assign_lhs= replace_deprecated_lval l
           ; assign_op= Assign
           ; assign_rhs= replace_deprecated_expr e }
-    | stmt ->
+    | _ ->
         map_statement replace_deprecated_expr replace_deprecated_stmt
           replace_deprecated_lval ident stmt
   in
@@ -171,8 +190,10 @@ let rec parens_stmt {stmt; smeta} =
   in
   {stmt; smeta}
 
-let repair_syntax : untyped_program -> untyped_program =
-  map_program repair_syntax_stmt
+let repair_syntax program : untyped_program =
+  map_program
+    (repair_syntax_stmt (userdef_distributions program.functionblock))
+    program
 
 let canonicalize_program program : typed_program =
   program |> map_program replace_deprecated_stmt |> map_program parens_stmt
