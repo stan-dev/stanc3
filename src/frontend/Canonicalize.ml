@@ -18,6 +18,8 @@ let deprecated_distributions =
            | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
            | Rng | UnaryVectorized -> None ) ))
 
+let deprecated_userdefined = String.Table.create ()
+
 let is_distribution name =
   Option.is_some (String.Map.find deprecated_distributions name)
 
@@ -112,6 +114,17 @@ let rec replace_deprecated_expr {expr; emeta} =
             ( StanLib
             , {name= rename_function name; id_loc}
             , List.map ~f:replace_deprecated_expr e )
+    | FunApp (UserDefined, {name; id_loc}, e) -> (
+      match String.Table.find deprecated_userdefined name with
+      | Some newname ->
+          CondDistApp
+            ( UserDefined
+            , {name= newname; id_loc}
+            , List.map ~f:replace_deprecated_expr e )
+      | None ->
+          FunApp
+            (UserDefined, {name; id_loc}, List.map ~f:replace_deprecated_expr e)
+      )
     | _ -> map_expression replace_deprecated_expr ident expr
   in
   {expr; emeta}
@@ -127,6 +140,16 @@ let rec replace_deprecated_stmt {stmt; smeta} =
           { assign_lhs= replace_deprecated_lval l
           ; assign_op= Assign
           ; assign_rhs= replace_deprecated_expr e }
+    | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+        FunDef
+          { returntype
+          ; funname=
+              { name=
+                  Option.value ~default:name
+                    (String.Table.find deprecated_userdefined name)
+              ; id_loc }
+          ; arguments
+          ; body= replace_deprecated_stmt body }
     | _ ->
         map_statement replace_deprecated_expr replace_deprecated_stmt
           replace_deprecated_lval ident stmt
@@ -196,4 +219,21 @@ let repair_syntax program : untyped_program =
     program
 
 let canonicalize_program program : typed_program =
+  String.Table.clear deprecated_userdefined ;
+  program.functionblock
+  |> Option.iter
+       ~f:
+         (List.iter ~f:(function
+           | { stmt=
+                 FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
+             ; smeta= _ }
+             when String.is_suffix ~suffix:"_log" name ->
+               let newname =
+                 if Middle.UnsizedType.is_real_type type_ then
+                   String.drop_suffix name 4 ^ "_lpdf"
+                 else String.drop_suffix name 4 ^ "_lpmf"
+               in
+               String.Table.add deprecated_userdefined ~key:name ~data:newname
+               |> (ignore : [`Ok | `Duplicate] -> unit)
+           | _ -> () )) ;
   program |> map_program replace_deprecated_stmt |> map_program parens_stmt

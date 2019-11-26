@@ -6,7 +6,7 @@ functions {
     dydt[2] = -y[1] - theta[1] * y[2];
     return dydt;
   }
-  real normal_log_log(real a, real b, real c) {
+  real normal_log_lpdf(real a, real b, real c) {
     return (a - b) / c;
   }
 }
@@ -32,6 +32,7 @@ model {
     x ~ normal(0, 1);
     x ~ normal_log(0, 1);
     x ~ normal_log(0, 1);
+    target += normal_log_lpdf(x| 1, 2);
     target += std_normal_lpdf(x| );
   }
   else {

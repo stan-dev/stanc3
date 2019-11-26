@@ -32,6 +32,7 @@ model {
     x ~ normal(0, 1);
     x ~ normal_log(0, 1);
     x ~ normal_log_log(0, 1);
+    target += normal_log_log(x,1,2);
     increment_log_prob(std_normal_lpdf(x));
   } else {
     x ~ exponential(1);
@@ -41,6 +42,7 @@ model {
   target += normal_log(x, 0, 1)
     + normal_cdf_log(2, 0, 1)
     + normal_ccdf_log(3, 0, 1);
+
 
   print("target: ", get_lp());
 }
