@@ -15,6 +15,8 @@ class TestModels(unittest.TestCase):
     def test_airt2pl(self):
         from irt2pl import model
         from irt2pl_data import data
+        import tensorflow as tf
+        tf.random.set_seed(1234)
         for param in model.parameter_names():
             if param in data:
                 del data[param]
@@ -36,6 +38,8 @@ class TestModels(unittest.TestCase):
     # def test_eight_schools(self):
     #     from eight_schools import eight_schools_ncp_model
     #     import eight_schools_data
+        # import tensorflow as tf
+        # tf.random.set_seed(seed)
     #     target_dist = eight_schools_ncp_model(**eight_schools_data.data)
     #     mcmc_trace, _ = stan(target_dist)
     #     mu, tau, theta_tilde = [merge_chains(x) for x in mcmc_trace]

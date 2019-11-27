@@ -74,22 +74,31 @@ let one_to_zero_indexing e =
       {e with pattern= Indexed (obj, List.map ~f:single_minus_one idcs)}
   | _ -> e
 
-let int_to_real e =
+(* All of this int to real transformation shenanigans is necessary because
+   TFP / TF throw errors if you give the wrong numeric type, but this would
+   also be fixed if we did handled Stan auto-promotion of ints to reals in the
+   type inference stage, see https://github.com/stan-dev/stanc3/issues/373
+   Right now, we've implemented a few heuristics below.
+*)
+let rec int_to_real e =
+  let open Expr.Fixed.Pattern in
   match e.Expr.Fixed.pattern with
   | Lit (Int, s) -> {e with pattern= Lit (Real, s)}
-  | _ -> e
+  | FunApp (fk, f, args) when Option.is_some (Operator.of_string_opt f) ->
+      (* We don't want to convert operator arguments *)
+      {e with pattern= FunApp (fk, f, List.map ~f:int_to_real args)}
+  | ep -> {e with pattern= Expr.Fixed.Pattern.map int_to_real ep}
+
+let rec int_to_real_stmt s =
+  let open Stmt.Fixed.Pattern in
+  match s.Stmt.Fixed.pattern with
+  | For ({body; _} as f) ->
+      (* We don't want to convert loop bounds*)
+      {s with pattern= For {f with body= int_to_real_stmt body}}
+  | sp -> {s with pattern= map int_to_real int_to_real_stmt sp}
 
 let real_transformation_args =
   Program.map_transformation (Expr.Fixed.rewrite_top_down ~f:int_to_real)
-
-(* let rec stdlib_funapp_ints_to_real e =
- *   let open Expr.Fixed in
- *   let open Expr.Fixed.Pattern in
- *   match e.pattern with
- *   | FunApp(Fun_kind.StanLib, f, args) ->
- *     {e with pattern=FunApp(Fun_kind.StanLib, f,
- *                            List.map ~f:(Fn.compose stdlib_funapp_ints_to_real int_to_real) args)}
- *   | _ -> {e with pattern=map stdlib_funapp_ints_to_real e.pattern} *)
 
 let map_transformations f p =
   { p with
@@ -123,5 +132,6 @@ let trans_prog (p : Program.Typed.t) =
   Program.map translate_funapps map_stmt p
   |> Program.map Fn.id remove_unused_stmts
   |> rewrite_expressions int_to_real
+  (* |> rewrite_expressions one_to_zero_indexing *)
   |> map_transformations real_transformation_args
   |> Analysis_and_optimization.Optimize.vectorize

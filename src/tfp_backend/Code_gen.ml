@@ -45,12 +45,11 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.strided_slice
 *)
       raise_s [%message "Multi-indices not supported yet"]
+  | Indexed (obj, []) -> pp_expr ppf obj
   | Indexed (obj, indices) ->
-      let pp_indexed ppf = function
-        | [] -> ()
-        | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
-      in
-      pf ppf "%a%a" pp_expr obj pp_indexed indices
+      pf ppf "tf__.gather(%a, %a)" pp_expr obj
+        (list ~sep:comma (Index.pp pp_expr))
+        indices
 
 (* Only necessary as long as we aren't inferring types, see
    https://github.com/stan-dev/stanc3/issues/373
@@ -86,10 +85,6 @@ let rec pp_stmt ppf s =
   (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
    *     pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id *)
   | Decl _ -> ()
-  (* if else, for loop, while loop all need to create functions for
-     their arguments. I think these functions need to be named and
-     defined inline in general because lambdas are limited.
-  *)
   | For {loopvar; lower; upper; body} ->
       let indexed_vars = ref [] in
       let rec pull_exprs_indexed_by i e =
@@ -116,7 +111,7 @@ let rec pp_stmt ppf s =
         ~outro:["return target"]
         (fun ppf -> pp_stmt ppf body) ;
       pf ppf
-        "@,@[<hov 2>target += tf__.reduce_sum(tf__.vectorized_map(%s, (%a, \
+        "@,@[<hov 2>target += tf__.reduce_sum(@,tf__.vectorized_map(%s, (%a, \
          list(range(%a, %a + 1)))))@]"
         body_name (list ~sep:comma string) !indexed_vars pp_expr lower pp_expr
         upper
