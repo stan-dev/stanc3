@@ -9,6 +9,9 @@ functions {
   real normal_log_lpdf(real a, real b, real c) {
     return (a - b) / c;
   }
+  real foo_lcdf(real x, real y) {
+    return x / y;
+  }
 }
 transformed data {
   int a = -12;
@@ -38,6 +41,7 @@ model {
   else {
     x ~ exponential(1);
     x ~ exponential(1);
+    target += foo_lcdf(x| 1);
   }
   target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
             + normal_lccdf(3| 0, 1);

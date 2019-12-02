@@ -229,7 +229,11 @@ let canonicalize_program program : typed_program =
              ; smeta= _ }
              when String.is_suffix ~suffix:"_log" name ->
                let newname =
-                 if Middle.UnsizedType.is_real_type type_ then
+                 if String.is_suffix ~suffix:"_cdf_log" name then
+                   String.drop_suffix name 8 ^ "_lcdf"
+                 else if String.is_suffix ~suffix:"_ccdf_log" name then
+                   String.drop_suffix name 9 ^ "_lccdf"
+                 else if Middle.UnsizedType.is_real_type type_ then
                    String.drop_suffix name 4 ^ "_lpdf"
                  else String.drop_suffix name 4 ^ "_lpmf"
                in

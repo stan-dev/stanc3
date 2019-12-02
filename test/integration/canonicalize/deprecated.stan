@@ -8,6 +8,9 @@ functions {
   real normal_log_log(real a, real b, real c) {
     return (a-b)/c;
   }
+  real foo_cdf_log(real x, real y) {
+    return x/y;
+  }
 }
 transformed data {
   int a = -12;
@@ -37,12 +40,12 @@ model {
   } else {
     x ~ exponential(1);
     x ~ exponential_log(1);
+    increment_log_prob(foo_cdf_log(x, 1));
   }
 
   target += normal_log(x, 0, 1)
     + normal_cdf_log(2, 0, 1)
     + normal_ccdf_log(3, 0, 1);
-
 
   print("target: ", get_lp());
 }
