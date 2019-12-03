@@ -111,6 +111,7 @@ let is_user_dist s =
   ends_with_any user_dist_suffices s
   && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
 
+let format_number = String.map ~f:(function '_' -> '\'' | c -> c)
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
@@ -384,7 +385,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
-  | Lit (_, s) -> pf ppf "%s" s
+  | Lit (_, s) -> pf ppf "%s" (format_number s)
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
       pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
