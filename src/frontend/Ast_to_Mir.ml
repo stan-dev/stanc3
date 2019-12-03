@@ -13,6 +13,11 @@ let trans_fn_kind = function
   | Ast.StanLib -> Fun_kind.StanLib
   | UserDefined -> UserDefined
 
+let drop_leading_zeros s =
+  match String.lfindi ~f:(fun _ c -> not (c = '0' || c = '_')) s with
+  | Some p -> String.drop_prefix s p
+  | None -> "0"
+
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
@@ -49,7 +54,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
             Expr.Fixed.Pattern.TernaryIf
               (trans_expr cond, trans_expr ifb, trans_expr elseb)
         | Variable {name; _} -> Var name
-        | IntNumeral x -> Lit (Int, x)
+        | IntNumeral x -> Lit (Int, drop_leading_zeros x)
         | RealNumeral x -> Lit (Real, x)
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
