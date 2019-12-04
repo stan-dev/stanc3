@@ -741,106 +741,157 @@ let () =
   add_unqualified
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType UReal
-    , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] );
-  add_unqualified ( "gp_dot_prod_cov"
+    , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] ) ;
+  add_unqualified
+    ("gp_dot_prod_cov", ReturnType UMatrix, [bare_array_type (UReal, 1); UReal]) ;
+  add_unqualified
+    ( "gp_dot_prod_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal]) ;
-  add_unqualified ( "gp_dot_prod_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal] ) ;
+  add_unqualified
+    ( "gp_dot_prod_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal]) ;
-  add_unqualified ( "gp_dot_prod_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal] ) ;
+  add_unqualified
+    ( "gp_dot_prod_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal]) ;
-  add_unqualified ( "gp_dot_prod_cov"
+    , [bare_array_type (UVector, 1); UReal] ) ;
+  add_unqualified
+    ( "gp_dot_prod_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal]) ;
-    add_unqualified ( "gp_dot_prod_cov"
+    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal] ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
+    ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
+  add_unqualified
+    ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_exp_quad_cov"
+    , [ bare_array_type (UVector, 1)
+      ; bare_array_type (UVector, 1)
+      ; UReal
+      ; bare_array_type (UReal, 1) ] ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal ; UReal]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
+    ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
+  add_unqualified
+    ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_matern32_cov"
+    , [ bare_array_type (UVector, 1)
+      ; bare_array_type (UVector, 1)
+      ; UReal
+      ; bare_array_type (UReal, 1) ] ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
+    ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
+  add_unqualified
+    ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_matern52_cov"
+    , [ bare_array_type (UVector, 1)
+      ; bare_array_type (UVector, 1)
+      ; UReal
+      ; bare_array_type (UReal, 1) ] ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_exponential_cov"
-	, ReturnType UMatrix
-	, [bare_array_type (UReal, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_exponential_cov"
+    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_exponential_cov"
+    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal]) ;
-  add_unqualified ( "gp_exponential_cov"
+    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]) ; 
-  add_unqualified ( "gp_exponential_cov"
-    , ReturnType UMatrix,
-      [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-  add_unqualified ( "gp_exponential_cov"
-    , ReturnType UMatrix,
-      [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)]) ;
-	add_unqualified ( "gp_periodic_cov"
-		, ReturnType UMatrix,
-		[bare_array_type (UReal, 1); UReal; UReal; UReal]) ;
-	add_unqualified ( "gp_periodic_cov"
-		, ReturnType UMatrix
-		, [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal; UReal]);
-	add_unqualified ( "gp_periodic_cov"
-		, ReturnType UMatrix
-		, [bare_array_type (UVector, 1); UReal; UReal; UReal]);
-	add_unqualified ( "gp_periodic_cov"
-		, ReturnType UMatrix
-		, [bare_array_type (UVector, 1); bare_array_type (UVector, 1);  UReal; UReal; UReal]);
+    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
+    ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
+    , ReturnType UMatrix
+    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
+  add_unqualified
+    ( "gp_exponential_cov"
+    , ReturnType UMatrix
+    , [ bare_array_type (UVector, 1)
+      ; bare_array_type (UVector, 1)
+      ; UReal
+      ; bare_array_type (UReal, 1) ] ) ;
+  add_unqualified
+    ( "gp_periodic_cov"
+    , ReturnType UMatrix
+    , [bare_array_type (UReal, 1); UReal; UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_periodic_cov"
+    , ReturnType UMatrix
+    , [ bare_array_type (UReal, 1)
+      ; bare_array_type (UReal, 1)
+      ; UReal; UReal; UReal ] ) ;
+  add_unqualified
+    ( "gp_periodic_cov"
+    , ReturnType UMatrix
+    , [bare_array_type (UVector, 1); UReal; UReal; UReal] ) ;
+  add_unqualified
+    ( "gp_periodic_cov"
+    , ReturnType UMatrix
+    , [ bare_array_type (UVector, 1)
+      ; bare_array_type (UVector, 1)
+      ; UReal; UReal; UReal ] ) ;
   (* ; add_nullary ("get_lp")   *)
   add_unqualified ("head", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("head", ReturnType UVector, [UVector; UInt]) ;
