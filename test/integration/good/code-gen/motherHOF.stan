@@ -19,6 +19,15 @@ functions {
   real map_rectfake(real x) {
     return 2 * x;
   }
+  vector algebra_system(vector x,
+                        vector y,
+                        real[] dat,
+                        int[] dat_int) {
+    vector[2] f_x;
+    f_x[1] = x[1] - y[1];
+    f_x[2] = x[2] - y[2];
+    return f_x;
+  }
 }
 data {
   int<lower=1> T;
@@ -39,6 +48,7 @@ parameters {
   real y0_p[2];
   real theta_p[1];
   real x_p[1];
+  vector[2] x_p_v;
   vector[3] shared_params_p;
   vector[3] job_params_p[3];
 }
@@ -52,6 +62,18 @@ transformed parameters {
       = map_rect(foo, shared_params_d, job_params_p, data_r, data_i);
   vector[3] y_hat_tp3
       = map_rect(foo, shared_params_p, job_params_d, data_r, data_i);
+  vector[2] theta_p_as;
+  vector[2] x_v;
+  vector[2] y_v;
+  vector[2] y_p;
+  theta_p_as = algebra_solver(algebra_system, x_v, y_v, x_d_r, x_d_i);
+  theta_p_as = algebra_solver(algebra_system, x_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver(algebra_system, x_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver(algebra_system, x_p_v, y_v, x_d_r, x_d_i);
+
+  theta_p_as = algebra_solver(algebra_system, x_p_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i);
+  theta_p_as = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
 }
 
 model {

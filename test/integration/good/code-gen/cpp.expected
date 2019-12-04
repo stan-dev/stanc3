@@ -8256,78 +8256,90 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'motherHOF.stan', line 48, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 49, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 50, column 2 to column 14)",
+                                                      " (in 'motherHOF.stan', line 51, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 52, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 53, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 56, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 57, column 2 to column 37)",
+                                                      " (in 'motherHOF.stan', line 58, column 2 to column 33)",
+                                                      " (in 'motherHOF.stan', line 59, column 2 to line 60, column 69)",
+                                                      " (in 'motherHOF.stan', line 61, column 2 to line 62, column 69)",
+                                                      " (in 'motherHOF.stan', line 63, column 2 to line 64, column 69)",
+                                                      " (in 'motherHOF.stan', line 65, column 2 to column 23)",
+                                                      " (in 'motherHOF.stan', line 66, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 67, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 68, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 69, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 70, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 71, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 72, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 74, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 75, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 76, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 109, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 110, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 111, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 112, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 113, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 115, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 116, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 117, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 118, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 120, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 121, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 122, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 123, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 125, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 126, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 127, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 128, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 130, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 131, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 132, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 133, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 135, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 136, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 137, column 2 to column 34)",
+                                                      " (in 'motherHOF.stan', line 138, column 2 to column 38)",
+                                                      " (in 'motherHOF.stan', line 139, column 2 to line 140, column 69)",
+                                                      " (in 'motherHOF.stan', line 80, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 81, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 82, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 83, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 85, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 86, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 87, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 89, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 90, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 91, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 92, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 94, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 95, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 96, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 97, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 99, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 100, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 101, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 102, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 104, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 105, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 106, column 2 to column 36)",
+                                                      " (in 'motherHOF.stan', line 33, column 2 to column 17)",
+                                                      " (in 'motherHOF.stan', line 34, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 35, column 2 to column 10)",
+                                                      " (in 'motherHOF.stan', line 36, column 2 to column 13)",
+                                                      " (in 'motherHOF.stan', line 37, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 38, column 2 to column 12)",
                                                       " (in 'motherHOF.stan', line 39, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 40, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 41, column 2 to column 14)",
+                                                      " (in 'motherHOF.stan', line 40, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 41, column 2 to column 15)",
                                                       " (in 'motherHOF.stan', line 42, column 2 to column 28)",
                                                       " (in 'motherHOF.stan', line 43, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 46, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 47, column 2 to column 37)",
-                                                      " (in 'motherHOF.stan', line 48, column 2 to column 33)",
-                                                      " (in 'motherHOF.stan', line 49, column 2 to line 50, column 69)",
-                                                      " (in 'motherHOF.stan', line 51, column 2 to line 52, column 69)",
-                                                      " (in 'motherHOF.stan', line 53, column 2 to line 54, column 69)",
-                                                      " (in 'motherHOF.stan', line 87, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 88, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 89, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 90, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 91, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 93, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 94, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 95, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 96, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 98, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 99, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 100, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 101, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 103, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 104, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 105, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 106, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 108, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 109, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 110, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 111, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 113, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 114, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 115, column 2 to column 34)",
-                                                      " (in 'motherHOF.stan', line 116, column 2 to column 38)",
-                                                      " (in 'motherHOF.stan', line 117, column 2 to line 118, column 69)",
-                                                      " (in 'motherHOF.stan', line 58, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 59, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 60, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 61, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 63, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 64, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 65, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 67, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 68, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 69, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 70, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 72, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 73, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 74, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 75, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 77, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 78, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 79, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 80, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 82, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 83, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 84, column 2 to column 36)",
-                                                      " (in 'motherHOF.stan', line 24, column 2 to column 17)",
-                                                      " (in 'motherHOF.stan', line 25, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 26, column 2 to column 10)",
-                                                      " (in 'motherHOF.stan', line 27, column 2 to column 13)",
-                                                      " (in 'motherHOF.stan', line 28, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 29, column 2 to column 12)",
-                                                      " (in 'motherHOF.stan', line 30, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 31, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 32, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 33, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 34, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 35, column 2 to column 20)",
-                                                      " (in 'motherHOF.stan', line 36, column 2 to column 19)",
+                                                      " (in 'motherHOF.stan', line 44, column 2 to column 20)",
+                                                      " (in 'motherHOF.stan', line 45, column 2 to column 19)",
                                                       " (in 'motherHOF.stan', line 7, column 4 to column 17)",
                                                       " (in 'motherHOF.stan', line 8, column 4 to column 19)",
                                                       " (in 'motherHOF.stan', line 9, column 4 to column 38)",
@@ -8338,7 +8350,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 17, column 4 to column 22)",
                                                       " (in 'motherHOF.stan', line 16, column 42 to line 18, column 3)",
                                                       " (in 'motherHOF.stan', line 20, column 4 to column 17)",
-                                                      " (in 'motherHOF.stan', line 19, column 28 to line 21, column 3)"};
+                                                      " (in 'motherHOF.stan', line 19, column 28 to line 21, column 3)",
+                                                      " (in 'motherHOF.stan', line 26, column 4 to column 18)",
+                                                      " (in 'motherHOF.stan', line 27, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 28, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 29, column 4 to column 15)",
+                                                      " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
@@ -8357,14 +8374,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, 0);
     
-    current_statement__ = 74;
+    current_statement__ = 86;
     assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
       "assigning variable dydt");
-    current_statement__ = 75;
+    current_statement__ = 87;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
       (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
       "assigning variable dydt");
-    current_statement__ = 76;
+    current_statement__ = 88;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8400,7 +8417,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
   (void) propto__;
   
   try {
-    current_statement__ = 78;
+    current_statement__ = 90;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8436,7 +8453,7 @@ foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) propto__;
   
   try {
-    current_statement__ = 80;
+    current_statement__ = 92;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
@@ -8468,7 +8485,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 82;
+    current_statement__ = 94;
     return (2 * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8484,6 +8501,56 @@ typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return map_rectfake(x, pstream__);
+}
+};
+
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
+               const Eigen::Matrix<T1__, -1, 1>& y,
+               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
+               std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
+    f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+    
+    current_statement__ = 96;
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      current_statement__ = 96;
+      assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
+        std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
+    current_statement__ = 97;
+    assign(f_x, cons_list(index_uni(1), nil_index_list()),
+      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+    current_statement__ = 98;
+    assign(f_x, cons_list(index_uni(2), nil_index_list()),
+      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+    current_statement__ = 99;
+    return f_x;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct algebra_system_functor__ {
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& x,
+           const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
+           const std::vector<int>& dat_int, std::ostream* pstream__)  const 
+{
+return algebra_system(x, y, dat, dat_int, pstream__);
 }
 };
 
@@ -8526,180 +8593,180 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       context__.validate_dims("data initialization","T","int",
           context__.to_vec());
       
-      current_statement__ = 60;
+      current_statement__ = 72;
       pos__ = 1;
-      current_statement__ = 60;
+      current_statement__ = 72;
       T = context__.vals_i("T")[(pos__ - 1)];
       context__.validate_dims("data initialization","y0_d","double",
           context__.to_vec(2));
       y0_d = std::vector<double>(2, 0);
       
-      current_statement__ = 61;
+      current_statement__ = 73;
       pos__ = 1;
-      current_statement__ = 61;
+      current_statement__ = 73;
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 61;
+        current_statement__ = 73;
         assign(y0_d, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("y0_d")[(pos__ - 1)], "assigning variable y0_d");
-        current_statement__ = 61;
+        current_statement__ = 73;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","t0","double",
           context__.to_vec());
       
-      current_statement__ = 62;
+      current_statement__ = 74;
       pos__ = 1;
-      current_statement__ = 62;
+      current_statement__ = 74;
       t0 = context__.vals_r("t0")[(pos__ - 1)];
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(T));
       ts = std::vector<double>(T, 0);
       
-      current_statement__ = 63;
+      current_statement__ = 75;
       pos__ = 1;
-      current_statement__ = 63;
+      current_statement__ = 75;
       for (size_t sym1__ = 1; sym1__ <= T; ++sym1__) {
-        current_statement__ = 63;
+        current_statement__ = 75;
         assign(ts, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("ts")[(pos__ - 1)], "assigning variable ts");
-        current_statement__ = 63;
+        current_statement__ = 75;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","theta_d","double",
           context__.to_vec(1));
       theta_d = std::vector<double>(1, 0);
       
-      current_statement__ = 64;
+      current_statement__ = 76;
       pos__ = 1;
-      current_statement__ = 64;
+      current_statement__ = 76;
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 64;
+        current_statement__ = 76;
         assign(theta_d, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("theta_d")[(pos__ - 1)],
           "assigning variable theta_d");
-        current_statement__ = 64;
+        current_statement__ = 76;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(0));
       x = std::vector<double>(0, 0);
       
-      current_statement__ = 65;
+      current_statement__ = 77;
       pos__ = 1;
-      current_statement__ = 65;
+      current_statement__ = 77;
       for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 65;
+        current_statement__ = 77;
         assign(x, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("x")[(pos__ - 1)], "assigning variable x");
-        current_statement__ = 65;
+        current_statement__ = 77;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","x_int","int",
           context__.to_vec(0));
       x_int = std::vector<int>(0, 0);
       
-      current_statement__ = 66;
+      current_statement__ = 78;
       pos__ = 1;
-      current_statement__ = 66;
+      current_statement__ = 78;
       for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 66;
+        current_statement__ = 78;
         assign(x_int, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_i("x_int")[(pos__ - 1)], "assigning variable x_int");
-        current_statement__ = 66;
+        current_statement__ = 78;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","x_d_r","double",
           context__.to_vec(0));
       x_d_r = std::vector<double>(0, 0);
       
-      current_statement__ = 67;
+      current_statement__ = 79;
       pos__ = 1;
-      current_statement__ = 67;
+      current_statement__ = 79;
       for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 67;
+        current_statement__ = 79;
         assign(x_d_r, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("x_d_r")[(pos__ - 1)], "assigning variable x_d_r");
-        current_statement__ = 67;
+        current_statement__ = 79;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","x_d_i","int",
           context__.to_vec(0));
       x_d_i = std::vector<int>(0, 0);
       
-      current_statement__ = 68;
+      current_statement__ = 80;
       pos__ = 1;
-      current_statement__ = 68;
+      current_statement__ = 80;
       for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 68;
+        current_statement__ = 80;
         assign(x_d_i, cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_i("x_d_i")[(pos__ - 1)], "assigning variable x_d_i");
-        current_statement__ = 68;
+        current_statement__ = 80;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
       shared_params_d = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 69;
+      current_statement__ = 81;
       pos__ = 1;
-      current_statement__ = 69;
+      current_statement__ = 81;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 69;
+        current_statement__ = 81;
         assign(shared_params_d,
           cons_list(index_uni(sym1__), nil_index_list()),
           context__.vals_r("shared_params_d")[(pos__ - 1)],
           "assigning variable shared_params_d");
-        current_statement__ = 69;
+        current_statement__ = 81;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","job_params_d","double",
           context__.to_vec(3, 3));
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
-      current_statement__ = 70;
+      current_statement__ = 82;
       pos__ = 1;
-      current_statement__ = 70;
+      current_statement__ = 82;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 70;
+        current_statement__ = 82;
         for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 70;
+          current_statement__ = 82;
           assign(job_params_d,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
             context__.vals_r("job_params_d")[(pos__ - 1)],
             "assigning variable job_params_d");
-          current_statement__ = 70;
+          current_statement__ = 82;
           pos__ = (pos__ + 1);}}
       context__.validate_dims("data initialization","data_r","double",
           context__.to_vec(3, 3));
       data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, 0));
       
-      current_statement__ = 71;
+      current_statement__ = 83;
       pos__ = 1;
-      current_statement__ = 71;
+      current_statement__ = 83;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 71;
+        current_statement__ = 83;
         for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 71;
+          current_statement__ = 83;
           assign(data_r,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
             context__.vals_r("data_r")[(pos__ - 1)],
             "assigning variable data_r");
-          current_statement__ = 71;
+          current_statement__ = 83;
           pos__ = (pos__ + 1);}}
       context__.validate_dims("data initialization","data_i","int",
           context__.to_vec(3, 3));
       data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
       
-      current_statement__ = 72;
+      current_statement__ = 84;
       pos__ = 1;
-      current_statement__ = 72;
+      current_statement__ = 84;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 72;
+        current_statement__ = 84;
         for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 72;
+          current_statement__ = 84;
           assign(data_i,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
             context__.vals_i("data_i")[(pos__ - 1)],
             "assigning variable data_i");
-          current_statement__ = 72;
+          current_statement__ = 84;
           pos__ = (pos__ + 1);}}
-      current_statement__ = 60;
-      current_statement__ = 60;
+      current_statement__ = 72;
+      current_statement__ = 72;
       check_greater_or_equal(function__, "T", T, 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8710,6 +8777,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     num_params_r__ += 2;
     num_params_r__ += 1;
     num_params_r__ += 1;
+    num_params_r__ += 2;
     num_params_r__ += 3;
     num_params_r__ += 3 * 3;
     
@@ -8750,171 +8818,240 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 3;
         assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable x_p");}
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 4;
+      x_p_v = in__.vector(2);
       Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       shared_params_p = in__.vector(3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 5;
+        current_statement__ = 6;
         assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(3), "assigning variable job_params_p");}
       local_scalar_t__ abc1_p;
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       abc1_p = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 6;
+      current_statement__ = 7;
       abc1_p = 3;
       local_scalar_t__ abc2_p;
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       abc2_p = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 7;
+      current_statement__ = 8;
       abc2_p = map_rectfake(abc1_p, pstream__);
       local_scalar_t__ abc3_p;
       
-      current_statement__ = 8;
+      current_statement__ = 9;
       abc3_p = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 8;
+      current_statement__ = 9;
       abc3_p = map_rectfake(12, pstream__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
-      current_statement__ = 9;
+      current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 9;
+        current_statement__ = 10;
         assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp1");}
-      current_statement__ = 9;
+      current_statement__ = 10;
       assign(y_hat_tp1, nil_index_list(),
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 10;
+        current_statement__ = 11;
         assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp2");}
-      current_statement__ = 10;
+      current_statement__ = 11;
       assign(y_hat_tp2, nil_index_list(),
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
-      current_statement__ = 11;
+      current_statement__ = 12;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 11;
+        current_statement__ = 12;
         assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp3");}
-      current_statement__ = 11;
+      current_statement__ = 12;
       assign(y_hat_tp3, nil_index_list(),
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_p_as;
+      theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 13;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 13;
+        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable theta_p_as");}
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_v;
+      x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 14;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 14;
+        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
+      }
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_v;
+      y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 15;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 15;
+        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
+      }
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 16;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 16;
+        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_p");
+      }
+      current_statement__ = 17;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 18;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 19;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 20;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 21;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 22;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 23;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       {
         std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, 0));
         
-        current_statement__ = 39;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 40;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 41;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 42;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 43;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 44;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 45;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
-        current_statement__ = 46;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
-        current_statement__ = 47;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
-        current_statement__ = 48;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
-        current_statement__ = 49;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 50;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 51;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 52;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 53;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 54;
         assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 55;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 56;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 57;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+            pstream__), "assigning variable y_hat");
+        current_statement__ = 58;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+            pstream__), "assigning variable y_hat");
+        current_statement__ = 59;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+            pstream__), "assigning variable y_hat");
+        current_statement__ = 60;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__), "assigning variable y_hat");
+        current_statement__ = 61;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 62;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 63;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 64;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 65;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 66;
+        assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 55;
+        current_statement__ = 67;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 56;
+        current_statement__ = 68;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
         
-        current_statement__ = 57;
+        current_statement__ = 69;
         y_1d = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 57;
+        current_statement__ = 69;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
         local_scalar_t__ z_1d;
         
-        current_statement__ = 58;
+        current_statement__ = 70;
         z_1d = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 58;
+        current_statement__ = 70;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         local_scalar_t__ abc_m;
         
-        current_statement__ = 59;
+        current_statement__ = 71;
         abc_m = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 59;
+        current_statement__ = 71;
         abc_m = map_rectfake(abc1_p, pstream__);
       }
     } catch (const std::exception& e) {
@@ -8969,64 +9106,107 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 3;
         assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable x_p");}
+      Eigen::Matrix<double, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 4;
+      x_p_v = in__.vector(2);
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       shared_params_p = in__.vector(3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 5;
+        current_statement__ = 6;
         assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(3), "assigning variable job_params_p");}
       double abc1_p;
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       abc1_p = std::numeric_limits<double>::quiet_NaN();
       double abc2_p;
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       abc2_p = std::numeric_limits<double>::quiet_NaN();
       double abc3_p;
       
-      current_statement__ = 8;
+      current_statement__ = 9;
       abc3_p = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 9;
+      current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 9;
+        current_statement__ = 10;
         assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp1");}
       Eigen::Matrix<double, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 10;
+        current_statement__ = 11;
         assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp2");}
       Eigen::Matrix<double, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 11;
+      current_statement__ = 12;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 11;
+        current_statement__ = 12;
         assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp3");}
+      Eigen::Matrix<double, -1, 1> theta_p_as;
+      theta_p_as = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 13;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 13;
+        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable theta_p_as");}
+      Eigen::Matrix<double, -1, 1> x_v;
+      x_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 14;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 14;
+        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
+      }
+      Eigen::Matrix<double, -1, 1> y_v;
+      y_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 15;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 15;
+        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
+      }
+      Eigen::Matrix<double, -1, 1> y_p;
+      y_p = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 16;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 16;
+        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_p");
+      }
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(y0_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
         vars__.push_back(theta_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
         vars__.push_back(x_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_p_v[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(shared_params_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -9036,24 +9216,52 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 6;
-      abc1_p = 3;
       current_statement__ = 7;
-      abc2_p = map_rectfake(abc1_p, pstream__);
+      abc1_p = 3;
       current_statement__ = 8;
-      abc3_p = map_rectfake(12, pstream__);
+      abc2_p = map_rectfake(abc1_p, pstream__);
       current_statement__ = 9;
+      abc3_p = map_rectfake(12, pstream__);
+      current_statement__ = 10;
       assign(y_hat_tp1, nil_index_list(),
         map_rect<4, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
-      current_statement__ = 10;
+      current_statement__ = 11;
       assign(y_hat_tp2, nil_index_list(),
         map_rect<5, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
-      current_statement__ = 11;
+      current_statement__ = 12;
       assign(y_hat_tp3, nil_index_list(),
         map_rect<6, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
+      current_statement__ = 17;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 18;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 19;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 20;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 21;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 22;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 23;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       vars__.push_back(abc1_p);
       vars__.push_back(abc2_p);
       vars__.push_back(abc3_p);
@@ -9063,128 +9271,136 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         vars__.push_back(y_hat_tp2[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(y_hat_tp3[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(theta_p_as[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y_p[(sym1__ - 1)]);}
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
       std::vector<std::vector<double>> y_hat;
       y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, 0));
       
-      current_statement__ = 13;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 14;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 15;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 16;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 17;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 18;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 19;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 20;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 21;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 22;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 23;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 24;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
       current_statement__ = 25;
       assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 26;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 27;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 28;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 29;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 30;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 31;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 32;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 33;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 34;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 35;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 36;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 37;
+      assign(y_hat, nil_index_list(),
         integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 26;
+      current_statement__ = 38;
       assign(y_hat, nil_index_list(),
         integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 27;
+      current_statement__ = 39;
       assign(y_hat, nil_index_list(),
         integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 28;
+      current_statement__ = 40;
       assign(y_hat, nil_index_list(),
         integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 29;
+      current_statement__ = 41;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
           pstream__), "assigning variable y_hat");
-      current_statement__ = 30;
+      current_statement__ = 42;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
-      current_statement__ = 31;
+      current_statement__ = 43;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
           pstream__), "assigning variable y_hat");
-      current_statement__ = 32;
+      current_statement__ = 44;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       double y_1d;
       
-      current_statement__ = 33;
+      current_statement__ = 45;
       y_1d = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 33;
+      current_statement__ = 45;
       y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__);
       double z_1d;
       
-      current_statement__ = 34;
+      current_statement__ = 46;
       z_1d = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 34;
+      current_statement__ = 46;
       z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__, 1e-8);
       double abc1_gq;
       
-      current_statement__ = 35;
+      current_statement__ = 47;
       abc1_gq = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 35;
+      current_statement__ = 47;
       abc1_gq = map_rectfake(12, pstream__);
       double abc2_gq;
       
-      current_statement__ = 36;
+      current_statement__ = 48;
       abc2_gq = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 36;
+      current_statement__ = 48;
       abc2_gq = map_rectfake(abc1_p, pstream__);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
       y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
       
-      current_statement__ = 37;
+      current_statement__ = 49;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 37;
+        current_statement__ = 49;
         assign(y_hat_gq, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_gq");}
-      current_statement__ = 37;
+      current_statement__ = 49;
       assign(y_hat_gq, nil_index_list(),
         map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_gq");
@@ -9252,36 +9468,48 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("x_p")[(pos__ - 1)], "assigning variable x_p");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
-      Eigen::Matrix<double, -1, 1> shared_params_p;
-      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      Eigen::Matrix<double, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 4;
       pos__ = 1;
       current_statement__ = 4;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
-        assign(shared_params_p,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("shared_params_p")[(pos__ - 1)],
-          "assigning variable shared_params_p");
+        assign(x_p_v, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("x_p_v")[(pos__ - 1)], "assigning variable x_p_v");
         current_statement__ = 4;
         pos__ = (pos__ + 1);}
-      std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
-      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      Eigen::Matrix<double, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       
       current_statement__ = 5;
       pos__ = 1;
       current_statement__ = 5;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         current_statement__ = 5;
+        assign(shared_params_p,
+          cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("shared_params_p")[(pos__ - 1)],
+          "assigning variable shared_params_p");
+        current_statement__ = 5;
+        pos__ = (pos__ + 1);}
+      std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      
+      current_statement__ = 6;
+      pos__ = 1;
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 6;
         for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 5;
+          current_statement__ = 6;
           assign(job_params_p,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
             context__.vals_r("job_params_p")[(pos__ - 1)],
             "assigning variable job_params_p");
-          current_statement__ = 5;
+          current_statement__ = 6;
           pos__ = (pos__ + 1);}}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(y0_p[(sym1__ - 1)]);}
@@ -9289,6 +9517,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         vars__.push_back(theta_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
         vars__.push_back(x_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_p_v[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(shared_params_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -9307,6 +9537,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.push_back("y0_p");
     names__.push_back("theta_p");
     names__.push_back("x_p");
+    names__.push_back("x_p_v");
     names__.push_back("shared_params_p");
     names__.push_back("job_params_p");
     names__.push_back("abc1_p");
@@ -9315,6 +9546,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.push_back("y_hat_tp1");
     names__.push_back("y_hat_tp2");
     names__.push_back("y_hat_tp3");
+    names__.push_back("theta_p_as");
+    names__.push_back("x_v");
+    names__.push_back("y_v");
+    names__.push_back("y_p");
     names__.push_back("y_hat");
     names__.push_back("y_1d");
     names__.push_back("z_1d");
@@ -9335,6 +9570,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     dims__.push_back(1);
     dimss__.push_back(dims__);
     dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
     dims__.push_back(3);
     dimss__.push_back(dims__);
     dims__.resize(0);
@@ -9356,6 +9594,18 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     dimss__.push_back(dims__);
     dims__.resize(0);
     dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
     dimss__.push_back(dims__);
     dims__.resize(0);
     dims__.push_back(T);
@@ -9393,6 +9643,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       {
         param_names__.push_back(std::string() + "x_p" + '.' + std::to_string(sym1__));
       }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p_v" + '.' + std::to_string(sym1__));
+      }}
     for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
         param_names__.push_back(std::string() + "shared_params_p" + '.' + std::to_string(sym1__));
@@ -9419,6 +9673,22 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
           param_names__.push_back(std::string() + "y_hat_tp3" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_p_as" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "x_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_p" + '.' + std::to_string(sym1__));
         }}
     }
     
@@ -9458,6 +9728,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       {
         param_names__.push_back(std::string() + "x_p" + '.' + std::to_string(sym1__));
       }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p_v" + '.' + std::to_string(sym1__));
+      }}
     for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
       {
         param_names__.push_back(std::string() + "shared_params_p" + '.' + std::to_string(sym1__));
@@ -9485,6 +9759,22 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "y_hat_tp3" + '.' + std::to_string(sym1__));
         }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_p_as" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "x_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_p" + '.' + std::to_string(sym1__));
+        }}
     }
     
     if (emit_generated_quantities__) {
@@ -9509,13 +9799,13 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
