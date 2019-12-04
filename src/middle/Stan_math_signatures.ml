@@ -423,6 +423,9 @@ let () =
   add_unqualified ("add", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("add", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("add", ReturnType UMatrix, [UReal; UMatrix]) ;
+  add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UReal]) ;
+  add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UVector]) ;
+  add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; URowVector]) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType UVector
