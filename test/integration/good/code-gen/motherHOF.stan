@@ -51,6 +51,7 @@ parameters {
   vector[2] x_p_v;
   vector[3] shared_params_p;
   vector[3] job_params_p[3];
+  real x_r;
 }
 transformed parameters {
   real abc1_p = 3;
@@ -102,7 +103,29 @@ model {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 
   real y_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0.0, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0, 1.0, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0.0, 1.0, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, x_r, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0, x_r, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, x_r, x_r, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, x_r, 1, x_d_r, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0, x_r, x_d_r, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, x_r, x_r, x_d_r, x_d_r, x_d_i);
+
   real z_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0.0, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0, 1.0, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0.0, 1.0, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, x_r, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0, x_r, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, x_r, x_r, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, x_r, 1, x_d_r, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0, x_r, x_d_r, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, x_r, x_r, x_d_r, x_d_r, x_d_i, 1e-8);
+
   real abc_m = map_rectfake(abc1_p);
 }
 generated quantities {
@@ -133,7 +156,15 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 
   real y_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0.0, 1, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0, 1.0, x, x_d_r, x_d_i);
+  y_1d = integrate_1d(integrand, 0.0, 1.0, x, x_d_r, x_d_i);
+
   real z_1d = integrate_1d(integrand, 0, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0.0, 1, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0, 1.0, x, x_d_r, x_d_i, 1e-8);
+  z_1d = integrate_1d(integrand, 0.0, 1.0, x, x_d_r, x_d_i, 1e-8);
+
   real abc1_gq = map_rectfake(12);
   real abc2_gq = map_rectfake(abc1_p);
   vector[3] y_hat_gq
