@@ -1,0 +1,738 @@
+  $ ../../../../../../../install/default/bin/stanc --auto-format cholesky_corr_constrain.stan
+data {
+  int d_int;
+  vector[(d_int - 1) * d_int / 2] d_vector;
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  transformed_data_matrix = cholesky_corr_constrain(d_vector, d_int);
+}
+parameters {
+  real y_p;
+  vector[(d_int - 1) * d_int / 2] p_vector;
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_param_matrix;
+  transformed_param_matrix = cholesky_corr_constrain(d_vector, d_int);
+  transformed_param_matrix = cholesky_corr_constrain(p_vector, d_int);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format cholesky_corr_free.stan
+data {
+  int d_int;
+  matrix[d_int, d_int] d_matrix;
+}
+transformed data {
+  vector[(d_int - 1) * d_int / 2] transformed_data_vector;
+  transformed_data_vector = cholesky_corr_free(d_matrix);
+}
+parameters {
+  matrix[d_int, d_int] p_matrix;
+  real y_p;
+}
+transformed parameters {
+  vector[(d_int - 1) * d_int / 2] transformed_param_vector;
+  transformed_param_vector = cholesky_corr_free(d_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format cholesky_factor_constrain.stan
+data {
+  int d_int;
+  vector[(d_int + 1) * d_int / 2] d_vector;
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  transformed_data_matrix = cholesky_factor_constrain(d_vector, d_int, d_int);
+}
+parameters {
+  real y_p;
+  vector[(d_int + 1) * d_int / 2] p_vector;
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_param_matrix;
+  transformed_param_matrix = cholesky_factor_constrain(d_vector, d_int,
+                                                       d_int);
+  transformed_param_matrix = cholesky_factor_constrain(p_vector, d_int,
+                                                       d_int);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format cholesky_factor_free.stan
+data {
+  int d_int;
+  matrix[d_int, d_int] d_matrix;
+}
+transformed data {
+  vector[(d_int + 1) * d_int / 2] transformed_data_vector;
+  transformed_data_vector = cholesky_factor_free(d_matrix);
+}
+parameters {
+  matrix[d_int, d_int] p_matrix;
+  real y_p;
+}
+transformed parameters {
+  vector[(d_int + 1) * d_int / 2] transformed_param_vector;
+  transformed_param_vector = cholesky_factor_free(d_matrix);
+  transformed_param_vector = cholesky_factor_free(p_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format corr_matrix_constrain.stan
+data {
+  int d_int;
+  vector[(d_int - 1) * d_int / 2] d_vector;
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  transformed_data_matrix = corr_matrix_constrain(d_vector, d_int);
+}
+parameters {
+  real y_p;
+  vector[(d_int - 1) * d_int / 2] p_vector;
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_param_matrix;
+  transformed_param_matrix = corr_matrix_constrain(d_vector, d_int);
+  transformed_param_matrix = corr_matrix_constrain(p_vector, d_int);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format corr_matrix_free.stan
+data {
+  int d_int;
+  matrix[d_int, d_int] d_matrix;
+}
+transformed data {
+  vector[(d_int - 1) * d_int / 2] transformed_data_vector;
+  transformed_data_vector = corr_matrix_free(d_matrix);
+}
+parameters {
+  matrix[d_int, d_int] p_matrix;
+  real y_p;
+}
+transformed parameters {
+  vector[(d_int - 1) * d_int / 2] transformed_param_vector;
+  transformed_param_vector = corr_matrix_free(d_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format cov_matrix_constrain.stan
+data {
+  int d_int;
+  vector[(d_int + 1) * d_int / 2] d_vector;
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  transformed_data_matrix = cov_matrix_constrain(d_vector, d_int);
+}
+parameters {
+  real y_p;
+  vector[(d_int + 1) * d_int / 2] p_vector;
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_param_matrix;
+  transformed_param_matrix = cov_matrix_constrain(d_vector, d_int);
+  transformed_param_matrix = cov_matrix_constrain(p_vector, d_int);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format cov_matrix_free.stan
+data {
+  int d_int;
+  matrix[d_int, d_int] d_matrix;
+}
+transformed data {
+  vector[(d_int + 1) * d_int / 2] transformed_data_vector;
+  transformed_data_vector = cov_matrix_free(d_matrix);
+}
+parameters {
+  matrix[d_int, d_int] p_matrix;
+  real y_p;
+}
+transformed parameters {
+  vector[(d_int + 1) * d_int / 2] transformed_param_vector;
+  transformed_param_vector = cov_matrix_free(d_matrix);
+  transformed_param_vector = cov_matrix_free(p_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lb_constrain.stan
+data {
+  int d_int;
+  int r_int;
+  real d_real;
+  real r_real;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = lb_constrain(d_real, r_real);
+  transformed_data_real = lb_constrain(d_int, r_real);
+  transformed_data_real = lb_constrain(d_real, d_int);
+  transformed_data_real = lb_constrain(r_int, d_int);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lb_constrain(d_real, r_real);
+  transformed_param_real = lb_constrain(d_int, r_real);
+  transformed_param_real = lb_constrain(d_real, d_int);
+  transformed_param_real = lb_constrain(r_int, d_int);
+  transformed_param_real = lb_constrain(r_int, p_real);
+  transformed_param_real = lb_constrain(r_real, p_real);
+  transformed_param_real = lb_constrain(p_real, p_real);
+  transformed_param_real = lb_constrain(p_real, r_int);
+  transformed_param_real = lb_constrain(p_real, r_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lb_free.stan
+data {
+  int d_int;
+  int r_int;
+  real d_real;
+  real r_real;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = lb_free(d_real, r_real);
+  transformed_data_real = lb_free(d_int, r_real);
+  transformed_data_real = lb_free(d_real, d_int);
+  transformed_data_real = lb_free(r_int, d_int);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lb_free(d_real, r_real);
+  transformed_param_real = lb_free(d_int, r_real);
+  transformed_param_real = lb_free(d_real, d_int);
+  transformed_param_real = lb_free(r_int, d_int);
+  transformed_param_real = lb_free(r_int, p_real);
+  transformed_param_real = lb_free(r_real, p_real);
+  transformed_param_real = lb_free(p_real, p_real);
+  transformed_param_real = lb_free(p_real, r_int);
+  transformed_param_real = lb_free(p_real, r_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lub_constrain.stan
+data {
+  int d_int;
+  int e_int;
+  int f_int;
+  real d_real;
+  real e_real;
+  real f_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = lub_constrain(d_int, e_int, f_int);
+  transformed_data_real = lub_constrain(d_real, d_int, e_int);
+  transformed_data_real = lub_constrain(d_real, e_real, e_int);
+  transformed_data_real = lub_constrain(d_real, d_int, e_real);
+  transformed_data_real = lub_constrain(d_real, e_real, f_real);
+  transformed_data_real = lub_constrain(d_int, d_real, e_int);
+  transformed_data_real = lub_constrain(d_int, d_real, e_real);
+  transformed_data_real = lub_constrain(d_int, e_int, d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lub_constrain(d_int, e_int, f_int);
+  transformed_param_real = lub_constrain(d_real, d_int, e_int);
+  transformed_param_real = lub_constrain(d_real, e_real, e_int);
+  transformed_param_real = lub_constrain(d_real, d_int, e_real);
+  transformed_param_real = lub_constrain(d_real, e_real, f_real);
+  transformed_param_real = lub_constrain(d_int, d_real, e_int);
+  transformed_param_real = lub_constrain(d_int, d_real, e_real);
+  transformed_param_real = lub_constrain(d_int, e_int, d_real);
+  transformed_param_real = lub_constrain(p_real, p_real, p_real);
+  transformed_param_real = lub_constrain(p_real, p_real, d_real);
+  transformed_param_real = lub_constrain(p_real, p_real, d_int);
+  transformed_param_real = lub_constrain(p_real, d_real, p_real);
+  transformed_param_real = lub_constrain(p_real, e_real, p_real);
+  transformed_param_real = lub_constrain(p_real, e_real, d_int);
+  transformed_param_real = lub_constrain(p_real, d_int, p_real);
+  transformed_param_real = lub_constrain(p_real, d_int, e_real);
+  transformed_param_real = lub_constrain(p_real, d_int, e_int);
+  transformed_param_real = lub_constrain(d_real, p_real, p_real);
+  transformed_param_real = lub_constrain(d_real, p_real, d_real);
+  transformed_param_real = lub_constrain(d_real, p_real, d_int);
+  transformed_param_real = lub_constrain(d_real, e_real, p_real);
+  transformed_param_real = lub_constrain(d_real, d_int, p_real);
+  transformed_param_real = lub_constrain(d_real, e_real, p_real);
+  transformed_param_real = lub_constrain(d_int, p_real, p_real);
+  transformed_param_real = lub_constrain(d_int, p_real, d_real);
+  transformed_param_real = lub_constrain(d_int, p_real, e_int);
+  transformed_param_real = lub_constrain(d_int, d_real, p_real);
+  transformed_param_real = lub_constrain(d_int, e_int, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lub_free.stan
+data {
+  int d_int;
+  int e_int;
+  int f_int;
+  real d_real;
+  real e_real;
+  real f_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = lub_free(d_int, e_int, f_int);
+  transformed_data_real = lub_free(d_real, d_int, e_int);
+  transformed_data_real = lub_free(d_real, e_real, e_int);
+  transformed_data_real = lub_free(d_real, d_int, e_real);
+  transformed_data_real = lub_free(d_real, e_real, f_real);
+  transformed_data_real = lub_free(d_int, d_real, e_int);
+  transformed_data_real = lub_free(d_int, d_real, e_real);
+  transformed_data_real = lub_free(d_int, e_int, d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lub_free(d_int, e_int, f_int);
+  transformed_param_real = lub_free(d_real, d_int, e_int);
+  transformed_param_real = lub_free(d_real, e_real, e_int);
+  transformed_param_real = lub_free(d_real, d_int, e_real);
+  transformed_param_real = lub_free(d_real, e_real, f_real);
+  transformed_param_real = lub_free(d_int, d_real, e_int);
+  transformed_param_real = lub_free(d_int, d_real, e_real);
+  transformed_param_real = lub_free(d_int, e_int, d_real);
+  transformed_param_real = lub_free(p_real, p_real, p_real);
+  transformed_param_real = lub_free(p_real, p_real, d_real);
+  transformed_param_real = lub_free(p_real, p_real, d_int);
+  transformed_param_real = lub_free(p_real, d_real, p_real);
+  transformed_param_real = lub_free(p_real, e_real, p_real);
+  transformed_param_real = lub_free(p_real, e_real, d_int);
+  transformed_param_real = lub_free(p_real, d_int, p_real);
+  transformed_param_real = lub_free(p_real, d_int, e_real);
+  transformed_param_real = lub_free(p_real, d_int, e_int);
+  transformed_param_real = lub_free(d_real, p_real, p_real);
+  transformed_param_real = lub_free(d_real, p_real, d_real);
+  transformed_param_real = lub_free(d_real, p_real, d_int);
+  transformed_param_real = lub_free(d_real, e_real, p_real);
+  transformed_param_real = lub_free(d_real, d_int, p_real);
+  transformed_param_real = lub_free(d_real, e_real, p_real);
+  transformed_param_real = lub_free(d_int, p_real, p_real);
+  transformed_param_real = lub_free(d_int, p_real, d_real);
+  transformed_param_real = lub_free(d_int, p_real, e_int);
+  transformed_param_real = lub_free(d_int, d_real, p_real);
+  transformed_param_real = lub_free(d_int, e_int, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format offset_multiplier_constrain.stan
+data {
+  int d_int;
+  int e_int;
+  int f_int;
+  real d_real;
+  real e_real;
+  real f_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = offset_multiplier_constrain(d_int, e_int, f_int);
+  transformed_data_real = offset_multiplier_constrain(d_real, d_int, e_int);
+  transformed_data_real = offset_multiplier_constrain(d_real, e_real, e_int);
+  transformed_data_real = offset_multiplier_constrain(d_real, d_int, e_real);
+  transformed_data_real = offset_multiplier_constrain(d_real, e_real, f_real);
+  transformed_data_real = offset_multiplier_constrain(d_int, d_real, e_int);
+  transformed_data_real = offset_multiplier_constrain(d_int, d_real, e_real);
+  transformed_data_real = offset_multiplier_constrain(d_int, e_int, d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = offset_multiplier_constrain(d_int, e_int, f_int);
+  transformed_param_real = offset_multiplier_constrain(d_real, d_int, e_int);
+  transformed_param_real = offset_multiplier_constrain(d_real, e_real, e_int);
+  transformed_param_real = offset_multiplier_constrain(d_real, d_int, e_real);
+  transformed_param_real = offset_multiplier_constrain(d_real, e_real,
+                                                       f_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, d_real, e_int);
+  transformed_param_real = offset_multiplier_constrain(d_int, d_real, e_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, e_int, d_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, p_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, p_real,
+                                                       d_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, p_real, d_int);
+  transformed_param_real = offset_multiplier_constrain(p_real, d_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, e_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, e_real, d_int);
+  transformed_param_real = offset_multiplier_constrain(p_real, d_int, p_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, d_int, e_real);
+  transformed_param_real = offset_multiplier_constrain(p_real, d_int, e_int);
+  transformed_param_real = offset_multiplier_constrain(d_real, p_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(d_real, p_real,
+                                                       d_real);
+  transformed_param_real = offset_multiplier_constrain(d_real, p_real, d_int);
+  transformed_param_real = offset_multiplier_constrain(d_real, e_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(d_real, d_int, p_real);
+  transformed_param_real = offset_multiplier_constrain(d_real, e_real,
+                                                       p_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, p_real, p_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, p_real, d_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, p_real, e_int);
+  transformed_param_real = offset_multiplier_constrain(d_int, d_real, p_real);
+  transformed_param_real = offset_multiplier_constrain(d_int, e_int, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format offset_multiplier_free.stan
+data {
+  int d_int;
+  int e_int;
+  int f_int;
+  real d_real;
+  real e_real;
+  real f_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = offset_multiplier_free(d_int, e_int, f_int);
+  transformed_data_real = offset_multiplier_free(d_real, d_int, e_int);
+  transformed_data_real = offset_multiplier_free(d_real, e_real, e_int);
+  transformed_data_real = offset_multiplier_free(d_real, d_int, e_real);
+  transformed_data_real = offset_multiplier_free(d_real, e_real, f_real);
+  transformed_data_real = offset_multiplier_free(d_int, d_real, e_int);
+  transformed_data_real = offset_multiplier_free(d_int, d_real, e_real);
+  transformed_data_real = offset_multiplier_free(d_int, e_int, d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = offset_multiplier_free(d_int, e_int, f_int);
+  transformed_param_real = offset_multiplier_free(d_real, d_int, e_int);
+  transformed_param_real = offset_multiplier_free(d_real, e_real, e_int);
+  transformed_param_real = offset_multiplier_free(d_real, d_int, e_real);
+  transformed_param_real = offset_multiplier_free(d_real, e_real, f_real);
+  transformed_param_real = offset_multiplier_free(d_int, d_real, e_int);
+  transformed_param_real = offset_multiplier_free(d_int, d_real, e_real);
+  transformed_param_real = offset_multiplier_free(d_int, e_int, d_real);
+  transformed_param_real = offset_multiplier_free(p_real, p_real, p_real);
+  transformed_param_real = offset_multiplier_free(p_real, p_real, d_real);
+  transformed_param_real = offset_multiplier_free(p_real, p_real, d_int);
+  transformed_param_real = offset_multiplier_free(p_real, d_real, p_real);
+  transformed_param_real = offset_multiplier_free(p_real, e_real, p_real);
+  transformed_param_real = offset_multiplier_free(p_real, e_real, d_int);
+  transformed_param_real = offset_multiplier_free(p_real, d_int, p_real);
+  transformed_param_real = offset_multiplier_free(p_real, d_int, e_real);
+  transformed_param_real = offset_multiplier_free(p_real, d_int, e_int);
+  transformed_param_real = offset_multiplier_free(d_real, p_real, p_real);
+  transformed_param_real = offset_multiplier_free(d_real, p_real, d_real);
+  transformed_param_real = offset_multiplier_free(d_real, p_real, d_int);
+  transformed_param_real = offset_multiplier_free(d_real, e_real, p_real);
+  transformed_param_real = offset_multiplier_free(d_real, d_int, p_real);
+  transformed_param_real = offset_multiplier_free(d_real, e_real, p_real);
+  transformed_param_real = offset_multiplier_free(d_int, p_real, p_real);
+  transformed_param_real = offset_multiplier_free(d_int, p_real, d_real);
+  transformed_param_real = offset_multiplier_free(d_int, p_real, e_int);
+  transformed_param_real = offset_multiplier_free(d_int, d_real, p_real);
+  transformed_param_real = offset_multiplier_free(d_int, e_int, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format ordered_constrain.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = ordered_constrain(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = ordered_constrain(d_vector);
+  transformed_param_vector = ordered_constrain(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format ordered_free.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = ordered_free(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = ordered_free(d_vector);
+  transformed_param_vector = ordered_free(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format positive_ordered_constrain.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = positive_ordered_constrain(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = positive_ordered_constrain(d_vector);
+  transformed_param_vector = positive_ordered_constrain(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format positive_ordered_free.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = positive_ordered_free(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = positive_ordered_free(d_vector);
+  transformed_param_vector = positive_ordered_free(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format simplex_constrain.stan
+data {
+  int d_int;
+  vector[d_int - 1] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = simplex_constrain(d_vector);
+}
+parameters {
+  vector[d_int - 1] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = simplex_constrain(d_vector);
+  transformed_param_vector = simplex_constrain(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format simplex_free.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int - 1] transformed_data_vector;
+  transformed_data_vector = simplex_free(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int - 1] transformed_param_vector;
+  transformed_param_vector = simplex_free(d_vector);
+  transformed_param_vector = simplex_free(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format ub_constrain.stan
+data {
+  int d_int;
+  int r_int;
+  real d_real;
+  real r_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = ub_constrain(d_real, r_real);
+  transformed_data_real = ub_constrain(d_int, r_real);
+  transformed_data_real = ub_constrain(d_real, d_int);
+  transformed_data_real = ub_constrain(r_int, d_int);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = ub_constrain(d_real, r_real);
+  transformed_param_real = ub_constrain(d_int, r_real);
+  transformed_param_real = ub_constrain(d_real, d_int);
+  transformed_param_real = ub_constrain(r_int, d_int);
+  transformed_param_real = ub_constrain(r_int, p_real);
+  transformed_param_real = ub_constrain(r_real, p_real);
+  transformed_param_real = ub_constrain(p_real, p_real);
+  transformed_param_real = ub_constrain(p_real, r_int);
+  transformed_param_real = ub_constrain(p_real, r_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format ub_free.stan
+data {
+  int d_int;
+  int r_int;
+  real d_real;
+  real r_real;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = ub_free(d_real, r_real);
+  transformed_data_real = ub_free(d_int, r_real);
+  transformed_data_real = ub_free(d_real, d_int);
+  transformed_data_real = ub_free(r_int, d_int);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = ub_free(d_real, r_real);
+  transformed_param_real = ub_free(d_int, r_real);
+  transformed_param_real = ub_free(d_real, d_int);
+  transformed_param_real = ub_free(r_int, d_int);
+  transformed_param_real = ub_free(r_int, p_real);
+  transformed_param_real = ub_free(r_real, p_real);
+  transformed_param_real = ub_free(p_real, p_real);
+  transformed_param_real = ub_free(p_real, r_int);
+  transformed_param_real = ub_free(p_real, r_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format unit_vector_constrain.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = unit_vector_constrain(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = unit_vector_constrain(d_vector);
+  transformed_param_vector = unit_vector_constrain(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format unit_vector_free.stan
+data {
+  int d_int;
+  vector[d_int] d_vector;
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  transformed_data_vector = unit_vector_free(d_vector);
+}
+parameters {
+  vector[d_int] p_vector;
+  real y_p;
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  transformed_param_vector = unit_vector_free(d_vector);
+  transformed_param_vector = unit_vector_free(p_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+

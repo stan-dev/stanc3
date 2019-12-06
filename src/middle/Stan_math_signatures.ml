@@ -397,6 +397,10 @@ let add_binary name =
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
+let add_constraint (name, ct, ut, cargst, argst) =
+  add_unqualified (name ^ "_constrain", ReturnType ct, ut :: (cargst @ argst)) ;
+  add_unqualified (name ^ "_free", ReturnType ut, ct :: argst)
+
 let for_all_vector_types s =
   for i = 0 to all_vector_types_size - 1 do
     s (all_vector_types i)
@@ -411,6 +415,22 @@ let for_vector_types s =
 let () =
   List.iter declarative_fnsigs ~f:(fun (key, rt, args) ->
       Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args) ) ;
+  add_constraint ("lb", UReal, UReal, [], [UReal]) ;
+  add_constraint ("ub", UReal, UReal, [], [UReal]) ;
+  add_constraint ("lub", UReal, UReal, [], [UReal; UReal]) ;
+  add_constraint ("offset_multiplier", UReal, UReal, [], [UReal; UReal]) ;
+  add_constraint ("ordered", UVector, UVector, [], []) ;
+  add_constraint ("positive_ordered", UVector, UVector, [], []) ;
+  add_constraint ("simplex", UVector, UVector, [], []) ;
+  add_constraint ("unit_vector", UVector, UVector, [], []) ;
+  add_constraint ("cov_matrix", UMatrix, UVector, [UInt], []) ;
+  add_constraint ("cholesky_factor", UMatrix, UVector, [UInt; UInt], []) ;
+  add_unqualified ("corr_matrix_constrain", ReturnType UMatrix, [UVector; UInt]) ;
+  add_unqualified
+    ("cholesky_corr_constrain", ReturnType UMatrix, [UVector; UInt]) ;
+  add_qualified ("corr_matrix_free", ReturnType UVector, [(DataOnly, UMatrix)]) ;
+  add_qualified
+    ("cholesky_corr_free", ReturnType UVector, [(DataOnly, UMatrix)]) ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
   for i = 0 to bare_types_size - 1 do
