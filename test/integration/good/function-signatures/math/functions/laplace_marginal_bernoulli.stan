@@ -23,10 +23,9 @@ parameters {
 }
 
 model {
-  target +=
-    laplace_marginal_bernoulli(y, n_samples, K, phi, x, delta, delta_int,
-                               theta0, 1e-3, 100);
-
+  // target +=
+  //   laplace_marginal_bernoulli(y, n_samples, K, phi, x, delta, delta_int,
+  //                              theta0, 1e-3, 100);
   target +=
     laplace_marginal_bernoulli(y, n_samples, K, phi, x, delta, delta_int,
                                theta0);
