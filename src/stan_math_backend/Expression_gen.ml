@@ -72,7 +72,9 @@ let promote_unsizedtype es =
     | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
     | _, mtype -> mtype
   in
-  List.map es ~f:Expr.Typed.type_of |> List.reduce_exn ~f:fold_type
+  List.map es ~f:Expr.Typed.type_of
+  |> List.reduce ~f:fold_type
+  |> Option.value ~default:UReal
 
 let%expect_test "promote_unsized" =
   let e mtype =
