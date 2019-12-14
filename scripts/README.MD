@@ -24,9 +24,9 @@
    sudo add-apt-repository ppa:avsm/ppa
    sudo apt-get update
 ```
-2. Install `opam` `mingw-w64` `gcc` `m4` dependencies required
+2. Install `opam` `mingw-w64` `gcc` `m4` `make` dependencies required
 ```
-   sudo apt-get install opam mingw-w64 gcc m4 -y
+   sudo apt-get install opam mingw-w64 gcc m4 make -y
 ```
 3. Init opam, create and switch to 4.07.0, update environment shell
 
@@ -82,9 +82,9 @@ Switch to the root of the project and run
    sudo add-apt-repository ppa:avsm/ppa
    sudo apt-get update
 ```
-2. Install `opam` `mingw-w64` `gcc` `m4` dependencies required
+2. Install `opam` `mingw-w64` `gcc` `m4` `make` dependencies required
 ```
-   sudo apt-get install opam mingw-w64 gcc m4 -y
+   sudo apt-get install opam mingw-w64 gcc m4 make -y
 ```
 3. Init opam, create and switch to 4.07.0, update environment shell
 ```

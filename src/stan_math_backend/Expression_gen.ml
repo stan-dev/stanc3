@@ -280,6 +280,8 @@ and gen_fun_app ppf fname es =
       match (is_hof_call, fname, converted_es @ extra) with
       | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
+      | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
+          (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
       | ( true
         , "integrate_ode_bdf"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
