@@ -16,6 +16,10 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
   | FunApp (StanLib, f, obs :: dist_params)
+    when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
+      pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
+        (list ~sep:comma pp_expr) dist_params pp_expr obs
+  | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
   | FunApp (StanLib, f, args) when Operator.of_string_opt f |> Option.is_some
