@@ -1,6 +1,9 @@
 from eight_schools import eight_schools_ncp_model
 import eight_schools_data
 
+from normal_lub import normal_lub_model
+import normal_lub_data
+
 from test_unbounded_cont import test_unbounded_cont_model
 import test_unbounded_cont_data
 import test_unbounded_cont_fit 

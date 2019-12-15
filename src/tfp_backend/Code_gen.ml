@@ -180,15 +180,16 @@ let pp_bijector ppf trans =
   let components =
     match trans with
     | Program.Identity -> []
-    | Lower lb -> [("Exp", []); ("AffineScalar", [lb])]
+    | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
-        [("Exp", []); ("AffineScalar", [ub; Expr.Helpers.float (-1.)])]
+        [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
     | LowerUpper (lb, ub) ->
         [ ("Sigmoid", [])
-        ; ("AffineScalar", [lb; Expr.Helpers.binop ub Operator.Minus lb]) ]
-    | Offset o -> [("AffineScalar", [o])]
-    | Multiplier m -> [("AffineScalar", [Expr.Helpers.zero; m])]
-    | OffsetMultiplier (o, m) -> [("AffineScalar", [o; m])]
+        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
+        ; ("Shift", [lb]) ]
+    | Offset o -> [("Shift", [o])]
+    | Multiplier m -> [("Scale", [m])]
+    | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
     | CholeskyCorr -> [("CorrelationCholesky", [])]
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
