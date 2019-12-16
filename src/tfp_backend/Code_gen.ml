@@ -112,16 +112,22 @@ let rec pp_stmt ppf s =
         (fun ppf -> pp_stmt ppf body) ;
       pf ppf
         "@,@[<hov 2>target += tf__.reduce_sum(@,tf__.vectorized_map(%s, (%a, \
-         list(range(%a, %a + 1)))))@]"
-        body_name (list ~sep:comma string) !indexed_vars pp_expr lower pp_expr
-        upper
+         tf__.range(%a, %a + 1))))@]"
+        body_name (list ~sep:comma string) !indexed_vars pp_expr_int lower
+        pp_expr_int upper
   | _ -> raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
-let rec pp_cast prefix ppf (name, st) =
+let rec contains_int = function
+  | SizedType.SArray (t, _) -> contains_int t
+  | SInt -> true
+  | _ -> false
+
+let pp_cast prefix ppf (name, st) =
   match st with
-  | SizedType.SArray (t, _) -> pp_cast prefix ppf (name, t)
-  | SInt -> pf ppf "%s%s" prefix name
-  | _ -> pf ppf "tf__.cast(%a, dtype__)" (pp_cast prefix) (name, SInt)
+  | SizedType.SInt | SReal -> pf ppf "%s%s" prefix name
+  | _ ->
+      pf ppf "tf__.convert_to_tensor(%s%s%s)" prefix name
+        (if contains_int st then "" else ", dtype=dtype__")
 
 let pp_init ppf p =
   let pp_save_data ppf (name, st) =

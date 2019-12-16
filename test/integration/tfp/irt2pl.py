@@ -11,7 +11,7 @@ class irt_2pl_model(tfd__.Distribution):
   def __init__(self, I, J, y):
     self.I = I
     self.J = J
-    self.y = y
+    self.y = tf__.convert_to_tensor(y)
      
   
   def log_prob_one_chain(self, params):
@@ -51,7 +51,7 @@ class irt_2pl_model(tfd__.Distribution):
       return target
        
     target += tf__.reduce_sum(tf__.vectorized_map(body_sym1__, (b, a,
-      y, list(range(tf__.cast(1, dtype__), I + 1)))))
+      y, tf__.range(1, I + 1))))
     return target
      
   def log_prob(self, params):

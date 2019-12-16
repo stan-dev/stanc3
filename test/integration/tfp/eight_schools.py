@@ -10,8 +10,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
 
   def __init__(self, J, y, sigma):
     self.J = J
-    self.y = tf__.cast(y, dtype__)
-    self.sigma = tf__.cast(sigma, dtype__)
+    self.y = tf__.convert_to_tensor(y, dtype=dtype__)
+    self.sigma = tf__.convert_to_tensor(sigma, dtype=dtype__)
      
   
   def log_prob_one_chain(self, params):
