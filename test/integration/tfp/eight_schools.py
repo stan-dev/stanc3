@@ -47,8 +47,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
     y = self.y
     sigma = self.sigma
     return [tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, tf__.float64)),
-                         tfb__.Exp()]), tfb__.Identity()]
+            tfb__.Chain([tfb__.Shift(tf__.cast(0, tf__.float64)), tfb__.Exp()]),
+            tfb__.Identity()]
      
   def parameter_names(self):
     return ["mu", "tau", "theta_tilde"]
