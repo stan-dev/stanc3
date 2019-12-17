@@ -104,7 +104,7 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
-let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
+let user_dist_suffices = ["_lpdf"; "_lpmf"; "_log"]
 
 let ends_with_any suffices s =
   List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
@@ -113,14 +113,16 @@ let is_user_dist s =
   ends_with_any user_dist_suffices s
   && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
 
+let is_user_lp s = String.is_suffix ~suffix:"_lp" s
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
   else if Utils.is_propto_distribution f then
     Utils.stdlib_distribution_name f ^ "<propto__>"
-  else if Utils.is_distribution_name f || (udf && is_user_dist f) then
-    f ^ "<false>"
+  else if
+    Utils.is_distribution_name f || (udf && (is_user_dist f || is_user_lp f))
+  then f ^ "<false>"
   else f
 
 let fn_renames =
@@ -319,7 +321,7 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
 and pp_user_defined_fun ppf (f, es) =
   let extra_args =
     suffix_args f
-    @ (if is_user_dist f then ["lp__"; "lp_accum__"] else [])
+    @ (if is_user_lp f then ["lp__"; "lp_accum__"] else [])
     @ ["pstream__"]
   in
   let sep = if List.is_empty es then "" else ", " in

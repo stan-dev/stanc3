@@ -1165,11 +1165,9 @@ return foo_bar2(x, y, pstream__);
 }
 };
 
-template <bool propto__, typename T1__, typename T_lp__,
-typename T_lp_accum__>
+template <bool propto__, typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
-foo_lpmf(const int& y, const T1__& lambda, T_lp__& lp__,
-         T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
   
   try {
@@ -1184,13 +1182,11 @@ foo_lpmf(const int& y, const T1__& lambda, T_lp__& lp__,
 }
 
 struct foo_lpmf_functor__ {
-template <bool propto__, typename T1__, typename T_lp__,
-typename T_lp_accum__>
+template <bool propto__, typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
-operator()(const int& y, const T1__& lambda, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
-return foo_lpmf(y, lambda, lp__, lp_accum__, pstream__);
+return foo_lpmf(y, lambda, pstream__);
 }
 };
 
