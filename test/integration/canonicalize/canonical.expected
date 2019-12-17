@@ -1,0 +1,74 @@
+  $ ../../../../install/default/bin/stanc --print-canonical deprecated.stan
+functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+  real normal_log_lpdf(real a, real b, real c) {
+    return (a - b) / c;
+  }
+  real foo_lcdf(real x, real y) {
+    return x / y;
+  }
+}
+transformed data {
+  int a = -12;
+  real b = 1.5;
+  int c = abs(a);
+  real d = fabs(b);
+  int x_i[0];
+  real x_r[0];
+}
+parameters {
+  real x;
+  real theta[3];
+}
+model {
+  real k = (b < 0) ? lmultiply(1, d) : 0;
+  target += lchoose(10, 10);
+  c ~ poisson(3.0);
+  c ~ poisson_log(3.0);
+  c ~ poisson_log(3.0);
+  if (a) {
+    x ~ normal(0, 1);
+    x ~ normal_log(0, 1);
+    x ~ normal_log(0, 1);
+    target += normal_log_lpdf(x| 1, 2);
+    target += std_normal_lpdf(x| );
+  }
+  else {
+    x ~ exponential(1);
+    x ~ exponential(1);
+    target += foo_lcdf(x| 1);
+  }
+  target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
+            + normal_lccdf(3| 0, 1);
+  print("target: ", target());
+}
+generated quantities {
+  real y0[2] = {1.0, 2.0};
+  real ts[3] = {0.5, 1.0, 2.0};
+  real y_hat[3, 2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i);
+}
+
+  $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
+transformed data {
+  int N = 12;
+  real b = 1.5;
+}
+parameters {
+  real<lower=((b > 3) ? 1.0 : b - 2)> x;
+  matrix[N, N] m;
+}
+model {
+  matrix[N - 3, 4] n;
+  row_vector[N] v = ((1.0 + m)')[1];
+  for (i in 1 : (N - 3)) {
+    n[i] = m[i : (i + 3), i]';
+  }
+  if ((b < x) && (x < 1)) 
+    x + 4 ~ normal(0, 1 + 1) T[0, 8];
+}
+

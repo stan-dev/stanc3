@@ -16,6 +16,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let canonicalize_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
 let dump_mir_pretty = ref false
@@ -83,6 +84,9 @@ let options =
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
+    ; ( "--print-canonical"
+      , Arg.Set canonicalize_program
+      , " Prints the canonicalized program to the console" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -171,15 +175,24 @@ let add_file filename =
 
 (** ad directives from the given file. *)
 let use_file filename =
-  let ast = Frontend_utils.get_ast_or_exit filename in
+  let ast =
+    if !canonicalize_program then
+      Canonicalize.repair_syntax
+        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
+    else Frontend_utils.get_ast_or_exit filename
+  in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  if !canonicalize_program then
+    print_endline
+      (Pretty_printing.pretty_print_typed_program
+         (Canonicalize.canonicalize_program typed_ast)) ;
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   Debugging.typed_ast_logger typed_ast ;
-  if not !pretty_print_program then (
+  if not (!pretty_print_program || !canonicalize_program) then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;

@@ -16,6 +16,10 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
   | FunApp (StanLib, f, obs :: dist_params)
+    when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
+      pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
+        (list ~sep:comma pp_expr) dist_params pp_expr obs
+  | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
   | FunApp (StanLib, f, args) when Operator.of_string_opt f |> Option.is_some
@@ -176,7 +180,18 @@ let pp_bijector ppf trans =
   let components =
     match trans with
     | Program.Identity -> []
-    | Lower lb -> [("Exp", []); ("AffineScalar", [lb])]
+    | Lower lb -> [("Exp", []); ("Shift", [lb])]
+    | Upper ub ->
+        [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
+    | LowerUpper (lb, ub) ->
+        [ ("Sigmoid", [])
+        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
+        ; ("Shift", [lb]) ]
+    | Offset o -> [("Shift", [o])]
+    | Multiplier m -> [("Scale", [m])]
+    | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
+    | CholeskyCorr -> [("CorrelationCholesky", [])]
+    | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
           [%message
@@ -238,6 +253,6 @@ let pp_prog ppf (p : Program.Typed.t) =
   pf ppf "@ model = %s" p.prog_name
 
 (* Major work to do:
-1. Work awareness of distributions and bijectors into the type system
-2. Have backends present an environment that the frontend and middle can use for type checking and optimization.
+   1. Work awareness of distributions and bijectors into the type system
+   2. Have backends present an environment that the frontend and middle can use for type checking and optimization.
 *)

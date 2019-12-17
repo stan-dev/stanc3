@@ -13,10 +13,6 @@ let remove_stan_dist_suffix s =
 let capitalize_fnames =
   String.Set.of_list ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"]
 
-(* Bernoulli, Binomial, NegativeBinomial should be mapped to TFP with either probs= or logits= flags *)
-(* Poisson should be mapped to TFP with either rate or log_rate *)
-(* | "lkj_corr_cholesky" -> ("CholeskyLKJ", args) *)
-
 let map_functions fname args =
   match fname with
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
@@ -25,6 +21,7 @@ let map_functions fname args =
   | "lognormal" -> ("LogNormal", args)
   | "chi_square" -> ("Chi2", args)
   | "inv_gamma" -> ("InverseGamma", args)
+  | "lkj_corr_cholesky" -> ("CholeskyLKJ", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
@@ -47,7 +44,7 @@ let translate_funapps e =
 
 let%expect_test "nested dist prefixes translated" =
   let open Expr.Fixed.Pattern in
-  let e pattern = {Expr.Fixed.pattern; meta= ()} in
+  let e pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   let f =
     FunApp
       ( Fun_kind.StanLib
@@ -55,13 +52,14 @@ let%expect_test "nested dist prefixes translated" =
       , [FunApp (Fun_kind.StanLib, "normal_lpdf", []) |> e] )
     |> e |> translate_funapps
   in
-  print_s [%sexp (f : unit Expr.Fixed.t)] ;
+  print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
     {|
     ((pattern
       (FunApp StanLib tfd__.Normal
-       (((pattern (FunApp StanLib tfd__.Normal ())) (meta ())))))
-     (meta ())) |}]
+       (((pattern (FunApp StanLib tfd__.Normal ()))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))) |}]
 
 (* temporary until we get rid of these from the MIR *)
 let rec remove_unused_stmts s =

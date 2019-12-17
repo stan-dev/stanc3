@@ -1,6 +1,9 @@
 from eight_schools import eight_schools_ncp_model
 import eight_schools_data
 
+from normal_lub import normal_lub_model
+import normal_lub_data
+
 from test_unbounded_cont import test_unbounded_cont_model
 import test_unbounded_cont_data
 import test_unbounded_cont_fit 
@@ -58,6 +61,17 @@ class TestModels(unittest.TestCase):
         target_dist = test_positive_cont_model(**test_positive_cont_data.data)
         stan_fit = test_positive_cont_fit.data
         self._compare_lp(target_dist, stan_fit)
+
+    def test_normal_lub(self):
+        target_dist = normal_lub_model(**normal_lub_data.data)
+        mcmc_trace, _ = stan(target_dist)
+        theta_lub, theta_ub, theta_lb = [merge_chains(x) for x in mcmc_trace]
+
+        self.assertTrue(np.all(theta_lub<=3))
+        self.assertTrue(np.all(theta_lub>=-3))
+        self.assertTrue(np.all(theta_lb>=0))
+        self.assertTrue(np.all(theta_ub<=1))
+
 
 if __name__ == '__main__':
     unittest.main()
