@@ -2,6 +2,7 @@ from stan import stan, merge_chains
 import unittest
 import numpy as np
 import json
+import tensorflow as tf
 
 def significant_digit(x):
     return float("{:.1}".format(x))
@@ -21,8 +22,12 @@ class TestModels(unittest.TestCase):
             if param in data:
                 del data[param]
         target_dist = model(**data)
-        mcmc_trace, _ = stan(target_dist)
+        mcmc_trace, pkr = stan(target_dist, nchain=1)
 
+        nuts_kr = pkr.inner_results.inner_results
+        print("leapfrogs taken total", tf.sum(nuts_kr.leapfrogs_taken))
+        print("reach max depth", tf.sum(nuts_kr.reach_max_depth))
+        print("has divergence", tf.sum(nuts_kr.has_divergence))
         print([merge_chains(x) for x in mcmc_trace])
 
         # real<lower=0> sigma_theta;
@@ -50,4 +55,5 @@ class TestModels(unittest.TestCase):
     #                            delta=0.1)
 
 if __name__ == '__main__':
-    unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestModels)
+    unittest.TextTestRunner(verbosity=2).run(suite)
