@@ -13,6 +13,27 @@ let trans_fn_kind = function
   | Ast.StanLib -> Fun_kind.StanLib
   | UserDefined -> UserDefined
 
+let without_underscores = String.filter ~f:(( <> ) '_')
+
+let drop_leading_zeros s =
+  match String.lfindi ~f:(fun _ c -> c <> '0') s with
+  | Some p when p > 0 -> (
+    match s.[p] with
+    | 'e' | '.' -> String.drop_prefix s (p - 1)
+    | _ -> String.drop_prefix s p )
+  | Some _ -> s
+  | None -> "0"
+
+let format_number s = s |> without_underscores |> drop_leading_zeros
+
+let%expect_test "format_number0" =
+  format_number "0_000." |> print_endline ;
+  [%expect "0."]
+
+let%expect_test "format_number1" =
+  format_number ".123_456" |> print_endline ;
+  [%expect ".123456"]
+
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
@@ -49,8 +70,8 @@ and trans_expr {Ast.expr; Ast.emeta} =
             Expr.Fixed.Pattern.TernaryIf
               (trans_expr cond, trans_expr ifb, trans_expr elseb)
         | Variable {name; _} -> Var name
-        | IntNumeral x -> Lit (Int, x)
-        | RealNumeral x -> Lit (Real, x)
+        | IntNumeral x -> Lit (Int, format_number x)
+        | RealNumeral x -> Lit (Real, format_number x)
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)

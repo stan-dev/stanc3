@@ -540,7 +540,7 @@ Identifier 'bad_model_name_var_model' clashes with model name.
 
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
-Syntax error in 'bad_periods_data.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  data {
      2:    real x.y;
@@ -549,12 +549,11 @@ Syntax error in 'bad_periods_data.stan', line 2, column 7 to column 8, parsing e
      4:  parameters {
    -------------------------------------------------
 
-Only top-level variable declarations are allowed in data and parameter blocks.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
 
-Syntax error in 'bad_periods_gqs.stan', line 8, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
    -------------------------------------------------
      6:  }
      7:  generated quantities {
@@ -564,12 +563,11 @@ Syntax error in 'bad_periods_gqs.stan', line 8, column 7 to column 8, parsing er
     10:  }
    -------------------------------------------------
 
-";" or plain assignment is expected after a top-level variable declaration.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
 
-Syntax error in 'bad_periods_local.stan', line 5, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -579,12 +577,11 @@ Syntax error in 'bad_periods_local.stan', line 5, column 7 to column 8, parsing 
      7:  }
    -------------------------------------------------
 
-";" or plain assignment expected after variable declaration.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
 
-Syntax error in 'bad_periods_params.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  parameters {
      2:    real x.y;
@@ -593,12 +590,11 @@ Syntax error in 'bad_periods_params.stan', line 2, column 7 to column 8, parsing
      4:  model {
    -------------------------------------------------
 
-Only top-level variable declarations are allowed in data and parameter blocks.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
 
-Syntax error in 'bad_periods_tdata.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x.y;
@@ -607,12 +603,11 @@ Syntax error in 'bad_periods_tdata.stan', line 2, column 7 to column 8, parsing 
      4:  parameters {
    -------------------------------------------------
 
-";" or plain assignment is expected after a top-level variable declaration.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
 
-Syntax error in 'bad_periods_tparams.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  transformed parameters {
      2:    real x.;
@@ -621,8 +616,7 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7 to column 8, parsin
      4:  }
    -------------------------------------------------
 
-";" or plain assignment is expected after a top-level variable declaration.
-
+Invalid character found.
 
   $ ../../../../../install/default/bin/stanc good_all.stan
 
