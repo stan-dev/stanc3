@@ -206,7 +206,7 @@ let pp_ctor ppf p =
   in
   pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
     (list ~sep:comma string) params ;
-  let dims_check decl_id tr st =
+  let dims_check meta decl_id tr st =
     let check fn s =
       { Stmt.Fixed.pattern=
           NRFunApp
@@ -215,7 +215,7 @@ let pp_ctor ppf p =
             , [ Expr.Helpers.str decl_id
               ; Expr.Helpers.str (Fmt.strf "%a" pp_expr s)
               ; s ] )
-      ; meta= Stmt.Numbered.Meta.empty }
+      ; meta }
     in
     let fnvalidate =
       match tr with
@@ -243,9 +243,20 @@ let pp_ctor ppf p =
         ; out_unconstrained_st= st
         ; out_constrained_st= cst
         ; out_trans= tr } ) -> (
-      match SizedType.get_dims st with
-      | [] -> Some (dims_check decl_id tr cst, [Expr.Helpers.loop_bottom])
-      | ls -> Some (dims_check decl_id tr cst, ls) )
+        let meta =
+          p.log_prob
+          |> List.find ~f:(function
+               | {Stmt.Fixed.pattern= Decl {decl_id= id; _}; _}
+                 when id = decl_id ->
+                   true
+               | _ -> false )
+          |> Option.map ~f:(fun x -> x.meta)
+          |> Option.value ~default:Stmt.Numbered.Meta.empty
+        in
+        match SizedType.get_dims st with
+        | [] ->
+            Some (dims_check meta decl_id tr cst, [Expr.Helpers.loop_bottom])
+        | ls -> Some (dims_check meta decl_id tr cst, ls) )
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
@@ -270,9 +281,10 @@ let pp_ctor ppf p =
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
-        pf ppf "%a@ "
-          (list ~sep:cut pp_num_param)
-          (List.filter_map ~f:get_param_st output_vars) )
+        pp_located_error ppf
+          ( pp_block
+          , ( list ~sep:cut pp_num_param
+            , List.filter_map ~f:get_param_st output_vars ) ) )
     , p )
 
 let pp_model_private ppf {Program.prepare_data; _} =
