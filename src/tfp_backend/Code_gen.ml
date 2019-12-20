@@ -146,12 +146,6 @@ let get_param_st p var =
   in
   st
 
-let rec get_dims = function
-  | SizedType.SInt | SReal -> []
-  | SVector d | SRowVector d -> [d]
-  | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims t
-
 let pp_log_prob ppf p =
   pf ppf "@ %a@ " pp_log_prob_one_chain p ;
   let intro =
@@ -167,7 +161,7 @@ let get_params p =
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
     pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
-      (get_dims out_unconstrained_st)
+      (SizedType.get_dims out_unconstrained_st)
   in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;

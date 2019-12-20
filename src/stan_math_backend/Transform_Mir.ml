@@ -258,7 +258,7 @@ let%expect_test "Flatten slists" =
           (meta ())))))
       (meta ()))) |}]
 
-let add_reads stmts vars mkread =
+let add_reads vars mkread stmts =
   let var_names = String.Map.of_alist_exn vars in
   let add_read_to_decl (Stmt.Fixed.({pattern; meta}) as stmt) =
     match pattern with
@@ -395,6 +395,65 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
+let rec add_validate_dims outvars stmts =
+  let params =
+    List.filter_map
+      ~f:(function
+        | decl_id, Program.({out_block= Parameters; out_trans; _}) -> (
+          match out_trans with
+          | Program.Simplex ->
+              Some (decl_id, Internal_fun.FnValidateSizeSimplex)
+          | Program.UnitVector -> Some (decl_id, FnValidateSizeUnitVector)
+          | _ -> None )
+        | _ -> None)
+      outvars
+    |> String.Map.of_alist_exn
+  in
+  let fnvalidate id =
+    Option.value ~default:Internal_fun.FnValidateSize (Map.find params id)
+  in
+  let f = function
+    | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
+      decl ->
+        let check fn x =
+          Stmt.Fixed.
+            { meta
+            ; pattern=
+                NRFunApp
+                  ( CompilerInternal
+                  , Internal_fun.to_string fn
+                  , Expr.Helpers.
+                      [ str decl_id
+                      ; str (Fmt.strf "%a" Expression_gen.pp_expr x)
+                      ; x ] ) }
+        in
+        let rec map = function
+          | [] -> []
+          | [s] -> [check (fnvalidate decl_id) s]
+          | s :: ls -> check FnValidateSize s :: map ls
+        in
+        map (SizedType.get_dims st) @ [decl]
+    | stmt -> [validate_dims_stmt stmt]
+  in
+  List.concat_map ~f stmts
+
+and validate_dims_stmt stmt =
+  Stmt.Fixed.
+    { stmt with
+      pattern=
+        ( match stmt.pattern with
+        | Stmt.Fixed.Pattern.Block s ->
+            Stmt.Fixed.Pattern.Block (add_validate_dims [] s)
+        | SList s -> SList (add_validate_dims [] s)
+        | While (a, b) -> While (a, validate_dims_stmt b)
+        | For f -> For {f with body= validate_dims_stmt f.body}
+        | IfElse (p, t, e) ->
+            IfElse
+              ( p
+              , validate_dims_stmt t
+              , Option.map ~f:validate_dims_stmt e )
+        | s -> s ) }
+
 let make_fill vident st loc =
   let rhs =
     Expr.(
@@ -453,7 +512,6 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
-  let log_prob = List.map ~f:add_jacobians p.log_prob in
   let get_pname_cst = function
     | name, {Program.out_block= Parameters; out_constrained_st; _} ->
         Some (name, out_constrained_st)
@@ -506,8 +564,15 @@ let trans_prog (p : Program.Typed.t) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
+  let functions_block =
+    List.map
+      ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
+      p.functions_block
+  in
   let generate_quantities =
-    ( add_reads p.generate_quantities p.output_vars param_read
+    ( p.generate_quantities
+    |> add_validate_dims p.output_vars
+    |> add_reads p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
@@ -515,7 +580,9 @@ let trans_prog (p : Program.Typed.t) =
     @ gq_writes
   in
   let log_prob =
-    add_reads log_prob p.output_vars param_read
+    p.log_prob |> List.map ~f:add_jacobians
+    |> add_validate_dims p.output_vars
+    |> add_reads p.output_vars param_read
     |> constrain_in_params p.output_vars
     |> translate_to_open_cl
   in
@@ -555,15 +622,18 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      log_prob
+      functions_block
+    ; log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ add_reads p.prepare_data p.input_vars data_read
+        @ ( add_validate_dims [] p.prepare_data
+          |> add_reads p.input_vars data_read )
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ add_reads p.transform_inits constrained_params data_read
+        @ ( add_validate_dims p.output_vars p.transform_inits
+          |> add_reads constrained_params data_read )
         @ List.map ~f:gen_write constrained_params
     ; generate_quantities }
   in

@@ -57,3 +57,16 @@ let rec dims_of st =
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
+
+let rec get_dims = function
+  | SInt | SReal -> []
+  | SVector d | SRowVector d -> [d]
+  | SMatrix (dim1, dim2) -> [dim1; dim2]
+  | SArray (t, dim) -> dim :: get_dims t
+
+let%expect_test "dims" =
+  let open Fmt in
+  strf "@[%a@]" (list ~sep:comma string)
+    (get_dims (SArray (SMatrix ("x", "y"), "z")))
+  |> print_endline ;
+  [%expect {| z, x, y |}]
