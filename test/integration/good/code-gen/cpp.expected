@@ -38,6 +38,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
 
 using std::istream;
 using std::string;
@@ -105,6 +136,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       pos__ = 1;
       current_statement__ = 9;
       J = context__.vals_i("J")[(pos__ - 1)];
+      current_statement__ = 10;
+      validate_non_negative_index("y", "J", J);
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(J));
       y = std::vector<double>(J, 0);
@@ -118,6 +151,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
           context__.vals_r("y")[(pos__ - 1)], "assigning variable y");
         current_statement__ = 10;
         pos__ = (pos__ + 1);}
+      current_statement__ = 11;
+      validate_non_negative_index("sigma", "J", J);
       context__.validate_dims("data initialization","sigma","double",
           context__.to_vec(J));
       sigma = std::vector<double>(J, 0);
@@ -146,10 +181,18 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += J;
     
+    try {
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      current_statement__ = 3;
+      validate_non_negative_index("theta_tilde", "J", J);
+      num_params_r__ += J;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -179,11 +222,15 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         current_statement__ = 2;
         tau = lb_constrain(tau, 0);
       }
+      current_statement__ = 3;
+      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
+      current_statement__ = 4;
+      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       
@@ -244,11 +291,15 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       tau = in__.scalar();
       current_statement__ = 2;
       tau = lb_constrain(tau, 0);
+      current_statement__ = 3;
+      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
+      current_statement__ = 4;
+      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
       
@@ -306,6 +357,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       tau = context__.vals_r("tau")[(pos__ - 1)];
       current_statement__ = 2;
       tau = lb_free(tau, 0);
+      current_statement__ = 3;
+      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       
@@ -525,6 +578,37 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
+}
+
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
 }
 
 
@@ -1051,6 +1135,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) propto__;
   
   try {
+    current_statement__ = 261;
+    validate_non_negative_index("dydt", "2", 2);
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, 0);
     
@@ -1362,6 +1448,10 @@ foo_1(const int& a, std::ostream* pstream__) {
     }
     current_statement__ = 324;
     while (1) {
+      current_statement__ = 310;
+      validate_non_negative_index("vs", "2", 2);
+      current_statement__ = 310;
+      validate_non_negative_index("vs", "3", 3);
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, 0));
       
@@ -1416,6 +1506,10 @@ foo_1(const int& a, std::ostream* pstream__) {
       
       current_statement__ = 325;
       z = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 326;
+      validate_non_negative_index("vs", "2", 2);
+      current_statement__ = 326;
+      validate_non_negative_index("vs", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       
@@ -1472,6 +1566,8 @@ foo_1(const int& a, std::ostream* pstream__) {
       
       current_statement__ = 335;
       z = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 336;
+      validate_non_negative_index("vs", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -1508,6 +1604,8 @@ foo_1(const int& a, std::ostream* pstream__) {
       
       current_statement__ = 345;
       z = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 346;
+      validate_non_negative_index("vs", "2", 2);
       Eigen::Matrix<local_scalar_t__, 1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       
@@ -1577,6 +1675,8 @@ foo_2(const int& a, std::ostream* pstream__) {
   (void) propto__;
   
   try {
+    current_statement__ = 365;
+    validate_non_negative_index("vs", "2", 2);
     std::vector<int> vs;
     vs = std::vector<int>(2, 0);
     
@@ -1888,6 +1988,10 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
   (void) propto__;
   
   try {
+    current_statement__ = 393;
+    validate_non_negative_index("o", "rows(mat)", rows(mat));
+    current_statement__ = 393;
+    validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     
@@ -2700,9 +2804,21 @@ foo_6(std::ostream* pstream__) {
     
     current_statement__ = 426;
     b = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 427;
+    validate_non_negative_index("c", "20", 20);
+    current_statement__ = 427;
+    validate_non_negative_index("c", "30", 30);
     std::vector<std::vector<local_scalar_t__>> c;
     c = std::vector<std::vector<local_scalar_t__>>(20, std::vector<local_scalar_t__>(30, 0));
     
+    current_statement__ = 428;
+    validate_non_negative_index("ar_mat", "60", 60);
+    current_statement__ = 428;
+    validate_non_negative_index("ar_mat", "70", 70);
+    current_statement__ = 428;
+    validate_non_negative_index("ar_mat", "40", 40);
+    current_statement__ = 428;
+    validate_non_negative_index("ar_mat", "50", 50);
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     
@@ -2813,6 +2929,8 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   (void) propto__;
   
   try {
+    current_statement__ = 435;
+    validate_non_negative_index("l", "10", 10);
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
@@ -2851,6 +2969,8 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   (void) propto__;
   
   try {
+    current_statement__ = 438;
+    validate_non_negative_index("l", "10", 10);
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     
@@ -2900,6 +3020,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) propto__;
   
   try {
+    current_statement__ = 441;
+    validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     
@@ -2949,6 +3071,8 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
   (void) propto__;
   
   try {
+    current_statement__ = 446;
+    validate_non_negative_index("lpmf", "1", 1);
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     
@@ -3067,6 +3191,8 @@ class mother_model : public model_base_crtp<mother_model> {
       pos__ = 1;
       current_statement__ = 179;
       K = context__.vals_i("K")[(pos__ - 1)];
+      current_statement__ = 180;
+      validate_non_negative_index("d_int_1d_ar", "N", N);
       context__.validate_dims("data initialization","d_int_1d_ar","int",
           context__.to_vec(N));
       d_int_1d_ar = std::vector<int>(N, 0);
@@ -3081,6 +3207,12 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable d_int_1d_ar");
         current_statement__ = 180;
         pos__ = (pos__ + 1);}
+      current_statement__ = 181;
+      validate_non_negative_index("d_int_3d_ar", "N", N);
+      current_statement__ = 181;
+      validate_non_negative_index("d_int_3d_ar", "M", M);
+      current_statement__ = 181;
+      validate_non_negative_index("d_int_3d_ar", "K", K);
       context__.validate_dims("data initialization","d_int_3d_ar","int",
           context__.to_vec(N, M, K));
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, 0)));
@@ -3109,6 +3241,8 @@ class mother_model : public model_base_crtp<mother_model> {
       pos__ = 1;
       current_statement__ = 182;
       J = context__.vals_r("J")[(pos__ - 1)];
+      current_statement__ = 183;
+      validate_non_negative_index("d_real_1d_ar", "N", N);
       context__.validate_dims("data initialization","d_real_1d_ar","double",
           context__.to_vec(N));
       d_real_1d_ar = std::vector<double>(N, 0);
@@ -3123,6 +3257,12 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable d_real_1d_ar");
         current_statement__ = 183;
         pos__ = (pos__ + 1);}
+      current_statement__ = 184;
+      validate_non_negative_index("d_real_3d_ar", "N", N);
+      current_statement__ = 184;
+      validate_non_negative_index("d_real_3d_ar", "M", M);
+      current_statement__ = 184;
+      validate_non_negative_index("d_real_3d_ar", "K", K);
       context__.validate_dims("data initialization","d_real_3d_ar","double",
           context__.to_vec(N, M, K));
       d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
@@ -3144,6 +3284,8 @@ class mother_model : public model_base_crtp<mother_model> {
               "assigning variable d_real_3d_ar");
             current_statement__ = 184;
             pos__ = (pos__ + 1);}}}
+      current_statement__ = 185;
+      validate_non_negative_index("d_vec", "N", N);
       context__.validate_dims("data initialization","d_vec","double",
           context__.to_vec(N));
       d_vec = Eigen::Matrix<double, -1, 1>(N);
@@ -3157,6 +3299,10 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.vals_r("d_vec")[(pos__ - 1)], "assigning variable d_vec");
         current_statement__ = 185;
         pos__ = (pos__ + 1);}
+      current_statement__ = 186;
+      validate_non_negative_index("d_1d_vec", "N", N);
+      current_statement__ = 186;
+      validate_non_negative_index("d_1d_vec", "N", N);
       context__.validate_dims("data initialization","d_1d_vec","double",
           context__.to_vec(N, N));
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
@@ -3175,6 +3321,14 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable d_1d_vec");
           current_statement__ = 186;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 187;
+      validate_non_negative_index("d_3d_vec", "N", N);
+      current_statement__ = 187;
+      validate_non_negative_index("d_3d_vec", "M", M);
+      current_statement__ = 187;
+      validate_non_negative_index("d_3d_vec", "K", K);
+      current_statement__ = 187;
+      validate_non_negative_index("d_3d_vec", "N", N);
       context__.validate_dims("data initialization","d_3d_vec","double",
           context__.to_vec(N, M, K, N));
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -3199,6 +3353,8 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable d_3d_vec");
               current_statement__ = 187;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 188;
+      validate_non_negative_index("d_row_vec", "N", N);
       context__.validate_dims("data initialization","d_row_vec","double",
           context__.to_vec(N));
       d_row_vec = Eigen::Matrix<double, 1, -1>(N);
@@ -3213,6 +3369,10 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable d_row_vec");
         current_statement__ = 188;
         pos__ = (pos__ + 1);}
+      current_statement__ = 189;
+      validate_non_negative_index("d_1d_row_vec", "N", N);
+      current_statement__ = 189;
+      validate_non_negative_index("d_1d_row_vec", "N", N);
       context__.validate_dims("data initialization","d_1d_row_vec","double",
           context__.to_vec(N, N));
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
@@ -3231,6 +3391,14 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable d_1d_row_vec");
           current_statement__ = 189;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 190;
+      validate_non_negative_index("d_3d_row_vec", "N", N);
+      current_statement__ = 190;
+      validate_non_negative_index("d_3d_row_vec", "M", M);
+      current_statement__ = 190;
+      validate_non_negative_index("d_3d_row_vec", "K", K);
+      current_statement__ = 190;
+      validate_non_negative_index("d_3d_row_vec", "N", N);
       context__.validate_dims("data initialization","d_3d_row_vec","double",
           context__.to_vec(N, M, K, N));
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
@@ -3255,6 +3423,14 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable d_3d_row_vec");
               current_statement__ = 190;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 191;
+      validate_non_negative_index("d_ar_mat", "4", 4);
+      current_statement__ = 191;
+      validate_non_negative_index("d_ar_mat", "5", 5);
+      current_statement__ = 191;
+      validate_non_negative_index("d_ar_mat", "2", 2);
+      current_statement__ = 191;
+      validate_non_negative_index("d_ar_mat", "3", 3);
       context__.validate_dims("data initialization","d_ar_mat","double",
           context__.to_vec(4, 5, 2, 3));
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
@@ -3279,6 +3455,8 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable d_ar_mat");
               current_statement__ = 191;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 192;
+      validate_non_negative_index("d_simplex", "N", N);
       context__.validate_dims("data initialization","d_simplex","double",
           context__.to_vec(N));
       d_simplex = Eigen::Matrix<double, -1, 1>(N);
@@ -3293,6 +3471,10 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable d_simplex");
         current_statement__ = 192;
         pos__ = (pos__ + 1);}
+      current_statement__ = 193;
+      validate_non_negative_index("d_1d_simplex", "N", N);
+      current_statement__ = 193;
+      validate_non_negative_index("d_1d_simplex", "N", N);
       context__.validate_dims("data initialization","d_1d_simplex","double",
           context__.to_vec(N, N));
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
@@ -3311,6 +3493,14 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable d_1d_simplex");
           current_statement__ = 193;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 194;
+      validate_non_negative_index("d_3d_simplex", "N", N);
+      current_statement__ = 194;
+      validate_non_negative_index("d_3d_simplex", "M", M);
+      current_statement__ = 194;
+      validate_non_negative_index("d_3d_simplex", "K", K);
+      current_statement__ = 194;
+      validate_non_negative_index("d_3d_simplex", "N", N);
       context__.validate_dims("data initialization","d_3d_simplex","double",
           context__.to_vec(N, M, K, N));
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -3335,6 +3525,10 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable d_3d_simplex");
               current_statement__ = 194;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 195;
+      validate_non_negative_index("d_cfcov_54", "5", 5);
+      current_statement__ = 195;
+      validate_non_negative_index("d_cfcov_54", "4", 4);
       context__.validate_dims("data initialization","d_cfcov_54","double",
           context__.to_vec(5, 4));
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
@@ -3353,6 +3547,10 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable d_cfcov_54");
           current_statement__ = 195;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 196;
+      validate_non_negative_index("d_cfcov_33", "3", 3);
+      current_statement__ = 196;
+      validate_non_negative_index("d_cfcov_33", "3", 3);
       context__.validate_dims("data initialization","d_cfcov_33","double",
           context__.to_vec(3, 3));
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
@@ -3371,6 +3569,12 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable d_cfcov_33");
           current_statement__ = 196;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 197;
+      validate_non_negative_index("d_cfcov_33_ar", "K", K);
+      current_statement__ = 197;
+      validate_non_negative_index("d_cfcov_33_ar", "3", 3);
+      current_statement__ = 197;
+      validate_non_negative_index("d_cfcov_33_ar", "3", 3);
       context__.validate_dims("data initialization","d_cfcov_33_ar","double",
           context__.to_vec(K, 3, 3));
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -3393,8 +3597,12 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 197;
             pos__ = (pos__ + 1);}}}
       
+      current_statement__ = 199;
+      validate_non_negative_index("td_1d", "N", N);
       td_1d = std::vector<int>(N, 0);
       
+      current_statement__ = 200;
+      validate_non_negative_index("td_1dk", "M", M);
       td_1dk = std::vector<int>(M, 0);
       
       current_statement__ = 200;
@@ -3413,6 +3621,14 @@ class mother_model : public model_base_crtp<mother_model> {
       td_c = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 203;
       td_c = foo_bar1(td_b, pstream__);
+      current_statement__ = 204;
+      validate_non_negative_index("td_ar_mat", "4", 4);
+      current_statement__ = 204;
+      validate_non_negative_index("td_ar_mat", "5", 5);
+      current_statement__ = 204;
+      validate_non_negative_index("td_ar_mat", "2", 2);
+      current_statement__ = 204;
+      validate_non_negative_index("td_ar_mat", "3", 3);
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
       current_statement__ = 204;
@@ -3431,6 +3647,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable td_ar_mat");}}}}
+      current_statement__ = 205;
+      validate_non_negative_index("td_simplex", "N", N);
       td_simplex = Eigen::Matrix<double, -1, 1>(N);
       
       current_statement__ = 205;
@@ -3439,6 +3657,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(td_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable td_simplex");}
+      current_statement__ = 206;
+      validate_non_negative_index("td_1d_simplex", "N", N);
+      current_statement__ = 206;
+      validate_non_negative_index("td_1d_simplex", "N", N);
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 206;
@@ -3451,6 +3673,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable td_1d_simplex");}}
+      current_statement__ = 207;
+      validate_non_negative_index("td_3d_simplex", "N", N);
+      current_statement__ = 207;
+      validate_non_negative_index("td_3d_simplex", "M", M);
+      current_statement__ = 207;
+      validate_non_negative_index("td_3d_simplex", "K", K);
+      current_statement__ = 207;
+      validate_non_negative_index("td_3d_simplex", "N", N);
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       current_statement__ = 207;
@@ -3469,6 +3699,10 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable td_3d_simplex");}}}}
+      current_statement__ = 208;
+      validate_non_negative_index("td_cfcov_54", "5", 5);
+      current_statement__ = 208;
+      validate_non_negative_index("td_cfcov_54", "5", 5);
       td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
       
       current_statement__ = 208;
@@ -3481,6 +3715,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable td_cfcov_54");}}
+      current_statement__ = 209;
+      validate_non_negative_index("td_cfcov_33", "3", 3);
+      current_statement__ = 209;
+      validate_non_negative_index("td_cfcov_33", "3", 3);
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 209;
@@ -3493,6 +3731,8 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable td_cfcov_33");}}
+      current_statement__ = 210;
+      validate_non_negative_index("x", "2", 2);
       x = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 210;
@@ -3500,6 +3740,8 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 210;
         assign(x, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable x");}
+      current_statement__ = 211;
+      validate_non_negative_index("y", "2", 2);
       y = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 211;
@@ -3507,12 +3749,24 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 211;
         assign(y, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable y");}
+      current_statement__ = 212;
+      validate_non_negative_index("dat", "0", 0);
       dat = std::vector<double>(0, 0);
       
+      current_statement__ = 213;
+      validate_non_negative_index("dat_int", "0", 0);
       dat_int = std::vector<int>(0, 0);
       
+      current_statement__ = 214;
+      validate_non_negative_index("x_r", "0", 0);
+      current_statement__ = 214;
+      validate_non_negative_index("x_r", "0", 0);
       x_r = std::vector<std::vector<double>>(0, std::vector<double>(0, 0));
       
+      current_statement__ = 215;
+      validate_non_negative_index("x_i", "0", 0);
+      current_statement__ = 215;
+      validate_non_negative_index("x_i", "0", 0);
       x_i = std::vector<std::vector<int>>(0, std::vector<int>(0, 0));
       
       current_statement__ = 216;
@@ -3561,6 +3815,10 @@ class mother_model : public model_base_crtp<mother_model> {
       for (size_t i = 1; i <= 4; ++i) {
         current_statement__ = 241;
         for (size_t j = 1; j <= 5; ++j) {
+          current_statement__ = 238;
+          validate_non_negative_index("l_mat", "2", 2);
+          current_statement__ = 238;
+          validate_non_negative_index("l_mat", "3", 3);
           Eigen::Matrix<double, -1, -1> l_mat;
           l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
           
@@ -3600,6 +3858,8 @@ class mother_model : public model_base_crtp<mother_model> {
         
         current_statement__ = 246;
         z = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 247;
+        validate_non_negative_index("blocked_tdata_vs", "2", 2);
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
         
@@ -3775,26 +4035,110 @@ class mother_model : public model_base_crtp<mother_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += 1;
-    num_params_r__ += 5;
-    num_params_r__ += N;
-    num_params_r__ += N * M * K;
-    num_params_r__ += N;
-    num_params_r__ += N * N;
-    num_params_r__ += N * M * K * N;
-    num_params_r__ += N;
-    num_params_r__ += N * N;
-    num_params_r__ += N * M * K * N;
-    num_params_r__ += 4 * 5 * 2 * 3;
-    num_params_r__ += (N - 1);
-    num_params_r__ += N * (N - 1);
-    num_params_r__ += N * M * K * (N - 1);
-    num_params_r__ += ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4));
-    num_params_r__ += ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
-    num_params_r__ += K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
-    num_params_r__ += 2;
-    num_params_r__ += 2;
     
+    try {
+      num_params_r__ += 1;
+      current_statement__ = 2;
+      validate_non_negative_index("offset_multiplier", "5", 5);
+      num_params_r__ += 5;
+      current_statement__ = 3;
+      validate_non_negative_index("p_real_1d_ar", "N", N);
+      num_params_r__ += N;
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "N", N);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "M", M);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "K", K);
+      num_params_r__ += N * M * K;
+      current_statement__ = 5;
+      validate_non_negative_index("p_vec", "N", N);
+      num_params_r__ += N;
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
+      num_params_r__ += N * N;
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "M", M);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "K", K);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
+      num_params_r__ += N * M * K * N;
+      current_statement__ = 8;
+      validate_non_negative_index("p_row_vec", "N", N);
+      num_params_r__ += N;
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
+      num_params_r__ += N * N;
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "M", M);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "K", K);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
+      num_params_r__ += N * M * K * N;
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "4", 4);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "5", 5);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "2", 2);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "3", 3);
+      num_params_r__ += 4 * 5 * 2 * 3;
+      current_statement__ = 12;
+      validate_positive_index("p_simplex", "N", N);
+      num_params_r__ += (N - 1);
+      current_statement__ = 13;
+      validate_non_negative_index("p_1d_simplex", "N", N);
+      current_statement__ = 13;
+      validate_positive_index("p_1d_simplex", "N", N);
+      num_params_r__ += N * (N - 1);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "N", N);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "M", M);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "K", K);
+      current_statement__ = 14;
+      validate_positive_index("p_3d_simplex", "N", N);
+      num_params_r__ += N * M * K * (N - 1);
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "5", 5);
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "4", 4);
+      num_params_r__ += ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4));
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
+      num_params_r__ += ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "K", K);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      num_params_r__ += K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
+      current_statement__ = 18;
+      validate_non_negative_index("x_p", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 19;
+      validate_non_negative_index("y_p", "2", 2);
+      num_params_r__ += 2;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -3812,6 +4156,8 @@ class mother_model : public model_base_crtp<mother_model> {
       
       current_statement__ = 1;
       p_real = in__.scalar();
+      current_statement__ = 2;
+      validate_non_negative_index("offset_multiplier", "5", 5);
       std::vector<local_scalar_t__> offset_multiplier;
       offset_multiplier = std::vector<local_scalar_t__>(5, 0);
       
@@ -3837,6 +4183,8 @@ class mother_model : public model_base_crtp<mother_model> {
             offset_multiplier_constrain(offset_multiplier[(sym1__ - 1)], 1, 2),
             "assigning variable offset_multiplier");
         }}
+      current_statement__ = 3;
+      validate_non_negative_index("p_real_1d_ar", "N", N);
       std::vector<local_scalar_t__> p_real_1d_ar;
       p_real_1d_ar = std::vector<local_scalar_t__>(N, 0);
       
@@ -3861,6 +4209,12 @@ class mother_model : public model_base_crtp<mother_model> {
             lb_constrain(p_real_1d_ar[(sym1__ - 1)], 0),
             "assigning variable p_real_1d_ar");
         }}
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "N", N);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "M", M);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, 0)));
       
@@ -3902,6 +4256,8 @@ class mother_model : public model_base_crtp<mother_model> {
                   p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0),
                 "assigning variable p_real_3d_ar");
             }}}}
+      current_statement__ = 5;
+      validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
@@ -3920,6 +4276,10 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
             lb_constrain(p_vec[(sym1__ - 1)], 0), "assigning variable p_vec");
         }}
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -3928,6 +4288,14 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 6;
         assign(p_1d_vec, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(N), "assigning variable p_1d_vec");}
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "M", M);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "K", K);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
@@ -3943,11 +4311,17 @@ class mother_model : public model_base_crtp<mother_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.vector(N), "assigning variable p_3d_vec");}}}
+      current_statement__ = 8;
+      validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       
       current_statement__ = 8;
       p_row_vec = in__.row_vector(N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       
@@ -3956,6 +4330,14 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 9;
         assign(p_1d_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(N), "assigning variable p_1d_row_vec");}
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "M", M);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "K", K);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       
@@ -3971,6 +4353,14 @@ class mother_model : public model_base_crtp<mother_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.row_vector(N), "assigning variable p_3d_row_vec");}}}
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "4", 4);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "5", 5);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "2", 2);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       
@@ -4021,6 +4411,8 @@ class mother_model : public model_base_crtp<mother_model> {
                             cons_list(index_uni(sym4__), nil_index_list())))),
                       "p_ar_mat"), 0, 1), "assigning variable p_ar_mat");
               }}}}}
+      current_statement__ = 12;
+      validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
@@ -4040,6 +4432,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_simplex, nil_index_list(),
           simplex_constrain(p_simplex_in__), "assigning variable p_simplex");
       }
+      current_statement__ = 13;
+      validate_non_negative_index("p_1d_simplex", "N", N);
+      current_statement__ = 13;
+      validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -4069,6 +4465,14 @@ class mother_model : public model_base_crtp<mother_model> {
             simplex_constrain(p_1d_simplex_in__[(sym1__ - 1)]),
             "assigning variable p_1d_simplex");
         }}
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "N", N);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "M", M);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "K", K);
+      current_statement__ = 14;
+      validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
@@ -4115,6 +4519,10 @@ class mother_model : public model_base_crtp<mother_model> {
                   p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
                 "assigning variable p_3d_simplex");
             }}}}
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "5", 5);
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       
@@ -4141,6 +4549,10 @@ class mother_model : public model_base_crtp<mother_model> {
           cholesky_factor_constrain(p_cfcov_54_in__, 5, 4),
           "assigning variable p_cfcov_54");
       }
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       
@@ -4167,6 +4579,12 @@ class mother_model : public model_base_crtp<mother_model> {
           cholesky_factor_constrain(p_cfcov_33_in__, 3, 3),
           "assigning variable p_cfcov_33");
       }
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "K", K);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       
@@ -4197,22 +4615,36 @@ class mother_model : public model_base_crtp<mother_model> {
             cholesky_factor_constrain(p_cfcov_33_ar_in__[(sym1__ - 1)], 3, 3),
             "assigning variable p_cfcov_33_ar");
         }}
+      current_statement__ = 18;
+      validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
       current_statement__ = 18;
       x_p = in__.vector(2);
+      current_statement__ = 19;
+      validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
       current_statement__ = 19;
       y_p = in__.vector(2);
+      current_statement__ = 20;
+      validate_non_negative_index("tp_real_1d_ar", "N", N);
       std::vector<local_scalar_t__> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<local_scalar_t__>(N, 0);
       
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "N", N);
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "M", M);
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<local_scalar_t__>>> tp_real_3d_ar;
       tp_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, 0)));
       
+      current_statement__ = 22;
+      validate_non_negative_index("tp_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
@@ -4222,6 +4654,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_vec");}
+      current_statement__ = 23;
+      validate_non_negative_index("tp_1d_vec", "N", N);
+      current_statement__ = 23;
+      validate_non_negative_index("tp_1d_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -4235,6 +4671,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_vec");}}
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "N", N);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "M", M);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "K", K);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
@@ -4254,6 +4698,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_vec");}}}}
+      current_statement__ = 25;
+      validate_non_negative_index("tp_row_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       
@@ -4263,6 +4709,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_row_vec");}
+      current_statement__ = 26;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
+      current_statement__ = 26;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       
@@ -4276,6 +4726,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_row_vec");}}
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "M", M);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "K", K);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       
@@ -4295,6 +4753,14 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_row_vec");}}}}
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "4", 4);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "5", 5);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "2", 2);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       
@@ -4314,6 +4780,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_ar_mat");}}}}
+      current_statement__ = 29;
+      validate_non_negative_index("tp_simplex", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       
@@ -4323,6 +4791,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_simplex");}
+      current_statement__ = 30;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
+      current_statement__ = 30;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -4336,6 +4808,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_simplex");}}
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "N", N);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "M", M);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "K", K);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       
@@ -4355,6 +4835,10 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_simplex");}}}}
+      current_statement__ = 32;
+      validate_non_negative_index("tp_cfcov_54", "5", 5);
+      current_statement__ = 32;
+      validate_non_negative_index("tp_cfcov_54", "4", 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       
@@ -4368,6 +4852,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_cfcov_54");}}
+      current_statement__ = 33;
+      validate_non_negative_index("tp_cfcov_33", "3", 3);
+      current_statement__ = 33;
+      validate_non_negative_index("tp_cfcov_33", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       
@@ -4381,6 +4869,12 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_cfcov_33");}}
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "K", K);
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       
@@ -4397,6 +4891,8 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable tp_cfcov_33_ar");}}}
+      current_statement__ = 35;
+      validate_non_negative_index("theta_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p;
       theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -4564,6 +5060,8 @@ class mother_model : public model_base_crtp<mother_model> {
         check_cholesky_factor(function__, "tp_cfcov_33_ar[sym1__]",
                               tp_cfcov_33_ar[(sym1__ - 1)]);}
       {
+        current_statement__ = 143;
+        validate_non_negative_index("tmp", "0", 0);
         Eigen::Matrix<local_scalar_t__, -1, 1> tmp;
         tmp = Eigen::Matrix<local_scalar_t__, -1, 1>(0);
         
@@ -4573,6 +5071,10 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(tmp, cons_list(index_uni(sym1__), nil_index_list()),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tmp");}
+        current_statement__ = 144;
+        validate_non_negative_index("tmp2", "0", 0);
+        current_statement__ = 144;
+        validate_non_negative_index("tmp2", "0", 0);
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tmp2;
         tmp2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, Eigen::Matrix<local_scalar_t__, -1, 1>(0));
         
@@ -4697,6 +5199,8 @@ class mother_model : public model_base_crtp<mother_model> {
       
       current_statement__ = 1;
       p_real = in__.scalar();
+      current_statement__ = 2;
+      validate_non_negative_index("offset_multiplier", "5", 5);
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, 0);
       
@@ -4713,6 +5217,8 @@ class mother_model : public model_base_crtp<mother_model> {
           cons_list(index_uni(sym1__), nil_index_list()),
           offset_multiplier_constrain(offset_multiplier[(sym1__ - 1)], 1, 2),
           "assigning variable offset_multiplier");}
+      current_statement__ = 3;
+      validate_non_negative_index("p_real_1d_ar", "N", N);
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, 0);
       
@@ -4727,6 +5233,12 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
           lb_constrain(p_real_1d_ar[(sym1__ - 1)], 0),
           "assigning variable p_real_1d_ar");}
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "N", N);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "M", M);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
@@ -4756,6 +5268,8 @@ class mother_model : public model_base_crtp<mother_model> {
               lb_constrain(
                 p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0),
               "assigning variable p_real_3d_ar");}}}
+      current_statement__ = 5;
+      validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
       
@@ -4766,6 +5280,10 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 5;
         assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
           lb_constrain(p_vec[(sym1__ - 1)], 0), "assigning variable p_vec");}
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -4774,6 +5292,14 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 6;
         assign(p_1d_vec, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(N), "assigning variable p_1d_vec");}
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "M", M);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "K", K);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -4789,11 +5315,17 @@ class mother_model : public model_base_crtp<mother_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.vector(N), "assigning variable p_3d_vec");}}}
+      current_statement__ = 8;
+      validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
       current_statement__ = 8;
       p_row_vec = in__.row_vector(N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
@@ -4802,6 +5334,14 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 9;
         assign(p_1d_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(N), "assigning variable p_1d_row_vec");}
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "M", M);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "K", K);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
@@ -4817,6 +5357,14 @@ class mother_model : public model_base_crtp<mother_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.row_vector(N), "assigning variable p_3d_row_vec");}}}
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "4", 4);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "5", 5);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "2", 2);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
@@ -4850,6 +5398,8 @@ class mother_model : public model_base_crtp<mother_model> {
                         cons_list(index_uni(sym3__),
                           cons_list(index_uni(sym4__), nil_index_list())))),
                     "p_ar_mat"), 0, 1), "assigning variable p_ar_mat");}}}}
+      current_statement__ = 12;
+      validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
       
@@ -4861,6 +5411,10 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 12;
       assign(p_simplex, nil_index_list(), simplex_constrain(p_simplex_in__),
         "assigning variable p_simplex");
+      current_statement__ = 13;
+      validate_non_negative_index("p_1d_simplex", "N", N);
+      current_statement__ = 13;
+      validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -4880,6 +5434,14 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_1d_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           simplex_constrain(p_1d_simplex_in__[(sym1__ - 1)]),
           "assigning variable p_1d_simplex");}
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "N", N);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "M", M);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "K", K);
+      current_statement__ = 14;
+      validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -4914,6 +5476,10 @@ class mother_model : public model_base_crtp<mother_model> {
               simplex_constrain(
                 p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
               "assigning variable p_3d_simplex");}}}
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "5", 5);
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
@@ -4932,6 +5498,10 @@ class mother_model : public model_base_crtp<mother_model> {
       assign(p_cfcov_54, nil_index_list(),
         cholesky_factor_constrain(p_cfcov_54_in__, 5, 4),
         "assigning variable p_cfcov_54");
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
@@ -4950,6 +5520,12 @@ class mother_model : public model_base_crtp<mother_model> {
       assign(p_cfcov_33, nil_index_list(),
         cholesky_factor_constrain(p_cfcov_33_in__, 3, 3),
         "assigning variable p_cfcov_33");
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "K", K);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -4970,22 +5546,36 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_cfcov_33_ar, cons_list(index_uni(sym1__), nil_index_list()),
           cholesky_factor_constrain(p_cfcov_33_ar_in__[(sym1__ - 1)], 3, 3),
           "assigning variable p_cfcov_33_ar");}
+      current_statement__ = 18;
+      validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 18;
       x_p = in__.vector(2);
+      current_statement__ = 19;
+      validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 19;
       y_p = in__.vector(2);
+      current_statement__ = 20;
+      validate_non_negative_index("tp_real_1d_ar", "N", N);
       std::vector<double> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<double>(N, 0);
       
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "N", N);
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "M", M);
+      current_statement__ = 21;
+      validate_non_negative_index("tp_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<double>>> tp_real_3d_ar;
       tp_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
+      current_statement__ = 22;
+      validate_non_negative_index("tp_vec", "N", N);
       Eigen::Matrix<double, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<double, -1, 1>(N);
       
@@ -4995,6 +5585,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_vec");}
+      current_statement__ = 23;
+      validate_non_negative_index("tp_1d_vec", "N", N);
+      current_statement__ = 23;
+      validate_non_negative_index("tp_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -5008,6 +5602,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_vec");}}
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "N", N);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "M", M);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "K", K);
+      current_statement__ = 24;
+      validate_non_negative_index("tp_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -5027,6 +5629,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_vec");}}}}
+      current_statement__ = 25;
+      validate_non_negative_index("tp_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
@@ -5036,6 +5640,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_row_vec");}
+      current_statement__ = 26;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
+      current_statement__ = 26;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
@@ -5049,6 +5657,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_row_vec");}}
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "M", M);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "K", K);
+      current_statement__ = 27;
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
@@ -5068,6 +5684,14 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_row_vec");}}}}
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "4", 4);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "5", 5);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "2", 2);
+      current_statement__ = 28;
+      validate_non_negative_index("tp_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
@@ -5087,6 +5711,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_ar_mat");}}}}
+      current_statement__ = 29;
+      validate_non_negative_index("tp_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<double, -1, 1>(N);
       
@@ -5096,6 +5722,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(tp_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable tp_simplex");}
+      current_statement__ = 30;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
+      current_statement__ = 30;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -5109,6 +5739,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_1d_simplex");}}
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "N", N);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "M", M);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "K", K);
+      current_statement__ = 31;
+      validate_non_negative_index("tp_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -5128,6 +5766,10 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable tp_3d_simplex");}}}}
+      current_statement__ = 32;
+      validate_non_negative_index("tp_cfcov_54", "5", 5);
+      current_statement__ = 32;
+      validate_non_negative_index("tp_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
@@ -5141,6 +5783,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_cfcov_54");}}
+      current_statement__ = 33;
+      validate_non_negative_index("tp_cfcov_33", "3", 3);
+      current_statement__ = 33;
+      validate_non_negative_index("tp_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
@@ -5154,6 +5800,12 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable tp_cfcov_33");}}
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "K", K);
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
+      current_statement__ = 34;
+      validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -5170,6 +5822,8 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable tp_cfcov_33_ar");}}}
+      current_statement__ = 35;
+      validate_non_negative_index("theta_p", "2", 2);
       Eigen::Matrix<double, -1, 1> theta_p;
       theta_p = Eigen::Matrix<double, -1, 1>(2);
       
@@ -5448,12 +6102,22 @@ class mother_model : public model_base_crtp<mother_model> {
       gq_r2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 68;
       gq_r2 = foo_bar1(J, pstream__);
+      current_statement__ = 69;
+      validate_non_negative_index("gq_real_1d_ar", "N", N);
       std::vector<double> gq_real_1d_ar;
       gq_real_1d_ar = std::vector<double>(N, 0);
       
+      current_statement__ = 70;
+      validate_non_negative_index("gq_real_3d_ar", "N", N);
+      current_statement__ = 70;
+      validate_non_negative_index("gq_real_3d_ar", "M", M);
+      current_statement__ = 70;
+      validate_non_negative_index("gq_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
       gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
+      current_statement__ = 71;
+      validate_non_negative_index("gq_vec", "N", N);
       Eigen::Matrix<double, -1, 1> gq_vec;
       gq_vec = Eigen::Matrix<double, -1, 1>(N);
       
@@ -5463,6 +6127,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(gq_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable gq_vec");}
+      current_statement__ = 72;
+      validate_non_negative_index("gq_1d_vec", "N", N);
+      current_statement__ = 72;
+      validate_non_negative_index("gq_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
       gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -5476,6 +6144,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable gq_1d_vec");}}
+      current_statement__ = 73;
+      validate_non_negative_index("gq_3d_vec", "N", N);
+      current_statement__ = 73;
+      validate_non_negative_index("gq_3d_vec", "M", M);
+      current_statement__ = 73;
+      validate_non_negative_index("gq_3d_vec", "K", K);
+      current_statement__ = 73;
+      validate_non_negative_index("gq_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
       gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -5495,6 +6171,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable gq_3d_vec");}}}}
+      current_statement__ = 74;
+      validate_non_negative_index("gq_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> gq_row_vec;
       gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
@@ -5504,6 +6182,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(gq_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable gq_row_vec");}
+      current_statement__ = 75;
+      validate_non_negative_index("gq_1d_row_vec", "N", N);
+      current_statement__ = 75;
+      validate_non_negative_index("gq_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
       gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
@@ -5517,6 +6199,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable gq_1d_row_vec");}}
+      current_statement__ = 76;
+      validate_non_negative_index("gq_3d_row_vec", "N", N);
+      current_statement__ = 76;
+      validate_non_negative_index("gq_3d_row_vec", "M", M);
+      current_statement__ = 76;
+      validate_non_negative_index("gq_3d_row_vec", "K", K);
+      current_statement__ = 76;
+      validate_non_negative_index("gq_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
       gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
@@ -5536,6 +6226,14 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable gq_3d_row_vec");}}}}
+      current_statement__ = 77;
+      validate_non_negative_index("gq_ar_mat", "4", 4);
+      current_statement__ = 77;
+      validate_non_negative_index("gq_ar_mat", "5", 5);
+      current_statement__ = 77;
+      validate_non_negative_index("gq_ar_mat", "2", 2);
+      current_statement__ = 77;
+      validate_non_negative_index("gq_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
       gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
@@ -5555,6 +6253,8 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable gq_ar_mat");}}}}
+      current_statement__ = 78;
+      validate_non_negative_index("gq_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> gq_simplex;
       gq_simplex = Eigen::Matrix<double, -1, 1>(N);
       
@@ -5564,6 +6264,10 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(gq_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable gq_simplex");}
+      current_statement__ = 79;
+      validate_non_negative_index("gq_1d_simplex", "N", N);
+      current_statement__ = 79;
+      validate_non_negative_index("gq_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
       gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -5577,6 +6281,14 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable gq_1d_simplex");}}
+      current_statement__ = 80;
+      validate_non_negative_index("gq_3d_simplex", "N", N);
+      current_statement__ = 80;
+      validate_non_negative_index("gq_3d_simplex", "M", M);
+      current_statement__ = 80;
+      validate_non_negative_index("gq_3d_simplex", "K", K);
+      current_statement__ = 80;
+      validate_non_negative_index("gq_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
       gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -5596,6 +6308,10 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym4__), nil_index_list())))),
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable gq_3d_simplex");}}}}
+      current_statement__ = 81;
+      validate_non_negative_index("gq_cfcov_54", "5", 5);
+      current_statement__ = 81;
+      validate_non_negative_index("gq_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> gq_cfcov_54;
       gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
@@ -5609,6 +6325,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable gq_cfcov_54");}}
+      current_statement__ = 82;
+      validate_non_negative_index("gq_cfcov_33", "3", 3);
+      current_statement__ = 82;
+      validate_non_negative_index("gq_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> gq_cfcov_33;
       gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
@@ -5622,6 +6342,12 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable gq_cfcov_33");}}
+      current_statement__ = 83;
+      validate_non_negative_index("gq_cfcov_33_ar", "K", K);
+      current_statement__ = 83;
+      validate_non_negative_index("gq_cfcov_33_ar", "3", 3);
+      current_statement__ = 83;
+      validate_non_negative_index("gq_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
       gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -5638,12 +6364,20 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable gq_cfcov_33_ar");}}}
+      current_statement__ = 84;
+      validate_non_negative_index("indices", "3", 3);
       std::vector<int> indices;
       indices = std::vector<int>(3, 0);
       
       current_statement__ = 84;
       indices = stan::math::array_builder<int>().add(2).add(3).add(1)
           .array();
+      current_statement__ = 85;
+      validate_non_negative_index("indexing_mat", "5", 5);
+      current_statement__ = 85;
+      validate_non_negative_index("indexing_mat", "3", 3);
+      current_statement__ = 85;
+      validate_non_negative_index("indexing_mat", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
       indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
@@ -5660,6 +6394,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable indexing_mat");}}}
+      current_statement__ = 86;
+      validate_non_negative_index("idx_res1", "3", 3);
+      current_statement__ = 86;
+      validate_non_negative_index("idx_res1", "3", 3);
+      current_statement__ = 86;
+      validate_non_negative_index("idx_res1", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
       idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
       
@@ -5676,6 +6416,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res1");}}}
+      current_statement__ = 87;
+      validate_non_negative_index("idx_res2", "5", 5);
+      current_statement__ = 87;
+      validate_non_negative_index("idx_res2", "3", 3);
+      current_statement__ = 87;
+      validate_non_negative_index("idx_res2", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res2;
       idx_res2 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
@@ -5692,6 +6438,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res2");}}}
+      current_statement__ = 88;
+      validate_non_negative_index("idx_res3", "3", 3);
+      current_statement__ = 88;
+      validate_non_negative_index("idx_res3", "3", 3);
+      current_statement__ = 88;
+      validate_non_negative_index("idx_res3", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res3;
       idx_res3 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -5708,6 +6460,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res3");}}}
+      current_statement__ = 89;
+      validate_non_negative_index("idx_res11", "3", 3);
+      current_statement__ = 89;
+      validate_non_negative_index("idx_res11", "3", 3);
+      current_statement__ = 89;
+      validate_non_negative_index("idx_res11", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
       idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
       
@@ -5724,6 +6482,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res11");}}}
+      current_statement__ = 90;
+      validate_non_negative_index("idx_res21", "5", 5);
+      current_statement__ = 90;
+      validate_non_negative_index("idx_res21", "3", 3);
+      current_statement__ = 90;
+      validate_non_negative_index("idx_res21", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
       idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       
@@ -5740,6 +6504,12 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res21");}}}
+      current_statement__ = 91;
+      validate_non_negative_index("idx_res31", "3", 3);
+      current_statement__ = 91;
+      validate_non_negative_index("idx_res31", "3", 3);
+      current_statement__ = 91;
+      validate_non_negative_index("idx_res31", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
       idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -5756,6 +6526,10 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               std::numeric_limits<double>::quiet_NaN(),
               "assigning variable idx_res31");}}}
+      current_statement__ = 92;
+      validate_non_negative_index("idx_res4", "3", 3);
+      current_statement__ = 92;
+      validate_non_negative_index("idx_res4", "4", 4);
       std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
       idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
       
@@ -5769,6 +6543,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable idx_res4");}}
+      current_statement__ = 93;
+      validate_non_negative_index("idx_res5", "2", 2);
+      current_statement__ = 93;
+      validate_non_negative_index("idx_res5", "2", 2);
       std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
       idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
       
@@ -6234,6 +7012,8 @@ class mother_model : public model_base_crtp<mother_model> {
       pos__ = 1;
       current_statement__ = 1;
       p_real = context__.vals_r("p_real")[(pos__ - 1)];
+      current_statement__ = 2;
+      validate_non_negative_index("offset_multiplier", "5", 5);
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, 0);
       
@@ -6255,6 +7035,8 @@ class mother_model : public model_base_crtp<mother_model> {
           cons_list(index_uni(sym1__), nil_index_list()),
           offset_multiplier_free(offset_multiplier[(sym1__ - 1)], 1, 2),
           "assigning variable offset_multiplier");}
+      current_statement__ = 3;
+      validate_non_negative_index("p_real_1d_ar", "N", N);
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, 0);
       
@@ -6274,6 +7056,12 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
           lb_free(p_real_1d_ar[(sym1__ - 1)], 0),
           "assigning variable p_real_1d_ar");}
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "N", N);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "M", M);
+      current_statement__ = 4;
+      validate_non_negative_index("p_real_3d_ar", "K", K);
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
@@ -6307,6 +7095,8 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               lb_free(p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
                 0), "assigning variable p_real_3d_ar");}}}
+      current_statement__ = 5;
+      validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
       
@@ -6324,6 +7114,10 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 5;
         assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
           lb_free(p_vec[(sym1__ - 1)], 0), "assigning variable p_vec");}
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
+      current_statement__ = 6;
+      validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -6341,6 +7135,14 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable p_1d_vec");
           current_statement__ = 6;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "M", M);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "K", K);
+      current_statement__ = 7;
+      validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -6364,6 +7166,8 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable p_3d_vec");
               current_statement__ = 7;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 8;
+      validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
@@ -6377,6 +7181,10 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable p_row_vec");
         current_statement__ = 8;
         pos__ = (pos__ + 1);}
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
+      current_statement__ = 9;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
@@ -6394,6 +7202,14 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable p_1d_row_vec");
           current_statement__ = 9;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "M", M);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "K", K);
+      current_statement__ = 10;
+      validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
@@ -6417,6 +7233,14 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable p_3d_row_vec");
               current_statement__ = 10;
               pos__ = (pos__ + 1);}}}}
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "4", 4);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "5", 5);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "2", 2);
+      current_statement__ = 11;
+      validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
@@ -6461,6 +7285,8 @@ class mother_model : public model_base_crtp<mother_model> {
                         cons_list(index_uni(sym3__),
                           cons_list(index_uni(sym4__), nil_index_list())))),
                     "p_ar_mat"), 0, 1), "assigning variable p_ar_mat");}}}}
+      current_statement__ = 12;
+      validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
       
@@ -6477,6 +7303,10 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 12;
       assign(p_simplex, nil_index_list(), simplex_free(p_simplex),
         "assigning variable p_simplex");
+      current_statement__ = 13;
+      validate_non_negative_index("p_1d_simplex", "N", N);
+      current_statement__ = 13;
+      validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
@@ -6500,6 +7330,14 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_1d_simplex, cons_list(index_uni(sym1__), nil_index_list()),
           simplex_free(p_1d_simplex[(sym1__ - 1)]),
           "assigning variable p_1d_simplex");}
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "N", N);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "M", M);
+      current_statement__ = 14;
+      validate_non_negative_index("p_3d_simplex", "K", K);
+      current_statement__ = 14;
+      validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
@@ -6537,6 +7375,10 @@ class mother_model : public model_base_crtp<mother_model> {
               simplex_free(
                 p_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
               "assigning variable p_3d_simplex");}}}
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "5", 5);
+      current_statement__ = 15;
+      validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
@@ -6557,6 +7399,10 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 15;
       assign(p_cfcov_54, nil_index_list(), cholesky_factor_free(p_cfcov_54),
         "assigning variable p_cfcov_54");
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
+      current_statement__ = 16;
+      validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
@@ -6577,6 +7423,12 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 16;
       assign(p_cfcov_33, nil_index_list(), cholesky_factor_free(p_cfcov_33),
         "assigning variable p_cfcov_33");
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "K", K);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      current_statement__ = 17;
+      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
@@ -6603,6 +7455,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_cfcov_33_ar, cons_list(index_uni(sym1__), nil_index_list()),
           cholesky_factor_free(p_cfcov_33_ar[(sym1__ - 1)]),
           "assigning variable p_cfcov_33_ar");}
+      current_statement__ = 18;
+      validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
       
@@ -6615,6 +7469,8 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.vals_r("x_p")[(pos__ - 1)], "assigning variable x_p");
         current_statement__ = 18;
         pos__ = (pos__ + 1);}
+      current_statement__ = 19;
+      validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
       
@@ -8231,6 +9087,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
 
 using std::istream;
 using std::string;
@@ -8394,6 +9281,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) propto__;
   
   try {
+    current_statement__ = 112;
+    validate_non_negative_index("dydt", "2", 2);
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, 0);
     
@@ -8541,6 +9430,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) propto__;
   
   try {
+    current_statement__ = 123;
+    validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     
@@ -8620,6 +9511,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       pos__ = 1;
       current_statement__ = 99;
       T = context__.vals_i("T")[(pos__ - 1)];
+      current_statement__ = 100;
+      validate_non_negative_index("y0_d", "2", 2);
       context__.validate_dims("data initialization","y0_d","double",
           context__.to_vec(2));
       y0_d = std::vector<double>(2, 0);
@@ -8640,6 +9533,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       pos__ = 1;
       current_statement__ = 101;
       t0 = context__.vals_r("t0")[(pos__ - 1)];
+      current_statement__ = 102;
+      validate_non_negative_index("ts", "T", T);
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(T));
       ts = std::vector<double>(T, 0);
@@ -8653,6 +9548,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("ts")[(pos__ - 1)], "assigning variable ts");
         current_statement__ = 102;
         pos__ = (pos__ + 1);}
+      current_statement__ = 103;
+      validate_non_negative_index("theta_d", "1", 1);
       context__.validate_dims("data initialization","theta_d","double",
           context__.to_vec(1));
       theta_d = std::vector<double>(1, 0);
@@ -8667,6 +9564,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable theta_d");
         current_statement__ = 103;
         pos__ = (pos__ + 1);}
+      current_statement__ = 104;
+      validate_non_negative_index("x", "0", 0);
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(0));
       x = std::vector<double>(0, 0);
@@ -8680,6 +9579,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("x")[(pos__ - 1)], "assigning variable x");
         current_statement__ = 104;
         pos__ = (pos__ + 1);}
+      current_statement__ = 105;
+      validate_non_negative_index("x_int", "0", 0);
       context__.validate_dims("data initialization","x_int","int",
           context__.to_vec(0));
       x_int = std::vector<int>(0, 0);
@@ -8693,6 +9594,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_i("x_int")[(pos__ - 1)], "assigning variable x_int");
         current_statement__ = 105;
         pos__ = (pos__ + 1);}
+      current_statement__ = 106;
+      validate_non_negative_index("x_d_r", "0", 0);
       context__.validate_dims("data initialization","x_d_r","double",
           context__.to_vec(0));
       x_d_r = std::vector<double>(0, 0);
@@ -8706,6 +9609,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("x_d_r")[(pos__ - 1)], "assigning variable x_d_r");
         current_statement__ = 106;
         pos__ = (pos__ + 1);}
+      current_statement__ = 107;
+      validate_non_negative_index("x_d_i", "0", 0);
       context__.validate_dims("data initialization","x_d_i","int",
           context__.to_vec(0));
       x_d_i = std::vector<int>(0, 0);
@@ -8719,6 +9624,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_i("x_d_i")[(pos__ - 1)], "assigning variable x_d_i");
         current_statement__ = 107;
         pos__ = (pos__ + 1);}
+      current_statement__ = 108;
+      validate_non_negative_index("shared_params_d", "3", 3);
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
       shared_params_d = Eigen::Matrix<double, -1, 1>(3);
@@ -8734,6 +9641,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable shared_params_d");
         current_statement__ = 108;
         pos__ = (pos__ + 1);}
+      current_statement__ = 109;
+      validate_non_negative_index("job_params_d", "3", 3);
+      current_statement__ = 109;
+      validate_non_negative_index("job_params_d", "3", 3);
       context__.validate_dims("data initialization","job_params_d","double",
           context__.to_vec(3, 3));
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
@@ -8752,6 +9663,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
             "assigning variable job_params_d");
           current_statement__ = 109;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 110;
+      validate_non_negative_index("data_r", "3", 3);
+      current_statement__ = 110;
+      validate_non_negative_index("data_r", "3", 3);
       context__.validate_dims("data initialization","data_r","double",
           context__.to_vec(3, 3));
       data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, 0));
@@ -8770,6 +9685,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
             "assigning variable data_r");
           current_statement__ = 110;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 111;
+      validate_non_negative_index("data_i", "3", 3);
+      current_statement__ = 111;
+      validate_non_negative_index("data_i", "3", 3);
       context__.validate_dims("data initialization","data_i","int",
           context__.to_vec(3, 3));
       data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
@@ -8797,14 +9716,34 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += 2;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += 2;
-    num_params_r__ += 3;
-    num_params_r__ += 3 * 3;
-    num_params_r__ += 1;
     
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
+      num_params_r__ += 1;
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
+      num_params_r__ += 1;
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
+      num_params_r__ += 3;
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      num_params_r__ += 3 * 3;
+      num_params_r__ += 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -8818,6 +9757,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
       std::vector<local_scalar_t__> y0_p;
       y0_p = std::vector<local_scalar_t__>(2, 0);
       
@@ -8826,6 +9767,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 1;
         assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable y0_p");}
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
       std::vector<local_scalar_t__> theta_p;
       theta_p = std::vector<local_scalar_t__>(1, 0);
       
@@ -8834,6 +9777,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 2;
         assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable theta_p");}
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
       std::vector<local_scalar_t__> x_p;
       x_p = std::vector<local_scalar_t__>(1, 0);
       
@@ -8842,16 +9787,24 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 3;
         assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable x_p");}
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
       current_statement__ = 4;
       x_p_v = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
       current_statement__ = 5;
       shared_params_p = in__.vector(3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
       
@@ -8882,6 +9835,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       abc3_p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 10;
       abc3_p = map_rectfake(12, pstream__);
+      current_statement__ = 11;
+      validate_non_negative_index("y_hat_tp1", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
@@ -8895,6 +9850,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp1, nil_index_list(),
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
+      current_statement__ = 12;
+      validate_non_negative_index("y_hat_tp2", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
@@ -8908,6 +9865,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp2, nil_index_list(),
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
+      current_statement__ = 13;
+      validate_non_negative_index("y_hat_tp3", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       
@@ -8921,6 +9880,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp3, nil_index_list(),
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
+      current_statement__ = 14;
+      validate_non_negative_index("theta_p_as", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p_as;
       theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -8930,6 +9891,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable theta_p_as");}
+      current_statement__ = 15;
+      validate_non_negative_index("x_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_v;
       x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -8939,6 +9902,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
       }
+      current_statement__ = 16;
+      validate_non_negative_index("y_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_v;
       y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -8948,6 +9913,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
       }
+      current_statement__ = 17;
+      validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
@@ -8986,6 +9953,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
           pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       {
+        current_statement__ = 57;
+        validate_non_negative_index("y_hat", "T", T);
+        current_statement__ = 57;
+        validate_non_negative_index("y_hat", "2", 2);
         std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, 0));
         
@@ -9170,6 +10141,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     stan::math::accumulator<double> lp_accum__;
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
       std::vector<double> y0_p;
       y0_p = std::vector<double>(2, 0);
       
@@ -9178,6 +10151,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 1;
         assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable y0_p");}
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, 0);
       
@@ -9186,6 +10161,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 2;
         assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable theta_p");}
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
       std::vector<double> x_p;
       x_p = std::vector<double>(1, 0);
       
@@ -9194,16 +10171,24 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 3;
         assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable x_p");}
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 4;
       x_p_v = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       
       current_statement__ = 5;
       shared_params_p = in__.vector(3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
@@ -9228,6 +10213,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 10;
       abc3_p = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 11;
+      validate_non_negative_index("y_hat_tp1", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<double, -1, 1>(3);
       
@@ -9237,6 +10224,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp1");}
+      current_statement__ = 12;
+      validate_non_negative_index("y_hat_tp2", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<double, -1, 1>(3);
       
@@ -9246,6 +10235,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp2");}
+      current_statement__ = 13;
+      validate_non_negative_index("y_hat_tp3", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<double, -1, 1>(3);
       
@@ -9255,6 +10246,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable y_hat_tp3");}
+      current_statement__ = 14;
+      validate_non_negative_index("theta_p_as", "2", 2);
       Eigen::Matrix<double, -1, 1> theta_p_as;
       theta_p_as = Eigen::Matrix<double, -1, 1>(2);
       
@@ -9264,6 +10257,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable theta_p_as");}
+      current_statement__ = 15;
+      validate_non_negative_index("x_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_v;
       x_v = Eigen::Matrix<double, -1, 1>(2);
       
@@ -9273,6 +10268,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
       }
+      current_statement__ = 16;
+      validate_non_negative_index("y_v", "2", 2);
       Eigen::Matrix<double, -1, 1> y_v;
       y_v = Eigen::Matrix<double, -1, 1>(2);
       
@@ -9282,6 +10279,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
       }
+      current_statement__ = 17;
+      validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
       
@@ -9375,6 +10374,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
+      current_statement__ = 25;
+      validate_non_negative_index("y_hat", "T", T);
+      current_statement__ = 25;
+      validate_non_negative_index("y_hat", "2", 2);
       std::vector<std::vector<double>> y_hat;
       y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, 0));
       
@@ -9502,6 +10505,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       abc2_gq = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 55;
       abc2_gq = map_rectfake(abc1_p, pstream__);
+      current_statement__ = 56;
+      validate_non_negative_index("y_hat_gq", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
       y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
       
@@ -9542,6 +10547,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       int pos__;
       
       pos__ = 1;
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
       std::vector<double> y0_p;
       y0_p = std::vector<double>(2, 0);
       
@@ -9554,6 +10561,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("y0_p")[(pos__ - 1)], "assigning variable y0_p");
         current_statement__ = 1;
         pos__ = (pos__ + 1);}
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, 0);
       
@@ -9567,6 +10576,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable theta_p");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
       std::vector<double> x_p;
       x_p = std::vector<double>(1, 0);
       
@@ -9579,6 +10590,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("x_p")[(pos__ - 1)], "assigning variable x_p");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
       
@@ -9591,6 +10604,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.vals_r("x_p_v")[(pos__ - 1)], "assigning variable x_p_v");
         current_statement__ = 4;
         pos__ = (pos__ + 1);}
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       
@@ -9605,6 +10620,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable shared_params_p");
         current_statement__ = 5;
         pos__ = (pos__ + 1);}
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
@@ -10040,6 +11059,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
 
 using std::istream;
 using std::string;
@@ -10150,6 +11200,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
+      current_statement__ = 37;
+      validate_non_negative_index("X_d", "n", n);
+      current_statement__ = 37;
+      validate_non_negative_index("X_d", "k", k);
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
@@ -10167,6 +11221,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 38;
+      validate_non_negative_index("y_v_d", "n", n);
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
@@ -10180,6 +11236,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
+      current_statement__ = 39;
+      validate_non_negative_index("X_rv_d", "n", n);
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
@@ -10194,6 +11252,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
+      current_statement__ = 40;
+      validate_non_negative_index("y_vi_d", "n", n);
       context__.validate_dims("data initialization","y_vi_d","int",
           context__.to_vec(n));
       y_vi_d = std::vector<int>(n, 0);
@@ -10208,6 +11268,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
+      current_statement__ = 41;
+      validate_non_negative_index("y2_vi_d", "n", n);
       context__.validate_dims("data initialization","y2_vi_d","int",
           context__.to_vec(n));
       y2_vi_d = std::vector<int>(n, 0);
@@ -10241,16 +11303,38 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += k;
-    num_params_r__ += k;
-    num_params_r__ += k;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += n * k;
-    num_params_r__ += n * k;
-    num_params_r__ += n;
     
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
+      num_params_r__ += k;
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
+      num_params_r__ += k;
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
+      num_params_r__ += k;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
+      num_params_r__ += n * k;
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
+      num_params_r__ += n * k;
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
+      num_params_r__ += n;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -10264,16 +11348,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
       current_statement__ = 2;
       beta = in__.vector(k);
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
@@ -10299,16 +11389,26 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 6;
       phi = in__.scalar();
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       
@@ -10417,16 +11517,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     stan::math::accumulator<double> lp_accum__;
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
       current_statement__ = 2;
       beta = in__.vector(k);
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
@@ -10446,16 +11552,26 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 6;
       phi = in__.scalar();
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
@@ -10510,6 +11626,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       int pos__;
       
       pos__ = 1;
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
@@ -10523,6 +11641,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable alpha_v");
         current_statement__ = 1;
         pos__ = (pos__ + 1);}
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
@@ -10535,6 +11655,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
@@ -10567,6 +11689,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 6;
       phi = context__.vals_r("phi")[(pos__ - 1)];
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
@@ -10583,6 +11709,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
           current_statement__ = 7;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
@@ -10600,6 +11730,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             "assigning variable beta_m");
           current_statement__ = 8;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
