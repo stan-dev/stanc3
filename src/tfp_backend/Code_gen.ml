@@ -96,7 +96,11 @@ let pp_init ppf p =
   let pp_save_data ppf (name, st) =
     pf ppf "self.%s = %a" name (pp_cast "") (name, st)
   in
-  let ppbody ppf = (list ~sep:cut pp_save_data) ppf p.Program.input_vars in
+  let ppbody ppf =
+    if not (List.is_empty p.Program.input_vars) then
+      (list ~sep:cut pp_save_data) ppf p.Program.input_vars
+    else pf ppf "pass;"
+  in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
 let pp_extract_data ppf p =
