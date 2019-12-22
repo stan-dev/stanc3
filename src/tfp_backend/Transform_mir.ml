@@ -11,7 +11,8 @@ let remove_stan_dist_suffix s =
   |> List.hd_exn
 
 let capitalize_fnames =
-  String.Set.of_list ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"]
+  String.Set.of_list
+    ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"; "beta"]
 
 let map_functions fname args =
   match fname with
@@ -22,6 +23,29 @@ let map_functions fname args =
   | "chi_square" -> ("Chi2", args)
   | "inv_gamma" -> ("InverseGamma", args)
   | "lkj_corr_cholesky" -> ("CholeskyLKJ", args)
+  | "binomial_logit" -> ("Binomial", args)
+  | "bernoulli_logit" -> ("Bernoulli", args)
+  | "binomial" -> (
+    match args with
+    | [y; n; p] ->
+        ( "Binomial"
+        , [ y; n
+          ; {Expr.Fixed.pattern= Var "None"; meta= Expr.Typed.Meta.empty}
+          ; p ] )
+    | _ ->
+        raise_s
+          [%message
+            " Binomial argument should contain exactly three elements."] )
+  | "bernoulli" -> (
+    match args with
+    | [y; p] ->
+        ( "Bernoulli"
+        , [y; {Expr.Fixed.pattern= Var "None"; meta= Expr.Typed.Meta.empty}; p]
+        )
+    | _ ->
+        raise_s
+          [%message " Binomial argument should contain exactly two elements."]
+    )
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)

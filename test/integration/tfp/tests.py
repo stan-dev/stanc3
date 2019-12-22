@@ -8,6 +8,13 @@ from test_unbounded_cont import test_unbounded_cont_model
 import test_unbounded_cont_data
 import test_unbounded_cont_fit 
 
+from test_binary import test_binary_model
+import test_binary_data
+import test_binary_fit 
+
+from test_cont_01 import test_cont_01_model
+import test_cont_01_fit 
+
 from test_positive_cont import test_positive_cont_model
 import test_positive_cont_data
 import test_positive_cont_fit
@@ -55,6 +62,16 @@ class TestModels(unittest.TestCase):
     def test_unbounded_cont(self):
         target_dist = test_unbounded_cont_model(**test_unbounded_cont_data.data)
         stan_fit = test_unbounded_cont_fit.data
+        self._compare_lp(target_dist, stan_fit)
+
+    def test_binary(self):
+        target_dist = test_binary_model(**test_binary_data.data)
+        stan_fit = test_binary_fit.data
+        self._compare_lp(target_dist, stan_fit)
+
+    def test_binary(self):
+        target_dist = test_cont_01_model()
+        stan_fit = test_binary_fit.data
         self._compare_lp(target_dist, stan_fit)
 
     def test_positive_cont(self):
