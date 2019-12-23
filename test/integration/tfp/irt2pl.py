@@ -69,14 +69,13 @@ class irt_2pl_model(tfd__.Distribution):
     I = self.I
     J = self.J
     y = self.y
-    return [tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
-                         tfb__.Exp()]), tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
-                         tfb__.Exp()]),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
-                         tfb__.Exp()]), tfb__.Identity(),
-            tfb__.Chain([tfb__.AffineScalar(tf__.cast(0, dtype__)),
-                         tfb__.Exp()]), tfb__.Identity()]
+    return [tfb__.Chain([tfb__.Shift(tf__.cast(0, dtype__)), tfb__.Exp()]),
+            tfb__.Identity(),
+            tfb__.Chain([tfb__.Shift(tf__.cast(0, dtype__)), tfb__.Exp()]),
+            tfb__.Chain([tfb__.Shift(tf__.cast(0, dtype__)), tfb__.Exp()]),
+            tfb__.Identity(),
+            tfb__.Chain([tfb__.Shift(tf__.cast(0, dtype__)), tfb__.Exp()]),
+            tfb__.Identity()]
      
   @staticmethod
   def parameter_names():

@@ -10,14 +10,19 @@ let remove_stan_dist_suffix s =
     ~f:(fun suffix -> String.chop_suffix ~suffix s)
   |> List.hd_exn
 
-let capitalize_fnames = String.Set.of_list ["normal"; "cauchy"]
-let none = {Expr.Helpers.zero with Expr.Fixed.pattern= Var "None"}
+let capitalize_fnames =
+  String.Set.of_list ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"]
 
 let map_functions fname args =
   match fname with
   | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
-  | "lognormal" -> ("LogNormal", args)
   | "bernoulli_logit" -> ("Bernoulli", args)
+  | "student_t" -> ("StudentT", args)
+  | "double_exponential" -> ("Laplace", args)
+  | "lognormal" -> ("LogNormal", args)
+  | "chi_square" -> ("Chi2", args)
+  | "inv_gamma" -> ("InverseGamma", args)
+  | "lkj_corr_cholesky" -> ("CholeskyLKJ", args)
   | f when f = Operator.to_string Less -> ("tf__.less", args)
   | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
@@ -41,7 +46,7 @@ let translate_funapps e =
 
 let%expect_test "nested dist prefixes translated" =
   let open Expr.Fixed.Pattern in
-  let e pattern = {Expr.Fixed.pattern; meta= ()} in
+  let e pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   let f =
     FunApp
       ( Fun_kind.StanLib
@@ -49,13 +54,14 @@ let%expect_test "nested dist prefixes translated" =
       , [FunApp (Fun_kind.StanLib, "normal_lpdf", []) |> e] )
     |> e |> translate_funapps
   in
-  print_s [%sexp (f : unit Expr.Fixed.t)] ;
+  print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
     {|
     ((pattern
       (FunApp StanLib tfd__.Normal
-       (((pattern (FunApp StanLib tfd__.Normal ())) (meta ())))))
-     (meta ())) |}]
+       (((pattern (FunApp StanLib tfd__.Normal ()))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))) |}]
 
 let minus_one e =
   { e with

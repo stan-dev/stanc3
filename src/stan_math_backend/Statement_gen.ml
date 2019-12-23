@@ -128,12 +128,12 @@ let rec pp_statement (ppf : Format.formatter)
             rhs
         | _ -> maybe_deep_copy rhs
       in
-      pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
+      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %a,@ %S@]);" assignee pp_indexes idcs
         pp_expr rhs
         (strf "assigning variable %s"
            assignee
            (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *))
-  | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
+  | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnPrint ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
@@ -160,7 +160,7 @@ let rec pp_statement (ppf : Format.formatter)
         ; meta= stmt.meta }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
-      pf ppf "vars__.push_back(@[<hov>%a@]);" pp_expr var
+      pf ppf "@[<hov 2>vars__.push_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)

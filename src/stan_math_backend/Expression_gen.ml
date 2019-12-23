@@ -35,7 +35,7 @@ let is_row_vector e = Expr.Typed.type_of e = URowVector
 let pretty_print e = Fmt.to_to_string Expr.Typed.pp e
 
 let pp_call ppf (name, pp_arg, args) =
-  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
+  pf ppf "@[<hov 2>%s(@,%a)@]" name (list ~sep:comma pp_arg) args
 
 let rec stantype_prim_str = function
   | UnsizedType.UInt -> "int"
@@ -72,7 +72,9 @@ let promote_unsizedtype es =
     | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
     | _, mtype -> mtype
   in
-  List.map es ~f:Expr.Typed.type_of |> List.reduce_exn ~f:fold_type
+  List.map es ~f:Expr.Typed.type_of
+  |> List.reduce ~f:fold_type
+  |> Option.value ~default:UReal
 
 let%expect_test "promote_unsized" =
   let e mtype =
@@ -102,7 +104,7 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
-let user_dist_suffices = ["_lp"; "_lpdf"; "_lpmf"; "_log"]
+let user_dist_suffices = ["_lpdf"; "_lpmf"; "_log"]
 
 let ends_with_any suffices s =
   List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
@@ -111,14 +113,16 @@ let is_user_dist s =
   ends_with_any user_dist_suffices s
   && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
 
+let is_user_lp s = String.is_suffix ~suffix:"_lp" s
 let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
 
 let demangle_propto_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
   else if Utils.is_propto_distribution f then
     Utils.stdlib_distribution_name f ^ "<propto__>"
-  else if Utils.is_distribution_name f || (udf && is_user_dist f) then
-    f ^ "<false>"
+  else if
+    Utils.is_distribution_name f || (udf && (is_user_dist f || is_user_lp f))
+  then f ^ "<false>"
   else f
 
 let fn_renames =
@@ -146,17 +150,18 @@ let rec pp_index ppf = function
 
 and pp_indexes ppf = function
   | [] -> pf ppf "nil_index_list()"
-  | idx :: idxs -> pf ppf "cons_list(%a, %a)" pp_index idx pp_indexes idxs
+  | idx :: idxs ->
+      pf ppf "@[<hov 2>cons_list(@,%a,@ %a)@]" pp_index idx pp_indexes idxs
 
 and pp_logical_op ppf op lhs rhs =
-  pf ppf "(primitive_value(%a) %s primitive_value(%a))" pp_expr lhs op pp_expr
-    rhs
+  pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
+    pp_expr rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
 
 and pp_binary_f ppf f es =
-  pf ppf "%s(%a, %a)" f pp_expr (first es) pp_expr (second es)
+  pf ppf "%s(@,%a,@ %a)" f pp_expr (first es) pp_expr (second es)
 
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
@@ -169,38 +174,40 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
 
 and gen_operator_app = function
   | Operator.Plus ->
-      fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
+      fun ppf es -> pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
   | PMinus ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
+          (if is_scalar (List.hd_exn es) then "-%a" else "minus(@,%a)")
           es
   | PPlus -> fun ppf es -> pp_unary ppf "%a" es
   | Transpose ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "%a" else "transpose(%a)")
+          (if is_scalar (List.hd_exn es) then "%a" else "transpose(@,%a)")
           es
-  | PNot -> fun ppf es -> pp_unary ppf "logical_negation(%a)" es
+  | PNot -> fun ppf es -> pp_unary ppf "logical_negation(@,%a)" es
   | Minus ->
-      fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
+      fun ppf es -> pp_scalar_binary ppf "(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
   | Times ->
-      fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es
+      fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "multiply(@,%a,@ %a)" es
   | Divide ->
       fun ppf es ->
         if
           is_matrix (second es)
           && (is_matrix (first es) || is_row_vector (first es))
         then pp_binary_f ppf "mdivide_right" es
-        else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es
+        else pp_scalar_binary ppf "(%a@ /@ %a)" "divide(@,%a,@ %a)" es
   | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
   | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
   | And | Or ->
       raise_s [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
-      fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es
+      fun ppf es ->
+        pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
   | EltDivide ->
-      fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
+      fun ppf es ->
+        pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
   | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
   | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
   | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
@@ -211,9 +218,11 @@ and gen_operator_app = function
 
 and gen_misc_special_math_app f =
   match f with
-  | "lmultiply" -> Some (fun ppf es -> pp_binary ppf "multiply_log(%a, %a)" es)
+  | "lmultiply" ->
+      Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
   | "lchoose" ->
-      Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
+      Some
+        (fun ppf es -> pp_binary ppf "binomial_coefficient_log(@,%a,@ %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "max" | "min" ->
@@ -275,6 +284,8 @@ and gen_fun_app ppf fname es =
       match (is_hof_call, fname, converted_es @ extra) with
       | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
+      | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
+          (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
       | ( true
         , "integrate_ode_bdf"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
@@ -299,22 +310,22 @@ and gen_fun_app ppf fname es =
     ; gen_misc_special_math_app fname ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
-  pp ppf es
+  pf ppf "@[<hov 2>%a@]" pp es
 
 and pp_constrain_funapp constrain_or_un_str ppf = function
   | var :: {Expr.Fixed.pattern= Lit (Str, constraint_flavor); _} :: args ->
-      pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
+      pf ppf "@[<hov 2>%s_%s(@,%a@])" constraint_flavor constrain_or_un_str
         (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, es) =
   let extra_args =
     suffix_args f
-    @ (if is_user_dist f then ["lp__"; "lp_accum__"] else [])
+    @ (if is_user_lp f then ["lp__"; "lp_accum__"] else [])
     @ ["pstream__"]
   in
   let sep = if List.is_empty es then "" else ", " in
-  pf ppf "%s(@[<hov>%a%s@])"
+  pf ppf "@[<hov 2>%s(@,%a%s)@]"
     (demangle_propto_name true f)
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
@@ -345,12 +356,13 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadParam -> (
     match es with
     | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
-        pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
+        pf ppf "@[<hov 2>in__.%s(@,%a)@]" base_type (list ~sep:comma pp_expr)
+          dims
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
+  pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -391,7 +403,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
           pp_expr e
       in
-      let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
+      let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e

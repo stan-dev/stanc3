@@ -125,9 +125,10 @@ let pp_template_decorator ppf = function
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
+  let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
-  let extra = if is_dist then ["lp__"; "lp_accum__"] else [] in
+  let extra = if is_lp then ["lp__"; "lp_accum__"] else [] in
   let prefix_extra_templates, prefix_extra_args =
     if is_rng then (["RNG"], ["base_rng__"]) else ([], [])
   in
@@ -139,7 +140,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     let text = pf ppf "%s@;" in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
-    if not is_dist then (
+    if not (is_dist || is_lp) then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
     let blocked_fdbody =
@@ -152,7 +153,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
     pf ppf "@ "
   in
   let templates =
-    (if is_dist then ["bool propto__"] else [])
+    (if is_dist || is_lp then ["bool propto__"] else [])
     @ List.(
         map ~f:typename
           (prefix_extra_templates @ argtypetemplates @ extra_templates))
@@ -267,7 +268,8 @@ let pp_model_private ppf {Program.prepare_data; _} =
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>%s %a const " rt pp_call_str (name, params) ;
+  pf ppf "@[<v 2>%s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
+    params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;

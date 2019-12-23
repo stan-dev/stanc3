@@ -163,7 +163,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 37;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           current_statement__ = 37;
-          assign(X_d, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
+          assign(X_d,
+            cons_list(index_uni(sym2__),
+              cons_list(index_uni(sym1__), nil_index_list())),
+            context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
       context__.validate_dims("data initialization","y_v_d","double",
@@ -175,7 +178,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 38;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 38;
-        assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
+        assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","X_rv_d","double",
@@ -187,7 +191,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 39;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 39;
-        assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_d")[(pos__ - 1)], "assigning variable X_rv_d");
+        assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("X_rv_d")[(pos__ - 1)],
+          "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","y_vi_d","int",
@@ -199,7 +205,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 40;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 40;
-        assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y_vi_d")[(pos__ - 1)], "assigning variable y_vi_d");
+        assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_i("y_vi_d")[(pos__ - 1)],
+          "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","y2_vi_d","int",
@@ -211,7 +219,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 41;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 41;
-        assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_i("y2_vi_d")[(pos__ - 1)], "assigning variable y2_vi_d");
+        assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_i("y2_vi_d")[(pos__ - 1)],
+          "assigning variable y2_vi_d");
         current_statement__ = 41;
         pos__ = (pos__ + 1);}
       context__.validate_dims("data initialization","y_s_d","int",
@@ -316,86 +326,87 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       X_rv_p = in__.row_vector(n);
       {
         current_statement__ = 10;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                                                 X_d_opencl__, alpha, beta,
-                                                 sigma));
+        lp_accum__.add(
+          normal_id_glm_lpdf<false>(y_v_d_opencl__, X_d_opencl__, alpha,
+            beta, sigma));
         current_statement__ = 11;
-        lp_accum__.add(normal_id_glm_lpdf<false>(y_v_d, X_p, alpha, beta,
-                                                 sigma));
+        lp_accum__.add(
+          normal_id_glm_lpdf<false>(y_v_d, X_p, alpha, beta, sigma));
         current_statement__ = 12;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d_opencl__,
-                                                       X_d_opencl__, alpha,
-                                                       beta));
+        lp_accum__.add(
+          bernoulli_logit_glm_lpmf<false>(y_vi_d_opencl__, X_d_opencl__,
+            alpha, beta));
         current_statement__ = 13;
-        lp_accum__.add(bernoulli_logit_glm_lpmf<false>(y_vi_d, X_p, alpha,
-                                                       beta));
+        lp_accum__.add(
+          bernoulli_logit_glm_lpmf<false>(y_vi_d, X_p, alpha, beta));
         current_statement__ = 14;
-        lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d_opencl__,
-                                                   X_d_opencl__, alpha, beta));
+        lp_accum__.add(
+          poisson_log_glm_lpmf<false>(y_vi_d_opencl__, X_d_opencl__, alpha,
+            beta));
         current_statement__ = 15;
         lp_accum__.add(poisson_log_glm_lpmf<false>(y_vi_d, X_p, alpha, beta));
         current_statement__ = 16;
-        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d_opencl__,
-                                                          X_d_opencl__,
-                                                          alpha, beta, phi));
+        lp_accum__.add(
+          neg_binomial_2_log_glm_lpmf<false>(y_vi_d_opencl__, X_d_opencl__,
+            alpha, beta, phi));
         current_statement__ = 17;
-        lp_accum__.add(neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_p, alpha,
-                                                          beta, phi));
+        lp_accum__.add(
+          neg_binomial_2_log_glm_lpmf<false>(y_vi_d, X_p, alpha, beta, phi));
         current_statement__ = 18;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d_opencl__,
-                                                        X_d_opencl__, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_s_d_opencl__, X_d_opencl__,
+            beta, cuts));
         current_statement__ = 19;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_p, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_s_d, X_p, beta, cuts));
         current_statement__ = 20;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_d, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_d, beta, cuts));
         current_statement__ = 21;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_p, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_s_d, X_rv_p, beta, cuts));
         current_statement__ = 22;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d_opencl__,
-                                                        X_d_opencl__, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_vi_d_opencl__, X_d_opencl__,
+            beta, cuts));
         current_statement__ = 23;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_p, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_vi_d, X_p, beta, cuts));
         current_statement__ = 24;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_d, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_d, beta, cuts));
         current_statement__ = 25;
-        lp_accum__.add(ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_p, beta,
-                                                        cuts));
+        lp_accum__.add(
+          ordered_logistic_glm_lpmf<false>(y_vi_d, X_rv_p, beta, cuts));
         current_statement__ = 26;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d_opencl__,
-                                                         X_d_opencl__,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_s_d_opencl__, X_d_opencl__,
+            alpha_v, beta_m));
         current_statement__ = 27;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_p, alpha_v,
-                                                         beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_s_d, X_p, alpha_v, beta_m));
         current_statement__ = 28;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_d,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_s_d, X_rv_d, alpha_v, beta_m));
         current_statement__ = 29;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_s_d, X_rv_p,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_s_d, X_rv_p, alpha_v, beta_m));
         current_statement__ = 30;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d_opencl__,
-                                                         X_d_opencl__,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_vi_d_opencl__, X_d_opencl__,
+            alpha_v, beta_m));
         current_statement__ = 31;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_p,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_vi_d, X_p, alpha_v, beta_m));
         current_statement__ = 32;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_d,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_d, alpha_v, beta_m));
         current_statement__ = 33;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y_vi_d, X_rv_p, alpha_v, beta_m));
         current_statement__ = 34;
-        lp_accum__.add(categorical_logit_glm_lpmf<false>(y2_vi_d, X_rv_p,
-                                                         alpha_v, beta_m));
+        lp_accum__.add(
+          categorical_logit_glm_lpmf<false>(y2_vi_d, X_rv_p, alpha_v, beta_m));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -480,15 +491,21 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       vars__.push_back(phi);
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
-        }}
+          vars__.push_back(
+            rvalue(X_p,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())), "X_p"));}}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
-        }}
+          vars__.push_back(
+            rvalue(beta_m,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));}
+      }
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
-      if (logical_negation((primitive_value(emit_transformed_parameters__) || primitive_value(emit_generated_quantities__)))) {
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
       if (logical_negation(emit_generated_quantities__)) {
@@ -520,7 +537,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 1;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
-        assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("alpha_v")[(pos__ - 1)], "assigning variable alpha_v");
+        assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("alpha_v")[(pos__ - 1)],
+          "assigning variable alpha_v");
         current_statement__ = 1;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> beta;
@@ -531,7 +550,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
-        assign(beta, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
+        assign(beta, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
       Eigen::Matrix<double, -1, 1> cuts;
@@ -542,7 +562,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
-        assign(cuts, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
+        assign(cuts, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
       double sigma;
@@ -575,7 +596,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 7;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           current_statement__ = 7;
-          assign(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
+          assign(X_p,
+            cons_list(index_uni(sym2__),
+              cons_list(index_uni(sym1__), nil_index_list())),
+            context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
           current_statement__ = 7;
           pos__ = (pos__ + 1);}}
       Eigen::Matrix<double, -1, -1> beta_m;
@@ -588,7 +612,11 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 8;
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
           current_statement__ = 8;
-          assign(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), context__.vals_r("beta_m")[(pos__ - 1)], "assigning variable beta_m");
+          assign(beta_m,
+            cons_list(index_uni(sym2__),
+              cons_list(index_uni(sym1__), nil_index_list())),
+            context__.vals_r("beta_m")[(pos__ - 1)],
+            "assigning variable beta_m");
           current_statement__ = 8;
           pos__ = (pos__ + 1);}}
       Eigen::Matrix<double, 1, -1> X_rv_p;
@@ -599,7 +627,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 9;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 9;
-        assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("X_rv_p")[(pos__ - 1)], "assigning variable X_rv_p");
+        assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()),
+          context__.vals_r("X_rv_p")[(pos__ - 1)],
+          "assigning variable X_rv_p");
         current_statement__ = 9;
         pos__ = (pos__ + 1);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -613,12 +643,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       vars__.push_back(phi);
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.push_back(rvalue(X_p, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "X_p"));
-        }}
+          vars__.push_back(
+            rvalue(X_p,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())), "X_p"));}}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.push_back(rvalue(beta_m, cons_list(index_uni(sym2__), cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));
-        }}
+          vars__.push_back(
+            rvalue(beta_m,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())), "beta_m"));}
+      }
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {

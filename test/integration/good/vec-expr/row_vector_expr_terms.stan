@@ -17,6 +17,7 @@ data {
 }
 transformed data {
   vector[3] td_v1 = [ 21, 22, 23]';
+  row_vector[0] td_v0 = [ ];
   row_vector[2] td_rv1 = [ 1, 2];
   td_rv1 = [ x, y];
   td_rv1 = [ x + y, x - y];
@@ -29,6 +30,7 @@ parameters {
 }
 transformed parameters {
   vector[3] tp_v1 = [ 41, 42, 43]';
+  row_vector[0] tp_v0 = [ ];
   row_vector[2] tp_rv1 = [ 1, x];
   tp_v1 = foo(1);
   tp_v1 = [ 51, y, z]';
@@ -40,6 +42,7 @@ model {
 }
 generated quantities {
   vector[3] gq_v1 = [1, x, y]';
+  row_vector[0] gq_rv0 = [ ];
   row_vector[3] gq_rv1 = [1, x, y];
   row_vector[3] gq_rv2 = [1, x, z];
   gq_v1 = foo(1);

@@ -373,7 +373,7 @@ common_expression:
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
-  | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
+  | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
     {  grammar_logger "fun_app" ; FunApp ((), id, args) }

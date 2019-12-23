@@ -1661,20 +1661,6 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 27 to column 44, parsing
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
 
 
-  $ ../../../../install/default/bin/stanc matrix_expr_bad5.stan
-
-Syntax error in 'matrix_expr_bad5.stan', line 2, column 27 to column 28, parsing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    matrix[3,2] td_mat32 = [ [ ] ];
-                                     ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Comma separated list of expressions followed by "]" expected after "[".
-
-
   $ ../../../../install/default/bin/stanc multi_fun.stan
 
 Semantic error in 'multi_fun.stan', line 5, column 7 to column 10:
@@ -2371,20 +2357,6 @@ Semantic error in 'row_vector_expr_bad2.stan', line 5, column 20 to column 28:
    -------------------------------------------------
 
 Row_vector expression must have all int and real entries or all row_vector entries.
-
-  $ ../../../../install/default/bin/stanc row_vector_expr_bad3.stan
-
-Syntax error in 'row_vector_expr_bad3.stan', line 2, column 20 to column 21, parsing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    row_vector[2] X = [ ];
-                              ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Comma separated list of expressions followed by "]" expected after "[".
-
 
   $ ../../../../install/default/bin/stanc signature_function_known.stan
 
