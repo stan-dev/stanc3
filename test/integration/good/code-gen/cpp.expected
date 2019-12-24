@@ -4112,19 +4112,25 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_3d_simplex", "N", N);
       num_params_r__ += N * M * K * (N - 1);
       current_statement__ = 15;
-      validate_non_negative_index("p_cfcov_54", "5", 5);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
+                             "num rows (must be greater or equal to num cols)",
+                             5, 4);
       current_statement__ = 15;
       validate_non_negative_index("p_cfcov_54", "4", 4);
       num_params_r__ += ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4));
       current_statement__ = 16;
-      validate_non_negative_index("p_cfcov_33", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 16;
       validate_non_negative_index("p_cfcov_33", "3", 3);
       num_params_r__ += ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
       current_statement__ = 17;
-      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       num_params_r__ += K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
@@ -4520,7 +4526,9 @@ class mother_model : public model_base_crtp<mother_model> {
                 "assigning variable p_3d_simplex");
             }}}}
       current_statement__ = 15;
-      validate_non_negative_index("p_cfcov_54", "5", 5);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
+                             "num rows (must be greater or equal to num cols)",
+                             5, 4);
       current_statement__ = 15;
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
@@ -4550,7 +4558,9 @@ class mother_model : public model_base_crtp<mother_model> {
           "assigning variable p_cfcov_54");
       }
       current_statement__ = 16;
-      validate_non_negative_index("p_cfcov_33", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 16;
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
@@ -4582,7 +4592,9 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
       current_statement__ = 17;
-      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
@@ -5477,7 +5489,9 @@ class mother_model : public model_base_crtp<mother_model> {
                 p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
               "assigning variable p_3d_simplex");}}}
       current_statement__ = 15;
-      validate_non_negative_index("p_cfcov_54", "5", 5);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
+                             "num rows (must be greater or equal to num cols)",
+                             5, 4);
       current_statement__ = 15;
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
@@ -5499,7 +5513,9 @@ class mother_model : public model_base_crtp<mother_model> {
         cholesky_factor_constrain(p_cfcov_54_in__, 5, 4),
         "assigning variable p_cfcov_54");
       current_statement__ = 16;
-      validate_non_negative_index("p_cfcov_33", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 16;
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
@@ -5523,7 +5539,9 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
       current_statement__ = 17;
-      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
@@ -7376,7 +7394,9 @@ class mother_model : public model_base_crtp<mother_model> {
                 p_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
               "assigning variable p_3d_simplex");}}}
       current_statement__ = 15;
-      validate_non_negative_index("p_cfcov_54", "5", 5);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
+                             "num rows (must be greater or equal to num cols)",
+                             5, 4);
       current_statement__ = 15;
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
@@ -7400,7 +7420,9 @@ class mother_model : public model_base_crtp<mother_model> {
       assign(p_cfcov_54, nil_index_list(), cholesky_factor_free(p_cfcov_54),
         "assigning variable p_cfcov_54");
       current_statement__ = 16;
-      validate_non_negative_index("p_cfcov_33", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 16;
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
@@ -7426,7 +7448,9 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
       current_statement__ = 17;
-      validate_non_negative_index("p_cfcov_33_ar", "3", 3);
+      check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
+                             "num rows (must be greater or equal to num cols)",
+                             3, 3);
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;

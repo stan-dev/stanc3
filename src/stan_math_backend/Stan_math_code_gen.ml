@@ -206,30 +206,6 @@ let pp_ctor ppf p =
   in
   pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
     (list ~sep:comma string) params ;
-  let dims_check meta decl_id tr st =
-    let check fn s =
-      { Stmt.Fixed.pattern=
-          NRFunApp
-            ( CompilerInternal
-            , Internal_fun.to_string fn
-            , [ Expr.Helpers.str decl_id
-              ; Expr.Helpers.str (Fmt.strf "%a" pp_expr s)
-              ; s ] )
-      ; meta }
-    in
-    let fnvalidate =
-      match tr with
-      | Program.Simplex -> Internal_fun.FnValidateSizeSimplex
-      | UnitVector -> FnValidateSizeUnitVector
-      | _ -> FnValidateSize
-    in
-    let rec map = function
-      | [] -> []
-      | [s] -> [check fnvalidate s]
-      | s :: tl -> check FnValidateSize s :: map tl
-    in
-    SizedType.get_dims st |> map
-  in
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf (checks, dims) =
     if List.length checks > 0 then (
@@ -253,10 +229,10 @@ let pp_ctor ppf p =
           |> Option.map ~f:(fun x -> x.meta)
           |> Option.value ~default:Stmt.Numbered.Meta.empty
         in
+        let dims_check = Transform_Mir.validate_sized decl_id meta (Some tr) in
         match SizedType.get_dims st with
-        | [] ->
-            Some (dims_check meta decl_id tr cst, [Expr.Helpers.loop_bottom])
-        | ls -> Some (dims_check meta decl_id tr cst, ls) )
+        | [] -> Some (dims_check cst, [Expr.Helpers.loop_bottom])
+        | ls -> Some (dims_check cst, ls) )
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in

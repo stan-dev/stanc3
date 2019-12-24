@@ -222,6 +222,11 @@ module Numbered = struct
 end
 
 module Helpers = struct
+  let internal_nrfunapp fn args meta =
+    { Fixed.pattern=
+        NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)
+    ; meta }
+
   (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
   let mkfor upper bodyfn iteratee meta =

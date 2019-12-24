@@ -115,6 +115,7 @@ module Numbered : sig
 end
 
 module Helpers : sig
+  val internal_nrfunapp : Internal_fun.t -> 'a Fixed.First.t list -> 'b -> ('a, 'b) Fixed.t
   val contains_fn : Internal_fun.t -> ?init:bool -> ('a, 'b) Fixed.t -> bool
 
   val mkfor :
