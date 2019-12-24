@@ -296,10 +296,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 4;
       if (jacobian__) {
         current_statement__ = 4;
-        sigma = lb_constrain(sigma, 0, lp__);
+        sigma = stan::math::lb_constrain(sigma, 0, lp__);
       } else {
         current_statement__ = 4;
-        sigma = lb_constrain(sigma, 0);
+        sigma = stan::math::lb_constrain(sigma, 0);
       }
       local_scalar_t__ alpha;
       
@@ -456,7 +456,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 4;
       sigma = in__.scalar();
       current_statement__ = 4;
-      sigma = lb_constrain(sigma, 0);
+      sigma = stan::math::lb_constrain(sigma, 0);
       double alpha;
       
       current_statement__ = 5;
@@ -573,7 +573,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(pos__ - 1)];
       current_statement__ = 4;
-      sigma = lb_free(sigma, 0);
+      sigma = stan::math::lb_free(sigma, 0);
       double alpha;
       
       current_statement__ = 5;
