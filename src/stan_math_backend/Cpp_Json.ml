@@ -3,7 +3,10 @@ open Middle
 module Str = Re.Str
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
-  let emit_cpp_expr e = Fmt.strf "<< %a >>" Expression_gen.pp_expr e in
+  let emit_cpp_expr e =
+    Fmt.strf "<< %a >>" Expression_gen.pp_expr e
+    |> Str.global_replace (Str.regexp "[\n\r\t ]+") " "
+  in
   match st with
   | SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
@@ -49,9 +52,9 @@ let%expect_test "outvar to json pretty" =
 
 let replace_cpp_expr s =
   s
-  |> Str.global_replace (Str.regexp "\"") "\\\""
-  |> Str.global_replace (Str.regexp "\\\\\"<<") "\" <<"
-  |> Str.global_replace (Str.regexp ">>\\\\\"") "<< \""
+  |> Str.global_replace (Str.regexp {|"|}) {|\"|}
+  |> Str.global_replace (Str.regexp {|\\"<<|}) {|" <<|}
+  |> Str.global_replace (Str.regexp {|>>\\"|}) {|<< "|}
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
