@@ -1129,7 +1129,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
-      assign(sym65__, nil_index_list(), cov_matrix_constrain(x_cov_in__, 2),
+      assign(sym65__, nil_index_list(),
+        stan::math::cov_matrix_constrain(x_cov_in__, 2),
         "assigning variable sym65__");
       assign(x_cov, nil_index_list(), sym65__, "assigning variable x_cov");
       vars__.push_back(theta);
@@ -1501,7 +1502,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
       current_statement__ = 5;
-      assign(x_cov, nil_index_list(), cov_matrix_free(x_cov),
+      assign(x_cov, nil_index_list(), stan::math::cov_matrix_free(x_cov),
         "assigning variable x_cov");
       vars__.push_back(sym52__);
       vars__.push_back(sym51__);

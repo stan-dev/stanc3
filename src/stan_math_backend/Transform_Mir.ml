@@ -434,7 +434,7 @@ let rec add_validate_dims outvars stmts =
     List.filter_map
       ~f:(function
         | decl_id, Program.({out_block= Parameters; out_trans; _}) ->
-          Some (decl_id, out_trans)
+            Some (decl_id, out_trans)
         | _ -> None)
       outvars
     |> String.Map.of_alist_exn
