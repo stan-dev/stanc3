@@ -1,28 +1,21 @@
-from eight_schools import eight_schools_ncp_model
-import eight_schools_data
+from tfp_models.eight_schools import eight_schools_ncp_model
+from models_data import eight_schools_data, test_disc_binary_data, test_disc_bounded_data, test_disc_unbounded_data, normal_lub_data
 
-from normal_lub import normal_lub_model
-import normal_lub_data
+from tfp_models.normal_lub import normal_lub_model
 
-from test_unbounded_cont import test_unbounded_cont_model
-import test_unbounded_cont_data
-import test_unbounded_cont_fit 
-
-from test_binary import test_binary_model
-import test_binary_data
-import test_binary_fit 
-
-from test_cont_01 import test_cont_01_model
-import test_cont_01_fit 
-
-from test_positive_cont import test_positive_cont_model
-import test_positive_cont_data
-import test_positive_cont_fit
+from tfp_models.test_cont_01 import test_cont_01_model
+from tfp_models.test_cont_positive import test_cont_positive_model
+from tfp_models.test_cont_unbounded import test_cont_unbounded_model
+from tfp_models.test_disc_binary import test_disc_binary_model
+from tfp_models.test_disc_bounded import test_disc_bounded_model
+from tfp_models.test_disc_unbounded import test_disc_unbounded_model
 
 from stan import stan, merge_chains
 import unittest
 import numpy as np
 import tensorflow as tf
+import tensorflow_probability as tfp
+tfb = tfp.bijectors
 
 def significant_digit(x):
     return float("{:.1}".format(x))
@@ -53,30 +46,43 @@ class TestModels(unittest.TestCase):
 
         # correct for differences in log_det calculations
         bijectors = target_dist.parameter_bijectors()
-        log_det_corrections = [bijector.inverse_log_det_jacobian(param,0).numpy() for bijector, param in zip(bijectors, stan_samples.T)]
+        log_det_corrections = [bijector.inverse_log_det_jacobian(param,0).numpy() for bijector, param in zip(bijectors, stan_samples.T) if not isinstance(bijector, tfb.Identity)]
 
-        # if the bijector is tfb.Identity, its log_det_correction is an empty vector, we get rid of these so we can stack and sum
-        log_det_corrections = np.stack([corr for corr in log_det_corrections if corr.size>1]).sum(0)
+        if len(log_det_corrections) > 0:
+            log_det_corrections = np.stack(log_det_corrections).sum(0)
+        else:
+            #all bijectors are tfb.Identity  
+            log_det_corrections = 0
         self.assertTrue(np.allclose(tfp_lp-log_det_corrections, stan_lp))
 
-    def test_unbounded_cont(self):
-        target_dist = test_unbounded_cont_model(**test_unbounded_cont_data.data)
-        stan_fit = test_unbounded_cont_fit.data
+    def test_cont_unbounded(self):
+        target_dist = test_cont_unbounded_model()
+        stan_fit = np.load("stan_samples/samples_cont_unbounded.npy")
         self._compare_lp(target_dist, stan_fit)
 
-    def test_binary(self):
-        target_dist = test_binary_model(**test_binary_data.data)
-        stan_fit = test_binary_fit.data
+    def test_cont_positive(self):
+        target_dist = test_cont_positive_model()
+        stan_fit = np.load("stan_samples/samples_cont_positive.npy")
         self._compare_lp(target_dist, stan_fit)
 
-    def test_binary(self):
+    def test_cont_01(self):
         target_dist = test_cont_01_model()
-        stan_fit = test_binary_fit.data
+        stan_fit = np.load("stan_samples/samples_cont_01.npy")
         self._compare_lp(target_dist, stan_fit)
 
-    def test_positive_cont(self):
-        target_dist = test_positive_cont_model(**test_positive_cont_data.data)
-        stan_fit = test_positive_cont_fit.data
+    def test_disc_binary(self):
+        target_dist = test_disc_binary_model(**test_disc_binary_data.data)
+        stan_fit = np.load("stan_samples/samples_disc_binary.npy")
+        self._compare_lp(target_dist, stan_fit)
+
+    def test_disc_bounded(self):
+        target_dist = test_disc_bounded_model(**test_disc_bounded_data.data)
+        stan_fit = np.load("stan_samples/samples_disc_bounded.npy")
+        self._compare_lp(target_dist, stan_fit)
+
+    def test_disc_unbounded(self):
+        target_dist = test_disc_unbounded_model(**test_disc_unbounded_data.data)
+        stan_fit = np.load("stan_samples/samples_disc_unbounded.npy")
         self._compare_lp(target_dist, stan_fit)
 
     def test_normal_lub(self):
