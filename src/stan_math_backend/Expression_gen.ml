@@ -314,8 +314,8 @@ and gen_fun_app ppf fname es =
 
 and pp_constrain_funapp constrain_or_un_str ppf = function
   | var :: {Expr.Fixed.pattern= Lit (Str, constraint_flavor); _} :: args ->
-      pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor constrain_or_un_str
-        (list ~sep:comma pp_expr) (var :: args)
+      pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor
+        constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, es) =

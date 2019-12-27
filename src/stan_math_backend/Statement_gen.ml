@@ -67,6 +67,9 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
 
 let math_fn_translations = function
   | Internal_fun.FnLength -> Some ("length", [])
+  | FnValidateSize -> Some ("validate_non_negative_index", [])
+  | FnValidateSizeSimplex -> Some ("validate_positive_index", [])
+  | FnValidateSizeUnitVector -> Some ("validate_unit_vector_index", [])
   | _ -> None
 
 let trans_math_fn fname =

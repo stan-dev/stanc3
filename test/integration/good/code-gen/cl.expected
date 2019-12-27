@@ -38,6 +38,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
 
 using std::istream;
 using std::string;
@@ -152,6 +183,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 36;
       n = context__.vals_i("n")[(pos__ - 1)];
+      current_statement__ = 37;
+      validate_non_negative_index("X_d", "n", n);
+      current_statement__ = 37;
+      validate_non_negative_index("X_d", "k", k);
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
@@ -169,6 +204,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 37;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 38;
+      validate_non_negative_index("y_v_d", "n", n);
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
@@ -182,6 +219,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 38;
         pos__ = (pos__ + 1);}
+      current_statement__ = 39;
+      validate_non_negative_index("X_rv_d", "n", n);
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
@@ -196,6 +235,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable X_rv_d");
         current_statement__ = 39;
         pos__ = (pos__ + 1);}
+      current_statement__ = 40;
+      validate_non_negative_index("y_vi_d", "n", n);
       context__.validate_dims("data initialization","y_vi_d","int",
           context__.to_vec(n));
       y_vi_d = std::vector<int>(n, 0);
@@ -210,6 +251,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable y_vi_d");
         current_statement__ = 40;
         pos__ = (pos__ + 1);}
+      current_statement__ = 41;
+      validate_non_negative_index("y2_vi_d", "n", n);
       context__.validate_dims("data initialization","y2_vi_d","int",
           context__.to_vec(n));
       y2_vi_d = std::vector<int>(n, 0);
@@ -251,16 +294,38 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += k;
-    num_params_r__ += k;
-    num_params_r__ += k;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += n * k;
-    num_params_r__ += n * k;
-    num_params_r__ += n;
     
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
+      num_params_r__ += k;
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
+      num_params_r__ += k;
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
+      num_params_r__ += k;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
+      num_params_r__ += n * k;
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
+      num_params_r__ += n * k;
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
+      num_params_r__ += n;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -274,16 +339,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
       current_statement__ = 2;
       beta = in__.vector(k);
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       
@@ -309,16 +380,26 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 6;
       phi = in__.scalar();
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       
@@ -436,16 +517,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     stan::math::accumulator<double> lp_accum__;
     
     try {
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
       current_statement__ = 2;
       beta = in__.vector(k);
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
@@ -465,16 +552,26 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 6;
       phi = in__.scalar();
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
@@ -529,6 +626,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       int pos__;
       
       pos__ = 1;
+      current_statement__ = 1;
+      validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
@@ -542,6 +641,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           "assigning variable alpha_v");
         current_statement__ = 1;
         pos__ = (pos__ + 1);}
+      current_statement__ = 2;
+      validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
@@ -554,6 +655,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
+      current_statement__ = 3;
+      validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
@@ -586,6 +689,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 6;
       phi = context__.vals_r("phi")[(pos__ - 1)];
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "n", n);
+      current_statement__ = 7;
+      validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
@@ -602,6 +709,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
           current_statement__ = 7;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "n", n);
+      current_statement__ = 8;
+      validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
@@ -619,6 +730,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             "assigning variable beta_m");
           current_statement__ = 8;
           pos__ = (pos__ + 1);}}
+      current_statement__ = 9;
+      validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
