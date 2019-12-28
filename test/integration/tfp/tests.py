@@ -6,9 +6,11 @@ from tfp_models.normal_lub import normal_lub_model
 from tfp_models.test_cont_01 import test_cont_01_model
 from tfp_models.test_cont_positive import test_cont_positive_model
 from tfp_models.test_cont_unbounded import test_cont_unbounded_model
+from tfp_models.test_cont_lower_bounded import test_cont_lower_bounded_model
 from tfp_models.test_disc_binary import test_disc_binary_model
 from tfp_models.test_disc_bounded import test_disc_bounded_model
 from tfp_models.test_disc_unbounded import test_disc_unbounded_model
+from tfp_models.test_circular import test_circular_model
 
 from stan import stan, merge_chains
 import unittest
@@ -60,6 +62,11 @@ class TestModels(unittest.TestCase):
         stan_fit = np.load("stan_samples/samples_cont_unbounded.npy")
         self._compare_lp(target_dist, stan_fit)
 
+    def test_cont_lower_bounded(self):
+        target_dist = test_cont_lower_bounded_model()
+        stan_fit = np.load("stan_samples/samples_cont_lower_bounded.npy")
+        self._compare_lp(target_dist, stan_fit)
+
     def test_cont_positive(self):
         target_dist = test_cont_positive_model()
         stan_fit = np.load("stan_samples/samples_cont_positive.npy")
@@ -83,6 +90,11 @@ class TestModels(unittest.TestCase):
     def test_disc_unbounded(self):
         target_dist = test_disc_unbounded_model(**test_disc_unbounded_data.data)
         stan_fit = np.load("stan_samples/samples_disc_unbounded.npy")
+        self._compare_lp(target_dist, stan_fit)
+
+    def test_circular(self):
+        target_dist = test_circular_model()
+        stan_fit = np.load("stan_samples/samples_circular.npy")
         self._compare_lp(target_dist, stan_fit)
 
     def test_normal_lub(self):

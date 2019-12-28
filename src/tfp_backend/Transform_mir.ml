@@ -12,8 +12,7 @@ let remove_stan_dist_suffix s =
 
 let capitalize_fnames =
   String.Set.of_list
-    [ "normal"; "cauchy"; "gumbel"; "exponential"; "gamma"; "beta"; "poisson"
-    ; "wishart" ]
+    ["normal"; "cauchy"; "gumbel"; "exponential"; "gamma"; "beta"; "poisson"]
 
 let map_functions fname args =
   let open Expr in
@@ -27,7 +26,6 @@ let map_functions fname args =
   | "lkj_corr_cholesky" -> ("CholeskyLKJ", args)
   | "binomial_logit" -> ("Binomial", args)
   | "bernoulli_logit" -> ("Bernoulli", args)
-  | "categorical_logit" -> ("Categorical", args)
   | "von_mises" -> ("VonMises", args)
   | "binomial" -> (
     match args with
@@ -47,15 +45,6 @@ let map_functions fname args =
         raise_s
           [%message " Binomial argument should contain exactly two elements."]
     )
-  | "categorical" -> (
-    match args with
-    | [y; p] ->
-        ( "Categorical"
-        , [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p] )
-    | _ ->
-        raise_s
-          [%message
-            " Categorical argument should contain exactly two elements."] )
   | "poisson_log" -> (
     match args with
     | [y; log_lambda] ->
@@ -67,7 +56,7 @@ let map_functions fname args =
           [%message " Poisson argument should contain exactly two elements."] )
   | "pareto" -> (
     match args with
-    | [y; y_min; alpha] -> ("Categorical", [y; alpha; y_min])
+    | [y; y_min; alpha] -> ("Pareto", [y; alpha; y_min])
     | _ ->
         raise_s
           [%message " Pareto argument should contain exactly three elements."]
