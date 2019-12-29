@@ -16,52 +16,28 @@ let capitalize_fnames =
 
 let map_functions fname args =
   let open Expr in
-  match fname with
-  | "multi_normal_cholesky" -> ("MultivariateNormalTriL", args)
-  | "student_t" -> ("StudentT", args)
-  | "double_exponential" -> ("Laplace", args)
-  | "lognormal" -> ("LogNormal", args)
-  | "chi_square" -> ("Chi2", args)
-  | "inv_gamma" -> ("InverseGamma", args)
-  | "lkj_corr_cholesky" -> ("CholeskyLKJ", args)
-  | "binomial_logit" -> ("Binomial", args)
-  | "bernoulli_logit" -> ("Bernoulli", args)
-  | "von_mises" -> ("VonMises", args)
-  | "binomial" -> (
-    match args with
-    | [y; n; p] ->
-        ( "Binomial"
-        , [y; n; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p] )
-    | _ ->
-        raise_s
-          [%message
-            " Binomial argument should contain exactly three elements."] )
-  | "bernoulli" -> (
-    match args with
-    | [y; p] ->
-        ( "Bernoulli"
-        , [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p] )
-    | _ ->
-        raise_s
-          [%message " Binomial argument should contain exactly two elements."]
-    )
-  | "poisson_log" -> (
-    match args with
-    | [y; log_lambda] ->
-        ( "Poisson"
-        , [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; log_lambda]
-        )
-    | _ ->
-        raise_s
-          [%message " Poisson argument should contain exactly two elements."] )
-  | "pareto" -> (
-    match args with
-    | [y; y_min; alpha] -> ("Pareto", [y; alpha; y_min])
-    | _ ->
-        raise_s
-          [%message " Pareto argument should contain exactly three elements."]
-    )
-  | f when Operator.of_string_opt f |> Option.is_some -> (fname, args)
+  match (fname, args) with
+  | "multi_normal_cholesky", _ -> ("MultivariateNormalTriL", args)
+  | "student_t", _ -> ("StudentT", args)
+  | "double_exponential", _ -> ("Laplace", args)
+  | "lognormal", _ -> ("LogNormal", args)
+  | "chi_square", _ -> ("Chi2", args)
+  | "inv_gamma", _ -> ("InverseGamma", args)
+  | "lkj_corr_cholesky", _ -> ("CholeskyLKJ", args)
+  | "binomial_logit", _ -> ("Binomial", args)
+  | "bernoulli_logit", _ -> ("Bernoulli", args)
+  | "von_mises", _ -> ("VonMises", args)
+  | "binomial", [y; n; p] ->
+      ( "Binomial"
+      , [y; n; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p] )
+  | "bernoulli", [y; p] ->
+      ("Bernoulli", [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p])
+  | "poisson_log", [y; log_lambda] ->
+      ( "Poisson"
+      , [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; log_lambda] )
+  | "pareto", [y; y_min; alpha] -> ("Pareto", [y; alpha; y_min])
+  (* | "neg_binomial", [y; a; b] -> ("NegativeBinomial",[y; a; Helpers.(binop (int 1) Divide (binop (int 1) Plus b))]) *)
+  | f, _ when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
       else raise_s [%message "Not sure how to handle " fname " yet!"]
