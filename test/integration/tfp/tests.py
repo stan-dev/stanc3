@@ -17,6 +17,7 @@ import unittest
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
+from os.path import dirname, join
 tfb = tfp.bijectors
 
 def significant_digit(x):
@@ -59,42 +60,42 @@ class TestModels(unittest.TestCase):
 
     def test_cont_unbounded(self):
         target_dist = test_cont_unbounded_model()
-        stan_fit = np.load("./stan_samples/samples_cont_unbounded.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_cont_unbounded.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_cont_lower_bounded(self):
         target_dist = test_cont_lower_bounded_model()
-        stan_fit = np.load("./stan_samples/samples_cont_lower_bounded.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_cont_lower_bounded.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_cont_positive(self):
         target_dist = test_cont_positive_model()
-        stan_fit = np.load("./stan_samples/samples_cont_positive.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_cont_positive.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_cont_01(self):
         target_dist = test_cont_01_model()
-        stan_fit = np.load("./stan_samples/samples_cont_01.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_cont_01.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_disc_binary(self):
         target_dist = test_disc_binary_model(**test_disc_binary_data.data)
-        stan_fit = np.load("./stan_samples/samples_disc_binary.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_disc_binary.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_disc_bounded(self):
         target_dist = test_disc_bounded_model(**test_disc_bounded_data.data)
-        stan_fit = np.load("./stan_samples/samples_disc_bounded.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_disc_bounded.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_disc_unbounded(self):
         target_dist = test_disc_unbounded_model(**test_disc_unbounded_data.data)
-        stan_fit = np.load("./stan_samples/samples_disc_unbounded.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_disc_unbounded.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_circular(self):
         target_dist = test_circular_model()
-        stan_fit = np.load("./stan_samples/samples_circular.npy")
+        stan_fit = np.load(join(dirname(__file__), "stan_samples/samples_circular.npy"))
         self._compare_lp(target_dist, stan_fit)
 
     def test_normal_lub(self):

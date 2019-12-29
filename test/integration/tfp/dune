@@ -7,15 +7,15 @@
 
 (alias
  (name runtest)
- (action (diff eight_schools.py eight_schools.py.output)))
+ (action (diff ./tfp_models/eight_schools.py eight_schools.py.output)))
 
  (rule
  (targets normal_lub.py.output)
- (deps (package stanc) (:stanfiles normal_lub.stan))
+ (deps (package stanc) (:stanfiles ./stan_models/normal_lub.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
 (alias
  (name runtest)
- (action (diff normal_lub.py normal_lub.py.output)))
+ (action (diff ./tfp_models/normal_lub.py normal_lub.py.output)))
