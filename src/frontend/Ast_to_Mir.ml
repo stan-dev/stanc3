@@ -44,7 +44,7 @@ let rec op_to_funapp op args =
   and loc = Ast.expr_loc_lub args
   and adlevel = Ast.expr_ad_lub args in
   Expr.
-    { Fixed.pattern= FunApp (StanLib, Operator.to_string op, trans_exprs args)
+    { Fixed.pattern= FunApp (StanLib, Operator.to_string op, List.map ~f:trans_expr args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -74,18 +74,18 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | RealNumeral x -> Lit (Real, format_number x)
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
-            FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
+            FunApp (trans_fn_kind fn_kind, name, List.map ~f:trans_expr args)
         | GetLP | GetTarget -> FunApp (StanLib, "target", [])
         | ArrayExpr eles ->
             FunApp
               ( CompilerInternal
               , Internal_fun.to_string FnMakeArray
-              , trans_exprs eles )
+              , List.map ~f:trans_expr eles )
         | RowVectorExpr eles ->
             FunApp
               ( CompilerInternal
               , Internal_fun.to_string FnMakeRowVec
-              , trans_exprs eles )
+              , List.map ~f:trans_expr eles )
         | Indexed (lhs, indices) ->
             Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
@@ -105,8 +105,6 @@ and trans_idx = function
     | _ ->
         raise_s
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
-
-and trans_exprs = List.map ~f:trans_expr
 
 let trans_sizedtype = SizedType.map trans_expr
 let trans_possiblysizedtype pst = Type.map trans_expr pst
@@ -456,7 +454,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
         , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
-      NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
+      NRFunApp (trans_fn_kind fn_kind, name, List.map ~f:trans_expr args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix = dist_name_suffix udf_names distribution.name in
@@ -476,7 +474,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
           Expr.
-            { Fixed.pattern= FunApp (kind, name, trans_exprs (arg :: args))
+            { Fixed.pattern= FunApp (kind, name, List.map ~f:trans_expr (arg :: args))
             ; meta=
                 Typed.Meta.create ~type_:UReal ~loc:mloc
                   ~adlevel:(Ast.expr_ad_lub (arg :: args))
