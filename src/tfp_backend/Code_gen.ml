@@ -28,15 +28,16 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
       , args )
     with
-    | op, [lhs; rhs] -> pf ppf "%a %s %a" pp_expr lhs op pp_expr rhs
-    | op, [unary] -> pf ppf "(%s%a)" op pp_expr unary
+    | op, [lhs; rhs] -> pf ppf "%a %s %a" pp_paren lhs op pp_paren rhs
+    | op, [unary] -> pf ppf "%s%a" op pp_paren unary
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
   | FunApp (_, fname, args) -> pp_call ppf (fname, pp_expr, args)
   | TernaryIf (cond, iftrue, iffalse) ->
-      pf ppf "%a if %a else %a" pp_expr cond pp_expr iftrue pp_expr iffalse
-  | EAnd (a, b) -> pf ppf "%a and %a" pp_expr a pp_expr b
-  | EOr (a, b) -> pf ppf "%a or %a" pp_expr a pp_expr b
+      pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren
+        iffalse
+  | EAnd (a, b) -> pf ppf "%a and %a" pp_paren a pp_paren b
+  | EOr (a, b) -> pf ppf "%a or %a" pp_paren a pp_paren b
   | Indexed (_, indices) when List.exists ~f:is_multi_index indices ->
       (*
        TF indexing options:
@@ -52,6 +53,13 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
         | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
       in
       pf ppf "%a%a" pp_expr obj pp_indexed indices
+
+and pp_paren ppf expr =
+  match expr.Expr.Fixed.pattern with
+  | TernaryIf _ | EAnd _ | EOr _ -> pf ppf "(%a)" pp_expr expr
+  | FunApp (StanLib, f, _) when Operator.of_string_opt f |> Option.is_some ->
+      pf ppf "(%a)" pp_expr expr
+  | _ -> pp_expr ppf expr
 
 let rec pp_stmt ppf s =
   let fake_expr pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
@@ -150,12 +158,6 @@ let get_param_st p var =
   in
   st
 
-let rec get_dims = function
-  | SizedType.SInt | SReal -> []
-  | SVector d | SRowVector d -> [d]
-  | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims t
-
 let pp_log_prob ppf p =
   pf ppf "@ %a@ " pp_log_prob_one_chain p ;
   let intro =
@@ -171,7 +173,7 @@ let get_params p =
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
     pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
-      (get_dims out_unconstrained_st)
+      (SizedType.get_dims out_unconstrained_st)
   in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;

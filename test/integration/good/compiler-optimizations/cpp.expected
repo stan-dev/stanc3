@@ -38,6 +38,37 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
 
 using std::istream;
 using std::string;
@@ -283,12 +314,28 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
-    num_params_r__ += 1;
-    num_params_r__ += 1;
-    num_params_r__ += 3 * 2;
-    num_params_r__ += 2;
-    num_params_r__ += 3;
     
+    try {
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "3", 3);
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "2", 2);
+      num_params_r__ += 3 * 2;
+      current_statement__ = 4;
+      validate_non_negative_index("x_vector", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
+      num_params_r__ += 3;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
@@ -344,16 +391,26 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 2;
       phi = in__.scalar();
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "3", 3);
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
       
       current_statement__ = 3;
       x_matrix = in__.matrix(3, 2);
+      current_statement__ = 4;
+      validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
       current_statement__ = 4;
       x_vector = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       
@@ -1044,16 +1101,26 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 2;
       phi = in__.scalar();
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "3", 3);
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       
       current_statement__ = 3;
       x_matrix = in__.matrix(3, 2);
+      current_statement__ = 4;
+      validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
       
       current_statement__ = 4;
       x_vector = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       
@@ -1062,7 +1129,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
-      assign(sym65__, nil_index_list(), cov_matrix_constrain(x_cov_in__, 2),
+      assign(sym65__, nil_index_list(),
+        stan::math::cov_matrix_constrain(x_cov_in__, 2),
         "assigning variable sym65__");
       assign(x_cov, nil_index_list(), sym65__, "assigning variable x_cov");
       vars__.push_back(theta);
@@ -1252,6 +1320,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       double phi;
       
       sym51__ = context__.vals_r("phi")[(1 - 1)];
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "3", 3);
+      current_statement__ = 3;
+      validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       
@@ -1338,6 +1410,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
       }
+      current_statement__ = 4;
+      validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
       
@@ -1361,6 +1435,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
       }
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       
@@ -1424,7 +1502,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
       current_statement__ = 5;
-      assign(x_cov, nil_index_list(), cov_matrix_free(x_cov),
+      assign(x_cov, nil_index_list(), stan::math::cov_matrix_free(x_cov),
         "assigning variable x_cov");
       vars__.push_back(sym52__);
       vars__.push_back(sym51__);

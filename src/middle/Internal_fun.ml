@@ -9,6 +9,9 @@ type t =
   (* XXX move these to a backend specific file?*)
   | FnReadParam
   | FnWriteParam
+  | FnValidateSize
+  | FnValidateSizeSimplex
+  | FnValidateSizeUnitVector
   | FnConstrain
   | FnUnconstrain
   | FnCheck
