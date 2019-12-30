@@ -9,7 +9,7 @@
  (name runtest)
  (action (diff eight_schools.py eight_schools.py.output)))
 
- (rule
+(rule
  (targets normal_lub.py.output)
  (deps (package stanc) (:stanfiles normal_lub.stan))
  (action
@@ -19,3 +19,14 @@
 (alias
  (name runtest)
  (action (diff normal_lub.py normal_lub.py.output)))
+
+(rule
+ (targets nested_expr.py.output)
+ (deps (package stanc) (:stanfiles nested_expr.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:stan2tfp} %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff nested_expr.py nested_expr.py.output)))

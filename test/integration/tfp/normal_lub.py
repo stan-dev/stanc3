@@ -50,7 +50,7 @@ class normal_lub_model(tfd__.Distribution):
     y_lub = self.y_lub
     y_ub = self.y_ub
     y_lb = self.y_lb
-    return [tfb__.Chain([tfb__.Shift((-tf__.cast(3, tf__.float64))),
+    return [tfb__.Chain([tfb__.Shift(-tf__.cast(3, tf__.float64)),
                          tfb__.Scale(tf__.cast(3, tf__.float64) - (-tf__.cast(3, tf__.float64))),
                          tfb__.Sigmoid()]),
             tfb__.Chain([tfb__.Shift(tf__.cast(1, tf__.float64)),
