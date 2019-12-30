@@ -22,7 +22,7 @@ class eight_schools_ncp_model(tfd__.Distribution):
     mu = tf__.cast(params[0], tf__.float64)
     tau = tf__.cast(params[1], tf__.float64)
     theta_tilde = tf__.cast(params[2], tf__.float64)
-    theta = mu + tau * theta_tilde
+    theta = mu + (tau * theta_tilde)
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
                                            tf__.cast(5, tf__.float64)).log_prob(mu))
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
