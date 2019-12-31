@@ -1467,6 +1467,9 @@ let () =
     add_unqualified ("size", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)])
   done ;
+  for i = 0 to bare_types_size - 1 do
+    add_unqualified ("size", ReturnType UInt, [bare_types i])
+  done ;
   add_unqualified ("softmax", ReturnType UVector, [UVector]) ;
   add_unqualified
     ( "sort_asc"
