@@ -16,6 +16,7 @@ let capitalize_fnames =
 
 let map_functions fname args =
   let open Expr in
+  let none = {Fixed.pattern= Var "None"; meta= Typed.Meta.empty} in
   match (fname, args) with
   | "multi_normal_cholesky", _ -> ("MultivariateNormalTriL", args)
   | "student_t", _ -> ("StudentT", args)
@@ -27,16 +28,16 @@ let map_functions fname args =
   | "binomial_logit", _ -> ("Binomial", args)
   | "bernoulli_logit", _ -> ("Bernoulli", args)
   | "von_mises", _ -> ("VonMises", args)
-  | "binomial", [y; n; p] ->
-      ( "Binomial"
-      , [y; n; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p] )
-  | "bernoulli", [y; p] ->
-      ("Bernoulli", [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; p])
-  | "poisson_log", [y; log_lambda] ->
-      ( "Poisson"
-      , [y; {Fixed.pattern= Var "None"; meta= Typed.Meta.empty}; log_lambda] )
+  | "binomial", [y; n; p] -> ("Binomial", [y; n; none; p])
+  | "bernoulli", [y; p] -> ("Bernoulli", [y; none; p])
+  | "poisson_log", [y; log_lambda] -> ("Poisson", [y; none; log_lambda])
   | "pareto", [y; y_min; alpha] -> ("Pareto", [y; alpha; y_min])
-  (* | "neg_binomial", [y; a; b] -> ("NegativeBinomial",[y; a; Helpers.(binop (int 1) Divide (binop (int 1) Plus b))]) *)
+  | "neg_binomial", [y; a; b] ->
+      ( "NegativeBinomial"
+      , [y; a; none; Helpers.(binop (int 1) Divide (binop (int 1) Plus b))] )
+  | (("neg_binomial_2" | "neg_binomial_2_log") as l), _ ->
+      raise_s
+        [%message l " is not supported, consider using neg_binomial instead."]
   | f, _ when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
