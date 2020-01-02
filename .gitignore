@@ -1,20 +1,34 @@
+# rust
 /rust/target
 /bindgen_test/target
 **/*.rs.bk
 Cargo.lock
 math_iface/gen/*
-
-*.swp
 *.a
-*.merlin
-test/*.log
-_build
-_opam
-.#*
-node_modules/*
-.vscode/**
 
-*.pyc
+# ocaml
+_opam
+_build
+*.merlin
 stanc.install
 
-**/.DS_Store
+# js
+node_modules/*
+
+# python
+*.pyc
+
+# tests
+test/*.log
+
+# Visual Studio settings
+.vscode/**
+
+# temporary editor files
+*~
+\#*#
+.#*
+.*.swp
+
+# Mac OS X hidden files
+*.DS_Store
