@@ -4504,6 +4504,20 @@ model {
   }
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format tilde-block.stan
+data {
+  int t;
+}
+parameters {
+  real<lower=0> x;
+}
+model {
+  if (t) 
+    x ~ student_t(10, 0, 1) T[0, ];
+  else 
+    x ~ normal(0, 1) T[0, ];
+}
+
   $ ../../../../install/default/bin/stanc --auto-format truncation-user-defined.stan
 functions {
   real foo_log(real y, real theta) {

@@ -408,7 +408,11 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
     =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt udf_names {declc with dconstrain= None} in
-  let trans_single_stmt s = trans_stmt s |> List.hd_exn in
+  let trans_single_stmt s =
+    match trans_stmt s with
+    | [s] -> s
+    | s -> Stmt.Fixed.{pattern= SList s; meta= smeta}
+  in
   let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
