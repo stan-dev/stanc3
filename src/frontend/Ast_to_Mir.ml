@@ -120,7 +120,22 @@ let neg_inf =
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
-let truncate_dist ast_obs t =
+let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
+  let cdf_suffices = ["_lcdf"; "_cdf_log"] in
+  let ccdf_suffices = ["_lccdf"; "_ccdf_log"] in
+  let find_function_info sfx =
+    let possible_names =
+      List.map ~f:(( ^ ) id.name) sfx |> String.Set.of_list
+    in
+    match List.find ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists with
+    | Some (name, tp) -> (Ast.UserDefined, name, tp)
+    | None ->
+        ( Ast.StanLib
+        , Set.to_list possible_names |> List.hd_exn
+        , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
+          then UnsizedType.UInt
+          else UnsizedType.UReal (* close enough *) )
+  in
   let trunc cond_op (x : Ast.typed_expression) y =
     let smeta = x.Ast.emeta.loc in
     { Stmt.Fixed.meta= smeta
@@ -128,13 +143,44 @@ let truncate_dist ast_obs t =
         IfElse
           ( op_to_funapp cond_op [ast_obs; x]
           , {Stmt.Fixed.meta= smeta; pattern= TargetPE neg_inf}
-          , y ) }
+          , Some y ) }
+  in
+  let targetme loc e =
+    {Stmt.Fixed.meta= loc; pattern= TargetPE (op_to_funapp Operator.PMinus [e])}
+  in
+  let funapp meta kind name args =
+    { Ast.emeta= meta
+    ; expr= Ast.FunApp (kind, {name; id_loc= Location_span.empty}, args) }
+  in
+  let inclusive_bound tp (lb : Ast.typed_expression) =
+    let emeta = lb.emeta in
+    if UnsizedType.is_int_type tp then
+      Ast.
+        { emeta
+        ; expr= BinOp (lb, Operator.Minus, {emeta; expr= Ast.IntNumeral "1"})
+        }
+    else lb
   in
   match t with
   | Ast.NoTruncate -> []
-  | TruncateUpFrom lb -> [trunc Less lb None]
-  | TruncateDownFrom ub -> [trunc Greater ub None]
-  | TruncateBetween (lb, ub) -> [trunc Less lb (Some (trunc Greater ub None))]
+  | TruncateUpFrom lb ->
+      let fk, fn, tp = find_function_info ccdf_suffices in
+      [ trunc Less lb
+          (targetme lb.emeta.loc
+             (funapp lb.emeta fk fn (inclusive_bound tp lb :: ast_args))) ]
+  | TruncateDownFrom ub ->
+      let fk, fn, _ = find_function_info cdf_suffices in
+      [ trunc Greater ub
+          (targetme ub.emeta.loc (funapp ub.emeta fk fn (ub :: ast_args))) ]
+  | TruncateBetween (lb, ub) ->
+      let fk, fn, tp = find_function_info cdf_suffices in
+      [ trunc Less lb
+          (trunc Greater ub
+             (targetme ub.emeta.loc
+                (funapp ub.emeta Ast.StanLib "log_diff_exp"
+                   [ funapp ub.emeta fk fn (ub :: ast_args)
+                   ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
+                   ]))) ]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
@@ -389,7 +435,7 @@ let unwrap_block_or_skip = function
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
 
 let dist_name_suffix udf_names name =
-  let is_udf_name s = List.exists ~f:(( = ) s) udf_names in
+  let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
   match
     Middle.Utils.distribution_suffices
     |> List.filter ~f:(fun sfx ->
@@ -404,10 +450,9 @@ let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;
   [%expect {| _log |}]
 
-let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
-    =
+let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt udf_names {declc with dconstrain= None} in
+  let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
   let trans_single_stmt s =
     match trans_stmt s with
     | [s] -> s
@@ -463,15 +508,15 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix = dist_name_suffix udf_names distribution.name in
+      let suffix = dist_name_suffix ud_dists distribution.name in
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name)
             ("" :: Utils.distribution_suffices)
           |> String.Set.of_list
         in
-        if List.exists ~f:(Set.mem possible_names) udf_names then
-          Fun_kind.UserDefined
+        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
+        then Fun_kind.UserDefined
         else StanLib
       in
       let name =
@@ -486,7 +531,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
                   ~adlevel:(Ast.expr_ad_lub (arg :: args))
                   () }
       in
-      truncate_dist arg truncation @ swrap add_dist
+      truncate_dist ud_dists distribution arg args truncation @ swrap add_dist
   | Ast.Print ps ->
       NRFunApp
         ( CompilerInternal
@@ -569,7 +614,7 @@ let rec trans_stmt udf_names (declc : decl_context) (ts : Ast.typed_statement)
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
 
-let trans_fun_def udf_names (ts : Ast.typed_statement) =
+let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef {returntype; funname; arguments; body} ->
       [ Program.
@@ -578,7 +623,7 @@ let trans_fun_def udf_names (ts : Ast.typed_statement) =
           ; fdname= funname.name
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
-              trans_stmt udf_names
+              trans_stmt ud_dists
                 {dconstrain= None; dadlevel= AutoDiffable}
                 body
               |> unwrap_block_or_skip
@@ -608,12 +653,13 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     p
   in
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
-  let grab_fundef_names = function
-    | {Ast.stmt= Ast.FunDef {funname; _}; _} -> [funname.name]
+  let grab_fundef_names_and_types = function
+    | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
+        [(funname.name, type_)]
     | _ -> []
   in
-  let udf_names = map grab_fundef_names functionblock in
-  let trans_stmt = trans_stmt udf_names in
+  let ud_dists = map grab_fundef_names_and_types functionblock in
+  let trans_stmt = trans_stmt ud_dists in
   let get_name_size s =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
@@ -704,7 +750,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
-  { functions_block= map (trans_fun_def udf_names) functionblock
+  { functions_block= map (trans_fun_def ud_dists) functionblock
   ; input_vars
   ; prepare_data
   ; log_prob
