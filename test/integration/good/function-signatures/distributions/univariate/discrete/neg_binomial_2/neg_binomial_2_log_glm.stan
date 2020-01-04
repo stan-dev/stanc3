@@ -45,10 +45,10 @@ transformed parameters {
 
   transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_m, p_alpha, p_beta_v, p_phi);
   transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_m, p_alpha_v, p_beta_v, p_phi);
-  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y| p_x_m, p_alpha, p_beta_v, p_phi);
-  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y| p_x_m, p_alpha_v, p_beta_v, p_phi);
-  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_rv, p_alpha, p_beta_v, p_phi);
-  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_rv, p_alpha_v, p_beta_v, p_phi);
+  transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y| p_x_m, p_alpha, p_beta_v, p_phi);
+  transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y| p_x_m, p_alpha_v, p_beta_v, p_phi);
+  transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_rv, p_alpha, p_beta_v, p_phi);
+  transformed_param_real = neg_binomial_2_log_glm_lpmf(d_y_a| p_x_rv, p_alpha_v, p_beta_v, p_phi);
 }
 model {  
   y_p ~ normal(0,1); // in case anyone tries to run it
