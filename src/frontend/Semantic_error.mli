@@ -75,6 +75,7 @@ val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_sampling_no_such_dist : Location_span.t -> string -> t
 val target_plusequals_outisde_model_or_logprob : Location_span.t -> t
 val invalid_truncation_cdf_or_ccdf : Location_span.t -> t
+val multivariate_truncation : Location_span.t -> t
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t
 val expression_return_outside_returning_fn : Location_span.t -> t
