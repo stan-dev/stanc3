@@ -3,7 +3,6 @@ transformed data {
   int M = 3;
 
   int d_y = 1;
-
   int d_y_a[N] = {1, 0};
 
   matrix[N,M] d_x_m = [[1, 2, 3],[4, 5, 6]];
@@ -20,7 +19,7 @@ transformed data {
   real transformed_data_real;
   
   transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| d_x_m, d_alpha, d_beta_v, d_phi);
-  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_beta_v, d_phi);
+  transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| d_x_m, d_alpha_v, d_beta_v, d_phi); 
   transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y| d_x_m, d_alpha, d_beta_v, d_phi);
   transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y| d_x_m, d_alpha_v, d_beta_v, d_phi);
   transformed_data_real = neg_binomial_2_log_glm_lpmf(d_y_a| d_x_rv, d_alpha, d_beta_v, d_phi);
