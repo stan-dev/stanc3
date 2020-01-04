@@ -1321,11 +1321,11 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UReal; UVector; UReal] ) ; 
+    , [UVector; URowVector; UReal; UVector; UVector] ) ; 
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UVector; UVector; UReal] ) ;   
+    , [UVector; URowVector; UVector; UVector; UVector] ) ;   
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
