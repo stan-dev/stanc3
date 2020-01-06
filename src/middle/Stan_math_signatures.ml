@@ -1321,11 +1321,11 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UReal; UVector; UVector] ) ; 
+    , [UVector; URowVector; UReal; UVector; UVector] ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UVector; UVector; UVector] ) ;   
+    , [UVector; URowVector; UVector; UVector; UVector] ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
@@ -1416,9 +1416,7 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
   add_unqualified
-    ( "poisson_log_glm_lpmf"
-    , ReturnType UReal
-    , [UInt; UMatrix; UReal; UVector] ) ;
+    ("poisson_log_glm_lpmf", ReturnType UReal, [UInt; UMatrix; UReal; UVector]) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal

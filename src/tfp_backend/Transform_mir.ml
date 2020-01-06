@@ -2,6 +2,20 @@ open Core_kernel
 open Middle
 
 let dist_prefix = "tfd__."
+let kwrds_suffix = "_"
+let append_kwrds_suffix x = x ^ kwrds_suffix
+
+let python_kwrds =
+  String.Set.of_list
+    [ "False"; "None"; "True"; "and"; "as"; "assert"; "break"; "class"
+    ; "continue"; "def"; "del"; "elif"; "else"; "except"; "finally"; "for"
+    ; "from"; "global"; "if"; "import"; "in"; "is"; "lambda"; "nonlocal"; "not"
+    ; "or"; "pass"; "raise"; "return"; "try"; "while"; "with"; "yield" ]
+
+(* let python_kwrds = String.Set.of_list python_kwrds_lst *)
+(* let python_kwrds_with_suffix = String.Set.of_list (List.map ~f:append_kwrds_suffix python_kwrds_lst) *)
+let add_suffix_to_kwrds s =
+  if Set.mem python_kwrds s then append_kwrds_suffix s else s
 
 let remove_stan_dist_suffix s =
   let s = Utils.stdlib_distribution_name s in
@@ -43,7 +57,7 @@ let map_functions fname args =
       if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
       else raise_s [%message "Not sure how to handle " fname " yet!"]
 
-let translate_funapps e =
+let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
     match pattern with
@@ -54,6 +68,8 @@ let translate_funapps e =
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
         {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
+    | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
+    | Lit (l, s) -> {expr with pattern= Lit (l, add_suffix_to_kwrds s)}
     | _ -> expr
   in
   rewrite_bottom_up ~f e
@@ -66,7 +82,7 @@ let%expect_test "nested dist prefixes translated" =
       ( Fun_kind.StanLib
       , "normal_lpdf"
       , [FunApp (Fun_kind.StanLib, "normal_lpdf", []) |> e] )
-    |> e |> translate_funapps
+    |> e |> translate_funapps_and_kwrds
   in
   print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
@@ -90,12 +106,30 @@ let rec remove_unused_stmts s =
   in
   {s with pattern}
 
+let rec change_kwrds_stmts s =
+  let open Stmt.Fixed.Pattern in
+  let pattern =
+    match s.Stmt.Fixed.pattern with
+    | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
+    | NRFunApp (t, s, e) -> NRFunApp (t, add_suffix_to_kwrds s, e)
+    | Assignment ((s, t, e1), e2) ->
+        Assignment ((add_suffix_to_kwrds s, t, e1), e2)
+    | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}
+    | x -> map Fn.id change_kwrds_stmts x
+  in
+  {s with pattern}
+
 let trans_prog (p : Program.Typed.t) =
   let rec map_stmt {Stmt.Fixed.pattern; meta} =
     { Stmt.Fixed.pattern=
-        Stmt.Fixed.Pattern.map translate_funapps map_stmt pattern
+        Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta }
   in
-  Program.map translate_funapps map_stmt p
+  let rename_kwrds (s, x) = (add_suffix_to_kwrds s, x) in
+  Program.map translate_funapps_and_kwrds map_stmt
+    { p with
+      output_vars= List.map ~f:rename_kwrds p.output_vars
+    ; input_vars= List.map ~f:rename_kwrds p.input_vars }
+  |> Program.map Fn.id change_kwrds_stmts
   |> Program.map Fn.id remove_unused_stmts
   |> Program.map_stmts Analysis_and_optimization.Mir_utils.cleanup_empty_stmts
