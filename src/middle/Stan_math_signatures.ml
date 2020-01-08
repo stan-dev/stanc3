@@ -169,7 +169,7 @@ let distributions =
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal])
-  ; ([Lpdf], "std_normal", [DVReal])
+  ; (full_lpdf, "std_normal", [DVReal])
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal])
   ; ([Lpdf; Rng], "von_mises", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal])
