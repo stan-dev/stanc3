@@ -253,7 +253,7 @@ from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =
-  pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
+  pf ppf "%s@,@[%a@]\nclass %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
     (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
   pf ppf "@ model = %s" p.prog_name
 

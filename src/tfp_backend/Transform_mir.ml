@@ -10,7 +10,8 @@ let python_kwrds =
     [ "False"; "None"; "True"; "and"; "as"; "assert"; "break"; "class"
     ; "continue"; "def"; "del"; "elif"; "else"; "except"; "finally"; "for"
     ; "from"; "global"; "if"; "import"; "in"; "is"; "lambda"; "nonlocal"; "not"
-    ; "or"; "pass"; "raise"; "return"; "try"; "while"; "with"; "yield" ]
+    ; "or"; "pass"; "raise"; "return"; "try"; "while"; "with"; "yield"; "await"
+    ; "async" ]
 
 (* let python_kwrds = String.Set.of_list python_kwrds_lst *)
 (* let python_kwrds_with_suffix = String.Set.of_list (List.map ~f:append_kwrds_suffix python_kwrds_lst) *)
@@ -68,6 +69,9 @@ let translate_funapps_and_kwrds e =
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
         {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
+    | FunApp (UserDefined, fname, args) ->
+        { expr with
+          pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
     | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
     | Lit (l, s) -> {expr with pattern= Lit (l, add_suffix_to_kwrds s)}
     | _ -> expr
@@ -125,11 +129,18 @@ let trans_prog (p : Program.Typed.t) =
         Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta }
   in
-  let rename_kwrds (s, x) = (add_suffix_to_kwrds s, x) in
+  let rename_kwrds (s, e) = (add_suffix_to_kwrds s, e) in
+  let rename_fdarg (e1, s, e2) = (e1, add_suffix_to_kwrds s, e2) in
+  let rename_func (s : 'a Program.fun_def) =
+    { s with
+      fdname= add_suffix_to_kwrds s.fdname
+    ; fdargs= List.map ~f:rename_fdarg s.fdargs }
+  in
   Program.map translate_funapps_and_kwrds map_stmt
     { p with
       output_vars= List.map ~f:rename_kwrds p.output_vars
-    ; input_vars= List.map ~f:rename_kwrds p.input_vars }
+    ; input_vars= List.map ~f:rename_kwrds p.input_vars
+    ; functions_block= List.map ~f:rename_func p.functions_block }
   |> Program.map Fn.id change_kwrds_stmts
   |> Program.map Fn.id remove_unused_stmts
   |> Program.map_stmts Analysis_and_optimization.Mir_utils.cleanup_empty_stmts
