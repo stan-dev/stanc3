@@ -13,8 +13,6 @@ let python_kwrds =
     ; "or"; "pass"; "raise"; "return"; "try"; "while"; "with"; "yield"; "await"
     ; "async" ]
 
-(* let python_kwrds = String.Set.of_list python_kwrds_lst *)
-(* let python_kwrds_with_suffix = String.Set.of_list (List.map ~f:append_kwrds_suffix python_kwrds_lst) *)
 let add_suffix_to_kwrds s =
   if Set.mem python_kwrds s then append_kwrds_suffix s else s
 
@@ -73,7 +71,6 @@ let translate_funapps_and_kwrds e =
         { expr with
           pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
     | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
-    | Lit (l, s) -> {expr with pattern= Lit (l, add_suffix_to_kwrds s)}
     | _ -> expr
   in
   rewrite_bottom_up ~f e
