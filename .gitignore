@@ -10,6 +10,7 @@ math_iface/gen/*
 _opam
 _build
 *.merlin
+stanc.install
 
 # js
 node_modules/*

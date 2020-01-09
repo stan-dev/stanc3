@@ -7,16 +7,18 @@ let opencl_triggers =
   String.Map.of_alist_exn
     [ ( "normal_id_glm_lpdf"
       , ( [0; 1]
-        , [ (* Array of conditions under which to move to OpenCL *) ([1], [])
-          (* Argument 1 is data *)
-           ] ) )
-    ; ("bernoulli_logit_glm_lpmf", ([0; 1], [([1], [])]))
-    ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])])
-        (* Additional requirement of argument 1 being a matrix *) )
-    ; ("neg_binomial_2_log_glm_lpmf", ([0; 1], [([1], [])]))
-    ; ("ordered_logistic_glm_lpmf", ([0; 1], [([1], [(1, UMatrix)])]))
-    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [])])) ]
+      , [ (* Array of conditions under which to move to OpenCL *) 
+          ([1], (* Argument 1 is data *)
+          [(1, UnsizedType.UMatrix)])(* Argument 1 is a matrix *)
+        ]
+        )
+      )
+    ; ("bernoulli_logit_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+    ; ( "categorical_logit_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+    ; ("neg_binomial_2_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+    ; ("ordered_logistic_glm_lpmf",  ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+    ; ("poisson_log_glm_lpmf",  ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+   ]
 
 let opencl_suffix = "_opencl__"
 

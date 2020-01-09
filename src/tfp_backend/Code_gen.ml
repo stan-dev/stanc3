@@ -34,8 +34,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
   | FunApp (_, fname, args) -> pp_call ppf (fname, pp_expr, args)
   | TernaryIf (cond, iftrue, iffalse) ->
-      pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren
-        iffalse
+      pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren iffalse
   | EAnd (a, b) -> pf ppf "%a and %a" pp_paren a pp_paren b
   | EOr (a, b) -> pf ppf "%a or %a" pp_paren a pp_paren b
   | Indexed (_, indices) when List.exists ~f:is_multi_index indices ->
