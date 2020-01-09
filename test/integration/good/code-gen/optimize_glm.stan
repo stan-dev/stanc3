@@ -7,6 +7,7 @@ data {
   int y_vi_d[n];
   int y2_vi_d[n];
   int y_s_d;
+  real y_r_d;
 }
 
 parameters {
@@ -24,15 +25,31 @@ parameters {
 model {
   target += normal_id_glm_lpdf(y_v_d | X_d, alpha, beta, sigma);
   target += normal_id_glm_lpdf(y_v_d | X_p, alpha, beta, sigma);
+  target += normal_id_glm_lpdf(y_r_d | X_d, alpha, beta, beta);
+  target += normal_id_glm_lpdf(y_r_d | X_p, alpha, beta, beta);
+  target += normal_id_glm_lpdf(y_v_d | X_rv_d, alpha, beta, beta);
+  target += normal_id_glm_lpdf(y_v_d | X_rv_p, alpha, beta, beta);
 
   target += bernoulli_logit_glm_lpmf(y_vi_d| X_d, alpha, beta);
   target += bernoulli_logit_glm_lpmf(y_vi_d| X_p, alpha, beta);
+  target += bernoulli_logit_glm_lpmf(y_vi_d| X_rv_d, alpha, beta);
+  target += bernoulli_logit_glm_lpmf(y_vi_d| X_rv_p, alpha, beta);
+  target += bernoulli_logit_glm_lpmf(y_s_d| X_d, alpha, beta);
+  target += bernoulli_logit_glm_lpmf(y_s_d| X_p, alpha, beta);
 
   target += poisson_log_glm_lpmf(y_vi_d| X_d, alpha, beta);
   target += poisson_log_glm_lpmf(y_vi_d| X_p, alpha, beta);
+  target += poisson_log_glm_lpmf(y_s_d| X_d, alpha, beta);
+  target += poisson_log_glm_lpmf(y_s_d| X_p, alpha, beta);
+  target += poisson_log_glm_lpmf(y_vi_d| X_rv_d, alpha, beta);
+  target += poisson_log_glm_lpmf(y_vi_d| X_rv_p, alpha, beta);
 
   target += neg_binomial_2_log_glm_lpmf(y_vi_d| X_d, alpha, beta, phi);
   target += neg_binomial_2_log_glm_lpmf(y_vi_d| X_p, alpha, beta, phi);
+  target += neg_binomial_2_log_glm_lpmf(y_s_d| X_d, alpha, beta, phi);
+  target += neg_binomial_2_log_glm_lpmf(y_s_d| X_p, alpha, beta, phi);
+  target += neg_binomial_2_log_glm_lpmf(y_vi_d| X_rv_d, alpha, beta, phi);
+  target += neg_binomial_2_log_glm_lpmf(y_vi_d| X_rv_p, alpha, beta, phi);
 
   target += ordered_logistic_glm_lpmf(y_s_d| X_d, beta, cuts);
   target += ordered_logistic_glm_lpmf(y_s_d| X_p, beta, cuts);
