@@ -29,6 +29,7 @@ let optimize = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
+let warn_pedantic = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -81,6 +82,9 @@ let options =
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \
          experimental feature." )
+    ; ( "--warn-pedantic"
+      , Arg.Set warn_pedantic
+      , " Emit warnings about common mistakes in Stan programs." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
@@ -197,6 +201,8 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
+    ( if !warn_pedantic then
+        Pedantic_analysis.print_warn_pedantic mir ) ;
     ( if !warn_uninitialized then
       let uninitialized_vars =
         Dependence_analysis.mir_uninitialized_variables mir
