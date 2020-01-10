@@ -534,6 +534,22 @@ let () =
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UReal; UVector] ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UVector; UVector] ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UReal; UVector] ) ;
+  add_unqualified
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
   add_unqualified ("bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
   add_unqualified ("bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
@@ -1269,6 +1285,22 @@ let () =
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector; UReal] ) ;
+  add_unqualified
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UReal; UVector; UReal] ) ;
+  add_unqualified
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UVector; UVector; UReal] ) ;
+  add_unqualified
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UReal; UVector; UReal] ) ;
+  add_unqualified
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UVector; UVector; UReal] ) ;
   add_nullary "negative_infinity" ;
   add_unqualified
     ( "normal_id_glm_lpdf"
@@ -1278,6 +1310,22 @@ let () =
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; UMatrix; UVector; UVector; UReal] ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UReal; UMatrix; UReal; UVector; UVector] ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UReal; UMatrix; UVector; UVector; UVector] ) ;
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UVector; URowVector; UReal; UVector; UVector] ) ; 
+  add_unqualified
+    ( "normal_id_glm_lpdf"
+    , ReturnType UReal
+    , [UVector; URowVector; UVector; UVector; UVector] ) ;   
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
@@ -1367,6 +1415,22 @@ let () =
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+  add_unqualified
+    ( "poisson_log_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UReal; UVector] ) ;
+  add_unqualified
+    ( "poisson_log_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UMatrix; UVector; UVector] ) ;
+  add_unqualified
+    ( "poisson_log_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UReal; UVector] ) ;
+  add_unqualified
+    ( "poisson_log_glm_lpmf"
+    , ReturnType UReal
+    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
   add_nullary "positive_infinity" ;
   add_binary "pow" ;
   add_unqualified ("prod", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
@@ -1466,6 +1530,9 @@ let () =
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UVector, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)])
+  done ;
+  for i = 0 to bare_types_size - 1 do
+    add_unqualified ("size", ReturnType UInt, [bare_types i])
   done ;
   add_unqualified ("softmax", ReturnType UVector, [UVector]) ;
   add_unqualified
