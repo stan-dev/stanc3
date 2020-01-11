@@ -8,9 +8,12 @@ let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
 let is_distribution_name ?(infix = "") s =
-  List.exists
-    ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-    distribution_suffices
+  (not
+     ( String.is_suffix s ~suffix:"_cdf_log"
+     || String.is_suffix s ~suffix:"_ccdf_log" ))
+  && List.exists
+       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
+       distribution_suffices
 
 let is_propto_distribution s =
   is_distribution_name ~infix:proportional_to_distribution_infix s
