@@ -19,11 +19,23 @@ val print_warn_uniform :
    Print warnings about using the uniform distribution
 *)
 
+val print_warn_unscaled_constants :
+  Program.Typed.t -> unit
+(**
+   Print warnings about using unscaled constants
+*)
+
+
+val list_unscaled_constants :
+  Program.Typed.t -> (Location_span.t * string) Set.Poly.t
+(**
+   Return a set of each constant and corresponding location whose magnitude is < 0.1 or > 10
+*)
 
 val list_uniform :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t
 (**
-   Return a set each location and corresponding parameter name throughout the program that the uniform distribution is used.
+   Return a set of each location and corresponding parameter name throughout the program that the uniform distribution is used.
 *)
 
 val list_sigma_unbounded :

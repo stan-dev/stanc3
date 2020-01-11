@@ -49,9 +49,44 @@ let list_uniform (mir : Program.Typed.t) :
     ~init:Set.Poly.empty
     mir.log_prob
 
+let list_unscaled_constants (mir : Program.Typed.t)
+  : (Location_span.t * string) Set.Poly.t =
+  let rec collect_unscaled_expr (expr : Expr.Typed.t) =
+    match expr.pattern with
+    | Expr.Fixed.Pattern.Lit (Real, rstr)
+    | Expr.Fixed.Pattern.Lit (Int, rstr) ->
+      let mag = Float.abs (float_of_string rstr) in
+      if mag < 0.1 || mag > 10.0 then
+        Set.Poly.singleton (expr.meta.loc, rstr)
+      else
+        Set.Poly.empty
+    | pattern
+      -> Expr.Fixed.Pattern.fold_left
+           ~f:(fun l e -> Set.Poly.union l (collect_unscaled_expr e))
+           ~init:Set.Poly.empty
+           pattern
+  in
+  let rec collect_unscaled_stmt (stmt : Stmt.Located.t) =
+    Stmt.Fixed.Pattern.fold_left
+      ~f:(fun l e -> Set.Poly.union l (collect_unscaled_expr e))
+      ~g:(fun l s -> Set.Poly.union l (collect_unscaled_stmt s))
+      ~init:Set.Poly.empty
+      stmt.pattern
+  in
+  List.fold
+    ~f:(fun l s -> Set.Poly.union l (collect_unscaled_stmt s))
+    ~init:Set.Poly.empty
+    (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+
 let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
   Set.Poly.iter elems ~f:(fun elem ->
       Out_channel.output_string stderr (message elem))
+
+let print_warn_unscaled_constants (mir : Program.Typed.t) =
+  let uniforms = list_unscaled_constants mir in
+  let message (loc, name) =
+    "Warning: At " ^ Location_span.to_string loc ^ ", you have the constant " ^ name ^ " which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.\n"
+  in warn_set uniforms message
 
 let print_warn_uniform (mir : Program.Typed.t) =
   let uniforms = list_uniform mir in
@@ -68,5 +103,4 @@ let print_warn_sigma_unbounded (mir : Program.Typed.t) =
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;
   print_warn_uniform mir;
-
-(* note:expressions are Common.Foldable *)
+  print_warn_unscaled_constants mir;
