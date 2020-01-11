@@ -564,7 +564,13 @@ let trans_prog (p : Program.Typed.t) =
   in
   let translate_to_open_cl stmts =
     if !use_opencl then
-      let data_var_idents = List.map ~f:fst p.input_vars in
+      let decl Stmt.Fixed.({pattern; _}) =
+      match pattern with
+        | Decl d ->
+          Some (d.decl_id)
+        | _ -> None
+      in
+      let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in
       let rec trans_stmt_to_opencl s =
         Stmt.Fixed.
