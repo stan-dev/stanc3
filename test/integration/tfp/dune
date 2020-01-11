@@ -30,3 +30,14 @@
 (alias
  (name runtest)
  (action (diff ./tfp_models/nested_expr.py nested_expr.py.output)))
+
+(rule
+ (targets python_kwrds.py.output)
+ (deps (package stanc) (:stanfiles ./stan_models/python_kwrds.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:stan2tfp} %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff ./tfp_models/python_kwrds.py python_kwrds.py.output)))

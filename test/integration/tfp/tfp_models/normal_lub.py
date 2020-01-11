@@ -6,6 +6,7 @@ tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
 from tensorflow.python.ops.parallel_for import pfor as pfor__
 
+
 class normal_lub_model(tfd__.Distribution):
 
   def __init__(self, y_lub, y_ub, y_lb):
