@@ -174,7 +174,11 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
 
 and gen_operator_app = function
   | Operator.Plus ->
-      fun ppf es -> pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
+      fun ppf es -> 
+        if
+          is_matrix (second es) && (is_matrix (first es))
+        then pp_scalar_binary ppf "(%a@ +@ %a)" "(%a@ +@ %a)" es
+        else pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
   | PMinus ->
       fun ppf es ->
         pp_unary ppf
@@ -204,7 +208,10 @@ and gen_operator_app = function
       raise_s [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es ->
-        pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
+        if
+          is_matrix (second es) && (is_matrix (first es))
+        then pp_scalar_binary ppf "(%a@ *@ %a)" "(%a.array()@ *@ %a.array())" es
+        else pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
   | EltDivide ->
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es

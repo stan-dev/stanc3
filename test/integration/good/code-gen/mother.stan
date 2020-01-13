@@ -328,6 +328,8 @@ data {
   row_vector[N] d_1d_row_vec[N];
   row_vector[N] d_3d_row_vec[N,M,K];
   matrix<lower=0,upper=1>[2,3] d_ar_mat[4,5];
+  matrix<lower=0,upper=1>[5,5] d_elt_mat;
+  matrix<lower=0,upper=1>[5,5] d_elt_mat2;
   simplex[N] d_simplex;
   simplex[N] d_1d_simplex[N];
   simplex[N] d_3d_simplex[N,M,K];
@@ -356,6 +358,9 @@ transformed data {
   int x_i[0, 0];
   td_int = 1 || 2;
   td_int = 1 && 2;
+  matrix[5, 5] exp_mult_elt_mat = d_elt_mat .* d_elt_mat2;
+  matrix[5, 5] exp_add_elt_mat = d_elt_mat + d_elt_mat2;
+  matrix[5, 5] exp_add_mult_elt_mat = d_elt_mat + d_elt_mat2 .* d_elt_mat + d_elt_mat2 .* d_elt_mat + d_elt_mat2;
   for (i in 1:2) {
     for (j in 1:3) {
       for (m in 1:4) {
