@@ -103,16 +103,34 @@ let pp_init ppf p =
   let pp_save_data ppf (name, st) =
     pf ppf "self.%s = %a" name (pp_cast "") (name, st)
   in
+  let pp_prep_data_stmt ppf st = pf ppf "self.%a" pp_stmt st in
   let ppbody ppf =
     match p.Program.input_vars with
     | [] -> pf ppf "pass"
-    | _ -> (list ~sep:cut pp_save_data) ppf p.Program.input_vars
+    | _ ->
+        pf ppf "@[<v>%a@,%a@]"
+          (list ~sep:cut pp_save_data)
+          p.Program.input_vars
+          (list ~sep:cut pp_prep_data_stmt)
+          p.Program.prepare_data
   in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
 let pp_extract_data ppf p =
   let pp_data ppf (name, _) = pf ppf "%s = self.%s" name name in
   (list ~sep:cut pp_data) ppf p.Program.input_vars
+
+let pp_transformed_data ppf p =
+  let extract_arg_names x =
+    match x.Stmt.Fixed.pattern with
+    | Assignment ((lhs, _, _), _) -> Some lhs
+    | _ -> None
+  in
+  let arg_names =
+    List.filter_map ~f:extract_arg_names p.Program.prepare_data
+  in
+  let pp_transformed_data ppf s = pf ppf "%s = self.%s" s s in
+  (list ~sep:cut pp_transformed_data) ppf arg_names
 
 let pp_log_prob_one_chain ppf p =
   let pp_extract_param ppf (idx, name) =
@@ -123,10 +141,11 @@ let pp_log_prob_one_chain ppf p =
     | _ -> []
   in
   let ppbody ppf =
-    pf ppf "%a@,%a@,%a" pp_extract_data p
+    pf ppf "@,%s@,%a@,@,%s@,%a@,@,%s@,%a@,@,%s@,%a" "# Data" pp_extract_data p
+      "# Transformed data" pp_transformed_data p "# Parameters"
       (list ~sep:cut pp_extract_param)
       List.(concat (mapi p.output_vars ~f:grab_params))
-      (list ~sep:cut pp_stmt) p.log_prob
+      "# Target log probability computation" (list ~sep:cut pp_stmt) p.log_prob
   in
   let intro = ["target = 0"] in
   let outro = ["return target"] in
