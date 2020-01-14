@@ -28,6 +28,38 @@ let list_sigma_unbounded (mir : Program.Typed.t) :
               && not_lower_zero out_trans )
           mir.output_vars))
 
+let list_multi_twiddles (mir : Program.Typed.t) :
+  (string * Location_span.t Set.Poly.t) Set.Poly.t =
+  let merge_map_elems ~key:_ es = match es with
+    | `Left e1 -> Some e1
+    | `Right e2 -> Some e2
+    | `Both (e1, e2) -> Some (Set.Poly.union e1 e2)
+  in
+  let merge_maps m1 m2 = Map.Poly.merge ~f:merge_map_elems m1 m2
+  in
+  let rec collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
+    match stmt.pattern with
+    | Stmt.Fixed.Pattern.TargetPE
+        ({pattern=
+            Expr.Fixed.Pattern.FunApp
+              (_, _, (({pattern= Var vname; _})::_)); _})
+      -> Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
+    | pattern
+      -> Stmt.Fixed.Pattern.fold_left
+           ~g:(fun l s -> merge_maps l (collect_twiddle_stmt s))
+           ~f:(fun l _ -> l)
+           ~init:Map.Poly.empty
+           pattern
+  in
+  let twiddles = List.fold
+      ~f:(fun l s -> merge_maps l (collect_twiddle_stmt s))
+      ~init:Map.Poly.empty
+      mir.log_prob
+  in
+  let multi_twiddles = Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles
+  in
+  Map.fold ~init:Set.Poly.empty ~f:(fun ~key ~data s -> Set.add s (key, data)) multi_twiddles
+
 let list_uniform (mir : Program.Typed.t) :
   (Location_span.t * string) Set.Poly.t =
   let rec collect_uniform_stmt (stmt : Stmt.Located.t) =
@@ -100,7 +132,14 @@ let print_warn_sigma_unbounded (mir : Program.Typed.t) =
     "Warning: Your Stan program has an unconstrained parameter \"" ^ pname ^ "\" whose name begins with \"sigma\". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.\n"
   in warn_set pnames message
 
+let print_warn_multi_twiddles (mir : Program.Typed.t) =
+  let twds = list_multi_twiddles mir in
+  let message (vname, _) =
+    "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement."
+  in warn_set twds message
+
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;
   print_warn_uniform mir;
   print_warn_unscaled_constants mir;
+  print_warn_multi_twiddles mir;

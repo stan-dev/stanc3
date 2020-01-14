@@ -95,3 +95,27 @@ let%expect_test "Unscaled warning" =
       Warning: At 'string', line 11, column 28 to column 33, you have the constant 10000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 13, column 15 to column 19, you have the constant 1000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 13, column 22 to column 29, you have the constant 0.00001 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example. |}]
+
+let multi_twiddle_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        parameters {
+          real x;
+          real y;
+        }
+        model {
+          x ~ normal(0, 1);
+          y ~ normal(1, 1);
+          x ~ normal(y, 1);
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Multi twiddle warning" =
+  print_warn_pedantic multi_twiddle_example ;
+  [%expect
+    {|
+      Warning: At 'string', line 7, column 21 to column 22, you have the constant 0 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
+      Warning: The parameter x is on the left-hand side of more than one twiddle statement. |}]
