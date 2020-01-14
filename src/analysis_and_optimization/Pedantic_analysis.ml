@@ -3,6 +3,35 @@ open Middle
 open Middle.Program
 open Middle.Expr
 
+let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
+  let params =
+    Set.Poly.of_list
+      (List.map ~f:fst
+         (List.filter
+            ~f:(fun (_, {out_block; _}) ->
+                out_block = Parameters || out_block = TransformedParameters)
+            mir.output_vars))
+  in
+  let rec unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
+    match expr.pattern with
+    | Expr.Fixed.Pattern.Var s -> Set.Poly.remove p s
+    | pattern
+      -> Expr.Fixed.Pattern.fold_left
+           ~f:(fun p e -> unused_params_expr e p)
+           ~init:p
+           pattern
+  in
+  let rec unused_params_stmt (stmt : Stmt.Located.t) (p : string Set.Poly.t) =
+    Stmt.Fixed.Pattern.fold_left
+      ~f:(fun p e -> unused_params_expr e p)
+      ~g:(fun p s -> unused_params_stmt s p)
+      ~init:p
+      stmt.pattern
+  in
+  List.fold
+    ~f:(fun p s -> unused_params_stmt s p)
+    ~init:params
+    (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
 let list_sigma_unbounded (mir : Program.Typed.t) :
   string Set.Poly.t =
@@ -45,9 +74,7 @@ let list_hard_constrained (mir : Program.Typed.t) :
        | (Some 0., Some 1.) | (Some -1., Some 1.) -> false
        | _ -> true
       )
-    | _ ->
-      let () = print_string ("got nada") in
-      false
+    | _ -> false
   in
   Set.Poly.of_list
     (List.map ~f:fst
@@ -173,9 +200,16 @@ let print_warn_multi_twiddles (mir : Program.Typed.t) =
     "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n"
   in warn_set twds message
 
+let print_warn_unused_params (mir : Program.Typed.t) =
+  let pnames = list_unused_params mir in
+  let message pname =
+    "Warning: The parameter " ^ pname ^ " was defined but never used.\n"
+  in warn_set pnames message
+
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;
   print_warn_uniform mir;
   print_warn_unscaled_constants mir;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
+  print_warn_unused_params mir;

@@ -33,11 +33,14 @@ let%expect_test "Unbounded sigma warning" =
   print_warn_pedantic sigma_example ;
   [%expect
     {|
-      got nadagot nadagot nadagot nadagot nadaWarning: Your Stan program has an unconstrained parameter "sigma" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
+      Warning: Your Stan program has an unconstrained parameter "sigma" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has an unconstrained parameter "sigma_a" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has an unconstrained parameter "sigma_d" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has an unconstrained parameter "sigma_e" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has a parameter "sigma_e" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
+      Warning: The parameter logsigma_f was defined but never used.
+      Warning: The parameter sigma was defined but never used.
+      Warning: The parameter sigma_a was defined but never used.
     |}]
 
 let uniform_example =
@@ -59,7 +62,7 @@ let%expect_test "Uniform warning" =
   print_warn_pedantic uniform_example ;
   [%expect
     {|
-      got nadaWarning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
+      Warning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
     |}]
 
 let unscaled_example =
@@ -87,7 +90,7 @@ let%expect_test "Unscaled warning" =
   print_warn_pedantic unscaled_example ;
   [%expect
     {|
-      got nadaWarning: At 'string', line 4, column 19 to column 23, you have the constant 1000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
+      Warning: At 'string', line 4, column 19 to column 23, you have the constant 1000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 11, column 21 to column 26, you have the constant 0.001 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 11, column 28 to column 33, you have the constant 10000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 13, column 15 to column 19, you have the constant 1000 which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
@@ -114,7 +117,7 @@ let%expect_test "Multi twiddle warning" =
   print_warn_pedantic multi_twiddle_example ;
   [%expect
     {|
-      got nadagot nadaWarning: The parameter x is on the left-hand side of more than one twiddle statement. |}]
+      Warning: The parameter x is on the left-hand side of more than one twiddle statement. |}]
 
 let hard_constrained_example =
   let ast =
@@ -138,3 +141,35 @@ let%expect_test "Hard constraint warning" =
     {|
       Warning: Your Stan program has a parameter "c" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
       Warning: Your Stan program has a parameter "d" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution. |}]
+
+let unused_param_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        parameters {
+          real a;
+          real b;
+          real c;
+          real d;
+          real e;
+        }
+        transformed parameters {
+          real f = c;
+        }
+        model {
+          b ~ normal(1, 1);
+          a ~ normal(b, 1);
+        }
+        generated quantities {
+          real g = d;
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Unused param warning" =
+  print_warn_pedantic unused_param_example ;
+  [%expect
+    {|
+      Warning: The parameter e was defined but never used.
+      Warning: The parameter f was defined but never used. |}]
