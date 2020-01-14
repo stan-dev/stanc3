@@ -83,14 +83,6 @@ val all_node_dependencies :
    This is more efficient than calling node_dependencies on each node individually.
 *)
 
-val stmt_map_dependency_graph :
-     (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
-  -> (label, label Set.Poly.t) Map.Poly.t
-(**
-   Build the dependency graph for a statement map. Currently does not use reaching
-   definition information, so no data dependencies considered.
-*)
-
 val log_prob_dependency_graph :
   Program.Typed.t -> (label, label Set.Poly.t) Map.Poly.t
 (**

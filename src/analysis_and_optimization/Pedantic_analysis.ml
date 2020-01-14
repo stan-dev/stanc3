@@ -2,6 +2,9 @@ open Core_kernel
 open Middle
 open Middle.Program
 open Middle.Expr
+open Dependence_analysis
+open Dataflow_types
+open Mir_utils
 
 let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
   let params =
@@ -137,6 +140,40 @@ let list_uniform (mir : Program.Typed.t) :
     ~init:Set.Poly.empty
     mir.log_prob
 
+let list_param_dependant_cf (mir : Program.Typed.t)
+  : (label * string Set.Poly.t) Set.Poly.t =
+  let params =
+    Set.Poly.of_list
+      (List.map ~f:fst
+         (List.filter
+            ~f:(fun (_, {out_block; _}) ->
+                out_block = Parameters || out_block = TransformedParameters)
+            mir.output_vars))
+  in
+  let is_param v = Set.Poly.mem params v in
+  let info_map = log_prob_build_dep_info_map mir in
+  let is_cf (s : ('e, 's) Stmt.Fixed.Pattern.t) = match s with
+    | IfElse _ | While _ | For _ -> true
+    | _ -> false
+  in
+  let cf_labels = Set.Poly.of_list
+      (Map.Poly.keys
+         (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
+              is_cf stmt)))
+  in
+  let label_var_deps label : (label * string Set.Poly.t) =
+    let dep_labels = node_dependencies info_map label in
+    let dep_exprs = union_map dep_labels ~f:(fun label ->
+        let stmt, _ = Map.Poly.find_exn info_map label in
+        stmt_rhs_var_set stmt)
+    in
+    let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
+    let dep_params = Set.Poly.inter params dep_vars in
+    (label, dep_params)
+  in
+  let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
+  Set.Poly.filter ~f:(fun (_, vars) -> Set.Poly.exists ~f:is_param vars) all_cf_var_deps
+
 let list_unscaled_constants (mir : Program.Typed.t)
   : (Location_span.t * string) Set.Poly.t =
   let rec collect_unscaled_expr (expr : Expr.Typed.t) =
@@ -200,6 +237,13 @@ let print_warn_multi_twiddles (mir : Program.Typed.t) =
     "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n"
   in warn_set twds message
 
+let print_warn_param_dependant_cf (mir : Program.Typed.t) =
+  let cfs = list_param_dependant_cf mir in
+  let message (_, plist) =
+    let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
+    "Warning: The control flow statement depends on parameter(s): " ^ plistStr ^ ".\n"
+  in warn_set cfs message
+
 let print_warn_unused_params (mir : Program.Typed.t) =
   let pnames = list_unused_params mir in
   let message pname =
@@ -213,3 +257,4 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
   print_warn_unused_params mir;
+  print_warn_param_dependant_cf mir;

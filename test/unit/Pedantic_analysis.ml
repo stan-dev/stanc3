@@ -173,3 +173,38 @@ let%expect_test "Unused param warning" =
     {|
       Warning: The parameter e was defined but never used.
       Warning: The parameter f was defined but never used. |}]
+
+let param_dependant_cf_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        parameters {
+          real a;
+          real b;
+        }
+        model {
+          int x;
+          int y = 0;
+          if(a > 0) {
+            x = 0;
+          } else {
+            x = 1;
+          }
+          for(i in 0:x) {
+            y = y + 1;
+          }
+          while ( y > 0 ) {
+            b ~ normal(0, 1);
+          }
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Parameter dependent control flow warning" =
+  print_warn_pedantic param_dependant_cf_example ;
+  [%expect
+    {|
+      Warning: The control flow statement depends on parameter(s): a.
+      Warning: The control flow statement depends on parameter(s): a.
+      Warning: The control flow statement depends on parameter(s): a. |}]
