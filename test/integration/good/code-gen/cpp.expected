@@ -241,8 +241,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable theta");}
       current_statement__ = 4;
-      assign(theta, nil_index_list(),
-        mu + multiply(tau, theta_tilde).array(), "assigning variable theta");
+      assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)),
+        "assigning variable theta");
       {
         current_statement__ = 5;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
@@ -318,8 +318,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         return ;
       } 
       current_statement__ = 4;
-      assign(theta, nil_index_list(),
-        mu + multiply(tau, theta_tilde).array(), "assigning variable theta");
+      assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)),
+        "assigning variable theta");
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(theta[(sym1__ - 1)]);}
       if (logical_negation(emit_generated_quantities__)) {
@@ -3865,7 +3865,7 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable exp_add_elt_mat");}}
       current_statement__ = 221;
       assign(exp_add_elt_mat, nil_index_list(),
-        (d_elt_mat.array() + d_elt_mat2.array()),
+        d_elt_mat.array() + d_elt_mat2.array(),
         "assigning variable exp_add_elt_mat");
       current_statement__ = 222;
       validate_non_negative_index("exp_add_mult_elt_mat", "5", 5);
@@ -3885,9 +3885,9 @@ class mother_model : public model_base_crtp<mother_model> {
             "assigning variable exp_add_mult_elt_mat");}}
       current_statement__ = 222;
       assign(exp_add_mult_elt_mat, nil_index_list(),
-        (((d_elt_mat.array() + d_elt_mat2.cwiseProduct(d_elt_mat).array()).array()
-           + d_elt_mat2.cwiseProduct(d_elt_mat).array()).array() +
-          d_elt_mat2.array()), "assigning variable exp_add_mult_elt_mat");
+        d_elt_mat.array() + d_elt_mat2.cwiseProduct(d_elt_mat).array().array()
+          + d_elt_mat2.cwiseProduct(d_elt_mat).array().array() +
+          d_elt_mat2.array(), "assigning variable exp_add_mult_elt_mat");
       current_statement__ = 231;
       for (size_t i = 1; i <= 2; ++i) {
         current_statement__ = 229;
