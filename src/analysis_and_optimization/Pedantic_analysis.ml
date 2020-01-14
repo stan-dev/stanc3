@@ -88,7 +88,7 @@ let list_unscaled_constants (mir : Program.Typed.t)
     | Expr.Fixed.Pattern.Lit (Real, rstr)
     | Expr.Fixed.Pattern.Lit (Int, rstr) ->
       let mag = Float.abs (float_of_string rstr) in
-      if mag < 0.1 || mag > 10.0 then
+      if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
         Set.Poly.singleton (expr.meta.loc, rstr)
       else
         Set.Poly.empty
