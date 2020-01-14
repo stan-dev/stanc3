@@ -14,7 +14,8 @@ type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t }
+  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; meta: Location_span.t}
 
 (**
    Find all of the reaching definitions of a variable in an RD set
@@ -244,13 +245,14 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
   in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir log_prob_stmt in
-  Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, _) ->
+  Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, meta) ->
       let rds = Map.find_exn rd_map label in
       ( stmt
       , { predecessors= Map.find_exn preds label
         ; parents= Map.find_exn parents label
         ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit } ) )
+        ; reaching_defn_exit= rds.exit
+        ; meta= meta} ) )
 
 let log_prob_dependency_graph (mir : Program.Typed.t) :
   (label, label Set.Poly.t) Map.Poly.t =

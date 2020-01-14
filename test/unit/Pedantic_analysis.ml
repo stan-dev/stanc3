@@ -205,6 +205,6 @@ let%expect_test "Parameter dependent control flow warning" =
   print_warn_pedantic param_dependant_cf_example ;
   [%expect
     {|
-      Warning: The control flow statement depends on parameter(s): a.
-      Warning: The control flow statement depends on parameter(s): a.
-      Warning: The control flow statement depends on parameter(s): a. |}]
+      Warning: The control flow statement at 'string', line 9, column 10 to line 13, column 11 depends on parameter(s): a.
+      Warning: The control flow statement at 'string', line 14, column 10 to line 16, column 11 depends on parameter(s): a.
+      Warning: The control flow statement at 'string', line 17, column 10 to line 19, column 11 depends on parameter(s): a. |}]

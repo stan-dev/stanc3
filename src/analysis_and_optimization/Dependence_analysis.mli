@@ -26,7 +26,8 @@ type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t }
+  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; meta: Location_span.t }
 
 val node_immediate_dependencies :
      ( label

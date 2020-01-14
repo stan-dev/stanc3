@@ -141,7 +141,7 @@ let list_uniform (mir : Program.Typed.t) :
     mir.log_prob
 
 let list_param_dependant_cf (mir : Program.Typed.t)
-  : (label * string Set.Poly.t) Set.Poly.t =
+  : (Location_span.t * string Set.Poly.t) Set.Poly.t =
   let params =
     Set.Poly.of_list
       (List.map ~f:fst
@@ -161,7 +161,7 @@ let list_param_dependant_cf (mir : Program.Typed.t)
          (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
               is_cf stmt)))
   in
-  let label_var_deps label : (label * string Set.Poly.t) =
+  let label_var_deps label : (Location_span.t * string Set.Poly.t) =
     let dep_labels = node_dependencies info_map label in
     let dep_exprs = union_map dep_labels ~f:(fun label ->
         let stmt, _ = Map.Poly.find_exn info_map label in
@@ -169,7 +169,8 @@ let list_param_dependant_cf (mir : Program.Typed.t)
     in
     let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
     let dep_params = Set.Poly.inter params dep_vars in
-    (label, dep_params)
+    let _, info = Map.Poly.find_exn info_map label in
+    (info.meta, dep_params)
   in
   let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
   Set.Poly.filter ~f:(fun (_, vars) -> Set.Poly.exists ~f:is_param vars) all_cf_var_deps
@@ -239,9 +240,9 @@ let print_warn_multi_twiddles (mir : Program.Typed.t) =
 
 let print_warn_param_dependant_cf (mir : Program.Typed.t) =
   let cfs = list_param_dependant_cf mir in
-  let message (_, plist) =
+  let message (loc, plist) =
     let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
-    "Warning: The control flow statement depends on parameter(s): " ^ plistStr ^ ".\n"
+    "Warning: The control flow statement at " ^ Location_span.to_string loc ^ " depends on parameter(s): " ^ plistStr ^ ".\n"
   in warn_set cfs message
 
 let print_warn_unused_params (mir : Program.Typed.t) =
