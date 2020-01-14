@@ -28,6 +28,35 @@ let list_sigma_unbounded (mir : Program.Typed.t) :
               && not_lower_zero out_trans )
           mir.output_vars))
 
+let list_hard_constrained (mir : Program.Typed.t) :
+  string Set.Poly.t =
+  let rec bound_value (v : Expr.Typed.t) = match v with
+    | {pattern= Fixed.Pattern.Lit (Real, str); _}
+    | {pattern= Fixed.Pattern.Lit (Int, str); _} -> Some (float_of_string str)
+    | {pattern= Fixed.Pattern.FunApp (StanLib, "PMinus__", [v]); _} ->
+      (match bound_value v with
+       | Some v -> Some (-.v)
+       | None -> None)
+    | _ -> None
+  in
+  let constrained (e : Expr.Typed.t transformation) = match e with
+    | LowerUpper (lower, upper) ->
+      (match (bound_value lower, bound_value upper) with
+       | (Some 0., Some 1.) | (Some -1., Some 1.) -> false
+       | _ -> true
+      )
+    | _ ->
+      let () = print_string ("got nada") in
+      false
+  in
+  Set.Poly.of_list
+    (List.map ~f:fst
+       (List.filter
+          ~f:(fun (_, {out_block; out_trans; _}) ->
+              (out_block = Parameters || out_block = TransformedParameters)
+              &&  constrained out_trans )
+          mir.output_vars))
+
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
   let merge_map_elems ~key:_ es = match es with
@@ -132,10 +161,16 @@ let print_warn_sigma_unbounded (mir : Program.Typed.t) =
     "Warning: Your Stan program has an unconstrained parameter \"" ^ pname ^ "\" whose name begins with \"sigma\". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.\n"
   in warn_set pnames message
 
+let print_warn_hard_constrained (mir : Program.Typed.t) =
+  let pnames = list_hard_constrained mir in
+  let message pname =
+    "Warning: Your Stan program has a parameter \"" ^ pname ^ "\" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.\n"
+  in warn_set pnames message
+
 let print_warn_multi_twiddles (mir : Program.Typed.t) =
   let twds = list_multi_twiddles mir in
   let message (vname, _) =
-    "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement."
+    "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n"
   in warn_set twds message
 
 let print_warn_pedantic (mir : Program.Typed.t) =
@@ -143,3 +178,4 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_uniform mir;
   print_warn_unscaled_constants mir;
   print_warn_multi_twiddles mir;
+  print_warn_hard_constrained mir;
