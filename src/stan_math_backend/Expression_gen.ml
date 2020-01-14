@@ -32,7 +32,7 @@ let is_scalar e =
 
 let is_matrix e = Expr.Typed.type_of e = UMatrix
 
-let is_eigen e = 
+let is_eigen e =
   match Expr.Typed.type_of e with UMatrix | UVector -> true | _ -> false
 
 let is_row_vector e = Expr.Typed.type_of e = URowVector
@@ -178,29 +178,31 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
 
 and gen_operator_app = function
   | Operator.Plus ->
-      fun ppf es -> 
-        if
-          (is_eigen (first es) && is_eigen (second es))
-        then pp_scalar_binary ppf "(%a@ +@ %a)" "(%a.array()@ +@ %a.array())" es
-        else pp_scalar_binary ppf "(%a@ +@ %a)" "%a@ +@ %a.array()" es
+      fun ppf es ->
+        if is_eigen (first es) && is_eigen (second es) then
+          pp_scalar_binary ppf "(%a@ +@ %a)" "%a.array()@ +@ %a.array()" es
+        else pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
   | PMinus ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) || is_eigen (List.hd_exn es) then "-%a" else "minus(@,%a)")
+          ( if is_scalar (List.hd_exn es) || is_eigen (List.hd_exn es) then
+            "-%a"
+          else "minus(@,%a)" )
           es
   | PPlus -> fun ppf es -> pp_unary ppf "%a" es
   | Transpose ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "%a" 
-          else if is_eigen (List.hd_exn es) then "%a.transpose()" else "transpose(@,%a)")
+          ( if is_scalar (List.hd_exn es) then "%a"
+          else if is_eigen (first es) then "%a.transpose()"
+          else "transpose(@,%a)" )
           es
   | PNot -> fun ppf es -> pp_unary ppf "logical_negation(@,%a)" es
   | Minus ->
-      fun ppf es -> 
-    if (is_eigen (second es) && (is_eigen (first es))) then
-      pp_scalar_binary ppf "(%a@ -@ %a)" "%a.array() -@ %a.array())" es else
-      pp_scalar_binary ppf "(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
+      fun ppf es ->
+        if is_eigen (second es) && is_eigen (first es) then
+          pp_scalar_binary ppf "(%a@ -@ %a)" "%a.array() -@ %a.array()" es
+        else pp_scalar_binary ppf "(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
   | Times ->
       fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "multiply(@,%a,@ %a)" es
   | Divide ->
@@ -216,12 +218,14 @@ and gen_operator_app = function
       raise_s [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es ->
-        if (is_eigen (second es) && (is_eigen (first es)))
-        then pp_scalar_binary ppf "(%a@ *@ %a)" "%a.cwiseProduct(%a)" es
+        if is_eigen (second es) && is_eigen (first es) then
+          pp_scalar_binary ppf "(%a@ *@ %a)" "%a.cwiseProduct(%a)" es
         else pp_scalar_binary ppf "(%a@ *@ %a)" "elt_multiply(@,%a,@ %a)" es
   | EltDivide ->
       fun ppf es ->
-        pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
+        if is_eigen (second es) && is_eigen (first es) then
+          pp_scalar_binary ppf "(%a@ /@ %a)" "%a.array()@ /@ %a.array()" es
+        else pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
   | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
   | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
   | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
