@@ -453,9 +453,6 @@ generated quantities {
   N <- M / theta;
 }
 
-Info: Found int division at 'mark-recapture-2.stan', line 9, column 15 to column 24:
-  theta_max / (C - R + M)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 Info: Found int division at 'mark-recapture-2.stan', line 19, column 7 to column 8:
   M / theta
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
@@ -521,9 +518,6 @@ model {
   R ~ binomial(C, theta);
 }
 
-Info: Found int division at 'mark-recapture-3.stan', line 27, column 15 to column 24:
-  theta_max / (C - R + M)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 Info: Found int division at 'mark-recapture-3.stan', line 34, column 11 to column 12:
   M / N
 Positive values rounded down, negative values rounded up or down in platform-dependent way.

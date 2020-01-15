@@ -595,7 +595,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and re = semantic_check_expression cf e2
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
-        | UInt, UReal, Divide | UReal, UInt, Divide ->
+        | UInt, UReal, Divide | UInt, UInt, Divide ->
             Fmt.pr
               "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
               (Location_span.to_string x.emeta.loc)
