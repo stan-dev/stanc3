@@ -8,9 +8,6 @@ model {
   x ~ normal(0, exp(y / 2));
 }
 
-Info: Found int division at 'funnel.stan', line 7, column 19 to column 20:
-  y / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../../install/default/bin/stanc --auto-format funnel_reparam.stan
 parameters {
   real y_raw;
@@ -27,9 +24,6 @@ model {
   x_raw ~ normal(0, 1);
 }
 
-Info: Found int division at 'funnel_reparam.stan', line 10, column 11 to column 12:
-  y / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'funnel_reparam.stan', line 9, column 5:
    -------------------------------------------------
