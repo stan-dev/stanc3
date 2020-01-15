@@ -101,7 +101,6 @@ let has_int_or_real_type ue =
 let probability_distribution_name_variants id =
   let name = id.name in
   let open String in
-  let open Pervasives in
   List.map
     ~f:(fun n -> {name= n; id_loc= id.id_loc})
     ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
