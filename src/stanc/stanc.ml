@@ -142,34 +142,6 @@ let optimization_settings () : Optimize.optimization_settings =
   ; lazy_code_motion= !optimize
   ; optimize_ad_levels= true }
 
-let print_warn_uninitialized
-    (uninit_vars : (Location_span.t * string) Set.Poly.t) =
-  let show_location_span Location_span.({begin_loc; end_loc; _}) =
-    let begin_line = string_of_int begin_loc.line_num in
-    let begin_col = string_of_int begin_loc.col_num in
-    let end_line = string_of_int end_loc.line_num in
-    let end_col = string_of_int end_loc.col_num in
-    let char_range =
-      if begin_line = end_line then
-        "line " ^ begin_line ^ ", character(s) " ^ begin_col ^ "-" ^ end_col
-      else
-        "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line "
-        ^ end_line ^ ", character " ^ end_col
-    in
-    "File \"" ^ begin_loc.filename ^ "\", " ^ char_range
-  in
-  let show_var_info (span, var_name) =
-    show_location_span span ^ ":\n" ^ "  Warning: The variable '" ^ var_name
-    ^ "' may not have been initialized.\n"
-  in
-  let filtered_uninit_vars =
-    Set.Poly.filter
-      ~f:(fun (span, _) -> span <> Location_span.empty)
-      uninit_vars
-  in
-  Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
-      Out_channel.output_string stderr (show_var_info v_info) )
-
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
   exit 127
@@ -204,10 +176,7 @@ let use_file filename =
     ( if !warn_pedantic then
         Pedantic_analysis.print_warn_pedantic mir ) ;
     ( if !warn_uninitialized then
-      let uninitialized_vars =
-        Dependence_analysis.mir_uninitialized_variables mir
-      in
-      print_warn_uninitialized uninitialized_vars ) ;
+      Pedantic_analysis.print_warn_uninitialized mir ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

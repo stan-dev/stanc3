@@ -260,6 +260,36 @@ let print_warn_non_one_priors (mir : Program.Typed.t) =
     "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n"
   in warn_set vars message
 
+let print_warn_uninitialized (mir : Program.Typed.t) =
+  let uninit_vars =
+    Dependence_analysis.mir_uninitialized_variables mir
+  in
+  let show_location_span Location_span.({begin_loc; end_loc; _}) =
+    let begin_line = string_of_int begin_loc.line_num in
+    let begin_col = string_of_int begin_loc.col_num in
+    let end_line = string_of_int end_loc.line_num in
+    let end_col = string_of_int end_loc.col_num in
+    let char_range =
+      if begin_line = end_line then
+        "line " ^ begin_line ^ ", character(s) " ^ begin_col ^ "-" ^ end_col
+      else
+        "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line "
+        ^ end_line ^ ", character " ^ end_col
+    in
+    "File \"" ^ begin_loc.filename ^ "\", " ^ char_range
+  in
+  let show_var_info (span, var_name) =
+    show_location_span span ^ ":\n" ^ "  Warning: The variable '" ^ var_name
+    ^ "' may not have been initialized.\n"
+  in
+  let filtered_uninit_vars =
+    Set.Poly.filter
+      ~f:(fun (span, _) -> span <> Location_span.empty)
+      uninit_vars
+  in
+  Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
+      Out_channel.output_string stderr (show_var_info v_info) )
+
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;
   print_warn_uniform mir;
@@ -269,3 +299,4 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_unused_params mir;
   print_warn_param_dependant_cf mir;
   print_warn_non_one_priors mir;
+  print_warn_uninitialized mir;
