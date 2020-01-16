@@ -63,19 +63,6 @@ let factor_var_dependencies statement_map (label, factor) =
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs
 
-let data_set (mir : Program.Typed.t) : vexpr Set.Poly.t =
-  Set.Poly.of_list
-    (List.map ~f:(fun (v, _) -> VVar v)
-       mir.input_vars)
-
-let parameter_set (mir : Program.Typed.t) : vexpr Set.Poly.t =
-  Set.Poly.of_list
-    (List.map ~f:(fun (v, _) -> VVar v)
-       (List.filter
-          ~f:(fun (_, {out_block; _}) ->
-              out_block = Parameters || out_block = TransformedParameters)
-          mir.output_vars))
-
 
 let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) : factor_graph =
   let factor_map =
@@ -95,7 +82,10 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) 
 let prog_factor_graph prog : factor_graph =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
-  let vars = Set.Poly.union (data_set prog) (parameter_set prog) in
+  let vars = Set.Poly.map
+      ~f:(fun v -> VVar v)
+      (Set.Poly.union (parameter_set prog) (data_set prog))
+  in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->
         (l, fac, Set.Poly.inter vars (factor_var_dependencies statement_map (l, fac))) )
@@ -146,8 +136,8 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) : 
 
 let list_priors (mir : Program.Typed.t) : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
   let fg = prog_factor_graph mir in
-  let params = parameter_set mir in
-  let data = data_set mir in
+  let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_set mir) in
+  let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   generate_map params ~f:(fun p -> fg_var_priors p data fg)
 
 (*

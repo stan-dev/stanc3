@@ -9,32 +9,15 @@ open Factor_graph
 open Mir_utils
 
 let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
-  let params =
-    Set.Poly.of_list
-      (List.map ~f:fst
-         (List.filter
-            ~f:(fun (_, {out_block; _}) ->
-                out_block = Parameters || out_block = TransformedParameters)
-            mir.output_vars))
-  in
-  let rec unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
+  let params = parameter_set mir in
+  let unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
     match expr.pattern with
     | Expr.Fixed.Pattern.Var s -> Set.Poly.remove p s
-    | pattern
-      -> Expr.Fixed.Pattern.fold_left
-           ~f:(fun p e -> unused_params_expr e p)
-           ~init:p
-           pattern
+    | _ -> p
   in
-  let rec unused_params_stmt (stmt : Stmt.Located.t) (p : string Set.Poly.t) =
-    Stmt.Fixed.Pattern.fold_left
-      ~f:(fun p e -> unused_params_expr e p)
-      ~g:(fun p s -> unused_params_stmt s p)
-      ~init:p
-      stmt.pattern
-  in
-  List.fold
-    ~f:(fun p s -> unused_params_stmt s p)
+  fold_stmts
+    ~take_stmt:(fun p _ -> p)
+    ~take_expr:(fun p e -> unused_params_expr e p)
     ~init:params
     (List.concat [mir.log_prob; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
@@ -53,14 +36,8 @@ let list_sigma_unbounded (mir : Program.Typed.t) :
     | LowerUpper (_, _) -> false
     | _ -> true
   in
-  Set.Poly.of_list
-    (List.map ~f:fst
-       (List.filter
-          ~f:(fun (name, {out_block; out_trans; _}) ->
-              (out_block = Parameters || out_block = TransformedParameters)
-              && String.is_prefix ~prefix:"sigma" name
-              && not_lower_zero out_trans )
-          mir.output_vars))
+  Set.Poly.filter ~f:(fun v -> String.is_prefix ~prefix:"sigma" v)
+    (parameter_set ~trans_predicate:not_lower_zero mir)
 
 let list_hard_constrained (mir : Program.Typed.t) :
   string Set.Poly.t =
@@ -81,32 +58,22 @@ let list_hard_constrained (mir : Program.Typed.t) :
       )
     | _ -> false
   in
-  Set.Poly.of_list
-    (List.map ~f:fst
-       (List.filter
-          ~f:(fun (_, {out_block; out_trans; _}) ->
-              (out_block = Parameters || out_block = TransformedParameters)
-              &&  constrained out_trans )
-          mir.output_vars))
+  parameter_set ~trans_predicate:constrained mir
 
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
-  let rec collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
+  let collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
         ({pattern=
             Expr.Fixed.Pattern.FunApp
               (_, _, (({pattern= Var vname; _})::_)); _})
       -> Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
-    | pattern
-      -> Stmt.Fixed.Pattern.fold_left
-           ~g:(fun l s -> merge_set_maps l (collect_twiddle_stmt s))
-           ~f:(fun l _ -> l)
-           ~init:Map.Poly.empty
-           pattern
+    | _ -> Map.Poly.empty
   in
-  let twiddles = List.fold
-      ~f:(fun l s -> merge_set_maps l (collect_twiddle_stmt s))
+  let twiddles = fold_stmts
+      ~take_stmt:(fun m s -> merge_set_maps m (collect_twiddle_stmt s))
+      ~take_expr:(fun m _ -> m)
       ~init:Map.Poly.empty
       mir.log_prob
   in
@@ -116,35 +83,24 @@ let list_multi_twiddles (mir : Program.Typed.t) :
 
 let list_uniform (mir : Program.Typed.t) :
   (Location_span.t * string) Set.Poly.t =
-  let rec collect_uniform_stmt (stmt : Stmt.Located.t) =
+  let collect_uniform_stmt (stmt : Stmt.Located.t) =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
         ({pattern=
             Expr.Fixed.Pattern.FunApp
               (StanLib, "uniform_propto_log", (({pattern= Var vname; _})::_)); _})
       -> Set.Poly.singleton (stmt.meta, vname)
-    | pattern
-      -> Stmt.Fixed.Pattern.fold_left
-           ~g:(fun l s -> Set.Poly.union l (collect_uniform_stmt s))
-           ~f:(fun l _ -> l)
-           ~init:Set.Poly.empty
-           pattern
+    | _ -> Set.Poly.empty
   in
-  List.fold
-    ~f:(fun l s -> Set.Poly.union l (collect_uniform_stmt s))
+  fold_stmts
+    ~take_stmt:(fun l s -> Set.Poly.union l (collect_uniform_stmt s))
+    ~take_expr:(fun l _ -> l)
     ~init:Set.Poly.empty
     mir.log_prob
 
 let list_param_dependant_cf (mir : Program.Typed.t)
   : (Location_span.t * string Set.Poly.t) Set.Poly.t =
-  let params =
-    Set.Poly.of_list
-      (List.map ~f:fst
-         (List.filter
-            ~f:(fun (_, {out_block; _}) ->
-                out_block = Parameters || out_block = TransformedParameters)
-            mir.output_vars))
-  in
+  let params = parameter_set mir in
   let is_param v = Set.Poly.mem params v in
   let info_map = log_prob_build_dep_info_map mir in
   let cf_labels = Set.Poly.of_list
@@ -168,7 +124,7 @@ let list_param_dependant_cf (mir : Program.Typed.t)
 
 let list_unscaled_constants (mir : Program.Typed.t)
   : (Location_span.t * string) Set.Poly.t =
-  let rec collect_unscaled_expr (expr : Expr.Typed.t) =
+  let collect_unscaled_expr (expr : Expr.Typed.t) =
     match expr.pattern with
     | Expr.Fixed.Pattern.Lit (Real, rstr)
     | Expr.Fixed.Pattern.Lit (Int, rstr) ->
@@ -177,21 +133,11 @@ let list_unscaled_constants (mir : Program.Typed.t)
         Set.Poly.singleton (expr.meta.loc, rstr)
       else
         Set.Poly.empty
-    | pattern
-      -> Expr.Fixed.Pattern.fold_left
-           ~f:(fun l e -> Set.Poly.union l (collect_unscaled_expr e))
-           ~init:Set.Poly.empty
-           pattern
+    | _ -> Set.Poly.empty
   in
-  let rec collect_unscaled_stmt (stmt : Stmt.Located.t) =
-    Stmt.Fixed.Pattern.fold_left
-      ~f:(fun l e -> Set.Poly.union l (collect_unscaled_expr e))
-      ~g:(fun l s -> Set.Poly.union l (collect_unscaled_stmt s))
-      ~init:Set.Poly.empty
-      stmt.pattern
-  in
-  List.fold
-    ~f:(fun l s -> Set.Poly.union l (collect_unscaled_stmt s))
+  fold_stmts
+    ~take_stmt:(fun a _ -> a)
+    ~take_expr:(fun a e -> Set.Poly.union a (collect_unscaled_expr e))
     ~init:Set.Poly.empty
     (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
@@ -262,33 +208,14 @@ let print_warn_non_one_priors (mir : Program.Typed.t) =
 
 let print_warn_uninitialized (mir : Program.Typed.t) =
   let uninit_vars =
-    Dependence_analysis.mir_uninitialized_variables mir
-  in
-  let show_location_span Location_span.({begin_loc; end_loc; _}) =
-    let begin_line = string_of_int begin_loc.line_num in
-    let begin_col = string_of_int begin_loc.col_num in
-    let end_line = string_of_int end_loc.line_num in
-    let end_col = string_of_int end_loc.col_num in
-    let char_range =
-      if begin_line = end_line then
-        "line " ^ begin_line ^ ", character(s) " ^ begin_col ^ "-" ^ end_col
-      else
-        "line " ^ begin_line ^ ", character " ^ begin_col ^ " to line "
-        ^ end_line ^ ", character " ^ end_col
-    in
-    "File \"" ^ begin_loc.filename ^ "\", " ^ char_range
-  in
-  let show_var_info (span, var_name) =
-    show_location_span span ^ ":\n" ^ "  Warning: The variable '" ^ var_name
-    ^ "' may not have been initialized.\n"
-  in
-  let filtered_uninit_vars =
     Set.Poly.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
-      uninit_vars
+      (Dependence_analysis.mir_uninitialized_variables mir)
   in
-  Set.Poly.iter filtered_uninit_vars ~f:(fun v_info ->
-      Out_channel.output_string stderr (show_var_info v_info) )
+  let message (span, var_name) =
+    "Warning: the variable " ^ var_name ^ " may not have been initialized its use at " ^ Location_span.to_string span ^ ".\n"
+  in
+  warn_set uninit_vars message
 
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;

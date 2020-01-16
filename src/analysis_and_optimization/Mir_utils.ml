@@ -2,6 +2,43 @@ open Core_kernel
 open Middle
 open Dataflow_types
 
+let fold_stmts
+    ~take_expr
+    ~take_stmt
+    ~(init:'c)
+    (stmts : Stmt.Located.t List.t)
+  : 'c =
+  let rec fold_expr (state : 'c) (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
+    Expr.Fixed.Pattern.fold_left
+      ~f:(fun a e -> fold_expr (take_expr a e) e)
+      ~init:state
+      expr.pattern
+  in
+  let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
+    Stmt.Fixed.Pattern.fold_left
+      ~f:(fun a e -> fold_expr (take_expr a e) e)
+      ~g:(fun a s -> fold_stmt (take_stmt a s) s)
+      ~init:state
+      stmt.pattern
+  in
+  List.fold
+    ~f:(fun a s -> (fold_stmt (take_stmt a s) s))
+    ~init:init
+    stmts
+
+let data_set (mir : Program.Typed.t) : string Set.Poly.t =
+  Set.Poly.of_list
+    (List.map ~f:fst mir.input_vars)
+
+let parameter_set ?(trans_predicate=fun _ -> true) (mir : Program.Typed.t) : string Set.Poly.t =
+  Set.Poly.of_list
+    (List.map ~f:fst
+       (List.filter
+          ~f:(fun (_, {out_block; out_trans; _}) ->
+              (out_block = Parameters || out_block = TransformedParameters)
+              && trans_predicate out_trans)
+          mir.output_vars))
+
 let rec map_rec_expr f e =
   let recurse = map_rec_expr f in
   Expr.Fixed.{e with pattern= f (Pattern.map recurse e.pattern)}
