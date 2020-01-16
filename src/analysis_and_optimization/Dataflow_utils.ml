@@ -15,6 +15,25 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
   Map.Poly.merge m1 m2 ~f
 
 (**
+   Merge two maps whose values are sets, and union the sets when there's a collision.
+*)
+let merge_set_maps m1 m2 =
+  let merge_map_elems ~key:_ es = match es with
+    | `Left e1 -> Some e1
+    | `Right e2 -> Some e2
+    | `Both (e1, e2) -> Some (Set.Poly.union e1 e2)
+  in Map.Poly.merge ~f:merge_map_elems m1 m2
+
+(**
+   Generate a Map by applying a function to each element of a key set.
+*)
+let generate_map s ~f =
+  Set.Poly.fold
+    s
+    ~init:Map.Poly.empty
+    ~f:(fun m e -> Map.Poly.add_exn m ~key:e ~data:(f e))
+
+(**
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
 *)

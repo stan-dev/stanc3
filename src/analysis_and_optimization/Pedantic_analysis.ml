@@ -4,6 +4,8 @@ open Middle.Program
 open Middle.Expr
 open Dependence_analysis
 open Dataflow_types
+open Dataflow_utils
+open Factor_graph
 open Mir_utils
 
 let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
@@ -34,7 +36,7 @@ let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
   List.fold
     ~f:(fun p s -> unused_params_stmt s p)
     ~init:params
-    (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+    (List.concat [mir.log_prob; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
 let list_sigma_unbounded (mir : Program.Typed.t) :
   string Set.Poly.t =
@@ -89,13 +91,6 @@ let list_hard_constrained (mir : Program.Typed.t) :
 
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
-  let merge_map_elems ~key:_ es = match es with
-    | `Left e1 -> Some e1
-    | `Right e2 -> Some e2
-    | `Both (e1, e2) -> Some (Set.Poly.union e1 e2)
-  in
-  let merge_maps m1 m2 = Map.Poly.merge ~f:merge_map_elems m1 m2
-  in
   let rec collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
@@ -105,13 +100,13 @@ let list_multi_twiddles (mir : Program.Typed.t) :
       -> Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
     | pattern
       -> Stmt.Fixed.Pattern.fold_left
-           ~g:(fun l s -> merge_maps l (collect_twiddle_stmt s))
+           ~g:(fun l s -> merge_set_maps l (collect_twiddle_stmt s))
            ~f:(fun l _ -> l)
            ~init:Map.Poly.empty
            pattern
   in
   let twiddles = List.fold
-      ~f:(fun l s -> merge_maps l (collect_twiddle_stmt s))
+      ~f:(fun l s -> merge_set_maps l (collect_twiddle_stmt s))
       ~init:Map.Poly.empty
       mir.log_prob
   in
@@ -152,14 +147,10 @@ let list_param_dependant_cf (mir : Program.Typed.t)
   in
   let is_param v = Set.Poly.mem params v in
   let info_map = log_prob_build_dep_info_map mir in
-  let is_cf (s : ('e, 's) Stmt.Fixed.Pattern.t) = match s with
-    | IfElse _ | While _ | For _ -> true
-    | _ -> false
-  in
   let cf_labels = Set.Poly.of_list
       (Map.Poly.keys
          (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
-              is_cf stmt)))
+              is_ctrl_flow stmt)))
   in
   let label_var_deps label : (Location_span.t * string Set.Poly.t) =
     let dep_labels = node_dependencies info_map label in
@@ -203,6 +194,18 @@ let list_unscaled_constants (mir : Program.Typed.t)
     ~f:(fun l s -> Set.Poly.union l (collect_unscaled_stmt s))
     ~init:Set.Poly.empty
     (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+
+let list_non_one_priors (mir : Program.Typed.t) : (string * int) Set.Poly.t =
+  let priors = list_priors mir in
+  let prior_set =
+    Map.Poly.fold
+      priors
+      ~init:Set.Poly.empty
+      ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
+          Option.value_map factors_opt ~default:s
+            ~f:(fun factors -> Set.Poly.add s (v, Set.Poly.length factors)))
+  in
+  Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
 
 let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
   Set.Poly.iter elems ~f:(fun elem ->
@@ -251,6 +254,12 @@ let print_warn_unused_params (mir : Program.Typed.t) =
     "Warning: The parameter " ^ pname ^ " was defined but never used.\n"
   in warn_set pnames message
 
+let print_warn_non_one_priors (mir : Program.Typed.t) =
+  let vars = list_non_one_priors mir in
+  let message (pname, n) =
+    "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n"
+  in warn_set vars message
+
 let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_sigma_unbounded mir;
   print_warn_uniform mir;
@@ -259,3 +268,4 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_hard_constrained mir;
   print_warn_unused_params mir;
   print_warn_param_dependant_cf mir;
+  print_warn_non_one_priors mir;

@@ -63,6 +63,7 @@ let%expect_test "Uniform warning" =
   [%expect
     {|
       Warning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
+      Warning: The parameter x has 2 priors.
     |}]
 
 let unscaled_example =
@@ -117,7 +118,9 @@ let%expect_test "Multi twiddle warning" =
   print_warn_pedantic multi_twiddle_example ;
   [%expect
     {|
-      Warning: The parameter x is on the left-hand side of more than one twiddle statement. |}]
+      Warning: The parameter x is on the left-hand side of more than one twiddle statement.
+      Warning: The parameter x has 2 priors.
+      Warning: The parameter y has 2 priors. |}]
 
 let hard_constrained_example =
   let ast =
@@ -171,8 +174,10 @@ let%expect_test "Unused param warning" =
   print_warn_pedantic unused_param_example ;
   [%expect
     {|
+      Warning: The parameter d was defined but never used.
       Warning: The parameter e was defined but never used.
-      Warning: The parameter f was defined but never used. |}]
+      Warning: The parameter f was defined but never used.
+      Warning: The parameter b has 2 priors. |}]
 
 let param_dependant_cf_example =
   let ast =
@@ -208,3 +213,76 @@ let%expect_test "Parameter dependent control flow warning" =
       Warning: The control flow statement at 'string', line 9, column 10 to line 13, column 11 depends on parameter(s): a.
       Warning: The control flow statement at 'string', line 14, column 10 to line 16, column 11 depends on parameter(s): a.
       Warning: The control flow statement at 'string', line 17, column 10 to line 19, column 11 depends on parameter(s): a. |}]
+
+let non_one_priors_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        data {
+          real x;
+        }
+        parameters {
+          real a;
+          real b;
+          real c;
+          real d;
+        }
+        model
+        {
+          a ~ normal(0, 1);
+          b ~ normal(0, 1);
+          c ~ normal(a, b);
+          d ~ normal(0, 1);
+          x ~ normal(c, d);
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Non-one priors no warning" =
+  print_warn_pedantic non_one_priors_example ;
+  [%expect
+    {| |}]
+
+let non_one_priors_example2 =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        data {
+          real x;
+          real y;
+        }
+        parameters {
+          real a;
+          real b;
+          real c;
+          real d;
+          real e;
+          real f;
+        }
+        model
+        {
+          a ~ normal(0, 1);
+          b ~ normal(a, 1);
+          x ~ normal(b, 1);
+          y ~ normal(c, 1);
+          d ~ normal(b, 1);
+          e ~ normal(a, 1);
+          f ~ normal(a, 1);
+          f ~ normal(e, 1);
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Non-one priors warning" =
+  print_warn_pedantic non_one_priors_example2 ;
+  [%expect
+    {|
+      Warning: The parameter f is on the left-hand side of more than one twiddle statement.
+      Warning: The parameter a has 3 priors.
+      Warning: The parameter b has 2 priors.
+      Warning: The parameter c has 0 priors.
+      Warning: The parameter d has 0 priors.
+      Warning: The parameter e has 0 priors.
+      Warning: The parameter f has 0 priors. |}]

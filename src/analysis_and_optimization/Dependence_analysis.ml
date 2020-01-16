@@ -119,7 +119,7 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   in
   let to_rd_set set =
     Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:0) )
+        (VVar s, Option.value label_opt ~default:1) )
   in
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
