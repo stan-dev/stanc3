@@ -249,9 +249,9 @@ and gen_misc_special_math_app f =
 and read_data ut ppf es =
   let i_or_r =
     match ut with
-    | UnsizedType.UInt -> "i"
-    | UReal -> "r"
-    | UVector | URowVector | UMatrix | UArray _
+    | UnsizedType.UArray UInt -> "i"
+    | UArray UReal -> "r"
+    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]

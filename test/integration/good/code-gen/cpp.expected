@@ -133,9 +133,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
           context__.to_vec());
       
       current_statement__ = 9;
-      pos__ = 1;
-      current_statement__ = 9;
-      J = context__.vals_i("J")[(pos__ - 1)];
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 10;
       validate_non_negative_index("y", "J", J);
       context__.validate_dims("data initialization","y","double",
@@ -143,14 +141,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       y = std::vector<double>(J, 0);
       
       current_statement__ = 10;
-      pos__ = 1;
-      current_statement__ = 10;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 10;
-        assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("y")[(pos__ - 1)], "assigning variable y");
-        current_statement__ = 10;
-        pos__ = (pos__ + 1);}
+      assign(y, nil_index_list(), context__.vals_r("y"),
+        "assigning variable y");
       current_statement__ = 11;
       validate_non_negative_index("sigma", "J", J);
       context__.validate_dims("data initialization","sigma","double",
@@ -158,14 +150,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       sigma = std::vector<double>(J, 0);
       
       current_statement__ = 11;
-      pos__ = 1;
-      current_statement__ = 11;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 11;
-        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("sigma")[(pos__ - 1)], "assigning variable sigma");
-        current_statement__ = 11;
-        pos__ = (pos__ + 1);}
+      assign(sigma, nil_index_list(), context__.vals_r("sigma"),
+        "assigning variable sigma");
       current_statement__ = 9;
       current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
@@ -346,15 +332,11 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       double mu;
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      mu = context__.vals_r("mu")[(pos__ - 1)];
+      mu = context__.vals_r("mu")[(1 - 1)];
       double tau;
       
       current_statement__ = 2;
-      pos__ = 1;
-      current_statement__ = 2;
-      tau = context__.vals_r("tau")[(pos__ - 1)];
+      tau = context__.vals_r("tau")[(1 - 1)];
       current_statement__ = 2;
       tau = stan::math::lb_free(tau, 0);
       current_statement__ = 3;
@@ -362,14 +344,18 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       
+      std::vector<local_scalar_t__> theta_tilde_flat__;
+      current_statement__ = 3;
+      assign(theta_tilde_flat__, nil_index_list(),
+        context__.vals_r("theta_tilde"),
+        "assigning variable theta_tilde_flat__");
       current_statement__ = 3;
       pos__ = 1;
       current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         current_statement__ = 3;
         assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("theta_tilde")[(pos__ - 1)],
-          "assigning variable theta_tilde");
+          theta_tilde_flat__[(pos__ - 1)], "assigning variable theta_tilde");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
       vars__.push_back(mu);
@@ -3163,23 +3149,17 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec());
       
       current_statement__ = 177;
-      pos__ = 1;
-      current_statement__ = 177;
-      N = context__.vals_i("N")[(pos__ - 1)];
+      N = context__.vals_i("N")[(1 - 1)];
       context__.validate_dims("data initialization","M","int",
           context__.to_vec());
       
       current_statement__ = 178;
-      pos__ = 1;
-      current_statement__ = 178;
-      M = context__.vals_i("M")[(pos__ - 1)];
+      M = context__.vals_i("M")[(1 - 1)];
       context__.validate_dims("data initialization","K","int",
           context__.to_vec());
       
       current_statement__ = 179;
-      pos__ = 1;
-      current_statement__ = 179;
-      K = context__.vals_i("K")[(pos__ - 1)];
+      K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 180;
       validate_non_negative_index("d_int_1d_ar", "N", N);
       context__.validate_dims("data initialization","d_int_1d_ar","int",
@@ -3187,15 +3167,8 @@ class mother_model : public model_base_crtp<mother_model> {
       d_int_1d_ar = std::vector<int>(N, 0);
       
       current_statement__ = 180;
-      pos__ = 1;
-      current_statement__ = 180;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 180;
-        assign(d_int_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_i("d_int_1d_ar")[(pos__ - 1)],
-          "assigning variable d_int_1d_ar");
-        current_statement__ = 180;
-        pos__ = (pos__ + 1);}
+      assign(d_int_1d_ar, nil_index_list(), context__.vals_i("d_int_1d_ar"),
+        "assigning variable d_int_1d_ar");
       current_statement__ = 181;
       validate_non_negative_index("d_int_3d_ar", "N", N);
       current_statement__ = 181;
@@ -3206,6 +3179,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, M, K));
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, 0)));
       
+      std::vector<int> d_int_3d_ar_flat__;
+      current_statement__ = 181;
+      assign(d_int_3d_ar_flat__, nil_index_list(),
+        context__.vals_i("d_int_3d_ar"),
+        "assigning variable d_int_3d_ar_flat__");
       current_statement__ = 181;
       pos__ = 1;
       current_statement__ = 181;
@@ -3219,7 +3197,7 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym3__),
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list()))),
-              context__.vals_i("d_int_3d_ar")[(pos__ - 1)],
+              d_int_3d_ar_flat__[(pos__ - 1)],
               "assigning variable d_int_3d_ar");
             current_statement__ = 181;
             pos__ = (pos__ + 1);}}}
@@ -3227,9 +3205,7 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec());
       
       current_statement__ = 182;
-      pos__ = 1;
-      current_statement__ = 182;
-      J = context__.vals_r("J")[(pos__ - 1)];
+      J = context__.vals_r("J")[(1 - 1)];
       current_statement__ = 183;
       validate_non_negative_index("d_real_1d_ar", "N", N);
       context__.validate_dims("data initialization","d_real_1d_ar","double",
@@ -3237,15 +3213,8 @@ class mother_model : public model_base_crtp<mother_model> {
       d_real_1d_ar = std::vector<double>(N, 0);
       
       current_statement__ = 183;
-      pos__ = 1;
-      current_statement__ = 183;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 183;
-        assign(d_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("d_real_1d_ar")[(pos__ - 1)],
-          "assigning variable d_real_1d_ar");
-        current_statement__ = 183;
-        pos__ = (pos__ + 1);}
+      assign(d_real_1d_ar, nil_index_list(),
+        context__.vals_r("d_real_1d_ar"), "assigning variable d_real_1d_ar");
       current_statement__ = 184;
       validate_non_negative_index("d_real_3d_ar", "N", N);
       current_statement__ = 184;
@@ -3256,6 +3225,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, M, K));
       d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
+      std::vector<local_scalar_t__> d_real_3d_ar_flat__;
+      current_statement__ = 184;
+      assign(d_real_3d_ar_flat__, nil_index_list(),
+        context__.vals_r("d_real_3d_ar"),
+        "assigning variable d_real_3d_ar_flat__");
       current_statement__ = 184;
       pos__ = 1;
       current_statement__ = 184;
@@ -3269,7 +3243,7 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym3__),
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list()))),
-              context__.vals_r("d_real_3d_ar")[(pos__ - 1)],
+              d_real_3d_ar_flat__[(pos__ - 1)],
               "assigning variable d_real_3d_ar");
             current_statement__ = 184;
             pos__ = (pos__ + 1);}}}
@@ -3279,13 +3253,17 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N));
       d_vec = Eigen::Matrix<double, -1, 1>(N);
       
+      std::vector<local_scalar_t__> d_vec_flat__;
+      current_statement__ = 185;
+      assign(d_vec_flat__, nil_index_list(), context__.vals_r("d_vec"),
+        "assigning variable d_vec_flat__");
       current_statement__ = 185;
       pos__ = 1;
       current_statement__ = 185;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 185;
         assign(d_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("d_vec")[(pos__ - 1)], "assigning variable d_vec");
+          d_vec_flat__[(pos__ - 1)], "assigning variable d_vec");
         current_statement__ = 185;
         pos__ = (pos__ + 1);}
       current_statement__ = 186;
@@ -3296,6 +3274,10 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, N));
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
+      std::vector<local_scalar_t__> d_1d_vec_flat__;
+      current_statement__ = 186;
+      assign(d_1d_vec_flat__, nil_index_list(), context__.vals_r("d_1d_vec"),
+        "assigning variable d_1d_vec_flat__");
       current_statement__ = 186;
       pos__ = 1;
       current_statement__ = 186;
@@ -3306,8 +3288,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_vec,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("d_1d_vec")[(pos__ - 1)],
-            "assigning variable d_1d_vec");
+            d_1d_vec_flat__[(pos__ - 1)], "assigning variable d_1d_vec");
           current_statement__ = 186;
           pos__ = (pos__ + 1);}}
       current_statement__ = 187;
@@ -3322,6 +3303,10 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, M, K, N));
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
+      std::vector<local_scalar_t__> d_3d_vec_flat__;
+      current_statement__ = 187;
+      assign(d_3d_vec_flat__, nil_index_list(), context__.vals_r("d_3d_vec"),
+        "assigning variable d_3d_vec_flat__");
       current_statement__ = 187;
       pos__ = 1;
       current_statement__ = 187;
@@ -3338,8 +3323,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("d_3d_vec")[(pos__ - 1)],
-                "assigning variable d_3d_vec");
+                d_3d_vec_flat__[(pos__ - 1)], "assigning variable d_3d_vec");
               current_statement__ = 187;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 188;
@@ -3348,14 +3332,17 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N));
       d_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
+      std::vector<local_scalar_t__> d_row_vec_flat__;
+      current_statement__ = 188;
+      assign(d_row_vec_flat__, nil_index_list(),
+        context__.vals_r("d_row_vec"), "assigning variable d_row_vec_flat__");
       current_statement__ = 188;
       pos__ = 1;
       current_statement__ = 188;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 188;
         assign(d_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("d_row_vec")[(pos__ - 1)],
-          "assigning variable d_row_vec");
+          d_row_vec_flat__[(pos__ - 1)], "assigning variable d_row_vec");
         current_statement__ = 188;
         pos__ = (pos__ + 1);}
       current_statement__ = 189;
@@ -3366,6 +3353,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, N));
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
+      std::vector<local_scalar_t__> d_1d_row_vec_flat__;
+      current_statement__ = 189;
+      assign(d_1d_row_vec_flat__, nil_index_list(),
+        context__.vals_r("d_1d_row_vec"),
+        "assigning variable d_1d_row_vec_flat__");
       current_statement__ = 189;
       pos__ = 1;
       current_statement__ = 189;
@@ -3376,7 +3368,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_row_vec,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("d_1d_row_vec")[(pos__ - 1)],
+            d_1d_row_vec_flat__[(pos__ - 1)],
             "assigning variable d_1d_row_vec");
           current_statement__ = 189;
           pos__ = (pos__ + 1);}}
@@ -3392,6 +3384,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, M, K, N));
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
+      std::vector<local_scalar_t__> d_3d_row_vec_flat__;
+      current_statement__ = 190;
+      assign(d_3d_row_vec_flat__, nil_index_list(),
+        context__.vals_r("d_3d_row_vec"),
+        "assigning variable d_3d_row_vec_flat__");
       current_statement__ = 190;
       pos__ = 1;
       current_statement__ = 190;
@@ -3408,7 +3405,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("d_3d_row_vec")[(pos__ - 1)],
+                d_3d_row_vec_flat__[(pos__ - 1)],
                 "assigning variable d_3d_row_vec");
               current_statement__ = 190;
               pos__ = (pos__ + 1);}}}}
@@ -3424,6 +3421,10 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(4, 5, 2, 3));
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
+      std::vector<local_scalar_t__> d_ar_mat_flat__;
+      current_statement__ = 191;
+      assign(d_ar_mat_flat__, nil_index_list(), context__.vals_r("d_ar_mat"),
+        "assigning variable d_ar_mat_flat__");
       current_statement__ = 191;
       pos__ = 1;
       current_statement__ = 191;
@@ -3440,8 +3441,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("d_ar_mat")[(pos__ - 1)],
-                "assigning variable d_ar_mat");
+                d_ar_mat_flat__[(pos__ - 1)], "assigning variable d_ar_mat");
               current_statement__ = 191;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 192;
@@ -3450,14 +3450,17 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N));
       d_simplex = Eigen::Matrix<double, -1, 1>(N);
       
+      std::vector<local_scalar_t__> d_simplex_flat__;
+      current_statement__ = 192;
+      assign(d_simplex_flat__, nil_index_list(),
+        context__.vals_r("d_simplex"), "assigning variable d_simplex_flat__");
       current_statement__ = 192;
       pos__ = 1;
       current_statement__ = 192;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 192;
         assign(d_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("d_simplex")[(pos__ - 1)],
-          "assigning variable d_simplex");
+          d_simplex_flat__[(pos__ - 1)], "assigning variable d_simplex");
         current_statement__ = 192;
         pos__ = (pos__ + 1);}
       current_statement__ = 193;
@@ -3468,6 +3471,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, N));
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
+      std::vector<local_scalar_t__> d_1d_simplex_flat__;
+      current_statement__ = 193;
+      assign(d_1d_simplex_flat__, nil_index_list(),
+        context__.vals_r("d_1d_simplex"),
+        "assigning variable d_1d_simplex_flat__");
       current_statement__ = 193;
       pos__ = 1;
       current_statement__ = 193;
@@ -3478,7 +3486,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_1d_simplex,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("d_1d_simplex")[(pos__ - 1)],
+            d_1d_simplex_flat__[(pos__ - 1)],
             "assigning variable d_1d_simplex");
           current_statement__ = 193;
           pos__ = (pos__ + 1);}}
@@ -3494,6 +3502,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(N, M, K, N));
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
+      std::vector<local_scalar_t__> d_3d_simplex_flat__;
+      current_statement__ = 194;
+      assign(d_3d_simplex_flat__, nil_index_list(),
+        context__.vals_r("d_3d_simplex"),
+        "assigning variable d_3d_simplex_flat__");
       current_statement__ = 194;
       pos__ = 1;
       current_statement__ = 194;
@@ -3510,7 +3523,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("d_3d_simplex")[(pos__ - 1)],
+                d_3d_simplex_flat__[(pos__ - 1)],
                 "assigning variable d_3d_simplex");
               current_statement__ = 194;
               pos__ = (pos__ + 1);}}}}
@@ -3522,6 +3535,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(5, 4));
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
+      std::vector<local_scalar_t__> d_cfcov_54_flat__;
+      current_statement__ = 195;
+      assign(d_cfcov_54_flat__, nil_index_list(),
+        context__.vals_r("d_cfcov_54"),
+        "assigning variable d_cfcov_54_flat__");
       current_statement__ = 195;
       pos__ = 1;
       current_statement__ = 195;
@@ -3532,8 +3550,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_cfcov_54,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("d_cfcov_54")[(pos__ - 1)],
-            "assigning variable d_cfcov_54");
+            d_cfcov_54_flat__[(pos__ - 1)], "assigning variable d_cfcov_54");
           current_statement__ = 195;
           pos__ = (pos__ + 1);}}
       current_statement__ = 196;
@@ -3544,6 +3561,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(3, 3));
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
+      std::vector<local_scalar_t__> d_cfcov_33_flat__;
+      current_statement__ = 196;
+      assign(d_cfcov_33_flat__, nil_index_list(),
+        context__.vals_r("d_cfcov_33"),
+        "assigning variable d_cfcov_33_flat__");
       current_statement__ = 196;
       pos__ = 1;
       current_statement__ = 196;
@@ -3554,8 +3576,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(d_cfcov_33,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("d_cfcov_33")[(pos__ - 1)],
-            "assigning variable d_cfcov_33");
+            d_cfcov_33_flat__[(pos__ - 1)], "assigning variable d_cfcov_33");
           current_statement__ = 196;
           pos__ = (pos__ + 1);}}
       current_statement__ = 197;
@@ -3568,6 +3589,11 @@ class mother_model : public model_base_crtp<mother_model> {
           context__.to_vec(K, 3, 3));
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
+      std::vector<local_scalar_t__> d_cfcov_33_ar_flat__;
+      current_statement__ = 197;
+      assign(d_cfcov_33_ar_flat__, nil_index_list(),
+        context__.vals_r("d_cfcov_33_ar"),
+        "assigning variable d_cfcov_33_ar_flat__");
       current_statement__ = 197;
       pos__ = 1;
       current_statement__ = 197;
@@ -3581,7 +3607,7 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym3__),
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list()))),
-              context__.vals_r("d_cfcov_33_ar")[(pos__ - 1)],
+              d_cfcov_33_ar_flat__[(pos__ - 1)],
               "assigning variable d_cfcov_33_ar");
             current_statement__ = 197;
             pos__ = (pos__ + 1);}}}
@@ -7026,25 +7052,16 @@ class mother_model : public model_base_crtp<mother_model> {
       double p_real;
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      p_real = context__.vals_r("p_real")[(pos__ - 1)];
+      p_real = context__.vals_r("p_real")[(1 - 1)];
       current_statement__ = 2;
       validate_non_negative_index("offset_multiplier", "5", 5);
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, 0);
       
       current_statement__ = 2;
-      pos__ = 1;
-      current_statement__ = 2;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 2;
-        assign(offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("offset_multiplier")[(pos__ - 1)],
-          "assigning variable offset_multiplier");
-        current_statement__ = 2;
-        pos__ = (pos__ + 1);}
+      assign(offset_multiplier, nil_index_list(),
+        context__.vals_r("offset_multiplier"),
+        "assigning variable offset_multiplier");
       current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
         current_statement__ = 2;
@@ -7058,15 +7075,8 @@ class mother_model : public model_base_crtp<mother_model> {
       p_real_1d_ar = std::vector<double>(N, 0);
       
       current_statement__ = 3;
-      pos__ = 1;
-      current_statement__ = 3;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("p_real_1d_ar")[(pos__ - 1)],
-          "assigning variable p_real_1d_ar");
-        current_statement__ = 3;
-        pos__ = (pos__ + 1);}
+      assign(p_real_1d_ar, nil_index_list(),
+        context__.vals_r("p_real_1d_ar"), "assigning variable p_real_1d_ar");
       current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 3;
@@ -7082,6 +7092,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
+      std::vector<local_scalar_t__> p_real_3d_ar_flat__;
+      current_statement__ = 4;
+      assign(p_real_3d_ar_flat__, nil_index_list(),
+        context__.vals_r("p_real_3d_ar"),
+        "assigning variable p_real_3d_ar_flat__");
       current_statement__ = 4;
       pos__ = 1;
       current_statement__ = 4;
@@ -7095,7 +7110,7 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym3__),
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list()))),
-              context__.vals_r("p_real_3d_ar")[(pos__ - 1)],
+              p_real_3d_ar_flat__[(pos__ - 1)],
               "assigning variable p_real_3d_ar");
             current_statement__ = 4;
             pos__ = (pos__ + 1);}}}
@@ -7118,13 +7133,17 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
       
+      std::vector<local_scalar_t__> p_vec_flat__;
+      current_statement__ = 5;
+      assign(p_vec_flat__, nil_index_list(), context__.vals_r("p_vec"),
+        "assigning variable p_vec_flat__");
       current_statement__ = 5;
       pos__ = 1;
       current_statement__ = 5;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 5;
         assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("p_vec")[(pos__ - 1)], "assigning variable p_vec");
+          p_vec_flat__[(pos__ - 1)], "assigning variable p_vec");
         current_statement__ = 5;
         pos__ = (pos__ + 1);}
       current_statement__ = 5;
@@ -7140,6 +7159,10 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
+      std::vector<local_scalar_t__> p_1d_vec_flat__;
+      current_statement__ = 6;
+      assign(p_1d_vec_flat__, nil_index_list(), context__.vals_r("p_1d_vec"),
+        "assigning variable p_1d_vec_flat__");
       current_statement__ = 6;
       pos__ = 1;
       current_statement__ = 6;
@@ -7150,8 +7173,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_1d_vec,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("p_1d_vec")[(pos__ - 1)],
-            "assigning variable p_1d_vec");
+            p_1d_vec_flat__[(pos__ - 1)], "assigning variable p_1d_vec");
           current_statement__ = 6;
           pos__ = (pos__ + 1);}}
       current_statement__ = 7;
@@ -7165,6 +7187,10 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
+      std::vector<local_scalar_t__> p_3d_vec_flat__;
+      current_statement__ = 7;
+      assign(p_3d_vec_flat__, nil_index_list(), context__.vals_r("p_3d_vec"),
+        "assigning variable p_3d_vec_flat__");
       current_statement__ = 7;
       pos__ = 1;
       current_statement__ = 7;
@@ -7181,8 +7207,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("p_3d_vec")[(pos__ - 1)],
-                "assigning variable p_3d_vec");
+                p_3d_vec_flat__[(pos__ - 1)], "assigning variable p_3d_vec");
               current_statement__ = 7;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 8;
@@ -7190,14 +7215,17 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
       
+      std::vector<local_scalar_t__> p_row_vec_flat__;
+      current_statement__ = 8;
+      assign(p_row_vec_flat__, nil_index_list(),
+        context__.vals_r("p_row_vec"), "assigning variable p_row_vec_flat__");
       current_statement__ = 8;
       pos__ = 1;
       current_statement__ = 8;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 8;
         assign(p_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("p_row_vec")[(pos__ - 1)],
-          "assigning variable p_row_vec");
+          p_row_vec_flat__[(pos__ - 1)], "assigning variable p_row_vec");
         current_statement__ = 8;
         pos__ = (pos__ + 1);}
       current_statement__ = 9;
@@ -7207,6 +7235,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
+      std::vector<local_scalar_t__> p_1d_row_vec_flat__;
+      current_statement__ = 9;
+      assign(p_1d_row_vec_flat__, nil_index_list(),
+        context__.vals_r("p_1d_row_vec"),
+        "assigning variable p_1d_row_vec_flat__");
       current_statement__ = 9;
       pos__ = 1;
       current_statement__ = 9;
@@ -7217,7 +7250,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_1d_row_vec,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("p_1d_row_vec")[(pos__ - 1)],
+            p_1d_row_vec_flat__[(pos__ - 1)],
             "assigning variable p_1d_row_vec");
           current_statement__ = 9;
           pos__ = (pos__ + 1);}}
@@ -7232,6 +7265,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
+      std::vector<local_scalar_t__> p_3d_row_vec_flat__;
+      current_statement__ = 10;
+      assign(p_3d_row_vec_flat__, nil_index_list(),
+        context__.vals_r("p_3d_row_vec"),
+        "assigning variable p_3d_row_vec_flat__");
       current_statement__ = 10;
       pos__ = 1;
       current_statement__ = 10;
@@ -7248,7 +7286,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("p_3d_row_vec")[(pos__ - 1)],
+                p_3d_row_vec_flat__[(pos__ - 1)],
                 "assigning variable p_3d_row_vec");
               current_statement__ = 10;
               pos__ = (pos__ + 1);}}}}
@@ -7263,6 +7301,10 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
+      std::vector<local_scalar_t__> p_ar_mat_flat__;
+      current_statement__ = 11;
+      assign(p_ar_mat_flat__, nil_index_list(), context__.vals_r("p_ar_mat"),
+        "assigning variable p_ar_mat_flat__");
       current_statement__ = 11;
       pos__ = 1;
       current_statement__ = 11;
@@ -7279,8 +7321,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("p_ar_mat")[(pos__ - 1)],
-                "assigning variable p_ar_mat");
+                p_ar_mat_flat__[(pos__ - 1)], "assigning variable p_ar_mat");
               current_statement__ = 11;
               pos__ = (pos__ + 1);}}}}
       current_statement__ = 11;
@@ -7309,14 +7350,17 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
       
+      std::vector<local_scalar_t__> p_simplex_flat__;
+      current_statement__ = 12;
+      assign(p_simplex_flat__, nil_index_list(),
+        context__.vals_r("p_simplex"), "assigning variable p_simplex_flat__");
       current_statement__ = 12;
       pos__ = 1;
       current_statement__ = 12;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 12;
         assign(p_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("p_simplex")[(pos__ - 1)],
-          "assigning variable p_simplex");
+          p_simplex_flat__[(pos__ - 1)], "assigning variable p_simplex");
         current_statement__ = 12;
         pos__ = (pos__ + 1);}
       current_statement__ = 12;
@@ -7329,6 +7373,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
+      std::vector<local_scalar_t__> p_1d_simplex_flat__;
+      current_statement__ = 13;
+      assign(p_1d_simplex_flat__, nil_index_list(),
+        context__.vals_r("p_1d_simplex"),
+        "assigning variable p_1d_simplex_flat__");
       current_statement__ = 13;
       pos__ = 1;
       current_statement__ = 13;
@@ -7339,7 +7388,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_1d_simplex,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("p_1d_simplex")[(pos__ - 1)],
+            p_1d_simplex_flat__[(pos__ - 1)],
             "assigning variable p_1d_simplex");
           current_statement__ = 13;
           pos__ = (pos__ + 1);}}
@@ -7360,6 +7409,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
+      std::vector<local_scalar_t__> p_3d_simplex_flat__;
+      current_statement__ = 14;
+      assign(p_3d_simplex_flat__, nil_index_list(),
+        context__.vals_r("p_3d_simplex"),
+        "assigning variable p_3d_simplex_flat__");
       current_statement__ = 14;
       pos__ = 1;
       current_statement__ = 14;
@@ -7376,7 +7430,7 @@ class mother_model : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym3__),
                     cons_list(index_uni(sym2__),
                       cons_list(index_uni(sym1__), nil_index_list())))),
-                context__.vals_r("p_3d_simplex")[(pos__ - 1)],
+                p_3d_simplex_flat__[(pos__ - 1)],
                 "assigning variable p_3d_simplex");
               current_statement__ = 14;
               pos__ = (pos__ + 1);}}}}
@@ -7403,6 +7457,11 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
+      std::vector<local_scalar_t__> p_cfcov_54_flat__;
+      current_statement__ = 15;
+      assign(p_cfcov_54_flat__, nil_index_list(),
+        context__.vals_r("p_cfcov_54"),
+        "assigning variable p_cfcov_54_flat__");
       current_statement__ = 15;
       pos__ = 1;
       current_statement__ = 15;
@@ -7413,8 +7472,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_cfcov_54,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("p_cfcov_54")[(pos__ - 1)],
-            "assigning variable p_cfcov_54");
+            p_cfcov_54_flat__[(pos__ - 1)], "assigning variable p_cfcov_54");
           current_statement__ = 15;
           pos__ = (pos__ + 1);}}
       current_statement__ = 15;
@@ -7430,6 +7488,11 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
+      std::vector<local_scalar_t__> p_cfcov_33_flat__;
+      current_statement__ = 16;
+      assign(p_cfcov_33_flat__, nil_index_list(),
+        context__.vals_r("p_cfcov_33"),
+        "assigning variable p_cfcov_33_flat__");
       current_statement__ = 16;
       pos__ = 1;
       current_statement__ = 16;
@@ -7440,8 +7503,7 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(p_cfcov_33,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("p_cfcov_33")[(pos__ - 1)],
-            "assigning variable p_cfcov_33");
+            p_cfcov_33_flat__[(pos__ - 1)], "assigning variable p_cfcov_33");
           current_statement__ = 16;
           pos__ = (pos__ + 1);}}
       current_statement__ = 16;
@@ -7459,6 +7521,11 @@ class mother_model : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
+      std::vector<local_scalar_t__> p_cfcov_33_ar_flat__;
+      current_statement__ = 17;
+      assign(p_cfcov_33_ar_flat__, nil_index_list(),
+        context__.vals_r("p_cfcov_33_ar"),
+        "assigning variable p_cfcov_33_ar_flat__");
       current_statement__ = 17;
       pos__ = 1;
       current_statement__ = 17;
@@ -7472,7 +7539,7 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym3__),
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list()))),
-              context__.vals_r("p_cfcov_33_ar")[(pos__ - 1)],
+              p_cfcov_33_ar_flat__[(pos__ - 1)],
               "assigning variable p_cfcov_33_ar");
             current_statement__ = 17;
             pos__ = (pos__ + 1);}}}
@@ -7487,13 +7554,17 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
       
+      std::vector<local_scalar_t__> x_p_flat__;
+      current_statement__ = 18;
+      assign(x_p_flat__, nil_index_list(), context__.vals_r("x_p"),
+        "assigning variable x_p_flat__");
       current_statement__ = 18;
       pos__ = 1;
       current_statement__ = 18;
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 18;
         assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("x_p")[(pos__ - 1)], "assigning variable x_p");
+          x_p_flat__[(pos__ - 1)], "assigning variable x_p");
         current_statement__ = 18;
         pos__ = (pos__ + 1);}
       current_statement__ = 19;
@@ -7501,13 +7572,17 @@ class mother_model : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
       
+      std::vector<local_scalar_t__> y_p_flat__;
+      current_statement__ = 19;
+      assign(y_p_flat__, nil_index_list(), context__.vals_r("y_p"),
+        "assigning variable y_p_flat__");
       current_statement__ = 19;
       pos__ = 1;
       current_statement__ = 19;
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 19;
         assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("y_p")[(pos__ - 1)], "assigning variable y_p");
+          y_p_flat__[(pos__ - 1)], "assigning variable y_p");
         current_statement__ = 19;
         pos__ = (pos__ + 1);}
       vars__.push_back(p_real);
@@ -9534,9 +9609,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec());
       
       current_statement__ = 99;
-      pos__ = 1;
-      current_statement__ = 99;
-      T = context__.vals_i("T")[(pos__ - 1)];
+      T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 100;
       validate_non_negative_index("y0_d", "2", 2);
       context__.validate_dims("data initialization","y0_d","double",
@@ -9544,21 +9617,13 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       y0_d = std::vector<double>(2, 0);
       
       current_statement__ = 100;
-      pos__ = 1;
-      current_statement__ = 100;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 100;
-        assign(y0_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("y0_d")[(pos__ - 1)], "assigning variable y0_d");
-        current_statement__ = 100;
-        pos__ = (pos__ + 1);}
+      assign(y0_d, nil_index_list(), context__.vals_r("y0_d"),
+        "assigning variable y0_d");
       context__.validate_dims("data initialization","t0","double",
           context__.to_vec());
       
       current_statement__ = 101;
-      pos__ = 1;
-      current_statement__ = 101;
-      t0 = context__.vals_r("t0")[(pos__ - 1)];
+      t0 = context__.vals_r("t0")[(1 - 1)];
       current_statement__ = 102;
       validate_non_negative_index("ts", "T", T);
       context__.validate_dims("data initialization","ts","double",
@@ -9566,14 +9631,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       ts = std::vector<double>(T, 0);
       
       current_statement__ = 102;
-      pos__ = 1;
-      current_statement__ = 102;
-      for (size_t sym1__ = 1; sym1__ <= T; ++sym1__) {
-        current_statement__ = 102;
-        assign(ts, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("ts")[(pos__ - 1)], "assigning variable ts");
-        current_statement__ = 102;
-        pos__ = (pos__ + 1);}
+      assign(ts, nil_index_list(), context__.vals_r("ts"),
+        "assigning variable ts");
       current_statement__ = 103;
       validate_non_negative_index("theta_d", "1", 1);
       context__.validate_dims("data initialization","theta_d","double",
@@ -9581,15 +9640,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       theta_d = std::vector<double>(1, 0);
       
       current_statement__ = 103;
-      pos__ = 1;
-      current_statement__ = 103;
-      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 103;
-        assign(theta_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("theta_d")[(pos__ - 1)],
-          "assigning variable theta_d");
-        current_statement__ = 103;
-        pos__ = (pos__ + 1);}
+      assign(theta_d, nil_index_list(), context__.vals_r("theta_d"),
+        "assigning variable theta_d");
       current_statement__ = 104;
       validate_non_negative_index("x", "0", 0);
       context__.validate_dims("data initialization","x","double",
@@ -9597,14 +9649,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       x = std::vector<double>(0, 0);
       
       current_statement__ = 104;
-      pos__ = 1;
-      current_statement__ = 104;
-      for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 104;
-        assign(x, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("x")[(pos__ - 1)], "assigning variable x");
-        current_statement__ = 104;
-        pos__ = (pos__ + 1);}
+      assign(x, nil_index_list(), context__.vals_r("x"),
+        "assigning variable x");
       current_statement__ = 105;
       validate_non_negative_index("x_int", "0", 0);
       context__.validate_dims("data initialization","x_int","int",
@@ -9612,14 +9658,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       x_int = std::vector<int>(0, 0);
       
       current_statement__ = 105;
-      pos__ = 1;
-      current_statement__ = 105;
-      for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 105;
-        assign(x_int, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_i("x_int")[(pos__ - 1)], "assigning variable x_int");
-        current_statement__ = 105;
-        pos__ = (pos__ + 1);}
+      assign(x_int, nil_index_list(), context__.vals_i("x_int"),
+        "assigning variable x_int");
       current_statement__ = 106;
       validate_non_negative_index("x_d_r", "0", 0);
       context__.validate_dims("data initialization","x_d_r","double",
@@ -9627,14 +9667,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       x_d_r = std::vector<double>(0, 0);
       
       current_statement__ = 106;
-      pos__ = 1;
-      current_statement__ = 106;
-      for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 106;
-        assign(x_d_r, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("x_d_r")[(pos__ - 1)], "assigning variable x_d_r");
-        current_statement__ = 106;
-        pos__ = (pos__ + 1);}
+      assign(x_d_r, nil_index_list(), context__.vals_r("x_d_r"),
+        "assigning variable x_d_r");
       current_statement__ = 107;
       validate_non_negative_index("x_d_i", "0", 0);
       context__.validate_dims("data initialization","x_d_i","int",
@@ -9642,20 +9676,19 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       x_d_i = std::vector<int>(0, 0);
       
       current_statement__ = 107;
-      pos__ = 1;
-      current_statement__ = 107;
-      for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 107;
-        assign(x_d_i, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_i("x_d_i")[(pos__ - 1)], "assigning variable x_d_i");
-        current_statement__ = 107;
-        pos__ = (pos__ + 1);}
+      assign(x_d_i, nil_index_list(), context__.vals_i("x_d_i"),
+        "assigning variable x_d_i");
       current_statement__ = 108;
       validate_non_negative_index("shared_params_d", "3", 3);
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
       shared_params_d = Eigen::Matrix<double, -1, 1>(3);
       
+      std::vector<local_scalar_t__> shared_params_d_flat__;
+      current_statement__ = 108;
+      assign(shared_params_d_flat__, nil_index_list(),
+        context__.vals_r("shared_params_d"),
+        "assigning variable shared_params_d_flat__");
       current_statement__ = 108;
       pos__ = 1;
       current_statement__ = 108;
@@ -9663,7 +9696,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 108;
         assign(shared_params_d,
           cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("shared_params_d")[(pos__ - 1)],
+          shared_params_d_flat__[(pos__ - 1)],
           "assigning variable shared_params_d");
         current_statement__ = 108;
         pos__ = (pos__ + 1);}
@@ -9675,6 +9708,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec(3, 3));
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
+      std::vector<local_scalar_t__> job_params_d_flat__;
+      current_statement__ = 109;
+      assign(job_params_d_flat__, nil_index_list(),
+        context__.vals_r("job_params_d"),
+        "assigning variable job_params_d_flat__");
       current_statement__ = 109;
       pos__ = 1;
       current_statement__ = 109;
@@ -9685,7 +9723,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           assign(job_params_d,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("job_params_d")[(pos__ - 1)],
+            job_params_d_flat__[(pos__ - 1)],
             "assigning variable job_params_d");
           current_statement__ = 109;
           pos__ = (pos__ + 1);}}
@@ -9697,6 +9735,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec(3, 3));
       data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, 0));
       
+      std::vector<local_scalar_t__> data_r_flat__;
+      current_statement__ = 110;
+      assign(data_r_flat__, nil_index_list(), context__.vals_r("data_r"),
+        "assigning variable data_r_flat__");
       current_statement__ = 110;
       pos__ = 1;
       current_statement__ = 110;
@@ -9707,8 +9749,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           assign(data_r,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("data_r")[(pos__ - 1)],
-            "assigning variable data_r");
+            data_r_flat__[(pos__ - 1)], "assigning variable data_r");
           current_statement__ = 110;
           pos__ = (pos__ + 1);}}
       current_statement__ = 111;
@@ -9719,6 +9760,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec(3, 3));
       data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
       
+      std::vector<int> data_i_flat__;
+      current_statement__ = 111;
+      assign(data_i_flat__, nil_index_list(), context__.vals_i("data_i"),
+        "assigning variable data_i_flat__");
       current_statement__ = 111;
       pos__ = 1;
       current_statement__ = 111;
@@ -9729,8 +9774,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           assign(data_i,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_i("data_i")[(pos__ - 1)],
-            "assigning variable data_i");
+            data_i_flat__[(pos__ - 1)], "assigning variable data_i");
           current_statement__ = 111;
           pos__ = (pos__ + 1);}}
       current_statement__ = 99;
@@ -10579,55 +10623,40 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       y0_p = std::vector<double>(2, 0);
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 1;
-        assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("y0_p")[(pos__ - 1)], "assigning variable y0_p");
-        current_statement__ = 1;
-        pos__ = (pos__ + 1);}
+      assign(y0_p, nil_index_list(), context__.vals_r("y0_p"),
+        "assigning variable y0_p");
       current_statement__ = 2;
       validate_non_negative_index("theta_p", "1", 1);
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, 0);
       
       current_statement__ = 2;
-      pos__ = 1;
-      current_statement__ = 2;
-      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 2;
-        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("theta_p")[(pos__ - 1)],
-          "assigning variable theta_p");
-        current_statement__ = 2;
-        pos__ = (pos__ + 1);}
+      assign(theta_p, nil_index_list(), context__.vals_r("theta_p"),
+        "assigning variable theta_p");
       current_statement__ = 3;
       validate_non_negative_index("x_p", "1", 1);
       std::vector<double> x_p;
       x_p = std::vector<double>(1, 0);
       
       current_statement__ = 3;
-      pos__ = 1;
-      current_statement__ = 3;
-      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 3;
-        assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("x_p")[(pos__ - 1)], "assigning variable x_p");
-        current_statement__ = 3;
-        pos__ = (pos__ + 1);}
+      assign(x_p, nil_index_list(), context__.vals_r("x_p"),
+        "assigning variable x_p");
       current_statement__ = 4;
       validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
       
+      std::vector<local_scalar_t__> x_p_v_flat__;
+      current_statement__ = 4;
+      assign(x_p_v_flat__, nil_index_list(), context__.vals_r("x_p_v"),
+        "assigning variable x_p_v_flat__");
       current_statement__ = 4;
       pos__ = 1;
       current_statement__ = 4;
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
         assign(x_p_v, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("x_p_v")[(pos__ - 1)], "assigning variable x_p_v");
+          x_p_v_flat__[(pos__ - 1)], "assigning variable x_p_v");
         current_statement__ = 4;
         pos__ = (pos__ + 1);}
       current_statement__ = 5;
@@ -10635,6 +10664,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       
+      std::vector<local_scalar_t__> shared_params_p_flat__;
+      current_statement__ = 5;
+      assign(shared_params_p_flat__, nil_index_list(),
+        context__.vals_r("shared_params_p"),
+        "assigning variable shared_params_p_flat__");
       current_statement__ = 5;
       pos__ = 1;
       current_statement__ = 5;
@@ -10642,7 +10676,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         current_statement__ = 5;
         assign(shared_params_p,
           cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("shared_params_p")[(pos__ - 1)],
+          shared_params_p_flat__[(pos__ - 1)],
           "assigning variable shared_params_p");
         current_statement__ = 5;
         pos__ = (pos__ + 1);}
@@ -10653,6 +10687,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
+      std::vector<local_scalar_t__> job_params_p_flat__;
+      current_statement__ = 6;
+      assign(job_params_p_flat__, nil_index_list(),
+        context__.vals_r("job_params_p"),
+        "assigning variable job_params_p_flat__");
       current_statement__ = 6;
       pos__ = 1;
       current_statement__ = 6;
@@ -10663,16 +10702,14 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           assign(job_params_p,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("job_params_p")[(pos__ - 1)],
+            job_params_p_flat__[(pos__ - 1)],
             "assigning variable job_params_p");
           current_statement__ = 6;
           pos__ = (pos__ + 1);}}
       double x_r;
       
       current_statement__ = 7;
-      pos__ = 1;
-      current_statement__ = 7;
-      x_r = context__.vals_r("x_r")[(pos__ - 1)];
+      x_r = context__.vals_r("x_r")[(1 - 1)];
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(y0_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
@@ -11299,16 +11336,12 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.to_vec());
       
       current_statement__ = 98;
-      pos__ = 1;
-      current_statement__ = 98;
-      k = context__.vals_i("k")[(pos__ - 1)];
+      k = context__.vals_i("k")[(1 - 1)];
       context__.validate_dims("data initialization","n","int",
           context__.to_vec());
       
       current_statement__ = 99;
-      pos__ = 1;
-      current_statement__ = 99;
-      n = context__.vals_i("n")[(pos__ - 1)];
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 100;
       validate_non_negative_index("X_d", "n", n);
       current_statement__ = 100;
@@ -11317,6 +11350,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
+      std::vector<local_scalar_t__> X_d_flat__;
+      current_statement__ = 100;
+      assign(X_d_flat__, nil_index_list(), context__.vals_r("X_d"),
+        "assigning variable X_d_flat__");
       current_statement__ = 100;
       pos__ = 1;
       current_statement__ = 100;
@@ -11327,7 +11364,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           assign(X_d,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("X_d")[(pos__ - 1)], "assigning variable X_d");
+            X_d_flat__[(pos__ - 1)], "assigning variable X_d");
           current_statement__ = 100;
           pos__ = (pos__ + 1);}}
       current_statement__ = 101;
@@ -11336,13 +11373,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
       
+      std::vector<local_scalar_t__> y_v_d_flat__;
+      current_statement__ = 101;
+      assign(y_v_d_flat__, nil_index_list(), context__.vals_r("y_v_d"),
+        "assigning variable y_v_d_flat__");
       current_statement__ = 101;
       pos__ = 1;
       current_statement__ = 101;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 101;
         assign(y_v_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("y_v_d")[(pos__ - 1)], "assigning variable y_v_d");
+          y_v_d_flat__[(pos__ - 1)], "assigning variable y_v_d");
         current_statement__ = 101;
         pos__ = (pos__ + 1);}
       current_statement__ = 102;
@@ -11351,14 +11392,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
       
+      std::vector<local_scalar_t__> X_rv_d_flat__;
+      current_statement__ = 102;
+      assign(X_rv_d_flat__, nil_index_list(), context__.vals_r("X_rv_d"),
+        "assigning variable X_rv_d_flat__");
       current_statement__ = 102;
       pos__ = 1;
       current_statement__ = 102;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 102;
         assign(X_rv_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("X_rv_d")[(pos__ - 1)],
-          "assigning variable X_rv_d");
+          X_rv_d_flat__[(pos__ - 1)], "assigning variable X_rv_d");
         current_statement__ = 102;
         pos__ = (pos__ + 1);}
       current_statement__ = 103;
@@ -11368,15 +11412,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       y_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 103;
-      pos__ = 1;
-      current_statement__ = 103;
-      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 103;
-        assign(y_vi_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_i("y_vi_d")[(pos__ - 1)],
-          "assigning variable y_vi_d");
-        current_statement__ = 103;
-        pos__ = (pos__ + 1);}
+      assign(y_vi_d, nil_index_list(), context__.vals_i("y_vi_d"),
+        "assigning variable y_vi_d");
       current_statement__ = 104;
       validate_non_negative_index("y2_vi_d", "n", n);
       context__.validate_dims("data initialization","y2_vi_d","int",
@@ -11384,29 +11421,18 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       y2_vi_d = std::vector<int>(n, 0);
       
       current_statement__ = 104;
-      pos__ = 1;
-      current_statement__ = 104;
-      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 104;
-        assign(y2_vi_d, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_i("y2_vi_d")[(pos__ - 1)],
-          "assigning variable y2_vi_d");
-        current_statement__ = 104;
-        pos__ = (pos__ + 1);}
+      assign(y2_vi_d, nil_index_list(), context__.vals_i("y2_vi_d"),
+        "assigning variable y2_vi_d");
       context__.validate_dims("data initialization","y_s_d","int",
           context__.to_vec());
       
       current_statement__ = 105;
-      pos__ = 1;
-      current_statement__ = 105;
-      y_s_d = context__.vals_i("y_s_d")[(pos__ - 1)];
+      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       context__.validate_dims("data initialization","y_r_d","double",
           context__.to_vec());
       
       current_statement__ = 106;
-      pos__ = 1;
-      current_statement__ = 106;
-      y_r_d = context__.vals_r("y_r_d")[(pos__ - 1)];
+      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
       
       
       current_statement__ = 109;
@@ -12004,14 +12030,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
       
+      std::vector<local_scalar_t__> alpha_v_flat__;
+      current_statement__ = 1;
+      assign(alpha_v_flat__, nil_index_list(), context__.vals_r("alpha_v"),
+        "assigning variable alpha_v_flat__");
       current_statement__ = 1;
       pos__ = 1;
       current_statement__ = 1;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
         assign(alpha_v, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("alpha_v")[(pos__ - 1)],
-          "assigning variable alpha_v");
+          alpha_v_flat__[(pos__ - 1)], "assigning variable alpha_v");
         current_statement__ = 1;
         pos__ = (pos__ + 1);}
       current_statement__ = 2;
@@ -12019,13 +12048,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       
+      std::vector<local_scalar_t__> beta_flat__;
+      current_statement__ = 2;
+      assign(beta_flat__, nil_index_list(), context__.vals_r("beta"),
+        "assigning variable beta_flat__");
       current_statement__ = 2;
       pos__ = 1;
       current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
         assign(beta, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("beta")[(pos__ - 1)], "assigning variable beta");
+          beta_flat__[(pos__ - 1)], "assigning variable beta");
         current_statement__ = 2;
         pos__ = (pos__ + 1);}
       current_statement__ = 3;
@@ -12033,35 +12066,33 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       
+      std::vector<local_scalar_t__> cuts_flat__;
+      current_statement__ = 3;
+      assign(cuts_flat__, nil_index_list(), context__.vals_r("cuts"),
+        "assigning variable cuts_flat__");
       current_statement__ = 3;
       pos__ = 1;
       current_statement__ = 3;
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
         assign(cuts, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("cuts")[(pos__ - 1)], "assigning variable cuts");
+          cuts_flat__[(pos__ - 1)], "assigning variable cuts");
         current_statement__ = 3;
         pos__ = (pos__ + 1);}
       double sigma;
       
       current_statement__ = 4;
-      pos__ = 1;
-      current_statement__ = 4;
-      sigma = context__.vals_r("sigma")[(pos__ - 1)];
+      sigma = context__.vals_r("sigma")[(1 - 1)];
       current_statement__ = 4;
       sigma = stan::math::lb_free(sigma, 0);
       double alpha;
       
       current_statement__ = 5;
-      pos__ = 1;
-      current_statement__ = 5;
-      alpha = context__.vals_r("alpha")[(pos__ - 1)];
+      alpha = context__.vals_r("alpha")[(1 - 1)];
       double phi;
       
       current_statement__ = 6;
-      pos__ = 1;
-      current_statement__ = 6;
-      phi = context__.vals_r("phi")[(pos__ - 1)];
+      phi = context__.vals_r("phi")[(1 - 1)];
       current_statement__ = 7;
       validate_non_negative_index("X_p", "n", n);
       current_statement__ = 7;
@@ -12069,6 +12100,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       
+      std::vector<local_scalar_t__> X_p_flat__;
+      current_statement__ = 7;
+      assign(X_p_flat__, nil_index_list(), context__.vals_r("X_p"),
+        "assigning variable X_p_flat__");
       current_statement__ = 7;
       pos__ = 1;
       current_statement__ = 7;
@@ -12079,7 +12114,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           assign(X_p,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("X_p")[(pos__ - 1)], "assigning variable X_p");
+            X_p_flat__[(pos__ - 1)], "assigning variable X_p");
           current_statement__ = 7;
           pos__ = (pos__ + 1);}}
       current_statement__ = 8;
@@ -12089,6 +12124,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       
+      std::vector<local_scalar_t__> beta_m_flat__;
+      current_statement__ = 8;
+      assign(beta_m_flat__, nil_index_list(), context__.vals_r("beta_m"),
+        "assigning variable beta_m_flat__");
       current_statement__ = 8;
       pos__ = 1;
       current_statement__ = 8;
@@ -12099,8 +12138,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           assign(beta_m,
             cons_list(index_uni(sym2__),
               cons_list(index_uni(sym1__), nil_index_list())),
-            context__.vals_r("beta_m")[(pos__ - 1)],
-            "assigning variable beta_m");
+            beta_m_flat__[(pos__ - 1)], "assigning variable beta_m");
           current_statement__ = 8;
           pos__ = (pos__ + 1);}}
       current_statement__ = 9;
@@ -12108,14 +12146,17 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       
+      std::vector<local_scalar_t__> X_rv_p_flat__;
+      current_statement__ = 9;
+      assign(X_rv_p_flat__, nil_index_list(), context__.vals_r("X_rv_p"),
+        "assigning variable X_rv_p_flat__");
       current_statement__ = 9;
       pos__ = 1;
       current_statement__ = 9;
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 9;
         assign(X_rv_p, cons_list(index_uni(sym1__), nil_index_list()),
-          context__.vals_r("X_rv_p")[(pos__ - 1)],
-          "assigning variable X_rv_p");
+          X_rv_p_flat__[(pos__ - 1)], "assigning variable X_rv_p");
         current_statement__ = 9;
         pos__ = (pos__ + 1);}
       for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -12494,9 +12535,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
           context__.to_vec());
       
       current_statement__ = 7;
-      pos__ = 1;
-      current_statement__ = 7;
-      t = context__.vals_i("t")[(pos__ - 1)];
+      t = context__.vals_i("t")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12625,9 +12664,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
       double x;
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      x = context__.vals_r("x")[(pos__ - 1)];
+      x = context__.vals_r("x")[(1 - 1)];
       current_statement__ = 1;
       x = stan::math::lb_free(x, 0);
       vars__.push_back(x);
@@ -12899,16 +12936,12 @@ class truncate_model : public model_base_crtp<truncate_model> {
           context__.to_vec());
       
       current_statement__ = 19;
-      pos__ = 1;
-      current_statement__ = 19;
-      n = context__.vals_i("n")[(pos__ - 1)];
+      n = context__.vals_i("n")[(1 - 1)];
       context__.validate_dims("data initialization","x","double",
           context__.to_vec());
       
       current_statement__ = 20;
-      pos__ = 1;
-      current_statement__ = 20;
-      x = context__.vals_r("x")[(pos__ - 1)];
+      x = context__.vals_r("x")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -13103,15 +13136,11 @@ class truncate_model : public model_base_crtp<truncate_model> {
       double m;
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      m = context__.vals_r("m")[(pos__ - 1)];
+      m = context__.vals_r("m")[(1 - 1)];
       double y;
       
       current_statement__ = 2;
-      pos__ = 1;
-      current_statement__ = 2;
-      y = context__.vals_r("y")[(pos__ - 1)];
+      y = context__.vals_r("y")[(1 - 1)];
       current_statement__ = 2;
       y = stan::math::lb_free(y, 0);
       vars__.push_back(m);
@@ -13502,9 +13531,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
       double x;
       
       current_statement__ = 1;
-      pos__ = 1;
-      current_statement__ = 1;
-      x = context__.vals_r("x")[(pos__ - 1)];
+      x = context__.vals_r("x")[(1 - 1)];
       current_statement__ = 1;
       x = stan::math::lb_free(x, 0);
       vars__.push_back(x);
