@@ -1,20 +1,152 @@
 open Core_kernel
 open Middle
 open Middle.Program
-open Middle.Expr
 open Dependence_analysis
 open Dataflow_types
 open Dataflow_utils
 open Factor_graph
 open Mir_utils
 
-type dist_info =
-  { name : string
-  ; loc : Location_span.t
-  ; args : Expr.Typed.t List.t
-  ; param_opt : (string * bound_values) option
-  }
+let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
+  let params = parameter_names_set mir in
+  (* fold starting will all parameters, remove them from set as they're encountered *)
+  let unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
+    match expr.pattern with
+    | Expr.Fixed.Pattern.Var s -> Set.Poly.remove p s
+    | _ -> p
+  in
+  fold_stmts
+    ~take_stmt:(fun p _ -> p)
+    ~take_expr:(fun p e -> unused_params_expr e p)
+    ~init:params
+    (List.append
+       mir.log_prob
+       (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
 
+let list_sigma_unbounded (mir : Program.Typed.t) : string Set.Poly.t =
+  let not_lower_zero (e : bound_values) = match e with
+    | {lower= `Lit 0.; _} -> false
+    | {lower= `Lit _; _} | {lower= `None; _} -> true
+    | _ -> false
+  in
+  Set.Poly.map ~f:fst
+    (Set.Poly.filter
+       ~f:(fun (name, trans) ->
+           String.is_prefix ~prefix:"sigma" name
+           && not_lower_zero (trans_bounds_values trans))
+       (parameter_set mir))
+
+let list_hard_constrained (mir : Program.Typed.t) :
+  string Set.Poly.t =
+  let constrained (e : bound_values) = match e with
+    | {lower= `Lit 0.; upper= `Lit 1.}
+    | {lower= `Lit -1.; upper= `Lit 1.} -> false
+    | {lower= `Lit _; upper= `Lit _} -> true
+    | _ -> false
+  in
+  Set.Poly.map ~f:fst
+    (Set.Poly.filter ~f:(fun (_, trans) -> constrained (trans_bounds_values trans))
+       (parameter_set mir))
+
+let list_multi_twiddles (mir : Program.Typed.t) :
+  (string * Location_span.t Set.Poly.t) Set.Poly.t =
+  let collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
+    match stmt.pattern with
+    | Stmt.Fixed.Pattern.TargetPE
+        ({pattern=
+            Expr.Fixed.Pattern.FunApp
+              (_, _, (({pattern= Var vname; _})::_)); _})
+      -> Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
+    | _ -> Map.Poly.empty
+  in
+  let twiddles =
+    fold_stmts
+      ~take_stmt:(fun m s -> merge_set_maps m (collect_twiddle_stmt s))
+      ~take_expr:(fun m _ -> m)
+      ~init:Map.Poly.empty
+      mir.log_prob
+  in
+  let multi_twiddles =
+    Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles
+  in
+  Map.fold
+    ~init:Set.Poly.empty
+    ~f:(fun ~key ~data s -> Set.add s (key, data))
+    multi_twiddles
+
+let list_param_dependant_cf (mir : Program.Typed.t)
+  : (Location_span.t * string Set.Poly.t) Set.Poly.t =
+  let params = parameter_names_set mir in
+  (* build dataflow data structure *)
+  let info_map = log_prob_build_dep_info_map mir in
+  (* Find all the control flow nodes *)
+  let cf_labels = Set.Poly.of_list
+      (Map.Poly.keys
+         (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
+              is_ctrl_flow stmt)))
+  in
+  (* Find all of the parameters which are dependencies for a given label *)
+  let label_var_deps label : (Location_span.t * string Set.Poly.t) =
+    (* Labels of dependencies *)
+    let dep_labels = node_dependencies info_map label in
+    (* expressions of dependencies *)
+    let dep_exprs =
+      union_map dep_labels ~f:(fun label ->
+          let stmt, _ = Map.Poly.find_exn info_map label in
+          stmt_rhs_var_set stmt)
+    in
+    (* variable dependencies *)
+    let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
+    (* parameter dependencies *)
+    let dep_params = Set.Poly.inter params dep_vars in
+    let _, info = Map.Poly.find_exn info_map label in
+    (info.meta, dep_params)
+  in
+  let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
+  (* remove empty dependency sets *)
+  Set.Poly.filter ~f:(fun (_, vars) -> not (Set.Poly.is_empty vars)) all_cf_var_deps
+
+let list_unscaled_constants (mir : Program.Typed.t)
+  : (Location_span.t * string) Set.Poly.t =
+  let collect_unscaled_expr (expr : Expr.Typed.t) =
+    match expr.pattern with
+    | Expr.Fixed.Pattern.Lit (Real, rstr)
+    | Expr.Fixed.Pattern.Lit (Int, rstr) ->
+      let mag = Float.abs (float_of_string rstr) in
+      if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
+        Set.Poly.singleton (expr.meta.loc, rstr)
+      else
+        Set.Poly.empty
+    | _ -> Set.Poly.empty
+  in
+  fold_stmts
+    ~take_stmt:(fun a _ -> a)
+    ~take_expr:(fun a e -> Set.Poly.union a (collect_unscaled_expr e))
+    ~init:Set.Poly.empty
+    (List.concat [mir.log_prob
+                 ; mir.generate_quantities
+                 ; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+
+let list_non_one_priors (mir : Program.Typed.t) : (string * int) Set.Poly.t =
+  let priors = list_priors mir in
+  let prior_set =
+    Map.Poly.fold
+      priors
+      ~init:Set.Poly.empty
+      ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
+          Option.value_map factors_opt ~default:s
+            ~f:(fun factors -> Set.Poly.add s (v, Set.Poly.length factors)))
+  in
+  Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
+
+
+(******
+   Distribution warnings
+   ******)
+
+(* Check if an expression is a parameter, and if it is, return some information
+   like name and bounds
+*)
 let param_info
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
     (expr : Expr.Typed.t) : (string * bound_values) option =
@@ -25,6 +157,20 @@ let param_info
       (Set.Poly.find params ~f:(fun (name, _) -> name = pname))
   | _ -> None
 
+(* Info about a distribution occurrences that's useful for checking that
+   distribution properties are met
+*)
+type dist_info =
+  { name : string
+  ; loc : Location_span.t
+  ; args : Expr.Typed.t List.t
+  ; param_opt : (string * bound_values) option
+  }
+
+(* Scrape all distributions from the program by searching for their function
+   names and function type, and wrangle some useful data about them, like the
+   nature of their first argument
+*)
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
     match expr.pattern with
@@ -50,14 +196,18 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
     ~init:Set.Poly.empty
     ~take_stmt:(fun s _ -> s)
     ~take_expr:(fun s e -> collect_distribution_expr s e)
-    (List.concat [mir.log_prob; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+    (List.append
+        mir.log_prob
+        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
 
+(* Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
    | {param_opt= Some (pname, _); _} ->
      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
    | _ -> None
 
+(* Warning particular to gamma and inv_gamma, when A=B<1 *)
 let gamma_arg_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
   | {args= [ _; a_expr; b_expr ]; _} ->
@@ -68,6 +218,7 @@ let gamma_arg_dist_warning (dist_info : dist_info) : string option =
      | _ -> None)
   | _ -> None
 
+(* Warning when the dist's parameter should be bounded >0 *)
 let positive_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
   | {param_opt= Some (pname, {lower; _}); _} ->
@@ -80,8 +231,8 @@ let positive_dist_warning (dist_info : dist_info) : string option =
      | _ -> None)
   | _ -> None
 
-let distribution_warning
-    (dist_info : dist_info) : string List.t =
+(* Generate the warnings that are relevant to a given distributions *)
+let distribution_warning (dist_info : dist_info) : string List.t =
   let apply_warnings = List.filter_map ~f:(fun f -> f dist_info) in
   match dist_info.name with
   | "uniform_propto_log" -> apply_warnings [
@@ -99,136 +250,17 @@ let distribution_warning
     ]
   | _ -> []
 
+(* Generate the distribution warnings for a program *)
 let list_distribution_warnings (mir : Program.Typed.t) : string Set.Poly.t =
   union_map
     ~f:(fun dist_info ->
         Set.Poly.of_list (distribution_warning dist_info))
     (list_distributions mir)
 
-let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
-  let params = parameter_names_set mir in
-  let unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
-    match expr.pattern with
-    | Expr.Fixed.Pattern.Var s -> Set.Poly.remove p s
-    | _ -> p
-  in
-  fold_stmts
-    ~take_stmt:(fun p _ -> p)
-    ~take_expr:(fun p e -> unused_params_expr e p)
-    ~init:params
-    (List.concat [mir.log_prob; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
-let list_sigma_unbounded (mir : Program.Typed.t) :
-  string Set.Poly.t =
-  let not_lower_zero (e : Expr.Typed.t transformation) = match e with
-    | Lower {pattern= Fixed.Pattern.Lit (Int, i); _} ->
-      int_of_string i <> 0
-    | Lower {pattern= Fixed.Pattern.Lit (Real, i); _} ->
-      float_of_string i <> 0.
-    | Lower _ -> false
-    | LowerUpper ({pattern= Fixed.Pattern.Lit (Int, i); _}, _) ->
-      int_of_string i <> 0
-    | LowerUpper ({pattern= Fixed.Pattern.Lit (Real, i); _}, _) ->
-      float_of_string i <> 0.
-    | LowerUpper (_, _) -> false
-    | _ -> true
-  in
-  Set.Poly.map ~f:fst
-    (Set.Poly.filter
-       ~f:(fun (name, trans) ->
-           String.is_prefix ~prefix:"sigma" name
-           && not_lower_zero trans)
-       (parameter_set mir))
-
-let list_hard_constrained (mir : Program.Typed.t) :
-  string Set.Poly.t =
-  let constrained (e : Expr.Typed.t transformation) = match e with
-    | LowerUpper (lower, upper) ->
-      (match (num_expr_value lower, num_expr_value upper) with
-       | (Some 0., Some 1.) | (Some -1., Some 1.) -> false
-       | _ -> true
-      )
-    | _ -> false
-  in
-  Set.Poly.map ~f:fst
-    (Set.Poly.filter ~f:(fun (_, trans) -> constrained trans)
-       (parameter_set mir))
-
-let list_multi_twiddles (mir : Program.Typed.t) :
-  (string * Location_span.t Set.Poly.t) Set.Poly.t =
-  let collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
-    match stmt.pattern with
-    | Stmt.Fixed.Pattern.TargetPE
-        ({pattern=
-            Expr.Fixed.Pattern.FunApp
-              (_, _, (({pattern= Var vname; _})::_)); _})
-      -> Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
-    | _ -> Map.Poly.empty
-  in
-  let twiddles = fold_stmts
-      ~take_stmt:(fun m s -> merge_set_maps m (collect_twiddle_stmt s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Map.Poly.empty
-      mir.log_prob
-  in
-  let multi_twiddles = Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles
-  in
-  Map.fold ~init:Set.Poly.empty ~f:(fun ~key ~data s -> Set.add s (key, data)) multi_twiddles
-
-let list_param_dependant_cf (mir : Program.Typed.t)
-  : (Location_span.t * string Set.Poly.t) Set.Poly.t =
-  let params = parameter_names_set mir in
-  let is_param v = Set.Poly.mem params v in
-  let info_map = log_prob_build_dep_info_map mir in
-  let cf_labels = Set.Poly.of_list
-      (Map.Poly.keys
-         (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
-              is_ctrl_flow stmt)))
-  in
-  let label_var_deps label : (Location_span.t * string Set.Poly.t) =
-    let dep_labels = node_dependencies info_map label in
-    let dep_exprs = union_map dep_labels ~f:(fun label ->
-        let stmt, _ = Map.Poly.find_exn info_map label in
-        stmt_rhs_var_set stmt)
-    in
-    let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
-    let dep_params = Set.Poly.inter params dep_vars in
-    let _, info = Map.Poly.find_exn info_map label in
-    (info.meta, dep_params)
-  in
-  let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
-  Set.Poly.filter ~f:(fun (_, vars) -> Set.Poly.exists ~f:is_param vars) all_cf_var_deps
-
-let list_unscaled_constants (mir : Program.Typed.t)
-  : (Location_span.t * string) Set.Poly.t =
-  let collect_unscaled_expr (expr : Expr.Typed.t) =
-    match expr.pattern with
-    | Expr.Fixed.Pattern.Lit (Real, rstr)
-    | Expr.Fixed.Pattern.Lit (Int, rstr) ->
-      let mag = Float.abs (float_of_string rstr) in
-      if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
-        Set.Poly.singleton (expr.meta.loc, rstr)
-      else
-        Set.Poly.empty
-    | _ -> Set.Poly.empty
-  in
-  fold_stmts
-    ~take_stmt:(fun a _ -> a)
-    ~take_expr:(fun a e -> Set.Poly.union a (collect_unscaled_expr e))
-    ~init:Set.Poly.empty
-    (List.concat [mir.log_prob; mir.generate_quantities; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
-
-let list_non_one_priors (mir : Program.Typed.t) : (string * int) Set.Poly.t =
-  let priors = list_priors mir in
-  let prior_set =
-    Map.Poly.fold
-      priors
-      ~init:Set.Poly.empty
-      ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
-          Option.value_map factors_opt ~default:s
-            ~f:(fun factors -> Set.Poly.add s (v, Set.Poly.length factors)))
-  in
-  Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
+(*****
+   Printing functions
+ *****)
 
 let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
   Set.Poly.iter elems ~f:(fun elem ->

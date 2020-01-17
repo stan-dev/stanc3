@@ -63,7 +63,8 @@ let factor_var_dependencies statement_map (label, factor) =
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs
 
-
+(* Helper function to generate the factor graph adjacency map representation
+   from a factor-adjacency list *)
 let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) : factor_graph =
   let factor_map =
     List.fold ~f:merge_set_maps ~init:Map.Poly.empty
@@ -78,7 +79,7 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) 
              (Set.Poly.to_list vars)))
   in { factor_map; var_map }
 
-(* So far just extracts factors in log_prob, finds their dependencies *)
+(* Build a factor graph from prog.log_prob using dependency analysis *)
 let prog_factor_graph prog : factor_graph =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
@@ -100,7 +101,10 @@ let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
   in
   {factor_map; var_map}
 
-let fg_reaches (starts : vexpr Set.Poly.t) (goals : vexpr Set.Poly.t) (fg : factor_graph) : bool =
+(* BFS on 'fg' with initial frontier 'starts' and terminating at any
+   element of 'goals' *)
+let fg_reaches (starts : vexpr Set.Poly.t) (goals : vexpr Set.Poly.t)
+    (fg : factor_graph) : bool =
   let vneighbors v =
     let factors = Map.Poly.find_exn fg.var_map v in
     union_map factors ~f:(Map.Poly.find_exn fg.factor_map)
@@ -125,46 +129,29 @@ let fg_factor_reaches (start : factor * label) (goals : vexpr Set.Poly.t) (fg : 
   fg_reaches var_starts goals fg
 
 let fg_factor_is_prior (var : vexpr) (fac : factor * label) (data : vexpr Set.Poly.t) (fg : factor_graph) : bool =
+  (* build G'=G\V *)
   let fg' = fg_remove_var var fg in
+  (* Check if the data is now unreachable *)
   not (fg_factor_reaches fac data fg')
 
-let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) : (factor * label) Set.Poly.t option =
+(* Priors of V are neighbors of V which have no connection to any data except though V
+   So for graph G and each parameter V:
+     G' = G\V;
+     For each neighbor F:
+       Use BFS starting from F in G' and search for any data,
+           if there is none, F is a prior
+*)
+let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph)
+  : (factor * label) Set.Poly.t option =
   match Map.Poly.find fg.var_map var with
   | Some factors -> Some
     (Set.Poly.filter factors ~f:(fun fac -> fg_factor_is_prior var fac data fg))
   | None -> None
 
-let list_priors (mir : Program.Typed.t) : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
+let list_priors (mir : Program.Typed.t)
+  : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
   let fg = prog_factor_graph mir in
   let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
+  (* for each param, apply fg_var_priors and collect results in a map*)
   generate_map params ~f:(fun p -> fg_var_priors p data fg)
-
-(*
- BFS:
-Set var -> FactorGraph -> var -> Bool
- Remove var:
-   var -> FactorGraph -> FactorGraph
- Get adjacent factors:
-   var -> FactorGraph -> Set factor
-*)
-
-(* Pull out:
-  What are the parameter dependencies of this label? 
-
-Final data structure? Tight:
-   Map factor (Set var)
-Or swap:
-   Map var (Set factor)
-
-   In a bipartite graph, you can have an adjacency list with only one part without redundancy
-
-   Going to watch to go from var -> factor as well though, should maybe cache that at the cost of redundancy.
-
-   Need to write BFS on the data structure.
-
-   To find prior for V, remove V and run BFS on each neighbor F of V, then F is a prior if no data is encountered.
-*)
-
-
-
