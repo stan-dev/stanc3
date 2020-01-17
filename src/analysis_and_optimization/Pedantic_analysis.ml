@@ -8,18 +8,6 @@ open Dataflow_utils
 open Factor_graph
 open Mir_utils
 
-let rec bound_value (v : Expr.Typed.t) = match v with
-  | {pattern= Fixed.Pattern.Lit (Real, str); _}
-  | {pattern= Fixed.Pattern.Lit (Int, str); _} -> Some (float_of_string str)
-  | {pattern= Fixed.Pattern.FunApp (StanLib, "PMinus__", [v]); _} ->
-    (match bound_value v with
-     | Some v -> Some (-.v)
-     | None -> None)
-  | _ -> None
-
-let is_dist (fname : string) : bool =
-  String.is_suffix ~suffix:"_propto_log" fname
-
 let list_distributions (mir : Program.Typed.t) : (string * Location_span.t * Expr.Typed.t List.t) Set.Poly.t =
   let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
     match expr.pattern with
@@ -38,56 +26,74 @@ let list_distributions (mir : Program.Typed.t) : (string * Location_span.t * Exp
 
 let param_info
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
-    (expr : Expr.Typed.t) : (string * Expr.Typed.t transformation) option =
+    (expr : Expr.Typed.t) : (string * bound_values) option =
     match expr with
   | ({pattern= Var pname; _}) ->
-    Set.Poly.find params ~f:(fun (name, _) -> name = pname)
+    Option.map
+      ~f:(fun (name, trans) -> (name, trans_bounds_values trans))
+      (Set.Poly.find params ~f:(fun (name, _) -> name = pname))
+  | _ -> None
+
+let uniform_warning (dist_name : string) (dist_loc : Location_span.t)
+    (param_info_opt : (string * bound_values) option)
+    (args : Expr.Typed.t List.t) : string option =
+  match (dist_name, param_info_opt, args) with
+   | ("uniform_propto_log", Some (pname, _), _) ->
+     Some ("Warning: At " ^ Location_span.to_string dist_loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
+   | _ -> None
+
+let dist_arg_warning (dist_name : string) (dist_loc : Location_span.t)
+    (param_info_opt : (string * bound_values) option)
+    (args : Expr.Typed.t List.t) : string option =
+  match (dist_name, param_info_opt, args) with
+  | ("gamma_propto_log", _, [ a_expr; b_expr ])
+  | ("inv_gamma_propto_log", _, [ a_expr; b_expr ]) ->
+    (match (num_expr_value a_expr, num_expr_value b_expr) with
+     | (Some a, Some b) -> if a = b && a < 1. then
+         Some ("Warning: At " ^ Location_span.to_string dist_loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+       else None
+     | _ -> None)
+  | _ -> None
+
+let dist_bounds_warning (dist_name : string) (dist_loc : Location_span.t)
+    (param_info_opt : (string * bound_values) option)
+    (args : Expr.Typed.t List.t) : string option =
+  match (dist_name, param_info_opt, args) with
+  | ("lognormal_propto_log", Some (pname, {lower; _}), _)
+  | ("gamma_propto_log", Some (pname, {lower; _}), _) ->
+    let warn =
+      Some ("Warning: Parameter " ^ pname ^ " is given a constrained distribution at " ^ Location_span.to_string dist_loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
+    in
+    (match lower with
+     | `None -> warn
+     | `Lit l when l < 0. -> warn
+     | _ -> None)
   | _ -> None
 
 let distribution_warning
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
     (dist_name : string)
     (dist_loc : Location_span.t)
-    (all_args : Expr.Typed.t List.t) : string option =
+    (all_args : Expr.Typed.t List.t) : string List.t =
   let (lhs, args) = match all_args with
     | (lhs :: args) -> (lhs, args)
     | _ -> raise (Failure ("Found distribution " ^ dist_name ^ " which has no arguments"))
   in
   let param_info_opt = param_info params lhs in
-  match (dist_name, param_info_opt, args) with
-  | ("uniform_propto_log", Some (pname, _), _) -> Some
-    ("Warning: At " ^ Location_span.to_string dist_loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
-  | ("gamma_propto_log", _, [ a_expr; b_expr ])
-  | ("inv_gamma_propto_log", _, [ a_expr; b_expr ]) ->
-    (match (bound_value a_expr, bound_value b_expr) with
-     | (Some a, Some b) -> if a = b && a < 1. then
-         Some ("Warning: At " ^ Location_span.to_string dist_loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
-       else None
-    | _ -> None)
-  | _ -> None
+  List.filter_opt
+    (List.map ~f:(fun f -> f dist_name dist_loc param_info_opt args)
+       [ uniform_warning
+       ; dist_arg_warning
+       ; dist_bounds_warning
+       ])
 
 let list_distribution_warnings (mir : Program.Typed.t) : string Set.Poly.t =
   let dists = list_distributions mir in
   let params = parameter_set mir in
-  Set.Poly.filter_map
+  union_map
     ~f:(fun (dist, loc, args) ->
-        distribution_warning params dist loc args)
+        Set.Poly.of_list (distribution_warning params dist loc args))
     dists
-
-
-(* so far, collects all functions and their first argument. Should:
-     * Collect only distribution/parameter pairs
-       * Probably means canonicalizing distributions somehow
-     * Lookup the transformation of the parameter
-     * Check in a table if the transformation is valid for the corresponding function
-
-   Also, this process is going to be very closely related to the check for invalid distribution parameters.
-   Might be smart to collect all (Distribution, [Arguments]), then check for parameter bound errors and arg errors
-
-   TODO Also, there are some warnings that check only literal values. It is definitely a good idea to do these after optimizations are run,
-   since you get propagation and partial evaluation for free.
-*)
-
 
 let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
   let params = parameter_names_set mir in
@@ -128,7 +134,7 @@ let list_hard_constrained (mir : Program.Typed.t) :
   string Set.Poly.t =
   let constrained (e : Expr.Typed.t transformation) = match e with
     | LowerUpper (lower, upper) ->
-      (match (bound_value lower, bound_value upper) with
+      (match (num_expr_value lower, num_expr_value upper) with
        | (Some 0., Some 1.) | (Some -1., Some 1.) -> false
        | _ -> true
       )

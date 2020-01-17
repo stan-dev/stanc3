@@ -1,5 +1,7 @@
 open Core_kernel
 open Middle
+open Middle.Program
+open Middle.Expr
 open Dataflow_types
 
 let fold_stmts
@@ -25,6 +27,36 @@ let fold_stmts
     ~f:(fun a s -> (fold_stmt (take_stmt a s) s))
     ~init:init
     stmts
+
+let rec num_expr_value (v : Expr.Typed.t) : float option = match v with
+  | {pattern= Fixed.Pattern.Lit (Real, str); _}
+  | {pattern= Fixed.Pattern.Lit (Int, str); _} -> Some (float_of_string str)
+  | {pattern= Fixed.Pattern.FunApp (StanLib, "PMinus__", [v]); _} ->
+    (match num_expr_value v with
+     | Some v -> Some (-.v)
+     | None -> None)
+  | _ -> None
+
+type bound_values =
+  {lower : [ `None | `Nonlit | `Lit of float ]
+  ; upper : [ `None | `Nonlit | `Lit of float ]}
+
+let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
+  let bound_value e = match num_expr_value e with
+    | None -> `Nonlit
+    | Some f -> `Lit f
+  in
+  match trans with
+  | Lower lower ->
+    {lower = bound_value lower; upper=`None}
+  | LowerUpper (lower, upper) ->
+    {lower = bound_value lower; upper = bound_value upper}
+  | Upper upper ->
+    {lower = `None; upper = bound_value upper}
+  | _ -> {lower = `None; upper = `None}
+
+let is_dist (fname : string) : bool =
+  String.is_suffix ~suffix:"_propto_log" fname
 
 let data_set (mir : Program.Typed.t) : string Set.Poly.t =
   Set.Poly.of_list
