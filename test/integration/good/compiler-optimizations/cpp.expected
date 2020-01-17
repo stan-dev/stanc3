@@ -1330,66 +1330,30 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       
-      std::vector<double> x_matrix_flat__;
-      assign(sym42__, nil_index_list(), context__.vals_r("x_matrix"),
-        "assigning variable sym42__");
       {
+        std::vector<double> x_matrix_flat__;
+        assign(sym42__, nil_index_list(), context__.vals_r("x_matrix"),
+          "assigning variable sym42__");
         {
           {
             {
               {
                 {
-                  current_statement__ = 3;
-                  assign(x_matrix,
-                    cons_list(index_uni(1),
-                      cons_list(index_uni(1), nil_index_list())),
-                    sym42__[(1 - 1)], "assigning variable x_matrix");
-                  current_statement__ = 3;
-                  pos__ = 2;
-                }
-                {
                   {
                     current_statement__ = 3;
-                    assign(x_matrix,
-                      cons_list(index_uni(2),
-                        cons_list(index_uni(1), nil_index_list())),
-                      sym42__[(pos__ - 1)], "assigning variable x_matrix");
-                    current_statement__ = 3;
-                    pos__ = (pos__ + 1);
-                  }
-                }
-                {
-                  {
-                    current_statement__ = 3;
-                    assign(x_matrix,
-                      cons_list(index_uni(3),
-                        cons_list(index_uni(1), nil_index_list())),
-                      sym42__[(pos__ - 1)], "assigning variable x_matrix");
-                    current_statement__ = 3;
-                    pos__ = (pos__ + 1);
-                  }
-                }
-              }
-            }
-          }
-          {
-            {
-              {
-                {
-                  {
                     assign(x_matrix,
                       cons_list(index_uni(1),
-                        cons_list(index_uni(2), nil_index_list())),
-                      sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                        cons_list(index_uni(1), nil_index_list())),
+                      sym42__[(1 - 1)], "assigning variable x_matrix");
                     current_statement__ = 3;
-                    pos__ = (pos__ + 1);
+                    pos__ = 2;
                   }
                   {
                     {
                       current_statement__ = 3;
                       assign(x_matrix,
                         cons_list(index_uni(2),
-                          cons_list(index_uni(2), nil_index_list())),
+                          cons_list(index_uni(1), nil_index_list())),
                         sym42__[(pos__ - 1)], "assigning variable x_matrix");
                       current_statement__ = 3;
                       pos__ = (pos__ + 1);
@@ -1400,8 +1364,46 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       current_statement__ = 3;
                       assign(x_matrix,
                         cons_list(index_uni(3),
+                          cons_list(index_uni(1), nil_index_list())),
+                        sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                      current_statement__ = 3;
+                      pos__ = (pos__ + 1);
+                    }
+                  }
+                }
+              }
+            }
+            {
+              {
+                {
+                  {
+                    {
+                      assign(x_matrix,
+                        cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
                         sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                      current_statement__ = 3;
+                      pos__ = (pos__ + 1);
+                    }
+                    {
+                      {
+                        current_statement__ = 3;
+                        assign(x_matrix,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                        current_statement__ = 3;
+                        pos__ = (pos__ + 1);
+                      }
+                    }
+                    {
+                      {
+                        current_statement__ = 3;
+                        assign(x_matrix,
+                          cons_list(index_uni(3),
+                            cons_list(index_uni(2), nil_index_list())),
+                          sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                      }
                     }
                   }
                 }
@@ -1415,23 +1417,25 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
       
-      std::vector<double> x_vector_flat__;
-      assign(sym43__, nil_index_list(), context__.vals_r("x_vector"),
-        "assigning variable sym43__");
       {
+        std::vector<double> x_vector_flat__;
+        assign(sym43__, nil_index_list(), context__.vals_r("x_vector"),
+          "assigning variable sym43__");
         {
-          {
-            current_statement__ = 4;
-            assign(x_vector, cons_list(index_uni(1), nil_index_list()),
-              sym43__[(1 - 1)], "assigning variable x_vector");
-            current_statement__ = 4;
-            pos__ = 2;
-          }
           {
             {
               current_statement__ = 4;
-              assign(x_vector, cons_list(index_uni(2), nil_index_list()),
-                sym43__[(pos__ - 1)], "assigning variable x_vector");
+              assign(x_vector, cons_list(index_uni(1), nil_index_list()),
+                sym43__[(1 - 1)], "assigning variable x_vector");
+              current_statement__ = 4;
+              pos__ = 2;
+            }
+            {
+              {
+                current_statement__ = 4;
+                assign(x_vector, cons_list(index_uni(2), nil_index_list()),
+                  sym43__[(pos__ - 1)], "assigning variable x_vector");
+              }
             }
           }
         }
@@ -1443,56 +1447,58 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       
-      std::vector<double> x_cov_flat__;
-      assign(sym41__, nil_index_list(), context__.vals_r("x_cov"),
-        "assigning variable sym41__");
       {
+        std::vector<double> x_cov_flat__;
+        assign(sym41__, nil_index_list(), context__.vals_r("x_cov"),
+          "assigning variable sym41__");
         {
           {
             {
               {
                 {
-                  current_statement__ = 5;
-                  assign(x_cov,
-                    cons_list(index_uni(1),
-                      cons_list(index_uni(1), nil_index_list())),
-                    sym41__[(1 - 1)], "assigning variable x_cov");
-                  current_statement__ = 5;
-                  pos__ = 2;
-                }
-                {
                   {
                     current_statement__ = 5;
-                    assign(x_cov,
-                      cons_list(index_uni(2),
-                        cons_list(index_uni(1), nil_index_list())),
-                      sym41__[(pos__ - 1)], "assigning variable x_cov");
-                    current_statement__ = 5;
-                    pos__ = (pos__ + 1);
-                  }
-                }
-              }
-            }
-          }
-          {
-            {
-              {
-                {
-                  {
                     assign(x_cov,
                       cons_list(index_uni(1),
-                        cons_list(index_uni(2), nil_index_list())),
-                      sym41__[(pos__ - 1)], "assigning variable x_cov");
+                        cons_list(index_uni(1), nil_index_list())),
+                      sym41__[(1 - 1)], "assigning variable x_cov");
                     current_statement__ = 5;
-                    pos__ = (pos__ + 1);
+                    pos__ = 2;
                   }
                   {
                     {
                       current_statement__ = 5;
                       assign(x_cov,
                         cons_list(index_uni(2),
+                          cons_list(index_uni(1), nil_index_list())),
+                        sym41__[(pos__ - 1)], "assigning variable x_cov");
+                      current_statement__ = 5;
+                      pos__ = (pos__ + 1);
+                    }
+                  }
+                }
+              }
+            }
+            {
+              {
+                {
+                  {
+                    {
+                      assign(x_cov,
+                        cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
                         sym41__[(pos__ - 1)], "assigning variable x_cov");
+                      current_statement__ = 5;
+                      pos__ = (pos__ + 1);
+                    }
+                    {
+                      {
+                        current_statement__ = 5;
+                        assign(x_cov,
+                          cons_list(index_uni(2),
+                            cons_list(index_uni(2), nil_index_list())),
+                          sym41__[(pos__ - 1)], "assigning variable x_cov");
+                      }
                     }
                   }
                 }

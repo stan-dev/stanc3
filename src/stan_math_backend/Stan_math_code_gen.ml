@@ -238,8 +238,7 @@ let pp_ctor ppf p =
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
-    | Decl {decl_id; decl_type; _}
-      when not (String.is_suffix decl_id ~suffix:"_flat__") -> (
+    | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st ->
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
@@ -267,7 +266,7 @@ let pp_ctor ppf p =
 let pp_model_private ppf {Program.prepare_data; _} =
   let decl Stmt.Fixed.({pattern; _}) =
     match pattern with
-    | Decl d when not (String.is_suffix d.decl_id ~suffix:"_flat__") ->
+    | Decl d ->
         Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)
     | _ -> None
   in

@@ -96,7 +96,9 @@ let data_read smeta (decl_id, st) =
         |> swrap ]
   | UArray UInt | UArray UReal ->
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
-  | _ ->
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Cannot read a function type."]
+  | UVector | URowVector | UMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl
@@ -128,8 +130,10 @@ let data_read smeta (decl_id, st) =
           ((pos, UInt, []), Expr.Helpers.loop_bottom)
         |> swrap
       in
-      [ decl; assign; pos_reset
-      ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
+      [ Block
+          [ decl; assign; pos_reset
+          ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
+        |> swrap ]
 
 let rec base_ut_to_string = function
   | UnsizedType.UMatrix -> "matrix"
