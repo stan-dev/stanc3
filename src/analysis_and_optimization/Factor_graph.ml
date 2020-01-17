@@ -84,7 +84,7 @@ let prog_factor_graph prog : factor_graph =
   let factors = extract_factors statement_map 1 in
   let vars = Set.Poly.map
       ~f:(fun v -> VVar v)
-      (Set.Poly.union (parameter_set prog) (data_set prog))
+      (Set.Poly.union (parameter_names_set prog) (data_set prog))
   in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->
@@ -136,7 +136,7 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) : 
 
 let list_priors (mir : Program.Typed.t) : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
   let fg = prog_factor_graph mir in
-  let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_set mir) in
+  let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   generate_map params ~f:(fun p -> fg_var_priors p data fg)
 

@@ -36,13 +36,7 @@ val print_warn_hard_constrained :
 val print_warn_multi_twiddles :
   Program.Typed.t -> unit
 (**
-   Print warnings about using the uniform distribution
-*)
-
-val print_warn_uniform :
-   Program.Typed.t -> unit
-(**
-   Print warnings about using the uniform distribution
+   Print a warning for each parameter which is on the left-hand side of more than one twiddle, or equivalent TargetPE
 *)
 
 val print_warn_unscaled_constants :
@@ -58,10 +52,10 @@ val list_unscaled_constants :
    Return a set of each constant and corresponding location whose magnitude is < 0.1 or > 10
 *)
 
-val list_uniform :
-  Program.Typed.t -> (Location_span.t * string) Set.Poly.t
+val list_distribution_warnings :
+  Program.Typed.t -> string Set.Poly.t
 (**
-   Return a set of each location and corresponding parameter name throughout the program that the uniform distribution is used.
+   Return a set of distributions whose first-argument parameters are not appropriately bounded.
 *)
 
 val list_multi_twiddles :

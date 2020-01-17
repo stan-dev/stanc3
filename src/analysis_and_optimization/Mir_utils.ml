@@ -30,14 +30,16 @@ let data_set (mir : Program.Typed.t) : string Set.Poly.t =
   Set.Poly.of_list
     (List.map ~f:fst mir.input_vars)
 
-let parameter_set ?(trans_predicate=fun _ -> true) (mir : Program.Typed.t) : string Set.Poly.t =
+let parameter_set (mir : Program.Typed.t) =
   Set.Poly.of_list
-    (List.map ~f:fst
+    (List.map ~f:(fun (pname, {out_trans;_}) -> (pname, out_trans))
        (List.filter
-          ~f:(fun (_, {out_block; out_trans; _}) ->
-              (out_block = Parameters || out_block = TransformedParameters)
-              && trans_predicate out_trans)
+          ~f:(fun (_, {out_block; _}) ->
+              (out_block = Parameters || out_block = TransformedParameters))
           mir.output_vars))
+
+let parameter_names_set (mir : Program.Typed.t) =
+  Set.Poly.map ~f:fst (parameter_set mir)
 
 let rec map_rec_expr f e =
   let recurse = map_rec_expr f in

@@ -4,7 +4,9 @@ open Dataflow_types
 
 val data_set : Program.Typed.t -> string Set.Poly.t
 
-val parameter_set : ?trans_predicate:(Expr.Typed.t Program.transformation -> bool) -> Program.Typed.t -> string Set.Poly.t
+val parameter_set : Program.Typed.t -> (string * Expr.Typed.t Program.transformation) Set.Poly.t
+
+val parameter_names_set : Program.Typed.t -> string Set.Poly.t
 
 val fold_stmts :
   take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)

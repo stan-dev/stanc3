@@ -62,8 +62,8 @@ let%expect_test "Uniform warning" =
   print_warn_pedantic uniform_example ;
   [%expect
     {|
-      Warning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
       Warning: The parameter x has 2 priors.
+      Warning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
     |}]
 
 let unscaled_example =
@@ -286,3 +286,36 @@ let%expect_test "Non-one priors warning" =
       Warning: The parameter d has 0 priors.
       Warning: The parameter e has 0 priors.
       Warning: The parameter f has 0 priors. |}]
+
+let gamma_example =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        parameters {
+          real a;
+          real b;
+          real c;
+          real d;
+        }
+        model {
+          a ~ gamma(0.5, 0.5);
+          a ~ gamma(0.1, b);
+          a ~ inv_gamma(0.5, 0.5);
+          a ~ inv_gamma(0.5, b);
+          c ~ gamma(2, 2);
+          d ~ gamma(0.4, 0.6);
+        }
+      |}
+  in
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+
+let%expect_test "Gamma warning" =
+  print_warn_pedantic gamma_example ;
+  [%expect
+    {|
+      Warning: The parameter a is on the left-hand side of more than one twiddle statement.
+      Warning: The parameter a has 4 priors.
+      Warning: The parameter b has 2 priors.
+      Warning: At 'string', line 11, column 10 to column 34 your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.
+      Warning: At 'string', line 9, column 10 to column 30 your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.
+    |}]
