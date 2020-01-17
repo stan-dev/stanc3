@@ -507,9 +507,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'reject_mult_args.stan', line 6, column 16 to column 35:
-  (fabs(x) + fabs(y)) / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../install/default/bin/stanc --auto-format reject_transformed_data.stan
 transformed data {
   real<lower=0> x;

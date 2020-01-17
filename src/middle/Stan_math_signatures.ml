@@ -169,7 +169,7 @@ let distributions =
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal])
-  ; ([Lpdf], "std_normal", [DVReal])
+  ; (full_lpdf, "std_normal", [DVReal])
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal])
   ; ([Lpdf; Rng], "von_mises", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal])
@@ -1321,11 +1321,11 @@ let () =
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UReal; UVector; UVector] ) ; 
+    , [UVector; URowVector; UReal; UVector; UVector] ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
-    , [UVector; URowVector; UVector; UVector; UVector] ) ;   
+    , [UVector; URowVector; UVector; UVector; UVector] ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
@@ -1416,9 +1416,7 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
   add_unqualified
-    ( "poisson_log_glm_lpmf"
-    , ReturnType UReal
-    , [UInt; UMatrix; UReal; UVector] ) ;
+    ("poisson_log_glm_lpmf", ReturnType UReal, [UInt; UMatrix; UReal; UVector]) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal

@@ -239,9 +239,6 @@ generated quantities {
   print("z /= foo(y): ", z);
 }
 
-Info: Found int division at 'divide_equals_print.stan', line 10, column 9 to column 11:
-  a1 / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../install/default/bin/stanc --auto-format divide_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
@@ -1230,9 +1227,6 @@ generated quantities {
   print("z += foo(y): ", z);
 }
 
-Info: Found int division at 'plus_equals_prim_print.stan', line 10, column 9 to column 11:
-  a1 / 2
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../install/default/bin/stanc --auto-format plus_equals_row_vector.stan
 functions {
   vector foo(vector a1) {

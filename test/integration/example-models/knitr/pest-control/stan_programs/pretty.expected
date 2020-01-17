@@ -482,9 +482,6 @@ generated quantities {
   }
 }
 
-Info: Found int division at 'hier_NB_regression_ncp_slopes_mod_resid.stan', line 65, column 18 to column 29:
-  mo_resid[m] / 10
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
