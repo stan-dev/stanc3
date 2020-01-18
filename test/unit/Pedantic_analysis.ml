@@ -1,9 +1,6 @@
 open Core_kernel
 open Frontend
-open Analysis_and_optimization.Dependence_analysis
 open Analysis_and_optimization.Pedantic_analysis
-open Middle
-open Analysis_and_optimization.Dataflow_types
 
 let semantic_check_program ast =
   Option.value_exn
