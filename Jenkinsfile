@@ -134,11 +134,7 @@ pipeline {
                             errorFailedThreshold: 100,
                             errorUnstableThreshold: 100
                     }
-                    post { 
-                        always {
-                            runShell("rm -rf ./*")
-                        } 
-                    }
+                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("TFP tests") {
                     agent {
