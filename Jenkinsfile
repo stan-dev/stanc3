@@ -51,7 +51,7 @@ pipeline {
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
-            post { always { runShell("rm -rf ./*")} }
+            post { always { runShell("rm -rf ./*") }}
         }
         stage("Test") {
             parallel {
@@ -66,11 +66,11 @@ pipeline {
                     steps {
                         sh 'printenv'
                         runShell("""
-                    eval \$(opam env)
-                    dune runtest
-                """)
+                            eval \$(opam env)
+                            dune runtest
+                        """)
                     }
-                    post { always { runShell("rm -rf ./*")} }
+                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Try to compile all good integration models") {
                     when { expression { params.compile_all } }
@@ -78,50 +78,55 @@ pipeline {
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
-          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                   """
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
+
                         writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
                                   text:"O=0\nCXXFLAGS+=-o/dev/null -S -Wno-unused-command-line-argument")
                         sh """
-          cd performance-tests-cmdstan
-          cd cmdstan; make -j${env.PARALLEL} build; cd ..
-          cp ../bin/stanc cmdstan/bin/stanc
-          git clone --depth 1 https://github.com/stan-dev/stanc3
-          CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
-               """
+                            cd performance-tests-cmdstan
+                            cd cmdstan; make -j${env.PARALLEL} build; cd ..
+                            cp ../bin/stanc cmdstan/bin/stanc
+                            git clone --depth 1 https://github.com/stan-dev/stanc3
+                            CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
+                        """
+
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
                             failIfNotNew: true,
                             pattern: 'performance-tests-cmdstan/performance.xml',
                             skipNoTestFiles: false,
-                            stopProcessingIfError: false)])
+                            stopProcessingIfError: false)
+                        ])
                     }
-                    post { always {
-                        runShell("rm -rf ./*")
-                    } }
+                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Run all models end-to-end") {
                     agent { label 'linux' }
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
-          git clone --single-branch --branch stan2 --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                   """
+                            git clone --single-branch --branch stan2 --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
                         sh """
-          cd performance-tests-cmdstan
-          echo "example-models/regression_tests/mother.stan" > all.tests
-          cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
-          cat all.tests
-          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-               """
+                            cd performance-tests-cmdstan
+                            echo "example-models/regression_tests/mother.stan" > all.tests
+                            cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
+                            cat all.tests
+                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                        """
+                        
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
                             failIfNotNew: true,
                             pattern: 'performance-tests-cmdstan/performance.xml',
                             skipNoTestFiles: false,
-                            stopProcessingIfError: false)])
+                            stopProcessingIfError: false)
+                        ])
+
                         archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
                         perfReport modePerformancePerTestCase: true,
                             sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
                             modeThroughput: false,
@@ -129,9 +134,11 @@ pipeline {
                             errorFailedThreshold: 100,
                             errorUnstableThreshold: 100
                     }
-                    post { always {
-                        runShell("rm -rf ./*")
-                    } }
+                    post { 
+                        always {
+                            runShell("rm -rf ./*")
+                        } 
+                    }
                 }
                 stage("TFP tests") {
                     agent {
@@ -144,7 +151,7 @@ pipeline {
                         sh "pip3 install tfp-nightly==0.9.0.dev20191216"
                         sh "python3 test/integration/tfp/tests.py"
                     }
-		    post { always { runShell("rm -rf ./*") } }
+		            post { always { runShell("rm -rf ./*") }}
                 }
             }
         }
@@ -156,21 +163,24 @@ pipeline {
                     agent { label "osx && ocaml" }
                     steps {
                         runShell("""
-                    eval \$(opam env)
-                    opam update || true
-                    bash -x scripts/install_build_deps.sh
-                    dune subst
-                    dune build @install
-                """)
+                            eval \$(opam env)
+                            opam update || true
+                            bash -x scripts/install_build_deps.sh
+                            dune subst
+                            dune build @install
+                        """)
+
                         echo runShell("""
-                    eval \$(opam env)
-                    time dune runtest --verbose
-                """)
+                            eval \$(opam env)
+                            time dune runtest --verbose
+                        """)
+
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
+
                         stash name:'mac-exe', includes:'bin/*'
                     }
-                    post {always { runShell("rm -rf ./*")}}
+                    post { always { runShell("rm -rf ./*") }}
                 }
                 stage("Build stanc.js") {
                     agent {
@@ -203,18 +213,19 @@ pipeline {
                     }
                     steps {
                         runShell("""
-                    eval \$(opam env)
-                    dune subst
-                    dune build @install --profile static
-                """)
+                            eval \$(opam env)
+                            dune subst
+                            dune build @install --profile static
+                        """)
 
                         echo runShell("""
-                    eval \$(opam env)
-                    time dune runtest --profile static --verbose
-                """)
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
+
                         stash name:'linux-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
@@ -244,7 +255,8 @@ pipeline {
                 unstash 'js-exe'
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                            ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ """)
+                            ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ 
+                """)
             }
         }
     }
