@@ -31,34 +31,6 @@ let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) : str
       (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map))
   in
   Set.Poly.diff params used_params
-    (*
-  (* fold starting will all parameters, remove them from set as they're encountered *)
-  let unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
-    match expr.pattern with
-    | Expr.Fixed.Pattern.Var s -> Set.Poly.remove p s
-    | _ -> p
-  in
-  fold_stmts
-    ~take_stmt:(fun p _ -> p)
-    ~take_expr:(fun p e -> unused_params_expr e p)
-    ~init:params
-    (List.append
-       mir.log_prob
-       (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
-       *)
-
-let list_sigma_unbounded (mir : Program.Typed.t) : string Set.Poly.t =
-  let not_lower_zero (e : bound_values) = match e with
-    | {lower= `Lit 0.; _} -> false
-    | {lower= `Lit _; _} | {lower= `None; _} -> true
-    | _ -> false
-  in
-  Set.Poly.map ~f:fst
-    (Set.Poly.filter
-       ~f:(fun (name, trans) ->
-           String.is_prefix ~prefix:"sigma" name
-           && not_lower_zero (trans_bounds_values trans))
-       (parameter_set mir))
 
 let list_hard_constrained (mir : Program.Typed.t) :
   string Set.Poly.t =
@@ -320,12 +292,6 @@ let print_warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
     "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.\n"
   in warn_set consts message
 
-let print_warn_sigma_unbounded (mir : Program.Typed.t) =
-  let pnames = list_sigma_unbounded mir in
-  let message pname =
-    "Warning: Your Stan program has an unconstrained parameter \"" ^ pname ^ "\" whose name begins with \"sigma\". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.\n"
-  in warn_set pnames message
-
 let print_warn_hard_constrained (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   let message pname =
@@ -374,7 +340,6 @@ let print_warn_distribution_warnings (distributions_list : dist_info Set.Poly.t)
 let print_warn_pedantic (mir : Program.Typed.t) =
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
-  (*print_warn_sigma_unbounded mir;*)
   print_warn_unscaled_constants distributions_info;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
