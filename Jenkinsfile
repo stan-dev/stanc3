@@ -106,17 +106,18 @@ pipeline {
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
-                            git clone --single-branch --branch master --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                         """
                         sh """
                             cd performance-tests-cmdstan
+                            git show HEAD --stat
                             echo "example-models/regression_tests/mother.stan" > all.tests
                             cat known_good_perf_all.tests >> all.tests
                             echo "" >> all.tests
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; STANC2=true make -j4 build; cd ..
+                            cd cmdstan; git show HEAD --stat; STANC2=true make -j4 build; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
