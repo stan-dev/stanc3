@@ -1435,7 +1435,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       int z;
       
       current_statement__ = 312;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
           current_statement__ = 312;
@@ -1446,7 +1446,7 @@ foo_1(const int& a, std::ostream* pstream__) {
           break;
         }}
       current_statement__ = 315;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
           current_statement__ = 315;
@@ -1457,14 +1457,14 @@ foo_1(const int& a, std::ostream* pstream__) {
           continue;
         }}
       current_statement__ = 318;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
           current_statement__ = 318;
           assign(v, nil_index_list(), vs[(sym1__ - 1)],
             "assigning variable v");
           current_statement__ = 319;
-          for (size_t sym1__ = 1; sym1__ <= stan::length(v); ++sym1__) {
+          for (size_t sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
               current_statement__ = 319;
@@ -1504,7 +1504,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       for (size_t sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
         current_statement__ = 327;
         for (size_t sym2__ = 1;
-             sym2__ <= stan::length(
+             sym2__ <= stan::math::size(
                          rvalue(vs,
                            cons_list(index_uni(sym1__), nil_index_list()),
                            "vs")); ++sym2__) {
@@ -1522,7 +1522,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       for (size_t sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
         current_statement__ = 330;
         for (size_t sym2__ = 1;
-             sym2__ <= stan::length(
+             sym2__ <= stan::math::size(
                          rvalue(vs,
                            cons_list(index_uni(sym1__), nil_index_list()),
                            "vs")); ++sym2__) {
@@ -1555,7 +1555,7 @@ foo_1(const int& a, std::ostream* pstream__) {
           std::numeric_limits<double>::quiet_NaN(), "assigning variable vs");
       }
       current_statement__ = 337;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
           current_statement__ = 337;
@@ -1565,7 +1565,7 @@ foo_1(const int& a, std::ostream* pstream__) {
           break;
         }}
       current_statement__ = 340;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
           current_statement__ = 340;
@@ -1593,7 +1593,7 @@ foo_1(const int& a, std::ostream* pstream__) {
           std::numeric_limits<double>::quiet_NaN(), "assigning variable vs");
       }
       current_statement__ = 347;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
           current_statement__ = 347;
@@ -1603,7 +1603,7 @@ foo_1(const int& a, std::ostream* pstream__) {
           break;
         }}
       current_statement__ = 350;
-      for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
           current_statement__ = 350;
@@ -1660,7 +1660,7 @@ foo_2(const int& a, std::ostream* pstream__) {
     int y;
     
     current_statement__ = 367;
-    for (size_t sym1__ = 1; sym1__ <= stan::length(vs); ++sym1__) {
+    for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
         current_statement__ = 367;
@@ -3920,7 +3920,7 @@ class mother_model : public model_base_crtp<mother_model> {
             std::numeric_limits<double>::quiet_NaN(),
             "assigning variable blocked_tdata_vs");}
         current_statement__ = 248;
-        for (size_t sym1__ = 1; sym1__ <= stan::length(blocked_tdata_vs);
+        for (size_t sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
              ++sym1__) {
           {
             double v;
