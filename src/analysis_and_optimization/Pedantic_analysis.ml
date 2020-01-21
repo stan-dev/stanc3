@@ -7,8 +7,15 @@ open Dataflow_utils
 open Factor_graph
 open Mir_utils
 
-let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
+let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) : string Set.Poly.t =
   let params = parameter_names_set mir in
+  let used_params =
+    Set.Poly.map
+      ~f:(fun (VVar v) -> v)
+      (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map))
+  in
+  Set.Poly.diff params used_params
+    (*
   (* fold starting will all parameters, remove them from set as they're encountered *)
   let unused_params_expr (expr : Expr.Typed.t) (p : string Set.Poly.t) =
     match expr.pattern with
@@ -22,6 +29,7 @@ let list_unused_params (mir : Program.Typed.t) : string Set.Poly.t =
     (List.append
        mir.log_prob
        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
+       *)
 
 let list_sigma_unbounded (mir : Program.Typed.t) : string Set.Poly.t =
   let not_lower_zero (e : bound_values) = match e with
@@ -128,7 +136,7 @@ let list_unscaled_constants (mir : Program.Typed.t)
                  ; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * int) Set.Poly.t =
-  let priors = list_priors ~factor_graph:fg mir () in
+  let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold
       priors
@@ -297,10 +305,10 @@ let print_warn_param_dependant_cf (mir : Program.Typed.t) =
     "Warning: The control flow statement at " ^ Location_span.to_string loc ^ " depends on parameter(s): " ^ plistStr ^ ".\n"
   in warn_set cfs message
 
-let print_warn_unused_params (mir : Program.Typed.t) =
-  let pnames = list_unused_params mir in
+let print_warn_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) =
+  let pnames = list_unused_params factor_graph mir in
   let message pname =
-    "Warning: The parameter " ^ pname ^ " was defined but never used.\n"
+    "Warning: The parameter " ^ pname ^ " was declared but does not participate in the model.\n"
   in warn_set pnames message
 
 let print_warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
@@ -330,7 +338,7 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   print_warn_unscaled_constants mir;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
-  print_warn_unused_params mir;
+  print_warn_unused_params factor_graph mir;
   print_warn_param_dependant_cf mir;
   print_warn_non_one_priors factor_graph mir;
   print_warn_uninitialized mir;

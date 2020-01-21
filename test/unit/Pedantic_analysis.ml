@@ -35,9 +35,13 @@ let%expect_test "Unbounded sigma warning" =
       Warning: Your Stan program has an unconstrained parameter "sigma_d" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has an unconstrained parameter "sigma_e" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
       Warning: Your Stan program has a parameter "sigma_e" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
-      Warning: The parameter logsigma_f was defined but never used.
-      Warning: The parameter sigma was defined but never used.
-      Warning: The parameter sigma_a was defined but never used.
+      Warning: The parameter logsigma_f was declared but does not participate in the model.
+      Warning: The parameter sigma was declared but does not participate in the model.
+      Warning: The parameter sigma_a was declared but does not participate in the model.
+      Warning: The parameter sigma_b was declared but does not participate in the model.
+      Warning: The parameter sigma_c was declared but does not participate in the model.
+      Warning: The parameter sigma_d was declared but does not participate in the model.
+      Warning: The parameter sigma_e was declared but does not participate in the model.
     |}]
 
 let uniform_example =
@@ -140,7 +144,11 @@ let%expect_test "Hard constraint warning" =
   [%expect
     {|
       Warning: Your Stan program has a parameter "c" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
-      Warning: Your Stan program has a parameter "d" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution. |}]
+      Warning: Your Stan program has a parameter "d" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
+      Warning: The parameter a was declared but does not participate in the model.
+      Warning: The parameter b was declared but does not participate in the model.
+      Warning: The parameter c was declared but does not participate in the model.
+      Warning: The parameter d was declared but does not participate in the model. |}]
 
 let unused_param_example =
   let ast =
@@ -171,9 +179,10 @@ let%expect_test "Unused param warning" =
   print_warn_pedantic unused_param_example ;
   [%expect
     {|
-      Warning: The parameter d was defined but never used.
-      Warning: The parameter e was defined but never used.
-      Warning: The parameter f was defined but never used.
+      Warning: The parameter c was declared but does not participate in the model.
+      Warning: The parameter d was declared but does not participate in the model.
+      Warning: The parameter e was declared but does not participate in the model.
+      Warning: The parameter f was declared but does not participate in the model.
       Warning: The parameter b has 2 priors. |}]
 
 let param_dependant_cf_example =

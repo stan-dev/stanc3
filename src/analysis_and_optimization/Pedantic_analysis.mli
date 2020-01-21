@@ -1,5 +1,6 @@
 open Core_kernel
 open Middle
+open Factor_graph
 
 val print_warn_pedantic :
   Program.Typed.t -> unit
@@ -20,7 +21,7 @@ val print_warn_sigma_unbounded :
 *)
 
 val print_warn_unused_params :
-  Program.Typed.t -> unit
+  factor_graph -> Program.Typed.t -> unit
 (**
    Print warnings about parameters that don't appear outside of the parameter block.
 *)
@@ -71,7 +72,7 @@ val list_sigma_unbounded :
 *)
 
 val list_unused_params :
-  Program.Typed.t -> string Set.Poly.t
+  factor_graph -> Program.Typed.t -> string Set.Poly.t
 (**
    Return the set of parameters which are not referenced outside of the parameter block.
 *)
