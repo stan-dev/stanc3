@@ -7,16 +7,21 @@ open Dataflow_utils
 open Factor_graph
 open Mir_utils
 
+(* Useful information about an expression. Opaque means we don't know anything. *)
+type compiletime_val
+  = Opaque
+  | Number of (float * string)
+  | Param of (string * bound_values)
+  | Data of string
+
 (* Info about a distribution occurrences that's useful for checking that
    distribution properties are met
 *)
 type dist_info =
   { name : string
   ; loc : Location_span.t
-  ; args : Expr.Typed.t List.t
-  ; param_opt : (string * bound_values) option
+  ; args : (compiletime_val * Expr.Typed.Meta.t) List.t
   }
-
 
 let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) : string Set.Poly.t =
   let params = parameter_names_set mir in
@@ -150,13 +155,11 @@ let list_unscaled_constants (mir : Program.Typed.t)
 
 let list_unscaled_constants (distributions_list : dist_info Set.Poly.t)
   : (Location_span.t * string) Set.Poly.t =
-  let collect_unscaled_expr (expr : Expr.Typed.t) =
-    match expr.pattern with
-    | Expr.Fixed.Pattern.Lit (Real, rstr)
-    | Expr.Fixed.Pattern.Lit (Int, rstr) ->
-      let mag = Float.abs (float_of_string rstr) in
+  let collect_unscaled_expr (arg : (compiletime_val * Expr.Typed.Meta.t)) = match arg with
+    | (Number (num, num_str), meta) ->
+      let mag = Float.abs num in
       if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
-        Set.Poly.singleton (expr.meta.loc, rstr)
+        Set.Poly.singleton (meta.loc, num_str)
       else
         Set.Poly.empty
     | _ -> Set.Poly.empty
@@ -182,18 +185,25 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * 
    Distribution warnings
    ******)
 
-(* Check if an expression is a parameter, and if it is, return some information
-   like name and bounds
-*)
-let param_info
+let compiletime_value_of_expr
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
-    (expr : Expr.Typed.t) : (string * bound_values) option =
-  match expr with
-  | ({pattern= Var pname; _}) ->
-    Option.map
-      ~f:(fun (name, trans) -> (name, trans_bounds_values trans))
-      (Set.Poly.find params ~f:(fun (name, _) -> name = pname))
-  | _ -> None
+    (data : string Set.Poly.t)
+    (expr : Expr.Typed.t) : (compiletime_val * Expr.Typed.Meta.t) =
+  let v = match expr with
+    | ({pattern= Var pname; _}) ->
+      (match (Set.Poly.find params ~f:(fun (name, _) -> name = pname)) with
+       | Some (name, trans) -> Param (name, trans_bounds_values trans)
+       | None ->
+         (match (Set.Poly.find data ~f:(fun name -> name = pname)) with
+          | Some name -> Data name
+          | None -> Opaque))
+    | _ ->
+      Option.value_map
+        (num_expr_value expr)
+        ~default:Opaque
+        ~f:(fun (v, s) -> Number (v, s))
+  in
+  (v, expr.meta)
 
 (* Scrape all distributions from the program by searching for their function
    names and function type, and wrangle some useful data about them, like the
@@ -203,19 +213,15 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
     match expr.pattern with
     | Expr.Fixed.Pattern.FunApp
-        (StanLib, fname, args) ->
+        (StanLib, fname, arg_exprs) ->
       if is_dist fname then
-        let lhs = match args with
-          | (lhs :: _) -> lhs
-          | _ -> raise (Failure ("Found distribution " ^ fname ^ " which has no arguments"))
-        in
         let params = parameter_set mir in
-        let param_info_opt = param_info params lhs in
+        let data = data_set mir in
+        let args = List.map ~f:(compiletime_value_of_expr params data) arg_exprs in
         Set.Poly.add s
           { name = fname
           ; loc = expr.meta.loc
           ; args = args
-          ; param_opt = param_info_opt
           }
       else s
     | _ -> s
@@ -231,27 +237,38 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
 (* Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
-   | {param_opt= Some (pname, _); _} ->
+   | {args=(Param (pname, _), _)::_; _} ->
      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
    | _ -> None
 
 (* Warning particular to gamma and inv_gamma, when A=B<1 *)
 let gamma_arg_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
-  | {args= [ _; a_expr; b_expr ]; _} ->
-    (match (num_expr_value a_expr, num_expr_value b_expr) with
-     | (Some a, Some b) -> if a = b && a < 1. then
-         Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
-       else None
-     | _ -> None)
+  | {args= [ _; (Number (a, _), _); (Number (b, _), _) ]; _} ->
+     if a = b && a < 1. then
+       Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+     else None
   | _ -> None
 
 (* Warning when the dist's parameter should be bounded >0 *)
 let positive_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
-  | {param_opt= Some (pname, {lower; _}); _} ->
+  | {args=(Param (pname, {lower; _}), _)::_; _} ->
     let warn =
       Some ("Warning: Parameter " ^ pname ^ " is given a constrained distribution at " ^ Location_span.to_string dist_info.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
+    in
+    (match lower with
+     | `None -> warn
+     | `Lit l when l < 0. -> warn
+     | _ -> None)
+  | _ -> None
+
+(* Warning when the dist's parameter should be bounded >0 *)
+let positive_variance_dist_warning (dist_info : dist_info) : string option =
+  match dist_info with
+  | {args=_::_::(Param (pname, {lower; _}), _)::_; _} ->
+    let warn =
+      Some ("Warning: Parameter " ^ pname ^ " is used as a scale parameter at " ^ Location_span.to_string dist_info.loc ^ ", but is not constrained to be positive.\n")
     in
     (match lower with
      | `None -> warn
@@ -275,6 +292,9 @@ let distribution_warning (dist_info : dist_info) : string List.t =
     ]
   | "lognormal_propto_log" -> apply_warnings [
       positive_dist_warning
+    ]
+  | "normal_propto_log" -> apply_warnings [
+      positive_variance_dist_warning
     ]
   | _ -> []
 
@@ -354,7 +374,7 @@ let print_warn_distribution_warnings (distributions_list : dist_info Set.Poly.t)
 let print_warn_pedantic (mir : Program.Typed.t) =
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
-  print_warn_sigma_unbounded mir;
+  (*print_warn_sigma_unbounded mir;*)
   print_warn_unscaled_constants distributions_info;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;

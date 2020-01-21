@@ -13,15 +13,20 @@ let sigma_example =
     Parse.parse_string Parser.Incremental.program
       {|
         parameters {
-          real sigma;
+          real x;
           real sigma_a;
           real<lower=0> sigma_b;
-          real<lower=0, upper=1> sigma_c;
-          real<lower=1> sigma_d;
+          real<lower=-1, upper=1> sigma_c;
+          real<lower=0, upper=1> sigma_d;
           real<lower=1, upper=2> sigma_e;
-          real logsigma_f;
         }
-        model {}
+        model {
+          x ~ normal (0, sigma_a);
+          x ~ normal (0, sigma_b);
+          x ~ normal (0, sigma_c);
+          x ~ normal (0, sigma_d);
+          x ~ normal (0, sigma_e);
+        }
       |}
   in
   Ast_to_Mir.trans_prog "" (semantic_check_program ast)
@@ -30,18 +35,11 @@ let%expect_test "Unbounded sigma warning" =
   print_warn_pedantic sigma_example ;
   [%expect
     {|
-      Warning: Your Stan program has an unconstrained parameter "sigma" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
-      Warning: Your Stan program has an unconstrained parameter "sigma_a" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
-      Warning: Your Stan program has an unconstrained parameter "sigma_d" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
-      Warning: Your Stan program has an unconstrained parameter "sigma_e" whose name begins with "sigma". Parameters with this name are typically scale parameters and constrained to be positive. If this parameter is indeed a scale (or standard deviation or variance) parameter, add lower=0 to its declaration.
+      Warning: The parameter x is on the left-hand side of more than one twiddle statement.
       Warning: Your Stan program has a parameter "sigma_e" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
-      Warning: The parameter logsigma_f was declared but does not participate in the model.
-      Warning: The parameter sigma was declared but does not participate in the model.
-      Warning: The parameter sigma_a was declared but does not participate in the model.
-      Warning: The parameter sigma_b was declared but does not participate in the model.
-      Warning: The parameter sigma_c was declared but does not participate in the model.
-      Warning: The parameter sigma_d was declared but does not participate in the model.
-      Warning: The parameter sigma_e was declared but does not participate in the model.
+      Warning: The parameter x has 5 priors.
+      Warning: Parameter sigma_a is used as a scale parameter at 'string', line 11, column 10 to column 34, but is not constrained to be positive.
+      Warning: Parameter sigma_c is used as a scale parameter at 'string', line 13, column 10 to column 34, but is not constrained to be positive.
     |}]
 
 let uniform_example =
@@ -245,7 +243,9 @@ let non_one_priors_example =
 let%expect_test "Non-one priors no warning" =
   print_warn_pedantic non_one_priors_example ;
   [%expect
-    {| |}]
+    {|
+      Warning: Parameter b is used as a scale parameter at 'string', line 15, column 10 to column 27, but is not constrained to be positive.
+      Warning: Parameter d is used as a scale parameter at 'string', line 17, column 10 to column 27, but is not constrained to be positive. |}]
 
 let non_one_priors_example2 =
   let ast =

@@ -2,7 +2,7 @@ open Core_kernel
 open Middle
 open Dataflow_types
 
-val num_expr_value : Expr.Typed.t -> float option
+val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
   {lower : [ `None | `Nonlit | `Lit of float ]

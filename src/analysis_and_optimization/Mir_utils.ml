@@ -28,12 +28,12 @@ let fold_stmts
     ~init:init
     stmts
 
-let rec num_expr_value (v : Expr.Typed.t) : float option = match v with
+let rec num_expr_value (v : Expr.Typed.t) : (float * string) option = match v with
   | {pattern= Fixed.Pattern.Lit (Real, str); _}
-  | {pattern= Fixed.Pattern.Lit (Int, str); _} -> Some (float_of_string str)
+  | {pattern= Fixed.Pattern.Lit (Int, str); _} -> Some (float_of_string str, str)
   | {pattern= Fixed.Pattern.FunApp (StanLib, "PMinus__", [v]); _} ->
     (match num_expr_value v with
-     | Some v -> Some (-.v)
+     | Some (v, s) -> Some (-.v, "-"^s)
      | None -> None)
   | _ -> None
 
@@ -44,7 +44,7 @@ type bound_values =
 let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
   let bound_value e = match num_expr_value e with
     | None -> `Nonlit
-    | Some f -> `Lit f
+    | Some (f, _) -> `Lit f
   in
   match trans with
   | Lower lower ->
