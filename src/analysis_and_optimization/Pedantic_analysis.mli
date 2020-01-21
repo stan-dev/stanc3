@@ -52,12 +52,6 @@ val list_unscaled_constants :
    Return a set of each constant and corresponding location whose magnitude is < 0.1 or > 10
 *)
 
-val list_distribution_warnings :
-  Program.Typed.t -> string Set.Poly.t
-(**
-   Return a set of distributions whose first-argument parameters are not appropriately bounded.
-*)
-
 val list_multi_twiddles :
   Program.Typed.t -> (string * Location_span.t Set.Poly.t) Set.Poly.t
 (**

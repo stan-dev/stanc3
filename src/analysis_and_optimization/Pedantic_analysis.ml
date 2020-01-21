@@ -127,8 +127,8 @@ let list_unscaled_constants (mir : Program.Typed.t)
                  ; mir.generate_quantities
                  ; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
 
-let list_non_one_priors (mir : Program.Typed.t) : (string * int) Set.Poly.t =
-  let priors = list_priors mir in
+let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * int) Set.Poly.t =
+  let priors = list_priors ~factor_graph:fg mir () in
   let prior_set =
     Map.Poly.fold
       priors
@@ -251,11 +251,11 @@ let distribution_warning (dist_info : dist_info) : string List.t =
   | _ -> []
 
 (* Generate the distribution warnings for a program *)
-let list_distribution_warnings (mir : Program.Typed.t) : string Set.Poly.t =
+let list_distribution_warnings (distributions_list : dist_info Set.Poly.t) : string Set.Poly.t =
   union_map
     ~f:(fun dist_info ->
         Set.Poly.of_list (distribution_warning dist_info))
-    (list_distributions mir)
+    distributions_list
 
 
 (*****
@@ -303,8 +303,8 @@ let print_warn_unused_params (mir : Program.Typed.t) =
     "Warning: The parameter " ^ pname ^ " was defined but never used.\n"
   in warn_set pnames message
 
-let print_warn_non_one_priors (mir : Program.Typed.t) =
-  let vars = list_non_one_priors mir in
+let print_warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
+  let vars = list_non_one_priors factor_graph mir in
   let message (pname, n) =
     "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n"
   in warn_set vars message
@@ -320,16 +320,18 @@ let print_warn_uninitialized (mir : Program.Typed.t) =
   in
   warn_set uninit_vars message
 
-let print_warn_distribution_warnings (mir : Program.Typed.t) =
-  warn_set (list_distribution_warnings mir) ident
+let print_warn_distribution_warnings (distributions_list : dist_info Set.Poly.t) =
+  warn_set (list_distribution_warnings distributions_list) ident
 
 let print_warn_pedantic (mir : Program.Typed.t) =
+  let distributions_info = list_distributions mir in
+  let factor_graph = prog_factor_graph mir in
   print_warn_sigma_unbounded mir;
   print_warn_unscaled_constants mir;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
   print_warn_unused_params mir;
   print_warn_param_dependant_cf mir;
-  print_warn_non_one_priors mir;
+  print_warn_non_one_priors factor_graph mir;
   print_warn_uninitialized mir;
-  print_warn_distribution_warnings mir;
+  print_warn_distribution_warnings distributions_info;

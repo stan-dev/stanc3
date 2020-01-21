@@ -148,9 +148,8 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph)
     (Set.Poly.filter factors ~f:(fun fac -> fg_factor_is_prior var fac data fg))
   | None -> None
 
-let list_priors (mir : Program.Typed.t)
+let list_priors (mir : Program.Typed.t) ?factor_graph:(fg=prog_factor_graph mir) ()
   : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
-  let fg = prog_factor_graph mir in
   let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   (* for each param, apply fg_var_priors and collect results in a map*)
