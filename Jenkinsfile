@@ -111,7 +111,9 @@ pipeline {
                         sh """
                             cd performance-tests-cmdstan
                             echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "\n" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                             cd cmdstan; STANC2=true make -j4 build; cd ..
