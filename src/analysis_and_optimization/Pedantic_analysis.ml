@@ -7,6 +7,17 @@ open Dataflow_utils
 open Factor_graph
 open Mir_utils
 
+(* Info about a distribution occurrences that's useful for checking that
+   distribution properties are met
+*)
+type dist_info =
+  { name : string
+  ; loc : Location_span.t
+  ; args : Expr.Typed.t List.t
+  ; param_opt : (string * bound_values) option
+  }
+
+
 let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) : string Set.Poly.t =
   let params = parameter_names_set mir in
   let used_params =
@@ -114,6 +125,7 @@ let list_param_dependant_cf (mir : Program.Typed.t)
   (* remove empty dependency sets *)
   Set.Poly.filter ~f:(fun (_, vars) -> not (Set.Poly.is_empty vars)) all_cf_var_deps
 
+(*
 let list_unscaled_constants (mir : Program.Typed.t)
   : (Location_span.t * string) Set.Poly.t =
   let collect_unscaled_expr (expr : Expr.Typed.t) =
@@ -134,6 +146,24 @@ let list_unscaled_constants (mir : Program.Typed.t)
     (List.concat [mir.log_prob
                  ; mir.generate_quantities
                  ; List.map ~f:(fun f -> f.fdbody) mir.functions_block])
+   *)
+
+let list_unscaled_constants (distributions_list : dist_info Set.Poly.t)
+  : (Location_span.t * string) Set.Poly.t =
+  let collect_unscaled_expr (expr : Expr.Typed.t) =
+    match expr.pattern with
+    | Expr.Fixed.Pattern.Lit (Real, rstr)
+    | Expr.Fixed.Pattern.Lit (Int, rstr) ->
+      let mag = Float.abs (float_of_string rstr) in
+      if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
+        Set.Poly.singleton (expr.meta.loc, rstr)
+      else
+        Set.Poly.empty
+    | _ -> Set.Poly.empty
+  in
+  union_map
+    ~f:(fun {args;_} -> Set.Poly.union_list (List.map ~f:collect_unscaled_expr args))
+    distributions_list
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * int) Set.Poly.t =
   let priors = list_priors ~factor_graph:(Some fg) mir in
@@ -164,16 +194,6 @@ let param_info
       ~f:(fun (name, trans) -> (name, trans_bounds_values trans))
       (Set.Poly.find params ~f:(fun (name, _) -> name = pname))
   | _ -> None
-
-(* Info about a distribution occurrences that's useful for checking that
-   distribution properties are met
-*)
-type dist_info =
-  { name : string
-  ; loc : Location_span.t
-  ; args : Expr.Typed.t List.t
-  ; param_opt : (string * bound_values) option
-  }
 
 (* Scrape all distributions from the program by searching for their function
    names and function type, and wrangle some useful data about them, like the
@@ -274,10 +294,10 @@ let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
   Set.Poly.iter elems ~f:(fun elem ->
       Out_channel.output_string stderr (message elem))
 
-let print_warn_unscaled_constants (mir : Program.Typed.t) =
-  let consts = list_unscaled_constants mir in
+let print_warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
+  let consts = list_unscaled_constants distributions_list in
   let message (loc, name) =
-    "Warning: At " ^ Location_span.to_string loc ^ ", you have the constant " ^ name ^ " which is less than 0.1 or more than 10 in absolute value. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.\n"
+    "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.\n"
   in warn_set consts message
 
 let print_warn_sigma_unbounded (mir : Program.Typed.t) =
@@ -335,7 +355,7 @@ let print_warn_pedantic (mir : Program.Typed.t) =
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
   print_warn_sigma_unbounded mir;
-  print_warn_unscaled_constants mir;
+  print_warn_unscaled_constants distributions_info;
   print_warn_multi_twiddles mir;
   print_warn_hard_constrained mir;
   print_warn_unused_params factor_graph mir;

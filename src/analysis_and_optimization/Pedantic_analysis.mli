@@ -40,19 +40,6 @@ val print_warn_multi_twiddles :
    Print a warning for each parameter which is on the left-hand side of more than one twiddle, or equivalent TargetPE
 *)
 
-val print_warn_unscaled_constants :
-  Program.Typed.t -> unit
-(**
-   Print warnings about using unscaled constants
-*)
-
-
-val list_unscaled_constants :
-  Program.Typed.t -> (Location_span.t * string) Set.Poly.t
-(**
-   Return a set of each constant and corresponding location whose magnitude is < 0.1 or > 10
-*)
-
 val list_multi_twiddles :
   Program.Typed.t -> (string * Location_span.t Set.Poly.t) Set.Poly.t
 (**
