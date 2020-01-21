@@ -47,11 +47,17 @@ let uniform_example =
     Parse.parse_string Parser.Incremental.program
       {|
         parameters {
-          real x;
+          real a;
+          real<lower=0, upper=1> b;
+          real<lower=0> c;
+          real<upper=0> d;
         }
         model {
-          x ~ uniform(0, 1);
-          1 ~ uniform(0, x);
+          a ~ uniform(0, 1);
+          1 ~ uniform(0, a);
+          b ~ uniform(0, 1);
+          c ~ uniform(0, 1);
+          d ~ uniform(0, 1);
         }
       |}
   in
@@ -61,8 +67,10 @@ let%expect_test "Uniform warning" =
   print_warn_pedantic uniform_example ;
   [%expect
     {|
-      Warning: The parameter x has 2 priors.
-      Warning: At 'string', line 6, column 10 to column 28, your Stan program has a uniform distribution on variable x. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
+      Warning: The parameter a has 2 priors.
+      Warning: At 'string', line 12, column 10 to column 28, your Stan program has a uniform distribution on variable c. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
+      Warning: At 'string', line 13, column 10 to column 28, your Stan program has a uniform distribution on variable d. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
+      Warning: At 'string', line 9, column 10 to column 28, your Stan program has a uniform distribution on variable a. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).
     |}]
 
 let unscaled_example =

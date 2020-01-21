@@ -203,23 +203,39 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
     ~take_stmt:(fun s _ -> s)
     ~take_expr:(fun s e -> collect_distribution_expr s e)
     (List.append
-        mir.log_prob
-        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
+       mir.log_prob
+       (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
 
 (* Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
-   | {args=(Param (pname, _), _)::_; _} ->
-     Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
-   | _ -> None
+  | {args=(Param (pname, bounds), _)::(arg1,_)::(arg2,_)::_; _} ->
+    let warning =
+      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
+    in
+    (match (arg1, arg2, bounds) with
+     | (_, _, {upper = `None; _})
+     | (_, _, {lower = `None; _}) ->
+       (* the variate is unbounded *)
+       warning
+     | (Number (uni, _), _, {lower = `Lit bound; _})
+     | (_, Number (uni, _), {upper = `Lit bound; _}) ->
+       (* the variate is bounded differently than the uniform dist *)
+       if uni = bound then
+         None
+       else
+         warning
+     | _ -> None)
+  | _ -> None
+
 
 (* Warning particular to gamma and inv_gamma, when A=B<1 *)
 let gamma_arg_dist_warning (dist_info : dist_info) : string option =
   match dist_info with
   | {args= [ _; (Number (a, _), _); (Number (b, _), _) ]; _} ->
-     if a = b && a < 1. then
-       Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
-     else None
+    if a = b && a < 1. then
+      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+    else None
   | _ -> None
 
 (* Warning when the dist's parameter should be bounded >0 *)
