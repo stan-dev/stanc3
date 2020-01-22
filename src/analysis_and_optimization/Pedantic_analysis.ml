@@ -175,7 +175,7 @@ let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
 let print_warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
   let consts = list_unscaled_constants distributions_list in
   let message (loc, name) =
-    "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.\n"
+    "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.\n"
   in warn_set consts message
 
 let print_warn_hard_constrained (mir : Program.Typed.t) =

@@ -93,8 +93,8 @@ let%expect_test "Unscaled warning" =
   print_warn_pedantic (build_program unscaled_example) ;
   [%expect
     {|
-      Warning: At 'string', line 11, column 21 to column 26, you have the distribution argument 0.001 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
-      Warning: At 'string', line 11, column 28 to column 33, you have the distribution argument 10000 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example. |}]
+      Warning: At 'string', line 11, column 21 to column 26, you have the distribution argument 0.001 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.
+      Warning: At 'string', line 11, column 28 to column 33, you have the distribution argument 10000 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example. |}]
 
 let multi_twiddle_example =
       {|
