@@ -173,6 +173,8 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
+    ( if !warn_pedantic then
+        Pedantic_analysis.print_warn_pedantic mir ) ;
     ( if !warn_uninitialized then
       Pedantic_analysis.print_warn_uninitialized mir ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
@@ -183,7 +185,9 @@ let use_file filename =
     let opt_mir =
       if !optimize then (
         let opt =
-          Optimize.optimization_suite ~optimization_settings:(optimization_settings ()) tx_mir
+          Optimize.optimization_suite
+            ~optimization_settings:(optimization_settings ())
+            tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter
@@ -192,8 +196,6 @@ let use_file filename =
         opt )
       else tx_mir
     in
-    ( if !warn_pedantic then
-        Pedantic_analysis.print_warn_pedantic opt_mir ) ;
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
