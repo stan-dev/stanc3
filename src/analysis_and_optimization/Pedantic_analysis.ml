@@ -1,4 +1,5 @@
 open Core_kernel
+open Optimize
 open Middle
 open Middle.Program
 open Dependence_analysis
@@ -222,7 +223,27 @@ let print_warn_uninitialized (mir : Program.Typed.t) =
 let print_warn_distribution_warnings (distributions_list : dist_info Set.Poly.t) =
   warn_set (list_distribution_warnings distributions_list) ident
 
-let print_warn_pedantic (mir : Program.Typed.t) =
+let settings_constant_prop =
+  { function_inlining= false
+  ; static_loop_unrolling= false
+  ; one_step_loop_unrolling= false
+  ; list_collapsing= false
+  ; block_fixing= false
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= false
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= false }
+
+let print_warn_pedantic (mir_unopt : Program.Typed.t) =
+  (* Some warnings will be stronger when constants are propagated *)
+  let mir =
+    Optimize.optimization_suite
+      ~optimization_settings:settings_constant_prop
+      mir_unopt
+  in
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
   print_warn_unscaled_constants distributions_info;

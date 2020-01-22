@@ -1,17 +1,19 @@
 open Core_kernel
 open Frontend
+open Analysis_and_optimization
 open Analysis_and_optimization.Pedantic_analysis
 
-let semantic_check_program ast =
-  Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+let build_program prog =
+    (Ast_to_Mir.trans_prog ""
+       (Option.value_exn
+          (Result.ok
+             (Semantic_check.semantic_check_program
+                (Option.value_exn
+                   (Result.ok
+                      (Parse.parse_string Parser.Incremental.program prog)))))))
 
 let sigma_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
+  {|
         parameters {
           real x;
           real sigma_a;
@@ -26,25 +28,24 @@ let sigma_example =
           x ~ normal (0, sigma_c);
           x ~ normal (0, sigma_d);
           x ~ normal (0, sigma_e);
+          real z = 1 - 2;
+          x ~ normal (0, z);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Unbounded sigma warning" =
-  print_warn_pedantic sigma_example ;
+  print_warn_pedantic (build_program sigma_example) ;
   [%expect
     {|
       Warning: The parameter x is on the left-hand side of more than one twiddle statement.
       Warning: Your Stan program has a parameter "sigma_e" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
-      Warning: The parameter x has 5 priors.
+      Warning: The parameter x has 6 priors.
       Warning: Parameter sigma_a is used as a scale parameter at 'string', line 11, column 10 to column 34, but is not constrained to be positive.
       Warning: Parameter sigma_c is used as a scale parameter at 'string', line 13, column 10 to column 34, but is not constrained to be positive.
+      Warning: a scale parameter at 'string', line 17, column 10 to column 28 is -1, but a scale parameter should be non-negative.
     |}]
 
 let uniform_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real a;
@@ -60,11 +61,9 @@ let uniform_example =
           d ~ uniform(0, 1);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Uniform warning" =
-  print_warn_pedantic uniform_example ;
+  print_warn_pedantic (build_program uniform_example) ;
   [%expect
     {|
       Warning: The parameter a has 2 priors.
@@ -74,8 +73,6 @@ let%expect_test "Uniform warning" =
     |}]
 
 let unscaled_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         functions {
           real f() {
@@ -91,19 +88,15 @@ let unscaled_example =
           z = -1000 + 0.00001;
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Unscaled warning" =
-  print_warn_pedantic unscaled_example ;
+  print_warn_pedantic (build_program unscaled_example) ;
   [%expect
     {|
       Warning: At 'string', line 11, column 21 to column 26, you have the distribution argument 0.001 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example.
       Warning: At 'string', line 11, column 28 to column 33, you have the distribution argument 10000 which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section *** of the manual for an example. |}]
 
 let multi_twiddle_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real x;
@@ -115,11 +108,9 @@ let multi_twiddle_example =
           x ~ normal(y, 1);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Multi twiddle warning" =
-  print_warn_pedantic multi_twiddle_example ;
+  print_warn_pedantic (build_program multi_twiddle_example) ;
   [%expect
     {|
       Warning: The parameter x is on the left-hand side of more than one twiddle statement.
@@ -127,8 +118,6 @@ let%expect_test "Multi twiddle warning" =
       Warning: The parameter y has 2 priors. |}]
 
 let hard_constrained_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real<lower=0, upper=1> a;
@@ -139,11 +128,9 @@ let hard_constrained_example =
         model {
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Hard constraint warning" =
-  print_warn_pedantic hard_constrained_example ;
+  print_warn_pedantic (build_program hard_constrained_example) ;
   [%expect
     {|
       Warning: Your Stan program has a parameter "c" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
@@ -154,8 +141,6 @@ let%expect_test "Hard constraint warning" =
       Warning: The parameter d was declared but does not participate in the model. |}]
 
 let unused_param_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real a;
@@ -175,11 +160,9 @@ let unused_param_example =
           real g = d;
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Unused param warning" =
-  print_warn_pedantic unused_param_example ;
+  print_warn_pedantic (build_program unused_param_example) ;
   [%expect
     {|
       Warning: The parameter c was declared but does not participate in the model.
@@ -189,8 +172,6 @@ let%expect_test "Unused param warning" =
       Warning: The parameter b has 2 priors. |}]
 
 let param_dependant_cf_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real a;
@@ -212,11 +193,9 @@ let param_dependant_cf_example =
           }
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Parameter dependent control flow warning" =
-  print_warn_pedantic param_dependant_cf_example ;
+  print_warn_pedantic (build_program param_dependant_cf_example) ;
   [%expect
     {|
       Warning: The control flow statement at 'string', line 9, column 10 to line 13, column 11 depends on parameter(s): a.
@@ -224,8 +203,6 @@ let%expect_test "Parameter dependent control flow warning" =
       Warning: The control flow statement at 'string', line 17, column 10 to line 19, column 11 depends on parameter(s): a. |}]
 
 let non_one_priors_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         data {
           real x;
@@ -245,19 +222,15 @@ let non_one_priors_example =
           x ~ normal(c, d);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Non-one priors no warning" =
-  print_warn_pedantic non_one_priors_example ;
+  print_warn_pedantic (build_program non_one_priors_example) ;
   [%expect
     {|
       Warning: Parameter b is used as a scale parameter at 'string', line 15, column 10 to column 27, but is not constrained to be positive.
       Warning: Parameter d is used as a scale parameter at 'string', line 17, column 10 to column 27, but is not constrained to be positive. |}]
 
 let non_one_priors_example2 =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         data {
           real x;
@@ -283,11 +256,9 @@ let non_one_priors_example2 =
           f ~ normal(e, 1);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Non-one priors warning" =
-  print_warn_pedantic non_one_priors_example2 ;
+  print_warn_pedantic (build_program non_one_priors_example2) ;
   [%expect
     {|
       Warning: The parameter f is on the left-hand side of more than one twiddle statement.
@@ -299,8 +270,6 @@ let%expect_test "Non-one priors warning" =
       Warning: The parameter f has 0 priors. |}]
 
 let gamma_args_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real<lower=0> a;
@@ -317,11 +286,9 @@ let gamma_args_example =
           d ~ gamma(0.4, 0.6);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Gamma args warning" =
-  print_warn_pedantic gamma_args_example ;
+  print_warn_pedantic (build_program gamma_args_example) ;
   [%expect
     {|
       Warning: The parameter a is on the left-hand side of more than one twiddle statement.
@@ -334,8 +301,6 @@ let%expect_test "Gamma args warning" =
     |}]
 
 let dist_bounds_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
       {|
         parameters {
           real a;
@@ -350,11 +315,9 @@ let dist_bounds_example =
           d ~ lognormal(2, 2);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Dist bounds warning" =
-  print_warn_pedantic dist_bounds_example ;
+  print_warn_pedantic (build_program dist_bounds_example) ;
   [%expect
     {|
       Warning: Parameter a is given a positive distribution at 'string', line 9, column 10 to column 26 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
