@@ -19,11 +19,11 @@ type dist_info =
   }
 
 (* Warning for all uniform distributions with a parameter *)
-let uniform_dist_warning (dist_info : dist_info) : string option =
+let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
   | {args=(Param (pname, bounds), _)::(arg1,_)::(arg2,_)::_; _} ->
     let warning =
-      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
+      Some (dist_info.loc, "Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
     in
     (match (arg1, arg2, bounds) with
      | (_, _, {upper = `None; _})
@@ -42,21 +42,20 @@ let uniform_dist_warning (dist_info : dist_info) : string option =
 
 
 (* Warning particular to gamma and inv_gamma, when A=B<1 *)
-let gamma_arg_dist_warning (dist_info : dist_info) : string option =
+let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
-  | {args= [ _; (Number (a, _), _); (Number (b, _), _) ]; _} ->
+  | {args= [ _; (Number (a, _), meta); (Number (b, _), _) ]; _} ->
     if a = b && a < 1. then
-      Some ("Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+      Some (meta.loc, "Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
     else None
   | _ -> None
 
 (* Warning when the dist's parameter should be bounded >0 *)
-let positive_dist_warning (dist_info : dist_info) : string option =
+let positive_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
-  | {args=(Param (pname, {lower; _}), _)::_; _} ->
+  | {args=(Param (pname, {lower; _}), meta)::_; _} ->
     let warn =
-      Some ("Warning: Parameter " ^ pname ^ " is given a positive distribution at " ^ Location_span.to_string dist_info.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
-    in
+      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a positive distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n") in
     (match lower with
      | `None -> warn
      | `Lit l when l < 0. -> warn
@@ -64,7 +63,7 @@ let positive_dist_warning (dist_info : dist_info) : string option =
   | _ -> None
 
 let positive_named_arg_dist_warning (argn : int)
-    (arg_name : string) ({args; name; loc} : dist_info) : string option =
+    (arg_name : string) ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
     | Some v -> v
     | None ->
@@ -73,26 +72,26 @@ let positive_named_arg_dist_warning (argn : int)
                          ^ " expects more arguments." )))
   in
   match v with
-  | (Param (pname, {lower; _}), _) ->
+  | (Param (pname, {lower; _}), meta) ->
     let warn =
-      Some ("Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " at " ^ Location_span.to_string loc ^ ", but is not constrained to be positive.\n")
+      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be positive.\n")
     in
     (match lower with
      | `None -> warn
      | `Lit l when l < 0. -> warn
      | _ -> None)
-  | (Number (num, num_str), _) ->
+  | (Number (num, num_str), meta) ->
     if num <= 0. then
-      Some ("Warning: " ^ arg_name ^ " at " ^ Location_span.to_string loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be non-negative.\n")
+      Some (meta.loc, "Warning: " ^ arg_name ^ " at " ^ Location_span.to_string meta.loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be non-negative.\n")
     else None
   | _ -> None
 
 (* Warning when the dist's parameter should be bounded >0 *)
-let unit_dist_warning (dist_info : dist_info) : string option =
+let unit_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
-  | {args=(Param (pname, {lower; upper}), _)::_; _} ->
+  | {args=(Param (pname, {lower; upper}), meta)::_; _} ->
     let warn =
-      Some ("Warning: Parameter " ^ pname ^ " is given a distribution on [0,1] at " ^ Location_span.to_string dist_info.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
+      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a [0,1] distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
     in
     (match (lower, upper) with
      | (`None, _) -> warn
@@ -104,18 +103,18 @@ let unit_dist_warning (dist_info : dist_info) : string option =
 
 
 let unit_named_arg_dist_warning (argn : int)
-    (arg_name : string) ({args; name; loc} : dist_info) : string option =
-  let v =
-    Option.value
-      ~default:(raise (Failure ("Distribution " ^ name ^
-                                " at " ^ Location_span.to_string loc
-                                ^ " expects more arguments." )))
-      (List.nth args argn)
+    (arg_name : string) ({args; name; loc} : dist_info) : (Location_span.t * string) option =
+  let v = match (List.nth args argn) with
+    | Some v -> v
+    | None ->
+      (raise (Failure ("Distribution " ^ name
+                       ^ " at " ^ Location_span.to_string loc
+                       ^ " expects more arguments." )))
   in
   match v with
-  | (Param (pname, {lower; upper}), _) ->
+  | (Param (pname, {lower; upper}), meta) ->
     let warn =
-      Some ("Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " at " ^ Location_span.to_string loc ^ ", but is not constrained to be on [0,1].\n")
+        Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be on [0,1].\n")
     in
     (match (lower, upper) with
      | (`None, _) -> warn
@@ -123,30 +122,23 @@ let unit_named_arg_dist_warning (argn : int)
      | (`Lit l, _) when l < 0. -> warn
      | (_, `Lit l) when l > 1. -> warn
      | _ -> None)
-  | (Number (num, num_str), _) ->
+  | (Number (num, num_str), meta) ->
     if num < 0. || num > 1. then
-      Some ("Warning: " ^ arg_name ^ " at " ^ Location_span.to_string loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be in [0,1].\n")
+      Some (meta.loc, "Warning: " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be in [0,1].\n")
     else None
   | _ -> None
 
 (* Generate the warnings that are relevant to a given distribution *)
-let distribution_warning (dist_info : dist_info) : string List.t =
+let distribution_warning (dist_info : dist_info) : (Location_span.t * string) List.t =
   let apply_warnings = List.filter_map ~f:(fun f -> f dist_info) in
   let scale_name = "a scale parameter" in
   let inv_scale_name = "an inverse scale parameter" in
   let shape_name = "a shape parameter" in
   let dof_name = "degrees of freedom" in
-  let dist_name =
-    match (String.chop_suffix ~suffix:"_propto_log" dist_info.name) with
-    | Some name -> name
-    | None -> (raise (Failure
-                        ("Compiler issue: Unrecognized distribution collected: \""
-                         ^ dist_info.name)))
-  in
   (* Information mostly from:
      https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html
   *)
-  match dist_name with
+  match dist_info.name with
   (* Unbounded Continuous Distributions *)
   | "normal" -> apply_warnings [
       positive_named_arg_dist_warning 2 scale_name
@@ -165,7 +157,7 @@ let distribution_warning (dist_info : dist_info) : string List.t =
       positive_named_arg_dist_warning 1 dof_name
     ; positive_named_arg_dist_warning 3 scale_name
     ]
-  | "cauchy_propto_log" -> apply_warnings [
+  | "cauchy" -> apply_warnings [
       positive_named_arg_dist_warning 2 scale_name
     ]
   | "double_exponential" -> apply_warnings [
@@ -228,7 +220,7 @@ let distribution_warning (dist_info : dist_info) : string List.t =
       positive_dist_warning
     ; positive_named_arg_dist_warning 1 scale_name
     ]
-  | "weiner" -> apply_warnings [
+  | "wiener" -> apply_warnings [
       (* Could do more here, since variate should be > arg 2 *)
       positive_dist_warning
     ; positive_named_arg_dist_warning 1 "a boundary separation parameter"
@@ -282,7 +274,7 @@ let distribution_warning (dist_info : dist_info) : string List.t =
 
 
 (* Generate the distribution warnings for a program *)
-let list_distribution_warnings (distributions_list : dist_info Set.Poly.t) : string Set.Poly.t =
+let list_distribution_warnings (distributions_list : dist_info Set.Poly.t) : (Location_span.t * string) Set.Poly.t =
   union_map
     ~f:(fun dist_info ->
         Set.Poly.of_list (distribution_warning dist_info))

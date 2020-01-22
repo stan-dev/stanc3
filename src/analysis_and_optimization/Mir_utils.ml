@@ -55,8 +55,18 @@ let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
     {lower = `None; upper = bound_value upper}
   | _ -> {lower = `None; upper = `None}
 
+let chop_dist_name (fname : string) : string Option.t =
+  let log_chop = String.chop_suffix ~suffix:"_propto_log" fname in
+  match log_chop with
+  | Some _ -> log_chop
+  | None ->
+    let lpdf_chop = String.chop_suffix ~suffix:"_propto_lpdf" fname in
+    (match lpdf_chop with
+     | Some _ -> lpdf_chop
+     | None -> None)
+
 let is_dist (fname : string) : bool =
-  String.is_suffix ~suffix:"_propto_log" fname
+  Option.is_some (chop_dist_name fname)
 
 let data_set (mir : Program.Typed.t) : string Set.Poly.t =
   Set.Poly.of_list

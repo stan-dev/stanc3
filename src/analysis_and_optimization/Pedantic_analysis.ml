@@ -129,16 +129,17 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
     match expr.pattern with
     | Expr.Fixed.Pattern.FunApp
         (StanLib, fname, arg_exprs) ->
-      if is_dist fname then
-        let params = parameter_set mir in
-        let data = data_set mir in
-        let args = List.map ~f:(compiletime_value_of_expr params data) arg_exprs in
-        Set.Poly.add s
-          { name = fname
-          ; loc = expr.meta.loc
-          ; args = args
-          }
-      else s
+      (match chop_dist_name fname with
+       | Some dname ->
+         let params = parameter_set mir in
+         let data = data_set mir in
+         let args = List.map ~f:(compiletime_value_of_expr params data) arg_exprs in
+         Set.Poly.add s
+           { name = dname
+           ; loc = expr.meta.loc
+           ; args = args
+           }
+       | _ -> s)
     | _ -> s
   in
   fold_stmts
@@ -172,56 +173,56 @@ let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
   Set.Poly.iter elems ~f:(fun elem ->
       Out_channel.output_string stderr (message elem))
 
-let print_warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
+let warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
   let consts = list_unscaled_constants distributions_list in
   let message (loc, name) =
-    "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.\n"
-  in warn_set consts message
+    (loc, "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.\n")
+  in Set.Poly.map ~f:message consts
 
-let print_warn_hard_constrained (mir : Program.Typed.t) =
+let warn_hard_constrained (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   let message pname =
-    "Warning: Your Stan program has a parameter \"" ^ pname ^ "\" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.\n"
-  in warn_set pnames message
+    (Location_span.empty, "Warning: Your Stan program has a parameter \"" ^ pname ^ "\" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.\n")
+  in Set.Poly.map ~f:message pnames
 
-let print_warn_multi_twiddles (mir : Program.Typed.t) =
+let warn_multi_twiddles (mir : Program.Typed.t) =
   let twds = list_multi_twiddles mir in
-  let message (vname, _) =
-    "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n"
-  in warn_set twds message
+  let message (vname, loc) =
+    (Set.Poly.min_elt_exn loc, "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n")
+  in Set.Poly.map ~f:message twds
 
-let print_warn_param_dependant_cf (mir : Program.Typed.t) =
+let warn_param_dependant_cf (mir : Program.Typed.t) =
   let cfs = list_param_dependant_cf mir in
   let message (loc, plist) =
     let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
-    "Warning: The control flow statement at " ^ Location_span.to_string loc ^ " depends on parameter(s): " ^ plistStr ^ ".\n"
-  in warn_set cfs message
+    (loc, "Warning: The control flow statement at " ^ Location_span.to_string loc ^ " depends on parameter(s): " ^ plistStr ^ ".\n")
+  in Set.Poly.map ~f:message cfs
 
-let print_warn_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) =
+let warn_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) =
   let pnames = list_unused_params factor_graph mir in
   let message pname =
-    "Warning: The parameter " ^ pname ^ " was declared but does not participate in the model.\n"
-  in warn_set pnames message
+    (Location_span.empty, "Warning: The parameter " ^ pname ^ " was declared but does not participate in the model.\n")
+  in Set.Poly.map ~f:message pnames
 
-let print_warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
+let warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
   let vars = list_non_one_priors factor_graph mir in
   let message (pname, n) =
-    "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n"
-  in warn_set vars message
+    (Location_span.empty, "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n")
+  in Set.Poly.map ~f:message vars
 
-let print_warn_uninitialized (mir : Program.Typed.t) =
+
+let warn_uninitialized (mir : Program.Typed.t) =
   let uninit_vars =
     Set.Poly.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
       (Dependence_analysis.mir_uninitialized_variables mir)
   in
   let message (span, var_name) =
-    "Warning: the variable " ^ var_name ^ " may not have been initialized its use at " ^ Location_span.to_string span ^ ".\n"
+    (span, "Warning: the variable " ^ var_name ^ " may not have been initialized its use at " ^ Location_span.to_string span ^ ".\n")
   in
-  warn_set uninit_vars message
+  Set.Poly.map ~f:message uninit_vars
 
-let print_warn_distribution_warnings (distributions_list : dist_info Set.Poly.t) =
-  warn_set (list_distribution_warnings distributions_list) ident
+let print_warn_uninitialized mir = warn_set (warn_uninitialized mir) snd
 
 let settings_constant_prop =
   { function_inlining= false
@@ -246,11 +247,16 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   in
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
-  print_warn_unscaled_constants distributions_info;
-  print_warn_multi_twiddles mir;
-  print_warn_hard_constrained mir;
-  print_warn_unused_params factor_graph mir;
-  print_warn_param_dependant_cf mir;
-  print_warn_non_one_priors factor_graph mir;
-  print_warn_uninitialized mir;
-  print_warn_distribution_warnings distributions_info;
+  let warning_set =
+    Set.Poly.union_list [
+      warn_uninitialized mir
+    ; warn_unscaled_constants distributions_info
+    ; warn_multi_twiddles mir
+    ; warn_hard_constrained mir
+    ; warn_unused_params factor_graph mir
+    ; warn_param_dependant_cf mir
+    ; warn_non_one_priors factor_graph mir
+    ; list_distribution_warnings distributions_info
+    ]
+  in
+  warn_set warning_set snd;
