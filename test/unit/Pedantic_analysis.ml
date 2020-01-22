@@ -329,6 +329,8 @@ let%expect_test "Gamma args warning" =
       Warning: The parameter b has 2 priors.
       Warning: At 'string', line 11, column 10 to column 34 your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.
       Warning: At 'string', line 9, column 10 to column 30 your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.
+      Warning: Parameter b is used as a scale parameter at 'string', line 12, column 10 to column 32, but is not constrained to be positive.
+      Warning: Parameter b is used as an inverse scale parameter at 'string', line 10, column 10 to column 28, but is not constrained to be positive.
     |}]
 
 let dist_bounds_example =
@@ -355,6 +357,6 @@ let%expect_test "Dist bounds warning" =
   print_warn_pedantic dist_bounds_example ;
   [%expect
     {|
-      Warning: Parameter a is given a constrained distribution at 'string', line 9, column 10 to column 26 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
-      Warning: Parameter c is given a constrained distribution at 'string', line 11, column 10 to column 30 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
+      Warning: Parameter a is given a positive distribution at 'string', line 9, column 10 to column 26 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
+      Warning: Parameter c is given a positive distribution at 'string', line 11, column 10 to column 30 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
     |}]
