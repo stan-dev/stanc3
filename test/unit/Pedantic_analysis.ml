@@ -1,6 +1,5 @@
 open Core_kernel
 open Frontend
-open Analysis_and_optimization
 open Analysis_and_optimization.Pedantic_analysis
 
 let build_program prog =
