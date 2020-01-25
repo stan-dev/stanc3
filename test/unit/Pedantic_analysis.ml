@@ -41,7 +41,7 @@ let%expect_test "Unbounded sigma warning" =
       Warning: The parameter x is on the left-hand side of more than one twiddle statement.
       Warning: Parameter sigma_a is used as a scale parameter in distribution normal at 'string', line 11, column 25 to column 32, but is not constrained to be positive.
       Warning: Parameter sigma_c is used as a scale parameter in distribution normal at 'string', line 13, column 25 to column 32, but is not constrained to be positive.
-      Warning: a scale parameter at 'string', line 16, column 19 to column 24 is -1, but a scale parameter should be non-negative.
+      Warning: a scale parameter in distribution normal at 'string', line 16, column 19 to column 24 has value -1, but a scale parameter should be positive.
     |}]
 
 let uniform_example =
@@ -447,7 +447,7 @@ let%expect_test "Dist warnings" =
       Warning: Parameter x is given a positive distribution wiener at 'string', line 53, column 2 to column 3 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
       Warning: Parameter unb_p is used as a boundary separation parameter in distribution wiener at 'string', line 53, column 13 to column 18, but is not constrained to be positive.
       Warning: Parameter unb_p is used as a non-decision time parameter in distribution wiener at 'string', line 53, column 20 to column 25, but is not constrained to be positive.
-      Warning: Parameter pos_p is used as an a-priori bias parameter in distribution wiener at 'string', line 53, column 27 to column 32, but is not constrained to be on [0,1].
+      Warning: Parameter pos_p is used as an a-priori bias parameter in distribution wiener at 'string', line 53, column 27 to column 32, but is not constrained to be [0,1].
       Warning: Parameter x is given a positive distribution pareto at 'string', line 55, column 2 to column 3 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
       Warning: Parameter unb_p is used as a positive minimum parameter in distribution pareto at 'string', line 55, column 13 to column 18, but is not constrained to be positive.
       Warning: Parameter unb_p is used as a shape parameter in distribution pareto at 'string', line 55, column 20 to column 25, but is not constrained to be positive.
@@ -458,7 +458,7 @@ let%expect_test "Dist warnings" =
       Warning: Parameter unb_p is used as a count parameter in distribution beta at 'string', line 59, column 18 to column 23, but is not constrained to be positive.
       Warning: The parameter x_unit is on the left-hand side of more than one twiddle statement.
       Warning: Parameter x is given a [0,1] distribution beta_proportion at 'string', line 61, column 2 to column 3 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.
-      Warning: Parameter unb_p is used as a unit mean parameter in distribution beta_proportion at 'string', line 61, column 22 to column 27, but is not constrained to be on [0,1].
+      Warning: Parameter unb_p is used as a unit mean parameter in distribution beta_proportion at 'string', line 61, column 22 to column 27, but is not constrained to be [0,1].
       Warning: Parameter unb_p is used as a precision parameter in distribution beta_proportion at 'string', line 61, column 29 to column 34, but is not constrained to be positive.
       Warning: Parameter unb_p is used as a scale parameter in distribution von_mises at 'string', line 63, column 19 to column 24, but is not constrained to be positive.
       Warning: Parameter vec is given a [0,1] distribution dirichlet at 'string', line 65, column 2 to column 5 but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.

@@ -50,60 +50,46 @@ let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) 
     else None
   | _ -> None
 
-(* Warning when the dist's parameter should be bounded >0 *)
-let positive_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
-  match dist_info with
-  | {args=(Param (pname, {lower; _}), meta)::_; _} ->
-    let warn =
-      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a positive distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n") in
-    (match lower with
-     | `None -> warn
-     | `Lit l when l < 0. -> warn
-     | _ -> None)
-  | _ -> None
+type range =
+  { name : string
+  ; lower : (float * bool) option
+  ; upper : (float * bool) option
+  }
 
-let positive_named_arg_dist_warning (argn : int)
-    (arg_name : string) ({args; name; loc} : dist_info) : (Location_span.t * string) option =
-  let v = match (List.nth args argn) with
-    | Some v -> v
-    | None ->
-        (raise (Failure ("Distribution " ^ name
-                         ^ " at " ^ Location_span.to_string loc
-                         ^ " expects more arguments." )))
+let unit_range =
+  { name = "[0,1]"
+  ; lower = Some (0., true)
+  ; upper = Some (1., true)
+  }
+
+let positive_range =
+  { name = "positive"
+  ; lower = Some (0., false)
+  ; upper = None
+  }
+
+let bounds_out_of_range (range : range) (bounds : bound_values) =
+  match (bounds.lower, bounds.upper, range.lower, range.upper) with
+   | (`None, _, Some _, _) -> true
+   | (_, `None, _, Some _) -> true
+   | (`Lit l, _, Some (l', _), _) when l < l' -> true
+   | (_, `Lit u, _, Some (u', _)) when u > u' -> true
+   | _ -> false
+
+let value_out_of_range (range : range) (v : float) =
+  let lower_bad = match range.lower with
+    | Some (l, true) -> v < l
+    | Some (l, false) -> v <= l
+    | None -> false
   in
-  match v with
-  | (Param (pname, {lower; _}), meta) ->
-    let warn =
-      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be positive.\n")
-    in
-    (match lower with
-     | `None -> warn
-     | `Lit l when l < 0. -> warn
-     | _ -> None)
-  | (Number (num, num_str), meta) ->
-    if num <= 0. then
-      Some (meta.loc, "Warning: " ^ arg_name ^ " at " ^ Location_span.to_string meta.loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be non-negative.\n")
-    else None
-  | _ -> None
+  let upper_bad = match range.upper with
+    | Some (u, true) -> v > u
+    | Some (u, false) -> v >= u
+    | None -> false
+  in lower_bad || upper_bad
 
-(* Warning when the dist's parameter should be bounded >0 *)
-let unit_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
-  match dist_info with
-  | {args=(Param (pname, {lower; upper}), meta)::_; _} ->
-    let warn =
-      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a [0,1] distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
-    in
-    (match (lower, upper) with
-     | (`None, _) -> warn
-     | (_, `None) -> warn
-     | (`Lit l, _) when l < 0. -> warn
-     | (_, `Lit l) when l > 1. -> warn
-     | _ -> None)
-  | _ -> None
-
-
-let unit_named_arg_dist_warning (argn : int)
-    (arg_name : string) ({args; name; loc} : dist_info) : (Location_span.t * string) option =
+let arg_range_warning (range : range) (argn : int) (arg_name : string)
+    ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
     | Some v -> v
     | None ->
@@ -112,19 +98,22 @@ let unit_named_arg_dist_warning (argn : int)
                        ^ " expects more arguments." )))
   in
   match v with
-  | (Param (pname, {lower; upper}), meta) ->
-    let warn =
-        Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be on [0,1].\n")
-    in
-    (match (lower, upper) with
-     | (`None, _) -> warn
-     | (_, `None) -> warn
-     | (`Lit l, _) when l < 0. -> warn
-     | (_, `Lit l) when l > 1. -> warn
-     | _ -> None)
+  | (Param (pname, bounds), meta) ->
+    if bounds_out_of_range range bounds then
+      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be " ^ range.name ^ ".\n")
+    else None
   | (Number (num, num_str), meta) ->
-    if num < 0. || num > 1. then
-      Some (meta.loc, "Warning: " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ " is " ^ num_str ^", but " ^ arg_name ^ " should be in [0,1].\n")
+    if value_out_of_range range num then
+      Some (meta.loc, "Warning: " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ " has value " ^ num_str ^", but " ^ arg_name ^ " should be " ^ range.name ^ ".\n")
+    else None
+  | _ -> None
+
+(* Warning when the dist's parameter should be bounded >0 *)
+let variate_range_warning (range : range) (dist_info : dist_info) : (Location_span.t * string) option =
+  match dist_info with
+  | {args=(Param (pname, bounds), meta)::_; _} ->
+    if bounds_out_of_range range bounds then
+      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a " ^ range.name ^ " distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
     else None
   | _ -> None
 
@@ -141,119 +130,119 @@ let distribution_warning (dist_info : dist_info) : (Location_span.t * string) Li
   match dist_info.name with
   (* Unbounded Continuous Distributions *)
   | "normal" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   | "normal_id_glm" -> apply_warnings [
-      positive_named_arg_dist_warning 4 scale_name
+      arg_range_warning positive_range 4 scale_name
     ]
   | "exp_mod_normal" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
-    ; positive_named_arg_dist_warning 3 shape_name
+      arg_range_warning positive_range 2 scale_name
+    ; arg_range_warning positive_range 3 shape_name
     ]
   | "skew_normal" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   | "student_t" -> apply_warnings [
-      positive_named_arg_dist_warning 1 dof_name
-    ; positive_named_arg_dist_warning 3 scale_name
+      arg_range_warning positive_range 1 dof_name
+    ; arg_range_warning positive_range 3 scale_name
     ]
   | "cauchy" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   | "double_exponential" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   | "logistic" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   | "gumbel" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   (* Positive Continuous Distributions *)
   | "lognormal" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 2 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 2 scale_name
     ]
   | "chi_square" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 dof_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 dof_name
     ]
   | "inv_chi_square" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 dof_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 dof_name
     ]
   | "scaled_inv_chi_square" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 dof_name
-    ; positive_named_arg_dist_warning 2 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 dof_name
+    ; arg_range_warning positive_range 2 scale_name
     ]
   | "exponential" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 scale_name
     ]
   | "gamma" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 shape_name
-    ; positive_named_arg_dist_warning 2 inv_scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 shape_name
+    ; arg_range_warning positive_range 2 inv_scale_name
     ; gamma_arg_dist_warning
     ]
   | "inv_gamma" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 shape_name
-    ; positive_named_arg_dist_warning 2 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 shape_name
+    ; arg_range_warning positive_range 2 scale_name
     ; gamma_arg_dist_warning
     ]
   | "weibull" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 shape_name
-    ; positive_named_arg_dist_warning 2 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 shape_name
+    ; arg_range_warning positive_range 2 scale_name
     ]
   | "frechet" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 shape_name
-    ; positive_named_arg_dist_warning 2 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 shape_name
+    ; arg_range_warning positive_range 2 scale_name
     ]
   (* Non-negative Continuous Distributions *)
   (* No real distinction needed here between positive and non-negative lower
      bounds *)
   | "rayleigh" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 scale_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 scale_name
     ]
   | "wiener" -> apply_warnings [
       (* Could do more here, since variate should be > arg 2 *)
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 "a boundary separation parameter"
-    ; positive_named_arg_dist_warning 2 "a non-decision time parameter"
-    ; unit_named_arg_dist_warning 3 "an a-priori bias parameter"
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 "a boundary separation parameter"
+    ; arg_range_warning positive_range 2 "a non-decision time parameter"
+    ; arg_range_warning unit_range 3 "an a-priori bias parameter"
     ]
   (* Positive Lower-Bounded Probabilities *)
   (* Currently treating these as if they're positive bounded,
      could easily do better *)
   | "pareto" -> apply_warnings [
-      positive_dist_warning
-    ; positive_named_arg_dist_warning 1 "a positive minimum parameter"
-    ; positive_named_arg_dist_warning 2 shape_name
+      variate_range_warning positive_range
+    ; arg_range_warning positive_range 1 "a positive minimum parameter"
+    ; arg_range_warning positive_range 2 shape_name
     ]
   | "pareto_type_2" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
-    ; positive_named_arg_dist_warning 3 shape_name
+      arg_range_warning positive_range 2 scale_name
+    ; arg_range_warning positive_range 3 shape_name
     ]
   (* Continuous Distributions on [0,1] *)
   | "beta" -> apply_warnings [
-      unit_dist_warning
-    ; positive_named_arg_dist_warning 1 "a count parameter"
-    ; positive_named_arg_dist_warning 2 "a count parameter"
+      variate_range_warning unit_range
+    ; arg_range_warning positive_range 1 "a count parameter"
+    ; arg_range_warning positive_range 2 "a count parameter"
     ]
   | "beta_proportion" -> apply_warnings [
-      unit_dist_warning
+      variate_range_warning unit_range
     (* should be exclusive bounds on arg 1*)
-    ; unit_named_arg_dist_warning 1 "a unit mean parameter"
-    ; positive_named_arg_dist_warning 2 "a precision parameter"
+    ; arg_range_warning unit_range 1 "a unit mean parameter"
+    ; arg_range_warning positive_range 2 "a precision parameter"
     ]
   (* Circular Distributions *)
   | "von_mises" -> apply_warnings [
-      positive_named_arg_dist_warning 2 scale_name
+      arg_range_warning positive_range 2 scale_name
     ]
   (* Bounded Continuous Distributions *)
   | "uniform" -> apply_warnings [
@@ -262,8 +251,8 @@ let distribution_warning (dist_info : dist_info) : (Location_span.t * string) Li
     ]
       (* Simplex Distributions *)
   | "dirichlet" -> apply_warnings [
-      unit_dist_warning
-    ; positive_named_arg_dist_warning 1 "a count parameter"
+      variate_range_warning unit_range
+    ; arg_range_warning positive_range 1 "a count parameter"
     ]
   (* TODO: Multivariate distributions in sections
       Distributions over Unbounded Vectors
@@ -271,7 +260,6 @@ let distribution_warning (dist_info : dist_info) : (Location_span.t * string) Li
       Covariance Matrix Distributions
   *)
   | _ -> []
-
 
 (* Generate the distribution warnings for a program *)
 let list_distribution_warnings (distributions_list : dist_info Set.Poly.t) : (Location_span.t * string) Set.Poly.t =
