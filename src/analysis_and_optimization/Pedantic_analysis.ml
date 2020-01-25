@@ -176,38 +176,38 @@ let warn_set (elems : 'a Set.Poly.t) (message : 'a -> string) =
 let warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
   let consts = list_unscaled_constants distributions_list in
   let message (loc, name) =
-    (loc, "Warning: At " ^ Location_span.to_string loc ^ ", you have the distribution argument " ^ name ^ " which is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.\n")
+    (loc, "A distribution argument " ^ name ^ " is less than 0.1 or more than 10 in magnitude. This suggests that you might have parameters in your model that have not been scaled to roughly order 1. We suggest rescaling using a multiplier; see section 22.12 of the manual for an example.\n")
   in Set.Poly.map ~f:message consts
 
 let warn_hard_constrained (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   let message pname =
-    (Location_span.empty, "Warning: Your Stan program has a parameter \"" ^ pname ^ "\" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.\n")
+    (Location_span.empty, "Your Stan program has a parameter \"" ^ pname ^ "\" with hard constraints in its declaration. Hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.\n")
   in Set.Poly.map ~f:message pnames
 
 let warn_multi_twiddles (mir : Program.Typed.t) =
   let twds = list_multi_twiddles mir in
   let message (vname, loc) =
-    (Set.Poly.min_elt_exn loc, "Warning: The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n")
+    (Set.Poly.min_elt_exn loc, "The parameter " ^ vname ^ " is on the left-hand side of more than one twiddle statement.\n")
   in Set.Poly.map ~f:message twds
 
 let warn_param_dependant_cf (mir : Program.Typed.t) =
   let cfs = list_param_dependant_cf mir in
   let message (loc, plist) =
     let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
-    (loc, "Warning: The control flow statement at " ^ Location_span.to_string loc ^ " depends on parameter(s): " ^ plistStr ^ ".\n")
+    (loc, "A control flow statement depends on parameter(s): " ^ plistStr ^ ".\n")
   in Set.Poly.map ~f:message cfs
 
 let warn_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) =
   let pnames = list_unused_params factor_graph mir in
   let message pname =
-    (Location_span.empty, "Warning: The parameter " ^ pname ^ " was declared but does not participate in the model.\n")
+    (Location_span.empty, "The parameter " ^ pname ^ " was declared but does not participate in the model.\n")
   in Set.Poly.map ~f:message pnames
 
 let warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
   let vars = list_non_one_priors factor_graph mir in
   let message (pname, n) =
-    (Location_span.empty, "Warning: The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n")
+    (Location_span.empty, "The parameter " ^ pname ^ " has " ^ string_of_int n ^ " priors.\n")
   in Set.Poly.map ~f:message vars
 
 
@@ -218,7 +218,7 @@ let warn_uninitialized (mir : Program.Typed.t) =
       (Dependence_analysis.mir_uninitialized_variables mir)
   in
   let message (span, var_name) =
-    (span, "Warning: the variable " ^ var_name ^ " may not have been initialized its use at " ^ Location_span.to_string span ^ ".\n")
+    (span, "The variable " ^ var_name ^ " may not have been initialized before its use.\n")
   in
   Set.Poly.map ~f:message uninit_vars
 
@@ -259,4 +259,10 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
     ; list_distribution_warnings distributions_info
     ]
   in
-  warn_set warning_set snd;
+  let warn (loc, msg) =
+    if loc = Location_span.empty then
+      "Warning:\n  " ^ msg
+    else
+      "Warning at " ^ Location_span.to_string loc ^ ":\n  " ^ msg
+  in
+  warn_set warning_set warn

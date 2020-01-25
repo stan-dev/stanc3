@@ -23,7 +23,7 @@ let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) op
   match dist_info with
   | {args=(Param (pname, bounds), _)::(arg1,_)::(arg2,_)::_; _} ->
     let warning =
-      Some (dist_info.loc, "Warning: At " ^ Location_span.to_string dist_info.loc ^ ", your Stan program has a uniform distribution on variable " ^ pname ^ ". The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
+      Some (dist_info.loc, "Parameter " ^ pname ^ " is given a uniform distribution. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
     in
     (match (arg1, arg2, bounds) with
      | (_, _, {upper = `None; _})
@@ -46,7 +46,7 @@ let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) 
   match dist_info with
   | {args= [ _; (Number (a, _), meta); (Number (b, _), _) ]; _} ->
     if a = b && a < 1. then
-      Some (meta.loc, "Warning: At " ^ Location_span.to_string dist_info.loc ^ " your Stan program has a gamma or inverse-gamma model with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+      Some (meta.loc, "There is a gamma or inverse-gamma distribution with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
     else None
   | _ -> None
 
@@ -100,11 +100,11 @@ let arg_range_warning (range : range) (argn : int) (arg_name : string)
   match v with
   | (Param (pname, bounds), meta) ->
     if bounds_out_of_range range bounds then
-      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is used as " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ ", but is not constrained to be " ^ range.name ^ ".\n")
+      Some (meta.loc, "A " ^ name ^ " distribution has parameter " ^ pname ^ " as " ^ arg_name ^ " (argument " ^ string_of_int argn ^ "), but " ^ pname ^ " is not constrained to be " ^ range.name ^ ".\n")
     else None
   | (Number (num, num_str), meta) ->
     if value_out_of_range range num then
-      Some (meta.loc, "Warning: " ^ arg_name ^ " in distribution " ^ name ^ " at " ^ Location_span.to_string meta.loc ^ " has value " ^ num_str ^", but " ^ arg_name ^ " should be " ^ range.name ^ ".\n")
+      Some (meta.loc, "A " ^ name ^ " distribution has value " ^ num_str ^ " as " ^ arg_name ^ " (argument " ^ string_of_int argn ^ "), but " ^ arg_name ^ " should be " ^ range.name ^ ".\n")
     else None
   | _ -> None
 
@@ -113,7 +113,7 @@ let variate_range_warning (range : range) (dist_info : dist_info) : (Location_sp
   match dist_info with
   | {args=(Param (pname, bounds), meta)::_; _} ->
     if bounds_out_of_range range bounds then
-      Some (meta.loc, "Warning: Parameter " ^ pname ^ " is given a " ^ range.name ^ " distribution " ^ dist_info.name ^ " at " ^ Location_span.to_string meta.loc ^ " but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
+      Some (meta.loc, "Parameter " ^ pname ^ " is given a " ^ dist_info.name ^ " distribution, which has " ^ range.name ^ " range, but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
     else None
   | _ -> None
 
