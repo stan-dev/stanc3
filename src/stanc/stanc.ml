@@ -7,7 +7,7 @@ open Analysis_and_optimization
 open Middle
 
 (** The main program. *)
-let version = "%%NAME%% %%VERSION%%"
+let version = "%%NAME%%3 %%VERSION%%"
 
 let name = "%%NAME%%"
 
