@@ -18,12 +18,24 @@ type dist_info =
   ; args : (compiletime_val * Expr.Typed.Meta.t) List.t
   }
 
+let uniform_dist_message (pname : string) : string =
+  Printf.sprintf
+    "Parameter %s is given a uniform distribution. The uniform distribution is \
+     not recommended, for two reasons: (a) Except when there are logical or \
+     physical constraints, it is very unusual for you to be sure that a \
+     parameter will fall inside a specified range, and (b) The infinite \
+     gradient induced by a uniform density can cause difficulties for Stan's \
+     sampling algorithm. As a consequence, we recommend soft constraints rather \
+     than hard constraints; for example, instead of giving an elasticity \
+     parameter a uniform(0,1) distribution, try normal(0.5,0.5)."
+    pname
+
 (* Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
   | {args=(Param (pname, bounds), _)::(arg1,_)::(arg2,_)::_; _} ->
     let warning =
-      Some (dist_info.loc, "Parameter " ^ pname ^ " is given a uniform distribution. The uniform distribution is not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a uniform density can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of giving an elasticity parameter a uniform(0,1) distribution, try normal(0.5,0.5).\n")
+      Some (dist_info.loc, uniform_dist_message pname)
     in
     (match (arg1, arg2, bounds) with
      | (_, _, {upper = `None; _})
@@ -40,13 +52,22 @@ let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) op
      | _ -> None)
   | _ -> None
 
+let gamma_arg_dist_message : string =
+  "There is a gamma or inverse-gamma distribution with parameters that are \
+   equal to each other and set to values less than 1. This is mathematically \
+   acceptable and can make sense in some problems, but typically we see this \
+   model used as an attempt to assign a noninformative prior distribution. In \
+   fact, priors such as inverse-gamma(.001,.001) can be very strong, as \
+   explained by Gelman (2006). Instead we recommend something like a \
+   normal(0,1) or student_t(4,0,1), with parameter constrained to be \
+   positive."
 
 (* Warning particular to gamma and inv_gamma, when A=B<1 *)
 let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
   | {args= [ _; (Number (a, _), meta); (Number (b, _), _) ]; _} ->
     if a = b && a < 1. then
-      Some (meta.loc, "There is a gamma or inverse-gamma distribution with parameters that are equal to each other and set to values less than 1. This is mathematically acceptable and can make sense in some problems, but typically we see this model used as an attempt to assign a noninformative prior distribution. In fact, priors such as inverse-gamma(.001,.001) can be very strong, as explained by Gelman (2006). Instead we recommend something like a normal(0,1) or student_t(4,0,1), with parameter constrained to be positive.\n")
+      Some (meta.loc, gamma_arg_dist_message)
     else None
   | _ -> None
 
@@ -88,6 +109,19 @@ let value_out_of_range (range : range) (v : float) =
     | None -> false
   in lower_bad || upper_bad
 
+let arg_range_bounds_message (dist_name : string) (param_name : string)
+    (arg_name : string) (argn : int) (range_name : string) : string =
+  Printf.sprintf
+    "A %s distribution has parameter %s as %s (argument %d), but %s is not \
+     constrained to be %s."
+    dist_name param_name arg_name argn param_name range_name
+
+let arg_range_literal_message (dist_name : string) (num_str : string)
+    (arg_name : string) (argn : int) (range_name : string) : string =
+  Printf.sprintf
+    "A %s distribution has value %s as %s (argument %d), but %s should be %s."
+    dist_name num_str arg_name argn arg_name range_name
+
 let arg_range_warning (range : range) (argn : int) (arg_name : string)
     ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
@@ -100,25 +134,38 @@ let arg_range_warning (range : range) (argn : int) (arg_name : string)
   match v with
   | (Param (pname, bounds), meta) ->
     if bounds_out_of_range range bounds then
-      Some (meta.loc, "A " ^ name ^ " distribution has parameter " ^ pname ^ " as " ^ arg_name ^ " (argument " ^ string_of_int argn ^ "), but " ^ pname ^ " is not constrained to be " ^ range.name ^ ".\n")
+      Some ( meta.loc
+           , arg_range_bounds_message name pname arg_name argn range.name)
     else None
   | (Number (num, num_str), meta) ->
     if value_out_of_range range num then
-      Some (meta.loc, "A " ^ name ^ " distribution has value " ^ num_str ^ " as " ^ arg_name ^ " (argument " ^ string_of_int argn ^ "), but " ^ arg_name ^ " should be " ^ range.name ^ ".\n")
+      Some ( meta.loc
+           , arg_range_literal_message name num_str arg_name argn range.name)
     else None
   | _ -> None
 
+let variate_range_bounds_message (dist_name : string) (param_name : string)
+    (range_name : string) : string =
+  Printf.sprintf
+    "Parameter %s is given a %s distribution, which has %s range, but was \
+     declared with no constraints or incompatible constraints. Either \
+     change the distribution or change the constraints."
+    param_name dist_name range_name
+
 (* Warning when the dist's parameter should be bounded >0 *)
-let variate_range_warning (range : range) (dist_info : dist_info) : (Location_span.t * string) option =
+let variate_range_warning (range : range) (dist_info : dist_info)
+  : (Location_span.t * string) option =
   match dist_info with
   | {args=(Param (pname, bounds), meta)::_; _} ->
     if bounds_out_of_range range bounds then
-      Some (meta.loc, "Parameter " ^ pname ^ " is given a " ^ dist_info.name ^ " distribution, which has " ^ range.name ^ " range, but was declared with no constraints or incompatible constraints. Either change the distribution or change the constraints.\n")
+      Some ( meta.loc
+           , variate_range_bounds_message dist_info.name pname range.name)
     else None
   | _ -> None
 
 (* Generate the warnings that are relevant to a given distribution *)
-let distribution_warning (dist_info : dist_info) : (Location_span.t * string) List.t =
+let distribution_warning (dist_info : dist_info)
+  : (Location_span.t * string) List.t =
   let apply_warnings = List.filter_map ~f:(fun f -> f dist_info) in
   let scale_name = "a scale parameter" in
   let inv_scale_name = "an inverse scale parameter" in
@@ -262,7 +309,8 @@ let distribution_warning (dist_info : dist_info) : (Location_span.t * string) Li
   | _ -> []
 
 (* Generate the distribution warnings for a program *)
-let list_distribution_warnings (distributions_list : dist_info Set.Poly.t) : (Location_span.t * string) Set.Poly.t =
+let list_distribution_warnings (distributions_list : dist_info Set.Poly.t)
+  : (Location_span.t * string) Set.Poly.t =
   union_map
     ~f:(fun dist_info ->
         Set.Poly.of_list (distribution_warning dist_info))
