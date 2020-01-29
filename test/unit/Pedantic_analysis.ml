@@ -461,6 +461,10 @@ parameters {
   vector<lower=0>[1] pos_vec;
   matrix[1,1] mat;
   simplex[1] sim;
+  cov_matrix[1] cov;
+  cholesky_factor_cov[1] chol_cov;
+  corr_matrix[1] corr;
+  cholesky_factor_corr[1] chol_corr;
 }
 model {
   x ~ normal(0, unb_p);
@@ -513,8 +517,30 @@ model {
   x_unit ~ beta_proportion(unit_p, pos_p);
   x ~ von_mises(0, unb_p);
   x ~ von_mises(0, pos_p);
+  vec ~ multi_normal(vec, mat);
+  vec ~ multi_normal(vec, cov);
+  vec ~ multi_normal_prec(vec, mat);
+  vec ~ multi_normal_prec(vec, cov);
+  vec ~ multi_normal_cholesky(vec, cov);
+  vec ~ multi_normal_cholesky(vec, chol_cov);
+  mat ~ multi_gp(mat, vec);
+  mat ~ multi_gp(cov, vec);
+  mat ~ multi_gp_cholesky(cov, vec);
+  mat ~ multi_gp_cholesky(chol_cov, vec);
+  vec ~ multi_student_t(unb_p, vec, mat);
+  vec ~ multi_student_t(pos_p, vec, cov);
+  mat ~ gaussian_dlm_obs(mat, mat, mat, mat, vec, mat);
+  mat ~ gaussian_dlm_obs(mat, mat, cov, cov, vec, mat);
   vec ~ dirichlet(vec);
   sim ~ dirichlet(pos_vec);
+  mat ~ lkj_corr(unb_p);
+  corr ~ lkj_corr(pos_p);
+  corr ~ lkj_corr_cholesky(unb_p);
+  chol_corr ~ lkj_corr_cholesky(pos_p);
+  mat ~ wishart(unb_p, mat);
+  cov ~ wishart(pos_p, cov);
+  mat ~ inv_wishart(unb_p, mat);
+  cov ~ inv_wishart(pos_p, cov);
 }
 |}
 
@@ -523,209 +549,296 @@ let%expect_test "Dist warnings" =
   [%expect
     {|
       Warning:
-        The parameter mat has 2 priors.
+        The parameter chol_cov has 2 priors.
       Warning:
-        The parameter pos_p has 26 priors.
+        The parameter corr has 2 priors.
       Warning:
-        The parameter unb_p has 25 priors.
+        The parameter cov has 9 priors.
+      Warning:
+        The parameter mat has 14 priors.
+      Warning:
+        The parameter pos_p has 31 priors.
+      Warning:
+        The parameter unb_p has 30 priors.
       Warning:
         The parameter unit_p has 2 priors.
       Warning:
-        The parameter vec has 3 priors.
+        The parameter vec has 17 priors.
       Warning:
         The parameter x has 34 priors.
       Warning:
         The parameter x_pos has 12 priors.
       Warning:
         The parameter x_unit has 2 priors.
-      Warning at 'string', line 15, column 2 to column 23:
+      Warning at 'string', line 19, column 2 to column 23:
         The parameter x is on the left-hand side of more than one twiddle
         statement.
-      Warning at 'string', line 15, column 16 to column 21:
+      Warning at 'string', line 19, column 16 to column 21:
         A normal distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 17, column 2 to column 44:
+      Warning at 'string', line 21, column 2 to column 44:
         The parameter vec is on the left-hand side of more than one twiddle
         statement.
-      Warning at 'string', line 17, column 37 to column 42:
+      Warning at 'string', line 21, column 37 to column 42:
         A normal_id_glm distribution has parameter unb_p as a scale parameter
         (argument 4), but unb_p is not constrained to be positive.
-      Warning at 'string', line 19, column 24 to column 29:
+      Warning at 'string', line 23, column 24 to column 29:
         A exp_mod_normal distribution has parameter unb_p as a scale parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 19, column 31 to column 36:
+      Warning at 'string', line 23, column 31 to column 36:
         A exp_mod_normal distribution has parameter unb_p as a shape parameter
         (argument 3), but unb_p is not constrained to be positive.
-      Warning at 'string', line 21, column 21 to column 26:
+      Warning at 'string', line 25, column 21 to column 26:
         A skew_normal distribution has parameter unb_p as a scale parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 23, column 16 to column 21:
+      Warning at 'string', line 27, column 16 to column 21:
         A student_t distribution has parameter unb_p as degrees of freedom
         (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 23, column 26 to column 31:
+      Warning at 'string', line 27, column 26 to column 31:
         A student_t distribution has parameter unb_p as a scale parameter (argument
         3), but unb_p is not constrained to be positive.
-      Warning at 'string', line 25, column 16 to column 21:
+      Warning at 'string', line 29, column 16 to column 21:
         A cauchy distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 27, column 28 to column 33:
+      Warning at 'string', line 31, column 28 to column 33:
         A double_exponential distribution has parameter unb_p as a scale parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 29, column 18 to column 23:
+      Warning at 'string', line 33, column 18 to column 23:
         A logistic distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 31, column 16 to column 21:
+      Warning at 'string', line 35, column 16 to column 21:
         A gumbel distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 33, column 2 to column 3:
+      Warning at 'string', line 37, column 2 to column 3:
         Parameter x is given a lognormal distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 33, column 19 to column 24:
+      Warning at 'string', line 37, column 19 to column 24:
         A lognormal distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 34, column 2 to column 30:
+      Warning at 'string', line 38, column 2 to column 30:
         The parameter x_pos is on the left-hand side of more than one twiddle
         statement.
-      Warning at 'string', line 35, column 2 to column 3:
+      Warning at 'string', line 39, column 2 to column 3:
         Parameter x is given a chi_square distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 35, column 17 to column 22:
+      Warning at 'string', line 39, column 17 to column 22:
         A chi_square distribution has parameter unb_p as degrees of freedom
         (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 37, column 2 to column 3:
+      Warning at 'string', line 41, column 2 to column 3:
         Parameter x is given a inv_chi_square distribution, which is constrained to
         be positive, but was declared with no constraints or incompatible
         constraints. Either change the distribution or change the constraints.
-      Warning at 'string', line 37, column 21 to column 26:
+      Warning at 'string', line 41, column 21 to column 26:
         A inv_chi_square distribution has parameter unb_p as degrees of freedom
         (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 39, column 2 to column 3:
+      Warning at 'string', line 43, column 2 to column 3:
         Parameter x is given a scaled_inv_chi_square distribution, which is
         constrained to be positive, but was declared with no constraints or
         incompatible constraints. Either change the distribution or change the
         constraints.
-      Warning at 'string', line 39, column 28 to column 33:
+      Warning at 'string', line 43, column 28 to column 33:
         A scaled_inv_chi_square distribution has parameter unb_p as degrees of
         freedom (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 39, column 35 to column 40:
+      Warning at 'string', line 43, column 35 to column 40:
         A scaled_inv_chi_square distribution has parameter unb_p as a scale
         parameter (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 41, column 2 to column 3:
+      Warning at 'string', line 45, column 2 to column 3:
         Parameter x is given a exponential distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 41, column 18 to column 23:
+      Warning at 'string', line 45, column 18 to column 23:
         A exponential distribution has parameter unb_p as a scale parameter
         (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 43, column 2 to column 3:
+      Warning at 'string', line 47, column 2 to column 3:
         Parameter x is given a gamma distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 43, column 12 to column 17:
+      Warning at 'string', line 47, column 12 to column 17:
         A gamma distribution has parameter unb_p as a shape parameter (argument 1),
         but unb_p is not constrained to be positive.
-      Warning at 'string', line 43, column 19 to column 24:
+      Warning at 'string', line 47, column 19 to column 24:
         A gamma distribution has parameter unb_p as an inverse scale parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 45, column 2 to column 3:
+      Warning at 'string', line 49, column 2 to column 3:
         Parameter x is given a inv_gamma distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 45, column 16 to column 21:
+      Warning at 'string', line 49, column 16 to column 21:
         A inv_gamma distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 45, column 23 to column 28:
+      Warning at 'string', line 49, column 23 to column 28:
         A inv_gamma distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 47, column 2 to column 3:
+      Warning at 'string', line 51, column 2 to column 3:
         Parameter x is given a weibull distribution, which is constrained to be
         non-negative, but was declared with no constraints or incompatible
         constraints. Either change the distribution or change the constraints.
-      Warning at 'string', line 47, column 14 to column 19:
+      Warning at 'string', line 51, column 14 to column 19:
         A weibull distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 47, column 21 to column 26:
+      Warning at 'string', line 51, column 21 to column 26:
         A weibull distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 49, column 2 to column 3:
+      Warning at 'string', line 53, column 2 to column 3:
         Parameter x is given a frechet distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 49, column 14 to column 19:
+      Warning at 'string', line 53, column 14 to column 19:
         A frechet distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 49, column 21 to column 26:
+      Warning at 'string', line 53, column 21 to column 26:
         A frechet distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 51, column 2 to column 3:
+      Warning at 'string', line 55, column 2 to column 3:
         Parameter x is given a rayleigh distribution, which is constrained to be
         non-negative, but was declared with no constraints or incompatible
         constraints. Either change the distribution or change the constraints.
-      Warning at 'string', line 51, column 15 to column 20:
+      Warning at 'string', line 55, column 15 to column 20:
         A rayleigh distribution has parameter unb_p as a scale parameter (argument
         1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 53, column 2 to column 3:
+      Warning at 'string', line 57, column 2 to column 3:
         Parameter x is given a wiener distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 53, column 13 to column 18:
+      Warning at 'string', line 57, column 13 to column 18:
         A wiener distribution has parameter unb_p as a boundary separation
         parameter (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 53, column 20 to column 25:
+      Warning at 'string', line 57, column 20 to column 25:
         A wiener distribution has parameter unb_p as a non-decision time parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 53, column 27 to column 32:
+      Warning at 'string', line 57, column 27 to column 32:
         A wiener distribution has parameter pos_p as an a-priori bias parameter
         (argument 3), but pos_p is not constrained to be [0,1].
-      Warning at 'string', line 55, column 2 to column 3:
+      Warning at 'string', line 59, column 2 to column 3:
         Parameter x is given a pareto distribution, which is constrained to be
         positive, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 55, column 13 to column 18:
+      Warning at 'string', line 59, column 13 to column 18:
         A pareto distribution has parameter unb_p as a positive minimum parameter
         (argument 1), but unb_p is not constrained to be positive.
-      Warning at 'string', line 55, column 20 to column 25:
+      Warning at 'string', line 59, column 20 to column 25:
         A pareto distribution has parameter unb_p as a shape parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 57, column 23 to column 28:
+      Warning at 'string', line 61, column 23 to column 28:
         A pareto_type_2 distribution has parameter unb_p as a scale parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 57, column 30 to column 35:
+      Warning at 'string', line 61, column 30 to column 35:
         A pareto_type_2 distribution has parameter unb_p as a shape parameter
         (argument 3), but unb_p is not constrained to be positive.
-      Warning at 'string', line 59, column 2 to column 3:
+      Warning at 'string', line 63, column 2 to column 3:
         Parameter x is given a beta distribution, which is constrained to be (0,1),
         but was declared with no constraints or incompatible constraints. Either
         change the distribution or change the constraints.
-      Warning at 'string', line 59, column 11 to column 16:
+      Warning at 'string', line 63, column 11 to column 16:
         A beta distribution has parameter unb_p as a count parameter (argument 1),
         but unb_p is not constrained to be positive.
-      Warning at 'string', line 59, column 18 to column 23:
+      Warning at 'string', line 63, column 18 to column 23:
         A beta distribution has parameter unb_p as a count parameter (argument 2),
         but unb_p is not constrained to be positive.
-      Warning at 'string', line 60, column 2 to column 30:
+      Warning at 'string', line 64, column 2 to column 30:
         The parameter x_unit is on the left-hand side of more than one twiddle
         statement.
-      Warning at 'string', line 61, column 2 to column 3:
+      Warning at 'string', line 65, column 2 to column 3:
         Parameter x is given a beta_proportion distribution, which is constrained
         to be (0,1), but was declared with no constraints or incompatible
         constraints. Either change the distribution or change the constraints.
-      Warning at 'string', line 61, column 22 to column 27:
+      Warning at 'string', line 65, column 22 to column 27:
         A beta_proportion distribution has parameter unb_p as a unit mean parameter
         (argument 1), but unb_p is not constrained to be (0,1).
-      Warning at 'string', line 61, column 29 to column 34:
+      Warning at 'string', line 65, column 29 to column 34:
         A beta_proportion distribution has parameter unb_p as a precision parameter
         (argument 2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 63, column 19 to column 24:
+      Warning at 'string', line 67, column 19 to column 24:
         A von_mises distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
-      Warning at 'string', line 65, column 2 to column 5:
+      Warning at 'string', line 69, column 26 to column 29:
+        A multi_normal distribution has parameter mat as a covariance matrix
+        (argument 2), but mat is not constrained to be covariance.
+      Warning at 'string', line 71, column 31 to column 34:
+        A multi_normal_prec distribution has parameter mat as a precision matrix
+        (argument 2), but mat is not constrained to be covariance.
+      Warning at 'string', line 73, column 35 to column 38:
+        A multi_normal_cholesky distribution has parameter cov as a covariance
+        matrix (argument 2), but cov is not constrained to be Cholesky factor of
+        covariance.
+      Warning at 'string', line 75, column 2 to column 27:
+        The parameter mat is on the left-hand side of more than one twiddle
+        statement.
+      Warning at 'string', line 75, column 17 to column 20:
+        A multi_gp distribution has parameter mat as a kernel matrix (argument 1),
+        but mat is not constrained to be covariance.
+      Warning at 'string', line 77, column 26 to column 29:
+        A multi_gp_cholesky distribution has parameter cov as Cholesky factor of
+        the kernel matrix (argument 1), but cov is not constrained to be Cholesky
+        factor of covariance.
+      Warning at 'string', line 79, column 24 to column 29:
+        A multi_student_t distribution has parameter unb_p as degrees of freedom
+        (argument 1), but unb_p is not constrained to be positive.
+      Warning at 'string', line 79, column 36 to column 39:
+        A multi_student_t distribution has parameter mat as a scale matrix
+        (argument 3), but mat is not constrained to be covariance.
+      Warning at 'string', line 81, column 35 to column 38:
+        A gaussian_dlm_obs distribution has parameter mat as observation covariance
+        matrix (argument 3), but mat is not constrained to be covariance.
+      Warning at 'string', line 81, column 40 to column 43:
+        A gaussian_dlm_obs distribution has parameter mat as system covariance
+        matrix (argument 4), but mat is not constrained to be covariance.
+      Warning at 'string', line 83, column 2 to column 5:
         Parameter vec is given a dirichlet distribution, which is constrained to be
         simplex, but was declared with no constraints or incompatible constraints.
         Either change the distribution or change the constraints.
-      Warning at 'string', line 65, column 18 to column 21:
+      Warning at 'string', line 83, column 18 to column 21:
         A dirichlet distribution has parameter vec as a count parameter (argument
         1), but vec is not constrained to be positive.
+      Warning at 'string', line 85, column 2 to column 5:
+        Parameter mat is given a lkj_corr distribution, which is constrained to be
+        correlation, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
+      Warning at 'string', line 85, column 2 to column 24:
+        It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky
+        factor variant. lkj_corr tends to run slower, consume more memory, and has
+        higher risk of numerical errors.
+      Warning at 'string', line 85, column 17 to column 22:
+        A lkj_corr distribution has parameter unb_p as a shape parameter (argument
+        1), but unb_p is not constrained to be positive.
+      Warning at 'string', line 86, column 2 to column 25:
+        It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky
+        factor variant. lkj_corr tends to run slower, consume more memory, and has
+        higher risk of numerical errors.
+      Warning at 'string', line 86, column 2 to column 25:
+        The parameter corr is on the left-hand side of more than one twiddle
+        statement.
+      Warning at 'string', line 87, column 2 to column 6:
+        Parameter corr is given a lkj_corr_cholesky distribution, which is
+        constrained to be Cholesky factor of correlation, but was declared with no
+        constraints or incompatible constraints. Either change the distribution or
+        change the constraints.
+      Warning at 'string', line 87, column 27 to column 32:
+        A lkj_corr_cholesky distribution has parameter unb_p as a shape parameter
+        (argument 1), but unb_p is not constrained to be positive.
+      Warning at 'string', line 89, column 2 to column 5:
+        Parameter mat is given a wishart distribution, which is constrained to be
+        covariance, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
+      Warning at 'string', line 89, column 16 to column 21:
+        A wishart distribution has parameter unb_p as degrees of freedom (argument
+        1), but unb_p is not constrained to be positive.
+      Warning at 'string', line 89, column 23 to column 26:
+        A wishart distribution has parameter mat as a scale matrix (argument 2),
+        but mat is not constrained to be covariance.
+      Warning at 'string', line 90, column 2 to column 28:
+        The parameter cov is on the left-hand side of more than one twiddle
+        statement.
+      Warning at 'string', line 91, column 2 to column 5:
+        Parameter mat is given a inv_wishart distribution, which is constrained to
+        be covariance, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
+      Warning at 'string', line 91, column 20 to column 25:
+        A inv_wishart distribution has parameter unb_p as degrees of freedom
+        (argument 1), but unb_p is not constrained to be positive.
+      Warning at 'string', line 91, column 27 to column 30:
+        A inv_wishart distribution has parameter mat as a scale matrix (argument
+        2), but mat is not constrained to be covariance.
     |}]

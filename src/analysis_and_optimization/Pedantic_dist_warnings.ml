@@ -85,7 +85,7 @@ type range =
   ; upper : (float * bool) option
   }
 
-type val_contraint_type =
+type var_constraint =
   | Range of range
   | Ordered
   | PositiveOrdered
@@ -96,9 +96,9 @@ type val_contraint_type =
   | Correlation
   | Covariance
 
-type val_constraint =
+type var_constraint_named =
   { name : string
-  ; constr : val_contraint_type
+  ; constr : var_constraint
   }
 
 let unit_range =
@@ -138,7 +138,27 @@ let simplex =
   ; constr = Simplex
   }
 
-let bounds_out_of_range (range : range) (bounds : bound_values) =
+let correlation =
+  { name = "correlation"
+  ; constr = Correlation
+  }
+
+let cholesky_correlation =
+  { name = "Cholesky factor of correlation"
+  ; constr = CholeskyCorr
+  }
+
+let covariance =
+  { name = "covariance"
+  ; constr = Covariance
+  }
+
+let cholesky_covariance =
+  { name = "Cholesky factor of covariance"
+  ; constr = CholeskyCov
+  }
+
+let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
   | (`None, _, Some _, _) -> true
   | (_, `None, _, Some _) -> true
@@ -146,17 +166,18 @@ let bounds_out_of_range (range : range) (bounds : bound_values) =
   | (_, `Lit u, _, Some (u', _)) when u > u' -> true
   | _ -> false
 
-let transform_mismatch_constraint (constr : val_constraint) (trans : Expr.Typed.t Program.transformation) =
-  match constr.constr with
+let transform_mismatch_constraint (constr : var_constraint)
+    (trans : Expr.Typed.t Program.transformation) : bool =
+  match constr with
   | Range range -> bounds_out_of_range range (trans_bounds_values trans)
   | Ordered -> trans <> Program.Ordered
   | PositiveOrdered -> trans <> Program.PositiveOrdered
   | Simplex -> trans <> Program.Simplex
   | UnitVector -> trans <> Program.UnitVector
   | CholeskyCorr -> trans <> Program.CholeskyCorr
-  | CholeskyCov -> trans <> Program.CholeskyCov
+  | CholeskyCov -> trans <> Program.CholeskyCov && trans <> Program.CholeskyCorr
   | Correlation -> trans <> Program.Correlation
-  | Covariance -> trans <> Program.Covariance
+  | Covariance -> trans <> Program.Covariance && trans <> Program.Correlation
 
 let value_out_of_range (range : range) (v : float) =
   let lower_bad = match range.lower with
@@ -170,8 +191,8 @@ let value_out_of_range (range : range) (v : float) =
     | None -> false
   in lower_bad || upper_bad
 
-let value_mismatch_constraint (constr : val_constraint) (v : float) =
-  match constr.constr with
+let value_mismatch_constraint (constr : var_constraint) (v : float) =
+  match constr with
   | Range range -> value_out_of_range range v
   (* We don't know how to check if a value falls into a constraint other than
      Range, unless we want to inspect e.g. matrix literals. *)
@@ -190,8 +211,9 @@ let arg_constr_literal_mismatch_message (dist_name : string) (num_str : string)
     "A %s distribution has value %s as %s (argument %d), but %s should be %s."
     dist_name num_str arg_name argn arg_name constr_name
 
-let arg_constr_warning (constr : val_constraint) (argn : int) (arg_name : string)
-    ({args; name; loc} : dist_info) : (Location_span.t * string) option =
+let arg_constr_warning (constr : var_constraint_named) (argn : int)
+    (arg_name : string) ({args; name; loc} : dist_info)
+  : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
     | Some v -> v
     | None ->
@@ -201,12 +223,12 @@ let arg_constr_warning (constr : val_constraint) (argn : int) (arg_name : string
   in
   match v with
   | (Param (pname, trans), meta) ->
-    if transform_mismatch_constraint constr trans then
+    if transform_mismatch_constraint constr.constr trans then
       Some ( meta.loc
            , arg_constr_mismatch_message name pname arg_name argn constr.name)
     else None
   | (Number (num, num_str), meta) ->
-    if value_mismatch_constraint constr num then
+    if value_mismatch_constraint constr.constr num then
       Some ( meta.loc
            , arg_constr_literal_mismatch_message name num_str arg_name argn constr.name)
     else None
@@ -221,11 +243,11 @@ let variate_constr_mismatch_message (dist_name : string) (param_name : string)
     param_name dist_name constr_name
 
 (* Warning when the dist's parameter should be bounded >0 *)
-let variate_constr_warning (constr : val_constraint) (dist_info : dist_info)
+let variate_constr_warning (constr : var_constraint_named) (dist_info : dist_info)
   : (Location_span.t * string) option =
   match dist_info with
   | {args=(Param (pname, trans), meta)::_; _} ->
-    if transform_mismatch_constraint constr trans then
+    if transform_mismatch_constraint constr.constr trans then
       Some ( meta.loc
            , variate_constr_mismatch_message dist_info.name pname constr.name)
     else None
@@ -235,9 +257,11 @@ let variate_constr_warning (constr : val_constraint) (dist_info : dist_info)
 let distribution_warning (dist_info : dist_info)
   : (Location_span.t * string) List.t =
   let scale_name = "a scale parameter" in
+  let scale_mat_name = "a scale matrix" in
   let inv_scale_name = "an inverse scale parameter" in
   let shape_name = "a shape parameter" in
   let dof_name = "degrees of freedom" in
+  let cov_name = "a covariance matrix" in
   (* Information mostly from:
      https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html
   *)
@@ -329,8 +353,6 @@ let distribution_warning (dist_info : dist_info)
     ; arg_constr_warning unit_range 3 "an a-priori bias parameter"
     ]
   (* Positive Lower-Bounded Probabilities *)
-  (* Currently treating these as if they're positive bounded,
-     could easily do better *)
   | "pareto" -> [
       (* Note: Variate >= arg 1 *)
       variate_constr_warning positive_range
@@ -366,63 +388,57 @@ let distribution_warning (dist_info : dist_info)
   (* Distributions over Unbounded Vectors *)
   (* Note: untested section *)
   | "multi_normal" -> [
-      (* Note: arg 2 "covariance matrix" symmetric and pos-definite, covariance matrix *)
+      arg_constr_warning covariance 2 cov_name
     ]
   | "multi_normal_prec" -> [
-      (* Note: arg 2 "positive definite precision matrix" is
-         symmetric and pos-definite, covariance matrix *)
+      arg_constr_warning covariance 2 "a precision matrix"
     ]
   | "multi_normal_cholesky" -> [
-      (* Note: arg 2 "covariance matrix" is symmetric and pos-definite, covariance matrix *)
+      arg_constr_warning cholesky_covariance 2 cov_name
     ]
   | "multi_gp" -> [
-      (* Note: arg 1 "kernel matrix" is symmetric, positive definite kernel matrix, covariance matrix? *)
       (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+      arg_constr_warning covariance 1 "a kernel matrix"
     ]
   | "multi_gp_cholesky" -> [
-      (* Note: variant CholeskyCov? *)
-      (* Note: arg 1 "Cholesky factor of the kernel matrix"
-         is lower triangular and such that LL^⊤ is positive
-         definite kernel matrix
-         CholeskyCov?
-         (implying L n , n > 0 for n ∈ 1 : N)*)
       (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+      arg_constr_warning cholesky_covariance 1 "Cholesky factor of the kernel matrix"
     ]
   | "multi_student_t" -> [
-      (* Note: arg 2 "scale matrix" symmetric and pos-definite, covariance matrix *)
       arg_constr_warning positive_range 1 dof_name
+    ; arg_constr_warning covariance 3 scale_mat_name
     ]
   | "gaussian_dlm_obs" -> [
-      (* Note: arg 2 "transition matrix" might be positive? *)
-      (* Note: arg 3 "observation covariance matrix" is covariance *)
-      (* Note: arg 4 "system covariance matrix" is covariance *)
+        arg_constr_warning covariance 3 "observation covariance matrix"
+      ; arg_constr_warning covariance 4 "system covariance matrix"
     ]
   (* Simplex Distributions *)
   | "dirichlet" -> [
-      (* Note: variate simplex *)
       variate_constr_warning simplex
     ; arg_constr_warning positive_range 1 "a count parameter"
     ]
   (* Correlation Matrix Distributions *)
   (* Note: untested section *)
   | "lkj_corr" -> [
-      (* Note: variate is symmetric, pos-definite (correlation) covariance? *)
       lkj_corr_dist_warning
+    ; variate_constr_warning correlation
+    ; arg_constr_warning positive_range 1 shape_name
     ]
   | "lkj_corr_cholesky" -> [
-      (* variate is lower-triangular *)
+      variate_constr_warning cholesky_correlation
+    ; arg_constr_warning positive_range 1 shape_name
     ]
   (* Covariance Matrix Distributions *)
   (* Note: untested section *)
   | "wishart" -> [
-      (* Note: variate is symmetric and pos-def, cov matrix *)
-      (* Note: arg 2 "scale matrix" is symmetric and pos-def, cov matrix *)
-        arg_constr_warning positive_range 1 dof_name
+        variate_constr_warning covariance
+      ; arg_constr_warning positive_range 1 dof_name
+      ; arg_constr_warning covariance 2 scale_mat_name
     ]
   | "inv_wishart" -> [
-      (* Note: variate is symmetric and pos-def, cov matrix *)
-      (* Note: arg 2 "scale matrix" is symmetric and pos-def, cov matrix *)
-        arg_constr_warning positive_range 1 dof_name
+        variate_constr_warning covariance
+      ; arg_constr_warning positive_range 1 dof_name
+      ; arg_constr_warning covariance 2 scale_mat_name
     ]
   | _ -> []
   in
