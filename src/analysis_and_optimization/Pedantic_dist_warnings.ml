@@ -52,6 +52,15 @@ let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) op
      | _ -> None)
   | _ -> None
 
+let lkj_corr_message : string =
+  "It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky \
+   factor variant. lkj_corr tends to run slower, consume more memory, and has \
+   higher risk of numerical errors."
+
+let lkj_corr_dist_warning (dist_info : dist_info)
+  : (Location_span.t * string) option =
+  Some (dist_info.loc, lkj_corr_message)
+
 let gamma_arg_dist_message : string =
   "There is a gamma or inverse-gamma distribution with parameters that are \
    equal to each other and set to values less than 1. This is mathematically \
@@ -91,11 +100,11 @@ let positive_range =
 
 let bounds_out_of_range (range : range) (bounds : bound_values) =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
-   | (`None, _, Some _, _) -> true
-   | (_, `None, _, Some _) -> true
-   | (`Lit l, _, Some (l', _), _) when l < l' -> true
-   | (_, `Lit u, _, Some (u', _)) when u > u' -> true
-   | _ -> false
+  | (`None, _, Some _, _) -> true
+  | (_, `None, _, Some _) -> true
+  | (`Lit l, _, Some (l', _), _) when l < l' -> true
+  | (_, `Lit u, _, Some (u', _)) when u > u' -> true
+  | _ -> false
 
 let value_out_of_range (range : range) (v : float) =
   let lower_bad = match range.lower with
@@ -166,7 +175,6 @@ let variate_range_warning (range : range) (dist_info : dist_info)
 (* Generate the warnings that are relevant to a given distribution *)
 let distribution_warning (dist_info : dist_info)
   : (Location_span.t * string) List.t =
-  let apply_warnings = List.filter_map ~f:(fun f -> f dist_info) in
   let scale_name = "a scale parameter" in
   let inv_scale_name = "an inverse scale parameter" in
   let shape_name = "a shape parameter" in
@@ -174,77 +182,78 @@ let distribution_warning (dist_info : dist_info)
   (* Information mostly from:
      https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html
   *)
-  match dist_info.name with
+  let warning_fns = match dist_info.name with
   (* Unbounded Continuous Distributions *)
-  | "normal" -> apply_warnings [
+  | "normal" -> [
       arg_range_warning positive_range 2 scale_name
     ]
-  | "normal_id_glm" -> apply_warnings [
+  | "normal_id_glm" -> [
       arg_range_warning positive_range 4 scale_name
     ]
-  | "exp_mod_normal" -> apply_warnings [
+  | "exp_mod_normal" -> [
       arg_range_warning positive_range 2 scale_name
     ; arg_range_warning positive_range 3 shape_name
     ]
-  | "skew_normal" -> apply_warnings [
+  | "skew_normal" -> [
       arg_range_warning positive_range 2 scale_name
     ]
-  | "student_t" -> apply_warnings [
+  | "student_t" -> [
       arg_range_warning positive_range 1 dof_name
     ; arg_range_warning positive_range 3 scale_name
     ]
-  | "cauchy" -> apply_warnings [
+  | "cauchy" -> [
       arg_range_warning positive_range 2 scale_name
     ]
-  | "double_exponential" -> apply_warnings [
+  | "double_exponential" -> [
       arg_range_warning positive_range 2 scale_name
     ]
-  | "logistic" -> apply_warnings [
+  | "logistic" -> [
       arg_range_warning positive_range 2 scale_name
     ]
-  | "gumbel" -> apply_warnings [
+  | "gumbel" -> [
       arg_range_warning positive_range 2 scale_name
     ]
   (* Positive Continuous Distributions *)
-  | "lognormal" -> apply_warnings [
+  | "lognormal" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 2 scale_name
     ]
-  | "chi_square" -> apply_warnings [
+  | "chi_square" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 dof_name
     ]
-  | "inv_chi_square" -> apply_warnings [
+  | "inv_chi_square" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 dof_name
     ]
-  | "scaled_inv_chi_square" -> apply_warnings [
+  | "scaled_inv_chi_square" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 dof_name
     ; arg_range_warning positive_range 2 scale_name
     ]
-  | "exponential" -> apply_warnings [
+  | "exponential" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 scale_name
     ]
-  | "gamma" -> apply_warnings [
+  | "gamma" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 shape_name
     ; arg_range_warning positive_range 2 inv_scale_name
     ; gamma_arg_dist_warning
     ]
-  | "inv_gamma" -> apply_warnings [
+  | "inv_gamma" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 shape_name
     ; arg_range_warning positive_range 2 scale_name
     ; gamma_arg_dist_warning
     ]
-  | "weibull" -> apply_warnings [
+  | "weibull" -> [
+      (* Note: variate non-negative *)
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 shape_name
     ; arg_range_warning positive_range 2 scale_name
     ]
-  | "frechet" -> apply_warnings [
+  | "frechet" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 shape_name
     ; arg_range_warning positive_range 2 scale_name
@@ -252,12 +261,13 @@ let distribution_warning (dist_info : dist_info)
   (* Non-negative Continuous Distributions *)
   (* No real distinction needed here between positive and non-negative lower
      bounds *)
-  | "rayleigh" -> apply_warnings [
+  | "rayleigh" -> [
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 scale_name
     ]
-  | "wiener" -> apply_warnings [
-      (* Could do more here, since variate should be > arg 2 *)
+  | "wiener" -> [
+      (* Note: Could do more here, since variate should be > arg 2 *)
+      (* Note: Variate actually positive, not non-negative *)
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 "a boundary separation parameter"
     ; arg_range_warning positive_range 2 "a non-decision time parameter"
@@ -266,47 +276,105 @@ let distribution_warning (dist_info : dist_info)
   (* Positive Lower-Bounded Probabilities *)
   (* Currently treating these as if they're positive bounded,
      could easily do better *)
-  | "pareto" -> apply_warnings [
+  | "pareto" -> [
+      (* Note: Variate >= arg 1 *)
       variate_range_warning positive_range
     ; arg_range_warning positive_range 1 "a positive minimum parameter"
     ; arg_range_warning positive_range 2 shape_name
     ]
-  | "pareto_type_2" -> apply_warnings [
+  | "pareto_type_2" -> [
+      (* Note: Variate >= arg 1 *)
       arg_range_warning positive_range 2 scale_name
     ; arg_range_warning positive_range 3 shape_name
     ]
   (* Continuous Distributions on [0,1] *)
-  | "beta" -> apply_warnings [
+  | "beta" -> [
+      (* Note: Variate is actually (0, 1) *)
       variate_range_warning unit_range
     ; arg_range_warning positive_range 1 "a count parameter"
     ; arg_range_warning positive_range 2 "a count parameter"
     ]
-  | "beta_proportion" -> apply_warnings [
+  | "beta_proportion" -> [
       variate_range_warning unit_range
-    (* should be exclusive bounds on arg 1*)
+    (* Note: Variate is actually (0, 1) *)
+    (* Note: Arg 1 is actually (0, 1) *)
     ; arg_range_warning unit_range 1 "a unit mean parameter"
     ; arg_range_warning positive_range 2 "a precision parameter"
     ]
   (* Circular Distributions *)
-  | "von_mises" -> apply_warnings [
+  | "von_mises" -> [
       arg_range_warning positive_range 2 scale_name
     ]
   (* Bounded Continuous Distributions *)
-  | "uniform" -> apply_warnings [
+  | "uniform" -> [
       (* Could also check b > c *)
+      (* Can this be generalized, by restricting a < variate < b? *)
       uniform_dist_warning
     ]
-      (* Simplex Distributions *)
-  | "dirichlet" -> apply_warnings [
+  (* Distributions over Unbounded Vectors *)
+  (* Note: untested section *)
+  | "multi_normal" -> [
+      (* Note: arg 2 "covariance matrix" symmetric and pos-definite *)
+    ]
+  | "multi_normal_prec" -> [
+      (* Note: arg 2 "positive definite precision matrix" is
+         symmetric and pos-definite *)
+    ]
+  | "multi_normal_cholesky" -> [
+      (* Note: arg 2 "covariance matrix" is symmetric and pos-definite *)
+    ]
+  | "multi_gp" -> [
+      (* Note: arg 1 "kernel matrix" is symmetric, positive definite kernel matrix*)
+      (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+    ]
+  | "multi_gp_cholesky" -> [
+      (* Note: arg 1 "Cholesky factor of the kernel matrix"
+         is lower triangular and such that LL^⊤ is positive
+         definite kernel matrix
+         (implying L n , n > 0 for n ∈ 1 : N)*)
+      (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+    ]
+  | "multi_student_t" -> [
+      (* Note: arg 2 "scale matrix" symmetric and pos-definite *)
+      arg_range_warning positive_range 1 dof_name
+    ]
+  | "gaussian_dlm_obs" -> [
+      (* Note: arg 2 "transition matrix" might be positive? *)
+      (* Note: arg 3 "observation covariance matrix" is covariance *)
+      (* Note: arg 4 "system covariance matrix" is covariance *)
+    ]
+  (* Simplex Distributions *)
+  | "dirichlet" -> [
+      (* Note: variate simplex *)
       variate_range_warning unit_range
     ; arg_range_warning positive_range 1 "a count parameter"
     ]
-  (* TODO: Multivariate distributions in sections
-      Distributions over Unbounded Vectors
-      Correlation Matrix Distributions
-      Covariance Matrix Distributions
-  *)
+  (* Correlation Matrix Distributions *)
+  (* Note: untested section *)
+  | "lkj_corr" -> [
+      (* Note: variate is symmetric, pos-definite (correlation) *)
+      (* Note: Warning: The only reason to use this density function is if you want the code to run slower and consume more memory with more risk of numerical errors. Use its Cholesky factor as described in the next section.
+      *)
+      lkj_corr_dist_warning
+    ]
+  | "lkj_corr_cholesky" -> [
+      (* variate is lower-triangular *)
+    ]
+  (* Covariance Matrix Distributions *)
+  (* Note: untested section *)
+  | "wishart" -> [
+      (* Note: variate is symmetric and pos-def *)
+      (* Note: arg 2 "scale matrix" is symmetric and pos-def *)
+        arg_range_warning positive_range 1 dof_name
+    ]
+  | "inv_wishart" -> [
+      (* Note: variate is symmetric and pos-def *)
+      (* Note: arg 2 "scale matrix" is symmetric and pos-def *)
+        arg_range_warning positive_range 1 dof_name
+    ]
   | _ -> []
+  in
+  List.filter_map ~f:(fun f -> f dist_info) warning_fns
 
 (* Generate the distribution warnings for a program *)
 let list_distribution_warnings (distributions_list : dist_info Set.Poly.t)
