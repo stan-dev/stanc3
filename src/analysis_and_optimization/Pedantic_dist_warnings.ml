@@ -6,7 +6,7 @@ open Mir_utils
 type compiletime_val
   = Opaque
   | Number of (float * string)
-  | Param of (string * bound_values)
+  | Param of (string * Expr.Typed.t Program.transformation)
   | Data of string
 
 (* Info about a distribution occurrences that's useful for checking that
@@ -33,11 +33,11 @@ let uniform_dist_message (pname : string) : string =
 (* Warning for all uniform distributions with a parameter *)
 let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
   match dist_info with
-  | {args=(Param (pname, bounds), _)::(arg1,_)::(arg2,_)::_; _} ->
+  | {args=(Param (pname, trans), _)::(arg1,_)::(arg2,_)::_; _} ->
     let warning =
       Some (dist_info.loc, uniform_dist_message pname)
     in
-    (match (arg1, arg2, bounds) with
+    (match (arg1, arg2, trans_bounds_values trans) with
      | (_, _, {upper = `None; _})
      | (_, _, {lower = `None; _}) ->
        (* the variate is unbounded *)
@@ -81,21 +81,61 @@ let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) 
   | _ -> None
 
 type range =
-  { name : string
-  ; lower : (float * bool) option
+  { lower : (float * bool) option
   ; upper : (float * bool) option
+  }
+
+type val_contraint_type =
+  | Range of range
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+
+type val_constraint =
+  { name : string
+  ; constr : val_contraint_type
   }
 
 let unit_range =
   { name = "[0,1]"
-  ; lower = Some (0., true)
-  ; upper = Some (1., true)
+  ; constr = Range
+        { lower = Some (0., true)
+        ; upper = Some (1., true)
+        }
+  }
+
+let exclusive_unit_range =
+  { name = "(0,1)"
+  ; constr = Range
+        { lower = Some (0., false)
+        ; upper = Some (1., false)
+        }
   }
 
 let positive_range =
   { name = "positive"
-  ; lower = Some (0., false)
-  ; upper = None
+  ; constr = Range
+        { lower = Some (0., false)
+        ; upper = None
+        }
+  }
+
+let nonnegative_range =
+  { name = "non-negative"
+  ; constr = Range
+        { lower = Some (0., true)
+        ; upper = None
+        }
+  }
+
+let simplex =
+  { name = "simplex"
+  ; constr = Simplex
   }
 
 let bounds_out_of_range (range : range) (bounds : bound_values) =
@@ -105,6 +145,18 @@ let bounds_out_of_range (range : range) (bounds : bound_values) =
   | (`Lit l, _, Some (l', _), _) when l < l' -> true
   | (_, `Lit u, _, Some (u', _)) when u > u' -> true
   | _ -> false
+
+let transform_mismatch_constraint (constr : val_constraint) (trans : Expr.Typed.t Program.transformation) =
+  match constr.constr with
+  | Range range -> bounds_out_of_range range (trans_bounds_values trans)
+  | Ordered -> trans <> Program.Ordered
+  | PositiveOrdered -> trans <> Program.PositiveOrdered
+  | Simplex -> trans <> Program.Simplex
+  | UnitVector -> trans <> Program.UnitVector
+  | CholeskyCorr -> trans <> Program.CholeskyCorr
+  | CholeskyCov -> trans <> Program.CholeskyCov
+  | Correlation -> trans <> Program.Correlation
+  | Covariance -> trans <> Program.Covariance
 
 let value_out_of_range (range : range) (v : float) =
   let lower_bad = match range.lower with
@@ -118,20 +170,27 @@ let value_out_of_range (range : range) (v : float) =
     | None -> false
   in lower_bad || upper_bad
 
-let arg_range_bounds_message (dist_name : string) (param_name : string)
-    (arg_name : string) (argn : int) (range_name : string) : string =
+let value_mismatch_constraint (constr : val_constraint) (v : float) =
+  match constr.constr with
+  | Range range -> value_out_of_range range v
+  (* We don't know how to check if a value falls into a constraint other than
+     Range, unless we want to inspect e.g. matrix literals. *)
+  | _ -> false
+
+let arg_constr_mismatch_message (dist_name : string) (param_name : string)
+    (arg_name : string) (argn : int) (constr_name : string) : string =
   Printf.sprintf
     "A %s distribution has parameter %s as %s (argument %d), but %s is not \
      constrained to be %s."
-    dist_name param_name arg_name argn param_name range_name
+    dist_name param_name arg_name argn param_name constr_name
 
-let arg_range_literal_message (dist_name : string) (num_str : string)
-    (arg_name : string) (argn : int) (range_name : string) : string =
+let arg_constr_literal_mismatch_message (dist_name : string) (num_str : string)
+    (arg_name : string) (argn : int) (constr_name : string) : string =
   Printf.sprintf
     "A %s distribution has value %s as %s (argument %d), but %s should be %s."
-    dist_name num_str arg_name argn arg_name range_name
+    dist_name num_str arg_name argn arg_name constr_name
 
-let arg_range_warning (range : range) (argn : int) (arg_name : string)
+let arg_constr_warning (constr : val_constraint) (argn : int) (arg_name : string)
     ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
     | Some v -> v
@@ -141,34 +200,34 @@ let arg_range_warning (range : range) (argn : int) (arg_name : string)
                        ^ " expects more arguments." )))
   in
   match v with
-  | (Param (pname, bounds), meta) ->
-    if bounds_out_of_range range bounds then
+  | (Param (pname, trans), meta) ->
+    if transform_mismatch_constraint constr trans then
       Some ( meta.loc
-           , arg_range_bounds_message name pname arg_name argn range.name)
+           , arg_constr_mismatch_message name pname arg_name argn constr.name)
     else None
   | (Number (num, num_str), meta) ->
-    if value_out_of_range range num then
+    if value_mismatch_constraint constr num then
       Some ( meta.loc
-           , arg_range_literal_message name num_str arg_name argn range.name)
+           , arg_constr_literal_mismatch_message name num_str arg_name argn constr.name)
     else None
   | _ -> None
 
-let variate_range_bounds_message (dist_name : string) (param_name : string)
-    (range_name : string) : string =
+let variate_constr_mismatch_message (dist_name : string) (param_name : string)
+    (constr_name : string) : string =
   Printf.sprintf
-    "Parameter %s is given a %s distribution, which has %s range, but was \
-     declared with no constraints or incompatible constraints. Either \
+    "Parameter %s is given a %s distribution, which is constrained to be %s, \
+     but was declared with no constraints or incompatible constraints. Either \
      change the distribution or change the constraints."
-    param_name dist_name range_name
+    param_name dist_name constr_name
 
 (* Warning when the dist's parameter should be bounded >0 *)
-let variate_range_warning (range : range) (dist_info : dist_info)
+let variate_constr_warning (constr : val_constraint) (dist_info : dist_info)
   : (Location_span.t * string) option =
   match dist_info with
-  | {args=(Param (pname, bounds), meta)::_; _} ->
-    if bounds_out_of_range range bounds then
+  | {args=(Param (pname, trans), meta)::_; _} ->
+    if transform_mismatch_constraint constr trans then
       Some ( meta.loc
-           , variate_range_bounds_message dist_info.name pname range.name)
+           , variate_constr_mismatch_message dist_info.name pname constr.name)
     else None
   | _ -> None
 
@@ -185,125 +244,118 @@ let distribution_warning (dist_info : dist_info)
   let warning_fns = match dist_info.name with
   (* Unbounded Continuous Distributions *)
   | "normal" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   | "normal_id_glm" -> [
-      arg_range_warning positive_range 4 scale_name
+      arg_constr_warning positive_range 4 scale_name
     ]
   | "exp_mod_normal" -> [
-      arg_range_warning positive_range 2 scale_name
-    ; arg_range_warning positive_range 3 shape_name
+      arg_constr_warning positive_range 2 scale_name
+    ; arg_constr_warning positive_range 3 shape_name
     ]
   | "skew_normal" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   | "student_t" -> [
-      arg_range_warning positive_range 1 dof_name
-    ; arg_range_warning positive_range 3 scale_name
+      arg_constr_warning positive_range 1 dof_name
+    ; arg_constr_warning positive_range 3 scale_name
     ]
   | "cauchy" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   | "double_exponential" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   | "logistic" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   | "gumbel" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   (* Positive Continuous Distributions *)
   | "lognormal" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 2 scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 2 scale_name
     ]
   | "chi_square" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 dof_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 dof_name
     ]
   | "inv_chi_square" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 dof_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 dof_name
     ]
   | "scaled_inv_chi_square" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 dof_name
-    ; arg_range_warning positive_range 2 scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 dof_name
+    ; arg_constr_warning positive_range 2 scale_name
     ]
   | "exponential" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 scale_name
     ]
   | "gamma" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 shape_name
-    ; arg_range_warning positive_range 2 inv_scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 shape_name
+    ; arg_constr_warning positive_range 2 inv_scale_name
     ; gamma_arg_dist_warning
     ]
   | "inv_gamma" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 shape_name
-    ; arg_range_warning positive_range 2 scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 shape_name
+    ; arg_constr_warning positive_range 2 scale_name
     ; gamma_arg_dist_warning
     ]
   | "weibull" -> [
-      (* Note: variate non-negative *)
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 shape_name
-    ; arg_range_warning positive_range 2 scale_name
+      variate_constr_warning nonnegative_range
+    ; arg_constr_warning positive_range 1 shape_name
+    ; arg_constr_warning positive_range 2 scale_name
     ]
   | "frechet" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 shape_name
-    ; arg_range_warning positive_range 2 scale_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 shape_name
+    ; arg_constr_warning positive_range 2 scale_name
     ]
   (* Non-negative Continuous Distributions *)
-  (* No real distinction needed here between positive and non-negative lower
-     bounds *)
   | "rayleigh" -> [
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 scale_name
+      variate_constr_warning nonnegative_range
+    ; arg_constr_warning positive_range 1 scale_name
     ]
   | "wiener" -> [
       (* Note: Could do more here, since variate should be > arg 2 *)
-      (* Note: Variate actually positive, not non-negative *)
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 "a boundary separation parameter"
-    ; arg_range_warning positive_range 2 "a non-decision time parameter"
-    ; arg_range_warning unit_range 3 "an a-priori bias parameter"
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 "a boundary separation parameter"
+    ; arg_constr_warning positive_range 2 "a non-decision time parameter"
+    ; arg_constr_warning unit_range 3 "an a-priori bias parameter"
     ]
   (* Positive Lower-Bounded Probabilities *)
   (* Currently treating these as if they're positive bounded,
      could easily do better *)
   | "pareto" -> [
       (* Note: Variate >= arg 1 *)
-      variate_range_warning positive_range
-    ; arg_range_warning positive_range 1 "a positive minimum parameter"
-    ; arg_range_warning positive_range 2 shape_name
+      variate_constr_warning positive_range
+    ; arg_constr_warning positive_range 1 "a positive minimum parameter"
+    ; arg_constr_warning positive_range 2 shape_name
     ]
   | "pareto_type_2" -> [
       (* Note: Variate >= arg 1 *)
-      arg_range_warning positive_range 2 scale_name
-    ; arg_range_warning positive_range 3 shape_name
+      arg_constr_warning positive_range 2 scale_name
+    ; arg_constr_warning positive_range 3 shape_name
     ]
   (* Continuous Distributions on [0,1] *)
   | "beta" -> [
-      (* Note: Variate is actually (0, 1) *)
-      variate_range_warning unit_range
-    ; arg_range_warning positive_range 1 "a count parameter"
-    ; arg_range_warning positive_range 2 "a count parameter"
+      variate_constr_warning exclusive_unit_range
+    ; arg_constr_warning positive_range 1 "a count parameter"
+    ; arg_constr_warning positive_range 2 "a count parameter"
     ]
   | "beta_proportion" -> [
-      variate_range_warning unit_range
-    (* Note: Variate is actually (0, 1) *)
-    (* Note: Arg 1 is actually (0, 1) *)
-    ; arg_range_warning unit_range 1 "a unit mean parameter"
-    ; arg_range_warning positive_range 2 "a precision parameter"
+      variate_constr_warning exclusive_unit_range
+    ; arg_constr_warning exclusive_unit_range 1 "a unit mean parameter"
+    ; arg_constr_warning positive_range 2 "a precision parameter"
     ]
   (* Circular Distributions *)
   | "von_mises" -> [
-      arg_range_warning positive_range 2 scale_name
+      arg_constr_warning positive_range 2 scale_name
     ]
   (* Bounded Continuous Distributions *)
   | "uniform" -> [
@@ -314,29 +366,31 @@ let distribution_warning (dist_info : dist_info)
   (* Distributions over Unbounded Vectors *)
   (* Note: untested section *)
   | "multi_normal" -> [
-      (* Note: arg 2 "covariance matrix" symmetric and pos-definite *)
+      (* Note: arg 2 "covariance matrix" symmetric and pos-definite, covariance matrix *)
     ]
   | "multi_normal_prec" -> [
       (* Note: arg 2 "positive definite precision matrix" is
-         symmetric and pos-definite *)
+         symmetric and pos-definite, covariance matrix *)
     ]
   | "multi_normal_cholesky" -> [
-      (* Note: arg 2 "covariance matrix" is symmetric and pos-definite *)
+      (* Note: arg 2 "covariance matrix" is symmetric and pos-definite, covariance matrix *)
     ]
   | "multi_gp" -> [
-      (* Note: arg 1 "kernel matrix" is symmetric, positive definite kernel matrix*)
+      (* Note: arg 1 "kernel matrix" is symmetric, positive definite kernel matrix, covariance matrix? *)
       (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
     ]
   | "multi_gp_cholesky" -> [
+      (* Note: variant CholeskyCov? *)
       (* Note: arg 1 "Cholesky factor of the kernel matrix"
          is lower triangular and such that LL^⊤ is positive
          definite kernel matrix
+         CholeskyCov?
          (implying L n , n > 0 for n ∈ 1 : N)*)
       (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
     ]
   | "multi_student_t" -> [
-      (* Note: arg 2 "scale matrix" symmetric and pos-definite *)
-      arg_range_warning positive_range 1 dof_name
+      (* Note: arg 2 "scale matrix" symmetric and pos-definite, covariance matrix *)
+      arg_constr_warning positive_range 1 dof_name
     ]
   | "gaussian_dlm_obs" -> [
       (* Note: arg 2 "transition matrix" might be positive? *)
@@ -346,15 +400,13 @@ let distribution_warning (dist_info : dist_info)
   (* Simplex Distributions *)
   | "dirichlet" -> [
       (* Note: variate simplex *)
-      variate_range_warning unit_range
-    ; arg_range_warning positive_range 1 "a count parameter"
+      variate_constr_warning simplex
+    ; arg_constr_warning positive_range 1 "a count parameter"
     ]
   (* Correlation Matrix Distributions *)
   (* Note: untested section *)
   | "lkj_corr" -> [
-      (* Note: variate is symmetric, pos-definite (correlation) *)
-      (* Note: Warning: The only reason to use this density function is if you want the code to run slower and consume more memory with more risk of numerical errors. Use its Cholesky factor as described in the next section.
-      *)
+      (* Note: variate is symmetric, pos-definite (correlation) covariance? *)
       lkj_corr_dist_warning
     ]
   | "lkj_corr_cholesky" -> [
@@ -363,14 +415,14 @@ let distribution_warning (dist_info : dist_info)
   (* Covariance Matrix Distributions *)
   (* Note: untested section *)
   | "wishart" -> [
-      (* Note: variate is symmetric and pos-def *)
-      (* Note: arg 2 "scale matrix" is symmetric and pos-def *)
-        arg_range_warning positive_range 1 dof_name
+      (* Note: variate is symmetric and pos-def, cov matrix *)
+      (* Note: arg 2 "scale matrix" is symmetric and pos-def, cov matrix *)
+        arg_constr_warning positive_range 1 dof_name
     ]
   | "inv_wishart" -> [
-      (* Note: variate is symmetric and pos-def *)
-      (* Note: arg 2 "scale matrix" is symmetric and pos-def *)
-        arg_range_warning positive_range 1 dof_name
+      (* Note: variate is symmetric and pos-def, cov matrix *)
+      (* Note: arg 2 "scale matrix" is symmetric and pos-def, cov matrix *)
+        arg_constr_warning positive_range 1 dof_name
     ]
   | _ -> []
   in

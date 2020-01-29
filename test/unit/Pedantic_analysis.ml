@@ -439,13 +439,13 @@ let%expect_test "Dist bounds warning" =
   [%expect
     {|
       Warning at 'string', line 9, column 10 to column 11:
-        Parameter a is given a gamma distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter a is given a gamma distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 11, column 10 to column 11:
-        Parameter c is given a lognormal distribution, which has positive range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter c is given a lognormal distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
     |}]
 
 let dist_examples =
@@ -578,9 +578,9 @@ let%expect_test "Dist warnings" =
         A gumbel distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
       Warning at 'string', line 33, column 2 to column 3:
-        Parameter x is given a lognormal distribution, which has positive range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter x is given a lognormal distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 33, column 19 to column 24:
         A lognormal distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
@@ -588,23 +588,24 @@ let%expect_test "Dist warnings" =
         The parameter x_pos is on the left-hand side of more than one twiddle
         statement.
       Warning at 'string', line 35, column 2 to column 3:
-        Parameter x is given a chi_square distribution, which has positive range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter x is given a chi_square distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 35, column 17 to column 22:
         A chi_square distribution has parameter unb_p as degrees of freedom
         (argument 1), but unb_p is not constrained to be positive.
       Warning at 'string', line 37, column 2 to column 3:
-        Parameter x is given a inv_chi_square distribution, which has positive
-        range, but was declared with no constraints or incompatible constraints.
-        Either change the distribution or change the constraints.
+        Parameter x is given a inv_chi_square distribution, which is constrained to
+        be positive, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
       Warning at 'string', line 37, column 21 to column 26:
         A inv_chi_square distribution has parameter unb_p as degrees of freedom
         (argument 1), but unb_p is not constrained to be positive.
       Warning at 'string', line 39, column 2 to column 3:
-        Parameter x is given a scaled_inv_chi_square distribution, which has
-        positive range, but was declared with no constraints or incompatible
-        constraints. Either change the distribution or change the constraints.
+        Parameter x is given a scaled_inv_chi_square distribution, which is
+        constrained to be positive, but was declared with no constraints or
+        incompatible constraints. Either change the distribution or change the
+        constraints.
       Warning at 'string', line 39, column 28 to column 33:
         A scaled_inv_chi_square distribution has parameter unb_p as degrees of
         freedom (argument 1), but unb_p is not constrained to be positive.
@@ -612,16 +613,16 @@ let%expect_test "Dist warnings" =
         A scaled_inv_chi_square distribution has parameter unb_p as a scale
         parameter (argument 2), but unb_p is not constrained to be positive.
       Warning at 'string', line 41, column 2 to column 3:
-        Parameter x is given a exponential distribution, which has positive range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter x is given a exponential distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 41, column 18 to column 23:
         A exponential distribution has parameter unb_p as a scale parameter
         (argument 1), but unb_p is not constrained to be positive.
       Warning at 'string', line 43, column 2 to column 3:
-        Parameter x is given a gamma distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a gamma distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 43, column 12 to column 17:
         A gamma distribution has parameter unb_p as a shape parameter (argument 1),
         but unb_p is not constrained to be positive.
@@ -629,9 +630,9 @@ let%expect_test "Dist warnings" =
         A gamma distribution has parameter unb_p as an inverse scale parameter
         (argument 2), but unb_p is not constrained to be positive.
       Warning at 'string', line 45, column 2 to column 3:
-        Parameter x is given a inv_gamma distribution, which has positive range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter x is given a inv_gamma distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 45, column 16 to column 21:
         A inv_gamma distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
@@ -639,9 +640,9 @@ let%expect_test "Dist warnings" =
         A inv_gamma distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
       Warning at 'string', line 47, column 2 to column 3:
-        Parameter x is given a weibull distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a weibull distribution, which is constrained to be
+        non-negative, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
       Warning at 'string', line 47, column 14 to column 19:
         A weibull distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
@@ -649,9 +650,9 @@ let%expect_test "Dist warnings" =
         A weibull distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
       Warning at 'string', line 49, column 2 to column 3:
-        Parameter x is given a frechet distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a frechet distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 49, column 14 to column 19:
         A frechet distribution has parameter unb_p as a shape parameter (argument
         1), but unb_p is not constrained to be positive.
@@ -659,16 +660,16 @@ let%expect_test "Dist warnings" =
         A frechet distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
       Warning at 'string', line 51, column 2 to column 3:
-        Parameter x is given a rayleigh distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a rayleigh distribution, which is constrained to be
+        non-negative, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
       Warning at 'string', line 51, column 15 to column 20:
         A rayleigh distribution has parameter unb_p as a scale parameter (argument
         1), but unb_p is not constrained to be positive.
       Warning at 'string', line 53, column 2 to column 3:
-        Parameter x is given a wiener distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a wiener distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 53, column 13 to column 18:
         A wiener distribution has parameter unb_p as a boundary separation
         parameter (argument 1), but unb_p is not constrained to be positive.
@@ -679,9 +680,9 @@ let%expect_test "Dist warnings" =
         A wiener distribution has parameter pos_p as an a-priori bias parameter
         (argument 3), but pos_p is not constrained to be [0,1].
       Warning at 'string', line 55, column 2 to column 3:
-        Parameter x is given a pareto distribution, which has positive range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter x is given a pareto distribution, which is constrained to be
+        positive, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 55, column 13 to column 18:
         A pareto distribution has parameter unb_p as a positive minimum parameter
         (argument 1), but unb_p is not constrained to be positive.
@@ -695,9 +696,9 @@ let%expect_test "Dist warnings" =
         A pareto_type_2 distribution has parameter unb_p as a shape parameter
         (argument 3), but unb_p is not constrained to be positive.
       Warning at 'string', line 59, column 2 to column 3:
-        Parameter x is given a beta distribution, which has [0,1] range, but was
-        declared with no constraints or incompatible constraints. Either change the
-        distribution or change the constraints.
+        Parameter x is given a beta distribution, which is constrained to be (0,1),
+        but was declared with no constraints or incompatible constraints. Either
+        change the distribution or change the constraints.
       Warning at 'string', line 59, column 11 to column 16:
         A beta distribution has parameter unb_p as a count parameter (argument 1),
         but unb_p is not constrained to be positive.
@@ -708,12 +709,12 @@ let%expect_test "Dist warnings" =
         The parameter x_unit is on the left-hand side of more than one twiddle
         statement.
       Warning at 'string', line 61, column 2 to column 3:
-        Parameter x is given a beta_proportion distribution, which has [0,1] range,
-        but was declared with no constraints or incompatible constraints. Either
-        change the distribution or change the constraints.
+        Parameter x is given a beta_proportion distribution, which is constrained
+        to be (0,1), but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
       Warning at 'string', line 61, column 22 to column 27:
         A beta_proportion distribution has parameter unb_p as a unit mean parameter
-        (argument 1), but unb_p is not constrained to be [0,1].
+        (argument 1), but unb_p is not constrained to be (0,1).
       Warning at 'string', line 61, column 29 to column 34:
         A beta_proportion distribution has parameter unb_p as a precision parameter
         (argument 2), but unb_p is not constrained to be positive.
@@ -721,10 +722,14 @@ let%expect_test "Dist warnings" =
         A von_mises distribution has parameter unb_p as a scale parameter (argument
         2), but unb_p is not constrained to be positive.
       Warning at 'string', line 65, column 2 to column 5:
-        Parameter vec is given a dirichlet distribution, which has [0,1] range, but
-        was declared with no constraints or incompatible constraints. Either change
-        the distribution or change the constraints.
+        Parameter vec is given a dirichlet distribution, which is constrained to be
+        simplex, but was declared with no constraints or incompatible constraints.
+        Either change the distribution or change the constraints.
       Warning at 'string', line 65, column 18 to column 21:
         A dirichlet distribution has parameter vec as a count parameter (argument
         1), but vec is not constrained to be positive.
+      Warning at 'string', line 66, column 2 to column 10:
+        Parameter unit_vec is given a dirichlet distribution, which is constrained
+        to be simplex, but was declared with no constraints or incompatible
+        constraints. Either change the distribution or change the constraints.
     |}]

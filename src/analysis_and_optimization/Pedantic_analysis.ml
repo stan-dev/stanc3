@@ -107,7 +107,7 @@ let compiletime_value_of_expr
   let v = match expr with
     | ({pattern= Var pname; _}) ->
       (match (Set.Poly.find params ~f:(fun (name, _) -> name = pname)) with
-       | Some (name, trans) -> Param (name, trans_bounds_values trans)
+       | Some (name, trans) -> Param (name, trans)
        | None ->
          (match (Set.Poly.find data ~f:(fun name -> name = pname)) with
           | Some name -> Data name

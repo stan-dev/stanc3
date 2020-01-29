@@ -48,12 +48,27 @@ let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
   in
   match trans with
   | Lower lower ->
-    {lower = bound_value lower; upper=`None}
-  | LowerUpper (lower, upper) ->
-    {lower = bound_value lower; upper = bound_value upper}
+    {lower= bound_value lower; upper= `None}
   | Upper upper ->
-    {lower = `None; upper = bound_value upper}
-  | _ -> {lower = `None; upper = `None}
+    {lower= `None; upper= bound_value upper}
+  | LowerUpper (lower, upper) ->
+    {lower= bound_value lower; upper= bound_value upper}
+  | Simplex ->
+    {lower= `Lit 0.; upper= `Lit 1.}
+  | PositiveOrdered ->
+    {lower= `Lit 0.; upper= `None}
+  | UnitVector ->
+    {lower= `Lit (-1.); upper= `Lit 1.}
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+  | Ordered
+  | Offset _
+  | Multiplier _
+  | OffsetMultiplier _
+  | Identity ->
+    {lower = `None; upper = `None}
 
 let chop_dist_name (fname : string) : string Option.t =
   let log_chop = String.chop_suffix ~suffix:"_propto_log" fname in

@@ -5,7 +5,7 @@ open Dataflow_types
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
-  {lower : [ `None | `Nonlit | `Lit of float ]
+  { lower : [ `None | `Nonlit | `Lit of float ]
   ; upper : [ `None | `Nonlit | `Lit of float ]}
 
 val trans_bounds_values : Expr.Typed.t Program.transformation -> bound_values
