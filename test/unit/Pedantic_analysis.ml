@@ -544,6 +544,8 @@ model {
 }
 |}
 
+(* Distribution warnings should appear only on alternating lines,
+   since the program lines go incorrect,correct,incorrect,correct,etc.*)
 let%expect_test "Dist warnings" =
   print_warn_pedantic (build_program dist_examples) ;
   [%expect

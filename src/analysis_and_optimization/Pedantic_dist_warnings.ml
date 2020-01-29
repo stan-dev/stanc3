@@ -2,6 +2,10 @@ open Core_kernel
 open Middle
 open Mir_utils
 
+(*********************
+   Types and utilities
+ ********************)
+
 (* Useful information about an expression. Opaque means we don't know anything. *)
 type compiletime_val
   = Opaque
@@ -18,73 +22,13 @@ type dist_info =
   ; args : (compiletime_val * Expr.Typed.Meta.t) List.t
   }
 
-let uniform_dist_message (pname : string) : string =
-  Printf.sprintf
-    "Parameter %s is given a uniform distribution. The uniform distribution is \
-     not recommended, for two reasons: (a) Except when there are logical or \
-     physical constraints, it is very unusual for you to be sure that a \
-     parameter will fall inside a specified range, and (b) The infinite \
-     gradient induced by a uniform density can cause difficulties for Stan's \
-     sampling algorithm. As a consequence, we recommend soft constraints rather \
-     than hard constraints; for example, instead of giving an elasticity \
-     parameter a uniform(0,1) distribution, try normal(0.5,0.5)."
-    pname
-
-(* Warning for all uniform distributions with a parameter *)
-let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
-  match dist_info with
-  | {args=(Param (pname, trans), _)::(arg1,_)::(arg2,_)::_; _} ->
-    let warning =
-      Some (dist_info.loc, uniform_dist_message pname)
-    in
-    (match (arg1, arg2, trans_bounds_values trans) with
-     | (_, _, {upper = `None; _})
-     | (_, _, {lower = `None; _}) ->
-       (* the variate is unbounded *)
-       warning
-     | (Number (uni, _), _, {lower = `Lit bound; _})
-     | (_, Number (uni, _), {upper = `Lit bound; _}) ->
-       (* the variate is bounded differently than the uniform dist *)
-       if uni = bound then
-         None
-       else
-         warning
-     | _ -> None)
-  | _ -> None
-
-let lkj_corr_message : string =
-  "It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky \
-   factor variant. lkj_corr tends to run slower, consume more memory, and has \
-   higher risk of numerical errors."
-
-let lkj_corr_dist_warning (dist_info : dist_info)
-  : (Location_span.t * string) option =
-  Some (dist_info.loc, lkj_corr_message)
-
-let gamma_arg_dist_message : string =
-  "There is a gamma or inverse-gamma distribution with parameters that are \
-   equal to each other and set to values less than 1. This is mathematically \
-   acceptable and can make sense in some problems, but typically we see this \
-   model used as an attempt to assign a noninformative prior distribution. In \
-   fact, priors such as inverse-gamma(.001,.001) can be very strong, as \
-   explained by Gelman (2006). Instead we recommend something like a \
-   normal(0,1) or student_t(4,0,1), with parameter constrained to be \
-   positive."
-
-(* Warning particular to gamma and inv_gamma, when A=B<1 *)
-let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
-  match dist_info with
-  | {args= [ _; (Number (a, _), meta); (Number (b, _), _) ]; _} ->
-    if a = b && a < 1. then
-      Some (meta.loc, gamma_arg_dist_message)
-    else None
-  | _ -> None
-
+(* Value constraint as a range. The bools are true if the bound is inclusive *)
 type range =
   { lower : (float * bool) option
   ; upper : (float * bool) option
   }
 
+(* Value constraint for an argument *)
 type var_constraint =
   | Range of range
   | Ordered
@@ -96,6 +40,7 @@ type var_constraint =
   | Correlation
   | Covariance
 
+(* Constraint paired with a name for user messages *)
 type var_constraint_named =
   { name : string
   ; constr : var_constraint
@@ -158,6 +103,8 @@ let cholesky_covariance =
   ; constr = CholeskyCov
   }
 
+(* Check for inconsistency between a distribution argument's value range and the
+   declared bounds of a variable *)
 let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
   | (`None, _, Some _, _) -> true
@@ -166,6 +113,8 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   | (_, `Lit u, _, Some (u', _)) when u > u' -> true
   | _ -> false
 
+(* Check for inconsistency between a distribution argument's constraint and the
+   constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
     (trans : Expr.Typed.t Program.transformation) : bool =
   match constr with
@@ -179,6 +128,8 @@ let transform_mismatch_constraint (constr : var_constraint)
   | Correlation -> trans <> Program.Correlation
   | Covariance -> trans <> Program.Covariance && trans <> Program.Correlation
 
+(* Check for inconsistency between a distribution argument's range and
+   a literal value *)
 let value_out_of_range (range : range) (v : float) =
   let lower_bad = match range.lower with
     | Some (l, true) -> v < l
@@ -191,12 +142,19 @@ let value_out_of_range (range : range) (v : float) =
     | None -> false
   in lower_bad || upper_bad
 
+(* Check for inconsistency between a distribution argument's constraint and
+   a literal value *)
 let value_mismatch_constraint (constr : var_constraint) (v : float) =
   match constr with
   | Range range -> value_out_of_range range v
   (* We don't know how to check if a value falls into a constraint other than
      Range, unless we want to inspect e.g. matrix literals. *)
   | _ -> false
+
+
+(*********************
+   Argument constraint mismatch warnings
+ ********************)
 
 let arg_constr_mismatch_message (dist_name : string) (param_name : string)
     (arg_name : string) (argn : int) (constr_name : string) : string =
@@ -211,15 +169,17 @@ let arg_constr_literal_mismatch_message (dist_name : string) (num_str : string)
     "A %s distribution has value %s as %s (argument %d), but %s should be %s."
     dist_name num_str arg_name argn arg_name constr_name
 
+(* Return a warning if the argn-th argument doesn't match its constraints *)
 let arg_constr_warning (constr : var_constraint_named) (argn : int)
     (arg_name : string) ({args; name; loc} : dist_info)
   : (Location_span.t * string) option =
   let v = match (List.nth args argn) with
     | Some v -> v
     | None ->
-      (raise (Failure ("Distribution " ^ name
-                       ^ " at " ^ Location_span.to_string loc
-                       ^ " expects more arguments." )))
+      let arg_fail_msg =
+        Printf.sprintf "Distribution %s at %s expects more arguments."
+          name (Location_span.to_string loc)
+      in raise (Failure arg_fail_msg)
   in
   match v with
   | (Param (pname, trans), meta) ->
@@ -230,7 +190,8 @@ let arg_constr_warning (constr : var_constraint_named) (argn : int)
   | (Number (num, num_str), meta) ->
     if value_mismatch_constraint constr.constr num then
       Some ( meta.loc
-           , arg_constr_literal_mismatch_message name num_str arg_name argn constr.name)
+           , arg_constr_literal_mismatch_message name num_str arg_name argn
+               constr.name)
     else None
   | _ -> None
 
@@ -242,7 +203,7 @@ let variate_constr_mismatch_message (dist_name : string) (param_name : string)
      change the distribution or change the constraints."
     param_name dist_name constr_name
 
-(* Warning when the dist's parameter should be bounded >0 *)
+(* Return a warning if the variate doesn't match its constraints *)
 let variate_constr_warning (constr : var_constraint_named) (dist_info : dist_info)
   : (Location_span.t * string) option =
   match dist_info with
@@ -253,7 +214,80 @@ let variate_constr_warning (constr : var_constraint_named) (dist_info : dist_inf
     else None
   | _ -> None
 
-(* Generate the warnings that are relevant to a given distribution *)
+
+(*********************
+   Distribution-specific warnings
+ ********************)
+
+let uniform_dist_message (pname : string) : string =
+  Printf.sprintf
+    "Parameter %s is given a uniform distribution. The uniform distribution is \
+     not recommended, for two reasons: (a) Except when there are logical or \
+     physical constraints, it is very unusual for you to be sure that a \
+     parameter will fall inside a specified range, and (b) The infinite \
+     gradient induced by a uniform density can cause difficulties for Stan's \
+     sampling algorithm. As a consequence, we recommend soft constraints rather \
+     than hard constraints; for example, instead of giving an elasticity \
+     parameter a uniform(0,1) distribution, try normal(0.5,0.5)."
+    pname
+
+(* Warning for all uniform distributions with a parameter *)
+let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
+  match dist_info with
+  | {args=(Param (pname, trans), _)::(arg1,_)::(arg2,_)::_; _} ->
+    let warning =
+      Some (dist_info.loc, uniform_dist_message pname)
+    in
+    (match (arg1, arg2, trans_bounds_values trans) with
+     | (_, _, {upper = `None; _})
+     | (_, _, {lower = `None; _}) ->
+       (* the variate is unbounded *)
+       warning
+     | (Number (uni, _), _, {lower = `Lit bound; _})
+     | (_, Number (uni, _), {upper = `Lit bound; _}) ->
+       (* the variate is bounded differently than the uniform dist *)
+       if uni = bound then
+         None
+       else
+         warning
+     | _ -> None)
+  | _ -> None
+
+let lkj_corr_message : string =
+  "It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky \
+   factor variant. lkj_corr tends to run slower, consume more memory, and has \
+   higher risk of numerical errors."
+
+(* Warn about all non-Cholesky lkj_corr distributions *)
+let lkj_corr_dist_warning (dist_info : dist_info)
+  : (Location_span.t * string) option =
+  Some (dist_info.loc, lkj_corr_message)
+
+let gamma_arg_dist_message : string =
+  "There is a gamma or inverse-gamma distribution with parameters that are \
+   equal to each other and set to values less than 1. This is mathematically \
+   acceptable and can make sense in some problems, but typically we see this \
+   model used as an attempt to assign a noninformative prior distribution. In \
+   fact, priors such as inverse-gamma(.001,.001) can be very strong, as \
+   explained by Gelman (2006). Instead we recommend something like a \
+   normal(0,1) or student_t(4,0,1), with parameter constrained to be \
+   positive."
+
+(* Warning particular to gamma and inv_gamma, when A=B<1 *)
+let gamma_arg_dist_warning (dist_info : dist_info) : (Location_span.t * string) option =
+  match dist_info with
+  | {args= [ _; (Number (a, _), meta); (Number (b, _), _) ]; _} ->
+    if a = b && a < 1. then
+      Some (meta.loc, gamma_arg_dist_message)
+    else None
+  | _ -> None
+
+
+(*********************
+   Distribution properties table
+ ********************)
+
+(* Generate all of the warnings that are relevant to a given distribution *)
 let distribution_warning (dist_info : dist_info)
   : (Location_span.t * string) List.t =
   let scale_name = "a scale parameter" in
@@ -386,7 +420,6 @@ let distribution_warning (dist_info : dist_info)
       uniform_dist_warning
     ]
   (* Distributions over Unbounded Vectors *)
-  (* Note: untested section *)
   | "multi_normal" -> [
       arg_constr_warning covariance 2 cov_name
     ]
@@ -418,7 +451,6 @@ let distribution_warning (dist_info : dist_info)
     ; arg_constr_warning positive_range 1 "a count parameter"
     ]
   (* Correlation Matrix Distributions *)
-  (* Note: untested section *)
   | "lkj_corr" -> [
       lkj_corr_dist_warning
     ; variate_constr_warning correlation
@@ -429,7 +461,6 @@ let distribution_warning (dist_info : dist_info)
     ; arg_constr_warning positive_range 1 shape_name
     ]
   (* Covariance Matrix Distributions *)
-  (* Note: untested section *)
   | "wishart" -> [
         variate_constr_warning covariance
       ; arg_constr_warning positive_range 1 dof_name
@@ -445,7 +476,7 @@ let distribution_warning (dist_info : dist_info)
   List.filter_map ~f:(fun f -> f dist_info) warning_fns
 
 (* Generate the distribution warnings for a program *)
-let list_distribution_warnings (distributions_list : dist_info Set.Poly.t)
+let distribution_warnings (distributions_list : dist_info Set.Poly.t)
   : (Location_span.t * string) Set.Poly.t =
   union_map
     ~f:(fun dist_info ->

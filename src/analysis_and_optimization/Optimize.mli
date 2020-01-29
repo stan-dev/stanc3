@@ -70,6 +70,10 @@ type optimization_settings =
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool }
 
+val optimization_settings_all : optimization_settings
+
+val optimization_settings_none : optimization_settings
+
 val optimization_suite :
   ?optimization_settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
 (** Perform all optimizations in this module on the MIR in an appropriate order. *)

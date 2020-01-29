@@ -9,7 +9,12 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
-let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) : string Set.Poly.t =
+(*********************
+   Pattern collection functions
+ ********************)
+
+let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t)
+  : string Set.Poly.t =
   let params = parameter_names_set mir in
   let used_params =
     Set.Poly.map
@@ -27,12 +32,14 @@ let list_hard_constrained (mir : Program.Typed.t) :
     | _ -> false
   in
   Set.Poly.map ~f:fst
-    (Set.Poly.filter ~f:(fun (_, trans) -> constrained (trans_bounds_values trans))
+    (Set.Poly.filter
+       ~f:(fun (_, trans) -> constrained (trans_bounds_values trans))
        (parameter_set mir))
 
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
-  let collect_twiddle_stmt (stmt : Stmt.Located.t) : (string, Location_span.t Set.Poly.t) Map.Poly.t =
+  let collect_twiddle_stmt (stmt : Stmt.Located.t)
+    : (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
         ({pattern=
@@ -86,9 +93,12 @@ let list_param_dependant_cf (mir : Program.Typed.t)
   in
   let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
   (* remove empty dependency sets *)
-  Set.Poly.filter ~f:(fun (_, vars) -> not (Set.Poly.is_empty vars)) all_cf_var_deps
+  Set.Poly.filter
+    ~f:(fun (_, vars) -> not (Set.Poly.is_empty vars))
+    all_cf_var_deps
 
-let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * int) Set.Poly.t =
+let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t)
+  : (string * int) Set.Poly.t =
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold
@@ -100,6 +110,8 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) : (string * 
   in
   Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
 
+(* Collect useful information about an expression that's available at
+   compile-time. *)
 let compiletime_value_of_expr
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
     (data : string Set.Poly.t)
@@ -165,10 +177,13 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t)
     ~f:(fun {args;_} -> Set.Poly.union_list (List.map ~f:collect_unscaled_expr args))
     distributions_list
 
-(*****
-   Printing functions
- *****)
 
+(*********************
+   Printing functions
+ ********************)
+
+(* Fmt format for warnings, where the warning body comes after the
+   "Warning at <location>:" line and is indented by 2 spaces. *)
 let pp_warning ppf (loc, msg) =
   let loc_str =
     if loc = Location_span.empty then
@@ -178,6 +193,9 @@ let pp_warning ppf (loc, msg) =
   in
   Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
 
+(* Print a set of 'warnings', where each warning comes with its location.
+   By tupling with location and using a set, we're also sorting the warning
+   messages by increasing location. *)
 let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
   Set.Poly.iter warnings ~f:(pp_warning Fmt.stderr)
 
@@ -189,9 +207,10 @@ let unscaled_constants_message (name : string) : string =
      see section 22.12 of the manual for an example."
     name
 
-let warn_unscaled_constants (distributions_list : dist_info Set.Poly.t) =
-  let consts = list_unscaled_constants distributions_list in
-  Set.Poly.map ~f:(fun (loc, name) -> (loc, unscaled_constants_message name)) consts
+let unscaled_constants_warnings (distributions_list : dist_info Set.Poly.t) =
+  Set.Poly.map
+    ~f:(fun (loc, name) -> (loc, unscaled_constants_message name))
+    (list_unscaled_constants distributions_list)
 
 let hard_constrained_message (pname : string) : string =
   Printf.sprintf
@@ -206,7 +225,7 @@ let hard_constrained_message (pname : string) : string =
      leave it unconstrained and give it a normal(0.5,0.5) prior distribution."
     pname
 
-let warn_hard_constrained (mir : Program.Typed.t) =
+let hard_constrained_warnings (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   Set.Poly.map
     ~f:(fun pname ->
@@ -215,10 +234,11 @@ let warn_hard_constrained (mir : Program.Typed.t) =
 
 let multi_twiddles_message (vname : string) : string =
   Printf.sprintf
-    "The parameter %s is on the left-hand side of more than one twiddle statement."
+    "The parameter %s is on the left-hand side of more than one twiddle \
+     statement."
     vname
 
-let warn_multi_twiddles (mir : Program.Typed.t) =
+let multi_twiddles_warnings (mir : Program.Typed.t) =
   let twds = list_multi_twiddles mir in
   Set.Poly.map
     ~f:(fun (vname, locs) ->
@@ -231,7 +251,7 @@ let param_dependant_cf_message (plist : string Set.Poly.t) : string =
     "A control flow statement depends on parameter(s): %s."
     plistStr
 
-let warn_param_dependant_cf (mir : Program.Typed.t) =
+let param_dependant_cf_warnings (mir : Program.Typed.t) =
   let cfs = list_param_dependant_cf mir in
   Set.Poly.map
     ~f:(fun (loc, plist) -> (loc, param_dependant_cf_message plist))
@@ -242,7 +262,7 @@ let unused_params_message (pname : string) : string =
     "The parameter %s was declared but does not participate in the model."
     pname
 
-let warn_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t) =
+let unused_params_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun pname -> (Location_span.empty, unused_params_message pname))
     (list_unused_params factor_graph mir)
@@ -252,7 +272,7 @@ let non_one_priors_message (pname : string) (n : int) : string =
     "The parameter %s has %d priors."
     pname n
 
-let warn_non_one_priors (factor_graph:factor_graph) (mir : Program.Typed.t) =
+let non_one_priors_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun (pname, n) -> (Location_span.empty, non_one_priors_message pname n))
     (list_non_one_priors factor_graph mir)
@@ -262,7 +282,7 @@ let uninitialized_message (vname : string) : string =
     "The variable %s may not have been initialized before its use."
     vname
 
-let warn_uninitialized (mir : Program.Typed.t) =
+let uninitialized_warnings (mir : Program.Typed.t) =
   let uninit_vars =
     Set.Poly.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
@@ -272,22 +292,20 @@ let warn_uninitialized (mir : Program.Typed.t) =
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
     uninit_vars
 
-let print_warn_uninitialized mir = print_warning_set (warn_uninitialized mir)
+(* Print uninitialized warnings
+   In case a user wants only this warning *)
+let print_warn_uninitialized mir =
+  print_warning_set (uninitialized_warnings mir)
 
+(* Optimization settings for constant propagation and partial evaluation *)
 let settings_constant_prop =
-  { function_inlining= false
-  ; static_loop_unrolling= false
-  ; one_step_loop_unrolling= false
-  ; list_collapsing= false
-  ; block_fixing= false
-  ; constant_propagation= true
-  ; expression_propagation= false
-  ; copy_propagation= true
-  ; dead_code_elimination= false
-  ; partial_evaluation= true
-  ; lazy_code_motion= false
-  ; optimize_ad_levels= false }
+  { optimization_settings_none with
+    constant_propagation = true
+  ; copy_propagation = true
+  ; partial_evaluation = true
+  }
 
+(* Print all pedantic mode warnings, sorted, to stderr *)
 let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
@@ -295,18 +313,19 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
       ~optimization_settings:settings_constant_prop
       mir_unopt
   in
+  (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
   let warning_set =
     Set.Poly.union_list [
-      warn_uninitialized mir
-    ; warn_unscaled_constants distributions_info
-    ; warn_multi_twiddles mir
-    ; warn_hard_constrained mir
-    ; warn_unused_params factor_graph mir
-    ; warn_param_dependant_cf mir
-    ; warn_non_one_priors factor_graph mir
-    ; list_distribution_warnings distributions_info
+      uninitialized_warnings mir
+    ; unscaled_constants_warnings distributions_info
+    ; multi_twiddles_warnings mir
+    ; hard_constrained_warnings mir
+    ; unused_params_warnings factor_graph mir
+    ; param_dependant_cf_warnings mir
+    ; non_one_priors_warnings factor_graph mir
+    ; distribution_warnings distributions_info
     ]
   in
   print_warning_set warning_set
