@@ -83,6 +83,11 @@ let simplex =
   ; constr = Simplex
   }
 
+let ordered =
+  { name = "ordered"
+  ; constr = Ordered
+  }
+
 let correlation =
   { name = "correlation"
   ; constr = Correlation
@@ -300,178 +305,257 @@ let distribution_warning (dist_info : dist_info)
      https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html
   *)
   let warning_fns = match dist_info.name with
-  (* Unbounded Continuous Distributions *)
-  | "normal" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  | "normal_id_glm" -> [
-      arg_constr_warning positive_range 4 scale_name
-    ]
-  | "exp_mod_normal" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ; arg_constr_warning positive_range 3 shape_name
-    ]
-  | "skew_normal" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  | "student_t" -> [
-      arg_constr_warning positive_range 1 dof_name
-    ; arg_constr_warning positive_range 3 scale_name
-    ]
-  | "cauchy" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  | "double_exponential" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  | "logistic" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  | "gumbel" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  (* Positive Continuous Distributions *)
-  | "lognormal" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 2 scale_name
-    ]
-  | "chi_square" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 dof_name
-    ]
-  | "inv_chi_square" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 dof_name
-    ]
-  | "scaled_inv_chi_square" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 dof_name
-    ; arg_constr_warning positive_range 2 scale_name
-    ]
-  | "exponential" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 scale_name
-    ]
-  | "gamma" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 shape_name
-    ; arg_constr_warning positive_range 2 inv_scale_name
-    ; gamma_arg_dist_warning
-    ]
-  | "inv_gamma" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 shape_name
-    ; arg_constr_warning positive_range 2 scale_name
-    ; gamma_arg_dist_warning
-    ]
-  | "weibull" -> [
-      variate_constr_warning nonnegative_range
-    ; arg_constr_warning positive_range 1 shape_name
-    ; arg_constr_warning positive_range 2 scale_name
-    ]
-  | "frechet" -> [
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 shape_name
-    ; arg_constr_warning positive_range 2 scale_name
-    ]
-  (* Non-negative Continuous Distributions *)
-  | "rayleigh" -> [
-      variate_constr_warning nonnegative_range
-    ; arg_constr_warning positive_range 1 scale_name
-    ]
-  | "wiener" -> [
-      (* Note: Could do more here, since variate should be > arg 2 *)
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 "a boundary separation parameter"
-    ; arg_constr_warning positive_range 2 "a non-decision time parameter"
-    ; arg_constr_warning unit_range 3 "an a-priori bias parameter"
-    ]
-  (* Positive Lower-Bounded Probabilities *)
-  | "pareto" -> [
-      (* Note: Variate >= arg 1 *)
-      variate_constr_warning positive_range
-    ; arg_constr_warning positive_range 1 "a positive minimum parameter"
-    ; arg_constr_warning positive_range 2 shape_name
-    ]
-  | "pareto_type_2" -> [
-      (* Note: Variate >= arg 1 *)
-      arg_constr_warning positive_range 2 scale_name
-    ; arg_constr_warning positive_range 3 shape_name
-    ]
-  (* Continuous Distributions on [0,1] *)
-  | "beta" -> [
-      variate_constr_warning exclusive_unit_range
-    ; arg_constr_warning positive_range 1 "a count parameter"
-    ; arg_constr_warning positive_range 2 "a count parameter"
-    ]
-  | "beta_proportion" -> [
-      variate_constr_warning exclusive_unit_range
-    ; arg_constr_warning exclusive_unit_range 1 "a unit mean parameter"
-    ; arg_constr_warning positive_range 2 "a precision parameter"
-    ]
-  (* Circular Distributions *)
-  | "von_mises" -> [
-      arg_constr_warning positive_range 2 scale_name
-    ]
-  (* Bounded Continuous Distributions *)
-  | "uniform" -> [
-      (* Could also check b > c *)
-      (* Can this be generalized, by restricting a < variate < b? *)
-      uniform_dist_warning
-    ]
-  (* Distributions over Unbounded Vectors *)
-  | "multi_normal" -> [
-      arg_constr_warning covariance 2 cov_name
-    ]
-  | "multi_normal_prec" -> [
-      arg_constr_warning covariance 2 "a precision matrix"
-    ]
-  | "multi_normal_cholesky" -> [
-      arg_constr_warning cholesky_covariance 2 cov_name
-    ]
-  | "multi_gp" -> [
-      (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
-      arg_constr_warning covariance 1 "a kernel matrix"
-    ]
-  | "multi_gp_cholesky" -> [
-      (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
-      arg_constr_warning cholesky_covariance 1 "Cholesky factor of the kernel matrix"
-    ]
-  | "multi_student_t" -> [
-      arg_constr_warning positive_range 1 dof_name
-    ; arg_constr_warning covariance 3 scale_mat_name
-    ]
-  | "gaussian_dlm_obs" -> [
+    (* Binary Distributions *)
+    | "bernoulli" -> [
+        (* Note: variate binary *)
+        arg_constr_warning unit_range 1 "chance of success"
+      ]
+    | "bernoulli_logit" -> [
+        (* Note: variate binary *)
+      ]
+    | "bernoulli_logit_glm" -> [
+        (* Note: variate binary *)
+      ]
+    (* Bounded Discrete Distributions *)
+    | "binomial" -> [
+        (* Note: variate nonnegative int *)
+        (* Note: args 1 nonnegative int *)
+        arg_constr_warning unit_range 2 "chance of success"
+      ]
+    | "binomial_logit" -> [
+        (* Note: variate nonnegative int *)
+        (* Note: args 1 nonnegative int *)
+      ]
+    | "beta_binomial" -> [
+        (* Note: variate nonnegative int *)
+        (* Note: args 1 nonnegative int *)
+        arg_constr_warning positive_range 2 "a prior success count"
+      ; arg_constr_warning positive_range 3 "a prior failure count"
+      ]
+    | "hypergeometric" -> [
+        (* Note: variate nonnegative int *)
+        (* Note: args 1,2,3 nonnegative int *)
+      ]
+    | "categorical" -> [
+        (* Note: variate positive int *)
+        arg_constr_warning simplex 1 "a vector of outcome probabilities"
+      ]
+    | "ordered_logistic" -> [
+        (* Note: variate positive int *)
+        arg_constr_warning ordered 2 "cutpoints"
+      ]
+    | "ordered_probit" -> [
+        (* Note: variate positive int *)
+        arg_constr_warning ordered 2 "cutpoints"
+      ]
+    (* Unbounded Discrete Distributions *)
+    | "neg_binomial" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 inv_scale_name
+      ]
+    | "neg_binomial_2" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 "a precision parameter"
+      ]
+    | "neg_binomial_2_log" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning positive_range 2 "an inverse overdispersion control \
+                                             parameter"
+      ]
+    | "neg_binomial_2_log_glm" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning positive_range 4 "an inverse overdispersion control \
+                                             parameter"
+      ]
+    | "poisson" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning positive_range 1 "a rate parameter"
+      ]
+    | "poisson_log" -> [
+        (* Note: variate nonnegative int *)
+      ]
+    | "poisson_log_glm" -> [
+        (* Note: variate nonnegative int *)
+      ]
+    (* Multivariate Discrete Distributions *)
+    | "multinomial" -> [
+        (* Note: variate nonnegative int *)
+        arg_constr_warning simplex 1 "a distribution parameter"
+      ]
+    (* Unbounded Continuous Distributions *)
+    | "normal" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    | "normal_id_glm" -> [
+        arg_constr_warning positive_range 4 scale_name
+      ]
+    | "exp_mod_normal" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ; arg_constr_warning positive_range 3 shape_name
+      ]
+    | "skew_normal" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    | "student_t" -> [
+        arg_constr_warning positive_range 1 dof_name
+      ; arg_constr_warning positive_range 3 scale_name
+      ]
+    | "cauchy" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    | "double_exponential" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    | "logistic" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    | "gumbel" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    (* Positive Continuous Distributions *)
+    | "lognormal" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 2 scale_name
+      ]
+    | "chi_square" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 dof_name
+      ]
+    | "inv_chi_square" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 dof_name
+      ]
+    | "scaled_inv_chi_square" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 dof_name
+      ; arg_constr_warning positive_range 2 scale_name
+      ]
+    | "exponential" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 scale_name
+      ]
+    | "gamma" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 inv_scale_name
+      ; gamma_arg_dist_warning
+      ]
+    | "inv_gamma" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 scale_name
+      ; gamma_arg_dist_warning
+      ]
+    | "weibull" -> [
+        variate_constr_warning nonnegative_range
+      ; arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 scale_name
+      ]
+    | "frechet" -> [
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 shape_name
+      ; arg_constr_warning positive_range 2 scale_name
+      ]
+    (* Non-negative Continuous Distributions *)
+    | "rayleigh" -> [
+        variate_constr_warning nonnegative_range
+      ; arg_constr_warning positive_range 1 scale_name
+      ]
+    | "wiener" -> [
+        (* Note: Could do more here, since variate should be > arg 2 *)
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 "a boundary separation parameter"
+      ; arg_constr_warning positive_range 2 "a non-decision time parameter"
+      ; arg_constr_warning unit_range 3 "an a-priori bias parameter"
+      ]
+    (* Positive Lower-Bounded Probabilities *)
+    | "pareto" -> [
+        (* Note: Variate >= arg 1 *)
+        variate_constr_warning positive_range
+      ; arg_constr_warning positive_range 1 "a positive minimum parameter"
+      ; arg_constr_warning positive_range 2 shape_name
+      ]
+    | "pareto_type_2" -> [
+        (* Note: Variate >= arg 1 *)
+        arg_constr_warning positive_range 2 scale_name
+      ; arg_constr_warning positive_range 3 shape_name
+      ]
+    (* Continuous Distributions on [0,1] *)
+    | "beta" -> [
+        variate_constr_warning exclusive_unit_range
+      ; arg_constr_warning positive_range 1 "a count parameter"
+      ; arg_constr_warning positive_range 2 "a count parameter"
+      ]
+    | "beta_proportion" -> [
+        variate_constr_warning exclusive_unit_range
+      ; arg_constr_warning exclusive_unit_range 1 "a unit mean parameter"
+      ; arg_constr_warning positive_range 2 "a precision parameter"
+      ]
+    (* Circular Distributions *)
+    | "von_mises" -> [
+        arg_constr_warning positive_range 2 scale_name
+      ]
+    (* Bounded Continuous Distributions *)
+    | "uniform" -> [
+        (* Could also check b > c *)
+        (* Can this be generalized, by restricting a < variate < b? *)
+        uniform_dist_warning
+      ]
+    (* Distributions over Unbounded Vectors *)
+    | "multi_normal" -> [
+        arg_constr_warning covariance 2 cov_name
+      ]
+    | "multi_normal_prec" -> [
+        arg_constr_warning covariance 2 "a precision matrix"
+      ]
+    | "multi_normal_cholesky" -> [
+        arg_constr_warning cholesky_covariance 2 cov_name
+      ]
+    | "multi_gp" -> [
+        (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+        arg_constr_warning covariance 1 "a kernel matrix"
+      ]
+    | "multi_gp_cholesky" -> [
+        (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+        arg_constr_warning cholesky_covariance 1 "Cholesky factor of the kernel matrix"
+      ]
+    | "multi_student_t" -> [
+        arg_constr_warning positive_range 1 dof_name
+      ; arg_constr_warning covariance 3 scale_mat_name
+      ]
+    | "gaussian_dlm_obs" -> [
         arg_constr_warning covariance 3 "observation covariance matrix"
       ; arg_constr_warning covariance 4 "system covariance matrix"
-    ]
-  (* Simplex Distributions *)
-  | "dirichlet" -> [
-      variate_constr_warning simplex
-    ; arg_constr_warning positive_range 1 "a count parameter"
-    ]
-  (* Correlation Matrix Distributions *)
-  | "lkj_corr" -> [
-      lkj_corr_dist_warning
-    ; variate_constr_warning correlation
-    ; arg_constr_warning positive_range 1 shape_name
-    ]
-  | "lkj_corr_cholesky" -> [
-      variate_constr_warning cholesky_correlation
-    ; arg_constr_warning positive_range 1 shape_name
-    ]
-  (* Covariance Matrix Distributions *)
-  | "wishart" -> [
+      ]
+    (* Simplex Distributions *)
+    | "dirichlet" -> [
+        variate_constr_warning simplex
+      ; arg_constr_warning positive_range 1 "a count parameter"
+      ]
+    (* Correlation Matrix Distributions *)
+    | "lkj_corr" -> [
+        lkj_corr_dist_warning
+      ; variate_constr_warning correlation
+      ; arg_constr_warning positive_range 1 shape_name
+      ]
+    | "lkj_corr_cholesky" -> [
+        variate_constr_warning cholesky_correlation
+      ; arg_constr_warning positive_range 1 shape_name
+      ]
+    (* Covariance Matrix Distributions *)
+    | "wishart" -> [
         variate_constr_warning covariance
       ; arg_constr_warning positive_range 1 dof_name
       ; arg_constr_warning covariance 2 scale_mat_name
-    ]
-  | "inv_wishart" -> [
+      ]
+    | "inv_wishart" -> [
         variate_constr_warning covariance
       ; arg_constr_warning positive_range 1 dof_name
       ; arg_constr_warning covariance 2 scale_mat_name
-    ]
-  | _ -> []
+      ]
+    | _ -> []
   in
   List.filter_map ~f:(fun f -> f dist_info) warning_fns
 

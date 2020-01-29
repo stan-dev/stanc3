@@ -71,14 +71,13 @@ let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
     {lower = `None; upper = `None}
 
 let chop_dist_name (fname : string) : string Option.t =
-  let log_chop = String.chop_suffix ~suffix:"_propto_log" fname in
-  match log_chop with
-  | Some _ -> log_chop
-  | None ->
-    let lpdf_chop = String.chop_suffix ~suffix:"_propto_lpdf" fname in
-    (match lpdf_chop with
-     | Some _ -> lpdf_chop
-     | None -> None)
+  (* Slightly inefficient, would be better to short-circuit *)
+  List.fold ~init:None ~f:Option.first_some
+    (List.map ~f:(fun suffix -> String.chop_suffix ~suffix fname)
+       [ "_propto_log"
+       ; "_propto_lpdf"
+       ; "_propto_lpmf"
+       ])
 
 let is_dist (fname : string) : bool =
   Option.is_some (chop_dist_name fname)
