@@ -920,7 +920,7 @@ let settings_const b =
 
 let optimization_settings_all = settings_const true
 
-let optimization_settings_none = settings_const true
+let optimization_settings_none = settings_const false
 
 let optimization_suite ?optimization_settings:(settings=optimization_settings_all) mir =
   let maybe_optimizations =
