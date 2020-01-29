@@ -15,6 +15,7 @@ open Pedantic_dist_warnings
 
 let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t)
   : string Set.Poly.t =
+  (* Build a factor graph of the program, check for missing parameters *)
   let params = parameter_names_set mir in
   let used_params =
     Set.Poly.map
@@ -25,6 +26,7 @@ let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t)
 
 let list_hard_constrained (mir : Program.Typed.t) :
   string Set.Poly.t =
+  (* Iterate through all parameters' transformations for hard constraints *)
   let constrained (e : bound_values) = match e with
     | {lower= `Lit 0.; upper= `Lit 1.}
     | {lower= `Lit -1.; upper= `Lit 1.} -> false
@@ -38,6 +40,7 @@ let list_hard_constrained (mir : Program.Typed.t) :
 
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
+  (* Collect statements of the form "target += Dist(param, ...)" *)
   let collect_twiddle_stmt (stmt : Stmt.Located.t)
     : (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
@@ -55,6 +58,7 @@ let list_multi_twiddles (mir : Program.Typed.t) :
       ~init:Map.Poly.empty
       mir.log_prob
   in
+  (* Filter for parameters assigned more than one distribution *)
   let multi_twiddles =
     Map.Poly.filter ~f:(fun s -> Set.Poly.length s <> 1) twiddles
   in
@@ -99,6 +103,9 @@ let list_param_dependant_cf (mir : Program.Typed.t)
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t)
   : (string * int) Set.Poly.t =
+  (* Use the factor graph definition of priors, which treats a neighboring
+     factor as a prior for parameter P if it has no connection to the data
+     except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold
@@ -108,10 +115,11 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t)
           Option.value_map factors_opt ~default:s
             ~f:(fun factors -> Set.Poly.add s (v, Set.Poly.length factors)))
   in
+  (* Return only multi-prior parameters *)
   Set.Poly.filter prior_set ~f:(fun (_, n) -> n <> 1)
 
 (* Collect useful information about an expression that's available at
-   compile-time. *)
+   compile-time into a convenient form. *)
 let compiletime_value_of_expr
     (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
     (data : string Set.Poly.t)
@@ -145,7 +153,9 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
        | Some dname ->
          let params = parameter_set mir in
          let data = data_set mir in
-         let args = List.map ~f:(compiletime_value_of_expr params data) arg_exprs in
+         let args =
+           List.map ~f:(compiletime_value_of_expr params data) arg_exprs
+         in
          Set.Poly.add s
            { name = dname
            ; loc = expr.meta.loc
@@ -162,12 +172,17 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
        mir.log_prob
        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
 
+(* Our definition of 'unscaled' for constants used in distributions *)
+let is_unscaled_value (v : float) =
+  let mag = Float.abs v in
+  (mag < 0.1 || mag > 10.0) && mag <> 0.0
+
 let list_unscaled_constants (distributions_list : dist_info Set.Poly.t)
   : (Location_span.t * string) Set.Poly.t =
+  (* Search all distributions for unscaled values *)
   let collect_unscaled_expr (arg : (compiletime_val * Expr.Typed.Meta.t)) = match arg with
     | (Number (num, num_str), meta) ->
-      let mag = Float.abs num in
-      if (mag < 0.1 || mag > 10.0) && mag <> 0.0 then
+      if is_unscaled_value num then
         Set.Poly.singleton (meta.loc, num_str)
       else
         Set.Poly.empty
