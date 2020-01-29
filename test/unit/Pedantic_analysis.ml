@@ -459,8 +459,8 @@ parameters {
   real<lower=0, upper=1> unit_p;
   vector[1] vec;
   vector<lower=0>[1] pos_vec;
-  vector<lower=0,upper=1>[1] unit_vec;
   matrix[1,1] mat;
+  simplex[1] sim;
 }
 model {
   x ~ normal(0, unb_p);
@@ -514,7 +514,7 @@ model {
   x ~ von_mises(0, unb_p);
   x ~ von_mises(0, pos_p);
   vec ~ dirichlet(vec);
-  unit_vec ~ dirichlet(pos_vec);
+  sim ~ dirichlet(pos_vec);
 }
 |}
 
@@ -728,8 +728,4 @@ let%expect_test "Dist warnings" =
       Warning at 'string', line 65, column 18 to column 21:
         A dirichlet distribution has parameter vec as a count parameter (argument
         1), but vec is not constrained to be positive.
-      Warning at 'string', line 66, column 2 to column 10:
-        Parameter unit_vec is given a dirichlet distribution, which is constrained
-        to be simplex, but was declared with no constraints or incompatible
-        constraints. Either change the distribution or change the constraints.
     |}]
