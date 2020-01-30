@@ -161,33 +161,49 @@ let value_mismatch_constraint (constr : var_constraint) (v : float) =
    Argument constraint mismatch warnings
  ********************)
 
-let arg_constr_mismatch_message (dist_name : string) (param_name : string)
-    (arg_name : string) (argn : int) (constr_name : string) : string =
-  Printf.sprintf
-    "A %s distribution is given parameter %s as %s (argument %d), but %s was \
-     not constrained to be %s."
-    dist_name param_name arg_name argn param_name constr_name
+type arg_info =
+  | Arg of (int * string)
+  | Variate
 
-let arg_constr_literal_mismatch_message (dist_name : string) (num_str : string)
-    (arg_name : string) (argn : int) (constr_name : string) : string =
-  Printf.sprintf
-    "A %s distribution is given value %s as %s (argument %d), but %s is not \
-     %s."
-    dist_name num_str arg_name argn arg_name constr_name
+let arg_number (arg : arg_info) = match arg with
+  | Arg (n, _) -> n
+  | Variate -> 0
 
-let variate_constr_mismatch_message (dist_name : string) (param_name : string)
-    (constr_name : string) : string =
-  Printf.sprintf
-    "Parameter %s is given a %s distribution, which has %s support, \
-     but %s was not constrained to be %s. Either change the distribution or \
-     change the constraints."
-    param_name dist_name constr_name param_name constr_name
+let constr_mismatch_message (dist_name : string) (param_name : string)
+    (arg : arg_info) (constr_name : string) : string =
+  match arg with
+  | Arg (argn, arg_name) ->
+    Printf.sprintf
+      "A %s distribution is given parameter %s as %s (argument %d), but %s was \
+       not constrained to be %s."
+      dist_name param_name arg_name argn param_name constr_name
+  | Variate ->
+    (* Possibly: Either change the distribution or change the constraints. *)
+    Printf.sprintf
+      "Parameter %s is given a %s distribution, which has %s support, \
+       but %s was not constrained to be %s."
+      param_name dist_name constr_name param_name constr_name
+
+let constr_literal_mismatch_message (dist_name : string) (num_str : string)
+    (arg : arg_info) (constr_name : string) : string =
+  match arg with
+  | Arg (argn, arg_name) ->
+    Printf.sprintf
+      "A %s distribution is given value %s as %s (argument %d), but %s is not \
+       %s."
+      dist_name num_str arg_name argn arg_name constr_name
+  | Variate ->
+    (* Possibly: Either change the distribution or change the constraints. *)
+    Printf.sprintf
+      "Value %s is given a %s distribution, which has %s support, \
+       but %s is not %s."
+      num_str dist_name constr_name num_str constr_name
+
 
 (* Return a warning if the argn-th argument doesn't match its constraints *)
-let arg_constr_warning (constr : var_constraint_named) (argn : int)
-    (arg_name : string) ({args; name; loc} : dist_info)
-  : (Location_span.t * string) option =
-  let v = match (List.nth args argn) with
+let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
+    ({args; name; loc} : dist_info) : (Location_span.t * string) option =
+  let v = match (List.nth args (arg_number arg)) with
     | Some v -> v
     | None ->
       let arg_fail_msg =
@@ -199,27 +215,15 @@ let arg_constr_warning (constr : var_constraint_named) (argn : int)
   | (Param (pname, trans), meta) ->
     if transform_mismatch_constraint constr.constr trans then
       Some ( meta.loc
-           , arg_constr_mismatch_message name pname arg_name argn constr.name)
+           , constr_mismatch_message name pname arg constr.name)
     else None
   | (Number (num, num_str), meta) ->
     if value_mismatch_constraint constr.constr num then
       Some ( meta.loc
-           , arg_constr_literal_mismatch_message name num_str arg_name argn
+           , constr_literal_mismatch_message name num_str arg
                constr.name)
     else None
   | _ -> None
-
-(* Return a warning if the variate doesn't match its constraints *)
-let variate_constr_warning (constr : var_constraint_named) (dist_info : dist_info)
-  : (Location_span.t * string) option =
-  match dist_info with
-  | {args=(Param (pname, trans), meta)::_; _} ->
-    if transform_mismatch_constraint constr.constr trans then
-      Some ( meta.loc
-           , variate_constr_mismatch_message dist_info.name pname constr.name)
-    else None
-  | _ -> None
-
 
 (*********************
    Distribution-specific warnings
@@ -309,7 +313,7 @@ let distribution_warning (dist_info : dist_info)
     (* Binary Distributions *)
     | "bernoulli" -> [
         (* Note: variate binary *)
-        arg_constr_warning unit_range 1 "chance of success"
+        constr_mismatch_warning unit_range (Arg (1, "chance of success"))
       ]
     | "bernoulli_logit" -> [
         (* Note: variate binary *)
@@ -321,7 +325,7 @@ let distribution_warning (dist_info : dist_info)
     | "binomial" -> [
         (* Note: variate nonnegative int *)
         (* Note: args 1 nonnegative int *)
-        arg_constr_warning unit_range 2 "chance of success"
+        constr_mismatch_warning unit_range (Arg (2, "chance of success"))
       ]
     | "binomial_logit" -> [
         (* Note: variate nonnegative int *)
@@ -330,8 +334,8 @@ let distribution_warning (dist_info : dist_info)
     | "beta_binomial" -> [
         (* Note: variate nonnegative int *)
         (* Note: args 1 nonnegative int *)
-        arg_constr_warning positive_range 2 "a prior success count"
-      ; arg_constr_warning positive_range 3 "a prior failure count"
+        constr_mismatch_warning positive_range (Arg (2, "a prior success count"))
+      ; constr_mismatch_warning positive_range (Arg (3, "a prior failure count"))
       ]
     | "hypergeometric" -> [
         (* Note: variate nonnegative int *)
@@ -339,40 +343,40 @@ let distribution_warning (dist_info : dist_info)
       ]
     | "categorical" -> [
         (* Note: variate positive int *)
-        arg_constr_warning simplex 1 "a vector of outcome probabilities"
+        constr_mismatch_warning simplex (Arg (1, "a vector of outcome probabilities"))
       ]
     | "ordered_logistic" -> [
         (* Note: variate positive int *)
-        arg_constr_warning ordered 2 "cutpoints"
+        constr_mismatch_warning ordered (Arg (2, "cutpoints"))
       ]
     | "ordered_probit" -> [
         (* Note: variate positive int *)
-        arg_constr_warning ordered 2 "cutpoints"
+        constr_mismatch_warning ordered (Arg (2, "cutpoints"))
       ]
     (* Unbounded Discrete Distributions *)
     | "neg_binomial" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 inv_scale_name
+        constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, inv_scale_name))
       ]
     | "neg_binomial_2" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 "a precision parameter"
+        constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, "a precision parameter"))
       ]
     | "neg_binomial_2_log" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning positive_range 2 "an inverse overdispersion control \
-                                             parameter"
+        constr_mismatch_warning positive_range (Arg (2, "an inverse overdispersion control \
+                                                    parameter"))
       ]
     | "neg_binomial_2_log_glm" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning positive_range 4 "an inverse overdispersion control \
-                                             parameter"
+        constr_mismatch_warning positive_range (Arg (4, "an inverse overdispersion control \
+                                                    parameter"))
       ]
     | "poisson" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning positive_range 1 "a rate parameter"
+        constr_mismatch_warning positive_range (Arg (1, "a rate parameter"))
       ]
     | "poisson_log" -> [
         (* Note: variate nonnegative int *)
@@ -383,120 +387,120 @@ let distribution_warning (dist_info : dist_info)
     (* Multivariate Discrete Distributions *)
     | "multinomial" -> [
         (* Note: variate nonnegative int *)
-        arg_constr_warning simplex 1 "a distribution parameter"
+        constr_mismatch_warning simplex (Arg (1, "a distribution parameter"))
       ]
     (* Unbounded Continuous Distributions *)
     | "normal" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "normal_id_glm" -> [
-        arg_constr_warning positive_range 4 scale_name
+        constr_mismatch_warning positive_range (Arg (4, scale_name))
       ]
     | "exp_mod_normal" -> [
-        arg_constr_warning positive_range 2 scale_name
-      ; arg_constr_warning positive_range 3 shape_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
+      ; constr_mismatch_warning positive_range (Arg (3, shape_name))
       ]
     | "skew_normal" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "student_t" -> [
-        arg_constr_warning positive_range 1 dof_name
-      ; arg_constr_warning positive_range 3 scale_name
+        constr_mismatch_warning positive_range (Arg (1, dof_name))
+      ; constr_mismatch_warning positive_range (Arg (3, scale_name))
       ]
     | "cauchy" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "double_exponential" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "logistic" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "gumbel" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     (* Positive Continuous Distributions *)
     | "lognormal" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "chi_square" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 dof_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, dof_name))
       ]
     | "inv_chi_square" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 dof_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, dof_name))
       ]
     | "scaled_inv_chi_square" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 dof_name
-      ; arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, dof_name))
+      ; constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "exponential" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, scale_name))
       ]
     | "gamma" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 inv_scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, inv_scale_name))
       ; gamma_arg_dist_warning
       ]
     | "inv_gamma" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, scale_name))
       ; gamma_arg_dist_warning
       ]
     | "weibull" -> [
-        variate_constr_warning nonnegative_range
-      ; arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning nonnegative_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     | "frechet" -> [
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 shape_name
-      ; arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
+      ; constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     (* Non-negative Continuous Distributions *)
     | "rayleigh" -> [
-        variate_constr_warning nonnegative_range
-      ; arg_constr_warning positive_range 1 scale_name
+        constr_mismatch_warning nonnegative_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, scale_name))
       ]
     | "wiener" -> [
         (* Note: Could do more here, since variate should be > arg 2 *)
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 "a boundary separation parameter"
-      ; arg_constr_warning positive_range 2 "a non-decision time parameter"
-      ; arg_constr_warning unit_range 3 "an a-priori bias parameter"
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, "a boundary separation parameter"))
+      ; constr_mismatch_warning positive_range (Arg (2, "a non-decision time parameter"))
+      ; constr_mismatch_warning unit_range (Arg (3, "an a-priori bias parameter"))
       ]
     (* Positive Lower-Bounded Probabilities *)
     | "pareto" -> [
         (* Note: Variate >= arg 1 *)
-        variate_constr_warning positive_range
-      ; arg_constr_warning positive_range 1 "a positive minimum parameter"
-      ; arg_constr_warning positive_range 2 shape_name
+        constr_mismatch_warning positive_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, "a positive minimum parameter"))
+      ; constr_mismatch_warning positive_range (Arg (2, shape_name))
       ]
     | "pareto_type_2" -> [
         (* Note: Variate >= arg 1 *)
-        arg_constr_warning positive_range 2 scale_name
-      ; arg_constr_warning positive_range 3 shape_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
+      ; constr_mismatch_warning positive_range (Arg (3, shape_name))
       ]
     (* Continuous Distributions on [0,1] *)
     | "beta" -> [
-        variate_constr_warning exclusive_unit_range
-      ; arg_constr_warning positive_range 1 "a count parameter"
-      ; arg_constr_warning positive_range 2 "a count parameter"
+        constr_mismatch_warning exclusive_unit_range Variate
+      ; constr_mismatch_warning positive_range (Arg (1, "a count parameter"))
+      ; constr_mismatch_warning positive_range (Arg (2, "a count parameter"))
       ]
     | "beta_proportion" -> [
-        variate_constr_warning exclusive_unit_range
-      ; arg_constr_warning exclusive_unit_range 1 "a unit mean parameter"
-      ; arg_constr_warning positive_range 2 "a precision parameter"
+        constr_mismatch_warning exclusive_unit_range Variate
+      ; constr_mismatch_warning exclusive_unit_range (Arg (1, "a unit mean parameter"))
+      ; constr_mismatch_warning positive_range (Arg (2, "a precision parameter"))
       ]
     (* Circular Distributions *)
     | "von_mises" -> [
-        arg_constr_warning positive_range 2 scale_name
+        constr_mismatch_warning positive_range (Arg (2, scale_name))
       ]
     (* Bounded Continuous Distributions *)
     | "uniform" -> [
@@ -506,55 +510,55 @@ let distribution_warning (dist_info : dist_info)
       ]
     (* Distributions over Unbounded Vectors *)
     | "multi_normal" -> [
-        arg_constr_warning covariance 2 cov_name
+        constr_mismatch_warning covariance (Arg (2, cov_name))
       ]
     | "multi_normal_prec" -> [
-        arg_constr_warning covariance 2 "a precision matrix"
+        constr_mismatch_warning covariance (Arg (2, "a precision matrix"))
       ]
     | "multi_normal_cholesky" -> [
-        arg_constr_warning cholesky_covariance 2 cov_name
+        constr_mismatch_warning cholesky_covariance (Arg (2, cov_name))
       ]
     | "multi_gp" -> [
         (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
-        arg_constr_warning covariance 1 "a kernel matrix"
+        constr_mismatch_warning covariance (Arg (1, "a kernel matrix"))
       ]
     | "multi_gp_cholesky" -> [
         (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
-        arg_constr_warning cholesky_covariance 1 "Cholesky factor of the kernel matrix"
+        constr_mismatch_warning cholesky_covariance (Arg (1, "Cholesky factor of the kernel matrix"))
       ]
     | "multi_student_t" -> [
-        arg_constr_warning positive_range 1 dof_name
-      ; arg_constr_warning covariance 3 scale_mat_name
+        constr_mismatch_warning positive_range (Arg (1, dof_name))
+      ; constr_mismatch_warning covariance (Arg (3, scale_mat_name))
       ]
     | "gaussian_dlm_obs" -> [
-        arg_constr_warning covariance 3 "observation covariance matrix"
-      ; arg_constr_warning covariance 4 "system covariance matrix"
+        constr_mismatch_warning covariance (Arg (3, "observation covariance matrix"))
+      ; constr_mismatch_warning covariance (Arg (4, "system covariance matrix"))
       ]
     (* Simplex Distributions *)
     | "dirichlet" -> [
-        variate_constr_warning simplex
-      ; arg_constr_warning positive_range 1 "a count parameter"
+        constr_mismatch_warning simplex Variate
+      ; constr_mismatch_warning positive_range (Arg (1, "a count parameter"))
       ]
     (* Correlation Matrix Distributions *)
     | "lkj_corr" -> [
         lkj_corr_dist_warning
-      ; variate_constr_warning correlation
-      ; arg_constr_warning positive_range 1 shape_name
+      ; constr_mismatch_warning correlation Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
       ]
     | "lkj_corr_cholesky" -> [
-        variate_constr_warning cholesky_correlation
-      ; arg_constr_warning positive_range 1 shape_name
+        constr_mismatch_warning cholesky_correlation Variate
+      ; constr_mismatch_warning positive_range (Arg (1, shape_name))
       ]
     (* Covariance Matrix Distributions *)
     | "wishart" -> [
-        variate_constr_warning covariance
-      ; arg_constr_warning positive_range 1 dof_name
-      ; arg_constr_warning covariance 2 scale_mat_name
+        constr_mismatch_warning covariance Variate
+      ; constr_mismatch_warning positive_range (Arg (1, dof_name))
+      ; constr_mismatch_warning covariance (Arg (2, scale_mat_name))
       ]
     | "inv_wishart" -> [
-        variate_constr_warning covariance
-      ; arg_constr_warning positive_range 1 dof_name
-      ; arg_constr_warning covariance 2 scale_mat_name
+        constr_mismatch_warning covariance Variate
+      ; constr_mismatch_warning positive_range (Arg (1, dof_name))
+      ; constr_mismatch_warning covariance (Arg (2, scale_mat_name))
       ]
     | _ -> []
   in

@@ -440,12 +440,10 @@ let%expect_test "Dist bounds warning" =
     {|
       Warning at 'string', line 9, column 10 to column 11:
         Parameter a is given a gamma distribution, which has strictly positive
-        support, but a was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but a was not constrained to be strictly positive.
       Warning at 'string', line 11, column 10 to column 11:
         Parameter c is given a lognormal distribution, which has strictly positive
-        support, but c was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but c was not constrained to be strictly positive.
     |}]
 
 let dist_examples =
@@ -725,8 +723,7 @@ let%expect_test "Dist warnings" =
         (argument 2), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 82, column 2 to column 3:
         Parameter x is given a lognormal distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 82, column 19 to column 24:
         A lognormal distribution is given parameter unb_p as a scale parameter
         (argument 2), but unb_p was not constrained to be strictly positive.
@@ -735,15 +732,13 @@ let%expect_test "Dist warnings" =
         statement.
       Warning at 'string', line 84, column 2 to column 3:
         Parameter x is given a chi_square distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 84, column 17 to column 22:
         A chi_square distribution is given parameter unb_p as degrees of freedom
         (argument 1), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 86, column 2 to column 3:
         Parameter x is given a inv_chi_square distribution, which has strictly
-        positive support, but x was not constrained to be strictly positive. Either
-        change the distribution or change the constraints.
+        positive support, but x was not constrained to be strictly positive.
       Warning at 'string', line 86, column 21 to column 26:
         A inv_chi_square distribution is given parameter unb_p as degrees of
         freedom (argument 1), but unb_p was not constrained to be strictly
@@ -751,7 +746,7 @@ let%expect_test "Dist warnings" =
       Warning at 'string', line 88, column 2 to column 3:
         Parameter x is given a scaled_inv_chi_square distribution, which has
         strictly positive support, but x was not constrained to be strictly
-        positive. Either change the distribution or change the constraints.
+        positive.
       Warning at 'string', line 88, column 28 to column 33:
         A scaled_inv_chi_square distribution is given parameter unb_p as degrees of
         freedom (argument 1), but unb_p was not constrained to be strictly
@@ -762,15 +757,13 @@ let%expect_test "Dist warnings" =
         positive.
       Warning at 'string', line 90, column 2 to column 3:
         Parameter x is given a exponential distribution, which has strictly
-        positive support, but x was not constrained to be strictly positive. Either
-        change the distribution or change the constraints.
+        positive support, but x was not constrained to be strictly positive.
       Warning at 'string', line 90, column 18 to column 23:
         A exponential distribution is given parameter unb_p as a scale parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 92, column 2 to column 3:
         Parameter x is given a gamma distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 92, column 12 to column 17:
         A gamma distribution is given parameter unb_p as a shape parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
@@ -779,8 +772,7 @@ let%expect_test "Dist warnings" =
         (argument 2), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 94, column 2 to column 3:
         Parameter x is given a inv_gamma distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 94, column 16 to column 21:
         A inv_gamma distribution is given parameter unb_p as a shape parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
@@ -789,8 +781,7 @@ let%expect_test "Dist warnings" =
         (argument 2), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 96, column 2 to column 3:
         Parameter x is given a weibull distribution, which has non-negative
-        support, but x was not constrained to be non-negative. Either change the
-        distribution or change the constraints.
+        support, but x was not constrained to be non-negative.
       Warning at 'string', line 96, column 14 to column 19:
         A weibull distribution is given parameter unb_p as a shape parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
@@ -799,8 +790,7 @@ let%expect_test "Dist warnings" =
         (argument 2), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 98, column 2 to column 3:
         Parameter x is given a frechet distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 98, column 14 to column 19:
         A frechet distribution is given parameter unb_p as a shape parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
@@ -809,15 +799,13 @@ let%expect_test "Dist warnings" =
         (argument 2), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 100, column 2 to column 3:
         Parameter x is given a rayleigh distribution, which has non-negative
-        support, but x was not constrained to be non-negative. Either change the
-        distribution or change the constraints.
+        support, but x was not constrained to be non-negative.
       Warning at 'string', line 100, column 15 to column 20:
         A rayleigh distribution is given parameter unb_p as a scale parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 102, column 2 to column 3:
         Parameter x is given a wiener distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 102, column 13 to column 18:
         A wiener distribution is given parameter unb_p as a boundary separation
         parameter (argument 1), but unb_p was not constrained to be strictly
@@ -831,8 +819,7 @@ let%expect_test "Dist warnings" =
         parameter (argument 3), but pos_p was not constrained to be [0,1].
       Warning at 'string', line 104, column 2 to column 3:
         Parameter x is given a pareto distribution, which has strictly positive
-        support, but x was not constrained to be strictly positive. Either change
-        the distribution or change the constraints.
+        support, but x was not constrained to be strictly positive.
       Warning at 'string', line 104, column 13 to column 18:
         A pareto distribution is given parameter unb_p as a positive minimum
         parameter (argument 1), but unb_p was not constrained to be strictly
@@ -848,8 +835,7 @@ let%expect_test "Dist warnings" =
         (argument 3), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 108, column 2 to column 3:
         Parameter x is given a beta distribution, which has (0,1) support, but x
-        was not constrained to be (0,1). Either change the distribution or change
-        the constraints.
+        was not constrained to be (0,1).
       Warning at 'string', line 108, column 11 to column 16:
         A beta distribution is given parameter unb_p as a count parameter (argument
         1), but unb_p was not constrained to be strictly positive.
@@ -861,8 +847,7 @@ let%expect_test "Dist warnings" =
         statement.
       Warning at 'string', line 110, column 2 to column 3:
         Parameter x is given a beta_proportion distribution, which has (0,1)
-        support, but x was not constrained to be (0,1). Either change the
-        distribution or change the constraints.
+        support, but x was not constrained to be (0,1).
       Warning at 'string', line 110, column 22 to column 27:
         A beta_proportion distribution is given parameter unb_p as a unit mean
         parameter (argument 1), but unb_p was not constrained to be (0,1).
@@ -909,15 +894,13 @@ let%expect_test "Dist warnings" =
         matrix (argument 4), but mat was not constrained to be covariance.
       Warning at 'string', line 128, column 2 to column 5:
         Parameter vec is given a dirichlet distribution, which has simplex support,
-        but vec was not constrained to be simplex. Either change the distribution
-        or change the constraints.
+        but vec was not constrained to be simplex.
       Warning at 'string', line 128, column 18 to column 21:
         A dirichlet distribution is given parameter vec as a count parameter
         (argument 1), but vec was not constrained to be strictly positive.
       Warning at 'string', line 130, column 2 to column 5:
         Parameter mat is given a lkj_corr distribution, which has correlation
-        support, but mat was not constrained to be correlation. Either change the
-        distribution or change the constraints.
+        support, but mat was not constrained to be correlation.
       Warning at 'string', line 130, column 2 to column 24:
         It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky
         factor variant. lkj_corr tends to run slower, consume more memory, and has
@@ -935,16 +918,14 @@ let%expect_test "Dist warnings" =
       Warning at 'string', line 132, column 2 to column 6:
         Parameter corr is given a lkj_corr_cholesky distribution, which has
         Cholesky factor of correlation support, but corr was not constrained to be
-        Cholesky factor of correlation. Either change the distribution or change
-        the constraints.
+        Cholesky factor of correlation.
       Warning at 'string', line 132, column 27 to column 32:
         A lkj_corr_cholesky distribution is given parameter unb_p as a shape
         parameter (argument 1), but unb_p was not constrained to be strictly
         positive.
       Warning at 'string', line 134, column 2 to column 5:
         Parameter mat is given a wishart distribution, which has covariance
-        support, but mat was not constrained to be covariance. Either change the
-        distribution or change the constraints.
+        support, but mat was not constrained to be covariance.
       Warning at 'string', line 134, column 16 to column 21:
         A wishart distribution is given parameter unb_p as degrees of freedom
         (argument 1), but unb_p was not constrained to be strictly positive.
@@ -956,8 +937,7 @@ let%expect_test "Dist warnings" =
         statement.
       Warning at 'string', line 136, column 2 to column 5:
         Parameter mat is given a inv_wishart distribution, which has covariance
-        support, but mat was not constrained to be covariance. Either change the
-        distribution or change the constraints.
+        support, but mat was not constrained to be covariance.
       Warning at 'string', line 136, column 20 to column 25:
         A inv_wishart distribution is given parameter unb_p as degrees of freedom
         (argument 1), but unb_p was not constrained to be strictly positive.
