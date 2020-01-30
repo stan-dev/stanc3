@@ -12598,140 +12598,78 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'parallel_reduce.stan', line 60, column 2 to column 18)",
-                                                      " (in 'parallel_reduce.stan', line 61, column 2 to column 20)",
-                                                      " (in 'parallel_reduce.stan', line 62, column 2 to column 16)",
-                                                      " (in 'parallel_reduce.stan', line 77, column 2 to column 61)",
-                                                      " (in 'parallel_reduce.stan', line 78, column 2 to column 40)",
-                                                      " (in 'parallel_reduce.stan', line 65, column 2 to column 65)",
-                                                      " (in 'parallel_reduce.stan', line 68, column 2 to column 68)",
-                                                      " (in 'parallel_reduce.stan', line 70, column 2 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 71, column 2 to column 40)",
-                                                      " (in 'parallel_reduce.stan', line 72, column 2 to column 33)",
-                                                      " (in 'parallel_reduce.stan', line 73, column 2 to column 33)",
-                                                      " (in 'parallel_reduce.stan', line 22, column 2 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 23, column 2 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 24, column 2 to column 25)",
-                                                      " (in 'parallel_reduce.stan', line 27, column 2 to column 34)",
-                                                      " (in 'parallel_reduce.stan', line 28, column 2 to column 31)",
-                                                      " (in 'parallel_reduce.stan', line 29, column 2 to column 13)",
-                                                      " (in 'parallel_reduce.stan', line 30, column 2 to column 14)",
-                                                      " (in 'parallel_reduce.stan', line 31, column 2 to column 15)",
-                                                      " (in 'parallel_reduce.stan', line 32, column 2 to column 16)",
-                                                      " (in 'parallel_reduce.stan', line 33, column 2 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 34, column 2 to column 15)",
-                                                      " (in 'parallel_reduce.stan', line 35, column 2 to column 13)",
-                                                      " (in 'parallel_reduce.stan', line 36, column 2 to column 15)",
-                                                      " (in 'parallel_reduce.stan', line 37, column 2 to column 24)",
-                                                      " (in 'parallel_reduce.stan', line 39, column 2 to column 57)",
-                                                      " (in 'parallel_reduce.stan', line 40, column 2 to column 66)",
-                                                      " (in 'parallel_reduce.stan', line 43, column 4 to column 65)",
-                                                      " (in 'parallel_reduce.stan', line 44, column 4 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 45, column 4 to column 17)",
-                                                      " (in 'parallel_reduce.stan', line 46, column 4 to column 29)",
-                                                      " (in 'parallel_reduce.stan', line 47, column 4 to column 19)",
-                                                      " (in 'parallel_reduce.stan', line 48, column 4 to column 24)",
-                                                      " (in 'parallel_reduce.stan', line 49, column 4 to column 26)",
-                                                      " (in 'parallel_reduce.stan', line 51, column 6 to column 39)",
-                                                      " (in 'parallel_reduce.stan', line 52, column 6 to column 24)",
-                                                      " (in 'parallel_reduce.stan', line 53, column 6 to column 18)",
-                                                      " (in 'parallel_reduce.stan', line 54, column 6 to column 16)",
-                                                      " (in 'parallel_reduce.stan', line 50, column 30 to line 55, column 5)",
-                                                      " (in 'parallel_reduce.stan', line 50, column 4 to line 55, column 5)",
-                                                      " (in 'parallel_reduce.stan', line 42, column 16 to line 56, column 3)",
-                                                      " (in 'parallel_reduce.stan', line 42, column 2 to line 56, column 3)",
-                                                      " (in 'parallel_reduce.stan', line 5, column 4 to column 72)",
-                                                      " (in 'parallel_reduce.stan', line 4, column 99 to line 6, column 3)",
-                                                      " (in 'parallel_reduce.stan', line 11, column 4 to column 18)",
-                                                      " (in 'parallel_reduce.stan', line 12, column 4 to column 32)",
-                                                      " (in 'parallel_reduce.stan', line 14, column 6 to column 40)",
-                                                      " (in 'parallel_reduce.stan', line 15, column 6 to column 38)",
-                                                      " (in 'parallel_reduce.stan', line 16, column 6 to column 72)",
-                                                      " (in 'parallel_reduce.stan', line 13, column 22 to line 17, column 5)",
-                                                      " (in 'parallel_reduce.stan', line 13, column 4 to line 17, column 5)",
-                                                      " (in 'parallel_reduce.stan', line 18, column 4 to column 14)",
-                                                      " (in 'parallel_reduce.stan', line 10, column 108 to line 19, column 3)"};
+                                                      " (in 'parallel_reduce.stan', line 47, column 2 to column 18)",
+                                                      " (in 'parallel_reduce.stan', line 48, column 2 to column 20)",
+                                                      " (in 'parallel_reduce.stan', line 49, column 2 to column 16)",
+                                                      " (in 'parallel_reduce.stan', line 69, column 2 to column 61)",
+                                                      " (in 'parallel_reduce.stan', line 70, column 2 to column 40)",
+                                                      " (in 'parallel_reduce.stan', line 52, column 2 to column 65)",
+                                                      " (in 'parallel_reduce.stan', line 57, column 2 to column 38)",
+                                                      " (in 'parallel_reduce.stan', line 59, column 4 to column 54)",
+                                                      " (in 'parallel_reduce.stan', line 58, column 2 to line 59, column 54)",
+                                                      " (in 'parallel_reduce.stan', line 60, column 2 to column 84)",
+                                                      " (in 'parallel_reduce.stan', line 62, column 2 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 63, column 2 to column 40)",
+                                                      " (in 'parallel_reduce.stan', line 64, column 2 to column 33)",
+                                                      " (in 'parallel_reduce.stan', line 65, column 2 to column 33)",
+                                                      " (in 'parallel_reduce.stan', line 9, column 2 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 10, column 2 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 11, column 2 to column 25)",
+                                                      " (in 'parallel_reduce.stan', line 14, column 2 to column 34)",
+                                                      " (in 'parallel_reduce.stan', line 15, column 2 to column 31)",
+                                                      " (in 'parallel_reduce.stan', line 16, column 2 to column 13)",
+                                                      " (in 'parallel_reduce.stan', line 17, column 2 to column 14)",
+                                                      " (in 'parallel_reduce.stan', line 18, column 2 to column 15)",
+                                                      " (in 'parallel_reduce.stan', line 19, column 2 to column 16)",
+                                                      " (in 'parallel_reduce.stan', line 20, column 2 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 21, column 2 to column 15)",
+                                                      " (in 'parallel_reduce.stan', line 22, column 2 to column 13)",
+                                                      " (in 'parallel_reduce.stan', line 23, column 2 to column 15)",
+                                                      " (in 'parallel_reduce.stan', line 24, column 2 to column 24)",
+                                                      " (in 'parallel_reduce.stan', line 26, column 2 to column 57)",
+                                                      " (in 'parallel_reduce.stan', line 27, column 2 to column 66)",
+                                                      " (in 'parallel_reduce.stan', line 30, column 4 to column 65)",
+                                                      " (in 'parallel_reduce.stan', line 31, column 4 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 32, column 4 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 33, column 4 to column 29)",
+                                                      " (in 'parallel_reduce.stan', line 34, column 4 to column 19)",
+                                                      " (in 'parallel_reduce.stan', line 35, column 4 to column 24)",
+                                                      " (in 'parallel_reduce.stan', line 36, column 4 to column 26)",
+                                                      " (in 'parallel_reduce.stan', line 38, column 6 to column 39)",
+                                                      " (in 'parallel_reduce.stan', line 39, column 6 to column 24)",
+                                                      " (in 'parallel_reduce.stan', line 40, column 6 to column 18)",
+                                                      " (in 'parallel_reduce.stan', line 41, column 6 to column 16)",
+                                                      " (in 'parallel_reduce.stan', line 37, column 30 to line 42, column 5)",
+                                                      " (in 'parallel_reduce.stan', line 37, column 4 to line 42, column 5)",
+                                                      " (in 'parallel_reduce.stan', line 29, column 16 to line 43, column 3)",
+                                                      " (in 'parallel_reduce.stan', line 29, column 2 to line 43, column 3)",
+                                                      " (in 'parallel_reduce.stan', line 4, column 4 to column 50)",
+                                                      " (in 'parallel_reduce.stan', line 5, column 4 to column 17)",
+                                                      " (in 'parallel_reduce.stan', line 3, column 72 to line 6, column 3)"};
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-hierarchical_reduce(const int& start, const int& end,
-                    const std::vector<T2__>& log_lambda_group,
-                    const std::vector<int>& y_slice,
-                    const std::vector<int>& gidx, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
-  const static bool propto__ = true;
-  (void) propto__;
-  
-  try {
-    current_statement__ = 43;
-    return poisson_log_lpmf<false>(y_slice,
-             rvalue(log_lambda_group,
-               cons_list(
-                 index_multi(rvalue(gidx,
-                               cons_list(index_min_max(start, end),
-                                 nil_index_list()), "gidx")),
-                 nil_index_list()), "log_lambda_group"));
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct hierarchical_reduce_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& log_lambda_group,
-           const std::vector<int>& y_slice, const std::vector<int>& gidx,
-           std::ostream* pstream__)  const 
-{
-return hierarchical_reduce(start, end, log_lambda_group, y_slice, gidx,
-         pstream__);
-}
-};
-
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-hierarchical_grouped_reduce(const int& start, const int& end,
-                            const std::vector<T2__>& log_lambda_group_slice,
-                            const std::vector<int>& y,
-                            const std::vector<int>& gsidx,
-                            std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+mr_reduce(const Eigen::Matrix<T0__, -1, 1>& beta,
+          const Eigen::Matrix<T1__, -1, 1>& log_lambda,
+          const std::vector<T2__>& xr, const std::vector<int>& xi,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
     local_scalar_t__ lp;
     
-    current_statement__ = 45;
-    lp = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 45;
-    lp = 0.0;
-    int terms;
-    
     current_statement__ = 46;
-    terms = ((end - start) + 1);
-    current_statement__ = 51;
-    for (size_t i = 1; i <= terms; ++i) {
-      int gstart;
-      
-      current_statement__ = 47;
-      gstart = gsidx[(((start + i) - 1) - 1)];
-      int gend;
-      
-      current_statement__ = 48;
-      gend = (gsidx[((start + i) - 1)] - 1);
-      current_statement__ = 49;
-      lp = (lp +
-             poisson_log_lpmf<false>(
-               rvalue(y,
-                 cons_list(index_min_max(gstart, gend), nil_index_list()),
-                 "y"), log_lambda_group_slice[(i - 1)]));}
-    current_statement__ = 52;
-    return lp;
+    lp = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 46;
+    lp = poisson_log_lpmf<false>(xi, log_lambda[(1 - 1)]);
+    current_statement__ = 47;
+    return transpose(stan::math::to_row_vector(
+             stan::math::array_builder<local_scalar_t__>().add(lp).array()));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12740,16 +12678,16 @@ hierarchical_grouped_reduce(const int& start, const int& end,
   
 }
 
-struct hierarchical_grouped_reduce_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& log_lambda_group_slice,
-           const std::vector<int>& y, const std::vector<int>& gsidx,
+struct mr_reduce_functor__ {
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& beta,
+           const Eigen::Matrix<T1__, -1, 1>& log_lambda,
+           const std::vector<T2__>& xr, const std::vector<int>& xi,
            std::ostream* pstream__)  const 
 {
-return hierarchical_grouped_reduce(start, end, log_lambda_group_slice, y,
-         gsidx, pstream__);
+return mr_reduce(beta, log_lambda, xr, xi, pstream__);
 }
 };
 
@@ -12793,75 +12731,75 @@ class parallel_reduce_model : public model_base_crtp<parallel_reduce_model> {
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       
-      current_statement__ = 12;
+      current_statement__ = 15;
       N = context__.vals_i("N")[(1 - 1)];
       context__.validate_dims("data initialization","G","int",
           context__.to_vec());
       
-      current_statement__ = 13;
+      current_statement__ = 16;
       G = context__.vals_i("G")[(1 - 1)];
       context__.validate_dims("data initialization","grainsize","int",
           context__.to_vec());
       
-      current_statement__ = 14;
+      current_statement__ = 17;
       grainsize = context__.vals_i("grainsize")[(1 - 1)];
       
-      current_statement__ = 15;
+      current_statement__ = 18;
       true_log_lambda = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 15;
+      current_statement__ = 18;
       true_log_lambda = stan::math::log(5.0);
       
-      current_statement__ = 16;
+      current_statement__ = 19;
       true_tau = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 16;
+      current_statement__ = 19;
       true_tau = (stan::math::log(10) / 1.96);
-      current_statement__ = 17;
+      current_statement__ = 20;
       validate_non_negative_index("y", "(N * G)", (N * G));
       y = std::vector<int>((N * G), 0);
       
-      current_statement__ = 18;
+      current_statement__ = 21;
       validate_non_negative_index("yg", "G", G);
-      current_statement__ = 18;
+      current_statement__ = 21;
       validate_non_negative_index("yg", "N", N);
       yg = std::vector<std::vector<int>>(G, std::vector<int>(N, 0));
       
-      current_statement__ = 19;
+      current_statement__ = 22;
       validate_non_negative_index("xr", "G", G);
-      current_statement__ = 19;
+      current_statement__ = 22;
       validate_non_negative_index("xr", "0", 0);
       xr = std::vector<std::vector<double>>(G, std::vector<double>(0, 0));
       
-      current_statement__ = 20;
+      current_statement__ = 23;
       validate_non_negative_index("gidx", "(N * G)", (N * G));
       gidx = std::vector<int>((N * G), 0);
       
-      current_statement__ = 21;
+      current_statement__ = 24;
       validate_non_negative_index("gsidx", "(G + 1)", (G + 1));
       gsidx = std::vector<int>((G + 1), 0);
       
-      current_statement__ = 22;
+      current_statement__ = 25;
       validate_non_negative_index("start", "G", G);
       start = std::vector<int>(G, 0);
       
-      current_statement__ = 23;
+      current_statement__ = 26;
       validate_non_negative_index("end", "G", G);
       end = std::vector<int>(G, 0);
       
-      current_statement__ = 24;
+      current_statement__ = 27;
       validate_non_negative_index("group", "G", G);
       group = std::vector<int>(G, 0);
       
-      current_statement__ = 25;
+      current_statement__ = 28;
       validate_non_negative_index("theta_dummy", "0", 0);
       theta_dummy = Eigen::Matrix<double, -1, 1>(0);
       
-      current_statement__ = 25;
+      current_statement__ = 28;
       for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-        current_statement__ = 25;
+        current_statement__ = 28;
         assign(theta_dummy, cons_list(index_uni(sym1__), nil_index_list()),
           std::numeric_limits<double>::quiet_NaN(),
           "assigning variable theta_dummy");}
-      current_statement__ = 26;
+      current_statement__ = 29;
       if (pstream__) {
         stan_print(pstream__, "Simulating problem size: G = ");
         stan_print(pstream__, G);
@@ -12869,62 +12807,62 @@ class parallel_reduce_model : public model_base_crtp<parallel_reduce_model> {
         stan_print(pstream__, N);
         stan_print(pstream__, "\n");
       }
-      current_statement__ = 27;
+      current_statement__ = 30;
       if (pstream__) {
         stan_print(pstream__, "Using parallel reduce TBB with grainsize = ");
         stan_print(pstream__, grainsize);
         stan_print(pstream__, "\n");
       }
-      current_statement__ = 42;
+      current_statement__ = 45;
       for (size_t g = 1; g <= G; ++g) {
         double lambda_group;
         
-        current_statement__ = 28;
+        current_statement__ = 31;
         lambda_group = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 28;
+        current_statement__ = 31;
         lambda_group = lognormal_rng(true_log_lambda, true_tau, base_rng__);
         int elem;
         
-        current_statement__ = 29;
+        current_statement__ = 32;
         elem = 1;
-        current_statement__ = 30;
+        current_statement__ = 33;
         assign(group, cons_list(index_uni(g), nil_index_list()), g,
           "assigning variable group");
-        current_statement__ = 31;
+        current_statement__ = 34;
         assign(start, cons_list(index_uni(g), nil_index_list()),
           (((g - 1) * N) + 1), "assigning variable start");
-        current_statement__ = 32;
+        current_statement__ = 35;
         assign(end, cons_list(index_uni(g), nil_index_list()), (g * N),
           "assigning variable end");
-        current_statement__ = 33;
+        current_statement__ = 36;
         assign(gsidx, cons_list(index_uni(g), nil_index_list()),
           start[(g - 1)], "assigning variable gsidx");
-        current_statement__ = 34;
+        current_statement__ = 37;
         assign(gsidx, cons_list(index_uni((g + 1)), nil_index_list()),
           (end[(g - 1)] + 1), "assigning variable gsidx");
-        current_statement__ = 40;
+        current_statement__ = 43;
         for (size_t i = start[(g - 1)]; i <= end[(g - 1)]; ++i) {
-          current_statement__ = 35;
+          current_statement__ = 38;
           assign(y, cons_list(index_uni(i), nil_index_list()),
             poisson_rng(lambda_group, base_rng__), "assigning variable y");
-          current_statement__ = 36;
+          current_statement__ = 39;
           assign(yg,
             cons_list(index_uni(g),
               cons_list(index_uni(elem), nil_index_list())), y[(i - 1)],
             "assigning variable yg");
-          current_statement__ = 37;
+          current_statement__ = 40;
           assign(gidx, cons_list(index_uni(i), nil_index_list()), g,
             "assigning variable gidx");
-          current_statement__ = 38;
+          current_statement__ = 41;
           elem = (elem + 1);}}
-      current_statement__ = 12;
-      current_statement__ = 12;
+      current_statement__ = 15;
+      current_statement__ = 15;
       check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 13;
-      current_statement__ = 13;
+      current_statement__ = 16;
+      current_statement__ = 16;
       check_greater_or_equal(function__, "G", G, 0);
-      current_statement__ = 14;
-      current_statement__ = 14;
+      current_statement__ = 17;
+      current_statement__ = 17;
       check_greater_or_equal(function__, "grainsize", grainsize, 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12990,20 +12928,46 @@ class parallel_reduce_model : public model_base_crtp<parallel_reduce_model> {
         assign(log_lambda_group, nil_index_list(),
           to_array_1d(add(log_lambda, multiply(eta, tau))),
           "assigning variable log_lambda_group");
-        local_scalar_t__ lpmf;
+        current_statement__ = 7;
+        validate_non_negative_index("log_lambda_group_tilde", "G", G);
+        current_statement__ = 7;
+        validate_non_negative_index("log_lambda_group_tilde", "1", 1);
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> log_lambda_group_tilde;
+        log_lambda_group_tilde = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(G, Eigen::Matrix<local_scalar_t__, -1, 1>(1));
         
         current_statement__ = 7;
-        lpmf = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 7;
-        lpmf = hierarchical_reduce(1, G, log_lambda_group, y,
-                 gsidx, pstream__);
-        current_statement__ = 8;
-        lp_accum__.add(lpmf);
+        for (size_t sym1__ = 1; sym1__ <= G; ++sym1__) {
+          current_statement__ = 7;
+          for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+            current_statement__ = 7;
+            assign(log_lambda_group_tilde,
+              cons_list(index_uni(sym1__),
+                cons_list(index_uni(sym2__), nil_index_list())),
+              std::numeric_limits<double>::quiet_NaN(),
+              "assigning variable log_lambda_group_tilde");}}
         current_statement__ = 9;
-        lp_accum__.add(normal_lpdf<false>(log_lambda, 0, 1));
+        for (size_t g = 1; g <= G; ++g) {
+          current_statement__ = 8;
+          assign(log_lambda_group_tilde,
+            cons_list(index_uni(g),
+              cons_list(index_uni(1), nil_index_list())),
+            log_lambda_group[(g - 1)],
+            "assigning variable log_lambda_group_tilde");}
+        local_scalar_t__ lpmf;
+        
         current_statement__ = 10;
-        lp_accum__.add(normal_lpdf<false>(tau, 0, 1));
+        lpmf = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 10;
+        lpmf = sum(
+                 map_rect<1, mr_reduce_functor__>(theta_dummy,
+                   log_lambda_group_tilde, xr, yg, pstream__));
         current_statement__ = 11;
+        lp_accum__.add(lpmf);
+        current_statement__ = 12;
+        lp_accum__.add(normal_lpdf<false>(log_lambda, 0, 1));
+        current_statement__ = 13;
+        lp_accum__.add(normal_lpdf<false>(tau, 0, 1));
+        current_statement__ = 14;
         lp_accum__.add(normal_lpdf<false>(eta, 0, 1));
       }
     } catch (const std::exception& e) {

@@ -1,23 +1,12 @@
+I 
 functions {
   // runs reduce over the index range start to end. Mapping from
   // data-index set to group indices pre-stored in gidx
-  real hierarchical_reduce(int start, int end, real[] log_lambda_group, int[] y_slice, int[] gidx) {
+  real hierarchical_reduce(int start, int end, int[] y_slice, real[] log_lambda_group, int[] gidx) {
     return poisson_log_lpmf(y_slice| log_lambda_group[gidx[start:end]]);   
   }
-
-  // runs reduce over the index range start to end. Mapping from
-  // data-index set to group indices pre-stored in gidx
-  real hierarchical_grouped_reduce(int start, int end, real[] log_lambda_group_slice, int[] y, int[] gsidx) {
-    real lp = 0.0;
-    int terms = end - start + 1;
-    for(i in 1:terms) {
-      int gstart = gsidx[start + i - 1];
-      int gend = gsidx[start + i] - 1;
-      lp += poisson_log_lpmf(y[gstart:gend]| log_lambda_group_slice[i]);
-    } 
-    return lp;
-  }
 }
+
 data {
   int<lower=0> N;
   int<lower=0> G;
@@ -64,9 +53,8 @@ parameters {
 model {
   real log_lambda_group[G] = to_array_1d(log_lambda + eta * tau);
 
-  //real lpmf = reduce_sum(grainsize, y, log_lambda_group, gidx);
-  real lpmf = hierarchical_reduce(1, G, log_lambda_group, y, gsidx);
-  
+  real lpmf = reduce_sum(hierarchical_reduce, grainsize, y, log_lambda_group, gidx);
+
   target += lpmf;
   target += normal_lpdf(log_lambda|0,1);
   target += normal_lpdf(tau|0,1);

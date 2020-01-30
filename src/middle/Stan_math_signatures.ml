@@ -1173,6 +1173,19 @@ let () =
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))
       ; (DataOnly, UArray (UArray UInt)) ] ) ;
+  add_qualified
+    ( "reduce_sum"
+    , ReturnType UReal
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (DataOnly, UInt); (DataOnly, UInt)
+              ; (DataOnly, UArray UInt); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt)]
+            , ReturnType UReal ) )
+      ; (DataOnly, UInt)
+      ; (DataOnly, UArray UInt)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
