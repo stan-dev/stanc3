@@ -1,4 +1,5 @@
-I 
+
+
 functions {
   // runs reduce over the index range start to end. Mapping from
   // data-index set to group indices pre-stored in gidx
@@ -53,7 +54,7 @@ parameters {
 model {
   real log_lambda_group[G] = to_array_1d(log_lambda + eta * tau);
 
-  real lpmf = reduce_sum(hierarchical_reduce, grainsize, y, log_lambda_group, gidx);
+  real lpmf = reduce_sum(hierarchical_reduce, y, grainsize, log_lambda_group, gidx);
 
   target += lpmf;
   target += normal_lpdf(log_lambda|0,1);

@@ -1182,8 +1182,8 @@ let () =
               ; (DataOnly, UArray UInt); (DataOnly, UArray UReal)
               ; (DataOnly, UArray UInt)]
             , ReturnType UReal ) )
-      ; (DataOnly, UInt)
       ; (DataOnly, UArray UInt)
+      ; (DataOnly, UInt)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UInt) ] ) ;
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
