@@ -6447,8 +6447,8 @@ class mother_model : public model_base_crtp<mother_model> {
       indices = std::vector<int>(3, 0);
       
       current_statement__ = 84;
-      indices = stan::math::array_builder<int>().add(2).add(3).add(1)
-          .array();
+      assign(indices, nil_index_list(), stan::math::array_builder<int>()
+        .add(2).add(3).add(1).array(), "assigning variable indices");
       current_statement__ = 85;
       validate_non_negative_index("indexing_mat", "5", 5);
       current_statement__ = 85;
