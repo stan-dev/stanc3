@@ -63,7 +63,7 @@ let exclusive_unit_range =
   }
 
 let positive_range =
-  { name = "positive"
+  { name = "strictly positive"
   ; constr = Range
         { lower = Some (0., false)
         ; upper = None
@@ -164,15 +164,24 @@ let value_mismatch_constraint (constr : var_constraint) (v : float) =
 let arg_constr_mismatch_message (dist_name : string) (param_name : string)
     (arg_name : string) (argn : int) (constr_name : string) : string =
   Printf.sprintf
-    "A %s distribution has parameter %s as %s (argument %d), but %s is not \
-     constrained to be %s."
+    "A %s distribution is given parameter %s as %s (argument %d), but %s was \
+     not constrained to be %s."
     dist_name param_name arg_name argn param_name constr_name
 
 let arg_constr_literal_mismatch_message (dist_name : string) (num_str : string)
     (arg_name : string) (argn : int) (constr_name : string) : string =
   Printf.sprintf
-    "A %s distribution has value %s as %s (argument %d), but %s should be %s."
+    "A %s distribution is given value %s as %s (argument %d), but %s is not \
+     %s."
     dist_name num_str arg_name argn arg_name constr_name
+
+let variate_constr_mismatch_message (dist_name : string) (param_name : string)
+    (constr_name : string) : string =
+  Printf.sprintf
+    "Parameter %s is given a %s distribution, which has %s support, \
+     but %s was not constrained to be %s. Either change the distribution or \
+     change the constraints."
+    param_name dist_name constr_name param_name constr_name
 
 (* Return a warning if the argn-th argument doesn't match its constraints *)
 let arg_constr_warning (constr : var_constraint_named) (argn : int)
@@ -199,14 +208,6 @@ let arg_constr_warning (constr : var_constraint_named) (argn : int)
                constr.name)
     else None
   | _ -> None
-
-let variate_constr_mismatch_message (dist_name : string) (param_name : string)
-    (constr_name : string) : string =
-  Printf.sprintf
-    "Parameter %s is given a %s distribution, which is constrained to be %s, \
-     but was declared with no constraints or incompatible constraints. Either \
-     change the distribution or change the constraints."
-    param_name dist_name constr_name
 
 (* Return a warning if the variate doesn't match its constraints *)
 let variate_constr_warning (constr : var_constraint_named) (dist_info : dist_info)
