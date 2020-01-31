@@ -1183,52 +1183,52 @@ let () =
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))
       ; (DataOnly, UArray (UArray UInt)) ] ) ;
-  for i = 0 to allowed_slice_types_size -1 do
-      add_qualified
-    ( "reduce_sum"
-    , ReturnType UReal
-    , [ ( AutoDiffable
-        , UFun
-            ( [ (DataOnly, UInt); (DataOnly, UInt)
-              ; (AutoDiffable, allowed_slice_types i)]
-            , ReturnType UReal ) )
-      ; (AutoDiffable, allowed_slice_types i)
-      ; (DataOnly, UInt) ] ) ;
-  done ;
-  for i = 0 to allowed_slice_types_size -1 do
+  for i = 0 to allowed_slice_types_size - 1 do
     add_qualified
-    ( "reduce_sum"
-    , ReturnType UReal
-    , [ ( AutoDiffable
-        , UFun
-            ( [ (DataOnly, UInt); (DataOnly, UInt)
-              ; (AutoDiffable, allowed_slice_types i)]
-            , ReturnType UReal ) )
-      ; (AutoDiffable, allowed_slice_types i)
-      ; (DataOnly, UInt) ] ) ;
+      ( "reduce_sum"
+      , ReturnType UReal
+      , [ ( AutoDiffable
+          , UFun
+              ( [ (DataOnly, UInt); (DataOnly, UInt)
+                ; (AutoDiffable, allowed_slice_types i) ]
+              , ReturnType UReal ) )
+        ; (AutoDiffable, allowed_slice_types i)
+        ; (DataOnly, UInt) ] )
   done ;
-  for i = 0 to allowed_slice_types_size -1 do
-    for j = 0 to bare_types_size -1 do
+  for i = 0 to allowed_slice_types_size - 1 do
+    add_qualified
+      ( "reduce_sum"
+      , ReturnType UReal
+      , [ ( AutoDiffable
+          , UFun
+              ( [ (DataOnly, UInt); (DataOnly, UInt)
+                ; (AutoDiffable, allowed_slice_types i) ]
+              , ReturnType UReal ) )
+        ; (AutoDiffable, allowed_slice_types i)
+        ; (DataOnly, UInt) ] )
+  done ;
+  for i = 0 to allowed_slice_types_size - 1 do
+    for j = 0 to bare_types_size - 1 do
       for k = 0 to 1 do
         add_qualified
-        ( "reduce_sum"
-        , ReturnType UReal
-        , [ ( AutoDiffable
-            , UFun
-                ( [ (DataOnly, UInt); (DataOnly, UInt)
-                  ; (AutoDiffable, allowed_slice_types i)
-                  ; (AutoDiffable, bare_array_type (bare_types j, k))]
-                , ReturnType UReal ) )
-          ; (AutoDiffable, allowed_slice_types i)
-          ; (DataOnly, UInt)
-          ; (AutoDiffable, bare_array_type (bare_types j, k)) ] ) ;
-      done ;
-    done ;
+          ( "reduce_sum"
+          , ReturnType UReal
+          , [ ( AutoDiffable
+              , UFun
+                  ( [ (DataOnly, UInt); (DataOnly, UInt)
+                    ; (AutoDiffable, allowed_slice_types i)
+                    ; (AutoDiffable, bare_array_type (bare_types j, k)) ]
+                  , ReturnType UReal ) )
+            ; (AutoDiffable, allowed_slice_types i)
+            ; (DataOnly, UInt)
+            ; (AutoDiffable, bare_array_type (bare_types j, k)) ] )
+      done
+    done
   done ;
-  for i = 0 to allowed_slice_types_size -1 do
-    for j = 0 to bare_types_size -1 do
+  for i = 0 to allowed_slice_types_size - 1 do
+    for j = 0 to bare_types_size - 1 do
       for k = 0 to 1 do
-        for m = 0 to bare_types_size -1 do
+        for m = 0 to bare_types_size - 1 do
           for n = 0 to 1 do
             add_qualified
               ( "reduce_sum"
@@ -1238,23 +1238,23 @@ let () =
                       ( [ (DataOnly, UInt); (DataOnly, UInt)
                         ; (AutoDiffable, allowed_slice_types i)
                         ; (AutoDiffable, bare_array_type (bare_types j, k))
-                        ; (AutoDiffable, bare_array_type (bare_types m, n))]
+                        ; (AutoDiffable, bare_array_type (bare_types m, n)) ]
                       , ReturnType UReal ) )
                 ; (AutoDiffable, allowed_slice_types i)
                 ; (DataOnly, UInt)
-                ; (AutoDiffable, bare_array_type (bare_types j, k)) 
-                ; (AutoDiffable, bare_array_type (bare_types m, n)) ] ) ;
-          done ;
-        done ;
-      done ;
-    done ;
+                ; (AutoDiffable, bare_array_type (bare_types j, k))
+                ; (AutoDiffable, bare_array_type (bare_types m, n)) ] )
+          done
+        done
+      done
+    done
   done ;
-  for i = 0 to allowed_slice_types_size -1 do
-    for j = 0 to bare_types_size -1 do
+  for i = 0 to allowed_slice_types_size - 1 do
+    for j = 0 to bare_types_size - 1 do
       for k = 0 to 1 do
-        for m = 0 to bare_types_size -1 do
+        for m = 0 to bare_types_size - 1 do
           for n = 0 to 1 do
-            for o = 0 to bare_types_size -1 do
+            for o = 0 to bare_types_size - 1 do
               for p = 0 to 1 do
                 add_qualified
                   ( "reduce_sum"
@@ -1265,19 +1265,20 @@ let () =
                             ; (AutoDiffable, allowed_slice_types i)
                             ; (AutoDiffable, bare_array_type (bare_types j, k))
                             ; (AutoDiffable, bare_array_type (bare_types m, n))
-                            ; (AutoDiffable, bare_array_type (bare_types o, p))]
+                            ; (AutoDiffable, bare_array_type (bare_types o, p))
+                            ]
                           , ReturnType UReal ) )
                     ; (AutoDiffable, allowed_slice_types i)
                     ; (DataOnly, UInt)
-                    ; (AutoDiffable, bare_array_type (bare_types j, k)) 
+                    ; (AutoDiffable, bare_array_type (bare_types j, k))
                     ; (AutoDiffable, bare_array_type (bare_types m, n))
-                    ; (AutoDiffable, bare_array_type (bare_types o, p)) ] ) ;
-              done ;
-            done ;
-          done ;
-        done ;
-      done ;
-    done ;
+                    ; (AutoDiffable, bare_array_type (bare_types o, p)) ] )
+              done
+            done
+          done
+        done
+      done
+    done
   done ;
   (* add_qualified
     ( "reduce_sum"
