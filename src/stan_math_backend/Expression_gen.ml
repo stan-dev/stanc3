@@ -296,10 +296,8 @@ and gen_fun_app ppf fname es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-      |( true
-        , "reduce_sum"
-        , f :: grain :: cnt :: tl ) ->
-          (fname, f :: grain :: cnt :: msgs :: tl)
+      | true, "reduce_sum", {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ->
+          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])

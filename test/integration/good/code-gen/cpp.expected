@@ -12702,7 +12702,7 @@ class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce
       {
         current_statement__ = 2;
         lp_accum__.add(
-          reduce_sum(my_func_functor__(), a, 1, pstream__, 0.0, 1.0));
+          reduce_sum<my_func_functor__>(a, 1, pstream__, 0.0, 1.0));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13330,7 +13330,7 @@ class parallel_reduce_test_model_model : public model_base_crtp<parallel_reduce_
         current_statement__ = 7;
         lpmf = std::numeric_limits<double>::quiet_NaN();
         current_statement__ = 7;
-        lpmf = reduce_sum(hierarchical_reduce_functor__(), y, grainsize,
+        lpmf = reduce_sum<hierarchical_reduce_functor__>(y, grainsize,
                  pstream__, log_lambda_group, gidx);
         current_statement__ = 8;
         lp_accum__.add(lpmf);
