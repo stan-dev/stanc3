@@ -30,3 +30,14 @@
 (alias
  (name runtest)
  (action (diff cl.expected cl.output)))
+
+(rule
+ (targets parallel_reduce.output)
+ (deps (package stanc) (:stanfiles  parallel_reduce_normal_test.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp" %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff parallel_reduce.expected parallel_reduce.output)))
