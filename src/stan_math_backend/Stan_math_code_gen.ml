@@ -164,8 +164,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
     let arg_strs =
       mk_extra_args prefix_extra_templates prefix_extra_args
       @ args
-      @ ["std::ostream* pstream__"]
       @ mk_extra_args extra_templates extra
+      @ ["std::ostream* pstream__"]
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
