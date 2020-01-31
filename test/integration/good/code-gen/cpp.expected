@@ -13234,24 +13234,35 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 8, column 2 to column 12)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 12, column 2 to column 48)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 17, column 2 to column 12)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 21, column 2 to column 55)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 22, column 2 to column 50)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 23, column 2 to column 45)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 24, column 2 to column 40)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 3, column 4 to column 44)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 2, column 72 to line 4, column 3)"};
+                                                      " (in 'parallel_reduce_normal_test.stan', line 2, column 86 to line 4, column 3)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 6, column 4 to column 44)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 5, column 74 to line 7, column 3)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 9, column 4 to column 42)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 8, column 62 to line 10, column 3)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 12, column 4 to column 43)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 11, column 53 to line 13, column 3)"};
 
-template <typename T2__, typename T3__, typename T4__>
-typename boost::math::tools::promote_args<T2__, T3__,
-T4__>::type
-my_func(const int& start, const int& end, const std::vector<T2__>& y_slice,
-        const T3__& mu, const T4__& sigma, std::ostream* pstream__) {
+template <typename T2__, typename T3__, typename T4__, typename T5__>
+typename boost::math::tools::promote_args<T2__, T3__, T4__,
+T5__>::type
+my_func_3(const int& start, const int& end, const std::vector<T2__>& y_slice,
+          const T3__& mu, const T4__& sigma, const T5__& dummy,
+          std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
           T3__,
-          T4__>::type;
+          T4__,
+          T5__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
-    current_statement__ = 3;
+    current_statement__ = 6;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13261,7 +13272,54 @@ my_func(const int& start, const int& end, const std::vector<T2__>& y_slice,
   
 }
 
-struct my_func_functor__ {
+struct my_func_3_functor__ {
+template <typename T2__, typename T3__, typename T4__, typename T5__>
+typename boost::math::tools::promote_args<T2__, T3__, T4__,
+T5__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, const T3__& mu,
+           const T4__& sigma, const T5__& dummy, std::ostream* pstream__)  const 
+{
+return my_func_3(start, end, y_slice, mu, sigma, dummy, pstream__);
+}
+};
+
+
+struct my_func_3_functor__reduce_sum__ {
+template <typename T2__, typename T3__, typename T4__, typename T5__>
+typename boost::math::tools::promote_args<T2__, T3__, T4__,
+T5__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+           const T3__& mu, const T4__& sigma, const T5__& dummy)  const 
+{
+return my_func_3(start, end, y_slice, mu, sigma, dummy, pstream__);
+}
+};
+
+template <typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T2__, T3__,
+T4__>::type
+my_func_2(const int& start, const int& end, const std::vector<T2__>& y_slice,
+          const T3__& mu, const T4__& sigma, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+          T3__,
+          T4__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 8;
+    return normal_lpdf<false>(y_slice, mu, sigma);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct my_func_2_functor__ {
 template <typename T2__, typename T3__, typename T4__>
 typename boost::math::tools::promote_args<T2__, T3__,
 T4__>::type
@@ -13269,12 +13327,12 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, const T3__& mu,
            const T4__& sigma, std::ostream* pstream__)  const 
 {
-return my_func(start, end, y_slice, mu, sigma, pstream__);
+return my_func_2(start, end, y_slice, mu, sigma, pstream__);
 }
 };
 
 
-struct my_func_functor__reduce_sum__ {
+struct my_func_2_functor__reduce_sum__ {
 template <typename T2__, typename T3__, typename T4__>
 typename boost::math::tools::promote_args<T2__, T3__,
 T4__>::type
@@ -13282,7 +13340,93 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu, const T4__& sigma)  const 
 {
-return my_func(start, end, y_slice, mu, sigma, pstream__);
+return my_func_2(start, end, y_slice, mu, sigma, pstream__);
+}
+};
+
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+my_func_1(const int& start, const int& end, const std::vector<T2__>& y_slice,
+          const T3__& mu, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+          T3__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 10;
+    return normal_lpdf<false>(y_slice, mu, 1.0);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct my_func_1_functor__ {
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, const T3__& mu,
+           std::ostream* pstream__)  const 
+{
+return my_func_1(start, end, y_slice, mu, pstream__);
+}
+};
+
+
+struct my_func_1_functor__reduce_sum__ {
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+           const T3__& mu)  const 
+{
+return my_func_1(start, end, y_slice, mu, pstream__);
+}
+};
+
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+my_func_0(const int& start, const int& end, const std::vector<T2__>& y_slice,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 12;
+    return normal_lpdf<false>(y_slice, 0.0, 1.0);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct my_func_0_functor__ {
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+{
+return my_func_0(start, end, y_slice, pstream__);
+}
+};
+
+
+struct my_func_0_functor__reduce_sum__ {
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+{
+return my_func_0(start, end, y_slice, pstream__);
 }
 };
 
@@ -13351,8 +13495,18 @@ class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce
       {
         current_statement__ = 2;
         lp_accum__.add(
-          reduce_sum<my_func_functor__reduce_sum__>(a, 1, pstream__, 0.0,
+          reduce_sum<my_func_3_functor__reduce_sum__>(a, 1, pstream__, 0.0,
+            1.0, 2.0));
+        current_statement__ = 3;
+        lp_accum__.add(
+          reduce_sum<my_func_2_functor__reduce_sum__>(a, 1, pstream__, 0.0,
             1.0));
+        current_statement__ = 4;
+        lp_accum__.add(
+          reduce_sum<my_func_1_functor__reduce_sum__>(a, 1, pstream__, 0.0));
+        current_statement__ = 5;
+        lp_accum__.add(
+          reduce_sum<my_func_0_functor__reduce_sum__>(a, 1, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
