@@ -10,4 +10,5 @@ parameters {
 
 model {
   target += reduce_sum(my_func, a, 1, 0.0, 1.0);
+  //target += my_func(1,2, a, 0.0, 1.0);
 }

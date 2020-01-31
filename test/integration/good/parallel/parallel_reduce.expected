@@ -129,6 +129,19 @@ return my_func(start, end, y_slice, mu, sigma, pstream__);
 }
 };
 
+
+struct my_func_functor__reduce_sum__ {
+template <typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T2__, T3__,
+T4__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+           const T3__& mu, const T4__& sigma)  const 
+{
+return my_func(start, end, y_slice, mu, sigma, pstream__);
+}
+};
+
 class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce_normal_test_model> {
 
  private:
@@ -194,7 +207,8 @@ class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce
       {
         current_statement__ = 2;
         lp_accum__.add(
-          reduce_sum<my_func_functor__>(a, 1, pstream__, 0.0, 1.0));
+          reduce_sum<my_func_functor__reduce_sum__>(a, 1, pstream__, 0.0,
+            1.0));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

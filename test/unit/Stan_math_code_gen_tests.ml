@@ -47,4 +47,15 @@ let%expect_test "udf" =
     {
     return sars(x, y, pstream__);
     }
+    };
+
+
+    struct sars_functor__reduce_sum__ {
+    template <typename T1__>
+    void
+    operator()(const Eigen::Matrix<double, -1, -1>& x,
+               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
+    {
+    return sars(x, y, pstream__);
+    }
     }; |}]

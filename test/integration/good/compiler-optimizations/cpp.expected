@@ -183,8 +183,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
-nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-         std::ostream* pstream__) {
+nrfun_lp(const T0__& x, const int& y, std::ostream* pstream__, T_lp__& lp__,
+         T_lp_accum__& lp_accum__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   
   try {
@@ -213,10 +213,22 @@ struct nrfun_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
-operator()(const T0__& x, const int& y, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+operator()(const T0__& x, const int& y, std::ostream* pstream__,
+           T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
 {
 return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
+}
+};
+
+
+struct nrfun_lp_functor__reduce_sum__ {
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& x, const int& y, std::ostream* pstream__,
+           T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
+{
+return nrfun_lp(x, y, pstream__, lp__, lp_accum__);
 }
 };
 
@@ -257,9 +269,18 @@ return rfun(y, pstream__);
 }
 };
 
+
+struct rfun_functor__reduce_sum__ {
+int
+operator()(const int& y, std::ostream* pstream__)  const 
+{
+return rfun(y, pstream__);
+}
+};
+
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
-rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+rfun_lp(std::ostream* pstream__, T_lp__& lp__, T_lp_accum__& lp_accum__) {
   using local_scalar_t__ = double;
   
   try {
@@ -280,9 +301,19 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
 struct rfun_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
-operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+operator()(std::ostream* pstream__, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
 {
 return rfun_lp(lp__, lp_accum__, pstream__);
+}
+};
+
+
+struct rfun_lp_functor__reduce_sum__ {
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+int
+operator()(std::ostream* pstream__, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
+{
+return rfun_lp(pstream__, lp__, lp_accum__);
 }
 };
 
