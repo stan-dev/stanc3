@@ -138,11 +138,10 @@ let fn_renames =
    hash map of metadata available for each expression that we could put something like this in.
 *)
 let map_rect_counter = ref 0
-
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_reduce_sum_functor__"
 
-let functor_suffix_choose f = 
+let functor_suffix_select f = 
   match f with
   | "reduce_sum" -> reduce_sum_functor_suffix
   | _ -> functor_suffix
@@ -271,7 +270,7 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ functor_suffix_choose fname, [])}
+          {e with pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
