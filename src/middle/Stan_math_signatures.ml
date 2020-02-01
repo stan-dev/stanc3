@@ -1196,18 +1196,6 @@ let () =
         ; (DataOnly, UInt) ] )
   done ;
   for i = 0 to allowed_slice_types_size - 1 do
-    add_qualified
-      ( "reduce_sum"
-      , ReturnType UReal
-      , [ ( AutoDiffable
-          , UFun
-              ( [ (DataOnly, UInt); (DataOnly, UInt)
-                ; (AutoDiffable, allowed_slice_types i) ]
-              , ReturnType UReal ) )
-        ; (AutoDiffable, allowed_slice_types i)
-        ; (DataOnly, UInt) ] )
-  done ;
-  for i = 0 to allowed_slice_types_size - 1 do
     for j = 0 to bare_types_size - 1 do
       for k = 0 to 1 do
         add_qualified

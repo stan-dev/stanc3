@@ -172,15 +172,12 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
   let pp_sig_rs ppf name =
     pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
-    let first_three_args =
-      List.mapi ~f:(fun i x -> if i < 3 then x else "") args
-    in
-    let rest_args = List.mapi ~f:(fun i x -> if i >= 3 then x else "") args in
+    let first_three, rest = List.split_n args 3 in
     let arg_strs =
       mk_extra_args prefix_extra_templates prefix_extra_args
-      @ List.filter ~f:(fun x -> x <> "") first_three_args
+      @ first_three
       @ ["std::ostream* pstream__"]
-      @ List.filter ~f:(fun x -> x <> "") rest_args
+      @ rest
       @ mk_extra_args extra_templates extra
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
