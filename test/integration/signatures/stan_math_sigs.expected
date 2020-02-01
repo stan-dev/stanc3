@@ -14181,7 +14181,6 @@ real[] rayleigh_rng(row_vector)
 real[] rayleigh_rng(int[])
 real[] rayleigh_rng(real[])
 real reduce_sum((data int, data int, int[]) => real, int[], int)
-real reduce_sum((data int, data int, int[]) => real, int[], int)
 real reduce_sum((data int, data int, int[], int) => real, int[], int, int)
 real reduce_sum((data int, data int, int[], int, int) => real, int[], int,
                   int, int)
@@ -16399,7 +16398,6 @@ real reduce_sum((data int, data int, int[], matrix[], matrix[], row_vector[]) =>
                   int[], int, matrix[], matrix[], row_vector[])
 real reduce_sum((data int, data int, int[], matrix[], matrix[], matrix[]) => real,
                   int[], int, matrix[], matrix[], matrix[])
-real reduce_sum((data int, data int, real[]) => real, real[], int)
 real reduce_sum((data int, data int, real[]) => real, real[], int)
 real reduce_sum((data int, data int, real[], int) => real, real[], int, int)
 real reduce_sum((data int, data int, real[], int, int) => real, real[], int,
@@ -18619,7 +18617,6 @@ real reduce_sum((data int, data int, real[], matrix[], matrix[], row_vector[]) =
                   real[], int, matrix[], matrix[], row_vector[])
 real reduce_sum((data int, data int, real[], matrix[], matrix[], matrix[]) => real,
                   real[], int, matrix[], matrix[], matrix[])
-real reduce_sum((data int, data int, vector[]) => real, vector[], int)
 real reduce_sum((data int, data int, vector[]) => real, vector[], int)
 real reduce_sum((data int, data int, vector[], int) => real, vector[], int,
                   int)
@@ -20842,7 +20839,6 @@ real reduce_sum((data int, data int, vector[], matrix[], matrix[], row_vector[])
 real reduce_sum((data int, data int, vector[], matrix[], matrix[], matrix[]) => real,
                   vector[], int, matrix[], matrix[], matrix[])
 real reduce_sum((data int, data int, row_vector[]) => real, row_vector[], int)
-real reduce_sum((data int, data int, row_vector[]) => real, row_vector[], int)
 real reduce_sum((data int, data int, row_vector[], int) => real,
                   row_vector[], int, int)
 real reduce_sum((data int, data int, row_vector[], int, int) => real,
@@ -23063,7 +23059,6 @@ real reduce_sum((data int, data int, row_vector[], matrix[], matrix[], row_vecto
                   row_vector[], int, matrix[], matrix[], row_vector[])
 real reduce_sum((data int, data int, row_vector[], matrix[], matrix[], matrix[]) => real,
                   row_vector[], int, matrix[], matrix[], matrix[])
-real reduce_sum((data int, data int, matrix[]) => real, matrix[], int)
 real reduce_sum((data int, data int, matrix[]) => real, matrix[], int)
 real reduce_sum((data int, data int, matrix[], int) => real, matrix[], int,
                   int)
