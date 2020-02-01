@@ -56,6 +56,6 @@ let%expect_test "udf" =
     operator()(const Eigen::Matrix<double, -1, -1>& x,
                const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
     {
-    return sars(x, y, pstream__);
+    return sars(x+1, y+1, pstream__);
     }
     }; |}]

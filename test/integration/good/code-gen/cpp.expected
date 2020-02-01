@@ -1097,7 +1097,7 @@ struct foo_rsfunctor__ {
 int
 operator()(const int& n, std::ostream* pstream__)  const 
 {
-return foo(n, pstream__);
+return foo(n+1, pstream__);
 }
 };
 
@@ -1164,7 +1164,7 @@ operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, std::ostream* pstream__,
            const std::vector<double>& x, const std::vector<int>& x_int)  const 
 {
-return sho(t, y, theta, x, x_int, pstream__);
+return sho(t+1, y+1, theta, x, x_int, pstream__);
 }
 };
 
@@ -1235,7 +1235,7 @@ template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
-return foo_bar1(x, pstream__);
+return foo_bar1(x+1, pstream__);
 }
 };
 
@@ -1276,7 +1276,7 @@ typename boost::math::tools::promote_args<T0__,
 T1__>::type
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
-return foo_bar2(x, y, pstream__);
+return foo_bar2(x+1, y+1, pstream__);
 }
 };
 
@@ -1311,7 +1311,7 @@ template <bool propto__, typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
-return foo_lpmf(y, lambda, pstream__);
+return foo_lpmf(y+1, lambda+1, pstream__);
 }
 };
 
@@ -1348,7 +1348,7 @@ template <typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
-return foo_lcdf(y, lambda, pstream__);
+return foo_lcdf(y+1, lambda+1, pstream__);
 }
 };
 
@@ -1385,7 +1385,7 @@ template <typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
-return foo_lccdf(y, lambda, pstream__);
+return foo_lccdf(y+1, lambda+1, pstream__);
 }
 };
 
@@ -1429,7 +1429,7 @@ T1__>::type
 operator()(RNG& base_rng__, const T0__& mu, const T1__& sigma,
            std::ostream* pstream__)  const 
 {
-return foo_rng(base_rng__, mu, sigma, pstream__);
+return foo_rng(base_rng__, mu+1, sigma+1, pstream__);
 }
 };
 
@@ -1472,7 +1472,7 @@ void
 operator()(const T0__& u, std::ostream* pstream__, T_lp__& lp__,
            T_lp_accum__& lp_accum__)  const 
 {
-return unit_normal_lp(u, lp__, lp_accum__, pstream__);
+return unit_normal_lp(u+1, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -1756,7 +1756,7 @@ struct foo_1_rsfunctor__ {
 int
 operator()(const int& a, std::ostream* pstream__)  const 
 {
-return foo_1(a, pstream__);
+return foo_1(a+1, pstream__);
 }
 };
 
@@ -1806,7 +1806,7 @@ struct foo_2_rsfunctor__ {
 int
 operator()(const int& a, std::ostream* pstream__)  const 
 {
-return foo_2(a, pstream__);
+return foo_2(a+1, pstream__);
 }
 };
 
@@ -1843,7 +1843,7 @@ template <typename T0__>
 std::vector<typename boost::math::tools::promote_args<T0__>::type>
 operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
 {
-return foo_3(t, n, pstream__);
+return foo_3(t+1, n+1, pstream__);
 }
 };
 
@@ -1884,7 +1884,7 @@ typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__, T_lp__& lp__,
            T_lp_accum__& lp_accum__)  const 
 {
-return foo_lp(x, lp__, lp_accum__, pstream__);
+return foo_lp(x+1, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -1924,7 +1924,7 @@ template <typename T0__>
 void
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
-return foo_4(x, pstream__);
+return foo_4(x+1, pstream__);
 }
 };
 
@@ -2006,7 +2006,7 @@ T3__>::type
 operator()(const T0__& x, const T1__& y, const T2__& max_,
            std::ostream* pstream__, const T3__& min_)  const 
 {
-return relative_diff(x, y, max_, min_, pstream__);
+return relative_diff(x+1, y+1, max_, min_, pstream__);
 }
 };
 
@@ -2057,7 +2057,7 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const std::vector<double>& data_r, std::ostream* pstream__,
            const std::vector<int>& data_i)  const 
 {
-return foo_5(shared_params, job_params, data_r, data_i, pstream__);
+return foo_5(shared_params+1, job_params+1, data_r, data_i, pstream__);
 }
 };
 
@@ -2107,7 +2107,7 @@ T4__>::type
 operator()(const T0__& x1, const T1__& x2, const T2__& x3,
            std::ostream* pstream__, const T3__& x4, const T4__& x5)  const 
 {
-return foo_five_args(x1, x2, x3, x4, x5, pstream__);
+return foo_five_args(x1+1, x2+1, x3, x4, x5, pstream__);
 }
 };
 
@@ -2162,7 +2162,8 @@ operator()(const T0__& x1, const T1__& x2, const T2__& x3,
            std::ostream* pstream__, const T3__& x4, const T4__& x5,
            const T5__& x6, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
 {
-return foo_five_args_lp(x1, x2, x3, x4, x5, x6, lp__, lp_accum__, pstream__);
+return foo_five_args_lp(x1+1, x2+1, x3, x4, x5, x6, lp__, lp_accum__,
+         pstream__);
 }
 };
 
@@ -2231,7 +2232,7 @@ Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
            std::ostream* pstream__)  const 
 {
-return covsqrt2corsqrt(mat, invert, pstream__);
+return covsqrt2corsqrt(mat+1, invert+1, pstream__);
 }
 };
 
@@ -2309,7 +2310,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f0(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2384,7 +2385,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f1(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2459,7 +2460,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f2(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2534,7 +2535,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f3(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2615,7 +2616,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f4(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2696,7 +2697,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f5(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2777,7 +2778,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f6(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2858,7 +2859,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f7(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2939,7 +2940,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f8(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3020,7 +3021,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f9(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3101,7 +3102,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f10(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3182,7 +3183,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f11(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3263,7 +3264,7 @@ operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
            const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
 {
-return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
+return f12(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3470,7 +3471,7 @@ template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
-return vecmufoo(mu, pstream__);
+return vecmufoo(mu+1, pstream__);
 }
 };
 
@@ -3525,7 +3526,7 @@ template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
-return vecmubar(mu, pstream__);
+return vecmubar(mu+1, pstream__);
 }
 };
 
@@ -3590,7 +3591,7 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
            std::ostream* pstream__, const std::vector<int>& dat_int)  const 
 {
-return algebra_system(x, y, dat, dat_int, pstream__);
+return algebra_system(x+1, y+1, dat, dat_int, pstream__);
 }
 };
 
@@ -3654,7 +3655,7 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
            const std::vector<double>& x_r, std::ostream* pstream__,
            const std::vector<int>& x_i)  const 
 {
-return binomialf(phi, theta, x_r, x_i, pstream__);
+return binomialf(phi+1, theta+1, x_r, x_i, pstream__);
 }
 };
 
@@ -10066,7 +10067,7 @@ operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, std::ostream* pstream__,
            const std::vector<T3__>& x, const std::vector<int>& x_int)  const 
 {
-return sho(t, y, theta, x, x_int, pstream__);
+return sho(t+1, y+1, theta, x, x_int, pstream__);
 }
 };
 
@@ -10115,7 +10116,7 @@ operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
            std::ostream* pstream__, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i)  const 
 {
-return integrand(x, xc, theta, x_r, x_i, pstream__);
+return integrand(x+1, xc+1, theta, x_r, x_i, pstream__);
 }
 };
 
@@ -10167,7 +10168,7 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const std::vector<T2__>& data_r, std::ostream* pstream__,
            const std::vector<int>& data_i)  const 
 {
-return foo(shared_params, job_params, data_r, data_i, pstream__);
+return foo(shared_params+1, job_params+1, data_r, data_i, pstream__);
 }
 };
 
@@ -10204,7 +10205,7 @@ template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
-return map_rectfake(x, pstream__);
+return map_rectfake(x+1, pstream__);
 }
 };
 
@@ -10269,7 +10270,7 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
            std::ostream* pstream__, const std::vector<int>& dat_int)  const 
 {
-return algebra_system(x, y, dat, dat_int, pstream__);
+return algebra_system(x+1, y+1, dat, dat_int, pstream__);
 }
 };
 
@@ -13293,7 +13294,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu, const T4__& sigma, const T5__& dummy)  const 
 {
-return my_func_3(start, end, y_slice, mu, sigma, dummy, pstream__);
+return my_func_3(start+1, end+1, y_slice, mu, sigma, dummy, pstream__);
 }
 };
 
@@ -13340,7 +13341,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu, const T4__& sigma)  const 
 {
-return my_func_2(start, end, y_slice, mu, sigma, pstream__);
+return my_func_2(start+1, end+1, y_slice, mu, sigma, pstream__);
 }
 };
 
@@ -13386,7 +13387,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu)  const 
 {
-return my_func_1(start, end, y_slice, mu, pstream__);
+return my_func_1(start+1, end+1, y_slice, mu, pstream__);
 }
 };
 
@@ -13426,7 +13427,7 @@ typename boost::math::tools::promote_args<T2__>::type
 operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
 {
-return my_func_0(start, end, y_slice, pstream__);
+return my_func_0(start+1, end+1, y_slice, pstream__);
 }
 };
 
@@ -13898,7 +13899,7 @@ operator()(const int& start, const int& end, const std::vector<int>& y_slice,
            const std::vector<T3__>& log_lambda_group,
            const std::vector<int>& gidx)  const 
 {
-return hierarchical_reduce(start, end, y_slice, log_lambda_group, gidx,
+return hierarchical_reduce(start+1, end+1, y_slice, log_lambda_group, gidx,
          pstream__);
 }
 };
@@ -15432,7 +15433,7 @@ typename boost::math::tools::promote_args<T0__,
 T1__>::type
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
-return lb_constrain(x, y, pstream__);
+return lb_constrain(x+1, y+1, pstream__);
 }
 };
 

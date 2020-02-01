@@ -228,7 +228,7 @@ void
 operator()(const T0__& x, const int& y, std::ostream* pstream__,
            T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
 {
-return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
+return nrfun_lp(x+1, y+1, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -274,7 +274,7 @@ struct rfun_rsfunctor__ {
 int
 operator()(const int& y, std::ostream* pstream__)  const 
 {
-return rfun(y, pstream__);
+return rfun(y+1, pstream__);
 }
 };
 
