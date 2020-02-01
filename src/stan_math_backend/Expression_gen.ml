@@ -138,9 +138,14 @@ let fn_renames =
    hash map of metadata available for each expression that we could put something like this in.
 *)
 let map_rect_counter = ref 0
-let functor_suffix = "_functor__"
-let functor_reduce_sum_suffix = "_functor__reduce_sum__"
 
+let functor_suffix = "_functor__"
+let reduce_sum_functor_suffix = "_reduce_sum_functor__"
+
+let functor_suffix_choose f = 
+  match f with
+  | "reduce_sum" -> reduce_sum_functor_suffix
+  | _ -> functor_suffix
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
@@ -266,7 +271,7 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ functor_suffix, [])}
+          {e with pattern= FunApp (StanLib, name ^ functor_suffix_choose fname, [])}
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -300,7 +305,7 @@ and gen_fun_app ppf fname es =
       | ( true
         , "reduce_sum"
         , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
-          ( strf "%s<%sreduce_sum__>" fname f
+          ( strf "%s<%s>" fname f
           , grainsize :: container :: msgs :: tl )
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;

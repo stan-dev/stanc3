@@ -1093,7 +1093,7 @@ return foo(n, pstream__);
 };
 
 
-struct foo_functor__reduce_sum__ {
+struct foo_reduce_sum_functor__ {
 int
 operator()(const int& n, std::ostream* pstream__)  const 
 {
@@ -1156,7 +1156,7 @@ return sho(t, y, theta, x, x_int, pstream__);
 };
 
 
-struct sho_functor__reduce_sum__ {
+struct sho_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__,
 T2__>::type>
@@ -1194,7 +1194,7 @@ return foo_bar0(pstream__);
 };
 
 
-struct foo_bar0_functor__reduce_sum__ {
+struct foo_bar0_reduce_sum_functor__ {
 double
 operator()(std::ostream* pstream__)  const 
 {
@@ -1230,7 +1230,7 @@ return foo_bar1(x, pstream__);
 };
 
 
-struct foo_bar1_functor__reduce_sum__ {
+struct foo_bar1_reduce_sum_functor__ {
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
@@ -1270,7 +1270,7 @@ return foo_bar2(x, y, pstream__);
 };
 
 
-struct foo_bar2_functor__reduce_sum__ {
+struct foo_bar2_reduce_sum_functor__ {
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -1306,7 +1306,7 @@ return foo_lpmf(y, lambda, pstream__);
 };
 
 
-struct foo_lpmf_functor__reduce_sum__ {
+struct foo_lpmf_reduce_sum_functor__ {
 template <bool propto__, typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
@@ -1343,7 +1343,7 @@ return foo_lcdf(y, lambda, pstream__);
 };
 
 
-struct foo_lcdf_functor__reduce_sum__ {
+struct foo_lcdf_reduce_sum_functor__ {
 template <typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
@@ -1380,7 +1380,7 @@ return foo_lccdf(y, lambda, pstream__);
 };
 
 
-struct foo_lccdf_functor__reduce_sum__ {
+struct foo_lccdf_reduce_sum_functor__ {
 template <typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
@@ -1422,7 +1422,7 @@ return foo_rng(base_rng__, mu, sigma, pstream__);
 };
 
 
-struct foo_rng_functor__reduce_sum__ {
+struct foo_rng_reduce_sum_functor__ {
 template <typename RNG, typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -1465,7 +1465,7 @@ return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 };
 
 
-struct unit_normal_lp_functor__reduce_sum__ {
+struct unit_normal_lp_reduce_sum_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
@@ -1752,7 +1752,7 @@ return foo_1(a, pstream__);
 };
 
 
-struct foo_1_functor__reduce_sum__ {
+struct foo_1_reduce_sum_functor__ {
 int
 operator()(const int& a, std::ostream* pstream__)  const 
 {
@@ -1802,7 +1802,7 @@ return foo_2(a, pstream__);
 };
 
 
-struct foo_2_functor__reduce_sum__ {
+struct foo_2_reduce_sum_functor__ {
 int
 operator()(const int& a, std::ostream* pstream__)  const 
 {
@@ -1838,7 +1838,7 @@ return foo_3(t, n, pstream__);
 };
 
 
-struct foo_3_functor__reduce_sum__ {
+struct foo_3_reduce_sum_functor__ {
 template <typename T0__>
 std::vector<typename boost::math::tools::promote_args<T0__>::type>
 operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
@@ -1877,7 +1877,7 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 };
 
 
-struct foo_lp_functor__reduce_sum__ {
+struct foo_lp_reduce_sum_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -1919,7 +1919,7 @@ return foo_4(x, pstream__);
 };
 
 
-struct foo_4_functor__reduce_sum__ {
+struct foo_4_reduce_sum_functor__ {
 template <typename T0__>
 void
 operator()(const T0__& x, std::ostream* pstream__)  const 
@@ -1999,7 +1999,7 @@ return relative_diff(x, y, max_, min_, pstream__);
 };
 
 
-struct relative_diff_functor__reduce_sum__ {
+struct relative_diff_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type
@@ -2048,7 +2048,7 @@ return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 };
 
 
-struct foo_5_functor__reduce_sum__ {
+struct foo_5_reduce_sum_functor__ {
 template <typename T0__, typename T1__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
 T1__>::type, -1, 1>
@@ -2099,7 +2099,7 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 };
 
 
-struct foo_five_args_functor__reduce_sum__ {
+struct foo_five_args_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
@@ -2152,7 +2152,7 @@ return foo_five_args_lp(x1, x2, x3, x4, x5, x6, lp__, lp_accum__, pstream__);
 };
 
 
-struct foo_five_args_lp_functor__reduce_sum__ {
+struct foo_five_args_lp_reduce_sum_functor__ {
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
@@ -2225,7 +2225,7 @@ return covsqrt2corsqrt(mat, invert, pstream__);
 };
 
 
-struct covsqrt2corsqrt_functor__reduce_sum__ {
+struct covsqrt2corsqrt_reduce_sum_functor__ {
 template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
@@ -2294,7 +2294,7 @@ return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f0_functor__reduce_sum__ {
+struct f0_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 void
@@ -2369,7 +2369,7 @@ return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f1_functor__reduce_sum__ {
+struct f1_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 int
@@ -2444,7 +2444,7 @@ return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f2_functor__reduce_sum__ {
+struct f2_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<int>
@@ -2519,7 +2519,7 @@ return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f3_functor__reduce_sum__ {
+struct f3_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<int>>
@@ -2598,7 +2598,7 @@ return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f4_functor__reduce_sum__ {
+struct f4_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2679,7 +2679,7 @@ return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f5_functor__reduce_sum__ {
+struct f5_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2760,7 +2760,7 @@ return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f6_functor__reduce_sum__ {
+struct f6_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2841,7 +2841,7 @@ return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f7_functor__reduce_sum__ {
+struct f7_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2922,7 +2922,7 @@ return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f8_functor__reduce_sum__ {
+struct f8_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3003,7 +3003,7 @@ return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f9_functor__reduce_sum__ {
+struct f9_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3084,7 +3084,7 @@ return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f10_functor__reduce_sum__ {
+struct f10_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3165,7 +3165,7 @@ return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f11_functor__reduce_sum__ {
+struct f11_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3246,7 +3246,7 @@ return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 };
 
 
-struct f12_functor__reduce_sum__ {
+struct f12_reduce_sum_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3337,7 +3337,7 @@ return foo_6(pstream__);
 };
 
 
-struct foo_6_functor__reduce_sum__ {
+struct foo_6_reduce_sum_functor__ {
 void
 operator()(std::ostream* pstream__)  const 
 {
@@ -3380,7 +3380,7 @@ return matfoo(pstream__);
 };
 
 
-struct matfoo_functor__reduce_sum__ {
+struct matfoo_reduce_sum_functor__ {
 Eigen::Matrix<double, -1, -1>
 operator()(std::ostream* pstream__)  const 
 {
@@ -3416,7 +3416,7 @@ return vecfoo(pstream__);
 };
 
 
-struct vecfoo_functor__reduce_sum__ {
+struct vecfoo_reduce_sum_functor__ {
 Eigen::Matrix<double, -1, 1>
 operator()(std::ostream* pstream__)  const 
 {
@@ -3465,7 +3465,7 @@ return vecmufoo(mu, pstream__);
 };
 
 
-struct vecmufoo_functor__reduce_sum__ {
+struct vecmufoo_reduce_sum_functor__ {
 template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
@@ -3520,7 +3520,7 @@ return vecmubar(mu, pstream__);
 };
 
 
-struct vecmubar_functor__reduce_sum__ {
+struct vecmubar_reduce_sum_functor__ {
 template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
@@ -3582,7 +3582,7 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 };
 
 
-struct algebra_system_functor__reduce_sum__ {
+struct algebra_system_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
 T2__>::type, -1, 1>
@@ -3645,7 +3645,7 @@ return binomialf(phi, theta, x_r, x_i, pstream__);
 };
 
 
-struct binomialf_functor__reduce_sum__ {
+struct binomialf_reduce_sum_functor__ {
 template <typename T0__, typename T1__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
 T1__>::type, -1, 1>
@@ -10058,7 +10058,7 @@ return sho(t, y, theta, x, x_int, pstream__);
 };
 
 
-struct sho_functor__reduce_sum__ {
+struct sho_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type>
@@ -10107,7 +10107,7 @@ return integrand(x, xc, theta, x_r, x_i, pstream__);
 };
 
 
-struct integrand_functor__reduce_sum__ {
+struct integrand_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type
@@ -10158,7 +10158,7 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 };
 
 
-struct foo_functor__reduce_sum__ {
+struct foo_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
 T2__>::type, -1, 1>
@@ -10199,7 +10199,7 @@ return map_rectfake(x, pstream__);
 };
 
 
-struct map_rectfake_functor__reduce_sum__ {
+struct map_rectfake_reduce_sum_functor__ {
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
@@ -10261,7 +10261,7 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 };
 
 
-struct algebra_system_functor__reduce_sum__ {
+struct algebra_system_reduce_sum_functor__ {
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
 T2__>::type, -1, 1>
@@ -13285,7 +13285,7 @@ return my_func_3(start, end, y_slice, mu, sigma, dummy, pstream__);
 };
 
 
-struct my_func_3_functor__reduce_sum__ {
+struct my_func_3_reduce_sum_functor__ {
 template <typename T2__, typename T3__, typename T4__, typename T5__>
 typename boost::math::tools::promote_args<T2__, T3__, T4__,
 T5__>::type
@@ -13332,7 +13332,7 @@ return my_func_2(start, end, y_slice, mu, sigma, pstream__);
 };
 
 
-struct my_func_2_functor__reduce_sum__ {
+struct my_func_2_reduce_sum_functor__ {
 template <typename T2__, typename T3__, typename T4__>
 typename boost::math::tools::promote_args<T2__, T3__,
 T4__>::type
@@ -13378,7 +13378,7 @@ return my_func_1(start, end, y_slice, mu, pstream__);
 };
 
 
-struct my_func_1_functor__reduce_sum__ {
+struct my_func_1_reduce_sum_functor__ {
 template <typename T2__, typename T3__>
 typename boost::math::tools::promote_args<T2__,
 T3__>::type
@@ -13420,7 +13420,7 @@ return my_func_0(start, end, y_slice, pstream__);
 };
 
 
-struct my_func_0_functor__reduce_sum__ {
+struct my_func_0_reduce_sum_functor__ {
 template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 operator()(const int& start, const int& end,
@@ -13495,18 +13495,18 @@ class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce
       {
         current_statement__ = 2;
         lp_accum__.add(
-          reduce_sum<my_func_3_functor__reduce_sum__>(a, 1, pstream__, 0.0,
+          reduce_sum<my_func_3_reduce_sum_functor__>(a, 1, pstream__, 0.0,
             1.0, 2.0));
         current_statement__ = 3;
         lp_accum__.add(
-          reduce_sum<my_func_2_functor__reduce_sum__>(a, 1, pstream__, 0.0,
+          reduce_sum<my_func_2_reduce_sum_functor__>(a, 1, pstream__, 0.0,
             1.0));
         current_statement__ = 4;
         lp_accum__.add(
-          reduce_sum<my_func_1_functor__reduce_sum__>(a, 1, pstream__, 0.0));
+          reduce_sum<my_func_1_reduce_sum_functor__>(a, 1, pstream__, 0.0));
         current_statement__ = 5;
         lp_accum__.add(
-          reduce_sum<my_func_0_functor__reduce_sum__>(a, 1, pstream__));
+          reduce_sum<my_func_0_reduce_sum_functor__>(a, 1, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13893,7 +13893,7 @@ return hierarchical_reduce(start, end, y_slice, log_lambda_group, gidx,
 };
 
 
-struct hierarchical_reduce_functor__reduce_sum__ {
+struct hierarchical_reduce_reduce_sum_functor__ {
 template <typename T3__>
 typename boost::math::tools::promote_args<T3__>::type
 operator()(const int& start, const int& end, const std::vector<int>& y_slice,
@@ -14148,7 +14148,7 @@ class parallel_reduce_test_model_model : public model_base_crtp<parallel_reduce_
         current_statement__ = 7;
         lpmf = std::numeric_limits<double>::quiet_NaN();
         current_statement__ = 7;
-        lpmf = reduce_sum<hierarchical_reduce_functor__reduce_sum__>(y,
+        lpmf = reduce_sum<hierarchical_reduce_reduce_sum_functor__>(y,
                  grainsize, pstream__, log_lambda_group, gidx);
         current_statement__ = 8;
         lp_accum__.add(lpmf);
@@ -15429,7 +15429,7 @@ return lb_constrain(x, y, pstream__);
 };
 
 
-struct lb_constrain_functor__reduce_sum__ {
+struct lb_constrain_reduce_sum_functor__ {
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type

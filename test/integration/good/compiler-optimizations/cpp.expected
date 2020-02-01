@@ -221,7 +221,7 @@ return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 };
 
 
-struct nrfun_lp_functor__reduce_sum__ {
+struct nrfun_lp_reduce_sum_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
@@ -270,7 +270,7 @@ return rfun(y, pstream__);
 };
 
 
-struct rfun_functor__reduce_sum__ {
+struct rfun_reduce_sum_functor__ {
 int
 operator()(const int& y, std::ostream* pstream__)  const 
 {
@@ -308,7 +308,7 @@ return rfun_lp(lp__, lp_accum__, pstream__);
 };
 
 
-struct rfun_lp_functor__reduce_sum__ {
+struct rfun_lp_reduce_sum_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 operator()(std::ostream* pstream__, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
