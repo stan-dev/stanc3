@@ -1280,32 +1280,6 @@ let () =
       done
     done
   done ;
-  (* add_qualified
-    ( "reduce_sum"
-    , ReturnType UReal
-    , [ ( AutoDiffable
-        , UFun
-            ( [ (DataOnly, UInt); (DataOnly, UInt)
-              ; (DataOnly, UArray UInt); (DataOnly, UArray UReal)
-              ; (DataOnly, UArray UInt)]
-            , ReturnType UReal ) )
-      ; (DataOnly, UArray UInt)
-      ; (DataOnly, UInt)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UInt) ] ) ; *)
-  (* add_qualified
-    ( "reduce_sum"
-    , ReturnType UReal
-    , [ ( AutoDiffable
-        , UFun
-            ( [ (DataOnly, UInt); (DataOnly, UInt)
-              ; (AutoDiffable, UArray UReal); (DataOnly, UReal)
-              ; (DataOnly, UReal)]
-            , ReturnType UReal ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UInt)
-      ; (DataOnly, UReal)
-      ; (DataOnly, UReal) ] ) ; *)
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
