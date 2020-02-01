@@ -196,6 +196,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
         , prefix_extra_args
           @ List.map ~f:(fun (_, name, _) -> name) fdargs
           @ extra @ ["pstream__"] ) ;
+      (* Produces the reduce_sum functors that has the pstream argument
+      as the third and not last argument *)
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
         reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
         ( fdname
