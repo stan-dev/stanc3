@@ -50,7 +50,7 @@ let%expect_test "udf" =
     };
 
 
-    struct sars_reduce_sum_functor__ {
+    struct sars_rsfunctor__ {
     template <typename T1__>
     void
     operator()(const Eigen::Matrix<double, -1, -1>& x,
