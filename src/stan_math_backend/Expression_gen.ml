@@ -139,7 +139,7 @@ let fn_renames =
 *)
 let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
-let reduce_sum_functor_suffix = "_reduce_sum_functor__"
+let reduce_sum_functor_suffix = "_rsfunctor__"
 
 let functor_suffix_select f = 
   match f with
