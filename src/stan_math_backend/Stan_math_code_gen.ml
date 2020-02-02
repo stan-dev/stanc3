@@ -200,7 +200,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) =
         reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
         ( fdname
         , prefix_extra_args          
-          @ List.map ~f:(fun (_, name, _) -> String.concat [name;"+1"]) first_two
+          @ List.map ~f:(fun (_, name, _) -> name ^ "+1") first_two
           @ List.map ~f:(fun (_, name, _) -> name) rest_fdargs
           @ extra @ ["pstream__"] )
 
