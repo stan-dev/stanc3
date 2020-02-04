@@ -191,6 +191,7 @@ end
 module ExpressionError = struct
   type t =
     | InvalidMapRectFn of string
+    | InvalidReduceSumFn of string
     | InvalidRngFunction
     | ConditionalNotationNotAllowed
     | ConditioningRequired
@@ -201,6 +202,11 @@ module ExpressionError = struct
     | InvalidMapRectFn fn_name ->
         Fmt.pf ppf
           "Mapped function cannot be an _rng or _lp function, found function \
+           name: %s"
+          fn_name
+    | InvalidReduceSumFn fn_name ->
+        Fmt.pf ppf
+          "Function supplied to reduce_sum must be of form (int, int, basic_type[], ...), found function \
            name: %s"
           fn_name
     | InvalidRngFunction ->
