@@ -70,7 +70,9 @@ rule token = parse
       "parameters"            { lexer_logger "transformed parameters" ;
                                 Parser.TRANSFORMEDPARAMETERSBLOCK }
   | "model"                   { lexer_logger "model" ; Parser.MODELBLOCK }
-  | "generated quantities"    { lexer_logger "generated quantities" ;
+  | "generated"
+      ( space+ )
+      "quantities"    { lexer_logger "generated quantities" ;
                                 Parser.GENERATEDQUANTITIESBLOCK }
 (* Punctuation *)
   | '{'                       { lexer_logger "{" ; Parser.LBRACE }
