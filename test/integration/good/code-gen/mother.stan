@@ -387,6 +387,11 @@ transformed data {
   td_simplex = td_1d_simplex[1,:];
   td_simplex = td_1d_simplex[1,];
   td_simplex = td_1d_simplex[1,1:N];
+
+  int arr_mul_ind[2,2];
+  arr_mul_ind[1,1:2] = {1, 1};
+
+  real x_mul_ind[2] = {1,2};
 }
 parameters {
   real p_real;
