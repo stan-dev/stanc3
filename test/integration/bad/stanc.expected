@@ -2455,17 +2455,17 @@ Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the
 
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
-Syntax error in 'target-reserved.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real target;
-               ^
+                      ^
      3:  }
      4:  parameters {
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
-
+A reserved keyword was found, which cannot be used as an identifier.
 
   $ ../../../../install/default/bin/stanc tilde-bad.stan
 

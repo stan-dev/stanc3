@@ -13506,4 +13506,5 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL OFFSET WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration. A reserved keyword was found, which cannot be used as an identifier.
+Identifier expected after type in top-level variable declaration.
+A reserved keyword was found, which cannot be used as an identifier.
