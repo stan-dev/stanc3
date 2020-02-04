@@ -343,16 +343,16 @@ let semantic_check_ternary_if loc (pe, te, fe) =
       Semantic_error.illtyped_ternary_if loc pe.emeta.type_ te.emeta.type_
         fe.emeta.type_
     in
-    [pe; te; fe] |> List.map ~f:arg_type
-    |> Stan_math_signatures.stan_math_returntype "if_else"
-    |> Option.value_map ~default:(error err) ~f:(function
-         | UnsizedType.ReturnType type_ ->
-             mk_typed_expression
-               ~expr:(TernaryIf (pe, te, fe))
-               ~ad_level:(lub_ad_e [pe; te; fe])
-               ~type_ ~loc
-             |> ok
-         | Void -> error err ))
+    if pe.emeta.type_ = UInt then
+      match UnsizedType.common_type (te.emeta.type_, fe.emeta.type_) with
+      | Some type_ ->
+          mk_typed_expression
+            ~expr:(TernaryIf (pe, te, fe))
+            ~ad_level:(lub_ad_e [pe; te; fe])
+            ~type_ ~loc
+          |> ok
+      | None -> error err
+    else error err)
 
 (* -- Binary (Infix) Operators ---------------------------------------------- *)
 
