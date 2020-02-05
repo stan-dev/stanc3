@@ -47,15 +47,4 @@ let%expect_test "udf" =
     {
     return sars(x, y, pstream__);
     }
-    };
-
-
-    struct sars_rsfunctor__ {
-    template <typename T1__>
-    void
-    operator()(const Eigen::Matrix<double, -1, -1>& x,
-               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
-    {
-    return sars(x+1, y+1, pstream__);
-    }
     }; |}]

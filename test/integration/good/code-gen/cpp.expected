@@ -1095,15 +1095,6 @@ return foo(n, pstream__);
 }
 };
 
-
-struct foo_rsfunctor__ {
-int
-operator()(const int& n, std::ostream* pstream__)  const 
-{
-return foo(n+1, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T2__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__,
 T2__>::type>
@@ -1158,19 +1149,6 @@ return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
-
-struct sho_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, std::ostream* pstream__,
-           const std::vector<double>& x, const std::vector<int>& x_int)  const 
-{
-return sho(t+1, y+1, theta, x, x_int, pstream__);
-}
-};
-
 double
 foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1189,15 +1167,6 @@ foo_bar0(std::ostream* pstream__) {
 }
 
 struct foo_bar0_functor__ {
-double
-operator()(std::ostream* pstream__)  const 
-{
-return foo_bar0(pstream__);
-}
-};
-
-
-struct foo_bar0_rsfunctor__ {
 double
 operator()(std::ostream* pstream__)  const 
 {
@@ -1232,16 +1201,6 @@ return foo_bar1(x, pstream__);
 }
 };
 
-
-struct foo_bar1_rsfunctor__ {
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return foo_bar1(x+1, pstream__);
-}
-};
-
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -1272,17 +1231,6 @@ return foo_bar2(x, y, pstream__);
 }
 };
 
-
-struct foo_bar2_rsfunctor__ {
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
-{
-return foo_bar2(x+1, y+1, pstream__);
-}
-};
-
 template <bool propto__, typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
@@ -1305,16 +1253,6 @@ typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lpmf(y, lambda, pstream__);
-}
-};
-
-
-struct foo_lpmf_rsfunctor__ {
-template <bool propto__, typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
-{
-return foo_lpmf(y+1, lambda+1, pstream__);
 }
 };
 
@@ -1345,16 +1283,6 @@ return foo_lcdf(y, lambda, pstream__);
 }
 };
 
-
-struct foo_lcdf_rsfunctor__ {
-template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
-{
-return foo_lcdf(y+1, lambda+1, pstream__);
-}
-};
-
 template <typename T1__>
 typename boost::math::tools::promote_args<T1__>::type
 foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
@@ -1379,16 +1307,6 @@ typename boost::math::tools::promote_args<T1__>::type
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lccdf(y, lambda, pstream__);
-}
-};
-
-
-struct foo_lccdf_rsfunctor__ {
-template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
-{
-return foo_lccdf(y+1, lambda+1, pstream__);
 }
 };
 
@@ -1424,18 +1342,6 @@ return foo_rng(base_rng__, mu, sigma, pstream__);
 }
 };
 
-
-struct foo_rng_rsfunctor__ {
-template <typename RNG, typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-operator()(RNG& base_rng__, const T0__& mu, const T1__& sigma,
-           std::ostream* pstream__)  const 
-{
-return foo_rng(base_rng__, mu+1, sigma+1, pstream__);
-}
-};
-
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
@@ -1464,18 +1370,6 @@ operator()(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
 return unit_normal_lp(u, lp__, lp_accum__, pstream__);
-}
-};
-
-
-struct unit_normal_lp_rsfunctor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-operator()(const T0__& u, std::ostream* pstream__, T_lp__& lp__,
-           T_lp_accum__& lp_accum__)  const 
-{
-return unit_normal_lp(u+1, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -1754,15 +1648,6 @@ return foo_1(a, pstream__);
 }
 };
 
-
-struct foo_1_rsfunctor__ {
-int
-operator()(const int& a, std::ostream* pstream__)  const 
-{
-return foo_1(a+1, pstream__);
-}
-};
-
 int
 foo_2(const int& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1804,15 +1689,6 @@ return foo_2(a, pstream__);
 }
 };
 
-
-struct foo_2_rsfunctor__ {
-int
-operator()(const int& a, std::ostream* pstream__)  const 
-{
-return foo_2(a+1, pstream__);
-}
-};
-
 template <typename T0__>
 std::vector<typename boost::math::tools::promote_args<T0__>::type>
 foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
@@ -1837,16 +1713,6 @@ std::vector<typename boost::math::tools::promote_args<T0__>::type>
 operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
 {
 return foo_3(t, n, pstream__);
-}
-};
-
-
-struct foo_3_rsfunctor__ {
-template <typename T0__>
-std::vector<typename boost::math::tools::promote_args<T0__>::type>
-operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
-{
-return foo_3(t+1, n+1, pstream__);
 }
 };
 
@@ -1879,18 +1745,6 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 }
 };
 
-
-struct foo_lp_rsfunctor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& x, std::ostream* pstream__, T_lp__& lp__,
-           T_lp_accum__& lp_accum__)  const 
-{
-return foo_lp(x+1, lp__, lp_accum__, pstream__);
-}
-};
-
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
@@ -1918,16 +1772,6 @@ void
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_4(x, pstream__);
-}
-};
-
-
-struct foo_4_rsfunctor__ {
-template <typename T0__>
-void
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return foo_4(x+1, pstream__);
 }
 };
 
@@ -2001,18 +1845,6 @@ return relative_diff(x, y, max_, min_, pstream__);
 }
 };
 
-
-struct relative_diff_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
-operator()(const T0__& x, const T1__& y, const T2__& max_,
-           std::ostream* pstream__, const T3__& min_)  const 
-{
-return relative_diff(x+1, y+1, max_, min_, pstream__);
-}
-};
-
 template <typename T0__, typename T1__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
 T1__>::type, -1, 1>
@@ -2047,20 +1879,6 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            std::ostream* pstream__)  const 
 {
 return foo_5(shared_params, job_params, data_r, data_i, pstream__);
-}
-};
-
-
-struct foo_5_rsfunctor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
-           const Eigen::Matrix<T1__, -1, 1>& job_params,
-           const std::vector<double>& data_r, std::ostream* pstream__,
-           const std::vector<int>& data_i)  const 
-{
-return foo_5(shared_params+1, job_params+1, data_r, data_i, pstream__);
 }
 };
 
@@ -2101,19 +1919,6 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 }
 };
 
-
-struct foo_five_args_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type
-operator()(const T0__& x1, const T1__& x2, const T2__& x3,
-           std::ostream* pstream__, const T3__& x4, const T4__& x5)  const 
-{
-return foo_five_args(x1+1, x2+1, x3, x4, x5, pstream__);
-}
-};
-
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
@@ -2151,22 +1956,6 @@ operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return foo_five_args_lp(x1, x2, x3, x4, x5, x6, lp__, lp_accum__, pstream__);
-}
-};
-
-
-struct foo_five_args_lp_rsfunctor__ {
-template <bool propto__, typename T0__, typename T1__, typename T2__,
-typename T3__, typename T4__, typename T5__, typename T_lp__,
-typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type
-operator()(const T0__& x1, const T1__& x2, const T2__& x3,
-           std::ostream* pstream__, const T3__& x4, const T4__& x5,
-           const T5__& x6, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
-{
-return foo_five_args_lp(x1+1, x2+1, x3, x4, x5, x6, lp__, lp_accum__,
-         pstream__);
 }
 };
 
@@ -2228,17 +2017,6 @@ return covsqrt2corsqrt(mat, invert, pstream__);
 }
 };
 
-
-struct covsqrt2corsqrt_rsfunctor__ {
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
-operator()(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
-           std::ostream* pstream__)  const 
-{
-return covsqrt2corsqrt(mat+1, invert+1, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 void
@@ -2297,26 +2075,6 @@ return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f0_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-void
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f0(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 int
@@ -2369,26 +2127,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f1_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-int
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f1(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2447,26 +2185,6 @@ return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f2_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<int>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f2(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<int>>
@@ -2519,26 +2237,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f3_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<int>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f3(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2601,28 +2299,6 @@ return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f4_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f4(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2679,28 +2355,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f5_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f5(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2763,28 +2417,6 @@ return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f6_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f6(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -2841,28 +2473,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f7_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f7(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -2925,28 +2535,6 @@ return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f8_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f8(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3003,28 +2591,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f9_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f9(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3087,28 +2653,6 @@ return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f10_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f10(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3168,28 +2712,6 @@ return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-
-struct f11_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f11(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
 std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
@@ -3246,28 +2768,6 @@ operator()(const int& a1, const std::vector<int>& a2,
            std::ostream* pstream__)  const 
 {
 return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
-}
-};
-
-
-struct f12_rsfunctor__ {
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>>
-operator()(const int& a1, const std::vector<int>& a2,
-           const std::vector<std::vector<int>>& a3, std::ostream* pstream__,
-           const T3__& a4, const std::vector<T4__>& a5,
-           const std::vector<std::vector<T5__>>& a6,
-           const Eigen::Matrix<T6__, -1, 1>& a7,
-           const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-           const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-           const Eigen::Matrix<T9__, -1, -1>& a10,
-           const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-           const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12)  const 
-{
-return f12(a1+1, a2+1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
@@ -3340,15 +2840,6 @@ return foo_6(pstream__);
 }
 };
 
-
-struct foo_6_rsfunctor__ {
-void
-operator()(std::ostream* pstream__)  const 
-{
-return foo_6(pstream__);
-}
-};
-
 Eigen::Matrix<double, -1, -1>
 matfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -3383,15 +2874,6 @@ return matfoo(pstream__);
 }
 };
 
-
-struct matfoo_rsfunctor__ {
-Eigen::Matrix<double, -1, -1>
-operator()(std::ostream* pstream__)  const 
-{
-return matfoo(pstream__);
-}
-};
-
 Eigen::Matrix<double, -1, 1>
 vecfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -3412,15 +2894,6 @@ vecfoo(std::ostream* pstream__) {
 }
 
 struct vecfoo_functor__ {
-Eigen::Matrix<double, -1, 1>
-operator()(std::ostream* pstream__)  const 
-{
-return vecfoo(pstream__);
-}
-};
-
-
-struct vecfoo_rsfunctor__ {
 Eigen::Matrix<double, -1, 1>
 operator()(std::ostream* pstream__)  const 
 {
@@ -3468,16 +2941,6 @@ return vecmufoo(mu, pstream__);
 }
 };
 
-
-struct vecmufoo_rsfunctor__ {
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
-operator()(const T0__& mu, std::ostream* pstream__)  const 
-{
-return vecmufoo(mu+1, pstream__);
-}
-};
-
 template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 vecmubar(const T0__& mu, std::ostream* pstream__) {
@@ -3520,16 +2983,6 @@ Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmubar(mu, pstream__);
-}
-};
-
-
-struct vecmubar_rsfunctor__ {
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
-operator()(const T0__& mu, std::ostream* pstream__)  const 
-{
-return vecmubar(mu+1, pstream__);
 }
 };
 
@@ -3585,19 +3038,6 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 }
 };
 
-
-struct algebra_system_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x,
-           const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
-           std::ostream* pstream__, const std::vector<int>& dat_int)  const 
-{
-return algebra_system(x+1, y+1, dat, dat_int, pstream__);
-}
-};
-
 template <typename T0__, typename T1__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
 T1__>::type, -1, 1>
@@ -3645,20 +3085,6 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
            std::ostream* pstream__)  const 
 {
 return binomialf(phi, theta, x_r, x_i, pstream__);
-}
-};
-
-
-struct binomialf_rsfunctor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
-           const Eigen::Matrix<T1__, -1, 1>& theta,
-           const std::vector<double>& x_r, std::ostream* pstream__,
-           const std::vector<int>& x_i)  const 
-{
-return binomialf(phi+1, theta+1, x_r, x_i, pstream__);
 }
 };
 
@@ -10082,19 +9508,6 @@ return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
-
-struct sho_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, std::ostream* pstream__,
-           const std::vector<T3__>& x, const std::vector<int>& x_int)  const 
-{
-return sho(t+1, y+1, theta, x, x_int, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type
@@ -10128,19 +9541,6 @@ operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
            std::ostream* pstream__)  const 
 {
 return integrand(x, xc, theta, x_r, x_i, pstream__);
-}
-};
-
-
-struct integrand_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
-operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
-           std::ostream* pstream__, const std::vector<T3__>& x_r,
-           const std::vector<int>& x_i)  const 
-{
-return integrand(x+1, xc+1, theta, x_r, x_i, pstream__);
 }
 };
 
@@ -10182,20 +9582,6 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 }
 };
 
-
-struct foo_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
-           const Eigen::Matrix<T1__, -1, 1>& job_params,
-           const std::vector<T2__>& data_r, std::ostream* pstream__,
-           const std::vector<int>& data_i)  const 
-{
-return foo(shared_params+1, job_params+1, data_r, data_i, pstream__);
-}
-};
-
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 map_rectfake(const T0__& x, std::ostream* pstream__) {
@@ -10220,16 +9606,6 @@ typename boost::math::tools::promote_args<T0__>::type
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return map_rectfake(x, pstream__);
-}
-};
-
-
-struct map_rectfake_rsfunctor__ {
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return map_rectfake(x+1, pstream__);
 }
 };
 
@@ -10282,19 +9658,6 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const std::vector<int>& dat_int, std::ostream* pstream__)  const 
 {
 return algebra_system(x, y, dat, dat_int, pstream__);
-}
-};
-
-
-struct algebra_system_rsfunctor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x,
-           const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
-           std::ostream* pstream__, const std::vector<int>& dat_int)  const 
-{
-return algebra_system(x+1, y+1, dat, dat_int, pstream__);
 }
 };
 
@@ -13318,7 +12681,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu, const T4__& sigma, const T5__& dummy)  const 
 {
-return my_func_3(start+1, end+1, y_slice, mu, sigma, dummy, pstream__);
+return my_func_3(start + 1, end + 1, y_slice, mu, sigma, dummy, pstream__);
 }
 };
 
@@ -13365,7 +12728,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu, const T4__& sigma)  const 
 {
-return my_func_2(start+1, end+1, y_slice, mu, sigma, pstream__);
+return my_func_2(start + 1, end + 1, y_slice, mu, sigma, pstream__);
 }
 };
 
@@ -13411,7 +12774,7 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__,
            const T3__& mu)  const 
 {
-return my_func_1(start+1, end+1, y_slice, mu, pstream__);
+return my_func_1(start + 1, end + 1, y_slice, mu, pstream__);
 }
 };
 
@@ -13451,7 +12814,7 @@ typename boost::math::tools::promote_args<T2__>::type
 operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
 {
-return my_func_0(start+1, end+1, y_slice, pstream__);
+return my_func_0(start + 1, end + 1, y_slice, pstream__);
 }
 };
 
@@ -13923,8 +13286,8 @@ operator()(const int& start, const int& end, const std::vector<int>& y_slice,
            const std::vector<T3__>& log_lambda_group,
            const std::vector<int>& gidx)  const 
 {
-return hierarchical_reduce(start+1, end+1, y_slice, log_lambda_group, gidx,
-         pstream__);
+return hierarchical_reduce(start + 1, end + 1, y_slice, log_lambda_group,
+         gidx, pstream__);
 }
 };
 
@@ -15447,17 +14810,6 @@ T1__>::type
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return lb_constrain(x, y, pstream__);
-}
-};
-
-
-struct lb_constrain_rsfunctor__ {
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
-{
-return lb_constrain(x+1, y+1, pstream__);
 }
 };
 
