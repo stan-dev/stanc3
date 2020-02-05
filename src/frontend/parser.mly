@@ -125,25 +125,22 @@ identifier:
 
 decl_identifier:
   | id=identifier { id }
-  | keyword UNREACHABLE
-      (* The only purpose of this rule is to improve the syntax error messages
-       when a user tries to use a keyword as a variable name. The rule can
-       never actually be built, but it provides a parser state that's distinct
-       from the use of other non-identifiers, so we can assign it a different
-       message in the .messages file.*)
+  (* The only purpose of the UNREACHABLE rules is to improve the syntax
+     error messages when a user tries to use a keyword as a variable name.
+     The rule can never actually be built, but it provides a parser state
+     that's distinct from the use of other non-identifiers, so we can assign
+     it a different message in the .messages file.
+   *)
+  | OFFSET UNREACHABLE
+  | MULTIPLIER UNREACHABLE
+  | LOWER UNREACHABLE
+  | UPPER UNREACHABLE
+  | TARGET UNREACHABLE
+  | PRINT UNREACHABLE
     {
       raise (Failure "This should be unreachable; the UNREACHABLE token should \
                       never be produced")
     }
-
-keyword:
-  | OFFSET
-  | MULTIPLIER
-  | LOWER
-  | UPPER
-  | TARGET
-  | PRINT
-  {}
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)

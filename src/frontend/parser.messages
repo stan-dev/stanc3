@@ -13507,4 +13507,73 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL OFFSET WHILE
 ##
 
 Identifier expected after type in top-level variable declaration.
-A reserved keyword was found, which cannot be used as an identifier.
+The reserved keyword 'offset' was found, which cannot be used as an identifier.
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL MULTIPLIER WHILE
+##
+## Ends in an error in state: 19.
+##
+## decl_identifier -> keyword . UNREACHABLE [ SEMICOLON RPAREN LPAREN LBRACK COMMA ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## keyword
+##
+
+Identifier expected after type in top-level variable declaration.
+The reserved keyword 'multiplier' was found, which cannot be used as an identifier.
+
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL LOWER WHILE
+##
+## Ends in an error in state: 19.
+##
+## decl_identifier -> keyword . UNREACHABLE [ SEMICOLON RPAREN LPAREN LBRACK COMMA ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## keyword
+##
+
+Identifier expected after type in top-level variable declaration.
+The reserved keyword 'lower' was found, which cannot be used as an identifier.
+
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL UPPER WHILE
+##
+## Ends in an error in state: 19.
+##
+## decl_identifier -> keyword . UNREACHABLE [ SEMICOLON RPAREN LPAREN LBRACK COMMA ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## keyword
+##
+
+Identifier expected after type in top-level variable declaration.
+The reserved keyword 'upper' was found, which cannot be used as an identifier.
+
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL TARGET WHILE
+##
+## Ends in an error in state: 19.
+##
+## decl_identifier -> keyword . UNREACHABLE [ SEMICOLON RPAREN LPAREN LBRACK COMMA ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## keyword
+##
+
+Identifier expected after type in top-level variable declaration.
+The reserved keyword 'target' was found, which cannot be used as an identifier.
+
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL PRINT WHILE
+##
+## Ends in an error in state: 19.
+##
+## decl_identifier -> keyword . UNREACHABLE [ SEMICOLON RPAREN LPAREN LBRACK COMMA ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## keyword
+##
+
+Identifier expected after type in top-level variable declaration.
+The reserved keyword 'print' was found, which cannot be used as an identifier.
