@@ -13506,8 +13506,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL OFFSET WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'offset' was found, which cannot be used as an identifier.
+Expected identifier, but found reserved keyword 'offset'
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL MULTIPLIER WHILE
 ##
@@ -13519,9 +13518,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL MULTIPLIER WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'multiplier' was found, which cannot be used as an identifier.
-
+Expected identifier, but found reserved keyword 'multiplier'
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL LOWER WHILE
 ##
@@ -13533,8 +13530,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL LOWER WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'lower' was found, which cannot be used as an identifier.
+Expected identifier, but found reserved keyword 'lower'
 
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL UPPER WHILE
@@ -13547,8 +13543,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL UPPER WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'upper' was found, which cannot be used as an identifier.
+Expected identifier, but found reserved keyword 'upper'
 
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL TARGET WHILE
@@ -13561,9 +13556,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL TARGET WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'target' was found, which cannot be used as an identifier.
-
+Expected identifier, but found reserved keyword 'target'
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL PRINT WHILE
 ##
@@ -13575,5 +13568,4 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL PRINT WHILE
 ## keyword
 ##
 
-Identifier expected after type in top-level variable declaration.
-The reserved keyword 'print' was found, which cannot be used as an identifier.
+Expected identifier, but found reserved keyword 'print'

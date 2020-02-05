@@ -2464,8 +2464,8 @@ Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing e
      4:  parameters {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
-A reserved keyword was found, which cannot be used as an identifier.
+Expected identifier, but found reserved keyword 'target'
+
 
   $ ../../../../install/default/bin/stanc tilde-bad.stan
 
