@@ -37,10 +37,10 @@ let rec expand_arg = function
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
   | DDeepVectorized ->
-      let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
-      List.(
-        concat_map all_base ~f:(fun a ->
-            map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
+    let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
+    List.(
+      concat_map all_base ~f:(fun a ->
+          map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
 
 type fkind = Lpmf | Lpdf | Rng | Cdf | Ccdf | UnaryVectorized
 
@@ -55,6 +55,25 @@ let stan_math_signatures = String.Table.create ()
 (** All of the signatures that are added by hand, rather than the ones
     added "declaratively" *)
 let manual_stan_math_signatures = String.Table.create ()
+
+let iter2 ~f l1 l2 =
+  let iter_rec e = List.iter l2 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter3 ~f l1 l2 l3 =
+  let iter_rec e = iter2 l2 l3 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter4 ~f l1 l2 l3 l4 =
+  let iter_rec e = iter3 l2 l3 l4 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter5 ~f l1 l2 l3 l4 l5 =
+  let iter_rec e = iter4 l2 l3 l4 l5 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter6 ~f l1 l2 l3 l4 l5 l6 =
+  let iter_rec e = iter5 l2 l3 l4 l5 l6 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter7 ~f l1 l2 l3 l4 l5 l6 l7 =
+  let iter_rec e = iter6 l2 l3 l4 l5 l6 l7 ~f:(f e) in
+  List.iter l1 ~f:iter_rec
 
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
@@ -82,15 +101,13 @@ let rec ints_to_real = function
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
-let allowed_slice_types_size = 5
-
-let allowed_slice_types = function
-  | 0 -> UnsizedType.UArray UReal
-  | 1 -> UArray UInt
-  | 2 -> UArray UMatrix
-  | 3 -> UArray UVector
-  | 4 -> UArray URowVector
-  | i -> raise_s [%sexp (i : int)]
+let allowed_slice_types =
+  [ UnsizedType.UArray UReal
+  ; UArray UInt
+  ; UArray UMatrix
+  ; UArray UVector
+  ; UArray URowVector
+  ]
 
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
@@ -120,20 +137,20 @@ let mk_declarative_sig (fnkinds, name, args) =
   in
   let add_fnkind = function
     | Rng ->
-        let rt, args = (List.hd_exn args, List.tl_exn args) in
-        let args = List.map ~f:add_ints args in
-        let rt = promoted_dim rt in
-        let name = name ^ "_rng" in
-        List.map (all_expanded args) ~f:(fun args ->
-            (name, find_rt rt args Rng, args) )
+      let rt, args = (List.hd_exn args, List.tl_exn args) in
+      let args = List.map ~f:add_ints args in
+      let rt = promoted_dim rt in
+      let name = name ^ "_rng" in
+      List.map (all_expanded args) ~f:(fun args ->
+          (name, find_rt rt args Rng, args) )
     | UnaryVectorized ->
-        create_from_fk_args UnaryVectorized (all_expanded args)
+      create_from_fk_args UnaryVectorized (all_expanded args)
     | fk -> create_from_fk_args fk (all_expanded args)
   in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
   |> List.map ~f:(fun (n, rt, args) ->
-         (n, rt, List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) args) )
+      (n, rt, List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) args) )
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
@@ -232,7 +249,7 @@ let math_sigs =
   ; ([UnaryVectorized], "step", [DReal])
   ; ([UnaryVectorized], "tan", [DDeepVectorized])
   ; ([UnaryVectorized], "tanh", [DDeepVectorized])
-    (* ; add_nullary ("target") *)
+  (* ; add_nullary ("target") *)
   ; ([UnaryVectorized], "tgamma", [DDeepVectorized])
   ; ([UnaryVectorized], "trunc", [DDeepVectorized])
   ; ([UnaryVectorized], "trigamma", [DDeepVectorized]) ]
@@ -258,11 +275,11 @@ let stan_math_returntype name args =
   let filteredmatches =
     List.filter
       ~f:(fun x ->
-        UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
+          UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
       namematches
   in
   if List.length filteredmatches = 0 then None
-    (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+  (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   else
     Some
       (List.hd_exn
@@ -277,10 +294,10 @@ let is_stan_math_function_name name =
 let is_distribution_name ?(infix = "") s =
   (not
      ( String.is_suffix ~suffix:"_cdf_log" s
-     || String.is_suffix ~suffix:"_ccdf_log" s ))
+       || String.is_suffix ~suffix:"_ccdf_log" s ))
   && List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-       distribution_suffices
+    ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
+    distribution_suffices
 
 let is_propto_distribution s =
   is_distribution_name ~infix:proportional_to_distribution_infix s
@@ -368,6 +385,14 @@ let bare_types = function
   | i -> raise_s [%sexp (i : int)]
 
 let bare_types_size = 5
+
+let bare_type_list =
+  [ UnsizedType.UInt
+  ; UReal
+  ; UVector
+  ; URowVector
+  ; UMatrix
+  ]
 
 let vector_types = function
   | 0 -> UnsizedType.UReal
@@ -1183,91 +1208,84 @@ let () =
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))
       ; (DataOnly, UArray (UArray UInt)) ] ) ;
-  for i = 0 to allowed_slice_types_size - 1 do
-    add_qualified
-      ( "reduce_sum"
-      , ReturnType UReal
-      , [ ( AutoDiffable
-          , UFun
-              ( [ (DataOnly, UInt); (DataOnly, UInt)
-                ; (AutoDiffable, allowed_slice_types i) ]
-              , ReturnType UReal ) )
-        ; (AutoDiffable, allowed_slice_types i)
-        ; (DataOnly, UInt) ] )
-  done ;
-  for i = 0 to allowed_slice_types_size - 1 do
-    for j = 0 to bare_types_size - 1 do
-      for k = 0 to 1 do
+  List.iter allowed_slice_types ~f:(fun slice_type ->
+      add_qualified
+        ( "reduce_sum"
+        , ReturnType UReal
+        , [ ( AutoDiffable
+            , UFun
+                ( [ (DataOnly, UInt); (DataOnly, UInt)
+                  ; (AutoDiffable, slice_type) ]
+                , ReturnType UReal ) )
+          ; (AutoDiffable, slice_type)
+          ; (DataOnly, UInt) ] ));
+  iter3
+    allowed_slice_types
+    bare_type_list
+    [0; 1]
+    ~f:(fun slice_type bare_type k ->
         add_qualified
           ( "reduce_sum"
           , ReturnType UReal
           , [ ( AutoDiffable
               , UFun
                   ( [ (DataOnly, UInt); (DataOnly, UInt)
-                    ; (AutoDiffable, allowed_slice_types i)
-                    ; (AutoDiffable, bare_array_type (bare_types j, k)) ]
+                    ; (AutoDiffable, slice_type)
+                    ; (AutoDiffable, bare_array_type (bare_type, k)) ]
                   , ReturnType UReal ) )
-            ; (AutoDiffable, allowed_slice_types i)
+            ; (AutoDiffable, slice_type)
             ; (DataOnly, UInt)
-            ; (AutoDiffable, bare_array_type (bare_types j, k)) ] )
-      done
-    done
-  done ;
-  for i = 0 to allowed_slice_types_size - 1 do
-    for j = 0 to bare_types_size - 1 do
-      for k = 0 to 1 do
-        for m = 0 to bare_types_size - 1 do
-          for n = 0 to 1 do
-            add_qualified
-              ( "reduce_sum"
-              , ReturnType UReal
-              , [ ( AutoDiffable
-                  , UFun
-                      ( [ (DataOnly, UInt); (DataOnly, UInt)
-                        ; (AutoDiffable, allowed_slice_types i)
-                        ; (AutoDiffable, bare_array_type (bare_types j, k))
-                        ; (AutoDiffable, bare_array_type (bare_types m, n)) ]
-                      , ReturnType UReal ) )
-                ; (AutoDiffable, allowed_slice_types i)
-                ; (DataOnly, UInt)
-                ; (AutoDiffable, bare_array_type (bare_types j, k))
-                ; (AutoDiffable, bare_array_type (bare_types m, n)) ] )
-          done
-        done
-      done
-    done
-  done ;
-  for i = 0 to allowed_slice_types_size - 1 do
-    for j = 0 to bare_types_size - 1 do
-      for k = 0 to 1 do
-        for m = 0 to bare_types_size - 1 do
-          for n = 0 to 1 do
-            for o = 0 to bare_types_size - 1 do
-              for p = 0 to 1 do
-                add_qualified
-                  ( "reduce_sum"
-                  , ReturnType UReal
-                  , [ ( AutoDiffable
-                      , UFun
-                          ( [ (DataOnly, UInt); (DataOnly, UInt)
-                            ; (AutoDiffable, allowed_slice_types i)
-                            ; (AutoDiffable, bare_array_type (bare_types j, k))
-                            ; (AutoDiffable, bare_array_type (bare_types m, n))
-                            ; (AutoDiffable, bare_array_type (bare_types o, p))
-                            ]
-                          , ReturnType UReal ) )
-                    ; (AutoDiffable, allowed_slice_types i)
-                    ; (DataOnly, UInt)
-                    ; (AutoDiffable, bare_array_type (bare_types j, k))
-                    ; (AutoDiffable, bare_array_type (bare_types m, n))
-                    ; (AutoDiffable, bare_array_type (bare_types o, p)) ] )
-              done
-            done
-          done
-        done
-      done
-    done
-  done ;
+            ; (AutoDiffable, bare_array_type (bare_type, k)) ] )
+      ) ;
+  iter5
+    allowed_slice_types
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    ~f:(fun slice_type bare_type1 k bare_type2 n ->
+        add_qualified
+          ( "reduce_sum"
+          , ReturnType UReal
+          , [ ( AutoDiffable
+              , UFun
+                  ( [ (DataOnly, UInt); (DataOnly, UInt)
+                    ; (AutoDiffable, slice_type)
+                    ; (AutoDiffable, bare_array_type (bare_type1, k))
+                    ; (AutoDiffable, bare_array_type (bare_type2, n)) ]
+                  , ReturnType UReal ) )
+            ; (AutoDiffable, slice_type)
+            ; (DataOnly, UInt)
+            ; (AutoDiffable, bare_array_type (bare_type1, k))
+            ; (AutoDiffable, bare_array_type (bare_type2, n)) ] )
+      ) ;
+  iter7
+    allowed_slice_types
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    ~f:(fun slice_type bare_type1 k bare_type2 n bare_type3 p ->
+        add_qualified
+          ( "reduce_sum"
+          , ReturnType UReal
+          , [ ( AutoDiffable
+              , UFun
+                  ( [ (DataOnly, UInt); (DataOnly, UInt)
+                    ; (AutoDiffable, slice_type)
+                    ; (AutoDiffable, bare_array_type (bare_type1, k))
+                    ; (AutoDiffable, bare_array_type (bare_type2, n))
+                    ; (AutoDiffable, bare_array_type (bare_type3, p))
+                    ]
+                  , ReturnType UReal ) )
+            ; (AutoDiffable, slice_type)
+            ; (DataOnly, UInt)
+            ; (AutoDiffable, bare_array_type (bare_type1, k))
+            ; (AutoDiffable, bare_array_type (bare_type2, n))
+            ; (AutoDiffable, bare_array_type (bare_type3, p)) ] )
+      ) ;
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
@@ -1788,3 +1806,107 @@ let () =
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
           Hashtbl.add_multi stan_math_signatures ~key ~data ) )
+
+
+let%expect_test "iter7" =
+  let f a b c d e f g = print_endline (Sexp.to_string_hum [%sexp ((a, b, c, d, e, f, g) : (int * int * int * int * int * int * int))])
+  in
+  iter7 [1; 2] [3; 4] [5; 6] [7; 8] [9] [10; 11; 12] [13; 14] ~f;
+  [%expect
+    {|
+      (1 3 5 7 9 10 13)
+      (1 3 5 7 9 10 14)
+      (1 3 5 7 9 11 13)
+      (1 3 5 7 9 11 14)
+      (1 3 5 7 9 12 13)
+      (1 3 5 7 9 12 14)
+      (1 3 5 8 9 10 13)
+      (1 3 5 8 9 10 14)
+      (1 3 5 8 9 11 13)
+      (1 3 5 8 9 11 14)
+      (1 3 5 8 9 12 13)
+      (1 3 5 8 9 12 14)
+      (1 3 6 7 9 10 13)
+      (1 3 6 7 9 10 14)
+      (1 3 6 7 9 11 13)
+      (1 3 6 7 9 11 14)
+      (1 3 6 7 9 12 13)
+      (1 3 6 7 9 12 14)
+      (1 3 6 8 9 10 13)
+      (1 3 6 8 9 10 14)
+      (1 3 6 8 9 11 13)
+      (1 3 6 8 9 11 14)
+      (1 3 6 8 9 12 13)
+      (1 3 6 8 9 12 14)
+      (1 4 5 7 9 10 13)
+      (1 4 5 7 9 10 14)
+      (1 4 5 7 9 11 13)
+      (1 4 5 7 9 11 14)
+      (1 4 5 7 9 12 13)
+      (1 4 5 7 9 12 14)
+      (1 4 5 8 9 10 13)
+      (1 4 5 8 9 10 14)
+      (1 4 5 8 9 11 13)
+      (1 4 5 8 9 11 14)
+      (1 4 5 8 9 12 13)
+      (1 4 5 8 9 12 14)
+      (1 4 6 7 9 10 13)
+      (1 4 6 7 9 10 14)
+      (1 4 6 7 9 11 13)
+      (1 4 6 7 9 11 14)
+      (1 4 6 7 9 12 13)
+      (1 4 6 7 9 12 14)
+      (1 4 6 8 9 10 13)
+      (1 4 6 8 9 10 14)
+      (1 4 6 8 9 11 13)
+      (1 4 6 8 9 11 14)
+      (1 4 6 8 9 12 13)
+      (1 4 6 8 9 12 14)
+      (2 3 5 7 9 10 13)
+      (2 3 5 7 9 10 14)
+      (2 3 5 7 9 11 13)
+      (2 3 5 7 9 11 14)
+      (2 3 5 7 9 12 13)
+      (2 3 5 7 9 12 14)
+      (2 3 5 8 9 10 13)
+      (2 3 5 8 9 10 14)
+      (2 3 5 8 9 11 13)
+      (2 3 5 8 9 11 14)
+      (2 3 5 8 9 12 13)
+      (2 3 5 8 9 12 14)
+      (2 3 6 7 9 10 13)
+      (2 3 6 7 9 10 14)
+      (2 3 6 7 9 11 13)
+      (2 3 6 7 9 11 14)
+      (2 3 6 7 9 12 13)
+      (2 3 6 7 9 12 14)
+      (2 3 6 8 9 10 13)
+      (2 3 6 8 9 10 14)
+      (2 3 6 8 9 11 13)
+      (2 3 6 8 9 11 14)
+      (2 3 6 8 9 12 13)
+      (2 3 6 8 9 12 14)
+      (2 4 5 7 9 10 13)
+      (2 4 5 7 9 10 14)
+      (2 4 5 7 9 11 13)
+      (2 4 5 7 9 11 14)
+      (2 4 5 7 9 12 13)
+      (2 4 5 7 9 12 14)
+      (2 4 5 8 9 10 13)
+      (2 4 5 8 9 10 14)
+      (2 4 5 8 9 11 13)
+      (2 4 5 8 9 11 14)
+      (2 4 5 8 9 12 13)
+      (2 4 5 8 9 12 14)
+      (2 4 6 7 9 10 13)
+      (2 4 6 7 9 10 14)
+      (2 4 6 7 9 11 13)
+      (2 4 6 7 9 11 14)
+      (2 4 6 7 9 12 13)
+      (2 4 6 7 9 12 14)
+      (2 4 6 8 9 10 13)
+      (2 4 6 8 9 10 14)
+      (2 4 6 8 9 11 13)
+      (2 4 6 8 9 11 14)
+      (2 4 6 8 9 12 13)
+      (2 4 6 8 9 12 14) |}]
