@@ -296,7 +296,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         |> error)
 
 (* Stan-Math function application *)
-let semantic_check_fn_stan_math ~_is_cond_dist ~loc id es =
+let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
   match
     Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
   with
@@ -305,6 +305,7 @@ let semantic_check_fn_stan_math ~_is_cond_dist ~loc id es =
       |> Validate.error
   | Some (UnsizedType.ReturnType ut) ->
       mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
         ~ad_level:(lub_ad_e es) ~type_:ut ~loc
       |> Validate.ok
   | _ ->
