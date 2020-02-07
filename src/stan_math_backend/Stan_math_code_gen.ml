@@ -192,8 +192,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
         ( fdname
         , prefix_extra_args
           @ List.map ~f:(fun (_, name, _) -> name) fdargs
-          @ extra @ ["pstream__"] ) ;
-    
+          @ extra @ ["pstream__"] ) ;    
       (* Produces the reduce_sum functors that has the pstream argument
       as the third and not last argument *)
       let first_two, rest_fdargs = List.split_n fdargs 2 in

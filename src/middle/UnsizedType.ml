@@ -10,10 +10,12 @@ type t =
   | UArray of t
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
+  | Any
 
 and autodifftype = DataOnly | AutoDiffable
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
+
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
@@ -42,6 +44,7 @@ let rec pp ppf = function
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
       (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+  | Any -> pp_keyword ppf "*"
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   match ad_ty with

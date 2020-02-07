@@ -266,7 +266,7 @@ module Helpers = struct
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
-    | UMathLibraryFunction | UFun _ ->
+    | UMathLibraryFunction | UFun _ | Any ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
   let contains_fn fn ?(init = false) stmt =

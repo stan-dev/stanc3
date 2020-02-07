@@ -257,7 +257,7 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UInt | UReal | UVector | URowVector | UMatrix | UArray _
-     |UFun (_, _)
+     |UFun (_, _) | Any
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in

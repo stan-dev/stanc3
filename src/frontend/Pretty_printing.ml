@@ -71,6 +71,7 @@ and pp_unsizedtype ppf = function
         Fmt.(list ~sep:comma_no_break pp_argtype)
         argtypes pp_returntype rt
   | UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
+  | Any -> Fmt.pf ppf "*"
 
 and pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 

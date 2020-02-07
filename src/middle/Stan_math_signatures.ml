@@ -1224,7 +1224,39 @@ let () =
                 , ReturnType UReal ) )
           ; (AutoDiffable, slice_type)
           ; (DataOnly, UInt) ] ));
-  iter3
+  List.iter allowed_slice_types ~f:(fun slice_type ->
+      add_qualified
+        ( "reduce_sum"
+        , ReturnType UReal
+        , [ ( AutoDiffable
+            , UFun
+                ( [ (DataOnly, UInt); (DataOnly, UInt)
+                  ; (AutoDiffable, slice_type)
+                  ; (AutoDiffable, Any)
+                  ; (AutoDiffable, Any) ]
+                , ReturnType UReal ) )
+          ; (AutoDiffable, slice_type)
+          ; (DataOnly, UInt)
+          ; (AutoDiffable, Any)
+          ; (AutoDiffable, Any) ] ));
+  List.iter allowed_slice_types ~f:(fun slice_type ->
+      add_qualified
+        ( "reduce_sum"
+        , ReturnType UReal
+        , [ ( AutoDiffable
+            , UFun
+                ( [ (DataOnly, UInt); (DataOnly, UInt)
+                  ; (AutoDiffable, slice_type)
+                  ; (AutoDiffable, Any)
+                  ; (AutoDiffable, Any)
+                  ; (AutoDiffable, Any) ]
+                , ReturnType UReal ) )
+          ; (AutoDiffable, slice_type)
+          ; (DataOnly, UInt)
+          ; (AutoDiffable, Any)
+          ; (AutoDiffable, Any)
+          ; (AutoDiffable, Any) ] ));
+  (* iter3
     allowed_slice_types
     bare_type_list
     [0; 1]
@@ -1290,7 +1322,7 @@ let () =
             ; (AutoDiffable, bare_array_type (bare_type1, k))
             ; (AutoDiffable, bare_array_type (bare_type2, n))
             ; (AutoDiffable, bare_array_type (bare_type3, p)) ] )
-      ) ;
+      ) ; *)
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;

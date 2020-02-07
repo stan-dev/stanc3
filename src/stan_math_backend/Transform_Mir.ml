@@ -87,6 +87,7 @@ let data_read smeta (decl_id, st) =
       Expr.Typed.Meta.{var.meta with type_= flat_type}
   in
   match unsized with
+  | Any -> []
   | UInt | UReal ->
       [ Assignment
           ( (decl_id, unsized, [])
