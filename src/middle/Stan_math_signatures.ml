@@ -74,7 +74,18 @@ let iter6 ~f l1 l2 l3 l4 l5 l6 =
 let iter7 ~f l1 l2 l3 l4 l5 l6 l7 =
   let iter_rec e = iter6 l2 l3 l4 l5 l6 l7 ~f:(f e) in
   List.iter l1 ~f:iter_rec
-
+let iter8 ~f l1 l2 l3 l4 l5 l6 l7 l8=
+  let iter_rec e = iter7 l2 l3 l4 l5 l6 l7 l8~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter9 ~f l1 l2 l3 l4 l5 l6 l7 l8 l9=
+  let iter_rec e = iter8 l2 l3 l4 l5 l6 l7 l8 l9~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter10 ~f l1 l2 l3 l4 l5 l6 l7 l8 l9 l10=
+  let iter_rec e = iter9 l2 l3 l4 l5 l6 l7 l8 l9 l10~f:(f e) in
+  List.iter l1 ~f:iter_rec
+let iter11 ~f l1 l2 l3 l4 l5 l6 l7 l8 l9 l10 l11=
+  let iter_rec e = iter10 l2 l3 l4 l5 l6 l7 l8 l9 l10 l11~f:(f e) in
+  List.iter l1 ~f:iter_rec
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
   List.fold_right xx ~init:[[]] ~f:(fun x accum ->
@@ -1285,6 +1296,72 @@ let () =
             ; (AutoDiffable, bare_array_type (bare_type1, k))
             ; (AutoDiffable, bare_array_type (bare_type2, n))
             ; (AutoDiffable, bare_array_type (bare_type3, p)) ] )
+      ) ;
+  iter9
+    allowed_slice_types
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    ~f:(fun slice_type bare_type1 k bare_type2 n bare_type3 p bare_type4 r ->
+        add_qualified
+          ( "reduce_sum"
+          , ReturnType UReal
+          , [ ( AutoDiffable
+              , UFun
+                  ( [ (DataOnly, UInt); (DataOnly, UInt)
+                    ; (AutoDiffable, slice_type)
+                    ; (AutoDiffable, bare_array_type (bare_type1, k))
+                    ; (AutoDiffable, bare_array_type (bare_type2, n))
+                    ; (AutoDiffable, bare_array_type (bare_type3, p))
+                    ; (AutoDiffable, bare_array_type (bare_type4, r))
+                    ]
+                  , ReturnType UReal ) )
+            ; (AutoDiffable, slice_type)
+            ; (DataOnly, UInt)
+            ; (AutoDiffable, bare_array_type (bare_type1, k))
+            ; (AutoDiffable, bare_array_type (bare_type2, n))
+            ; (AutoDiffable, bare_array_type (bare_type3, p))
+            ; (AutoDiffable, bare_array_type (bare_type4, r)) ] )
+      ) ;
+   iter11
+    allowed_slice_types
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    bare_type_list
+    [0; 1]
+    ~f:(fun slice_type bare_type1 k bare_type2 n bare_type3 p bare_type4 r bare_type5 s ->
+        add_qualified
+          ( "reduce_sum"
+          , ReturnType UReal
+          , [ ( AutoDiffable
+              , UFun
+                  ( [ (DataOnly, UInt); (DataOnly, UInt)
+                    ; (AutoDiffable, slice_type)
+                    ; (AutoDiffable, bare_array_type (bare_type1, k))
+                    ; (AutoDiffable, bare_array_type (bare_type2, n))
+                    ; (AutoDiffable, bare_array_type (bare_type3, p))
+                    ; (AutoDiffable, bare_array_type (bare_type4, r))
+                    ; (AutoDiffable, bare_array_type (bare_type5, s))
+                    ]
+                  , ReturnType UReal ) )
+            ; (AutoDiffable, slice_type)
+            ; (DataOnly, UInt)
+            ; (AutoDiffable, bare_array_type (bare_type1, k))
+            ; (AutoDiffable, bare_array_type (bare_type2, n))
+            ; (AutoDiffable, bare_array_type (bare_type3, p))
+            ; (AutoDiffable, bare_array_type (bare_type4, r))
+            ; (AutoDiffable, bare_array_type (bare_type5, s)) ] )
       ) ;
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
