@@ -1,3 +1,6 @@
+Info: Found int division at 'stan_models/python_kwrds.stan', line 13, column 12 to column 18:
+  lambda / 3
+Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 import numpy as np__
 import tensorflow as tf__
