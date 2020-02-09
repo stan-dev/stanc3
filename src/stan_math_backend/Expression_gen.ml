@@ -113,8 +113,12 @@ let is_user_dist s =
   ends_with_any user_dist_suffices s
   && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
 
-let is_user_lp s = String.is_suffix ~suffix:"_lp" s
-let suffix_args f = if ends_with "_rng" f then ["base_rng__"] else []
+let is_user_lp s = ends_with "_lp" s
+
+let suffix_args f =
+  if ends_with "_rng" f then ["base_rng__"]
+  else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
+  else []
 
 let demangle_propto_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
@@ -319,11 +323,7 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, es) =
-  let extra_args =
-    suffix_args f
-    @ (if is_user_lp f then ["lp__"; "lp_accum__"] else [])
-    @ ["pstream__"]
-  in
+  let extra_args = suffix_args f @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
   pf ppf "@[<hov 2>%s(@,%a%s)@]"
     (demangle_propto_name true f)
