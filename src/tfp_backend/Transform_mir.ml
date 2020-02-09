@@ -2,8 +2,13 @@ open Core_kernel
 open Middle
 
 let dist_prefix = "tfd__."
-let kwrds_suffix = "_"
-let append_kwrds_suffix x = x ^ kwrds_suffix
+let kwrds_suffix = "__"
+
+let append_kwrds_suffix x =
+  let x_with_suffix = x ^ kwrds_suffix in
+  Fmt.pr "Identifier %s is a reserved word in python, renamed to %s@," x
+    x_with_suffix ;
+  x_with_suffix
 
 let python_kwrds =
   String.Set.of_list
