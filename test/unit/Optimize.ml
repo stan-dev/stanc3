@@ -2190,11 +2190,11 @@ model {
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
+      Info: Found int division at 'string', line 27, column 14 to column 15:
+        i / j
+      Positive values rounded down, negative values rounded up or down in platform-dependent way.
       Info: Found int division at 'string', line 99, column 25 to column 26:
         1 / 2.
-      Positive values rounded down, negative values rounded up or down in platform-dependent way.
-      Info: Found int division at 'string', line 100, column 25 to column 27:
-        1. / 2
       Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 

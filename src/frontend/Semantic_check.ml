@@ -101,7 +101,6 @@ let has_int_or_real_type ue =
 let probability_distribution_name_variants id =
   let name = id.name in
   let open String in
-  let open Pervasives in
   List.map
     ~f:(fun n -> {name= n; id_loc= id.id_loc})
     ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
@@ -595,7 +594,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and re = semantic_check_expression cf e2
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
-        | UInt, UReal, Divide | UReal, UInt, Divide ->
+        | UInt, UReal, Divide | UInt, UInt, Divide ->
             Fmt.pr
               "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
               (Location_span.to_string x.emeta.loc)
