@@ -128,7 +128,7 @@ let demangle_propto_name udf f =
 let fn_renames =
   List.map
     ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
-    [ (Internal_fun.FnLength, "stan::length")
+    [ (Internal_fun.FnLength, "stan::math::size")
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
@@ -249,9 +249,9 @@ and gen_misc_special_math_app f =
 and read_data ut ppf es =
   let i_or_r =
     match ut with
-    | UnsizedType.UInt -> "i"
-    | UReal -> "r"
-    | UVector | URowVector | UMatrix | UArray _
+    | UnsizedType.UArray UInt -> "i"
+    | UArray UReal -> "r"
+    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]

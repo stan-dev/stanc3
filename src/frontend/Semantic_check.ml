@@ -101,7 +101,6 @@ let has_int_or_real_type ue =
 let probability_distribution_name_variants id =
   let name = id.name in
   let open String in
-  let open Pervasives in
   List.map
     ~f:(fun n -> {name= n; id_loc= id.id_loc})
     ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
@@ -595,7 +594,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and re = semantic_check_expression cf e2
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
-        | UInt, UReal, Divide | UReal, UInt, Divide ->
+        | UInt, UReal, Divide | UInt, UInt, Divide ->
             Fmt.pr
               "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
               (Location_span.to_string x.emeta.loc)
@@ -1064,6 +1063,12 @@ let cumulative_density_is_defined id arguments =
      || is_reat_rt_for_suffix "_ccdf_log"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
+let can_truncate_distribution ~loc (arg : typed_expression) = function
+  | NoTruncate -> Validate.ok ()
+  | _ ->
+      if UnsizedType.is_scalar_type arg.emeta.type_ then Validate.ok ()
+      else Validate.error @@ Semantic_error.multivariate_truncation loc
+
 let semantic_check_sampling_cdf_defined ~loc id truncation args =
   Validate.(
     match truncation with
@@ -1092,6 +1097,7 @@ let semantic_check_tilde ~loc ~cf distribution truncation arg args =
     semantic_check_sampling_distribution ~loc distribution (arg :: args)
     |> apply_const
          (semantic_check_sampling_cdf_defined ~loc distribution truncation args)
+    |> apply_const (can_truncate_distribution ~loc arg truncation)
     |> map ~f:(fun _ ->
            let stmt = Tilde {arg; distribution; args; truncation} in
            mk_typed_statement ~stmt ~loc ~return_type:NoReturnType ))

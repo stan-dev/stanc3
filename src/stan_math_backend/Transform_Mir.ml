@@ -64,49 +64,76 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
         pattern=
           Expr.Fixed.Pattern.map (switch_expr_to_opencl available_cl_vars) x }
 
-let pos = "pos__"
-
-let data_read smeta (decl_id, st) =
-  let decl_var =
-    { Expr.Fixed.pattern= Var decl_id
-    ; meta=
-        Expr.Typed.Meta.
-          {loc= smeta; type_= SizedType.to_unsized st; adlevel= DataOnly} }
-  in
-  let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
-  let bodyfn var =
-    let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
-    let readfnapp var =
-      let f =
-        Expr.Helpers.internal_funapp FnReadData
-          [{var with pattern= Lit (Str, decl_id)}]
-          var.meta
-      in
-      let meta = Expr.Typed.Meta.{var.meta with type_= UInt} in
-      {Expr.Fixed.pattern= Indexed (f, [Single pos_var]); meta}
-    in
-    let pos_increment =
-      if SizedType.is_scalar st then []
-      else
-        [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
-          |> swrap ]
-    in
-    SList
-      ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
-          readfnapp var
-      :: pos_increment )
-    |> swrap
-  in
-  let pos_reset =
-    Stmt.Fixed.Pattern.Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom)
-    |> swrap
-  in
-  [pos_reset; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta]
-
 let rec base_type = function
   | SizedType.SArray (t, _) -> base_type t
   | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
   | x -> SizedType.to_unsized x
+
+let pos = "pos__"
+
+let data_read smeta (decl_id, st) =
+  let unsized = SizedType.to_unsized st in
+  let scalar = base_type st in
+  let flat_type = UnsizedType.UArray scalar in
+  let decl_var =
+    { Expr.Fixed.pattern= Var decl_id
+    ; meta= Expr.Typed.Meta.{loc= smeta; type_= unsized; adlevel= DataOnly} }
+  in
+  let swrap stmt = {Stmt.Fixed.pattern= stmt; meta= smeta} in
+  let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
+  let readfnapp var =
+    Expr.Helpers.internal_funapp FnReadData
+      [{var with pattern= Lit (Str, decl_id)}]
+      Expr.Typed.Meta.{var.meta with type_= flat_type}
+  in
+  match unsized with
+  | UInt | UReal ->
+      [ Assignment
+          ( (decl_id, unsized, [])
+          , { Expr.Fixed.pattern=
+                Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
+            ; meta= {decl_var.meta with type_= unsized} } )
+        |> swrap ]
+  | UArray UInt | UArray UReal ->
+      [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Cannot read a function type."]
+  | UVector | URowVector | UMatrix | UArray _ ->
+      let decl, assign, flat_var =
+        let decl_id = decl_id ^ "_flat__" in
+        ( Stmt.Fixed.Pattern.Decl
+            {decl_adtype= AutoDiffable; decl_id; decl_type= Unsized flat_type}
+          |> swrap
+        , Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap
+        , { Expr.Fixed.pattern= Var decl_id
+          ; meta=
+              Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
+          } )
+      in
+      let bodyfn var =
+        let pos_increment =
+          [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
+            |> swrap ]
+        in
+        let read_indexed _ =
+          { Expr.Fixed.pattern= Indexed (flat_var, [Single pos_var])
+          ; meta= Expr.Typed.Meta.{flat_var.meta with type_= scalar} }
+        in
+        SList
+          ( Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
+              read_indexed var
+          :: pos_increment )
+        |> swrap
+      in
+      let pos_reset =
+        Stmt.Fixed.Pattern.Assignment
+          ((pos, UInt, []), Expr.Helpers.loop_bottom)
+        |> swrap
+      in
+      [ Block
+          [ decl; assign; pos_reset
+          ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
+        |> swrap ]
 
 let rec base_ut_to_string = function
   | UnsizedType.UMatrix -> "matrix"
@@ -568,10 +595,7 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-      match pattern with
-        | Decl d ->
-          Some (d.decl_id)
-        | _ -> None
+        match pattern with Decl d -> Some d.decl_id | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in

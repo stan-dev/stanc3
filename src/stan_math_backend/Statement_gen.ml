@@ -94,10 +94,6 @@ let rec pp_statement (ppf : Format.formatter)
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
-  | Assignment
-      ((id, _, idcs), ({pattern= FunApp (CompilerInternal, f, _); _} as rhs))
-    when Internal_fun.of_string_opt f = Some FnMakeArray ->
-      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (id, idcs) pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->

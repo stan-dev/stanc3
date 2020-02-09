@@ -139,9 +139,6 @@ generated quantities {
   }
 }
 
-Info: Found int division at 'gam_one_centered_design.stan', line 30, column 10 to column 30:
-  1.01 * (max(x) - min(x)) / (K - q)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'gam_one_centered_design.stan', line 30, column 8:
    -------------------------------------------------

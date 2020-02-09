@@ -5022,10 +5022,6 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
-Info: Found int division at './/functions/mvmer_functions.stan', line 428, column 11, included from
-'jm.stan', line 12, column 0:
-  mean_PPD / N
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined lm.stan
 functions {
   real ll_mvn_ols_qr_lp(vector theta, vector b, real intercept, real ybar,
@@ -5125,9 +5121,6 @@ generated quantities {
   }
 }
 
-Info: Found int division at 'lm.stan', line 54, column 25 to column 28:
-  1.0 / N[j]
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined mvmer.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
@@ -6343,10 +6336,6 @@ generated quantities {
   }
 }
 
-Info: Found int division at './/functions/mvmer_functions.stan', line 428, column 11, included from
-'mvmer.stan', line 12, column 0:
-  mean_PPD / N
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined polr.stan
 functions {
   real CDF_polr(real x, int link) {
