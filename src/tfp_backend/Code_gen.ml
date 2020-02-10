@@ -116,11 +116,12 @@ let pp_init ppf p =
   in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
-let pp_extract_data ppf p =
-  let pp_data ppf (name, _) = pf ppf "%s = self.%s" name name in
-  (list ~sep:cut pp_data) ppf p.Program.input_vars
+let pp_var_assignment ppf s = pf ppf "%s = self.%s" s s
 
-let pp_transformed_data ppf p =
+let pp_extract_data ppf p =
+  (list ~sep:cut pp_var_assignment) ppf (List.map ~f:fst p.Program.input_vars)
+
+let pp_extract_transf_data ppf p =
   let extract_arg_names x =
     match x.Stmt.Fixed.pattern with
     | Assignment ((lhs, _, _), _) -> Some lhs
@@ -129,8 +130,7 @@ let pp_transformed_data ppf p =
   let arg_names =
     List.filter_map ~f:extract_arg_names p.Program.prepare_data
   in
-  let pp_transformed_data ppf s = pf ppf "%s = self.%s" s s in
-  (list ~sep:cut pp_transformed_data) ppf arg_names
+  (list ~sep:cut pp_var_assignment) ppf arg_names
 
 let pp_log_prob_one_chain ppf p =
   let pp_extract_param ppf (idx, name) =
@@ -142,7 +142,7 @@ let pp_log_prob_one_chain ppf p =
   in
   let ppbody ppf =
     pf ppf "@,%s@,%a@,@,%s@,%a@,@,%s@,%a@,@,%s@,%a" "# Data" pp_extract_data p
-      "# Transformed data" pp_transformed_data p "# Parameters"
+      "# Transformed data" pp_extract_transf_data p "# Parameters"
       (list ~sep:cut pp_extract_param)
       List.(concat (mapi p.output_vars ~f:grab_params))
       "# Target log probability computation" (list ~sep:cut pp_stmt) p.log_prob
