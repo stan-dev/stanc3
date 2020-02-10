@@ -362,7 +362,6 @@ let bare_types = function
   | i -> raise_s [%sexp (i : int)]
 
 let bare_types_size = 5
-let bare_type_list = [UnsizedType.UInt; UReal; UVector; URowVector; UMatrix]
 
 let vector_types = function
   | 0 -> UnsizedType.UReal

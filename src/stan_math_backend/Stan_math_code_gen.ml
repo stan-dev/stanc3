@@ -124,7 +124,7 @@ let pp_template_decorator ppf = function
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
+let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) funs_used_in_reduce_sum_ =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -189,8 +189,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
       (* Produces the reduce_sum functors that has the pstream argument
       as the third and not last argument *)
       let first_two, rest_fdargs = List.split_n fdargs 2 in
-      let fun_used_in_reduce_sum = List.mem a fdname ~equal:( = ) in
-      if fun_used_in_reduce_sum then
+      if List.mem funs_used_in_reduce_sum_ fdname ~equal:( = ) then
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
           reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
           ( fdname
