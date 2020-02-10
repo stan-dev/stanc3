@@ -59,14 +59,20 @@ rule token = parse
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
   | "data"                    { lexer_logger "data" ; Parser.DATABLOCK }
-  | "transformed data"        { lexer_logger "transformed data" ;
+  | "transformed"
+      ( space+ )
+      "data"                  { lexer_logger "transformed data" ;
                                 Parser.TRANSFORMEDDATABLOCK }
   | "parameters"              { lexer_logger "parameters" ;
                                 Parser.PARAMETERSBLOCK }
-  | "transformed parameters"  { lexer_logger "transformed parameters" ;
+  | "transformed"
+      ( space+ )
+      "parameters"            { lexer_logger "transformed parameters" ;
                                 Parser.TRANSFORMEDPARAMETERSBLOCK }
   | "model"                   { lexer_logger "model" ; Parser.MODELBLOCK }
-  | "generated quantities"    { lexer_logger "generated quantities" ;
+  | "generated"
+      ( space+ )
+      "quantities"    { lexer_logger "generated quantities" ;
                                 Parser.GENERATEDQUANTITIESBLOCK }
 (* Punctuation *)
   | '{'                       { lexer_logger "{" ; Parser.LBRACE }
