@@ -79,17 +79,15 @@ module TypeError = struct
            type %a and rhs has type %a"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           UnsizedType.pp lt UnsizedType.pp rt
-    | IllTypedTernaryIf (ut1, ut2, ut3) ->
-        if ut1 = UnsizedType.UInt then
-          Fmt.pf ppf
-            "Type mismatch in ternary expression, expression when true is: \
-             %a; expression when false is: %a"
-            UnsizedType.pp ut2 UnsizedType.pp ut3
-        else
-          Fmt.pf ppf
-            "Condition in ternary expression must be primitive int; found \
-             type=%a"
-            UnsizedType.pp ut1
+    | IllTypedTernaryIf (UInt, ut2, ut3) ->
+        Fmt.pf ppf
+          "Type mismatch in ternary expression, expression when true is: %a; \
+           expression when false is: %a"
+          UnsizedType.pp ut2 UnsizedType.pp ut3
+    | IllTypedTernaryIf (ut1, _, _) ->
+        Fmt.pf ppf
+          "Condition in ternary expression must be primitive int; found type=%a"
+          UnsizedType.pp ut1
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
