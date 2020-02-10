@@ -314,6 +314,19 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
+
+let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
+    (* Validate.(
+      match get_arg_types es with
+    | [(_, UFun );_] ->   *)
+        mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+        ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
+        |> Validate.ok
+      (* | _ -> 
+        Semantic_error.illtyped_reduce_sum loc
+        |> error) *)
+
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
      function because, technically, user defined functions can shadow
@@ -331,9 +344,13 @@ let fn_kind_from_application id es =
     corresponding semantic check
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
-  match fn_kind_from_application id es with
-  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  match id.name with
+  | "reduce_sum" ->
+      semantic_check_reduce_sum ~is_cond_dist ~loc id es
+  | _ ->
+    match fn_kind_from_application id es with
+    | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+    | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -876,6 +893,17 @@ let semantic_check_nr_fn_app ~loc ~cf id es =
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
     >>= semantic_check_nr_fnkind ~loc id)
+
+let semantic_check_nr_fn_app2 ~loc ~cf id es =
+  Validate.(
+    es
+
+    |> List.map ~f:(semantic_check_expression cf)
+    |> sequence
+    |> apply_const (semantic_check_identifier id) 
+    |> apply_const (semantic_check_nrfn_target ~loc ~cf id) 
+    >>= semantic_check_nr_fnkind ~loc id
+  )
 
 (* -- Assignment ------------------------------------------------------------ *)
 
@@ -1622,6 +1650,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
     Ast.typed_statement Validate.t =
   let loc = s.smeta.loc in
   match s.stmt with
+  | NRFunApp (_, id, es) when id.name="algebra_solver" -> semantic_check_nr_fn_app2 ~loc ~cf id es
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs
