@@ -67,7 +67,7 @@ let check_of_same_type_mod_conv name t1 t2 =
              ~f:(fun x -> x = true)
              (List.map2_exn
                 ~f:(fun (at1, ut1) (at2, ut2) ->
-                  (ut1 = ut2 && autodifftype_can_convert at2 at1) )
+                  ut1 = ut2 && autodifftype_can_convert at2 at1 )
                 l1 l2)
     | _ -> t1 = t2
 

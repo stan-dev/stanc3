@@ -262,8 +262,8 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UInt | UReal | UVector | URowVector | UMatrix | UArray _
-    | UFun (_, _)
-    | UMathLibraryFunction ->
+     |UFun (_, _)
+     |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
