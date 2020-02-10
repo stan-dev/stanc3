@@ -149,7 +149,6 @@ let rec pp_value_json ppf e =
       Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
   | _ -> failwith "This should never happen."
 
-
 let var_decl_id d =
   match d.stmt with
   | VarDecl {identifier; _} -> identifier.name

@@ -10,12 +10,10 @@ type t =
   | UArray of t
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
-  | Any
 
 and autodifftype = DataOnly | AutoDiffable
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
-
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
@@ -44,7 +42,6 @@ let rec pp ppf = function
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
       (pp_angle_brackets Fmt.string) ppf "Stan Math function"
-  | Any -> pp_keyword ppf "*"
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   match ad_ty with
@@ -70,9 +67,9 @@ let check_of_same_type_mod_conv name t1 t2 =
              ~f:(fun x -> x = true)
              (List.map2_exn
                 ~f:(fun (at1, ut1) (at2, ut2) ->
-                  ut1 = Any || ut2 = Any || ut1 = ut2 && autodifftype_can_convert at2 at1 )
+                  (ut1 = ut2 && autodifftype_can_convert at2 at1) )
                 l1 l2)
-    | _ -> t1 = Any || t2 = Any || t1 = t2
+    | _ -> t1 = t2
 
 let rec check_of_same_type_mod_array_conv name t1 t2 =
   match (t1, t2) with

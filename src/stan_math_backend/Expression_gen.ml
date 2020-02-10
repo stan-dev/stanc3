@@ -145,10 +145,11 @@ let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
 
-let functor_suffix_select f = 
+let functor_suffix_select f =
   match f with
   | "reduce_sum" -> reduce_sum_functor_suffix
   | _ -> functor_suffix
+
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
@@ -261,8 +262,8 @@ and read_data ut ppf es =
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
     | UInt | UReal | UVector | URowVector | UMatrix | UArray _
-     |UFun (_, _) | Any
-     |UMathLibraryFunction ->
+    | UFun (_, _)
+    | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
@@ -274,7 +275,9 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])}
+          { e with
+            pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
+          }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -308,8 +311,7 @@ and gen_fun_app ppf fname es =
       | ( true
         , "reduce_sum"
         , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
-          ( strf "%s<%s>" fname f
-          , grainsize :: container :: msgs :: tl )
+          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
