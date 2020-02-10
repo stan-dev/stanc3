@@ -106,7 +106,7 @@ and trans_idx = function
         raise_s
           [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)] )
 
-and trans_exprs = List.map ~f:trans_expr
+and trans_exprs exprs = List.map ~f:trans_expr exprs
 
 let trans_sizedtype = SizedType.map trans_expr
 let trans_possiblysizedtype pst = Type.map trans_expr pst
