@@ -128,11 +128,11 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
-  let extra = if is_lp then ["lp__"; "lp_accum__"] else [] in
-  let prefix_extra_templates, prefix_extra_args =
-    if is_rng then (["RNG"], ["base_rng__"]) else ([], [])
+  let extra, extra_templates =
+    if is_lp then (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
+    else if is_rng then (["base_rng__"], ["RNG"])
+    else ([], [])
   in
-  let extra_templates = List.map ~f:(( ^ ) "T_") extra in
   let mk_extra_args templates args =
     List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
   in
@@ -154,18 +154,13 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
   in
   let templates =
     (if is_dist || is_lp then ["bool propto__"] else [])
-    @ List.(
-        map ~f:typename
-          (prefix_extra_templates @ argtypetemplates @ extra_templates))
+    @ List.(map ~f:typename (argtypetemplates @ extra_templates))
   in
   let pp_sig ppf name =
     pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
     let arg_strs =
-      mk_extra_args prefix_extra_templates prefix_extra_args
-      @ args
-      @ mk_extra_args extra_templates extra
-      @ ["std::ostream* pstream__"]
+      args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
@@ -174,12 +169,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
     pp_returntype ppf fdargs fdrt ;
     let first_three, rest = List.split_n args 3 in
     let arg_strs =
-      mk_extra_args prefix_extra_templates prefix_extra_args
-      @ first_three
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
-    in
+      first_three @ ["std::ostream* pstream__"] @ rest @ mk_extra_args extra_templates extra
+    in    
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
   pp_sig ppf fdname ;
@@ -190,9 +181,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
         functor_suffix pp_sig "operator()" pp_call_str
         ( fdname
-        , prefix_extra_args
-          @ List.map ~f:(fun (_, name, _) -> name) fdargs
-          @ extra @ ["pstream__"] ) ;    
+        , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
+        ) ;    
       (* Produces the reduce_sum functors that has the pstream argument
       as the third and not last argument *)
       let first_two, rest_fdargs = List.split_n fdargs 2 in
@@ -201,8 +191,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) a =
           pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
             reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
             ( fdname
-            , prefix_extra_args          
-              @ List.map ~f:(fun (_, name, _) -> name ^ " + 1") first_two
+            , List.map ~f:(fun (_, name, _) -> name ^ " + 1") first_two
               @ List.map ~f:(fun (_, name, _) -> name) rest_fdargs
               @ extra @ ["pstream__"] )
 

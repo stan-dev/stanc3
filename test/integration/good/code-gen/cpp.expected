@@ -1310,10 +1310,10 @@ return foo_lccdf(y, lambda, pstream__);
 }
 };
 
-template <typename RNG, typename T0__, typename T1__>
+template <typename T0__, typename T1__, typename RNG>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
-foo_rng(RNG& base_rng__, const T0__& mu, const T1__& sigma,
+foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
         std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T1__>::type;
@@ -1332,13 +1332,13 @@ foo_rng(RNG& base_rng__, const T0__& mu, const T1__& sigma,
 }
 
 struct foo_rng_functor__ {
-template <typename RNG, typename T0__, typename T1__>
+template <typename T0__, typename T1__, typename RNG>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
-operator()(RNG& base_rng__, const T0__& mu, const T1__& sigma,
+operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
            std::ostream* pstream__)  const 
 {
-return foo_rng(base_rng__, mu, sigma, pstream__);
+return foo_rng(mu, sigma, base_rng__, pstream__);
 }
 };
 

@@ -33,6 +33,7 @@ let reducearray (sbt, l) =
 %token PRINT REJECT
 %token TRUNCATE
 %token EOF
+%token UNREACHABLE
 
 %right COMMA
 %right QMARK COLON
@@ -122,8 +123,27 @@ identifier:
       {name="T"; id_loc=Location_span.of_positions_exn $startpos $endpos}
     }
 
+decl_identifier:
+  | id=identifier { id }
+  (* The only purpose of the UNREACHABLE rules is to improve the syntax
+     error messages when a user tries to use a keyword as a variable name.
+     The rule can never actually be built, but it provides a parser state
+     that's distinct from the use of other non-identifiers, so we can assign
+     it a different message in the .messages file.
+   *)
+  | OFFSET UNREACHABLE
+  | MULTIPLIER UNREACHABLE
+  | LOWER UNREACHABLE
+  | UPPER UNREACHABLE
+  | TARGET UNREACHABLE
+  | PRINT UNREACHABLE
+    {
+      raise (Failure "This should be unreachable; the UNREACHABLE token should \
+                      never be produced")
+    }
+
 function_def:
-  | rt=return_type name=identifier LPAREN args=separated_list(COMMA, arg_decl)
+  | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
     {
       grammar_logger "function_def" ;
@@ -140,7 +160,7 @@ return_type:
     {  grammar_logger "return_type unsized_type" ; ReturnType ut }
 
 arg_decl:
-  | od=option(DATABLOCK) ut=unsized_type id=identifier
+  | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
     {  grammar_logger "arg_decl" ;
        match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
@@ -172,7 +192,7 @@ unsized_dims:
 
 (* declarations *)
 var_decl:
-  | sbt=sized_basic_type id=identifier d=option(dims)
+  | sbt=sized_basic_type id=decl_identifier d=option(dims)
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
@@ -198,7 +218,7 @@ sized_basic_type:
     { grammar_logger "MATRIX_var_type" ; SizedType.SMatrix (e1, e2) }
 
 top_var_decl_no_assign:
-  | tvt=top_var_type id=identifier d=option(dims) SEMICOLON
+  | tvt=top_var_type id=decl_identifier d=option(dims) SEMICOLON
     {
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
@@ -213,7 +233,7 @@ top_var_decl_no_assign:
     }
 
 top_var_decl:
-  | tvt=top_var_type id=identifier d=option(dims)
+  | tvt=top_var_type id=decl_identifier d=option(dims)
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
