@@ -245,11 +245,6 @@ top_var_decl:
                        is_global= true};
        smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
     }
-  (*
-  | top_var_type OFFSET UNREACHABLE option(dims) SEMICOLON
-    { raise (Failure "This should be unreachable; the UNREACHABLE token should \
-                      never be produced") }
-   *)
 
 top_var_type:
   | INT r=range_constraint
