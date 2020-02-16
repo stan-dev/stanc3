@@ -12,26 +12,15 @@ let opencl_triggers =
                   [(1, UnsizedType.UMatrix)])
           (* Argument 1 is a matrix *)
            ] ) )
-    ; ( "normal_id_glm_propto_lpdf"
-      , ([0; 1], [ ([1], [(1, UnsizedType.UMatrix)])] ) )
     ; ( "bernoulli_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "bernoulli_logit_glm_propto_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "categorical_logit_glm_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "categorical_logit_propto_glm"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "neg_binomial_2_log_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "neg_binomial_2_log_glm_propto_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "ordered_logistic_glm_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "ordered_logistic_propto_glm"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
-    ; ("poisson_log_glm_propto_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
     ]
 
 let opencl_suffix = "_opencl__"
@@ -66,9 +55,10 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
+  let trim_propto f = String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f in
   match pattern with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers f ->
-      let trigger = Map.find_exn opencl_triggers f in
+  | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
+      let trigger = Map.find_exn opencl_triggers (trim_propto f) in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with
