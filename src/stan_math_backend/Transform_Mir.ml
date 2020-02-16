@@ -12,15 +12,26 @@ let opencl_triggers =
                   [(1, UnsizedType.UMatrix)])
           (* Argument 1 is a matrix *)
            ] ) )
+    ; ( "normal_id_glm_propto_lpdf"
+      , ([0; 1], [ ([1], [(1, UnsizedType.UMatrix)])] ) )
     ; ( "bernoulli_logit_glm_lpmf"
+      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+    ; ( "bernoulli_logit_glm_propto_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "categorical_logit_glm_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+    ; ( "categorical_logit_propto_glm"
+      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "neg_binomial_2_log_glm_lpmf"
+      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+    ; ( "neg_binomial_2_log_glm_propto_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ( "ordered_logistic_glm_lpmf"
       , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+    ; ( "ordered_logistic_propto_glm"
+      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
     ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
+    ; ("poisson_log_glm_propto_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
     ]
 
 let opencl_suffix = "_opencl__"
