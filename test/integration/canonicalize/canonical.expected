@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --print-canonical deprecated.stan
+  $ ../../../../install/default/bin/stanc --print_canonical deprecated.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -53,7 +53,7 @@ generated quantities {
   real y_hat[3, 2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i);
 }
 
-  $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
+  $ ../../../../install/default/bin/stanc --print_canonical parenthesize.stan
 transformed data {
   int N = 12;
   real b = 1.5;

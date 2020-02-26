@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format estdof.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format estdof.stan
 data {
   int<lower=0> N;
   real y[N];
@@ -61,7 +61,7 @@ Warning: deprecated language construct used in 'estdof.stan', line 6, column 0:
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format simt4.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format simt4.stan
 transformed data {
   int d;
   d <- 4;

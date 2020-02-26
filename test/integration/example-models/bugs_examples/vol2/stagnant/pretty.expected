@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format stagnant.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stagnant.stan
 data {
   int<lower=0> N;
   real x[N];
@@ -74,7 +74,7 @@ Warning: deprecated language construct used in 'stagnant.stan', line 41, column 
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stagnant2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stagnant2.stan
 data {
   int<lower=0> N;
   real x[N];

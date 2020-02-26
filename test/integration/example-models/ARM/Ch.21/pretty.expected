@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format finite_populations.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format finite_populations.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -44,7 +44,7 @@ Semantic error in 'finite_populations.stan', line 15, column 10 to column 13:
 
 Identifier 'a_0' not in scope.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format multiple_comparison.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format multiple_comparison.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -65,7 +65,7 @@ generated quantities {
   e_theta = theta - mu_theta;
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format r_sqr.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format r_sqr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_county;
@@ -117,7 +117,7 @@ Semantic error in 'r_sqr.stan', line 11, column 9 to column 10:
 
 Identifier 'j' not in scope.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_a.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_a.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -155,7 +155,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_b.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_b.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -195,7 +195,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_floor.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_floor.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -223,7 +223,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_floor2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_floor2.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -252,7 +252,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_floor2_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_floor2_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -283,7 +283,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_floor_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_floor_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -313,7 +313,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_nofloor.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_nofloor.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -340,7 +340,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_nofloor_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format radon_vary_intercept_nofloor_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;

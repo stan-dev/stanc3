@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format schools-1.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format schools-1.stan
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -89,7 +89,7 @@ Warning: deprecated language construct used in 'schools-1.stan', line 50, column
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format schools-2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format schools-2.stan
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -183,7 +183,7 @@ Warning: deprecated language construct used in 'schools-2.stan', line 51, column
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format schools-3.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format schools-3.stan
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -286,7 +286,7 @@ Warning: deprecated language construct used in 'schools-3.stan', line 49, column
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format schools-4.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format schools-4.stan
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -396,7 +396,7 @@ Warning: deprecated language construct used in 'schools-4.stan', line 55, column
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format schools.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format schools.stan
 data {
   int<lower=0> N;
   int<lower=0> M;

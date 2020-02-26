@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format earnings.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -25,7 +25,7 @@ model {
                     + beta[11] * any_charity, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format earnings2.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -53,7 +53,7 @@ model {
                     + beta[11] * any_welfare + beta[12] * any_charity, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings_pt1.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format earnings_pt1.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -76,7 +76,7 @@ model {
                              + beta[8] * any_welfare + beta[9] * any_charity);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings_pt2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format earnings_pt2.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;

@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format arK.stan
+  $ ../../../../../install/default/bin/stanc --auto_format arK.stan
 data {
   int<lower=0> K;
   int<lower=0> T;
@@ -22,7 +22,7 @@ model {
   }
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format arma.stan
+  $ ../../../../../install/default/bin/stanc --auto_format arma.stan
 data {
   int<lower=1> T;
   real y[T];
@@ -49,7 +49,7 @@ model {
   err ~ normal(0, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format eight_schools.stan
+  $ ../../../../../install/default/bin/stanc --auto_format eight_schools.stan
 data {
   int<lower=0> J;
   real y[J];
@@ -72,7 +72,7 @@ model {
   y ~ normal(theta, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format garch.stan
+  $ ../../../../../install/default/bin/stanc --auto_format garch.stan
 data {
   int<lower=0> T;
   real y[T];
@@ -93,7 +93,7 @@ model {
   y ~ normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format gen_gp_data.stan
+  $ ../../../../../install/default/bin/stanc --auto_format gen_gp_data.stan
 transformed data {
   real rho = 5.5;
   real alpha = 3;
@@ -122,7 +122,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
+  $ ../../../../../install/default/bin/stanc --auto_format gp_pois_regr.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -149,7 +149,7 @@ model {
   k ~ poisson_log(f);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
+  $ ../../../../../install/default/bin/stanc --auto_format gp_regr.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -170,7 +170,7 @@ model {
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
+  $ ../../../../../install/default/bin/stanc --auto_format irt_2pl.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -197,7 +197,7 @@ model {
     y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_corr_gauss.stan
+  $ ../../../../../install/default/bin/stanc --auto_format low_dim_corr_gauss.stan
 transformed data {
   vector[2] mu;
   real sigma1;
@@ -229,7 +229,7 @@ generated quantities {
   delta_corr = (z[1] - mu[1]) * (z[2] - mu[2]) / (sigma1 * sigma2) - rho;
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix.stan
+  $ ../../../../../install/default/bin/stanc --auto_format low_dim_gauss_mix.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -248,7 +248,7 @@ model {
                       normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
+  $ ../../../../../install/default/bin/stanc --auto_format low_dim_gauss_mix_collapse.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -267,7 +267,7 @@ model {
                       normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
+  $ ../../../../../install/default/bin/stanc --auto_format one_comp_mm_elim_abs.stan
 functions {
   real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
                               int[] x_i) {
@@ -326,7 +326,7 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
+  $ ../../../../../install/default/bin/stanc --auto_format sim_one_comp_mm_elim_abs.stan
 functions {
   real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
                               int[] x_i) {
@@ -374,7 +374,7 @@ generated quantities {
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format sir.stan
+  $ ../../../../../install/default/bin/stanc --auto_format sir.stan
 functions {
   real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
     real dydt[4];

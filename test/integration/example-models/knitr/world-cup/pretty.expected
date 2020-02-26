@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format abs_test.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format abs_test.stan
 data {
   int N;
   vector[N] y;
@@ -13,7 +13,7 @@ model {
   y ~ normal(theta, 1);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format worldcup_first_try.stan
 data {
   int N_teams;
   int N_games;
@@ -47,7 +47,7 @@ model {
   sqrt_dif ~ student_t(df, a[team_1] - a[team_2], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try_noprior.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format worldcup_first_try_noprior.stan
 data {
   int N_teams;
   int N_games;
@@ -81,7 +81,7 @@ model {
   sqrt_dif ~ student_t(df, a[team_1] - a[team_2], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_fixed.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format worldcup_fixed.stan
 data {
   int N_teams;
   int N_games;
@@ -123,7 +123,7 @@ generated quantities {
   y_rep_original_scale = y_rep .* fabs(y_rep);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_no_sqrt.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format worldcup_no_sqrt.stan
 data {
   int N_teams;
   int N_games;
@@ -159,7 +159,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_with_replication.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format worldcup_with_replication.stan
 data {
   int N_teams;
   int N_games;

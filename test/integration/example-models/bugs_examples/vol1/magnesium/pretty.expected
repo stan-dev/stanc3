@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format magnesium.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format magnesium.stan
 data {
   int N_studies;
   int rt[N_studies];

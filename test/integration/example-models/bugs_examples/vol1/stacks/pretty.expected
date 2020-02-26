@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_a_normal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_a_normal.stan
 data {
   int<lower=0> N;
   int<lower=0> p;
@@ -212,7 +212,7 @@ Warning: deprecated language construct used in 'stacks_a_normal.stan', line 58, 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_b_dexp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_b_dexp.stan
 data {
   int<lower=0> N;
   int<lower=0> p;
@@ -441,7 +441,7 @@ Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 61, co
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_c_t4.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_c_t4.stan
 data {
   int<lower=0> N;
   int<lower=0> p;
@@ -670,7 +670,7 @@ Warning: deprecated language construct used in 'stacks_c_t4.stan', line 62, colu
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_d_normal_ridge.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_d_normal_ridge.stan
 data {
   int<lower=0> N;
   int<lower=0> p;
@@ -886,7 +886,7 @@ Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', lin
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_e_dexp_ridge.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_e_dexp_ridge.stan
 data {
   int<lower=0> N;
   int<lower=0> p;
@@ -1120,7 +1120,7 @@ Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format stacks_f_t4_ridge.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format stacks_f_t4_ridge.stan
 data {
   int<lower=0> N;
   int<lower=0> p;

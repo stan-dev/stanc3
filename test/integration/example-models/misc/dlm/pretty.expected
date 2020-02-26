@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format fx_equicorr.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format fx_equicorr.stan
 data {
   int r;
   int T;
@@ -128,7 +128,7 @@ Warning: deprecated language construct used in 'fx_equicorr.stan', line 31, colu
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format fx_factor.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format fx_factor.stan
 data {
   int r;
   int T;
@@ -181,7 +181,7 @@ Warning: deprecated language construct used in 'fx_factor.stan', line 23, column
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format nile.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format nile.stan
 data {
   int n;
   matrix[1, n] y;

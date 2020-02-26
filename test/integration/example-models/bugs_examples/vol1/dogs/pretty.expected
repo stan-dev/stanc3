@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format dogs.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format dogs.stan
 data {
   int<lower=0> Ndogs;
   int<lower=0> Ntrials;

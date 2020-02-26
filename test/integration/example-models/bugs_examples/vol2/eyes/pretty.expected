@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format eyes.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format eyes.stan
 data {
   int<lower=0> N;
   real y[N];

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format seeds.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format seeds.stan
 data {
   int<lower=0> I;
   int<lower=0> n[I];

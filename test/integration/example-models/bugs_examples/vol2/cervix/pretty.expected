@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format cervix2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format cervix2.stan
 data {
   int<lower=0> Nc;
   int<lower=0> Ni;

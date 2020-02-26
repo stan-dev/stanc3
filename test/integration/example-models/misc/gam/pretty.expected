@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format gam_one_centered_design.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format gam_one_centered_design.stan
 functions {
   vector range(int imin, int imax) {
     return cumulative_sum(rep_vector(1, imax - imin + 1)) - 1 + imin;

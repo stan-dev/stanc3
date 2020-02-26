@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format js_ms.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format js_ms.stan
 functions {
   vector seq_cprob(vector gamma) {
     int N = rows(gamma);
@@ -108,7 +108,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format js_rest_occ.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format js_rest_occ.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -269,7 +269,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format js_super.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format js_super.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -433,7 +433,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format js_super_indran.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format js_super_indran.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -601,7 +601,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format js_tempran.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format js_tempran.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format epil.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format epil.stan
 data {
   int<lower=0> N;
   int<lower=0> T;

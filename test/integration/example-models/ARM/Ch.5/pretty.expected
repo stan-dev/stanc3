@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format nes_logit.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format nes_logit.stan
 data {
   int<lower=0> N;
   vector[N] income;
@@ -11,7 +11,7 @@ model {
   vote ~ bernoulli_logit(beta[1] + beta[2] * income);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format separation.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format separation.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> y[N];
@@ -24,7 +24,7 @@ model {
   y ~ bernoulli_logit(beta[1] + beta[2] * x);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_d100ars.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_d100ars.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -42,7 +42,7 @@ model {
   switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_daae_c.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_daae_c.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -70,7 +70,7 @@ model {
                              + beta[5] * assoc + beta[6] * educ4);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dae.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dae.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -92,7 +92,7 @@ model {
                              + beta[4] * educ4);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_c.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dae_c.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -119,7 +119,7 @@ model {
                              + beta[5] * educ4);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_inter.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dae_inter.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -143,7 +143,7 @@ model {
                              + beta[4] * educ4 + beta[5] * inter);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_inter_c.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dae_inter_c.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -175,7 +175,7 @@ model {
                              + beta[7] * ae_inter);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dist.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dist.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -188,7 +188,7 @@ model {
   switched ~ bernoulli_logit(beta[1] + beta[2] * dist);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_dist100.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_dist100.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -205,7 +205,7 @@ model {
   switched ~ bernoulli_logit(beta[1] + beta[2] * dist100);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_interaction.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_interaction.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -226,7 +226,7 @@ model {
                              + beta[4] * inter);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_interaction_c.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_interaction_c.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -249,7 +249,7 @@ model {
                              + beta[3] * c_arsenic + beta[4] * inter);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_predicted.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_predicted.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];
@@ -289,7 +289,7 @@ generated quantities {
                         + beta[7] * ae_inter[i]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells_predicted_log.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format wells_predicted_log.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> switched[N];

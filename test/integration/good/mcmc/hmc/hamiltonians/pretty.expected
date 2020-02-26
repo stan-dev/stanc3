@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format funnel.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format funnel.stan
 transformed data {
   int N;
   N = 10;

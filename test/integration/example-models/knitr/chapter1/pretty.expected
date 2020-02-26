@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format fake-data.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format fake-data.stan
 data {
   int<lower=1> N;
   real a;
@@ -12,7 +12,7 @@ generated quantities {
     y[n] = normal_rng(a + b * x[n], sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format simplest-regression.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format simplest-regression.stan
 data {
   int<lower=0> N;
   vector[N] x;
@@ -27,7 +27,7 @@ model {
   y ~ normal(a + b * x, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format vector-regression.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format vector-regression.stan
 data {
   int<lower=0> N;
   int<lower=0> K;

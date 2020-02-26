@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_logistic_glm_lpmf.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format ordered_logistic_glm_lpmf.stan
 transformed data {
   int N = 2;
   int M = 3;
@@ -32,7 +32,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_logistic_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format ordered_logistic_log.stan
 data {
   int d_int;
   real d_real;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format bones.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format bones.stan
 data {
   int<lower=0> nChild;
   int<lower=0> nInd;

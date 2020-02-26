@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format normal_normal.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format normal_normal.stan
 data {
   real y;
   real<lower=0> sigma_y;

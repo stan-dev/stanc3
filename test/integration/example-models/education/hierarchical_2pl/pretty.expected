@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format hierarchical_2pl.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format hierarchical_2pl.stan
 data {
   int<lower=1> I;
   int<lower=1> J;

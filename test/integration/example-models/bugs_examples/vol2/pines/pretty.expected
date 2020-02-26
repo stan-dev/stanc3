@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format pines-2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format pines-2.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -141,7 +141,7 @@ Warning: deprecated language construct used in 'pines-2.stan', line 43, column 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format pines-3.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format pines-3.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -196,7 +196,7 @@ generated quantities {
 Info: Found int division at 'pines-3.stan', line 23, column 15 to column 16:
   1 / sqrt(tau[i])
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../../../../install/default/bin/stanc --auto-format pines-4.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format pines-4.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -320,7 +320,7 @@ Warning: deprecated language construct used in 'pines-4.stan', line 44, column 5
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format pines-independent.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format pines-independent.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -421,7 +421,7 @@ Warning: deprecated language construct used in 'pines-independent.stan', line 33
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format pines.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format pines.stan
 data {
   int<lower=0> N;
   vector[N] y;

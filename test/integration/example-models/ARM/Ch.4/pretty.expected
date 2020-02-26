@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format earn_height.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format earn_height.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -12,7 +12,7 @@ model {
   earn ~ normal(beta[1] + beta[2] * height, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format kidiq_interaction.stan
 data {
   int<lower=0> N;
   vector[N] kid_score;
@@ -32,7 +32,7 @@ model {
                      + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_c.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format kidiq_interaction_c.stan
 data {
   int<lower=0> N;
   vector[N] kid_score;
@@ -56,7 +56,7 @@ model {
                      + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_c2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format kidiq_interaction_c2.stan
 data {
   int<lower=0> N;
   vector[N] kid_score;
@@ -80,7 +80,7 @@ model {
                      + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_z.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format kidiq_interaction_z.stan
 data {
   int<lower=0> N;
   vector[N] kid_score;
@@ -104,7 +104,7 @@ model {
                      + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format kidscore_momwork.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format kidscore_momwork.stan
 data {
   int<lower=0> N;
   vector[N] kid_score;
@@ -129,7 +129,7 @@ model {
                      + beta[4] * work4, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format log10earn_height.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format log10earn_height.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -149,7 +149,7 @@ model {
   log10_earn ~ normal(beta[1] + beta[2] * height, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format logearn_height.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format logearn_height.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -167,7 +167,7 @@ model {
   log_earn ~ normal(beta[1] + beta[2] * height, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format logearn_height_male.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format logearn_height_male.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -186,7 +186,7 @@ model {
   log_earn ~ normal(beta[1] + beta[2] * height + beta[3] * male, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format logearn_interaction.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format logearn_interaction.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -208,7 +208,7 @@ model {
                     + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format logearn_interaction_z.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format logearn_interaction_z.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -232,7 +232,7 @@ model {
                     + beta[4] * inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format logearn_logheight.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format logearn_logheight.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -253,7 +253,7 @@ model {
   log_earn ~ normal(beta[1] + beta[2] * log_height + beta[3] * male, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -274,7 +274,7 @@ model {
                   + beta[6] * density + beta[7] * group, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite_log.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite_log.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -310,7 +310,7 @@ model {
                       + beta[7] * group, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite_va.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite_va.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -336,7 +336,7 @@ model {
                       + beta[3] * log_canopy_area + beta[4] * group, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite_vas.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite_vas.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -373,7 +373,7 @@ model {
                       + beta[7] * group, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite_vash.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite_vash.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -406,7 +406,7 @@ model {
                       + beta[5] * log_total_height + beta[6] * group, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mesquite_volume.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mesquite_volume.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -428,7 +428,7 @@ model {
   log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format nes.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format nes.stan
 data {
   int<lower=0> N;
   vector[N] partyid7;

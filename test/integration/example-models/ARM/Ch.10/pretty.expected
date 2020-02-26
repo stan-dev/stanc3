@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format ideo_interactions.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ideo_interactions.stan
 data {
   int<lower=0> N;
   vector[N] party;
@@ -18,7 +18,7 @@ model {
                   sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ideo_reparam.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ideo_reparam.stan
 data {
   int<lower=0> N;
   vector[N] party;
@@ -35,7 +35,7 @@ model {
                   sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ideo_two_pred.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ideo_two_pred.stan
 data {
   int<lower=0> N;
   vector[N] party;
@@ -50,7 +50,7 @@ model {
   score1 ~ normal(beta[1] + beta[2] * party + beta[3] * x, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sesame_multi_preds_3a.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format sesame_multi_preds_3a.stan
 data {
   int<lower=0> N;
   vector[N] encouraged;
@@ -81,7 +81,7 @@ model {
                    + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sesame_multi_preds_3b.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format sesame_multi_preds_3b.stan
 data {
   int<lower=0> N;
   vector[N] pretest;
@@ -112,7 +112,7 @@ model {
              + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sesame_one_pred_2b.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format sesame_one_pred_2b.stan
 data {
   int<lower=0> N;
   vector[N] watched_hat;
@@ -126,7 +126,7 @@ model {
   y ~ normal(beta[1] + beta[2] * watched_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sesame_one_pred_a.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format sesame_one_pred_a.stan
 data {
   int<lower=0> N;
   vector[N] encouraged;
@@ -140,7 +140,7 @@ model {
   watched ~ normal(beta[1] + beta[2] * encouraged, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sesame_one_pred_b.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format sesame_one_pred_b.stan
 data {
   int<lower=0> N;
   vector[N] encouraged;

@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format Dynocc.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format Dynocc.stan
 data {
   int<lower=1> nsite;
   int<lower=1> nrep;
@@ -67,7 +67,7 @@ generated quantities {
                             ./ psi[2 : ];
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Dynocc2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format Dynocc2.stan
 data {
   int<lower=1> nsite;
   int<lower=1> nyear;
@@ -131,7 +131,7 @@ generated quantities {
                             ./ psi[2 : ];
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format bluebug.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format bluebug.stan
 data {
   int<lower=1> R;
   int<lower=1> T;
@@ -213,7 +213,7 @@ generated quantities {
   occ_fs = sum(z);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format owls_ms1.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format owls_ms1.stan
 data {
   int<lower=1> R;
   int<lower=1> T;
@@ -270,7 +270,7 @@ generated quantities {
     n_occ[i] = sum(occ[i]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format owls_ms2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format owls_ms2.stan
 data {
   int<lower=1> R;
   int<lower=1> T;
@@ -334,7 +334,7 @@ generated quantities {
     n_occ[i] = sum(occ[i]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format site-occ.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format site-occ.stan
 data {
   int<lower=1> R;
   int<lower=1> T;
@@ -373,7 +373,7 @@ generated quantities {
   occ_fs = occ_obs + binomial_rng(R - occ_obs, psi_nd);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format site-occ_cov.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format site-occ_cov.stan
 data {
   int<lower=1> R;
   int<lower=1> T;

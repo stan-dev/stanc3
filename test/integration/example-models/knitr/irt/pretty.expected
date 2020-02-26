@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format irt-multilevel.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt-multilevel.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -47,7 +47,7 @@ Warning: deprecated language construct used in 'irt-multilevel.stan', line 33, c
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -66,7 +66,7 @@ model {
     y[i] ~ bernoulli_logit(delta[i] * (alpha - beta[i]));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -94,7 +94,7 @@ Warning: deprecated language construct used in 'irt_1pl.stan', line 1, column 0:
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_adjust.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_adjust.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -169,7 +169,7 @@ Warning: deprecated language construct used in 'irt_1pl_adjust.stan', line 18, c
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_fit_predict.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_fit_predict.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -251,7 +251,7 @@ Warning: deprecated language construct used in 'irt_1pl_fit_predict.stan', line 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_hier.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_hier.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -285,7 +285,7 @@ Warning: deprecated language construct used in 'irt_1pl_hier.stan', line 1, colu
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_mle.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_mle.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -300,7 +300,7 @@ model {
     y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_pin.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_pin.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -328,9 +328,9 @@ Warning: deprecated language construct used in 'irt_1pl_pin.stan', line 1, colum
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_power.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_power.stan
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_predict.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_predict.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -412,7 +412,7 @@ Warning: deprecated language construct used in 'irt_1pl_predict.stan', line 25, 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_unit.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_unit.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -470,7 +470,7 @@ Warning: deprecated language construct used in 'irt_1pl_unit.stan', line 15, col
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_vague.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_1pl_vague.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -502,7 +502,7 @@ Warning: deprecated language construct used in 'irt_1pl_vague.stan', line 1, col
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_2pl_power.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_2pl_power.stan
 data {
   int<lower=0> I;
   vector[I] a;
@@ -576,5 +576,5 @@ Warning: deprecated language construct used in 'irt_2pl_power.stan', line 16, co
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_power.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format irt_power.stan
 

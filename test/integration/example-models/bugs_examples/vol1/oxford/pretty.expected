@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format oxford.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format oxford.stan
 data {
   int<lower=0> K;
   int<lower=0> n0[K];

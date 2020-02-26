@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format mixture.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mixture.stan
 data {
   int K;
   int N;
@@ -21,7 +21,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mixture_2.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format mixture_2.stan
 data {
   int K;
   int N;

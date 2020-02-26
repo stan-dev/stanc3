@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format dogs.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format dogs.stan
 data {
   int<lower=0> n_dogs;
   int<lower=0> n_trials;
@@ -30,7 +30,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format dogs_check.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format dogs_check.stan
 data {
   int<lower=0> n_dogs;
   int<lower=0> n_trials;
@@ -76,7 +76,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format dogs_log.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format dogs_log.stan
 data {
   int<lower=0> n_trials;
   int<lower=0> n_dogs;

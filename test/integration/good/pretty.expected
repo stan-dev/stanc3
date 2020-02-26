@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --auto-format abs-deprecate.stan
+  $ ../../../../install/default/bin/stanc --auto_format abs-deprecate.stan
 transformed data {
   real mu;
   mu = abs(-1.2);
@@ -10,7 +10,7 @@ model {
   y ~ normal(mu, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format algebra_solver_good.stan
 functions {
   real algebra_solverfake(real x) {
     return 2 * x;
@@ -59,7 +59,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignment-deprecated.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignment-deprecated.stan
 transformed data {
   real mu;
   real<lower=0> sigma;
@@ -99,7 +99,7 @@ Warning: deprecated language construct used in 'assignment-deprecated.stan', lin
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format assignment-new.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignment-new.stan
 transformed data {
   real mu;
   real<lower=0> sigma;
@@ -113,7 +113,7 @@ model {
   y ~ normal(mu, sigma);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignment_double_index_lhs.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignment_double_index_lhs.stan
 transformed data {
   real a[109, 307];
   vector[5] b[17];
@@ -157,7 +157,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignments.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignments.stan
 data {
   real x;
   vector[5] y;
@@ -414,7 +414,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignments_double_var.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignments_double_var.stan
 data {
   real x;
   vector[5] y;
@@ -671,7 +671,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format assignments_var.stan
+  $ ../../../../install/default/bin/stanc --auto_format assignments_var.stan
 parameters {
   real x;
   vector[5] y;
@@ -928,7 +928,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_old_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format bernoulli_logit_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -959,7 +959,7 @@ model {
 Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -990,7 +990,7 @@ model {
 Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
+  $ ../../../../install/default/bin/stanc --auto_format break-continue.stan
 functions {
   int foo(int a) {
     while (1) break;
@@ -1121,7 +1121,7 @@ generated quantities {
   while (0) continue;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format conditional_condition_good.stan
 parameters {
   real y;
 }
@@ -1135,7 +1135,7 @@ model {
     y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format conditional_op_fun_promote.stan
+  $ ../../../../install/default/bin/stanc --auto_format conditional_op_fun_promote.stan
 functions {
   real foo(real y) {
     return 1 ? y : 2;
@@ -1152,7 +1152,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declarations.stan
+  $ ../../../../install/default/bin/stanc --auto_format declarations.stan
 data {
   int a0;
   int a1[1];
@@ -1375,7 +1375,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-conditional-op.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-conditional-op.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> y[N];
@@ -1446,7 +1446,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-gq-local-rng.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-gq-local-rng.stan
 transformed data {
   int a = categorical_rng(rep_vector(0.1, 10));
   {
@@ -1470,7 +1470,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-matrix.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-constrained-matrix.stan
 data {
   int d;
   corr_matrix[d] d_corr_matrix;
@@ -1564,7 +1564,7 @@ generated quantities {
   print("gq_cholesky_factor_cov_ar = ", gq_cholesky_factor_cov_ar);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-vector.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-constrained-vector.stan
 data {
   int d;
   simplex[d] d_simplex;
@@ -1682,7 +1682,7 @@ generated quantities {
   print("gq_positive_ordered_ar = ", gq_positive_ordered_ar);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-double.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-double.stan
 functions {
   real foo(real a1) {
     int lf0 = 2;
@@ -1830,7 +1830,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-int.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-int.stan
 functions {
   int foo() {
     int lf1 = 3;
@@ -1881,7 +1881,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-matrix.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-matrix.stan
 functions {
   matrix foo(int a) {
     matrix[a, a] lf0;
@@ -1948,7 +1948,7 @@ generated quantities {
   print("gq_m_ar6 = ", gq_m_ar6);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-vec-runtime-error.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-vec-runtime-error.stan
 data {
   vector[7] b0;
 }
@@ -1962,7 +1962,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-vec-types.stan
+  $ ../../../../install/default/bin/stanc --auto_format declare-define-var-vec-types.stan
 functions {
   void foo1() {
     vector[2] lf1;
@@ -2097,7 +2097,7 @@ generated quantities {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-increment-log-prob.stan
+  $ ../../../../install/default/bin/stanc --auto_format deprecate-increment-log-prob.stan
 data {
   real a;
   vector[3] b;
@@ -2238,7 +2238,7 @@ Warning: deprecated language construct used in 'deprecate-increment-log-prob.sta
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format deprecate-old-prob-funs.stan
+  $ ../../../../install/default/bin/stanc --auto_format deprecate-old-prob-funs.stan
 parameters {
   real y;
 }
@@ -2247,7 +2247,7 @@ model {
             + normal_ccdf_log(3, 0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
+  $ ../../../../install/default/bin/stanc --auto_format duplicate-warns.stan
 model {
   real foo;
   foo = 1;
@@ -2286,7 +2286,7 @@ Warning: deprecated language construct used in 'duplicate-warns.stan', line 5, c
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
     return a / b;
@@ -2299,14 +2299,14 @@ model {
   y ~ bar_baz(3.2);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ1.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun-return-typ1.stan
 functions {
   real foo() {
     reject("");
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ2.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun-return-typ2.stan
 functions {
   real foo() {
     if (1) 
@@ -2315,7 +2315,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ4.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun-return-typ4.stan
 functions {
   real foo() {
     if (1) 
@@ -2330,7 +2330,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-var-constraints.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun-var-constraints.stan
 functions {
   real foo() {
     return 0;
@@ -2355,7 +2355,7 @@ generated quantities {
   real<lower=-100, upper=foo()> g;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_0.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_0.stan
 functions {
   real foo() {
     return 1.7;
@@ -2365,7 +2365,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_0_lp.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_0_lp.stan
 functions {
   real foo_lp() {
     return 1.0;
@@ -2375,7 +2375,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_1.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_1.stan
 functions {
   real foo(real x) {
     return x;
@@ -2385,7 +2385,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_4.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_4.stan
 functions {
   real foo(real x1, real x2, real x3, real x4) {
     return x1;
@@ -2395,7 +2395,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_4_lp.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_4_lp.stan
 functions {
   real foo_lp(real x1, real x2, real x3, real x4) {
     return x1;
@@ -2405,7 +2405,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_5.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_5.stan
 functions {
   real foo(real x1, real x2, real x3, real x4, real x5) {
     return x1;
@@ -2415,7 +2415,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_5_lp.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_5_lp.stan
 functions {
   real foo_lp(real x1, real x2, real x3, real x4, real x5) {
     return x1;
@@ -2425,7 +2425,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_int0.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_int0.stan
 functions {
   int foo() {
     return 3;
@@ -2435,7 +2435,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_int.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_int_1_int.stan
 functions {
   int foo(int x) {
     return x;
@@ -2445,7 +2445,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_real.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_args_int_1_real.stan
 functions {
   int foo(real x) {
     return 3;
@@ -2455,7 +2455,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_as_lhs_sampling.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_as_lhs_sampling.stan
 transformed data {
   matrix[2, 2] M = rep_matrix(0, 2, 2);
 }
@@ -2463,7 +2463,7 @@ model {
   to_vector(M) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_as_stmt.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_as_stmt.stan
 functions {
   void foo_lp() {
     
@@ -2473,7 +2473,7 @@ model {
   foo_lp();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
+  $ ../../../../install/default/bin/stanc --auto_format fun_log_forward_decl.stan
 functions {
   real n_log(real y);
   real n_log(real y) {
@@ -2501,7 +2501,7 @@ Warning: deprecated language construct used in 'fun_log_forward_decl.stan', line
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-fwd-ref.stan
 functions {
   int foo(int n);
   int foo(int n) {
@@ -2517,7 +2517,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-good-void.stan
 functions {
   void linear_regression_lp(vector x, vector y, real alpha, real beta,
                             real sigma) {
@@ -2541,7 +2541,7 @@ model {
   linear_regression_lp(x, y, alpha, beta, sigma);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-good1.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-good1.stan
 functions {
   real foo0() {
     return 0.0;
@@ -2716,7 +2716,7 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-good2.stan
 functions {
   real foo_bar0() {
     return 0.0;
@@ -2735,7 +2735,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-good3.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-good3.stan
 functions {
   real unit_normal_rng() {
     return normal_rng(0, 1);
@@ -2752,7 +2752,7 @@ generated quantities {
   z = unit_normal_rng();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format functions-promote-return.stan
+  $ ../../../../install/default/bin/stanc --auto_format functions-promote-return.stan
 functions {
   vector foo(vector x, real y) {
     if (y < 10) 
@@ -2772,7 +2772,7 @@ model {
   foo(x, y) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format funs1.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs1.stan
 functions {
   void unit_normal_lp(real u) {
     increment_log_prob(normal_log(u, 0, 1));
@@ -2799,7 +2799,7 @@ Warning: deprecated language construct used in 'funs1.stan', line 3, column 21:
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format funs2.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs2.stan
 functions {
   real unit_normal_rng() {
     return normal_rng(0, 1);
@@ -2816,7 +2816,7 @@ generated quantities {
   z = unit_normal_rng();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format funs3.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs3.stan
 functions {
   real unit_normal_log(real y) {
     return normal_log(y, 0, 1);
@@ -2829,7 +2829,7 @@ model {
   y ~ unit_normal();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format funs4.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs4.stan
 functions {
   real unit_normal_log(real y) {
     return normal_log(y, 0, 1);
@@ -2854,7 +2854,7 @@ Warning: deprecated language construct used in 'funs4.stan', line 10, column 19:
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format funs5.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs5.stan
 functions {
   void foo(real x) {
     print("x=", x);
@@ -2868,7 +2868,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format funs6.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs6.stan
 functions {
   real foo(real x) {
     return x * 2;
@@ -2881,7 +2881,7 @@ model {
   foo(y) ~ normal(0, 2);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format funs7.stan
+  $ ../../../../install/default/bin/stanc --auto_format funs7.stan
 functions {
   real foo(real z) {
     real y;
@@ -2899,7 +2899,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
+  $ ../../../../install/default/bin/stanc --auto_format get-lp-deprecate.stan
 parameters {
   real<lower=0> y;
 }
@@ -2921,7 +2921,7 @@ Warning: deprecated language construct used in 'get-lp-deprecate.stan', line 5, 
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
+  $ ../../../../install/default/bin/stanc --auto_format get-lp-target.stan
 parameters {
   real<lower=0> y;
 }
@@ -2961,7 +2961,7 @@ Warning: deprecated language construct used in 'get-lp-target.stan', line 10, co
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format get_lp_good.stan
 functions {
   real foo_lp(real x) {
     return x + get_lp();
@@ -3019,7 +3019,7 @@ Warning: deprecated language construct used in 'get_lp_good.stan', line 22, colu
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
+  $ ../../../../install/default/bin/stanc --auto_format good_fundef_returntypes1.stan
 functions {
   real foo() {
     if (215) 
@@ -3028,7 +3028,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes2.stan
+  $ ../../../../install/default/bin/stanc --auto_format good_fundef_returntypes2.stan
 functions {
   void foo() {
     if (215) 
@@ -3036,7 +3036,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes3.stan
+  $ ../../../../install/default/bin/stanc --auto_format good_fundef_returntypes3.stan
 functions {
   real foo() {
     if (215) 
@@ -3045,7 +3045,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes4.stan
+  $ ../../../../install/default/bin/stanc --auto_format good_fundef_returntypes4.stan
 functions {
   real foo() {
     if (215) 
@@ -3055,7 +3055,7 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format good_inf.stan
+  $ ../../../../install/default/bin/stanc --auto_format good_inf.stan
 data {
   real L;
   real U;
@@ -3067,7 +3067,7 @@ model {
   infty ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
+  $ ../../../../install/default/bin/stanc --auto_format illegal_generated_quantities.stan
 parameters {
   real y;
 }
@@ -3079,7 +3079,7 @@ generated quantities {
   x = -1;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_data.stan
+  $ ../../../../install/default/bin/stanc --auto_format illegal_transformed_data.stan
 transformed data {
   real<lower=0> x;
   x = -1;
@@ -3088,7 +3088,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_parameters.stan
+  $ ../../../../install/default/bin/stanc --auto_format illegal_transformed_parameters.stan
 transformed parameters {
   real<lower=0> x;
   x = -1;
@@ -3097,7 +3097,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format increment-target.stan
+  $ ../../../../install/default/bin/stanc --auto_format increment-target.stan
 data {
   real a;
   vector[3] b;
@@ -3123,7 +3123,7 @@ model {
   target += h;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format increment_log_prob.stan
+  $ ../../../../install/default/bin/stanc --auto_format increment_log_prob.stan
 transformed data {
   int n;
   int nn[2];
@@ -3566,7 +3566,7 @@ Warning: deprecated language construct used in 'increment_log_prob.stan', line 7
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format int_div_user.stan
+  $ ../../../../install/default/bin/stanc --auto_format int_div_user.stan
 data {
   int a[4];
   int b[3];
@@ -3582,7 +3582,7 @@ model {
 Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
   a[1] / b[2]
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
+  $ ../../../../install/default/bin/stanc --auto_format int_fun.stan
 functions {
   int foo(int x) {
     return x + 1;
@@ -3599,7 +3599,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_adams.stan
+  $ ../../../../install/default/bin/stanc --auto_format integrate_ode_adams.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -3649,7 +3649,7 @@ generated quantities {
                               1e-10, 1e8);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
+  $ ../../../../install/default/bin/stanc --auto_format integrate_ode_bdf.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -3702,7 +3702,7 @@ generated quantities {
                             1e-10, 1e8);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
+  $ ../../../../install/default/bin/stanc --auto_format integrate_ode_deprecation.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -3734,7 +3734,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
+  $ ../../../../install/default/bin/stanc --auto_format integrate_ode_rk45.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -3771,7 +3771,7 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format io_example.stan
+  $ ../../../../install/default/bin/stanc --auto_format io_example.stan
 transformed data {
   vector[2] y;
 }
@@ -3783,7 +3783,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-else-if.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-else-if.stan
 parameters {
   real a;
   real if2;
@@ -3796,7 +3796,7 @@ model {
     if2 ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-else.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-else.stan
 parameters {
   real a;
   real elseif;
@@ -3808,7 +3808,7 @@ model {
   elseif ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-for.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-for.stan
 parameters {
   real force;
 }
@@ -3816,7 +3816,7 @@ model {
   force ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-if.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-if.stan
 parameters {
   real iffy;
 }
@@ -3824,7 +3824,7 @@ model {
   iffy ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-increment-log-prob.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-increment-log-prob.stan
 parameters {
   real increment_log_prob2;
 }
@@ -3832,7 +3832,7 @@ model {
   increment_log_prob2 ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-integrate-ode.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-integrate-ode.stan
 parameters {
   real integrate_ode_foo;
 }
@@ -3840,7 +3840,7 @@ model {
   integrate_ode_foo ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-print.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-print.stan
 parameters {
   real printer;
 }
@@ -3848,7 +3848,7 @@ model {
   printer ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-reject.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-reject.stan
 parameters {
   real rejection;
 }
@@ -3856,7 +3856,7 @@ model {
   rejection ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-return.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-return.stan
 parameters {
   real returning;
 }
@@ -3864,7 +3864,7 @@ model {
   returning ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format keywords-while.stan
+  $ ../../../../install/default/bin/stanc --auto_format keywords-while.stan
 parameters {
   real whiley;
 }
@@ -3872,7 +3872,7 @@ model {
   whiley ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation1.stan
+  $ ../../../../install/default/bin/stanc --auto_format lkj_cov_deprecation1.stan
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -3883,7 +3883,7 @@ model {
   Sigma ~ lkj_cov(mu, sigma, eta);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation2.stan
+  $ ../../../../install/default/bin/stanc --auto_format lkj_cov_deprecation2.stan
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -3906,7 +3906,7 @@ Warning: deprecated language construct used in 'lkj_cov_deprecation2.stan', line
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format lower-trunc-discrete.stan
+  $ ../../../../install/default/bin/stanc --auto_format lower-trunc-discrete.stan
 functions {
   real foo_lpmf(int y, real lambda) {
     return 1.0;
@@ -3978,7 +3978,7 @@ model {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
+  $ ../../../../install/default/bin/stanc --auto_format lp_in_fun.stan
 functions {
   void foo_lp() {
     print("lp__ = ", get_lp());
@@ -4001,7 +4001,7 @@ Warning: deprecated language construct used in 'lp_in_fun.stan', line 3, column 
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
-  $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
+  $ ../../../../install/default/bin/stanc --auto_format map_rect.stan
 functions {
   vector foo(vector shared_params, vector job_params, real[] data_r,
              int[] data_i) {
@@ -4042,7 +4042,7 @@ generated quantities {
                                 data_i);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format mat_assign.stan
+  $ ../../../../install/default/bin/stanc --auto_format mat_assign.stan
 transformed data {
   matrix[2, 2] X;
   row_vector[2] y;
@@ -4070,7 +4070,7 @@ model {
   z ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format min-max-types.stan
+  $ ../../../../install/default/bin/stanc --auto_format min-max-types.stan
 parameters {
   matrix[max(1, 3), min(2, 5)] a;
 }
@@ -4085,7 +4085,7 @@ model {
   to_vector(a) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format model_block_empty.stan
+  $ ../../../../install/default/bin/stanc --auto_format model_block_empty.stan
 functions {
   real foo(real x) {
     return x;
@@ -4095,7 +4095,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format multiple_funs.stan
+  $ ../../../../install/default/bin/stanc --auto_format multiple_funs.stan
 functions {
   int foo(int a);
   int foo(int a) {
@@ -4112,7 +4112,7 @@ model {
   theta ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_old_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format neg_binomial_2_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4144,7 +4144,7 @@ model {
 Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4176,7 +4176,7 @@ model {
 Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
+  $ ../../../../install/default/bin/stanc --auto_format new-prob-fun-suffixes.stan
 parameters {
   real y;
 }
@@ -4190,7 +4190,7 @@ model {
   target += poisson_lccdf(1| 2);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_old_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format normal_id_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4222,7 +4222,7 @@ model {
 Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4254,7 +4254,7 @@ model {
 Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
+  $ ../../../../install/default/bin/stanc --auto_format nullary-unconflicted.stan
 parameters {
   real e;
   real pi;
@@ -4276,7 +4276,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format numeric-literal.stan
+  $ ../../../../install/default/bin/stanc --auto_format numeric-literal.stan
 transformed data {
   int a = 0;
   int b = 10_000;
@@ -4287,7 +4287,7 @@ transformed data {
   real g = 1_100_100.0_345;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format ode-int-segments.stan
+  $ ../../../../install/default/bin/stanc --auto_format ode-int-segments.stan
 functions {
   real[] ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[0];
@@ -4319,7 +4319,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
+  $ ../../../../install/default/bin/stanc --auto_format ode-nested-quotes.stan
 functions {
   real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
     return rep_array(1.0, 1);
@@ -4335,7 +4335,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format ode_good.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -4374,7 +4374,7 @@ model {
     y[t] ~ normal(y_hat[t], sigma);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
+  $ ../../../../install/default/bin/stanc --auto_format old-log-funs.stan
 transformed data {
   real x;
   x = multiply_log(x, x);
@@ -4389,7 +4389,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4420,7 +4420,7 @@ model {
 Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
+  $ ../../../../install/default/bin/stanc --auto_format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -4451,7 +4451,7 @@ model {
 Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
   j / M
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
+  $ ../../../../install/default/bin/stanc --auto_format pound-comment-deprecated.stan
 data {
   int N;
 }
@@ -4471,7 +4471,7 @@ Warning: deprecated language construct used in 'pound-comment-deprecated.stan', 
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../install/default/bin/stanc --auto-format print_chars.stan
+  $ ../../../../install/default/bin/stanc --auto_format print_chars.stan
 parameters {
   real y;
 }
@@ -4480,7 +4480,7 @@ model {
   print("a e z A R Z 0 4 9 / ~ ! @ # $ % ^ & * ( ) ` _ + - = { } | [ ] : ; ' < > ? , . / ");
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format print_indexing.stan
+  $ ../../../../install/default/bin/stanc --auto_format print_indexing.stan
 data {
   int<lower=1> N[2];
   int<lower=0> y_1[N[1]];
@@ -4493,7 +4493,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format prophet.stan
+  $ ../../../../install/default/bin/stanc --auto_format prophet.stan
 functions {
   real[,] get_changepoint_matrix(real[] t, real[] t_change, int T, int S) {
     real A[T, S];
@@ -4608,12 +4608,12 @@ model {
   y ~ normal(Y, sigma_obs);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
+  $ ../../../../install/default/bin/stanc --auto_format propto-good.stan
 model {
   target += normal_propto_lpdf(1| 0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
+  $ ../../../../install/default/bin/stanc --auto_format rng_loc.stan
 functions {
   real foo_rng(real mu, real sigma) {
     return normal_rng(mu, sigma);
@@ -4634,7 +4634,7 @@ generated quantities {
   z = normal_rng(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format rng_transformed_data.stan
+  $ ../../../../install/default/bin/stanc --auto_format rng_transformed_data.stan
 data {
   int<lower=0> N;
 }
@@ -4656,7 +4656,7 @@ generated quantities {
   real sd_y = sd(y);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
+  $ ../../../../install/default/bin/stanc --auto_format stanc_helper.stan
 parameters {
   real y;
 }
@@ -4664,7 +4664,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format tern_op_contains_var.stan
+  $ ../../../../install/default/bin/stanc --auto_format tern_op_contains_var.stan
 data {
   int N;
   int y_max;
@@ -4681,7 +4681,7 @@ model {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format truncation-user-defined.stan
+  $ ../../../../install/default/bin/stanc --auto_format truncation-user-defined.stan
 functions {
   real foo_log(real y, real theta) {
     return 1;
@@ -4707,14 +4707,14 @@ model {
   y ~ foo(theta) T[L, U];
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format truncation-wild.stan
+  $ ../../../../install/default/bin/stanc --auto_format truncation-wild.stan
 model {
   real T[1, 1] = {{42.0}};
   1 ~ normal(0, 1) T[1, T[1, 1]];
   print(T[1, 1]);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format unconstrained_params_var.stan
+  $ ../../../../install/default/bin/stanc --auto_format unconstrained_params_var.stan
 parameters {
   real mu;
   real<lower=0> sigma;
@@ -4725,7 +4725,7 @@ model {
   3 ~ normal(mu, sigma);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
+  $ ../../../../install/default/bin/stanc --auto_format user-defined-lpdf-fun.stan
 functions {
   real bar_lpmf(int y, real z) {
     return 1.0;
@@ -4764,7 +4764,7 @@ model {
   target += poisson_lccdf(2| 7.0);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format user-distro-truncate.stan
+  $ ../../../../install/default/bin/stanc --auto_format user-distro-truncate.stan
 functions {
   real foo_lpdf(real y, real mu) {
     return -(y - mu) ^ 2;
@@ -4787,7 +4787,7 @@ model {
   y ~ foo(mu) T[1, 5];
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_add_expression_dimss_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_add_expression_dimss_good.stan
 transformed data {
   real x;
   vector[3] v;
@@ -4805,7 +4805,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_add_var_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_add_var_good.stan
 data {
   int n;
   real x;
@@ -4883,7 +4883,7 @@ generated quantities {
   corr_matrix[3] corrm_gq;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_bounds_comparison.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_bounds_comparison.stan
 data {
   real<lower=if_else(1 < 2, -1, -2)> a;
   real<upper=if_else(1 < 2, -1, -2)> b;
@@ -4896,7 +4896,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
     real fl_x;
@@ -5081,7 +5081,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_division_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_division_good.stan
 transformed data {
   real u;
   matrix[3, 3] m;
@@ -5120,7 +5120,7 @@ Positive values rounded down, negative values rounded up or down in platform-dep
 Info: Found int division at 'validate_division_good.stan', line 21, column 7 to column 8:
   2 / 3.1
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_division_int_warning.stan
 transformed data {
   real u;
   int j;
@@ -5139,7 +5139,7 @@ model {
 Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
   j / k
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -5177,7 +5177,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_elt_multiplication_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_elt_multiplication_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -5201,7 +5201,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_exponentiation_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_exponentiation_good.stan
 data {
   int i;
   int j;
@@ -5236,7 +5236,7 @@ model {
   a ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_exponentiation_precedence.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_exponentiation_precedence.stan
 data {
 
 }
@@ -5267,7 +5267,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_functions.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_functions.stan
 functions {
   real my_fun(real x);
   real my_fun2(real x, real y);
@@ -5301,7 +5301,7 @@ generated quantities {
   gq_d2 = my_fun3(gq_d1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_int_expr2_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_int_expr2_good.stan
 parameters {
   vector[10] y;
 }
@@ -5310,7 +5310,7 @@ model {
     y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning1.stan
 parameters {
   real y;
 }
@@ -5318,7 +5318,7 @@ model {
   log(y) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning2.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning2.stan
 parameters {
   real y;
 }
@@ -5326,7 +5326,7 @@ model {
   (y * y) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning3.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning3.stan
 parameters {
   vector[5] v;
 }
@@ -5334,7 +5334,7 @@ model {
   (v' * v) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning4.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning4.stan
 parameters {
   real y;
 }
@@ -5342,7 +5342,7 @@ model {
   1 + (y * y) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning5.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning5.stan
 parameters {
   vector[10] y;
 }
@@ -5350,7 +5350,7 @@ model {
   head((y .* y), 2) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning6.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning6.stan
 parameters {
   real y;
 }
@@ -5358,7 +5358,7 @@ model {
   -(y * y) ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning_good.stan
 data {
   int N;
   real x;
@@ -5416,7 +5416,7 @@ Positive values rounded down, negative values rounded up or down in platform-dep
 Info: Found int division at 'validate_jacobian_warning_good.stan', line 57, column 2 to column 3:
   1 / (1 / z)
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_jacobian_warning_user.stan
 parameters {
   vector[1] y;
 }
@@ -5424,7 +5424,7 @@ model {
   exp(y[1]) ~ normal(0, 2);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_left_division_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_left_division_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -5444,7 +5444,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_logical_negate_expr_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_logical_negate_expr_good.stan
 transformed data {
   int n;
   real x;
@@ -5462,7 +5462,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_modulus_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_modulus_good.stan
 data {
   int i;
   int j;
@@ -5488,7 +5488,7 @@ generated quantities {
   k3 = i3 % j3;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_multiplication.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_multiplication.stan
 transformed data {
   real x;
   x = 1.3;
@@ -5502,7 +5502,7 @@ model {
   y ~ normal(x * 3, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_negate_expr_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_negate_expr_good.stan
 transformed data {
   int n;
   real x;
@@ -5532,7 +5532,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_offset_multiplier_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_double_offset_multiplier_good.stan
 transformed data {
   real<offset=2> a = 3;
 }
@@ -5554,7 +5554,7 @@ generated quantities {
   z = 3;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_range_lower_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_double_range_lower_good.stan
 data {
   real<lower=1.2> a;
   real<lower=1> b;
@@ -5570,7 +5570,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_range_upper_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_double_range_upper_good.stan
 data {
   real<upper=1.2> a;
   real<upper=1> b;
@@ -5586,7 +5586,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_fun_type_named_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_fun_type_named_good.stan
 transformed data {
   real x;
   x = exp(x);
@@ -5598,7 +5598,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_int_range_lower_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_int_range_lower_good.stan
 data {
   int<lower=1> a;
   int<lower=1, upper=3> b;
@@ -5610,7 +5610,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_int_range_upper_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_set_int_range_upper_good.stan
 data {
   int<upper=1> a;
   int<lower=1, upper=3> b;
@@ -5622,7 +5622,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_validate_int_expr_good.stan
+  $ ../../../../install/default/bin/stanc --auto_format validate_validate_int_expr_good.stan
 data {
   vector[3] a;
   row_vector[3] b;
@@ -5643,7 +5643,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format var-decl-after-statement.stan
+  $ ../../../../install/default/bin/stanc --auto_format var-decl-after-statement.stan
 transformed data {
   real y;
   y = 3;
@@ -5654,7 +5654,7 @@ model {
 
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format var-decls-in-functions.stan
+  $ ../../../../install/default/bin/stanc --auto_format var-decls-in-functions.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[size(y)];
@@ -5668,7 +5668,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format var-ending-lpdf.stan
+  $ ../../../../install/default/bin/stanc --auto_format var-ending-lpdf.stan
 parameters {
   real mu_lpdf;
 }
@@ -5676,7 +5676,7 @@ model {
   target += mu_lpdf;
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format vars-with-type-prefixes.stan
+  $ ../../../../install/default/bin/stanc --auto_format vars-with-type-prefixes.stan
 parameters {
   real int_x;
   real real_x;
@@ -5708,7 +5708,7 @@ model {
   corr_matrix_x ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format vector-size-stmts.stan
+  $ ../../../../install/default/bin/stanc --auto_format vector-size-stmts.stan
 functions {
   void test_vector(int vlen1, int vlen2, int arrlen) {
     vector[vlen1] lf1;
@@ -5811,7 +5811,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format vector-zero.stan
+  $ ../../../../install/default/bin/stanc --auto_format vector-zero.stan
 data {
   vector[0] d_v;
   row_vector[0] d_rv;
@@ -5883,7 +5883,7 @@ generated quantities {
   int gq_i2c[0, 0];
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format vector_size_lt_zero.stan
+  $ ../../../../install/default/bin/stanc --auto_format vector_size_lt_zero.stan
 data {
   int d;
 }

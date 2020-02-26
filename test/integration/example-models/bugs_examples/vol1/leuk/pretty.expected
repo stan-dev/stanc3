@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format leuk.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format leuk.stan
 data {
   int<lower=0> N;
   int<lower=0> NT;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format seeds.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format seeds.stan
 data {
   int<lower=0> I;
   int<lower=0> n[I];
@@ -82,7 +82,7 @@ Warning: deprecated language construct used in 'seeds.stan', line 25, column 12:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format seeds_centered.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format seeds_centered.stan
 data {
   int<lower=0> I;
   int<lower=0> n[I];
@@ -231,7 +231,7 @@ Warning: deprecated language construct used in 'seeds_centered.stan', line 32, c
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format seeds_stanified.stan
+  $ ../../../../../../../install/default/bin/stanc --auto_format seeds_stanified.stan
 data {
   int<lower=0> I;
   int<lower=0> n[I];

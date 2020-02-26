@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format exponential.stan
 data {
   int N;
   vector[N] x;
@@ -16,7 +16,7 @@ model {
   sigma ~ normal(0, 10);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential_positive.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format exponential_positive.stan
 data {
   int N;
   vector[N] x;
@@ -34,7 +34,7 @@ model {
   sigma ~ normal(0, 10);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential_positive_lognormal.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format exponential_positive_lognormal.stan
 data {
   int N;
   vector[N] x;

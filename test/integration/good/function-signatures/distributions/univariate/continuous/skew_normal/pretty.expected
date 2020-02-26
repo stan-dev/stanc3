@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_ccdf_log_1.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_ccdf_log_1.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -3563,7 +3563,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_ccdf_log_2.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_ccdf_log_2.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -7166,7 +7166,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_ccdf_log_3.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_ccdf_log_3.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -10764,7 +10764,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_ccdf_log_4.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_ccdf_log_4.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -14422,7 +14422,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_1.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_1.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -17748,7 +17748,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_2.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_2.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -21273,7 +21273,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_3.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_3.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -24769,7 +24769,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_4.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_4.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -28361,7 +28361,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_log_1.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_log_1.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -31892,7 +31892,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_log_2.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_log_2.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -35492,7 +35492,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_log_3.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_log_3.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -39075,7 +39075,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_cdf_log_4.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_cdf_log_4.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -42732,7 +42732,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_log_1.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_log_1.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -46058,7 +46058,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_log_2.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_log_2.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -49583,7 +49583,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_log_3.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_log_3.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -53079,7 +53079,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format skew_normal_log_4.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format skew_normal_log_4.stan
 data {
   int d_int;
   int d_int_array[d_int];

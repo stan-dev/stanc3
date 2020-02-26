@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format ipm.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ipm.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
@@ -124,7 +124,7 @@ generated quantities {
   lambda[1 : ny_minus_1] = Ntot[2 : nyears] ./ Ntot[1 : ny_minus_1];
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ipm_hoopoe.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ipm_hoopoe.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
@@ -298,7 +298,7 @@ generated quantities {
   mlam = exp(1.0 / ny_minus_1 * sum(logla));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ipm_pred.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ipm_pred.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
@@ -460,7 +460,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ipm_prod.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format ipm_prod.stan
 functions {
   real real_poisson_lpdf(real n, real lambda) {
     real lp;

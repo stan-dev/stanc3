@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_1.stan
+  $ ../../../../../install/default/bin/stanc --auto_format x_in_xs_function_block_1.stan
 functions {
   int foo(int a) {
     int vs[2];
@@ -15,7 +15,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_2.stan
+  $ ../../../../../install/default/bin/stanc --auto_format x_in_xs_function_block_2.stan
 functions {
   int foo(int a) {
     int vs[2];
@@ -32,7 +32,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_3.stan
+  $ ../../../../../install/default/bin/stanc --auto_format x_in_xs_function_block_3.stan
 functions {
   int foo(int a) {
     int vs[2, 3];

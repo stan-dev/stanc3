@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format golf1.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format golf1.stan
 data {
   int J;
   int n[J];
@@ -25,7 +25,7 @@ generated quantities {
 Info: Found int division at 'golf1.stan', line 21, column 19 to column 22:
   180 / pi()
 Positive values rounded down, negative values rounded up or down in platform-dependent way.
-  $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
+  $ ../../../../../../install/default/bin/stanc --auto_format golf_logistic.stan
 data {
   int J;
   int n[J];

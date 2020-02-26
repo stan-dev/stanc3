@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format normal_ccdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format normal_ccdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -1154,7 +1154,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format normal_cdf.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format normal_cdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -2106,7 +2106,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format normal_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format normal_cdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -3166,7 +3166,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format normal_id_glm.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format normal_id_glm.stan
 transformed data {
   int N = 2;
   int M = 3;
@@ -3212,7 +3212,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format normal_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto_format normal_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
