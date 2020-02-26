@@ -33,58 +33,58 @@ let warn_uninitialized = ref false
 (** Some example command-line options here *)
 let options =
   Arg.align
-    [ ( "--debug-lex"
+    [ ( "--debug_lex"
       , Arg.Set Debugging.lexer_logging
       , " For debugging purposes: print the lexer actions" )
-    ; ( "--debug-parse"
+    ; ( "--debug_parse"
       , Arg.Set Debugging.grammar_logging
       , " For debugging purposes: print the parser actions" )
-    ; ( "--debug-ast"
+    ; ( "--debug_ast"
       , Arg.Set Debugging.ast_printing
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
-    ; ( "--debug-decorated-ast"
+    ; ( "--debug_decorated_ast"
       , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
-    ; ( "--debug-generate-data"
+    ; ( "--debug_generate_data"
       , Arg.Set generate_data
       , " For debugging purposes: generate a mock dataset to run the model on"
       )
-    ; ( "--debug-mir"
+    ; ( "--debug_mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR as an S-expression." )
-    ; ( "--debug-mir-pretty"
+    ; ( "--debug_mir_pretty"
       , Arg.Set dump_mir_pretty
       , " For debugging purposes: pretty-print the MIR." )
-    ; ( "--debug-optimized-mir"
+    ; ( "--debug_optimized_mir"
       , Arg.Set dump_opt_mir
       , " For debugging purposes: print the MIR after it's been optimized. \
          Only has an effect when optimizations are turned on." )
-    ; ( "--debug-optimized-mir-pretty"
+    ; ( "--debug_optimized_mir_pretty"
       , Arg.Set dump_opt_mir_pretty
       , " For debugging purposes: pretty print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
-    ; ( "--debug-transformed-mir"
+    ; ( "--debug_transformed_mir"
       , Arg.Set dump_tx_mir
       , " For debugging purposes: print the MIR after the backend has \
          transformed it." )
-    ; ( "--debug-transformed-mir-pretty"
+    ; ( "--debug_transformed_mir_pretty"
       , Arg.Set dump_tx_mir_pretty
       , " For debugging purposes: pretty print the MIR after the backend has \
          transformed it." )
-    ; ( "--dump-stan-math-signatures"
+    ; ( "--dump_stan_math_signatures"
       , Arg.Set dump_stan_math_sigs
       , "Dump out the list of supported type signatures for Stan Math backend."
       )
-    ; ( "--warn-uninitialized"
+    ; ( "--warn_uninitialized"
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \
          experimental feature." )
-    ; ( "--auto-format"
+    ; ( "--auto_format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
-    ; ( "--print-canonical"
+    ; ( "--print_canonical"
       , Arg.Set canonicalize_program
       , " Prints the canonicalized program to the console" )
     ; ( "--version"
@@ -105,7 +105,7 @@ let options =
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
          \"$name.hpp\")" )
-    ; ( "--print-cpp"
+    ; ( "--print_cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow_undefined"
@@ -118,7 +118,7 @@ let options =
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
-    ; ( "--use-opencl"
+    ; ( "--use_opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." ) ]
 

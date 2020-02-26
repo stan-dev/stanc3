@@ -3,7 +3,7 @@
  (deps (package stanc))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:stanc} --dump-stan-math-signatures))))
+   (run %{bin:stanc} --dump_stan_math_signatures))))
 
 (alias
  (name runtest)

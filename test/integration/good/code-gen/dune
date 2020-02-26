@@ -3,7 +3,7 @@
  (deps (package stanc) (:stanfiles (glob_files *.stan)))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --print_cpp" %{stanfiles}))))
 
 (alias
  (name runtest)
@@ -14,7 +14,7 @@
  (deps (package stanc) (:stanfiles mother.stan))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-mir" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug_mir" %{stanfiles}))))
 
 (alias
  (name runtest)
@@ -25,7 +25,7 @@
  (deps (package stanc) (:stanfiles  optimize_glm.stan))
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp --use-opencl" %{stanfiles}))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --print_cpp --use_opencl" %{stanfiles}))))
 
 (alias
  (name runtest)
