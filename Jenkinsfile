@@ -106,17 +106,21 @@ pipeline {
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
-                            git clone --single-branch --branch stan2 --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                         """
                         sh """
                             cd performance-tests-cmdstan
+                            git show HEAD --stat
                             echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            cd cmdstan; git show HEAD --stat; STANC2=true make -j4 build; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
-                        
+
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
                             failIfNotNew: true,
@@ -252,7 +256,7 @@ pipeline {
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                     tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                    ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ 
+                    ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
                 """)
             }
         }

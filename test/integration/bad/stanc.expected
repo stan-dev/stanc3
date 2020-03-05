@@ -2455,16 +2455,16 @@ Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the
 
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
-Syntax error in 'target-reserved.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real target;
-               ^
+                      ^
      3:  }
      4:  parameters {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'target'
 
 
   $ ../../../../install/default/bin/stanc tilde-bad.stan
@@ -2675,48 +2675,7 @@ Semantic error in 'validate_conditional_op_bad-1.stan', line 5, column 7 to colu
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to ? : operator. Available signatures: 
-(int, int, int) => int
-(int, real, real) => real
-(int, vector, vector) => vector
-(int, row_vector, row_vector) => row_vector
-(int, matrix, matrix) => matrix
-(int, int[], int[]) => int[]
-(int, real[], real[]) => real[]
-(int, vector[], vector[]) => vector[]
-(int, row_vector[], row_vector[]) => row_vector[]
-(int, matrix[], matrix[]) => matrix[]
-(int, int[,], int[,]) => int[,]
-(int, real[,], real[,]) => real[,]
-(int, vector[,], vector[,]) => vector[,]
-(int, row_vector[,], row_vector[,]) => row_vector[,]
-(int, matrix[,], matrix[,]) => matrix[,]
-(int, int[,,], int[,,]) => int[,,]
-(int, real[,,], real[,,]) => real[,,]
-(int, vector[,,], vector[,,]) => vector[,,]
-(int, row_vector[,,], row_vector[,,]) => row_vector[,,]
-(int, matrix[,,], matrix[,,]) => matrix[,,]
-(int, int[,,,], int[,,,]) => int[,,,]
-(int, real[,,,], real[,,,]) => real[,,,]
-(int, vector[,,,], vector[,,,]) => vector[,,,]
-(int, row_vector[,,,], row_vector[,,,]) => row_vector[,,,]
-(int, matrix[,,,], matrix[,,,]) => matrix[,,,]
-(int, int[,,,,], int[,,,,]) => int[,,,,]
-(int, real[,,,,], real[,,,,]) => real[,,,,]
-(int, vector[,,,,], vector[,,,,]) => vector[,,,,]
-(int, row_vector[,,,,], row_vector[,,,,]) => row_vector[,,,,]
-(int, matrix[,,,,], matrix[,,,,]) => matrix[,,,,]
-(int, int[,,,,,], int[,,,,,]) => int[,,,,,]
-(int, real[,,,,,], real[,,,,,]) => real[,,,,,]
-(int, vector[,,,,,], vector[,,,,,]) => vector[,,,,,]
-(int, row_vector[,,,,,], row_vector[,,,,,]) => row_vector[,,,,,]
-(int, matrix[,,,,,], matrix[,,,,,]) => matrix[,,,,,]
-(int, int[,,,,,,], int[,,,,,,]) => int[,,,,,,]
-(int, real[,,,,,,], real[,,,,,,]) => real[,,,,,,]
-(int, vector[,,,,,,], vector[,,,,,,]) => vector[,,,,,,]
-(int, row_vector[,,,,,,], row_vector[,,,,,,]) => row_vector[,,,,,,]
-(int, matrix[,,,,,,], matrix[,,,,,,]) => matrix[,,,,,,]
-Instead supplied arguments of incompatible type: row_vector[,], int, int.
+Condition in ternary expression must be primitive int; found type=row_vector[,]
 
   $ ../../../../install/default/bin/stanc validate_conditional_op_bad-2.stan
 
@@ -2730,48 +2689,7 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to ? : operator. Available signatures: 
-(int, int, int) => int
-(int, real, real) => real
-(int, vector, vector) => vector
-(int, row_vector, row_vector) => row_vector
-(int, matrix, matrix) => matrix
-(int, int[], int[]) => int[]
-(int, real[], real[]) => real[]
-(int, vector[], vector[]) => vector[]
-(int, row_vector[], row_vector[]) => row_vector[]
-(int, matrix[], matrix[]) => matrix[]
-(int, int[,], int[,]) => int[,]
-(int, real[,], real[,]) => real[,]
-(int, vector[,], vector[,]) => vector[,]
-(int, row_vector[,], row_vector[,]) => row_vector[,]
-(int, matrix[,], matrix[,]) => matrix[,]
-(int, int[,,], int[,,]) => int[,,]
-(int, real[,,], real[,,]) => real[,,]
-(int, vector[,,], vector[,,]) => vector[,,]
-(int, row_vector[,,], row_vector[,,]) => row_vector[,,]
-(int, matrix[,,], matrix[,,]) => matrix[,,]
-(int, int[,,,], int[,,,]) => int[,,,]
-(int, real[,,,], real[,,,]) => real[,,,]
-(int, vector[,,,], vector[,,,]) => vector[,,,]
-(int, row_vector[,,,], row_vector[,,,]) => row_vector[,,,]
-(int, matrix[,,,], matrix[,,,]) => matrix[,,,]
-(int, int[,,,,], int[,,,,]) => int[,,,,]
-(int, real[,,,,], real[,,,,]) => real[,,,,]
-(int, vector[,,,,], vector[,,,,]) => vector[,,,,]
-(int, row_vector[,,,,], row_vector[,,,,]) => row_vector[,,,,]
-(int, matrix[,,,,], matrix[,,,,]) => matrix[,,,,]
-(int, int[,,,,,], int[,,,,,]) => int[,,,,,]
-(int, real[,,,,,], real[,,,,,]) => real[,,,,,]
-(int, vector[,,,,,], vector[,,,,,]) => vector[,,,,,]
-(int, row_vector[,,,,,], row_vector[,,,,,]) => row_vector[,,,,,]
-(int, matrix[,,,,,], matrix[,,,,,]) => matrix[,,,,,]
-(int, int[,,,,,,], int[,,,,,,]) => int[,,,,,,]
-(int, real[,,,,,,], real[,,,,,,]) => real[,,,,,,]
-(int, vector[,,,,,,], vector[,,,,,,]) => vector[,,,,,,]
-(int, row_vector[,,,,,,], row_vector[,,,,,,]) => row_vector[,,,,,,]
-(int, matrix[,,,,,,], matrix[,,,,,,]) => matrix[,,,,,,]
-Instead supplied arguments of incompatible type: int, real, row_vector[,].
+Type mismatch in ternary expression, expression when true is: real; expression when false is: row_vector[,]
 
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
 

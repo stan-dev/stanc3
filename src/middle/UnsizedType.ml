@@ -87,6 +87,14 @@ let check_compatible_arguments_mod_conv name args1 args2 =
             && autodifftype_can_convert (fst sign1) (fst sign2) )
           args1 args2)
 
+(** Given two types find the minimal type both can convert to *)
+let rec common_type = function
+  | UReal, UInt | UInt, UReal -> Some UReal
+  | UArray t1, UArray t2 ->
+      common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
+  | t1, t2 when t1 = t2 -> Some t1
+  | _, _ -> None
+
 (* -- Helpers -- *)
 let is_real_type = function
   | UReal | UVector | URowVector | UMatrix
