@@ -314,6 +314,19 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
+let semantic_check_ode_bdf ~is_cond_dist ~loc id es =
+    (* Validate.(
+      match get_arg_types es with
+    | [(_, UFun );_] ->   *)
+        mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+        ~ad_level:(lub_ad_e es) ~type_:(UArray (UArray UReal)) ~loc
+        |> Validate.ok
+      (* | _ -> 
+        Semantic_error.illtyped_ode_bdf loc
+        |> error) *)
+
+
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
      function because, technically, user defined functions can shadow
@@ -331,9 +344,13 @@ let fn_kind_from_application id es =
     corresponding semantic check
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
-  match fn_kind_from_application id es with
-  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  match id.name with
+  | "ode_bdf" ->
+      semantic_check_ode_bdf ~is_cond_dist ~loc id es
+  | _ ->
+    match fn_kind_from_application id es with
+    | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+    | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 

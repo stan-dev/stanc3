@@ -143,7 +143,12 @@ let fn_renames =
 *)
 let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
+let ode_bdf_functor_suffix = "_obfunctor__"
 
+let functor_suffix_select f =
+  match f with
+  | "ode_bdf" -> ode_bdf_functor_suffix
+  | _ -> functor_suffix
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
@@ -269,7 +274,9 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ functor_suffix, [])}
+          { e with
+            pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
+          }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -303,6 +310,10 @@ and gen_fun_app ppf fname es =
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
+      |( true
+        , "ode_bdf"
+        , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_num_steps :: tl ) ->
+        (fname,  f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_num_steps :: msgs :: tl)
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in
