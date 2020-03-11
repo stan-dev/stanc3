@@ -29,6 +29,9 @@ functions {
   real my_func_0a(int start, int end, real[] y_slice) {
     return normal_lpdf(y_slice | 0.0, 1.0);
   }
+  real my_func_0b(int start, int end, real[] y_slice) {
+    return normal_lpdf(y_slice | 0.0, 1.0);
+  }
 }
 
 parameters {
@@ -45,4 +48,5 @@ model {
   target += reduce_sum(my_func_2, a, 1, 0.0, 1.0);
   target += reduce_sum(my_func_1, a, 1, 0.0);
   target += reduce_sum(my_func_0a, a, 1) + reduce_sum(my_func_0a, a, 1);
+  target += (reduce_sum(my_func_0b, a, 1) + reduce_sum(my_func_0b, a, 1)) * (reduce_sum(my_func_0b, a, 1) + reduce_sum(my_func_0b, a, 1));
 }
