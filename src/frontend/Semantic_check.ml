@@ -894,17 +894,6 @@ let semantic_check_nr_fn_app ~loc ~cf id es =
     |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
     >>= semantic_check_nr_fnkind ~loc id)
 
-let semantic_check_nr_fn_app2 ~loc ~cf id es =
-  Validate.(
-    es
-
-    |> List.map ~f:(semantic_check_expression cf)
-    |> sequence
-    |> apply_const (semantic_check_identifier id) 
-    |> apply_const (semantic_check_nrfn_target ~loc ~cf id) 
-    >>= semantic_check_nr_fnkind ~loc id
-  )
-
 (* -- Assignment ------------------------------------------------------------ *)
 
 let semantic_check_assignment_read_only ~loc id =
@@ -1650,7 +1639,6 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
     Ast.typed_statement Validate.t =
   let loc = s.smeta.loc in
   match s.stmt with
-  | NRFunApp (_, id, es) when id.name="algebra_solver" -> semantic_check_nr_fn_app2 ~loc ~cf id es
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs
