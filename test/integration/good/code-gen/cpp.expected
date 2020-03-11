@@ -12952,16 +12952,17 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 35, column 2 to column 12)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 39, column 2 to column 80)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 40, column 2 to column 75)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 41, column 2 to column 70)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 42, column 2 to column 65)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 43, column 2 to column 60)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 44, column 2 to column 55)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 45, column 2 to column 50)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 46, column 2 to column 45)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 47, column 2 to column 72)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 38, column 2 to column 12)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 42, column 2 to column 80)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 43, column 2 to column 75)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 44, column 2 to column 70)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 45, column 2 to column 65)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 46, column 2 to column 60)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 47, column 2 to column 55)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 48, column 2 to column 50)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 49, column 2 to column 45)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 50, column 2 to column 72)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 51, column 2 to column 138)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 3, column 4 to column 44)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 2, column 151 to line 4, column 3)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 6, column 4 to column 44)",
@@ -12981,7 +12982,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'parallel_reduce_normal_test.stan', line 27, column 4 to column 43)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 26, column 53 to line 28, column 3)",
                                                       " (in 'parallel_reduce_normal_test.stan', line 30, column 4 to column 43)",
-                                                      " (in 'parallel_reduce_normal_test.stan', line 29, column 54 to line 31, column 3)"};
+                                                      " (in 'parallel_reduce_normal_test.stan', line 29, column 54 to line 31, column 3)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 33, column 4 to column 43)",
+                                                      " (in 'parallel_reduce_normal_test.stan', line 32, column 54 to line 34, column 3)"};
 
 template <typename T2__, typename T3__, typename T4__, typename T5__,
 typename T6__, typename T7__, typename T8__, typename T9__, typename T10__>
@@ -13004,7 +13007,7 @@ my_func_8(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 11;
+    current_statement__ = 12;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13069,7 +13072,7 @@ my_func_7(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 13;
+    current_statement__ = 14;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13133,7 +13136,7 @@ my_func_6(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 15;
+    current_statement__ = 16;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13192,7 +13195,7 @@ my_func_5(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 17;
+    current_statement__ = 18;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13249,7 +13252,7 @@ my_func_4(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 19;
+    current_statement__ = 20;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13303,7 +13306,7 @@ my_func_3(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 21;
+    current_statement__ = 22;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13350,7 +13353,7 @@ my_func_2(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 23;
+    current_statement__ = 24;
     return normal_lpdf<false>(y_slice, mu, sigma);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13396,7 +13399,7 @@ my_func_1(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 25;
+    current_statement__ = 26;
     return normal_lpdf<false>(y_slice, mu, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13440,7 +13443,7 @@ my_func_0(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 27;
+    current_statement__ = 28;
     return normal_lpdf<false>(y_slice, 0.0, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13469,7 +13472,7 @@ my_func_0a(const int& start, const int& end,
   (void) propto__;
   
   try {
-    current_statement__ = 29;
+    current_statement__ = 30;
     return normal_lpdf<false>(y_slice, 0.0, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13497,6 +13500,46 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
 {
 return my_func_0a(start + 1, end + 1, y_slice, pstream__);
+}
+};
+
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+my_func_0b(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 32;
+    return normal_lpdf<false>(y_slice, 0.0, 1.0);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct my_func_0b_functor__ {
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+{
+return my_func_0b(start, end, y_slice, pstream__);
+}
+};
+
+
+struct my_func_0b_rsfunctor__ {
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+{
+return my_func_0b(start + 1, end + 1, y_slice, pstream__);
 }
 };
 
@@ -13596,6 +13639,12 @@ class parallel_reduce_normal_test_model : public model_base_crtp<parallel_reduce
         lp_accum__.add(
           (reduce_sum<my_func_0a_rsfunctor__>(a, 1, pstream__) +
             reduce_sum<my_func_0a_rsfunctor__>(a, 1, pstream__)));
+        current_statement__ = 11;
+        lp_accum__.add(
+          ((reduce_sum<my_func_0b_rsfunctor__>(a, 1, pstream__) +
+             reduce_sum<my_func_0b_rsfunctor__>(a, 1, pstream__)) *
+            (reduce_sum<my_func_0b_rsfunctor__>(a, 1, pstream__) +
+              reduce_sum<my_func_0b_rsfunctor__>(a, 1, pstream__))));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
