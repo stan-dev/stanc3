@@ -679,9 +679,10 @@ let pp_register_map_rect_functors ppf p =
     (List.mapi ~f:(fun i f -> (i + 1, f)) functors)
 
 let fun_used_in_reduce_sum p =
-  let find_functors_expr accum Expr.Fixed.({pattern; _}) =
+  let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     match pattern with
     | FunApp (StanLib, "reduce_sum", {pattern= Var f; _} :: _) -> f :: accum
+    | FunApp (StanLib, _ , fk :: _) -> find_functors_expr accum fk
     | _ -> accum
   in
   let rec find_functors_stmt accum stmt =
