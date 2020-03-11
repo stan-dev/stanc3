@@ -84,7 +84,7 @@ let rec ints_to_real = function
 
 let allowed_slice_types =
   [ UnsizedType.UArray UReal; UArray UInt; UArray UMatrix; UArray UVector
-  ; UArray URowVector ]
+  ; UArray URowVector; (UArray (UArray UReal)) ]
 
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
