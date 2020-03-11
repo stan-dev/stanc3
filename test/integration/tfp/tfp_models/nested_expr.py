@@ -11,13 +11,23 @@ class nested_expr_model(tfd__.Distribution):
   def __init__(self, x, y):
     self.x = tf__.cast(x, tf__.float64)
     self.y = tf__.cast(y, tf__.float64)
+    
      
   
   def log_prob_one_chain(self, params):
     target = 0
+    
+    # Data
     x = self.x
     y = self.y
+    
+    # Transformed data
+    
+    
+    # Parameters
     s = tf__.cast(params[0], tf__.float64)
+    
+    # Target log probability computation
     z = x if (y < x) else (y if (tf__.cast(1, tf__.float64) < y) else tf__.cast(1, tf__.float64))
     v = z * (z + (x ^ tf__.cast(2, tf__.float64)))
     u = ((y < tf__.cast(1, tf__.float64)) and (x < tf__.cast(1, tf__.float64))) * (-x)
