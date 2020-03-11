@@ -12264,8 +12264,8 @@ class ode_bdf_test_model_model : public model_base_crtp<ode_bdf_test_model_model
       
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf(dz_dt_obfunctor__(), z_init, 0, ts, 1e-5, 1e-3, 5e2, alpha,
-          beta, gamma, delta, pstream__), "assigning variable z");
+        ode_bdf(dz_dt_obfunctor__(), z_init, 0, ts, 1e-5, 1e-3, 5e2,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
@@ -12402,8 +12402,8 @@ class ode_bdf_test_model_model : public model_base_crtp<ode_bdf_test_model_model
       } 
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf(dz_dt_obfunctor__(), z_init, 0, ts, 1e-5, 1e-3, 5e2, alpha,
-          beta, gamma, delta, pstream__), "assigning variable z");
+        ode_bdf(dz_dt_obfunctor__(), z_init, 0, ts, 1e-5, 1e-3, 5e2,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}

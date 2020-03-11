@@ -220,6 +220,18 @@ return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
 }
 };
 
+
+struct nrfun_lp_obfunctor__ {
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& x, const int& y, std::ostream* pstream__,
+           T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
+{
+return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
+}
+};
+
 int
 rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -257,6 +269,15 @@ return rfun(y, pstream__);
 }
 };
 
+
+struct rfun_obfunctor__ {
+int
+operator()(const int& y, std::ostream* pstream__)  const 
+{
+return rfun(y, pstream__);
+}
+};
+
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
@@ -281,6 +302,16 @@ struct rfun_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+{
+return rfun_lp(lp__, lp_accum__, pstream__);
+}
+};
+
+
+struct rfun_lp_obfunctor__ {
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+int
+operator()(std::ostream* pstream__, T_lp__& lp__, T_lp_accum__& lp_accum__)  const 
 {
 return rfun_lp(lp__, lp_accum__, pstream__);
 }
