@@ -314,18 +314,31 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
-
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
-    (* Validate.(
-      match get_arg_types es with
-    | [(_, UFun );_] ->   *)
+    let args_match a b =
+      if List.length a = List.length b then
+        List.for_all2_exn ~f:( fun (_,x) y -> (x = y.emeta.type_) ) a b
+      else
+        false
+    in
+    match es with 
+    | {emeta={type_=(UnsizedType.UFun ((_,UInt)::(_,UInt)::(_,sliced_fun)::fun_args, ReturnType UReal));_};_} :: sliced :: grainsize :: args ->
+      if grainsize.emeta.type_ = UInt &&
+         List.mem Stan_math_signatures.allowed_slice_types sliced.emeta.type_ ~equal:( = ) &&
+         List.mem Stan_math_signatures.allowed_slice_types sliced_fun ~equal:( = ) &&
+         sliced_fun = sliced.emeta.type_ &&
+         args_match fun_args args
+      then
         mk_typed_expression
-        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-        ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
-        |> Validate.ok
-      (* | _ -> 
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+          ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
+          |> Validate.ok
+      else
         Semantic_error.illtyped_reduce_sum loc
-        |> error) *)
+        |> Validate.error
+    | _ -> 
+        Semantic_error.illtyped_reduce_sum loc
+        |> Validate.error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
