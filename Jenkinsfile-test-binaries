@@ -18,6 +18,30 @@ def tagName() {
         'unknown-tag'
     }
 }
+
+def checkoutRepository(os_type) {
+    if(params.git_branch.contains("PR-")){
+        pr_number = params.git_branch.split("-")[1]
+
+        if(os_type == "sh"){
+            sh "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
+            sh "git checkout pr/${pr_number}"
+        }
+        else if(os_type == "bat"){
+            bat "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
+            bat "git checkout pr/${pr_number}"
+        }
+    }
+    else{
+        if(os_type == "sh"){
+            sh "git pull ${params.git_branch} && git checkout ${params.git_branch}"
+        }
+        else if(os_type == "bat"){
+            bat "git pull ${params.git_branch} && git checkout ${params.git_branch}"
+        }
+    }
+}
+
 pipeline {
     agent none
     parameters {
@@ -33,11 +57,13 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
+                script {
+                    checkoutRepository("sh")
+                }
                 sh 'echo Hellow'
                 sh 'printenv'
                 runShell("""
@@ -56,7 +82,9 @@ pipeline {
                 stage("Build & test Mac OS X binary") {
                     agent { label "osx && ocaml" }
                     steps {
-
+                        script {
+                            checkoutRepository("sh")
+                        }
                         runShell("""
                             eval \$(opam env)
                             opam update || true
@@ -86,7 +114,9 @@ pipeline {
                         }
                     }
                     steps {
-
+                        script {
+                            checkoutRepository("sh")
+                        }
                         runShell("""
                             eval \$(opam env)
                             dune subst
@@ -110,6 +140,9 @@ pipeline {
                     }
                     steps {
 
+                        script {
+                            checkoutRepository("sh")
+                        }
                         runShell("""
                             eval \$(opam env)
                             dune subst
@@ -131,6 +164,10 @@ pipeline {
                 stage("Build & test static Windows binary") {
                     agent { label "WSL" }
                     steps {
+
+                        script {
+                            checkoutRepository("bat")
+                        }
 
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
