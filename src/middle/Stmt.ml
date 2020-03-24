@@ -265,6 +265,14 @@ module Helpers = struct
             {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
+    | USparseMatrix ->
+              let emeta = iteratee.meta in
+        let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
+        let rows =
+          Expr.Fixed.
+            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
+        in
+        mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
@@ -293,9 +301,11 @@ module Helpers = struct
 *)
   let rec for_eigen st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+
+
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -311,6 +321,8 @@ module Helpers = struct
     | SizedType.SInt | SReal -> bodyfn var
     | SVector d | SRowVector d -> mkfor d bodyfn var smeta
     | SMatrix (d1, d2) ->
+        mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+    | SSparseMatrix (_, _, d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 

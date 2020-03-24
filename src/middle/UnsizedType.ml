@@ -7,6 +7,7 @@ type t =
   | UVector
   | URowVector
   | UMatrix
+  | USparseMatrix
   | UArray of t
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
@@ -32,6 +33,7 @@ let rec pp ppf = function
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
+  | USparseMatrix -> pp_keyword ppf "sparse_matrix"
   | UArray ut ->
       let ty, depth = unsized_array_depth ut in
       let commas = String.make depth ',' in
@@ -97,7 +99,7 @@ let rec common_type = function
 
 (* -- Helpers -- *)
 let is_real_type = function
-  | UReal | UVector | URowVector | UMatrix
+  | UReal | UVector | URowVector | UMatrix | USparseMatrix
    |UArray UReal
    |UArray UVector
    |UArray URowVector
@@ -113,6 +115,8 @@ let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
   | UMatrix, [] -> false
   | UMatrix, _ -> true
+  | USparseMatrix, [] -> false
+  | USparseMatrix, _ -> true
   | _ -> false
 
 module Comparator = Comparator.Make (struct

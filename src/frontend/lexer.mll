@@ -102,6 +102,7 @@ rule token = parse
   | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }
+  | "sparse_matrix"           { lexer_logger "sparse_matrix" ; Parser.SPARSEMATRIX }
   | "ordered"                 { lexer_logger "ordered" ; Parser.ORDERED }
   | "positive_ordered"        { lexer_logger "positive_ordered" ;
                                 Parser.POSITIVEORDERED }

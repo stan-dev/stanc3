@@ -99,7 +99,7 @@ let data_read smeta (decl_id, st) =
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
-  | UVector | URowVector | UMatrix | UArray _ ->
+  | UVector | URowVector | UMatrix | USparseMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl
@@ -138,6 +138,7 @@ let data_read smeta (decl_id, st) =
 
 let rec base_ut_to_string = function
   | UnsizedType.UMatrix -> "matrix"
+  | USparseMatrix -> "sparse_matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "scalar"
@@ -459,6 +460,10 @@ let validate_sized decl_id meta transform st =
           | _ -> check FnValidateSize rows
         in
         [validate_rows; check FnValidateSize cols]
+    | SSparseMatrix (_, _, rows, cols) ->
+        let validate_rows = check FnValidateSize rows
+        in
+        [validate_rows; check FnValidateSize cols]
   in
   dims_check st
 
@@ -517,7 +522,7 @@ let make_fill vident st loc =
 
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
+  | UMatrix | URowVector | UVector | USparseMatrix -> true
   | _ -> false
 
 let type_needs_fill decl_id ut =
