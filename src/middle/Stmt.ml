@@ -248,6 +248,27 @@ module Helpers = struct
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
 
+  let mkfortnite nonzero_rows nonzero_cols bodyfn var meta = 
+    let idx s = 
+       let meta = 
+         Expr.Typed.Meta.create ~type_:Uint ~loc:meta ~adlevel:DataOnly ()
+        in
+        let expr = Expr.Fixed.{meta; pattern= Var s} in
+        Index.Single expr
+    in
+    let loopvar, reset = Gensym.enter () in
+    let lower = Expr.Helpers.loop_bottom in
+    let upper = Expr.Helpers.internal_funapp FnLength [nonzero_rows] () in
+    let row_idx = Expr.Helpers.add_int_index nonzero_rows (idx loopvar) in
+    let col_idx = Expr.Helpers.add_int_index nonzero_cols (idx loopvar) in
+    let row_iter = Expr.Helpers.add_int_index var (Index.Single row_idx) in
+    let col_iter = Expr.Helpers.add_int_index row_iter (Index.Single col_idx) in
+    let bodyfn = col_iter |> bodyfn in
+    reset ();
+    let body = Fixed.{meta; pattern = bodyfn var} in
+    let pattern = Fixed.Pattern.For {loopvar; lower; upper ; body} in
+    Fixed.{meta; pattern}
+    
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
@@ -322,8 +343,8 @@ module Helpers = struct
     | SVector d | SRowVector d -> mkfor d bodyfn var smeta
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-    | SSparseMatrix (_, _, d1, d2) ->
-        mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+    | SSparseMatrix (nonzero_rows, nonzero_cols, _, _) ->
+      mkfortnite nonzero_rows nonzero_cols bodyfn var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
