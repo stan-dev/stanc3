@@ -12,6 +12,7 @@ type dimensionality =
   | DReal
   | DVector
   | DMatrix
+  | DSparseMatrix
   (* Vectorizable int *)
   | DVInt
   (* Vectorizable real *)
@@ -32,12 +33,13 @@ let rec expand_arg = function
   | DReal -> [UnsizedType.UReal]
   | DVector -> [UVector]
   | DMatrix -> [UMatrix]
+  | DSparseMatrix -> [USparseMatrix]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
   | DDeepVectorized ->
-      let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix] in
+      let all_base = [UnsizedType.UInt; UReal; URowVector; UVector; UMatrix; USparseMatrix] in
       List.(
         concat_map all_base ~f:(fun a ->
             map (range 0 8) ~f:(fun i -> bare_array_type (a, i)) ))
@@ -355,9 +357,10 @@ let bare_types = function
   | 2 -> UVector
   | 3 -> URowVector
   | 4 -> UMatrix
+  | 5 -> USparseMatrix
   | i -> raise_s [%sexp (i : int)]
 
-let bare_types_size = 5
+let bare_types_size = 6
 
 let vector_types = function
   | 0 -> UnsizedType.UReal
@@ -426,6 +429,8 @@ let () =
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UReal]) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; UVector]) ;
   add_unqualified ("add_diag", ReturnType UMatrix, [UMatrix; URowVector]) ;
+  add_unqualified ("add", ReturnType USparseMatrix, [USparseMatrix; UReal]) ;
+  add_unqualified ("add", ReturnType USparseMatrix, [UReal; USparseMatrix]) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType UVector
@@ -480,6 +485,13 @@ let () =
   add_unqualified ("assign_multiply", Void, [URowVector; UMatrix]) ;
   add_unqualified ("assign_multiply", Void, [UVector; UReal]) ;
   add_unqualified ("assign_multiply", Void, [UVector; UInt]) ;
+  add_unqualified ("assign_multiply", Void, [URowVector; UReal]) ;
+  add_unqualified ("assign_multiply", Void, [USparseMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_multiply", Void, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("assign_multiply", Void, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("assign_multiply", Void, [USparseMatrix; UReal]) ;
+  add_unqualified ("assign_multiply", Void, [USparseMatrix; UInt]) ;
+  add_unqualified ("assign_multiply", Void, [URowVector; USparseMatrix]) ;
   add_unqualified ("assign_add", Void, [UInt; UInt]) ;
   add_unqualified ("assign_add", Void, [UMatrix; UMatrix]) ;
   add_unqualified ("assign_add", Void, [UMatrix; UReal]) ;
@@ -492,6 +504,11 @@ let () =
   add_unqualified ("assign_add", Void, [UVector; UReal]) ;
   add_unqualified ("assign_add", Void, [UVector; UInt]) ;
   add_unqualified ("assign_add", Void, [UVector; UVector]) ;
+  add_unqualified ("assign_add", Void, [UMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_add", Void, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("assign_add", Void, [USparseMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_add", Void, [USparseMatrix; UReal]) ;
+  add_unqualified ("assign_add", Void, [USparseMatrix; UInt]) ;
   add_unqualified ("assign_subtract", Void, [UInt; UInt]) ;
   add_unqualified ("assign_subtract", Void, [UMatrix; UMatrix]) ;
   add_unqualified ("assign_subtract", Void, [UMatrix; UReal]) ;
@@ -504,6 +521,11 @@ let () =
   add_unqualified ("assign_subtract", Void, [UVector; UReal]) ;
   add_unqualified ("assign_subtract", Void, [UVector; UInt]) ;
   add_unqualified ("assign_subtract", Void, [UVector; UVector]) ;
+  add_unqualified ("assign_subtract", Void, [UMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_subtract", Void, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("assign_subtract", Void, [USparseMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_subtract", Void, [USparseMatrix; UReal]) ;
+  add_unqualified ("assign_subtract", Void, [USparseMatrix; UInt]) ;
   add_unqualified ("assign_elt_times", Void, [UMatrix; UMatrix]) ;
   add_unqualified ("assign_elt_times", Void, [URowVector; URowVector]) ;
   add_unqualified ("assign_elt_times", Void, [UVector; UVector]) ;
@@ -525,6 +547,11 @@ let () =
   add_unqualified ("assign_divide", Void, [UReal; UInt]) ;
   add_unqualified ("assign_divide", Void, [URowVector; UInt]) ;
   add_unqualified ("assign_divide", Void, [UVector; UInt]) ;
+  add_unqualified ("assign_divide", Void, [UMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_divide", Void, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("assign_divide", Void, [USparseMatrix; USparseMatrix]) ;
+  add_unqualified ("assign_divide", Void, [USparseMatrix; UReal]) ;
+  add_unqualified ("assign_divide", Void, [USparseMatrix; UInt]) ;
   add_binary "atan2" ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
@@ -657,6 +684,7 @@ let () =
   add_unqualified ("cumulative_sum", ReturnType UVector, [UVector]) ;
   add_unqualified ("cumulative_sum", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("determinant", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("determinant", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("diag_matrix", ReturnType UMatrix, [UVector]) ;
   add_unqualified ("diag_post_multiply", ReturnType UMatrix, [UMatrix; UVector]) ;
   add_unqualified
@@ -665,11 +693,13 @@ let () =
   add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [URowVector; UMatrix]) ;
   add_unqualified ("diagonal", ReturnType UVector, [UMatrix]) ;
+  add_unqualified ("diagonal", ReturnType USparseMatrix, [USparseMatrix]) ;
   add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UInt]) ;
   add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UReal]) ;
   add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UVector]) ;
   add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [URowVector]) ;
   add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UMatrix]) ;
+  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [USparseMatrix]) ;
   for i = 0 to 8 - 1 do
     add_unqualified
       ( "dims"
@@ -690,7 +720,11 @@ let () =
     add_unqualified
       ( "dims"
       , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UMatrix, i + 1)] )
+      , [bare_array_type (UMatrix, i + 1)] );
+      add_unqualified
+      ( "dims"
+      , ReturnType (bare_array_type (UInt, 1))
+      , [bare_array_type (USparseMatrix, i + 1)] )
   done ;
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector]) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; UVector]) ;
@@ -702,6 +736,7 @@ let () =
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("divide", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("divide", ReturnType UMatrix, [UMatrix; UReal]) ;
+  add_unqualified ("divide", ReturnType USparseMatrix, [USparseMatrix; UReal]) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; URowVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; URowVector]) ;
@@ -1096,6 +1131,7 @@ let () =
     ("inv_wishart_lpdf", ReturnType UReal, [UMatrix; UReal; UMatrix]) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix]) ;
   add_unqualified ("inverse", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("inverse", ReturnType USparseMatrix, [USparseMatrix]) ;
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("is_inf", ReturnType UInt, [UReal]) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal]) ;
@@ -1114,6 +1150,7 @@ let () =
   add_nullary "log10" ;
   add_nullary "log2" ;
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("log_determinant", ReturnType UReal, [USparseMatrix]) ;
   add_binary "log_diff_exp" ;
   add_binary "log_falling_factorial" ;
   add_ternary "log_mix" ;
@@ -1138,6 +1175,7 @@ let () =
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("log_sum_exp", ReturnType UReal, [USparseMatrix]) ;
   add_binary "log_sum_exp" ;
   for i = 0 to primitive_types_size - 1 do
     add_unqualified ("logical_negation", ReturnType UInt, [primitive_types i]) ;
@@ -1181,9 +1219,11 @@ let () =
   add_unqualified ("max", ReturnType UReal, [UVector]) ;
   add_unqualified ("max", ReturnType UReal, [URowVector]) ;
   add_unqualified ("max", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("max", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("max", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("mdivide_left", ReturnType UVector, [UMatrix; UVector]) ;
   add_unqualified ("mdivide_left", ReturnType UMatrix, [UMatrix; UMatrix]) ;
+  add_unqualified ("mdivide_left", ReturnType USparseMatrix, [USparseMatrix; USparseMatrix]) ;
   add_unqualified ("mdivide_left_spd", ReturnType UVector, [UMatrix; UVector]) ;
   add_unqualified ("mdivide_left_spd", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified
@@ -1204,17 +1244,20 @@ let () =
   add_unqualified ("mean", ReturnType UReal, [UVector]) ;
   add_unqualified ("mean", ReturnType UReal, [URowVector]) ;
   add_unqualified ("mean", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("mean", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("min", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("min", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("min", ReturnType UReal, [UVector]) ;
   add_unqualified ("min", ReturnType UReal, [URowVector]) ;
   add_unqualified ("min", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("min", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("min", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("minus", ReturnType UInt, [UInt]) ;
   add_unqualified ("minus", ReturnType UReal, [UReal]) ;
   add_unqualified ("minus", ReturnType UVector, [UVector]) ;
   add_unqualified ("minus", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("minus", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("minus", ReturnType USparseMatrix, [USparseMatrix]) ;
   add_unqualified
     ("modified_bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
   add_unqualified
@@ -1274,6 +1317,13 @@ let () =
   add_unqualified ("multiply", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("multiply", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("multiply", ReturnType UMatrix, [UReal; UMatrix]) ;
+  add_unqualified ("multiply", ReturnType URowVector, [URowVector; USparseMatrix]) ;
+  add_unqualified ("multiply", ReturnType USparseMatrix, [USparseMatrix; UReal]) ;
+  add_unqualified ("multiply", ReturnType USparseMatrix, [USparseMatrix; USparseMatrix]) ;
+  add_unqualified ("multiply", ReturnType USparseMatrix, [UReal; USparseMatrix]) ;
+  add_unqualified ("multiply", ReturnType UMatrix, [UMatrix; USparseMatrix]) ;
+  add_unqualified ("multiply", ReturnType UMatrix, [USparseMatrix; UMatrix]) ;
+  add_unqualified ("multiply", ReturnType UVector, [USparseMatrix; UVector]) ;
   add_binary "multiply_log" ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix]) ;
@@ -1330,6 +1380,7 @@ let () =
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
   add_unqualified ("num_elements", ReturnType UInt, [URowVector]) ;
+  add_unqualified ("num_elements", ReturnType UInt, [USparseMatrix]) ;
   for i = 1 to 10 - 1 do
     add_unqualified
       ("num_elements", ReturnType UInt, [bare_array_type (UInt, i)]) ;
@@ -1337,6 +1388,8 @@ let () =
       ("num_elements", ReturnType UInt, [bare_array_type (UReal, i)]) ;
     add_unqualified
       ("num_elements", ReturnType UInt, [bare_array_type (UMatrix, i)]) ;
+    add_unqualified
+      ("num_elements", ReturnType UInt, [bare_array_type (USparseMatrix, i)]) ;
     add_unqualified
       ("num_elements", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
     add_unqualified
@@ -1407,6 +1460,7 @@ let () =
   add_unqualified ("plus", ReturnType UVector, [UVector]) ;
   add_unqualified ("plus", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("plus", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("plus", ReturnType USparseMatrix, [USparseMatrix]) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
@@ -1436,6 +1490,7 @@ let () =
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
   add_unqualified ("prod", ReturnType UReal, [URowVector]) ;
   add_unqualified ("prod", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("prod", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector]) ;
   add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("quad_form_sym", ReturnType UReal, [UMatrix; UVector]) ;
@@ -1492,6 +1547,7 @@ let () =
   add_unqualified ("rows", ReturnType UInt, [UVector]) ;
   add_unqualified ("rows", ReturnType UInt, [URowVector]) ;
   add_unqualified ("rows", ReturnType UInt, [UMatrix]) ;
+  add_unqualified ("rows", ReturnType UInt, [USparseMatrix]) ;
   add_unqualified ("rows_dot_product", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified
     ("rows_dot_product", ReturnType UVector, [URowVector; URowVector]) ;
@@ -1505,6 +1561,7 @@ let () =
   add_unqualified ("sd", ReturnType UReal, [UVector]) ;
   add_unqualified ("sd", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sd", ReturnType UReal, [UMatrix]) ;
+    add_unqualified ("sd", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("segment", ReturnType URowVector, [URowVector; UInt; UInt]) ;
   add_unqualified ("segment", ReturnType UVector, [UVector; UInt; UInt]) ;
   for i = 0 to bare_types_size - 1 do
@@ -1527,7 +1584,8 @@ let () =
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UReal, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (UVector, i)]) ;
     add_unqualified ("size", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)])
+    add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)]);
+    add_unqualified ("size", ReturnType UInt, [bare_array_type (USparseMatrix, i)])
   done ;
   for i = 0 to bare_types_size - 1 do
     add_unqualified ("size", ReturnType UInt, [bare_types i])
@@ -1594,14 +1652,17 @@ let () =
   add_unqualified ("subtract", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("subtract", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UMatrix; UReal]) ;
+  add_unqualified ("subtract", ReturnType USparseMatrix, [USparseMatrix; UReal]) ;
   add_unqualified ("subtract", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("subtract", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UReal; UMatrix]) ;
+  add_unqualified ("subtract", ReturnType USparseMatrix, [UReal; USparseMatrix]) ;
   add_unqualified ("sum", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("sum", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("sum", ReturnType UReal, [UVector]) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("sum", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt]) ;
   for i = 0 to bare_types_size - 1 do
@@ -1676,6 +1737,7 @@ let () =
     ("to_vector", ReturnType UVector, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("to_vector", ReturnType UVector, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("trace", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("trace", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix]) ;
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector]) ;
@@ -1683,10 +1745,12 @@ let () =
   add_unqualified ("transpose", ReturnType URowVector, [UVector]) ;
   add_unqualified ("transpose", ReturnType UVector, [URowVector]) ;
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("transpose", ReturnType USparseMatrix, [USparseMatrix]) ;
   add_unqualified ("variance", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("variance", ReturnType UReal, [UVector]) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("variance", ReturnType UReal, [USparseMatrix]) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix]) ;
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)

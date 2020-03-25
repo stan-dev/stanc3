@@ -193,8 +193,12 @@ module Helpers = struct
      |UMatrix, [Upfrom _; Single _]
      |UMatrix, [Between _; Single _]
      |UMatrix, [MultiIndex _]
-     |UMatrix, [Single _] ->
-        UVector
+     |UMatrix, [Single _] -> UVector
+    | USparseMatrix, [All; Single _]
+    |USparseMatrix, [Upfrom _; Single _]
+    |USparseMatrix, [Between _; Single _]
+    |USparseMatrix, [MultiIndex _; MultiIndex _; All; All;]
+    |USparseMatrix, [Single _] -> USparseMatrix
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
     | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal

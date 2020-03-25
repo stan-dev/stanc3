@@ -72,7 +72,7 @@ let rec get_dims = function
   | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SSparseMatrix (nz1, nz2, dim1, dim2) -> [nz1; nz2; dim1; dim2]
+  | SSparseMatrix (_, _, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
