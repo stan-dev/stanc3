@@ -64,7 +64,7 @@ let rec dims_of st =
   match st with
   | SArray (t, _) -> dims_of t
   | SMatrix (d1, d2) -> [d1; d2]
-  | SSparseMatrix (_, _, d1, d2) -> [d1; d2]
+  | SSparseMatrix (nz_rows, nz_cols, d1, d2) -> [nz_rows; nz_cols; d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
@@ -72,7 +72,7 @@ let rec get_dims = function
   | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SSparseMatrix (_, _, dim1, dim2) -> [dim1; dim2]
+  | SSparseMatrix (nz_rows, nz_cols, dim1, dim2) -> [nz_rows; nz_cols; dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =

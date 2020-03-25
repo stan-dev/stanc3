@@ -262,8 +262,11 @@ module Helpers = struct
       let col_idx = Expr.Helpers.add_int_index nonzero_cols (idx loopvar) in
       let bodyfn var = Expr.Helpers.add_int_index (Expr.Helpers.add_int_index var (Index.Single row_idx)) (Index.Single col_idx) |> bodyfn in
       let upper = Expr.Helpers.internal_funapp FnLength [nonzero_rows] Expr.Typed.Meta.empty in
+      let full_body = bodyfn var in
+      let stmt = Fixed.Pattern.Block [full_body] in
       reset ();
-      let pattern = Fixed.Pattern.For {loopvar; lower; upper; body=bodyfn var} in
+      let body = Fixed.{meta; pattern=stmt} in
+      let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
       Fixed.{meta; pattern}
     
   let rec for_each bodyfn iteratee smeta =
