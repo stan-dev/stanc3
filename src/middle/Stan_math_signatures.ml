@@ -1527,7 +1527,7 @@ let () =
         ; (DataOnly, UArray UInt)
         ; ( AutoDiffable
           , UFun
-            ( [ (AutoDiffable, UVector); (DataOnly, UArray UVector)
+            ( [ (AutoDiffable, UVector); (DataOnly, UMatrix)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UMatrix ) )
             ; (AutoDiffable, UVector); (DataOnly, UMatrix)

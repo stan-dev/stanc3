@@ -41,6 +41,6 @@ generated quantities {
   vector[1] theta_pred
     = laplace_approx_bernoulli_rng(y, n_samples, K, phi, x, delta, delta_int,
                                    theta0);
-  theta_pred = laplace_approx_bernoulli_rng(y, n_samples, K, phi, x_m, delta,
+  theta_pred = laplace_approx_bernoulli_rng(y, n_samples, Km, phi, x_m, delta,
                                             delta_int, theta0);
 }
