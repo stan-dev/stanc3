@@ -1508,6 +1508,32 @@ let () =
           ; (DataOnly, UArray UReal); (DataOnly, UArray UInt)
           ; (AutoDiffable, UVector) ] ) ;
   add_qualified
+    ( "laplace_approx_bernoulli_rng"
+    , ReturnType UVector
+    , [ (DataOnly, UArray UInt)
+      ; (DataOnly, UArray UInt)
+      ; ( AutoDiffable
+        , UFun
+          ( [ (AutoDiffable, UVector); (DataOnly, UArray UVector)
+            ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+          , ReturnType UMatrix ) )
+          ; (AutoDiffable, UVector); (DataOnly, UArray UVector)
+          ; (DataOnly, UArray UReal); (DataOnly, UArray UInt)
+          ; (AutoDiffable, UVector) ] ) ;
+    add_qualified
+      ( "laplace_approx_bernoulli_rng"
+      , ReturnType UVector
+      , [ (DataOnly, UArray UInt)
+        ; (DataOnly, UArray UInt)
+        ; ( AutoDiffable
+          , UFun
+            ( [ (AutoDiffable, UVector); (DataOnly, UArray UVector)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType UMatrix ) )
+            ; (AutoDiffable, UVector); (DataOnly, UMatrix)
+            ; (DataOnly, UArray UReal); (DataOnly, UArray UInt)
+            ; (AutoDiffable, UVector) ] ) ;
+  add_qualified
     ( "laplace_marginal_poisson"
     , ReturnType UReal
     , [ (DataOnly, UArray UInt); (DataOnly, UArray UInt)
