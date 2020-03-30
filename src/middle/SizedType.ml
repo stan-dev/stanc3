@@ -8,6 +8,7 @@ type 'a t =
   | SRowVector of 'a
   | SMatrix of 'a * 'a
   | SSparseMatrix of 'a * 'a * 'a * 'a
+  | SStaticSparseMatrix of 'a * 'a
   | SArray of 'a t * 'a
 [@@deriving sexp, compare, map, hash, fold]
 
@@ -24,7 +25,11 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
-  | SArray (st, expr) ->
+  | SStaticSparseMatrix (d1_expr, d2_expr) ->
+      Fmt.pf ppf {|sparse_matrix%a|}
+        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+        (d1_expr, d2_expr)
+    | SArray (st, expr) ->
       Fmt.pf ppf {|array%a|}
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
@@ -35,6 +40,7 @@ let collect_exprs st =
     | SVector e | SRowVector e -> List.rev @@ (e :: accu)
     | SMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
     | SSparseMatrix (e1, e2, e3, e4) -> List.rev @@ (e1 :: e2 :: e3 :: e4 :: accu)
+    | SStaticSparseMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
     | SArray (inner, e) -> aux (e :: accu) inner
   in
   aux [] st
@@ -46,6 +52,7 @@ let rec to_unsized = function
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
   | SSparseMatrix _ -> USparseMatrix
+  | SStaticSparseMatrix _ -> USparseMatrix
   | SArray (t, _) -> UArray (to_unsized t)
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
@@ -55,6 +62,8 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SSparseMatrix (e1, e2, e3, e4) ->
       Expr.Labelled.(associate ~init:(associate ~init:(associate ~init:(associate ~init:assocs e1) e2) e3) e4)
+  | SStaticSparseMatrix (e1, e2) ->
+      Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
 
@@ -65,6 +74,7 @@ let rec dims_of st =
   | SArray (t, _) -> dims_of t
   | SMatrix (d1, d2) -> [d1; d2]
   | SSparseMatrix (nz_rows, nz_cols, d1, d2) -> [nz_rows; nz_cols; d1; d2]
+  | SStaticSparseMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
@@ -73,6 +83,7 @@ let rec get_dims = function
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SSparseMatrix (nz_rows, nz_cols, dim1, dim2) -> [nz_rows; nz_cols; dim1; dim2]
+  | SStaticSparseMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =

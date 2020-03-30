@@ -194,6 +194,8 @@ and pp_sizedtype ppf = function
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SSparseMatrix (e1, e2, e3, e4) ->
       Fmt.pf ppf "sparse_matrix[%a, %a, %a, %a]" pp_expression e1 pp_expression e2 pp_expression e3 pp_expression e4
+  | SStaticSparseMatrix (e1, e2) ->
+      Fmt.pf ppf "sparse_matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
@@ -241,7 +243,11 @@ and pp_transformed_type ppf (pst, trans) =
     | Sized (SSparseMatrix (e1, e2, e3, e4)) ->
       Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a, %a, %a]" pp_expression e1 pp_expression e2 pp_expression e3 pp_expression) e4
-    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
+    | Sized (SStaticSparseMatrix (e1, e2)) ->
+      Fmt.const
+          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
+          e2
+      | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
       ->
         Fmt.nop
   in

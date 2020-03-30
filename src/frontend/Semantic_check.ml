@@ -78,6 +78,7 @@ let rec unsizedtype_of_sizedtype = function
   | SRowVector _ -> URowVector
   | SMatrix (_, _) -> UMatrix
   | SSparseMatrix (_, _, _, _) -> USparseMatrix
+  | SStaticSparseMatrix (_, _) -> USparseMatrix
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
@@ -743,6 +744,10 @@ let rec semantic_check_sizedtype cf = function
       and ue3 = semantic_check_expression_of_int_type cf e3 "Sparse Matrix sizes"
       and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
       Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SizedType.SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4
+  | SStaticSparseMatrix (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Static Sparse Matrix sizes"
+      and ue2 = semantic_check_expression_of_int_type cf e2 "Static Sparse Matrix sizes" in
+      Validate.liftA2 (fun ue1 ue2 -> SizedType.SStaticSparseMatrix (ue1, ue2)) ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
@@ -1376,6 +1381,7 @@ and semantic_check_size_decl ~loc is_global sized_ty =
     | SRowVector e -> not_ptq e
     | SMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
     | SSparseMatrix (_, _, e3, e4) -> not_ptq e3 && not_ptq e4
+    | SStaticSparseMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
     | SArray (sized_ty, e) when not_ptq e -> check_sizes_data_only sized_ty
     | SArray _ -> false
     | _ -> true
