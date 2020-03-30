@@ -8544,6 +8544,34 @@ matrix inverse(matrix)
 matrix inverse_spd(matrix)
 int is_inf(real)
 int is_nan(real)
+vector laplace_approx_bernoulli_rng(int[], int[],
+                                      (vector, data matrix, data real[], data int[]) => matrix,
+                                      vector, matrix, real[], int[], vector)
+vector laplace_approx_bernoulli_rng(int[], int[],
+                                      (vector, data vector[], data real[], data int[]) => matrix,
+                                      vector, vector[], real[], int[], vector)
+vector laplace_approx_poisson_rng(int[], int[], vector,
+                                    (vector, data vector[], data real[], data int[]) => matrix,
+                                    vector, vector[], real[], int[], vector)
+vector laplace_approx_poisson_rng(int[], int[],
+                                    (vector, data vector[], data real[], data int[]) => matrix,
+                                    vector, vector[], real[], int[], vector)
+real laplace_marginal_bernoulli(int[], int[],
+                                  (vector, data matrix, data real[], data int[]) => matrix,
+                                  vector, matrix, real[], int[], vector)
+real laplace_marginal_bernoulli(int[], int[],
+                                  (vector, data vector[], data real[], data int[]) => matrix,
+                                  vector, vector[], real[], int[], vector)
+real laplace_marginal_bernoulli(int[], int[],
+                                  (vector, data vector[], data real[], data int[]) => matrix,
+                                  vector, vector[], real[], int[], vector,
+                                  real, int)
+real laplace_marginal_poisson(int[], int[], vector,
+                                (vector, data vector[], data real[], data int[]) => matrix,
+                                vector, vector[], real[], int[], vector)
+real laplace_marginal_poisson(int[], int[],
+                                (vector, data vector[], data real[], data int[]) => matrix,
+                                vector, vector[], real[], int[], vector)
 real lbeta(real, real)
 real lchoose(real, real)
 real lgamma(int)
