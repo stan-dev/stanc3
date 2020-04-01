@@ -508,6 +508,12 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
      |UMatrix, [(Between _, _); (Single _, UInt)]
      |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
         k @@ Validate.ok UnsizedType.UVector
+    | UnsizedType.USparseMatrix, [(All, _); (Single _, UnsizedType.UInt)]
+    |USparseMatrix, [(Upfrom _, _); (Single _, UInt)]
+    |USparseMatrix, [(Downfrom _, _); (Single _, UInt)]
+    |USparseMatrix, [(Between _, _); (Single _, UInt)]
+    |USparseMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
+        k @@ Validate.ok UnsizedType.USparseMatrix
     | _, [] -> k @@ Validate.ok ut
     | _, next :: rest -> (
       match next with
@@ -516,6 +522,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
         | UArray inner_ty -> aux k inner_ty rest
         | UVector | URowVector -> aux k UReal rest
         | UMatrix -> aux k URowVector rest
+        | USparseMatrix -> aux k USparseMatrix rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
       | _ -> (
         match ut with
@@ -524,7 +531,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
               Fn.compose k (Validate.map ~f:(fun t -> UnsizedType.UArray t))
             in
             aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
+        | UVector | URowVector | UMatrix | USparseMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
   in
   aux Fn.id ut (List.map ~f:index_with_type indices)

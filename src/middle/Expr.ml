@@ -201,7 +201,7 @@ module Helpers = struct
     |USparseMatrix, [Single _] -> USparseMatrix
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
-    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] | USparseMatrix, [Single _; Single _] -> UReal
     | _ -> raise_s [%message "Can't index" (ut : UnsizedType.t)]
 
   (** [add_index expression index] returns an expression that (additionally)
