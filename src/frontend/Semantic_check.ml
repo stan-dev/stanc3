@@ -514,6 +514,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     |USparseMatrix, [(Between _, _); (Single _, UInt)]
     |USparseMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
         k @@ Validate.ok UnsizedType.USparseMatrix
+    | USparseMatrix, [(Single _,  _); (Single _, _)] -> k @@ Validate.ok UnsizedType.UReal
     | _, [] -> k @@ Validate.ok ut
     | _, next :: rest -> (
       match next with
