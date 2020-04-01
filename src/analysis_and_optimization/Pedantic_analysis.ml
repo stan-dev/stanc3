@@ -25,18 +25,21 @@ let list_unused_params (factor_graph:factor_graph) (mir : Program.Typed.t)
   Set.Poly.diff params used_params
 
 let list_hard_constrained (mir : Program.Typed.t) :
-  string Set.Poly.t =
+  (string * [ `HardConstraint | `NonsenseConstraint ]) Set.Poly.t =
   (* Iterate through all parameters' transformations for hard constraints *)
   let constrained (e : bound_values) = match e with
     | {lower= `Lit 0.; upper= `Lit 1.}
-    | {lower= `Lit -1.; upper= `Lit 1.} -> false
-    | {lower= `Lit _; upper= `Lit _} -> true
-    | _ -> false
+    | {lower= `Lit -1.; upper= `Lit 1.} -> None
+    | {lower= `Lit a; upper= `Lit b} when a >= b -> Some `NonsenseConstraint
+    | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
+    | _ -> None
   in
-  Set.Poly.map ~f:fst
-    (Set.Poly.filter
-       ~f:(fun (_, trans) -> constrained (trans_bounds_values trans))
-       (parameter_set mir))
+  (Set.Poly.filter_map
+     ~f:(fun (name, trans) ->
+         Option.map
+           ~f:(fun c -> (name, c))
+           (constrained (trans_bounds_values trans)))
+     (parameter_set mir))
 
 let list_multi_twiddles (mir : Program.Typed.t) :
   (string * Location_span.t Set.Poly.t) Set.Poly.t =
@@ -227,6 +230,11 @@ let unscaled_constants_warnings (distributions_list : dist_info Set.Poly.t) =
     ~f:(fun (loc, name) -> (loc, unscaled_constants_message name))
     (list_unscaled_constants distributions_list)
 
+let nonsense_constrained_message (pname : string) : string =
+  Printf.sprintf
+    "Parameter %s has constraints that don't make sense. The lower bound should be strictly less than the upper bound."
+    pname
+
 let hard_constrained_message (pname : string) : string =
   Printf.sprintf
     "Your Stan program has a parameter %s with hard constraints in its \
@@ -243,8 +251,11 @@ let hard_constrained_message (pname : string) : string =
 let hard_constrained_warnings (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   Set.Poly.map
-    ~f:(fun pname ->
-        (Location_span.empty, hard_constrained_message pname))
+    ~f:(fun (pname, c) -> match c with
+        | `HardConstraint ->
+          (Location_span.empty, hard_constrained_message pname)
+        | `NonsenseConstraint ->
+          (Location_span.empty, nonsense_constrained_message pname))
     pnames
 
 let multi_twiddles_message (vname : string) : string =

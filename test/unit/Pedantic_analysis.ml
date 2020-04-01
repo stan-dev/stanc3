@@ -178,6 +178,8 @@ let hard_constrained_example =
           real<lower=-1, upper=1> b;
           real<lower=0, upper=10> c;
           real<lower=-1, upper=0> d;
+          real<lower=0, upper=0> e;
+          real<lower=1, upper=-1> f;
         }
         model {
         }
@@ -188,13 +190,23 @@ let%expect_test "Hard constraint warning" =
   [%expect
     {|
       Warning:
-        The parameter a was declared but does not participate in the model.
+        Parameter e has constraints that don't make sense. The lower bound should
+        be strictly less than the upper bound.
       Warning:
-        The parameter b was declared but does not participate in the model.
+        Parameter f has constraints that don't make sense. The lower bound should
+        be strictly less than the upper bound.
       Warning:
-        The parameter c was declared but does not participate in the model.
+        The parameter a was declared but was not used in the model.
       Warning:
-        The parameter d was declared but does not participate in the model.
+        The parameter b was declared but was not used in the model.
+      Warning:
+        The parameter c was declared but was not used in the model.
+      Warning:
+        The parameter d was declared but was not used in the model.
+      Warning:
+        The parameter e was declared but was not used in the model.
+      Warning:
+        The parameter f was declared but was not used in the model.
       Warning:
         Your Stan program has a parameter c with hard constraints in its
         declaration. Hard constraints are not recommended, for two reasons: (a)
@@ -244,13 +256,13 @@ let%expect_test "Unused param warning" =
       Warning:
         The parameter b has 2 priors.
       Warning:
-        The parameter c was declared but does not participate in the model.
+        The parameter c was declared but was not used in the model.
       Warning:
-        The parameter d was declared but does not participate in the model.
+        The parameter d was declared but was not used in the model.
       Warning:
-        The parameter e was declared but does not participate in the model.
+        The parameter e was declared but was not used in the model.
       Warning:
-        The parameter f was declared but does not participate in the model. |}]
+        The parameter f was declared but was not used in the model. |}]
 
 let param_dependant_cf_example =
       {|
@@ -354,13 +366,13 @@ let%expect_test "Non-one priors warning" =
       Warning:
         The parameter b has 2 priors.
       Warning:
-        The parameter c has 0 priors.
+        The parameter c has no priors.
       Warning:
-        The parameter d has 0 priors.
+        The parameter d has no priors.
       Warning:
-        The parameter e has 0 priors.
+        The parameter e has no priors.
       Warning:
-        The parameter f has 0 priors.
+        The parameter f has no priors.
       Warning at 'string', line 22, column 10 to column 27:
         The parameter f is on the left-hand side of more than one twiddle
         statement. |}]
@@ -594,29 +606,29 @@ let%expect_test "Dist warnings" =
   [%expect
     {|
       Warning:
-        The parameter chol_corr has 0 priors.
+        The parameter chol_corr has no priors.
       Warning:
-        The parameter chol_cov has 0 priors.
+        The parameter chol_cov has no priors.
       Warning:
-        The parameter corr has 0 priors.
+        The parameter corr has no priors.
       Warning:
-        The parameter cov has 0 priors.
+        The parameter cov has no priors.
       Warning:
-        The parameter mat has 0 priors.
+        The parameter mat has no priors.
       Warning:
-        The parameter ord has 0 priors.
+        The parameter ord has no priors.
       Warning:
-        The parameter pos_vec has 0 priors.
+        The parameter pos_vec has no priors.
       Warning:
-        The parameter unb_p has 0 priors.
+        The parameter unb_p has no priors.
       Warning:
-        The parameter unit_p has 0 priors.
+        The parameter unit_p has no priors.
       Warning:
-        The parameter x has 0 priors.
+        The parameter x has no priors.
       Warning:
-        The parameter x_pos has 0 priors.
+        The parameter x_pos has no priors.
       Warning:
-        The parameter x_unit has 0 priors.
+        The parameter x_unit has no priors.
       Warning at 'string', line 28, column 2 to column 27:
         The parameter unb_d is on the left-hand side of more than one twiddle
         statement.
@@ -902,16 +914,16 @@ let%expect_test "Dist warnings" =
         Parameter mat is given a lkj_corr distribution, which has correlation
         support, but mat was not constrained to be correlation.
       Warning at 'string', line 130, column 2 to column 24:
-        It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky
-        factor variant. lkj_corr tends to run slower, consume more memory, and has
-        higher risk of numerical errors.
+        It is suggested to reparameterize your model to replace lkj_corr with
+        lkj_corr_cholesky, the Cholesky factor variant. lkj_corr tends to run
+        slower, consume more memory, and has higher risk of numerical errors.
       Warning at 'string', line 130, column 17 to column 22:
         A lkj_corr distribution is given parameter unb_p as a shape parameter
         (argument 1), but unb_p was not constrained to be strictly positive.
       Warning at 'string', line 131, column 2 to column 25:
-        It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky
-        factor variant. lkj_corr tends to run slower, consume more memory, and has
-        higher risk of numerical errors.
+        It is suggested to reparameterize your model to replace lkj_corr with
+        lkj_corr_cholesky, the Cholesky factor variant. lkj_corr tends to run
+        slower, consume more memory, and has higher risk of numerical errors.
       Warning at 'string', line 131, column 2 to column 25:
         The parameter corr is on the left-hand side of more than one twiddle
         statement.
