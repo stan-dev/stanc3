@@ -264,9 +264,9 @@ let uniform_dist_warning (dist_info : dist_info) : (Location_span.t * string) op
   | _ -> None
 
 let lkj_corr_message : string =
-  "It is suggested to replace lkj_corr with lkj_corr_cholesky, the Cholesky \
-   factor variant. lkj_corr tends to run slower, consume more memory, and has \
-   higher risk of numerical errors."
+  "It is suggested to reparameterize your model to replace lkj_corr with \
+   lkj_corr_cholesky, the Cholesky factor variant. lkj_corr tends to run \
+   slower, consume more memory, and has higher risk of numerical errors."
 
 (* Warn about all non-Cholesky lkj_corr distributions *)
 let lkj_corr_dist_warning (dist_info : dist_info)

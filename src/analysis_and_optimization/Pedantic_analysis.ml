@@ -274,7 +274,7 @@ let param_dependant_cf_warnings (mir : Program.Typed.t) =
 
 let unused_params_message (pname : string) : string =
   Printf.sprintf
-    "The parameter %s was declared but does not participate in the model."
+    "The parameter %s was declared but was not used in the model."
     pname
 
 let unused_params_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
@@ -283,9 +283,15 @@ let unused_params_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
     (list_unused_params factor_graph mir)
 
 let non_one_priors_message (pname : string) (n : int) : string =
-  Printf.sprintf
-    "The parameter %s has %d priors."
-    pname n
+  if n = 0
+  then
+    Printf.sprintf
+      "The parameter %s has no priors."
+      pname
+  else
+    Printf.sprintf
+      "The parameter %s has %d priors."
+      pname n
 
 let non_one_priors_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
   Set.Poly.map
