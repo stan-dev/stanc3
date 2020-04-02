@@ -231,6 +231,7 @@ end
 module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
+    | CannotAssignToSparseMatrix of string
     | CannotAssignToGlobal of string
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
@@ -257,8 +258,11 @@ module StatementError = struct
 
   let pp ppf = function
     | CannotAssignToReadOnly name ->
+      Fmt.pf ppf
+        "Cannot assign to function argument or loop identifier '%s'." name
+    | CannotAssignToSparseMatrix name ->
         Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+          "Cannot assign to sparse matrix '%s'." name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
@@ -474,6 +478,9 @@ let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)
+
+let cannot_assign_to_sparsematrix loc name =
+  StatementError (loc, StatementError.CannotAssignToSparseMatrix name)
 
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)

@@ -925,6 +925,20 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
     then ok ()
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
+let semantic_check_assignment_sparsematrix ~loc lhs id =
+    let var = Symbol_table.look vm id.name in
+    let is_sparsematrix =
+      Option.map ~f:snd var = Some Middle.UnsizedType.USparseMatrix
+    in
+    let is_indexed = match lhs.expr with
+      | Indexed _ -> true
+      | _ -> false
+    in
+    if is_sparsematrix && is_indexed then
+      Semantic_error.cannot_assign_to_sparsematrix loc id.name |> Validate.error
+    else
+      Validate.ok ()
+
 let mk_assignment_from_indexed_expr assop lhs rhs =
   Assignment
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
@@ -975,6 +989,7 @@ let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
     liftA2 tuple2 (liftA3 tuple3 lhs assop rhs) block
     >>= fun ((lhs, assop, rhs), block) ->
     semantic_check_assignment_operator ~loc assop lhs rhs
+    |> apply_const (semantic_check_assignment_sparsematrix ~loc lhs assign_id)
     |> apply_const (semantic_check_assignment_global ~loc ~cf ~block assign_id)
     |> apply_const (semantic_check_assignment_read_only ~loc assign_id))
 
