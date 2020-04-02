@@ -926,18 +926,22 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
 let semantic_check_assignment_sparsematrix ~loc lhs id =
-    let var = Symbol_table.look vm id.name in
-    let is_sparsematrix =
-      Option.map ~f:snd var = Some Middle.UnsizedType.USparseMatrix
-    in
-    let is_indexed = match lhs.expr with
-      | Indexed _ -> true
-      | _ -> false
-    in
-    if is_sparsematrix && is_indexed then
-      Semantic_error.cannot_assign_to_sparsematrix loc id.name |> Validate.error
-    else
-      Validate.ok ()
+  let var_opt = Symbol_table.look vm id.name in
+  let rec is_indexed_sparsematrix ty expr =
+    match (ty, expr) with
+    | (Middle.UnsizedType.USparseMatrix, Indexed _) -> true
+    | (Middle.UnsizedType.UArray sub_type, Indexed (sub_expr, _)) ->
+      is_indexed_sparsematrix sub_type sub_expr.expr
+    | (_, _) -> false
+  in
+  let sm_opt = Option.map
+      ~f:(fun (_, ty) -> is_indexed_sparsematrix ty lhs.expr)
+      var_opt
+  in
+  if sm_opt = Some true then
+    Semantic_error.cannot_assign_to_sparsematrix loc id.name |> Validate.error
+  else
+    Validate.ok ()
 
 let mk_assignment_from_indexed_expr assop lhs rhs =
   Assignment
