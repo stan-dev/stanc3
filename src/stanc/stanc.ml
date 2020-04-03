@@ -30,6 +30,7 @@ let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
+let emit_factor_graph = ref None
 
 (** Some example command-line options here *)
 let options =
@@ -115,6 +116,13 @@ let options =
     ; ( "--allow_undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
+    ; ( "--emit-factor-graph"
+      , Arg.String
+          (fun str ->
+             emit_factor_graph := Some str
+          )
+      , " Specify an output file for a factor graph representation of the Stan model \
+        in DOT format." )
     ; ( "--include_paths"
       , Arg.String
           (fun str ->
@@ -175,6 +183,11 @@ let use_file filename =
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     ( if !warn_pedantic then
         Pedantic_analysis.print_warn_pedantic mir ) ;
+    ( Option.iter !emit_factor_graph
+        ~f:(fun filepath ->
+           let dot =
+             Factor_graph.factor_graph_to_dot (Factor_graph.prog_factor_graph mir)
+           in Out_channel.write_all filepath ~data:dot)) ;
     ( if !warn_uninitialized then
       Pedantic_analysis.print_warn_uninitialized mir ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
