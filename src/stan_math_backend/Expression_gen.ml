@@ -147,7 +147,8 @@ let reduce_sum_functor_suffix = "_rsfunctor__"
 
 let functor_suffix_select f =
   match f with
-  | "reduce_sum" -> reduce_sum_functor_suffix
+  | "reduce_sum"
+  | "reduce_sum_static" -> reduce_sum_functor_suffix
   | _ -> functor_suffix
 
 let rec pp_index ppf = function
@@ -310,6 +311,10 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( true
         , "reduce_sum"
+        , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
+          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+      | ( true
+        , "reduce_sum_static"
         , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->

@@ -358,7 +358,8 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
     match (id.name, fn_kind_from_application id es) with
-    | ("reduce_sum", _) -> semantic_check_reduce_sum ~is_cond_dist ~loc id es
+    | ("reduce_sum", _)
+    | ("reduce_sum_static", _) -> semantic_check_reduce_sum ~is_cond_dist ~loc id es
     | (_, StanLib) -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
     | (_, UserDefined) -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
