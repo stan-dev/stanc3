@@ -331,17 +331,22 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "optimize_glm_model_namespace::optimize_glm_model";
     (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       context__.validate_dims("data initialization","k","int",
           context__.to_vec());
+      k = std::numeric_limits<int>::min();
       
       current_statement__ = 174;
       k = context__.vals_i("k")[(1 - 1)];
       context__.validate_dims("data initialization","n","int",
           context__.to_vec());
+      n = std::numeric_limits<int>::min();
       
       current_statement__ = 175;
       n = context__.vals_i("n")[(1 - 1)];
@@ -418,7 +423,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_vi_d", "n", n);
       context__.validate_dims("data initialization","y_vi_d","int",
           context__.to_vec(n));
-      y_vi_d = std::vector<int>(n, 0);
+      y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 179;
       assign(y_vi_d, nil_index_list(), context__.vals_i("y_vi_d"),
@@ -427,13 +432,14 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y2_vi_d", "n", n);
       context__.validate_dims("data initialization","y2_vi_d","int",
           context__.to_vec(n));
-      y2_vi_d = std::vector<int>(n, 0);
+      y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 180;
       assign(y2_vi_d, nil_index_list(), context__.vals_i("y2_vi_d"),
         "assigning variable y2_vi_d");
       context__.validate_dims("data initialization","y_s_d","int",
           context__.to_vec());
+      y_s_d = std::numeric_limits<int>::min();
       
       current_statement__ = 181;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
@@ -442,7 +448,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 182;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
+      k_td = std::numeric_limits<int>::min();
       
+      n_td = std::numeric_limits<int>::min();
       
       current_statement__ = 185;
       validate_non_negative_index("X_d_td", "n", n);
@@ -457,8 +465,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           current_statement__ = 185;
           assign(X_d_td,
             cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            std::numeric_limits<double>::quiet_NaN(),
+              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
             "assigning variable X_d_td");}}
       current_statement__ = 186;
       validate_non_negative_index("y_v_d_td", "n", n);
@@ -468,8 +475,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 186;
         assign(y_v_d_td, cons_list(index_uni(sym1__), nil_index_list()),
-          std::numeric_limits<double>::quiet_NaN(),
-          "assigning variable y_v_d_td");}
+          DUMMY_VAR__, "assigning variable y_v_d_td");}
       current_statement__ = 187;
       validate_non_negative_index("X_rv_d_td", "n", n);
       X_rv_d_td = Eigen::Matrix<double, 1, -1>(n);
@@ -478,20 +484,20 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 187;
         assign(X_rv_d_td, cons_list(index_uni(sym1__), nil_index_list()),
-          std::numeric_limits<double>::quiet_NaN(),
-          "assigning variable X_rv_d_td");}
+          DUMMY_VAR__, "assigning variable X_rv_d_td");}
       current_statement__ = 188;
       validate_non_negative_index("y_vi_d_td", "n", n);
-      y_vi_d_td = std::vector<int>(n, 0);
+      y_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 189;
       validate_non_negative_index("y2_vi_d_td", "n", n);
-      y2_vi_d_td = std::vector<int>(n, 0);
+      y2_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      y_s_d_td = std::numeric_limits<int>::min();
       
       
       current_statement__ = 191;
-      y_r_d_td = std::numeric_limits<double>::quiet_NaN();
+      y_r_d_td = DUMMY_VAR__;
       current_statement__ = 174;
       current_statement__ = 174;
       check_greater_or_equal(function__, "k", k, 1);
@@ -573,6 +579,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       current_statement__ = 1;
@@ -1242,6 +1251,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       current_statement__ = 1;
@@ -1351,6 +1363,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       current_statement__ = 1;

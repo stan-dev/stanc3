@@ -28,6 +28,8 @@ let%expect_test "udf" =
       using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
       const static bool propto__ = true;
       (void) propto__;
+      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+      (void) DUMMY_VAR__;  // suppress unused var warning
 
       try {
         return add(x, 1);

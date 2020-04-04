@@ -173,8 +173,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 140, column 4 to column 25)",
                                                       " (in 'optimizations.stan', line 143, column 4 to column 26)",
                                                       " (in 'optimizations.stan', line 144, column 4 to column 22)",
-                                                      " (in 'optimizations.stan', line 146, column 6 to column 28)",
-                                                      " (in 'optimizations.stan', line 145, column 4 to line 146, column 28)",
                                                       " (in 'optimizations.stan', line 147, column 4 to column 23)",
                                                       " (in 'optimizations.stan', line 4, column 10 to column 17)",
                                                       " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
@@ -187,15 +185,17 @@ void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym34__;
     int sym33__;
     {
-      current_statement__ = 87;
+      current_statement__ = 85;
       if (logical_gt(x, 342)) {
         {
-          current_statement__ = 86;
+          current_statement__ = 84;
           return ;
         }
       } else ;
@@ -226,6 +226,8 @@ rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym37__;
@@ -239,7 +241,7 @@ rfun(const int& y, std::ostream* pstream__) {
           return (y + 24);
         }
       } else ;
-      current_statement__ = 88;
+      current_statement__ = 86;
       return (y + 2);
     }
   } catch (const std::exception& e) {
@@ -262,12 +264,14 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     {
       current_statement__ = 55;
       lp_accum__.add(2);
-      current_statement__ = 89;
+      current_statement__ = 87;
       return 24;
     }
   } catch (const std::exception& e) {
@@ -306,8 +310,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "optimizations_model_namespace::optimizations_model";
     (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      pos__ = std::numeric_limits<int>::min();
       
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -348,9 +355,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
-      local_scalar_t__ sym112__;
+      int sym112__;
       int sym111__;
       int sym110__;
       int sym109__;
@@ -383,7 +393,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       int sym82__;
       int sym81__;
       int sym80__;
-      int sym79__;
+      double sym79__;
       local_scalar_t__ theta;
       
       current_statement__ = 1;
@@ -514,22 +524,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     lp_accum__.add(3);
                   }}
               }
-              sym109__ = (sym10__ + 1);
+              sym110__ = (sym10__ + 1);
               for (size_t sym12__ = 1; sym12__ <= 1; ++sym12__) {
                 {
                   {
                     {
                       sym13__ = 29;
-                      sym109__ = (sym10__ + 1);
+                      sym110__ = (sym10__ + 1);
                       break;
                     }
                   }
                   sym13__ = 7;
-                  sym109__ = (sym10__ + 1);
+                  sym110__ = (sym10__ + 1);
                   break;
                 }}
             }
-            for (size_t i = sym109__; i <= sym13__; ++i) {
+            for (size_t i = sym110__; i <= sym13__; ++i) {
               {
                 {
                   int sym16__;
@@ -621,15 +631,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      sym111__ = (2 * 2);
-                      if (logical_lte(2, sym111__)) {
+                      sym112__ = (2 * 2);
+                      if (logical_lte(2, sym112__)) {
                         {
                           {
-                            sym108__ = (2 + 1);
+                            sym109__ = (2 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym108__; k <= sym111__; ++k) {
+                          for (size_t k = sym109__; k <= sym112__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
@@ -640,15 +650,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      sym111__ = (3 * 2);
-                      if (logical_lte(3, sym111__)) {
+                      sym112__ = (3 * 2);
+                      if (logical_lte(3, sym112__)) {
                         {
                           {
-                            sym108__ = (3 + 1);
+                            sym109__ = (3 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym108__; k <= sym111__; ++k) {
+                          for (size_t k = sym109__; k <= sym112__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
@@ -662,40 +672,40 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym107__ = (2 + 2);
-                if (logical_lte(2, sym107__)) {
+                sym108__ = (2 + 2);
+                if (logical_lte(2, sym108__)) {
                   {
                     {
-                      sym110__ = (2 * 2);
-                      if (logical_lte(2, sym110__)) {
+                      sym111__ = (2 * 2);
+                      if (logical_lte(2, sym111__)) {
                         {
                           {
-                            sym106__ = (2 + 1);
+                            sym107__ = (2 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym106__; k <= sym110__; ++k) {
+                          for (size_t k = sym107__; k <= sym111__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym106__ = (2 + 1);
+                        sym107__ = (2 + 1);
                       }
                     }
                     current_statement__ = 20;
-                    for (size_t j = sym106__; j <= sym107__; ++j) {
+                    for (size_t j = sym107__; j <= sym108__; ++j) {
                       {
-                        sym111__ = (j * 2);
-                        if (logical_lte(j, sym111__)) {
+                        sym112__ = (j * 2);
+                        if (logical_lte(j, sym112__)) {
                           {
                             {
-                              sym108__ = (j + 1);
+                              sym109__ = (j + 1);
                               lp_accum__.add(53);
                             }
                             current_statement__ = 19;
-                            for (size_t k = sym108__; k <= sym111__; ++k) {
+                            for (size_t k = sym109__; k <= sym112__; ++k) {
                               {
                                 current_statement__ = 19;
                                 lp_accum__.add(53);
@@ -709,40 +719,40 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym107__ = (3 + 2);
-                if (logical_lte(3, sym107__)) {
+                sym108__ = (3 + 2);
+                if (logical_lte(3, sym108__)) {
                   {
                     {
-                      sym110__ = (3 * 2);
-                      if (logical_lte(3, sym110__)) {
+                      sym111__ = (3 * 2);
+                      if (logical_lte(3, sym111__)) {
                         {
                           {
-                            sym106__ = (3 + 1);
+                            sym107__ = (3 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym106__; k <= sym110__; ++k) {
+                          for (size_t k = sym107__; k <= sym111__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym106__ = (3 + 1);
+                        sym107__ = (3 + 1);
                       }
                     }
                     current_statement__ = 20;
-                    for (size_t j = sym106__; j <= sym107__; ++j) {
+                    for (size_t j = sym107__; j <= sym108__; ++j) {
                       {
-                        sym111__ = (j * 2);
-                        if (logical_lte(j, sym111__)) {
+                        sym112__ = (j * 2);
+                        if (logical_lte(j, sym112__)) {
                           {
                             {
-                              sym108__ = (j + 1);
+                              sym109__ = (j + 1);
                               lp_accum__.add(53);
                             }
                             current_statement__ = 19;
-                            for (size_t k = sym108__; k <= sym111__; ++k) {
+                            for (size_t k = sym109__; k <= sym112__; ++k) {
                               {
                                 current_statement__ = 19;
                                 lp_accum__.add(53);
@@ -756,40 +766,40 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym107__ = (4 + 2);
-                if (logical_lte(4, sym107__)) {
+                sym108__ = (4 + 2);
+                if (logical_lte(4, sym108__)) {
                   {
                     {
-                      sym110__ = (4 * 2);
-                      if (logical_lte(4, sym110__)) {
+                      sym111__ = (4 * 2);
+                      if (logical_lte(4, sym111__)) {
                         {
                           {
-                            sym106__ = (4 + 1);
+                            sym107__ = (4 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym106__; k <= sym110__; ++k) {
+                          for (size_t k = sym107__; k <= sym111__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym106__ = (4 + 1);
+                        sym107__ = (4 + 1);
                       }
                     }
                     current_statement__ = 20;
-                    for (size_t j = sym106__; j <= sym107__; ++j) {
+                    for (size_t j = sym107__; j <= sym108__; ++j) {
                       {
-                        sym111__ = (j * 2);
-                        if (logical_lte(j, sym111__)) {
+                        sym112__ = (j * 2);
+                        if (logical_lte(j, sym112__)) {
                           {
                             {
-                              sym108__ = (j + 1);
+                              sym109__ = (j + 1);
                               lp_accum__.add(53);
                             }
                             current_statement__ = 19;
-                            for (size_t k = sym108__; k <= sym111__; ++k) {
+                            for (size_t k = sym109__; k <= sym112__; ++k) {
                               {
                                 current_statement__ = 19;
                                 lp_accum__.add(53);
@@ -803,40 +813,40 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym107__ = (5 + 2);
-                if (logical_lte(5, sym107__)) {
+                sym108__ = (5 + 2);
+                if (logical_lte(5, sym108__)) {
                   {
                     {
-                      sym110__ = (5 * 2);
-                      if (logical_lte(5, sym110__)) {
+                      sym111__ = (5 * 2);
+                      if (logical_lte(5, sym111__)) {
                         {
                           {
-                            sym106__ = (5 + 1);
+                            sym107__ = (5 + 1);
                             lp_accum__.add(53);
                           }
                           current_statement__ = 19;
-                          for (size_t k = sym106__; k <= sym110__; ++k) {
+                          for (size_t k = sym107__; k <= sym111__; ++k) {
                             {
                               current_statement__ = 19;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym106__ = (5 + 1);
+                        sym107__ = (5 + 1);
                       }
                     }
                     current_statement__ = 20;
-                    for (size_t j = sym106__; j <= sym107__; ++j) {
+                    for (size_t j = sym107__; j <= sym108__; ++j) {
                       {
-                        sym111__ = (j * 2);
-                        if (logical_lte(j, sym111__)) {
+                        sym112__ = (j * 2);
+                        if (logical_lte(j, sym112__)) {
                           {
                             {
-                              sym108__ = (j + 1);
+                              sym109__ = (j + 1);
                               lp_accum__.add(53);
                             }
                             current_statement__ = 19;
-                            for (size_t k = sym108__; k <= sym111__; ++k) {
+                            for (size_t k = sym109__; k <= sym112__; ++k) {
                               {
                                 current_statement__ = 19;
                                 lp_accum__.add(53);
@@ -1041,13 +1051,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         lp_accum__.add(159);
         double paramvar;
         
-        {
-          {
-            sym112__ = (theta * 34);
-          }
-        }
-        current_statement__ = 85;
-        lp_accum__.add(sym112__);
+        current_statement__ = 83;
+        lp_accum__.add(DUMMY_VAR__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1075,6 +1080,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       double sym78__;
@@ -1317,6 +1325,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       int sym39__;
       int sym38__;
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
       
       double theta;
       
