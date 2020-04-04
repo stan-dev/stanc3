@@ -13,13 +13,16 @@ let pp_set_size ppf (decl_id, st, adtype) =
       pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
     match st with
-    | SizedType.SInt | SReal -> pf ppf "0"
+    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+    | SReal ->
+        if adtype = AutoDiffable then pf ppf "DUMMY_VAR__"
+        else pf ppf "std::numeric_limits<double>::quiet_NaN()"
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
   match st with
-  | SizedType.SInt | SReal -> ()
+  | SizedType.SReal -> ()
   | st -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =

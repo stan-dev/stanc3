@@ -55,7 +55,9 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
-  let trim_propto f = String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f in
+  let trim_propto f =
+    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
+  in
   match pattern with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
       let trigger = Map.find_exn opencl_triggers (trim_propto f) in
@@ -497,9 +499,9 @@ and validate_dims_stmt stmt =
 
 let make_fill vident st loc =
   let rhs =
-    Expr.(
-      Helpers.internal_funapp FnNaN []
-      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
+    Expr.
+      { Fixed.pattern= Var "DUMMY_VAR__"
+      ; meta= Typed.Meta.create ~type_:UReal ~loc ~adlevel:AutoDiffable () }
   in
   let ut = SizedType.to_unsized st in
   let var =
