@@ -552,7 +552,6 @@ using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
-using std::pow;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
@@ -565,7 +564,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; |}
+using namespace stan::math;
+using std::pow; |}
 
 (* XXX probably move these to the Stan repo when these repos are joined. *)
 let custom_functions =
