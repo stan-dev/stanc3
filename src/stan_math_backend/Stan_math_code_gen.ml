@@ -549,6 +549,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 let usings =
   {|
 using std::istream;
+using std::pow;
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -564,8 +565,7 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math;
-using std::pow; |}
+using namespace stan::math; |}
 
 (* XXX probably move these to the Stan repo when these repos are joined. *)
 let custom_functions =
