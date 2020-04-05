@@ -35,8 +35,8 @@ val returning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
 val illtyped_reduce_sum :
-  Location_span.t -> string -> t
-
+  Location_span.t -> string -> UnsizedType.t list -> t
+  
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 

@@ -331,6 +331,8 @@ let pp_math_sigs ppf name =
 
 let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 
+let pretty_print_reduce_sum_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
+
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args)) =

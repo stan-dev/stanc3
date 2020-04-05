@@ -322,22 +322,27 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
         false
     in
     match es with 
-    | {emeta={type_=(UnsizedType.UFun ((_,UInt)::(_,UInt)::(_,sliced_fun)::fun_args, ReturnType UReal));_};_} :: sliced :: grainsize :: args ->
+    | {emeta={type_=(UnsizedType.UFun ((_,UInt)::(_,UInt)::(_,sliced_fun)::fun_args, (ReturnType rt)));_};_} :: sliced :: grainsize :: args ->
       if grainsize.emeta.type_ = UInt &&
          List.mem Stan_math_signatures.allowed_slice_types sliced.emeta.type_ ~equal:( = ) &&
          List.mem Stan_math_signatures.allowed_slice_types sliced_fun ~equal:( = ) &&
          sliced_fun = sliced.emeta.type_ &&
-         args_match fun_args args
+         args_match fun_args args &&
+         rt = UnsizedType.UReal
       then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
           ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
           |> Validate.ok
       else
-        Semantic_error.illtyped_reduce_sum loc id.name
+        es
+        |> List.map ~f:type_of_expr_typed
+        |> Semantic_error.illtyped_reduce_sum loc id.name
         |> Validate.error
     | _ -> 
-        Semantic_error.illtyped_reduce_sum loc id.name
+        es
+        |> List.map ~f:type_of_expr_typed
+        |> Semantic_error.illtyped_reduce_sum loc id.name
         |> Validate.error
 
 let fn_kind_from_application id es =
