@@ -15,7 +15,7 @@ module TypeError = struct
     | IllTypedAssignment of
         Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
-    | IllTypedReduceSum
+    | IllTypedReduceSum of string
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -89,9 +89,10 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum -> 
+    | IllTypedReduceSum name-> 
         Fmt.pf ppf
-          "Illegal use of reduce_sum!"
+          "Ill-typed arguments supplied to function '%s'."
+          name
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -405,8 +406,8 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
-let illtyped_reduce_sum loc =
-  TypeError (loc, TypeError.IllTypedReduceSum)
+let illtyped_reduce_sum loc name =
+  TypeError (loc, TypeError.IllTypedReduceSum name)
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

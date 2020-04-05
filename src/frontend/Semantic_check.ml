@@ -334,10 +334,10 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
           ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
           |> Validate.ok
       else
-        Semantic_error.illtyped_reduce_sum loc
+        Semantic_error.illtyped_reduce_sum loc id.name
         |> Validate.error
     | _ -> 
-        Semantic_error.illtyped_reduce_sum loc
+        Semantic_error.illtyped_reduce_sum loc id.name
         |> Validate.error
 
 let fn_kind_from_application id es =

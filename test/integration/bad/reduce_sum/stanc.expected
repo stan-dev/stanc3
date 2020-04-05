@@ -9,7 +9,7 @@ Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
 
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2.stan
 
@@ -22,7 +22,33 @@ Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2_static.stan
+
+Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to column 54:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
+
+  $ ../../../../../install/default/bin/stanc bad_args_length_mismatch_static.stan
+
+Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to column 49:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg.stan
 
@@ -35,7 +61,20 @@ Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_fun_first_arg_static.stan
+
+Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 49:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg.stan
 
@@ -48,7 +87,20 @@ Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_fun_second_arg_static.stan
+
+Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column 49:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match.stan
 
@@ -61,7 +113,20 @@ Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match_static.stan
+
+Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, column 12 to column 49:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types.stan
 
@@ -74,7 +139,7 @@ Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to colum
     17:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
 
@@ -87,7 +152,20 @@ Semantic error in 'bad_non_matching_arg_types2.stan', line 12, column 14 to colu
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2_static.stan
+
+Semantic error in 'bad_non_matching_arg_types2_static.stan', line 12, column 14 to column 54:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:      target += reduce_sum_static(my_func, a, 1, 0.0, 0);
+                       ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3.stan
 
@@ -100,7 +178,33 @@ Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to colu
     14:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3_static.stan
+
+Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 to column 54:
+   -------------------------------------------------
+    11:  
+    12:  model {
+    13:      target += reduce_sum_static(my_func, a, 1, 0.0, b);
+                       ^
+    14:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
+
+  $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types_static.stan
+
+Semantic error in 'bad_non_matching_arg_types_static.stan', line 16, column 14 to column 54:
+   -------------------------------------------------
+    14:  
+    15:  model {
+    16:      target += reduce_sum_static(my_func, a, 1, 0.0, b);
+                       ^
+    17:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
 
@@ -113,5 +217,18 @@ Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Illegal use of reduce_sum!
+Ill-typed arguments supplied to function 'reduce_sum'.
+
+  $ ../../../../../install/default/bin/stanc bad_not_slice_type_static.stan
+
+Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column 49:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'.
 
