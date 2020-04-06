@@ -90,27 +90,32 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum (name, arg_tys) -> 
+    | IllTypedReduceSum (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-          signatures: %s@[<h>Instead supplied arguments of incompatible type: %a@]"
-          name          
+           signatures: %s@[<h>Instead supplied arguments of incompatible \
+           type: %a@]"
+          name
           (Stan_math_signatures.pretty_print_reduce_sum_sigs name)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-    | IllTypedReduceSumGeneric (name, arg_tys) -> 
-        let type_string (a, b, c, d, e, f) = Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n" 
-          Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-          Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-          Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
+    | IllTypedReduceSumGeneric (name, arg_tys) ->
+        let type_string (a, b, c, d, e, f) =
+          Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n"
+            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
+            Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
         in
-        let argument_list i = Printf.sprintf "%s" (type_string (UInt, UInt, i, UReal, i, UInt))
+        let argument_list i =
+          Printf.sprintf "%s" (type_string (UInt, UInt, i, UReal, i, UInt))
         in
-        let lines = List.map ~f:argument_list Stan_math_signatures.allowed_slice_types in
+        let lines =
+          List.map ~f:argument_list Stan_math_signatures.allowed_slice_types
+        in
         Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available \
-          signatures:\n%s @[<h>Instead supplied arguments of incompatible type: %a@]"
-          name          
+          "Ill-typed arguments supplied to function '%s'. Available signatures:\n\
+           %s @[<h>Instead supplied arguments of incompatible type: %a@]"
+          name
           (String.concat ~sep:"" lines)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys

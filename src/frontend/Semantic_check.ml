@@ -315,39 +315,46 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Validate.error
 
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
-    let args_match a b =
-      if List.length a = List.length b then
-        List.for_all2_exn ~f:( fun (_,x) y -> (x = y.emeta.type_) ) a b
-      else
-        false
-    in
-    match es with 
-    | {emeta={type_=(UnsizedType.UFun ((_,st) ::(_, e)::(_,sliced_fun)::fun_args, (ReturnType rt)));_};_} :: sliced :: grainsize :: args ->
-      if st= UInt && e = UInt &&
-         grainsize.emeta.type_ = UInt &&
-         List.mem Stan_math_signatures.allowed_slice_types sliced.emeta.type_ ~equal:( = ) &&
-         List.mem Stan_math_signatures.allowed_slice_types sliced_fun ~equal:( = ) &&
-         rt = UnsizedType.UReal &&
-         sliced_fun = sliced.emeta.type_
+  let args_match a b =
+    if List.length a = List.length b then
+      List.for_all2_exn ~f:(fun (_, x) y -> x = y.emeta.type_) a b
+    else false
+  in
+  let return_generic_error =
+    es
+    |> List.map ~f:type_of_expr_typed
+    |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+    |> Validate.error
+  in
+  match es with
+  | { emeta=
+        { type_=
+            UnsizedType.UFun
+              ((_, st) :: (_, e) :: (_, sliced_fun) :: fun_args, ReturnType rt); _
+        }; _ }
+    :: sliced :: grainsize :: args ->
+      if
+        st = UInt && e = UInt
+        && grainsize.emeta.type_ = UInt
+        && List.mem Stan_math_signatures.allowed_slice_types sliced.emeta.type_
+             ~equal:( = )
+        && List.mem Stan_math_signatures.allowed_slice_types sliced_fun
+             ~equal:( = )
+        && rt = UnsizedType.UReal
+        && sliced_fun = sliced.emeta.type_
       then
         if args_match fun_args args then
           mk_typed_expression
             ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
             ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
-            |> Validate.ok
+          |> Validate.ok
         else
           es
           |> List.map ~f:type_of_expr_typed
-          |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+          |> Semantic_error.illtyped_reduce_sum loc id.name
           |> Validate.error
-      else
-        Semantic_error.illtyped_reduce_sum loc id.name (List.map ~f:type_of_expr_typed es)
-        |> Validate.error
-    | _ -> 
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_reduce_sum_generic loc id.name
-        |> Validate.error
+      else return_generic_error
+  | _ -> return_generic_error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
@@ -366,11 +373,11 @@ let fn_kind_from_application id es =
     corresponding semantic check
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
-    match (id.name, fn_kind_from_application id es) with
-    | ("reduce_sum", _)
-    | ("reduce_sum_static", _) -> semantic_check_reduce_sum ~is_cond_dist ~loc id es
-    | (_, StanLib) -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-    | (_, UserDefined) -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  match (id.name, fn_kind_from_application id es) with
+  | "reduce_sum", _ | "reduce_sum_static", _ ->
+      semantic_check_reduce_sum ~is_cond_dist ~loc id es
+  | _, StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | _, UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 

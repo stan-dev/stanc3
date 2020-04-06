@@ -84,7 +84,7 @@ let rec ints_to_real = function
 
 let allowed_slice_types =
   [ UnsizedType.UArray UReal; UArray UInt; UArray UMatrix; UArray UVector
-  ; UArray URowVector; (UArray (UArray UReal)) ]
+  ; UArray URowVector; UArray (UArray UReal) ]
 
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
@@ -330,7 +330,6 @@ let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
 
 let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
-
 let pretty_print_reduce_sum_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 
 let pretty_print_all_math_sigs ppf () =

@@ -124,7 +124,8 @@ let pp_template_decorator ppf = function
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) funs_used_in_reduce_sum_ =
+let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
+    funs_used_in_reduce_sum_ =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -683,7 +684,7 @@ let fun_used_in_reduce_sum p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     match pattern with
     | FunApp (StanLib, "reduce_sum", {pattern= Var f; _} :: _) -> f :: accum
-    | FunApp (StanLib, _ , fk :: _) -> find_functors_expr accum fk
+    | FunApp (StanLib, _, fk :: _) -> find_functors_expr accum fk
     | _ -> accum
   in
   let rec find_functors_stmt accum stmt =

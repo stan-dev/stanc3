@@ -147,8 +147,7 @@ let reduce_sum_functor_suffix = "_rsfunctor__"
 
 let functor_suffix_select f =
   match f with
-  | "reduce_sum"
-  | "reduce_sum_static" -> reduce_sum_functor_suffix
+  | "reduce_sum" | "reduce_sum_static" -> reduce_sum_functor_suffix
   | _ -> functor_suffix
 
 let rec pp_index ppf = function
