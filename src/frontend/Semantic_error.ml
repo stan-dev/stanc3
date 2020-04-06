@@ -16,6 +16,7 @@ module TypeError = struct
         Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | IllTypedReduceSum of string * UnsizedType.t list
+    | IllTypedReduceSumGeneric of string * UnsizedType.t list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -97,9 +98,22 @@ module TypeError = struct
           (Stan_math_signatures.pretty_print_reduce_sum_sigs name)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-(* Available *)
-    (* signatures: %s@[<h>Instead supplied arguments of incompatible *)
-    (* type:  *)
+    | IllTypedReduceSumGeneric (name, arg_tys) -> 
+        let type_string (a, b, c, d, e, f) = Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n" 
+          Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+          Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
+          Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
+        in
+        let argument_list i = Printf.sprintf "%s" (type_string (UInt, UInt, i, UReal, i, UInt))
+        in
+        let lines = List.map ~f:argument_list Stan_math_signatures.allowed_slice_types in
+        Fmt.pf ppf
+          "Ill-typed arguments supplied to function '%s'. Available \
+          signatures:\n%s @[<h>Instead supplied arguments of incompatible type: %a@]"
+          name          
+          (String.concat ~sep:"" lines)
+          Fmt.(list UnsizedType.pp ~sep:comma)
+          arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -413,8 +427,11 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
-let illtyped_reduce_sum loc  name arg_tys =
+let illtyped_reduce_sum loc name arg_tys =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys))
+
+let illtyped_reduce_sum_generic loc name arg_tys =
+  TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

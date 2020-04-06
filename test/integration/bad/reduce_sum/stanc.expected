@@ -9,8 +9,14 @@ Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real
 
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2.stan
@@ -24,8 +30,14 @@ Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real) => real, real[], int, real, real
 
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2_static.stan
@@ -39,8 +51,14 @@ Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real) => real, real[], int, real, real
 
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch_static.stan
@@ -54,9 +72,87 @@ Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real
+
+  $ ../../../../../install/default/bin/stanc bad_fun_1.stan
+
+Semantic error in 'bad_fun_1.stan', line 12, column 12 to column 39:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum(my_func_0, a, 1);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
+Instead supplied arguments of incompatible type: (int, real[]) => real, real[], int
+
+  $ ../../../../../install/default/bin/stanc bad_fun_1_static.stan
+
+Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func_0, a, 1);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
+Instead supplied arguments of incompatible type: (int, real[]) => real, real[], int
+
+  $ ../../../../../install/default/bin/stanc bad_fun_2.stan
+
+Semantic error in 'bad_fun_2.stan', line 12, column 12 to column 39:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum(my_func_0, a, 1);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+
+Instead supplied arguments of incompatible type: (int, int, real[,,]) => real, real[,,], int
+
+  $ ../../../../../install/default/bin/stanc bad_fun_2_static.stan
+
+Semantic error in 'bad_fun_2_static.stan', line 12, column 12 to column 39:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum(my_func_0, a, 1);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+
+Instead supplied arguments of incompatible type: (int, int, real[,,]) => real, real[,,], int
 
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg.stan
 
@@ -159,8 +255,14 @@ Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to colum
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
@@ -174,8 +276,14 @@ Semantic error in 'bad_non_matching_arg_types2.stan', line 12, column 14 to colu
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2_static.stan
@@ -189,8 +297,14 @@ Semantic error in 'bad_non_matching_arg_types2_static.stan', line 12, column 14 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3.stan
@@ -204,8 +318,14 @@ Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to colu
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, vector
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3_static.stan
@@ -219,8 +339,14 @@ Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, vector
 
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types_static.stan
@@ -234,8 +360,14 @@ Semantic error in 'bad_non_matching_arg_types_static.stan', line 16, column 14 t
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
-
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures:
+(int, int, real[], ...) => real, real[], int, ...
+(int, int, int[], ...) => real, int[], int, ...
+(int, int, matrix[], ...) => real, matrix[], int, ...
+(int, int, vector[], ...) => real, vector[], int, ...
+(int, int, row_vector[], ...) => real, row_vector[], int, ...
+(int, int, real[,], ...) => real, real[,], int, ...
+ 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
