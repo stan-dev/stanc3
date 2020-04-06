@@ -9,7 +9,8 @@ Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real
 
@@ -24,7 +25,8 @@ Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real) => real, real[], int, real, real
 
@@ -39,7 +41,8 @@ Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum_static'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real) => real, real[], int, real, real
 
@@ -54,7 +57,8 @@ Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum_static'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real
 
@@ -279,7 +283,8 @@ Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to colum
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
@@ -294,7 +299,8 @@ Semantic error in 'bad_non_matching_arg_types2.stan', line 12, column 14 to colu
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
@@ -309,7 +315,8 @@ Semantic error in 'bad_non_matching_arg_types2_static.stan', line 12, column 14 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum_static'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 
@@ -324,7 +331,8 @@ Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to colu
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, vector
 
@@ -339,7 +347,8 @@ Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum_static'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, vector
 
@@ -354,7 +363,8 @@ Semantic error in 'bad_non_matching_arg_types_static.stan', line 16, column 14 t
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available signatures: 
+Ill-typed arguments supplied to function 'reduce_sum_static'. Expected signature:
+(int, int, real, ...) => real, real, int, ...
 
 Instead supplied arguments of incompatible type: (int, int, real[], real, real) => real, real[], int, real, int
 

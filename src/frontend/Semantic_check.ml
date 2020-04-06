@@ -349,9 +349,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
             ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
           |> Validate.ok
         else
-          es
-          |> List.map ~f:type_of_expr_typed
-          |> Semantic_error.illtyped_reduce_sum loc id.name
+          Semantic_error.illtyped_reduce_sum loc id.name (List.map ~f:type_of_expr_typed es) fun_args
           |> Validate.error
       else return_generic_error
   | _ -> return_generic_error
