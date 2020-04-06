@@ -330,18 +330,19 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ((_, st) :: (_, e) :: (_, sliced_fun) :: fun_args, ReturnType rt); _
+              ((_, st) :: (_, e) :: sliced_fun :: fun_args, ReturnType rt); _
         }; _ }
     :: sliced :: grainsize :: args ->
+      let (_, sliced_fun_type) = sliced_fun in
       if
         st = UInt && e = UInt
         && grainsize.emeta.type_ = UInt
         && List.mem Stan_math_signatures.allowed_slice_types sliced.emeta.type_
              ~equal:( = )
-        && List.mem Stan_math_signatures.allowed_slice_types sliced_fun
+        && List.mem Stan_math_signatures.allowed_slice_types sliced_fun_type
              ~equal:( = )
         && rt = UnsizedType.UReal
-        && sliced_fun = sliced.emeta.type_
+        && sliced_fun_type = sliced.emeta.type_
       then
         if args_match fun_args args then
           mk_typed_expression
@@ -349,7 +350,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
             ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
           |> Validate.ok
         else
-          Semantic_error.illtyped_reduce_sum loc id.name (List.map ~f:type_of_expr_typed es) fun_args
+          Semantic_error.illtyped_reduce_sum loc id.name (List.map ~f:type_of_expr_typed es) (sliced_fun :: fun_args)
           |> Validate.error
       else return_generic_error
   | _ -> return_generic_error

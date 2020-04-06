@@ -90,39 +90,35 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum (name, arg_tys, _args) ->
-        let type_string (a, b, c, d, e, f) =
-          Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n"
-            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-            Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
-        in
+    | IllTypedReduceSum (name, arg_tys, args) ->
+        let arg_types = (List.map ~f:(fun (_,t)->t) args) in
+        let first,rest = List.split_n arg_types 1 in
+        let generate_reduce_sum_sig = 
+          List.concat
+          [[(UnsizedType.UFun
+              ((AutoDiffable, UInt) :: (AutoDiffable, UInt) :: args, ReturnType UReal))]; first; [UInt;]; rest]
+        in 
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Expected \
-           signature:\n%s@[<h>Instead supplied arguments of incompatible \
-           type: %a@]"
+           arguments:@[<h>%a@]\n@[<h>Instead supplied arguments of incompatible type: %a@]"
           name
-          (type_string (UInt, UInt, UReal, UReal, UReal, UInt))
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+          Fmt.(list UnsizedType.pp ~sep:comma) generate_reduce_sum_sig          
+          Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
     | IllTypedReduceSumGeneric (name, arg_tys) ->
-        let type_string (a, b, c, d, e, f) =
-          Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n"
-            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-            Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
+        let reduce_sum_sig i =
+          [ UnsizedType.UFun
+              ([(AutoDiffable, UInt); (AutoDiffable, UInt); (AutoDiffable, i)], ReturnType UReal)
+          ; i; UInt ]
         in
-        let lines =
-          List.map ~f:(fun i -> (type_string (UInt, UInt, i, UReal, i, UInt)))
-                   Stan_math_signatures.allowed_slice_types
+        let reduce_sum_sigs =
+          List.map ~f:reduce_sum_sig Stan_math_signatures.allowed_slice_types
         in
         Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available signatures:\n\
-           %s @[<h>Instead supplied arguments of incompatible type: %a@]"
+          "Ill-typed arguments supplied to function '%s'. Available \
+           arguments:@[<h>%a@]@[<h>Instead supplied arguments of incompatible type: %a@]"
           name
-          (String.concat ~sep:"" lines)
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+          Fmt.(list Fmt.(list UnsizedType.pp ~sep:comma) ~sep:(const pf "\n")) reduce_sum_sigs          
+          Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
