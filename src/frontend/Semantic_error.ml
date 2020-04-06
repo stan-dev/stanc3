@@ -16,7 +16,7 @@ module TypeError = struct
         Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | IllTypedReduceSum of string * UnsizedType.t list * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedReduceSumGeneric of string * UnsizedType.t list
+    | IllTypedReduceSumBasic of string * UnsizedType.t list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -104,20 +104,22 @@ module TypeError = struct
           name
           Fmt.(list UnsizedType.pp ~sep:comma) generate_reduce_sum_sig          
           Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
-    | IllTypedReduceSumGeneric (name, arg_tys) ->
-        let reduce_sum_sig i =
-          [ UnsizedType.UFun
-              ([(AutoDiffable, UInt); (AutoDiffable, UInt); (AutoDiffable, i)], ReturnType UReal)
-          ; i; UInt ]
+    | IllTypedReduceSumBasic (name, arg_tys) ->
+        let type_string (a, b, c, d, e, f) =
+          Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n"
+            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
+            Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
         in
-        let reduce_sum_sigs =
-          List.map ~f:reduce_sum_sig Stan_math_signatures.allowed_slice_types
+        let lines =
+          List.map ~f:(fun i -> (type_string (UInt, UInt, i, UReal, i, UInt)))
+                   Stan_math_signatures.allowed_slice_types
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           arguments:@[<h>%a@]@[<h>Instead supplied arguments of incompatible type: %a@]"
+           arguments:\n%s@[<h>Instead supplied arguments of incompatible type: %a@]"
           name
-          Fmt.(list Fmt.(list UnsizedType.pp ~sep:comma) ~sep:(const pf "\n")) reduce_sum_sigs          
+          (String.concat ~sep:"" lines)     
           Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
@@ -436,7 +438,7 @@ let illtyped_reduce_sum loc name arg_tys args =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args))
 
 let illtyped_reduce_sum_generic loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
+  TypeError (loc, TypeError.IllTypedReduceSumBasic (name, arg_tys))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
