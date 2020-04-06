@@ -30,6 +30,7 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | InvalidStaticSparseMatrixDeclLocation of string
     | NotIndexable of UnsizedType.t
 
   let pp ppf = function
@@ -88,6 +89,10 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
+    | InvalidStaticSparseMatrixDeclLocation blockname ->
+      Fmt.pf ppf
+        "Incorrect sparse_matrix declaration in the %s block; nonzero element location arrays are required."
+        blockname
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -226,6 +231,7 @@ end
 module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
+    | CannotAssignToSparseMatrix of string
     | CannotAssignToGlobal of string
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
@@ -252,8 +258,11 @@ module StatementError = struct
 
   let pp ppf = function
     | CannotAssignToReadOnly name ->
+      Fmt.pf ppf
+        "Cannot assign to function argument or loop identifier '%s'." name
+    | CannotAssignToSparseMatrix name ->
         Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+          "Cannot assign to sparse matrix '%s'." name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
@@ -434,6 +443,8 @@ let illtyped_prefix_op loc op ut =
 let illtyped_postfix_op loc op ut =
   TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
 
+let invalid_staticsparsematrix_decl_location loc blockname = TypeError (loc, TypeError.InvalidStaticSparseMatrixDeclLocation blockname)
+
 let not_indexable loc ut = TypeError (loc, TypeError.NotIndexable ut)
 
 let ident_is_keyword loc name =
@@ -467,6 +478,9 @@ let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)
+
+let cannot_assign_to_sparsematrix loc name =
+  StatementError (loc, StatementError.CannotAssignToSparseMatrix name)
 
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)

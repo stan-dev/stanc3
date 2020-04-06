@@ -56,6 +56,7 @@ val illtyped_binary_op :
 
 val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
 val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
+val invalid_staticsparsematrix_decl_location : Location_span.t -> string -> t
 val not_indexable : Location_span.t -> UnsizedType.t -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
@@ -69,6 +70,7 @@ val conditioning_required : Location_span.t -> t
 val not_printable : Location_span.t -> t
 val empty_array : Location_span.t -> t
 val cannot_assign_to_read_only : Location_span.t -> string -> t
+val cannot_assign_to_sparsematrix : Location_span.t -> string -> t
 val cannot_assign_to_global : Location_span.t -> string -> t
 val invalid_sampling_pdf_or_pmf : Location_span.t -> t
 val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t

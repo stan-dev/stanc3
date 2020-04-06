@@ -733,7 +733,7 @@ and semantic_check_expression_of_int_array_or_range_type cf e name =
     else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
 
 (* -- Sized Types ----------------------------------------------------------- *)
-let rec semantic_check_sizedtype cf = function
+let rec semantic_check_sizedtype ~loc cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
   | SVector e ->
@@ -753,11 +753,15 @@ let rec semantic_check_sizedtype cf = function
       and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
       Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SizedType.SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4
   | SStaticSparseMatrix (e1, e2) ->
+    (match cf.current_block with
+     | Data -> Validate.error (Semantic_error.invalid_staticsparsematrix_decl_location loc "Data")
+     | Param -> Validate.error (Semantic_error.invalid_staticsparsematrix_decl_location loc "Parameters")
+    | _ ->
       let ue1 = semantic_check_expression_of_int_type cf e1 "Static Sparse Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Static Sparse Matrix sizes" in
-      Validate.liftA2 (fun ue1 ue2 -> SizedType.SStaticSparseMatrix (ue1, ue2)) ue1 ue2
+      Validate.liftA2 (fun ue1 ue2 -> SizedType.SStaticSparseMatrix (ue1, ue2)) ue1 ue2)
   | SArray (st, e) ->
-      let ust = semantic_check_sizedtype cf st
+      let ust = semantic_check_sizedtype ~loc cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
 
@@ -921,6 +925,24 @@ let semantic_check_assignment_global ~loc ~cf ~block id =
     then ok ()
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
+let semantic_check_assignment_sparsematrix ~loc lhs id =
+  let var_opt = Symbol_table.look vm id.name in
+  let rec is_indexed_sparsematrix ty expr =
+    match (ty, expr) with
+    | (Middle.UnsizedType.USparseMatrix, Indexed _) -> true
+    | (Middle.UnsizedType.UArray sub_type, Indexed (sub_expr, _)) ->
+      is_indexed_sparsematrix sub_type sub_expr.expr
+    | (_, _) -> false
+  in
+  let sm_opt = Option.map
+      ~f:(fun (_, ty) -> is_indexed_sparsematrix ty lhs.expr)
+      var_opt
+  in
+  if sm_opt = Some true then
+    Semantic_error.cannot_assign_to_sparsematrix loc id.name |> Validate.error
+  else
+    Validate.ok ()
+
 let mk_assignment_from_indexed_expr assop lhs rhs =
   Assignment
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
@@ -971,6 +993,7 @@ let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
     liftA2 tuple2 (liftA3 tuple3 lhs assop rhs) block
     >>= fun ((lhs, assop, rhs), block) ->
     semantic_check_assignment_operator ~loc assop lhs rhs
+    |> apply_const (semantic_check_assignment_sparsematrix ~loc lhs assign_id)
     |> apply_const (semantic_check_assignment_global ~loc ~cf ~block assign_id)
     |> apply_const (semantic_check_assignment_read_only ~loc assign_id))
 
@@ -1446,7 +1469,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
 and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
   let checked_stmt =
     Validate.(
-      semantic_check_sizedtype cf sized_ty
+      semantic_check_sizedtype ~loc cf sized_ty
       >>= fun ust ->
       semantic_check_size_decl ~loc is_global ust |> map ~f:(fun _ -> ust))
   in
