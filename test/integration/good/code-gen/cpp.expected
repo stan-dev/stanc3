@@ -201,10 +201,12 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     try {
       local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
       
       current_statement__ = 1;
       mu = in__.scalar();
       local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
       
       current_statement__ = 2;
       tau = in__.scalar();
@@ -220,6 +222,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
@@ -227,12 +230,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta, DUMMY_VAR__);
       
-      current_statement__ = 4;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 4;
-        assign(theta, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta");}
       current_statement__ = 4;
       assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
@@ -278,10 +277,12 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     try {
       double mu;
+      mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       mu = in__.scalar();
       double tau;
+      tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       tau = in__.scalar();
@@ -291,6 +292,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
+      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
@@ -298,12 +300,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
+      stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 4;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 4;
-        assign(theta, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta");}
       vars__.push_back(mu);
       vars__.push_back(tau);
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
@@ -340,10 +338,12 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       
       pos__ = 1;
       double mu;
+      mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
       double tau;
+      tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       tau = context__.vals_r("tau")[(1 - 1)];
@@ -353,6 +353,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
+      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> theta_tilde_flat__;
@@ -1518,25 +1519,16 @@ foo_1(const int& a, std::ostream* pstream__) {
     current_statement__ = 337;
     while (1) {
       local_scalar_t__ z;
-      
-      current_statement__ = 328;
       z = DUMMY_VAR__;
+      
       current_statement__ = 329;
       validate_non_negative_index("vs", "2", 2);
       current_statement__ = 329;
       validate_non_negative_index("vs", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
+      stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 329;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 329;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 329;
-          assign(vs,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable vs");}}
       current_statement__ = 330;
       for (size_t sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
         current_statement__ = 330;
@@ -1577,19 +1569,14 @@ foo_1(const int& a, std::ostream* pstream__) {
     current_statement__ = 347;
     while (1) {
       local_scalar_t__ z;
-      
-      current_statement__ = 338;
       z = DUMMY_VAR__;
+      
       current_statement__ = 339;
       validate_non_negative_index("vs", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 339;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 339;
-        assign(vs, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable vs");}
       current_statement__ = 340;
       for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
@@ -1614,19 +1601,14 @@ foo_1(const int& a, std::ostream* pstream__) {
     current_statement__ = 357;
     while (1) {
       local_scalar_t__ z;
-      
-      current_statement__ = 348;
       z = DUMMY_VAR__;
+      
       current_statement__ = 349;
       validate_non_negative_index("vs", "2", 2);
       Eigen::Matrix<local_scalar_t__, 1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
+      stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 349;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 349;
-        assign(vs, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable vs");}
       current_statement__ = 350;
       for (size_t sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
@@ -1834,13 +1816,11 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   
   try {
     local_scalar_t__ abs_diff;
-    
-    current_statement__ = 380;
     abs_diff = DUMMY_VAR__;
-    local_scalar_t__ avg_scale;
     
-    current_statement__ = 381;
+    local_scalar_t__ avg_scale;
     avg_scale = DUMMY_VAR__;
+    
     current_statement__ = 382;
     abs_diff = stan::math::fabs((x - y));
     current_statement__ = 383;
@@ -2027,16 +2007,8 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
+    stan::math::fill(o, DUMMY_VAR__);
     
-    current_statement__ = 396;
-    for (size_t sym1__ = 1; sym1__ <= rows(mat); ++sym1__) {
-      current_statement__ = 396;
-      for (size_t sym2__ = 1; sym2__ <= cols(mat); ++sym2__) {
-        current_statement__ = 396;
-        assign(o,
-          cons_list(index_uni(sym1__),
-            cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-          "assigning variable o");}}
     current_statement__ = 397;
     assign(o, nil_index_list(), mat, "assigning variable o");
     current_statement__ = 398;
@@ -2862,9 +2834,8 @@ foo_6(std::ostream* pstream__) {
     a = std::numeric_limits<int>::min();
     
     local_scalar_t__ b;
-    
-    current_statement__ = 429;
     b = DUMMY_VAR__;
+    
     current_statement__ = 430;
     validate_non_negative_index("c", "20", 20);
     current_statement__ = 430;
@@ -2882,22 +2853,8 @@ foo_6(std::ostream* pstream__) {
     validate_non_negative_index("ar_mat", "50", 50);
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
+    stan::math::fill(ar_mat, DUMMY_VAR__);
     
-    current_statement__ = 431;
-    for (size_t sym1__ = 1; sym1__ <= 60; ++sym1__) {
-      current_statement__ = 431;
-      for (size_t sym2__ = 1; sym2__ <= 70; ++sym2__) {
-        current_statement__ = 431;
-        for (size_t sym3__ = 1; sym3__ <= 40; ++sym3__) {
-          current_statement__ = 431;
-          for (size_t sym4__ = 1; sym4__ <= 50; ++sym4__) {
-            current_statement__ = 431;
-            assign(ar_mat,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__),
-                    cons_list(index_uni(sym4__), nil_index_list())))),
-              DUMMY_VAR__, "assigning variable ar_mat");}}}}
     current_statement__ = 432;
     assign(ar_mat,
       cons_list(index_uni(1),
@@ -2999,12 +2956,8 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     validate_non_negative_index("l", "10", 10);
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
+    stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 438;
-    for (size_t sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      current_statement__ = 438;
-      assign(l, cons_list(index_uni(sym1__), nil_index_list()), DUMMY_VAR__,
-        "assigning variable l");}
     current_statement__ = 438;
     assign(l, nil_index_list(), multiply(mu, vecfoo(pstream__)),
       "assigning variable l");
@@ -3041,12 +2994,8 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     validate_non_negative_index("l", "10", 10);
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
+    stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 441;
-    for (size_t sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      current_statement__ = 441;
-      assign(l, cons_list(index_uni(sym1__), nil_index_list()), DUMMY_VAR__,
-        "assigning variable l");}
     current_statement__ = 441;
     assign(l, nil_index_list(),
       multiply(mu,
@@ -3094,12 +3043,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+    stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 444;
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      current_statement__ = 444;
-      assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
-        DUMMY_VAR__, "assigning variable f_x");}
     current_statement__ = 445;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
@@ -3147,12 +3092,8 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
     validate_non_negative_index("lpmf", "1", 1);
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
+    stan::math::fill(lpmf, DUMMY_VAR__);
     
-    current_statement__ = 449;
-    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-      current_statement__ = 449;
-      assign(lpmf, cons_list(index_uni(sym1__), nil_index_list()),
-        DUMMY_VAR__, "assigning variable lpmf");}
     current_statement__ = 450;
     assign(lpmf, cons_list(index_uni(1), nil_index_list()), 0.0,
       "assigning variable lpmf");
@@ -3309,6 +3250,7 @@ class mother_model : public model_base_crtp<mother_model> {
       }
       context__.validate_dims("data initialization","J","double",
           context__.to_vec());
+      J = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 182;
       J = context__.vals_r("J")[(1 - 1)];
@@ -3360,6 +3302,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_vec","double",
           context__.to_vec(N));
       d_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_vec_flat__;
@@ -3383,6 +3326,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_1d_vec","double",
           context__.to_vec(N, N));
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(d_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_1d_vec_flat__;
@@ -3414,6 +3358,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_3d_vec","double",
           context__.to_vec(N, M, K, N));
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(d_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_3d_vec_flat__;
@@ -3445,6 +3390,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_row_vec","double",
           context__.to_vec(N));
       d_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_row_vec_flat__;
@@ -3469,6 +3415,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_1d_row_vec","double",
           context__.to_vec(N, N));
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(d_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_1d_row_vec_flat__;
@@ -3502,6 +3449,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_3d_row_vec","double",
           context__.to_vec(N, M, K, N));
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(d_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_3d_row_vec_flat__;
@@ -3541,6 +3489,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_ar_mat","double",
           context__.to_vec(4, 5, 2, 3));
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(d_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_ar_mat_flat__;
@@ -3572,6 +3521,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_simplex","double",
           context__.to_vec(N));
       d_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_simplex_flat__;
@@ -3596,6 +3546,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_1d_simplex","double",
           context__.to_vec(N, N));
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(d_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_1d_simplex_flat__;
@@ -3629,6 +3580,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_3d_simplex","double",
           context__.to_vec(N, M, K, N));
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(d_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_3d_simplex_flat__;
@@ -3664,6 +3616,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_cfcov_54","double",
           context__.to_vec(5, 4));
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(d_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_cfcov_54_flat__;
@@ -3692,6 +3645,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_cfcov_33","double",
           context__.to_vec(3, 3));
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(d_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_cfcov_33_flat__;
@@ -3722,6 +3676,7 @@ class mother_model : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_cfcov_33_ar","double",
           context__.to_vec(K, 3, 3));
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(d_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_cfcov_33_ar_flat__;
@@ -3764,14 +3719,12 @@ class mother_model : public model_base_crtp<mother_model> {
       
       current_statement__ = 201;
       td_a = N;
+      td_b = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 202;
-      td_b = DUMMY_VAR__;
       current_statement__ = 202;
       td_b = (N * J);
+      td_c = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 203;
-      td_c = DUMMY_VAR__;
       current_statement__ = 203;
       td_c = foo_bar1(td_b, pstream__);
       current_statement__ = 204;
@@ -3783,46 +3736,20 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 204;
       validate_non_negative_index("td_ar_mat", "3", 3);
       td_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(td_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 204;
-      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 204;
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 204;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 204;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 204;
-              assign(td_ar_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable td_ar_mat");}}}}
       current_statement__ = 205;
       validate_non_negative_index("td_simplex", "N", N);
       td_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(td_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 205;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 205;
-        assign(td_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable td_simplex");}
       current_statement__ = 206;
       validate_non_negative_index("td_1d_simplex", "N", N);
       current_statement__ = 206;
       validate_non_negative_index("td_1d_simplex", "N", N);
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(td_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 206;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 206;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 206;
-          assign(td_1d_simplex,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable td_1d_simplex");}}
       current_statement__ = 207;
       validate_non_negative_index("td_3d_simplex", "N", N);
       current_statement__ = 207;
@@ -3832,70 +3759,32 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 207;
       validate_non_negative_index("td_3d_simplex", "N", N);
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(td_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 207;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 207;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 207;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 207;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 207;
-              assign(td_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable td_3d_simplex");}}}}
       current_statement__ = 208;
       validate_non_negative_index("td_cfcov_54", "5", 5);
       current_statement__ = 208;
       validate_non_negative_index("td_cfcov_54", "5", 5);
       td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
+      stan::math::fill(td_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 208;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 208;
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 208;
-          assign(td_cfcov_54,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable td_cfcov_54");}}
       current_statement__ = 209;
       validate_non_negative_index("td_cfcov_33", "3", 3);
       current_statement__ = 209;
       validate_non_negative_index("td_cfcov_33", "3", 3);
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(td_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 209;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 209;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 209;
-          assign(td_cfcov_33,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable td_cfcov_33");}}
       current_statement__ = 210;
       validate_non_negative_index("x", "2", 2);
       x = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 210;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 210;
-        assign(x, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable x");}
       current_statement__ = 211;
       validate_non_negative_index("y", "2", 2);
       y = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 211;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 211;
-        assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y");}
       current_statement__ = 212;
       validate_non_negative_index("dat", "0", 0);
       dat = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
@@ -3968,16 +3857,8 @@ class mother_model : public model_base_crtp<mother_model> {
           validate_non_negative_index("l_mat", "3", 3);
           Eigen::Matrix<double, -1, -1> l_mat;
           l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
+          stan::math::fill(l_mat, std::numeric_limits<double>::quiet_NaN());
           
-          current_statement__ = 238;
-          for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-            current_statement__ = 238;
-            for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-              current_statement__ = 238;
-              assign(l_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__), nil_index_list())),
-                DUMMY_VAR__, "assigning variable l_mat");}}
           current_statement__ = 238;
           assign(l_mat, nil_index_list(), d_ar_mat[(i - 1)][(j - 1)],
             "assigning variable l_mat");
@@ -4001,20 +3882,14 @@ class mother_model : public model_base_crtp<mother_model> {
         "assigning variable td_cfcov_33");
       {
         double z;
+        z = std::numeric_limits<double>::quiet_NaN();
         
-        current_statement__ = 246;
-        z = DUMMY_VAR__;
         current_statement__ = 247;
         validate_non_negative_index("blocked_tdata_vs", "2", 2);
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
+        stan::math::fill(blocked_tdata_vs, std::numeric_limits<double>::quiet_NaN());
         
-        current_statement__ = 247;
-        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 247;
-          assign(blocked_tdata_vs,
-            cons_list(index_uni(sym1__), nil_index_list()), DUMMY_VAR__,
-            "assigning variable blocked_tdata_vs");}
         current_statement__ = 248;
         for (size_t sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
              ++sym1__) {
@@ -4326,6 +4201,7 @@ class mother_model : public model_base_crtp<mother_model> {
     
     try {
       local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
       p_real = in__.scalar();
@@ -4435,6 +4311,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(p_vec, DUMMY_VAR__);
       
       current_statement__ = 5;
       p_vec = in__.vector(N);
@@ -4458,6 +4335,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(p_1d_vec, DUMMY_VAR__);
       
       current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4474,6 +4352,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, DUMMY_VAR__);
       
       current_statement__ = 7;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4491,6 +4370,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(p_row_vec, DUMMY_VAR__);
       
       current_statement__ = 8;
       p_row_vec = in__.row_vector(N);
@@ -4500,6 +4380,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 9;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4516,6 +4397,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4539,6 +4421,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat, DUMMY_VAR__);
       
       current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -4591,9 +4474,11 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(p_simplex, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_in__;
       p_simplex_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
+      stan::math::fill(p_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 12;
       p_simplex_in__ = in__.vector((N - 1));
@@ -4615,10 +4500,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(p_1d_simplex, DUMMY_VAR__);
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_in__;
       p_1d_simplex_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(
         (N - 1)));
+      stan::math::fill(p_1d_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 13;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4652,10 +4539,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(p_3d_simplex, DUMMY_VAR__);
       
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_in__;
       p_3d_simplex_in__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
         (N - 1)))));
+      stan::math::fill(p_3d_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 14;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -4704,6 +4593,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
+      stan::math::fill(p_cfcov_54, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_in__;
       p_cfcov_54_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 *
@@ -4712,6 +4602,7 @@ class mother_model : public model_base_crtp<mother_model> {
                                                                  +
                                                                  ((5 - 4) *
                                                                    4)));
+      stan::math::fill(p_cfcov_54_in__, DUMMY_VAR__);
       
       current_statement__ = 15;
       p_cfcov_54_in__ = in__.vector(
@@ -4736,6 +4627,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
+      stan::math::fill(p_cfcov_33, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_in__;
       p_cfcov_33_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 *
@@ -4744,6 +4636,7 @@ class mother_model : public model_base_crtp<mother_model> {
                                                                  +
                                                                  ((3 - 3) *
                                                                    3)));
+      stan::math::fill(p_cfcov_33_in__, DUMMY_VAR__);
       
       current_statement__ = 16;
       p_cfcov_33_in__ = in__.vector(
@@ -4770,10 +4663,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
+      stan::math::fill(p_cfcov_33_ar, DUMMY_VAR__);
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_in__;
       p_cfcov_33_ar_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
         ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
+      stan::math::fill(p_cfcov_33_ar_in__, DUMMY_VAR__);
       
       current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -4804,6 +4699,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p, DUMMY_VAR__);
       
       current_statement__ = 18;
       x_p = in__.vector(2);
@@ -4811,6 +4707,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(y_p, DUMMY_VAR__);
       
       current_statement__ = 19;
       y_p = in__.vector(2);
@@ -4832,28 +4729,16 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(tp_vec, DUMMY_VAR__);
       
-      current_statement__ = 22;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 22;
-        assign(tp_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_vec");}
       current_statement__ = 23;
       validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 23;
       validate_non_negative_index("tp_1d_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(tp_1d_vec, DUMMY_VAR__);
       
-      current_statement__ = 23;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 23;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 23;
-          assign(tp_1d_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_vec");}}
       current_statement__ = 24;
       validate_non_negative_index("tp_3d_vec", "N", N);
       current_statement__ = 24;
@@ -4864,48 +4749,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(tp_3d_vec, DUMMY_VAR__);
       
-      current_statement__ = 24;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 24;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 24;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 24;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 24;
-              assign(tp_3d_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_vec");}}}}
       current_statement__ = 25;
       validate_non_negative_index("tp_row_vec", "N", N);
       Eigen::Matrix<local_scalar_t__, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(tp_row_vec, DUMMY_VAR__);
       
-      current_statement__ = 25;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 25;
-        assign(tp_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_row_vec");}
       current_statement__ = 26;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 26;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(tp_1d_row_vec, DUMMY_VAR__);
       
-      current_statement__ = 26;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 26;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 26;
-          assign(tp_1d_row_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_row_vec");}}
       current_statement__ = 27;
       validate_non_negative_index("tp_3d_row_vec", "N", N);
       current_statement__ = 27;
@@ -4916,22 +4775,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
+      stan::math::fill(tp_3d_row_vec, DUMMY_VAR__);
       
-      current_statement__ = 27;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 27;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 27;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 27;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 27;
-              assign(tp_3d_row_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_row_vec");}}}}
       current_statement__ = 28;
       validate_non_negative_index("tp_ar_mat", "4", 4);
       current_statement__ = 28;
@@ -4942,48 +4787,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
+      stan::math::fill(tp_ar_mat, DUMMY_VAR__);
       
-      current_statement__ = 28;
-      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 28;
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 28;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 28;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 28;
-              assign(tp_ar_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_ar_mat");}}}}
       current_statement__ = 29;
       validate_non_negative_index("tp_simplex", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(tp_simplex, DUMMY_VAR__);
       
-      current_statement__ = 29;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 29;
-        assign(tp_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_simplex");}
       current_statement__ = 30;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 30;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(tp_1d_simplex, DUMMY_VAR__);
       
-      current_statement__ = 30;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 30;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 30;
-          assign(tp_1d_simplex,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_simplex");}}
       current_statement__ = 31;
       validate_non_negative_index("tp_3d_simplex", "N", N);
       current_statement__ = 31;
@@ -4994,54 +4813,24 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(tp_3d_simplex, DUMMY_VAR__);
       
-      current_statement__ = 31;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 31;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 31;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 31;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 31;
-              assign(tp_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_simplex");}}}}
       current_statement__ = 32;
       validate_non_negative_index("tp_cfcov_54", "5", 5);
       current_statement__ = 32;
       validate_non_negative_index("tp_cfcov_54", "4", 4);
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
+      stan::math::fill(tp_cfcov_54, DUMMY_VAR__);
       
-      current_statement__ = 32;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 32;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          current_statement__ = 32;
-          assign(tp_cfcov_54,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_cfcov_54");}}
       current_statement__ = 33;
       validate_non_negative_index("tp_cfcov_33", "3", 3);
       current_statement__ = 33;
       validate_non_negative_index("tp_cfcov_33", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
+      stan::math::fill(tp_cfcov_33, DUMMY_VAR__);
       
-      current_statement__ = 33;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 33;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 33;
-          assign(tp_cfcov_33,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_cfcov_33");}}
       current_statement__ = 34;
       validate_non_negative_index("tp_cfcov_33_ar", "K", K);
       current_statement__ = 34;
@@ -5050,29 +4839,14 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
+      stan::math::fill(tp_cfcov_33_ar, DUMMY_VAR__);
       
-      current_statement__ = 34;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 34;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 34;
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            current_statement__ = 34;
-            assign(tp_cfcov_33_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable tp_cfcov_33_ar");}}}
       current_statement__ = 35;
       validate_non_negative_index("theta_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p;
       theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(theta_p, DUMMY_VAR__);
       
-      current_statement__ = 35;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 35;
-        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta_p");}
       current_statement__ = 36;
       assign(tp_real_1d_ar, nil_index_list(), p_real_1d_ar,
         "assigning variable tp_real_1d_ar");
@@ -5235,38 +5009,24 @@ class mother_model : public model_base_crtp<mother_model> {
         validate_non_negative_index("tmp", "0", 0);
         Eigen::Matrix<local_scalar_t__, -1, 1> tmp;
         tmp = Eigen::Matrix<local_scalar_t__, -1, 1>(0);
+        stan::math::fill(tmp, DUMMY_VAR__);
         
-        current_statement__ = 143;
-        for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-          current_statement__ = 143;
-          assign(tmp, cons_list(index_uni(sym1__), nil_index_list()),
-            DUMMY_VAR__, "assigning variable tmp");}
         current_statement__ = 144;
         validate_non_negative_index("tmp2", "0", 0);
         current_statement__ = 144;
         validate_non_negative_index("tmp2", "0", 0);
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tmp2;
         tmp2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, Eigen::Matrix<local_scalar_t__, -1, 1>(0));
+        stan::math::fill(tmp2, DUMMY_VAR__);
         
-        current_statement__ = 144;
-        for (size_t sym1__ = 1; sym1__ <= 0; ++sym1__) {
-          current_statement__ = 144;
-          for (size_t sym2__ = 1; sym2__ <= 0; ++sym2__) {
-            current_statement__ = 144;
-            assign(tmp2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-              "assigning variable tmp2");}}
         local_scalar_t__ r1;
-        
-        current_statement__ = 145;
         r1 = DUMMY_VAR__;
+        
         current_statement__ = 145;
         r1 = foo_bar1(p_real, pstream__);
         local_scalar_t__ r2;
-        
-        current_statement__ = 146;
         r2 = DUMMY_VAR__;
+        
         current_statement__ = 146;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 147;
@@ -5368,6 +5128,7 @@ class mother_model : public model_base_crtp<mother_model> {
     
     try {
       double p_real;
+      p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       p_real = in__.scalar();
@@ -5445,6 +5206,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       p_vec = in__.vector(N);
@@ -5460,6 +5222,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5476,6 +5239,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5493,6 +5257,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(p_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
       p_row_vec = in__.row_vector(N);
@@ -5502,6 +5267,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5518,6 +5284,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 10;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5541,6 +5308,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -5576,9 +5344,11 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_simplex, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_in__;
       p_simplex_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
+      stan::math::fill(p_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 12;
       p_simplex_in__ = in__.vector((N - 1));
@@ -5592,10 +5362,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_in__;
       p_1d_simplex_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(
         (N - 1)));
+      stan::math::fill(p_1d_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 13;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5619,10 +5391,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_in__;
       p_3d_simplex_in__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
         (N - 1)))));
+      stan::math::fill(p_3d_simplex_in__, DUMMY_VAR__);
       
       current_statement__ = 14;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5659,6 +5433,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(p_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_in__;
       p_cfcov_54_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 *
@@ -5667,6 +5442,7 @@ class mother_model : public model_base_crtp<mother_model> {
                                                                  +
                                                                  ((5 - 4) *
                                                                    4)));
+      stan::math::fill(p_cfcov_54_in__, DUMMY_VAR__);
       
       current_statement__ = 15;
       p_cfcov_54_in__ = in__.vector(
@@ -5683,6 +5459,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(p_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_in__;
       p_cfcov_33_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 *
@@ -5691,6 +5468,7 @@ class mother_model : public model_base_crtp<mother_model> {
                                                                  +
                                                                  ((3 - 3) *
                                                                    3)));
+      stan::math::fill(p_cfcov_33_in__, DUMMY_VAR__);
       
       current_statement__ = 16;
       p_cfcov_33_in__ = in__.vector(
@@ -5709,10 +5487,12 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_in__;
       p_cfcov_33_ar_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
         ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
+      stan::math::fill(p_cfcov_33_ar_in__, DUMMY_VAR__);
       
       current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -5732,6 +5512,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 18;
       x_p = in__.vector(2);
@@ -5739,6 +5520,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 19;
       y_p = in__.vector(2);
@@ -5760,28 +5542,16 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_vec", "N", N);
       Eigen::Matrix<double, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(tp_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 22;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 22;
-        assign(tp_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_vec");}
       current_statement__ = 23;
       validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 23;
       validate_non_negative_index("tp_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(tp_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 23;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 23;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 23;
-          assign(tp_1d_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_vec");}}
       current_statement__ = 24;
       validate_non_negative_index("tp_3d_vec", "N", N);
       current_statement__ = 24;
@@ -5792,48 +5562,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(tp_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 24;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 24;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 24;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 24;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 24;
-              assign(tp_3d_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_vec");}}}}
       current_statement__ = 25;
       validate_non_negative_index("tp_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> tp_row_vec;
       tp_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(tp_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 25;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 25;
-        assign(tp_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_row_vec");}
       current_statement__ = 26;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 26;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(tp_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 26;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 26;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 26;
-          assign(tp_1d_row_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_row_vec");}}
       current_statement__ = 27;
       validate_non_negative_index("tp_3d_row_vec", "N", N);
       current_statement__ = 27;
@@ -5844,22 +5588,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(tp_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 27;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 27;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 27;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 27;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 27;
-              assign(tp_3d_row_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_row_vec");}}}}
       current_statement__ = 28;
       validate_non_negative_index("tp_ar_mat", "4", 4);
       current_statement__ = 28;
@@ -5870,48 +5600,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(tp_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 28;
-      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 28;
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 28;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 28;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 28;
-              assign(tp_ar_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_ar_mat");}}}}
       current_statement__ = 29;
       validate_non_negative_index("tp_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> tp_simplex;
       tp_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(tp_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 29;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 29;
-        assign(tp_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable tp_simplex");}
       current_statement__ = 30;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 30;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(tp_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 30;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 30;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 30;
-          assign(tp_1d_simplex,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_1d_simplex");}}
       current_statement__ = 31;
       validate_non_negative_index("tp_3d_simplex", "N", N);
       current_statement__ = 31;
@@ -5922,54 +5626,24 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(tp_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 31;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 31;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 31;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 31;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 31;
-              assign(tp_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable tp_3d_simplex");}}}}
       current_statement__ = 32;
       validate_non_negative_index("tp_cfcov_54", "5", 5);
       current_statement__ = 32;
       validate_non_negative_index("tp_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(tp_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 32;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 32;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          current_statement__ = 32;
-          assign(tp_cfcov_54,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_cfcov_54");}}
       current_statement__ = 33;
       validate_non_negative_index("tp_cfcov_33", "3", 3);
       current_statement__ = 33;
       validate_non_negative_index("tp_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(tp_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 33;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 33;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 33;
-          assign(tp_cfcov_33,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable tp_cfcov_33");}}
       current_statement__ = 34;
       validate_non_negative_index("tp_cfcov_33_ar", "K", K);
       current_statement__ = 34;
@@ -5978,29 +5652,14 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("tp_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(tp_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 34;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 34;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 34;
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            current_statement__ = 34;
-            assign(tp_cfcov_33_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable tp_cfcov_33_ar");}}}
       current_statement__ = 35;
       validate_non_negative_index("theta_p", "2", 2);
       Eigen::Matrix<double, -1, 1> theta_p;
       theta_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(theta_p, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 35;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 35;
-        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta_p");}
       vars__.push_back(p_real);
       for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
         vars__.push_back(offset_multiplier[(sym1__ - 1)]);}
@@ -6259,15 +5918,13 @@ class mother_model : public model_base_crtp<mother_model> {
         return ;
       } 
       double gq_r1;
+      gq_r1 = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 67;
-      gq_r1 = DUMMY_VAR__;
       current_statement__ = 67;
       gq_r1 = foo_bar1(p_real, pstream__);
       double gq_r2;
+      gq_r2 = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 68;
-      gq_r2 = DUMMY_VAR__;
       current_statement__ = 68;
       gq_r2 = foo_bar1(J, pstream__);
       current_statement__ = 69;
@@ -6288,28 +5945,16 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_vec", "N", N);
       Eigen::Matrix<double, -1, 1> gq_vec;
       gq_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(gq_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 71;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 71;
-        assign(gq_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable gq_vec");}
       current_statement__ = 72;
       validate_non_negative_index("gq_1d_vec", "N", N);
       current_statement__ = 72;
       validate_non_negative_index("gq_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
       gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(gq_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 72;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 72;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 72;
-          assign(gq_1d_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable gq_1d_vec");}}
       current_statement__ = 73;
       validate_non_negative_index("gq_3d_vec", "N", N);
       current_statement__ = 73;
@@ -6320,48 +5965,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
       gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(gq_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 73;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 73;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 73;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 73;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 73;
-              assign(gq_3d_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable gq_3d_vec");}}}}
       current_statement__ = 74;
       validate_non_negative_index("gq_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> gq_row_vec;
       gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(gq_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 74;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 74;
-        assign(gq_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable gq_row_vec");}
       current_statement__ = 75;
       validate_non_negative_index("gq_1d_row_vec", "N", N);
       current_statement__ = 75;
       validate_non_negative_index("gq_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
       gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(gq_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 75;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 75;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 75;
-          assign(gq_1d_row_vec,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable gq_1d_row_vec");}}
       current_statement__ = 76;
       validate_non_negative_index("gq_3d_row_vec", "N", N);
       current_statement__ = 76;
@@ -6372,22 +5991,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
       gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(gq_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 76;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 76;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 76;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 76;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 76;
-              assign(gq_3d_row_vec,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable gq_3d_row_vec");}}}}
       current_statement__ = 77;
       validate_non_negative_index("gq_ar_mat", "4", 4);
       current_statement__ = 77;
@@ -6398,48 +6003,22 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
       gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(gq_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 77;
-      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 77;
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 77;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 77;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 77;
-              assign(gq_ar_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable gq_ar_mat");}}}}
       current_statement__ = 78;
       validate_non_negative_index("gq_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> gq_simplex;
       gq_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(gq_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 78;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 78;
-        assign(gq_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable gq_simplex");}
       current_statement__ = 79;
       validate_non_negative_index("gq_1d_simplex", "N", N);
       current_statement__ = 79;
       validate_non_negative_index("gq_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
       gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(gq_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 79;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 79;
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 79;
-          assign(gq_1d_simplex,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable gq_1d_simplex");}}
       current_statement__ = 80;
       validate_non_negative_index("gq_3d_simplex", "N", N);
       current_statement__ = 80;
@@ -6450,54 +6029,24 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
       gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(gq_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 80;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 80;
-        for (size_t sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 80;
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 80;
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              current_statement__ = 80;
-              assign(gq_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                DUMMY_VAR__, "assigning variable gq_3d_simplex");}}}}
       current_statement__ = 81;
       validate_non_negative_index("gq_cfcov_54", "5", 5);
       current_statement__ = 81;
       validate_non_negative_index("gq_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> gq_cfcov_54;
       gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(gq_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 81;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 81;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          current_statement__ = 81;
-          assign(gq_cfcov_54,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable gq_cfcov_54");}}
       current_statement__ = 82;
       validate_non_negative_index("gq_cfcov_33", "3", 3);
       current_statement__ = 82;
       validate_non_negative_index("gq_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> gq_cfcov_33;
       gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(gq_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 82;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 82;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 82;
-          assign(gq_cfcov_33,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable gq_cfcov_33");}}
       current_statement__ = 83;
       validate_non_negative_index("gq_cfcov_33_ar", "K", K);
       current_statement__ = 83;
@@ -6506,19 +6055,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("gq_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
       gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(gq_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 83;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 83;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 83;
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            current_statement__ = 83;
-            assign(gq_cfcov_33_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable gq_cfcov_33_ar");}}}
       current_statement__ = 84;
       validate_non_negative_index("indices", "3", 3);
       std::vector<int> indices;
@@ -6535,19 +6073,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("indexing_mat", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
       indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      stan::math::fill(indexing_mat, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 85;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 85;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 85;
-          for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            current_statement__ = 85;
-            assign(indexing_mat,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable indexing_mat");}}}
       current_statement__ = 86;
       validate_non_negative_index("idx_res1", "3", 3);
       current_statement__ = 86;
@@ -6556,19 +6083,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res1", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
       idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
+      stan::math::fill(idx_res1, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 86;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 86;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 86;
-          for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            current_statement__ = 86;
-            assign(idx_res1,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res1");}}}
       current_statement__ = 87;
       validate_non_negative_index("idx_res2", "5", 5);
       current_statement__ = 87;
@@ -6577,19 +6093,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res2", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res2;
       idx_res2 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      stan::math::fill(idx_res2, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 87;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 87;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 87;
-          for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            current_statement__ = 87;
-            assign(idx_res2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res2");}}}
       current_statement__ = 88;
       validate_non_negative_index("idx_res3", "3", 3);
       current_statement__ = 88;
@@ -6598,19 +6103,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res3", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res3;
       idx_res3 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(idx_res3, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 88;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 88;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 88;
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            current_statement__ = 88;
-            assign(idx_res3,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res3");}}}
       current_statement__ = 89;
       validate_non_negative_index("idx_res11", "3", 3);
       current_statement__ = 89;
@@ -6619,19 +6113,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res11", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
       idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
+      stan::math::fill(idx_res11, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 89;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 89;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 89;
-          for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            current_statement__ = 89;
-            assign(idx_res11,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res11");}}}
       current_statement__ = 90;
       validate_non_negative_index("idx_res21", "5", 5);
       current_statement__ = 90;
@@ -6640,19 +6123,8 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res21", "4", 4);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
       idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
+      stan::math::fill(idx_res21, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 90;
-      for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 90;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 90;
-          for (size_t sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            current_statement__ = 90;
-            assign(idx_res21,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res21");}}}
       current_statement__ = 91;
       validate_non_negative_index("idx_res31", "3", 3);
       current_statement__ = 91;
@@ -6661,51 +6133,24 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("idx_res31", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
       idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(idx_res31, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 91;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 91;
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          current_statement__ = 91;
-          for (size_t sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            current_statement__ = 91;
-            assign(idx_res31,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              DUMMY_VAR__, "assigning variable idx_res31");}}}
       current_statement__ = 92;
       validate_non_negative_index("idx_res4", "3", 3);
       current_statement__ = 92;
       validate_non_negative_index("idx_res4", "4", 4);
       std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
       idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
+      stan::math::fill(idx_res4, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 92;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 92;
-        for (size_t sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          current_statement__ = 92;
-          assign(idx_res4,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable idx_res4");}}
       current_statement__ = 93;
       validate_non_negative_index("idx_res5", "2", 2);
       current_statement__ = 93;
       validate_non_negative_index("idx_res5", "2", 2);
       std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
       idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
+      stan::math::fill(idx_res5, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 93;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 93;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          current_statement__ = 93;
-          assign(idx_res5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable idx_res5");}}
       current_statement__ = 94;
       assign(gq_real_1d_ar, nil_index_list(),
         rvalue(p_1d_simplex,
@@ -7154,6 +6599,7 @@ class mother_model : public model_base_crtp<mother_model> {
       
       pos__ = 1;
       double p_real;
+      p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       p_real = context__.vals_r("p_real")[(1 - 1)];
@@ -7238,6 +6684,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_vec", "N", N);
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_vec_flat__;
@@ -7266,6 +6713,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_vec", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_1d_vec_flat__;
@@ -7296,6 +6744,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_3d_vec_flat__;
@@ -7326,6 +6775,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_row_vec", "N", N);
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      stan::math::fill(p_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_row_vec_flat__;
@@ -7349,6 +6799,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_1d_row_vec", "N", N);
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_1d_row_vec_flat__;
@@ -7381,6 +6832,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_3d_row_vec", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_3d_row_vec_flat__;
@@ -7419,6 +6871,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_ar_mat", "3", 3);
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_ar_mat_flat__;
@@ -7470,6 +6923,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_simplex", "N", N);
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(p_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_simplex_flat__;
@@ -7496,6 +6950,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_1d_simplex", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_1d_simplex_flat__;
@@ -7534,6 +6989,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_positive_index("p_3d_simplex", "N", N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_3d_simplex_flat__;
@@ -7584,6 +7040,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_54", "4", 4);
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      stan::math::fill(p_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_cfcov_54_flat__;
@@ -7617,6 +7074,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33", "3", 3);
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      stan::math::fill(p_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_cfcov_33_flat__;
@@ -7652,6 +7110,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("p_cfcov_33_ar", "3", 3);
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p_cfcov_33_ar_flat__;
@@ -7687,6 +7146,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> x_p_flat__;
@@ -7707,6 +7167,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> y_p_flat__;
@@ -9684,12 +9145,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+    stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 123;
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      current_statement__ = 123;
-      assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
-        DUMMY_VAR__, "assigning variable f_x");}
     current_statement__ = 124;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
@@ -9774,6 +9231,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         "assigning variable y0_d");
       context__.validate_dims("data initialization","t0","double",
           context__.to_vec());
+      t0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 101;
       t0 = context__.vals_r("t0")[(1 - 1)];
@@ -9836,6 +9294,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
       shared_params_d = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(shared_params_d, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> shared_params_d_flat__;
@@ -9862,6 +9321,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       context__.validate_dims("data initialization","job_params_d","double",
           context__.to_vec(3, 3));
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      stan::math::fill(job_params_d, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> job_params_d_flat__;
@@ -10025,6 +9485,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p_v, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_p_v = in__.vector(2);
@@ -10032,6 +9493,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(shared_params_p, DUMMY_VAR__);
       
       current_statement__ = 5;
       shared_params_p = in__.vector(3);
@@ -10041,6 +9503,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
+      stan::math::fill(job_params_p, DUMMY_VAR__);
       
       current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -10048,37 +9511,31 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(3), "assigning variable job_params_p");}
       local_scalar_t__ x_r;
+      x_r = DUMMY_VAR__;
       
       current_statement__ = 7;
       x_r = in__.scalar();
       local_scalar_t__ abc1_p;
-      
-      current_statement__ = 8;
       abc1_p = DUMMY_VAR__;
+      
       current_statement__ = 8;
       abc1_p = 3;
       local_scalar_t__ abc2_p;
-      
-      current_statement__ = 9;
       abc2_p = DUMMY_VAR__;
+      
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
       local_scalar_t__ abc3_p;
-      
-      current_statement__ = 10;
       abc3_p = DUMMY_VAR__;
+      
       current_statement__ = 10;
       abc3_p = map_rectfake(12, pstream__);
       current_statement__ = 11;
       validate_non_negative_index("y_hat_tp1", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp1, DUMMY_VAR__);
       
-      current_statement__ = 11;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 11;
-        assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp1");}
       current_statement__ = 11;
       assign(y_hat_tp1, nil_index_list(),
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
@@ -10087,12 +9544,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("y_hat_tp2", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp2, DUMMY_VAR__);
       
-      current_statement__ = 12;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 12;
-        assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp2");}
       current_statement__ = 12;
       assign(y_hat_tp2, nil_index_list(),
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
@@ -10101,12 +9554,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("y_hat_tp3", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(y_hat_tp3, DUMMY_VAR__);
       
-      current_statement__ = 13;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 13;
-        assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp3");}
       current_statement__ = 13;
       assign(y_hat_tp3, nil_index_list(),
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
@@ -10115,42 +9564,26 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("theta_p_as", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p_as;
       theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(theta_p_as, DUMMY_VAR__);
       
-      current_statement__ = 14;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 14;
-        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta_p_as");}
       current_statement__ = 15;
       validate_non_negative_index("x_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_v;
       x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_v, DUMMY_VAR__);
       
-      current_statement__ = 15;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 15;
-        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable x_v");}
       current_statement__ = 16;
       validate_non_negative_index("y_v", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_v;
       y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(y_v, DUMMY_VAR__);
       
-      current_statement__ = 16;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 16;
-        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_v");}
       current_statement__ = 17;
       validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(y_p, DUMMY_VAR__);
       
-      current_statement__ = 17;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 17;
-        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_p");}
       current_statement__ = 18;
       assign(theta_p_as, nil_index_list(),
         algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
@@ -10260,9 +9693,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
-        
-        current_statement__ = 76;
         y_1d = DUMMY_VAR__;
+        
         current_statement__ = 76;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
@@ -10297,9 +9729,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
         local_scalar_t__ z_1d;
-        
-        current_statement__ = 87;
         z_1d = DUMMY_VAR__;
+        
         current_statement__ = 87;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
@@ -10334,9 +9765,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
         local_scalar_t__ abc_m;
-        
-        current_statement__ = 98;
         abc_m = DUMMY_VAR__;
+        
         current_statement__ = 98;
         abc_m = map_rectfake(abc1_p, pstream__);
       }
@@ -10405,6 +9835,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p_v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       x_p_v = in__.vector(2);
@@ -10412,6 +9843,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       shared_params_p = in__.vector(3);
@@ -10421,6 +9853,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -10428,91 +9861,61 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(3), "assigning variable job_params_p");}
       double x_r;
+      x_r = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 7;
       x_r = in__.scalar();
       double abc1_p;
+      abc1_p = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 8;
-      abc1_p = DUMMY_VAR__;
       double abc2_p;
+      abc2_p = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 9;
-      abc2_p = DUMMY_VAR__;
       double abc3_p;
+      abc3_p = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 10;
-      abc3_p = DUMMY_VAR__;
       current_statement__ = 11;
       validate_non_negative_index("y_hat_tp1", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(y_hat_tp1, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 11;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 11;
-        assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp1");}
       current_statement__ = 12;
       validate_non_negative_index("y_hat_tp2", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(y_hat_tp2, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 12;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 12;
-        assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp2");}
       current_statement__ = 13;
       validate_non_negative_index("y_hat_tp3", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(y_hat_tp3, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 13;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 13;
-        assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_tp3");}
       current_statement__ = 14;
       validate_non_negative_index("theta_p_as", "2", 2);
       Eigen::Matrix<double, -1, 1> theta_p_as;
       theta_p_as = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(theta_p_as, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 14;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 14;
-        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable theta_p_as");}
       current_statement__ = 15;
       validate_non_negative_index("x_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_v;
       x_v = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_v, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 15;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 15;
-        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable x_v");}
       current_statement__ = 16;
       validate_non_negative_index("y_v", "2", 2);
       Eigen::Matrix<double, -1, 1> y_v;
       y_v = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y_v, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 16;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 16;
-        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_v");}
       current_statement__ = 17;
       validate_non_negative_index("y_p", "2", 2);
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 17;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 17;
-        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_p");}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(y0_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
@@ -10685,9 +10088,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       double y_1d;
+      y_1d = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 46;
-      y_1d = DUMMY_VAR__;
       current_statement__ = 46;
       y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__);
@@ -10701,9 +10103,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__);
       double z_1d;
+      z_1d = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 50;
-      z_1d = DUMMY_VAR__;
       current_statement__ = 50;
       z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__, 1e-8);
@@ -10717,27 +10118,21 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__, 1e-8);
       double abc1_gq;
+      abc1_gq = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 54;
-      abc1_gq = DUMMY_VAR__;
       current_statement__ = 54;
       abc1_gq = map_rectfake(12, pstream__);
       double abc2_gq;
+      abc2_gq = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 55;
-      abc2_gq = DUMMY_VAR__;
       current_statement__ = 55;
       abc2_gq = map_rectfake(abc1_p, pstream__);
       current_statement__ = 56;
       validate_non_negative_index("y_hat_gq", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
       y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(y_hat_gq, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 56;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 56;
-        assign(y_hat_gq, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_hat_gq");}
       current_statement__ = 56;
       assign(y_hat_gq, nil_index_list(),
         map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
@@ -10798,6 +10193,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("x_p_v", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_p_v, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> x_p_v_flat__;
@@ -10818,6 +10214,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("shared_params_p", "3", 3);
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> shared_params_p_flat__;
@@ -10843,6 +10240,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("job_params_p", "3", 3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> job_params_p_flat__;
@@ -10866,6 +10264,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
             pos__ = (pos__ + 1);}}
       }
       double x_r;
+      x_r = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 7;
       x_r = context__.vals_r("x_r")[(1 - 1)];
@@ -11590,6 +10989,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(X_d, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> X_d_flat__;
@@ -11615,6 +11015,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
+      stan::math::fill(y_v_d, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> y_v_d_flat__;
@@ -11636,6 +11037,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
+      stan::math::fill(X_rv_d, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> X_rv_d_flat__;
@@ -11678,6 +11080,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       context__.validate_dims("data initialization","y_r_d","double",
           context__.to_vec());
+      y_r_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 182;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
@@ -11690,34 +11093,18 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 185;
       validate_non_negative_index("X_d_td", "k", k);
       X_d_td = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 185;
-      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 185;
-        for (size_t sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 185;
-          assign(X_d_td,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), DUMMY_VAR__,
-            "assigning variable X_d_td");}}
       current_statement__ = 186;
       validate_non_negative_index("y_v_d_td", "n", n);
       y_v_d_td = Eigen::Matrix<double, -1, 1>(n);
+      stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 186;
-      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 186;
-        assign(y_v_d_td, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable y_v_d_td");}
       current_statement__ = 187;
       validate_non_negative_index("X_rv_d_td", "n", n);
       X_rv_d_td = Eigen::Matrix<double, 1, -1>(n);
+      stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 187;
-      for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 187;
-        assign(X_rv_d_td, cons_list(index_uni(sym1__), nil_index_list()),
-          DUMMY_VAR__, "assigning variable X_rv_d_td");}
       current_statement__ = 188;
       validate_non_negative_index("y_vi_d_td", "n", n);
       y_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
@@ -11728,9 +11115,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       y_s_d_td = std::numeric_limits<int>::min();
       
+      y_r_d_td = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 191;
-      y_r_d_td = DUMMY_VAR__;
       current_statement__ = 174;
       current_statement__ = 174;
       check_greater_or_equal(function__, "k", k, 1);
@@ -11801,6 +11187,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(alpha_v, DUMMY_VAR__);
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
@@ -11808,6 +11195,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.vector(k);
@@ -11815,10 +11203,12 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(cuts, DUMMY_VAR__);
       
       current_statement__ = 3;
       cuts = in__.vector(k);
       local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
       sigma = in__.scalar();
@@ -11831,10 +11221,12 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         sigma = stan::math::lb_constrain(sigma, 0);
       }
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
       
       current_statement__ = 5;
       alpha = in__.scalar();
       local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
       
       current_statement__ = 6;
       phi = in__.scalar();
@@ -11844,6 +11236,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(X_p, DUMMY_VAR__);
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
@@ -11853,6 +11246,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(beta_m, DUMMY_VAR__);
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
@@ -11860,6 +11254,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
+      stan::math::fill(X_rv_p, DUMMY_VAR__);
       
       current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
@@ -12428,6 +11823,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       alpha_v = in__.vector(k);
@@ -12435,6 +11831,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       beta = in__.vector(k);
@@ -12442,20 +11839,24 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       cuts = in__.vector(k);
       double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       sigma = in__.scalar();
       current_statement__ = 4;
       sigma = stan::math::lb_constrain(sigma, 0);
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
       alpha = in__.scalar();
       double phi;
+      phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
       phi = in__.scalar();
@@ -12465,6 +11866,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
       X_p = in__.matrix(n, k);
@@ -12474,6 +11876,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
       beta_m = in__.matrix(n, k);
@@ -12481,6 +11884,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
+      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
       X_rv_p = in__.row_vector(n);
@@ -12538,6 +11942,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("alpha_v", "k", k);
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> alpha_v_flat__;
@@ -12558,6 +11963,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta", "k", k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> beta_flat__;
@@ -12578,6 +11984,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("cuts", "k", k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
+      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> cuts_flat__;
@@ -12595,16 +12002,19 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
           pos__ = (pos__ + 1);}
       }
       double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       current_statement__ = 4;
       sigma = stan::math::lb_free(sigma, 0);
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       double phi;
+      phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
       phi = context__.vals_r("phi")[(1 - 1)];
@@ -12614,6 +12024,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_p", "k", k);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> X_p_flat__;
@@ -12640,6 +12051,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("beta_m", "k", k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
+      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> beta_m_flat__;
@@ -12664,6 +12076,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_p", "n", n);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
+      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> X_rv_p_flat__;
@@ -13093,6 +12506,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     try {
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
       
       current_statement__ = 1;
       x = in__.scalar();
@@ -13162,6 +12576,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     try {
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       x = in__.scalar();
@@ -13195,6 +12610,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
       
       pos__ = 1;
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
@@ -13477,6 +12893,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
       n = context__.vals_i("n")[(1 - 1)];
       context__.validate_dims("data initialization","x","double",
           context__.to_vec());
+      x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 20;
       x = context__.vals_r("x")[(1 - 1)];
@@ -13512,10 +12929,12 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     try {
       local_scalar_t__ m;
+      m = DUMMY_VAR__;
       
       current_statement__ = 1;
       m = in__.scalar();
       local_scalar_t__ y;
+      y = DUMMY_VAR__;
       
       current_statement__ = 2;
       y = in__.scalar();
@@ -13641,10 +13060,12 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     try {
       double m;
+      m = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       m = in__.scalar();
       double y;
+      y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       y = in__.scalar();
@@ -13679,10 +13100,12 @@ class truncate_model : public model_base_crtp<truncate_model> {
       
       pos__ = 1;
       double m;
+      m = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       m = context__.vals_r("m")[(1 - 1)];
       double y;
+      y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       y = context__.vals_r("y")[(1 - 1)];
@@ -14007,6 +13430,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     try {
       local_scalar_t__ x;
+      x = DUMMY_VAR__;
       
       current_statement__ = 1;
       x = in__.scalar();
@@ -14054,6 +13478,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     try {
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       x = in__.scalar();
@@ -14087,6 +13512,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
       
       pos__ = 1;
       double x;
+      x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
