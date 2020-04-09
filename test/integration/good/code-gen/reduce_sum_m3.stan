@@ -76,7 +76,11 @@ functions {
          int[] f, real[] g, vector[] h, row_vector[] i, matrix[] j,
          int[,] k, real[,] l, vector[,] m, row_vector[,] n, matrix[,] o,
          int[,,] p, real[,,] q) {
-    return 0.0;
+    return reduce_sum(s, y_slice, 1,
+                      a, b, c, d, e,
+                      f, g, h, i, j,
+                      k, l, m, n, o,
+                      p, q);
   }
   real r() {
     int N;

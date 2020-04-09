@@ -12957,16 +12957,25 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'reduce_sum_m1.stan', line 16, column 2 to column 12)",
-                                                      " (in 'reduce_sum_m1.stan', line 20, column 2 to column 32)",
-                                                      " (in 'reduce_sum_m1.stan', line 12, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 23, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 24, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 28, column 2 to column 33)",
+                                                      " (in 'reduce_sum_m1.stan', line 29, column 2 to column 37)",
+                                                      " (in 'reduce_sum_m1.stan', line 19, column 2 to column 14)",
                                                       " (in 'reduce_sum_m1.stan', line 6, column 6 to column 41)",
                                                       " (in 'reduce_sum_m1.stan', line 5, column 11 to line 7, column 5)",
                                                       " (in 'reduce_sum_m1.stan', line 4, column 6 to column 39)",
                                                       " (in 'reduce_sum_m1.stan', line 3, column 26 to line 5, column 5)",
                                                       " (in 'reduce_sum_m1.stan', line 3, column 4 to line 7, column 5)",
-                                                      " (in 'reduce_sum_m1.stan', line 2, column 45 to line 8, column 3)"};
+                                                      " (in 'reduce_sum_m1.stan', line 2, column 45 to line 8, column 3)",
+                                                      " (in 'reduce_sum_m1.stan', line 13, column 6 to column 35)",
+                                                      " (in 'reduce_sum_m1.stan', line 12, column 11 to line 14, column 5)",
+                                                      " (in 'reduce_sum_m1.stan', line 11, column 6 to column 53)",
+                                                      " (in 'reduce_sum_m1.stan', line 10, column 20 to line 12, column 5)",
+                                                      " (in 'reduce_sum_m1.stan', line 10, column 4 to line 14, column 5)",
+                                                      " (in 'reduce_sum_m1.stan', line 9, column 55 to line 15, column 3)"};
 
+struct h_rsfunctor__;
 struct g_rsfunctor__;template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 g(const int& start, const int& end, const std::vector<T2__>& y_slice,
@@ -12976,12 +12985,12 @@ g(const int& start, const int& end, const std::vector<T2__>& y_slice,
   (void) propto__;
   
   try {
-    current_statement__ = 8;
+    current_statement__ = 10;
     if (logical_gt(size(y_slice), 1)) {
-      current_statement__ = 6;
+      current_statement__ = 8;
       return reduce_sum<g_rsfunctor__>(y_slice, 1, pstream__);
     } else {
-      current_statement__ = 4;
+      current_statement__ = 6;
       return normal_lpdf<false>(y_slice, 0, 1);
     }
   } catch (const std::exception& e) {
@@ -13013,6 +13022,60 @@ return g(start + 1, end + 1, y_slice, pstream__);
 }
 };
 
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+h(const int& start, const int& end, const std::vector<T2__>& y_slice,
+  const std::vector<T3__>& a, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+          T3__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 16;
+    if (logical_gt(size(a), 1)) {
+      current_statement__ = 14;
+      return reduce_sum<h_rsfunctor__>(y_slice, 1, pstream__,
+               rvalue(a,
+                 cons_list(index_min_max(start, end), nil_index_list()), "a"));
+    } else {
+      current_statement__ = 12;
+      return normal_lpdf<false>(a, 0, 1);
+    }
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct h_functor__ {
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, const std::vector<T3__>& a,
+           std::ostream* pstream__)  const 
+{
+return h(start, end, y_slice, a, pstream__);
+}
+};
+
+
+struct h_rsfunctor__ {
+template <typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T2__,
+T3__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+           const std::vector<T3__>& a)  const 
+{
+return h(start + 1, end + 1, y_slice, a, pstream__);
+}
+};
+
 class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
 
  private:
@@ -13038,8 +13101,8 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       
       pos__ = 1;
       
-      current_statement__ = 3;
-      N = 10;
+      current_statement__ = 5;
+      N = 100;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -13049,7 +13112,10 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       current_statement__ = 1;
-      validate_non_negative_index("y", "N", N);
+      validate_non_negative_index("y1", "N", N);
+      num_params_r__ += N;
+      current_statement__ = 2;
+      validate_non_negative_index("y2", "N", N);
       num_params_r__ += N;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13070,18 +13136,30 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       current_statement__ = 1;
-      validate_non_negative_index("y", "N", N);
-      std::vector<local_scalar_t__> y;
-      y = std::vector<local_scalar_t__>(N, 0);
+      validate_non_negative_index("y1", "N", N);
+      std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, 0);
       
       current_statement__ = 1;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 1;
-        assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y");}
-      {
+        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y1");}
+      current_statement__ = 2;
+      validate_non_negative_index("y2", "N", N);
+      std::vector<local_scalar_t__> y2;
+      y2 = std::vector<local_scalar_t__>(N, 0);
+      
+      current_statement__ = 2;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 2;
-        lp_accum__.add(reduce_sum<g_rsfunctor__>(y, 1, pstream__));
+        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y2");}
+      {
+        current_statement__ = 3;
+        lp_accum__.add(reduce_sum<g_rsfunctor__>(y1, 1, pstream__));
+        current_statement__ = 4;
+        lp_accum__.add(reduce_sum<h_rsfunctor__>(y2, 1, pstream__, y2));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13112,17 +13190,29 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     try {
       current_statement__ = 1;
-      validate_non_negative_index("y", "N", N);
-      std::vector<double> y;
-      y = std::vector<double>(N, 0);
+      validate_non_negative_index("y1", "N", N);
+      std::vector<double> y1;
+      y1 = std::vector<double>(N, 0);
       
       current_statement__ = 1;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 1;
-        assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y");}
+        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y1");}
+      current_statement__ = 2;
+      validate_non_negative_index("y2", "N", N);
+      std::vector<double> y2;
+      y2 = std::vector<double>(N, 0);
+      
+      current_statement__ = 2;
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.push_back(y[(sym1__ - 1)]);}
+        current_statement__ = 2;
+        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y2");}
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        vars__.push_back(y1[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        vars__.push_back(y2[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -13149,15 +13239,25 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       
       pos__ = 1;
       current_statement__ = 1;
-      validate_non_negative_index("y", "N", N);
-      std::vector<double> y;
-      y = std::vector<double>(N, 0);
+      validate_non_negative_index("y1", "N", N);
+      std::vector<double> y1;
+      y1 = std::vector<double>(N, 0);
       
       current_statement__ = 1;
-      assign(y, nil_index_list(), context__.vals_r("y"),
-        "assigning variable y");
+      assign(y1, nil_index_list(), context__.vals_r("y1"),
+        "assigning variable y1");
+      current_statement__ = 2;
+      validate_non_negative_index("y2", "N", N);
+      std::vector<double> y2;
+      y2 = std::vector<double>(N, 0);
+      
+      current_statement__ = 2;
+      assign(y2, nil_index_list(), context__.vals_r("y2"),
+        "assigning variable y2");
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.push_back(y[(sym1__ - 1)]);}
+        vars__.push_back(y1[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        vars__.push_back(y2[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -13168,12 +13268,16 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
-    names__.push_back("y");
+    names__.push_back("y1");
+    names__.push_back("y2");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
     dims__.push_back(N);
     dimss__.push_back(dims__);
     dims__.resize(0);
@@ -13186,7 +13290,11 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "y" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "y1" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y2" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -13204,7 +13312,11 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "y" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "y1" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y2" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -13218,13 +13330,13 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
@@ -13522,7 +13634,22 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m2.stan', line 120, column 4 to column 20)",
                                                       " (in 'reduce_sum_m2.stan', line 113, column 53 to line 121, column 3)"};
 
-struct g1_rsfunctor__;struct g2_rsfunctor__;struct g3_rsfunctor__;struct g4_rsfunctor__;struct g5_rsfunctor__;struct g6_rsfunctor__;struct g7_rsfunctor__;struct g8_rsfunctor__;struct h1_rsfunctor__;struct h2_rsfunctor__;struct h3_rsfunctor__;struct h4_rsfunctor__;struct h5_rsfunctor__;struct h6_rsfunctor__;struct h7_rsfunctor__;struct h8_rsfunctor__;
+struct g1_rsfunctor__;
+struct g2_rsfunctor__;
+struct g3_rsfunctor__;
+struct g4_rsfunctor__;
+struct g5_rsfunctor__;
+struct g6_rsfunctor__;
+struct g7_rsfunctor__;
+struct g8_rsfunctor__;
+struct h1_rsfunctor__;
+struct h2_rsfunctor__;
+struct h3_rsfunctor__;
+struct h4_rsfunctor__;
+struct h5_rsfunctor__;
+struct h6_rsfunctor__;
+struct h7_rsfunctor__;
+struct h8_rsfunctor__;
 template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 g1(const int& start, const int& end, const std::vector<T2__>& y_slice,
@@ -16317,113 +16444,113 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'reduce_sum_m3.stan', line 201, column 2 to column 13)",
-                                                      " (in 'reduce_sum_m3.stan', line 202, column 2 to column 18)",
-                                                      " (in 'reduce_sum_m3.stan', line 203, column 2 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 204, column 2 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 205, column 2 to column 16)",
-                                                      " (in 'reduce_sum_m3.stan', line 206, column 2 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 207, column 2 to column 25)",
-                                                      " (in 'reduce_sum_m3.stan', line 208, column 2 to column 24)",
-                                                      " (in 'reduce_sum_m3.stan', line 209, column 2 to column 10)",
-                                                      " (in 'reduce_sum_m3.stan', line 210, column 2 to column 16)",
-                                                      " (in 'reduce_sum_m3.stan', line 211, column 2 to column 20)",
-                                                      " (in 'reduce_sum_m3.stan', line 212, column 2 to column 19)",
-                                                      " (in 'reduce_sum_m3.stan', line 213, column 2 to column 20)",
-                                                      " (in 'reduce_sum_m3.stan', line 250, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 251, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 252, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 253, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 205, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m3.stan', line 206, column 2 to column 18)",
+                                                      " (in 'reduce_sum_m3.stan', line 207, column 2 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 208, column 2 to column 21)",
+                                                      " (in 'reduce_sum_m3.stan', line 209, column 2 to column 16)",
+                                                      " (in 'reduce_sum_m3.stan', line 210, column 2 to column 21)",
+                                                      " (in 'reduce_sum_m3.stan', line 211, column 2 to column 25)",
+                                                      " (in 'reduce_sum_m3.stan', line 212, column 2 to column 24)",
+                                                      " (in 'reduce_sum_m3.stan', line 213, column 2 to column 10)",
+                                                      " (in 'reduce_sum_m3.stan', line 214, column 2 to column 16)",
+                                                      " (in 'reduce_sum_m3.stan', line 215, column 2 to column 20)",
+                                                      " (in 'reduce_sum_m3.stan', line 216, column 2 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 217, column 2 to column 20)",
                                                       " (in 'reduce_sum_m3.stan', line 254, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 255, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 256, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 257, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 258, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 259, column 2 to column 38)",
-                                                      " (in 'reduce_sum_m3.stan', line 260, column 2 to column 38)",
-                                                      " (in 'reduce_sum_m3.stan', line 261, column 2 to column 37)",
-                                                      " (in 'reduce_sum_m3.stan', line 262, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 263, column 2 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 264, column 2 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 265, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 258, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 259, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 260, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 261, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 262, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 263, column 2 to column 38)",
+                                                      " (in 'reduce_sum_m3.stan', line 264, column 2 to column 38)",
+                                                      " (in 'reduce_sum_m3.stan', line 265, column 2 to column 37)",
                                                       " (in 'reduce_sum_m3.stan', line 266, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 267, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 268, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 269, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 267, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 268, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 269, column 2 to column 40)",
                                                       " (in 'reduce_sum_m3.stan', line 270, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 271, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 272, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 273, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 274, column 2 to line 277, column 35)",
-                                                      " (in 'reduce_sum_m3.stan', line 217, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 218, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 219, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 220, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 271, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 272, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 273, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 274, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 275, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 276, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 277, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 278, column 2 to line 281, column 35)",
                                                       " (in 'reduce_sum_m3.stan', line 221, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 222, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 223, column 2 to column 34)",
                                                       " (in 'reduce_sum_m3.stan', line 224, column 2 to column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 225, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 226, column 2 to column 38)",
-                                                      " (in 'reduce_sum_m3.stan', line 227, column 2 to column 38)",
-                                                      " (in 'reduce_sum_m3.stan', line 228, column 2 to column 37)",
-                                                      " (in 'reduce_sum_m3.stan', line 229, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 230, column 2 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 231, column 2 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 232, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 225, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 226, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 227, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 228, column 2 to column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 229, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 230, column 2 to column 38)",
+                                                      " (in 'reduce_sum_m3.stan', line 231, column 2 to column 38)",
+                                                      " (in 'reduce_sum_m3.stan', line 232, column 2 to column 37)",
                                                       " (in 'reduce_sum_m3.stan', line 233, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 234, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 235, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 236, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 234, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 235, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 236, column 2 to column 40)",
                                                       " (in 'reduce_sum_m3.stan', line 237, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 238, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 239, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 240, column 2 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 241, column 2 to line 244, column 34)",
-                                                      " (in 'reduce_sum_m3.stan', line 246, column 2 to column 16)",
-                                                      " (in 'reduce_sum_m3.stan', line 149, column 2 to column 8)",
-                                                      " (in 'reduce_sum_m3.stan', line 150, column 2 to column 14)",
-                                                      " (in 'reduce_sum_m3.stan', line 151, column 2 to column 19)",
-                                                      " (in 'reduce_sum_m3.stan', line 152, column 2 to column 23)",
-                                                      " (in 'reduce_sum_m3.stan', line 153, column 2 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 154, column 2 to column 17)",
-                                                      " (in 'reduce_sum_m3.stan', line 155, column 2 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 156, column 2 to column 26)",
-                                                      " (in 'reduce_sum_m3.stan', line 157, column 2 to column 25)",
-                                                      " (in 'reduce_sum_m3.stan', line 158, column 2 to column 11)",
-                                                      " (in 'reduce_sum_m3.stan', line 159, column 2 to column 17)",
-                                                      " (in 'reduce_sum_m3.stan', line 160, column 2 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 161, column 2 to column 20)",
+                                                      " (in 'reduce_sum_m3.stan', line 238, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 239, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 240, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 241, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 242, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 243, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 244, column 2 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 245, column 2 to line 248, column 34)",
+                                                      " (in 'reduce_sum_m3.stan', line 250, column 2 to column 16)",
+                                                      " (in 'reduce_sum_m3.stan', line 153, column 2 to column 8)",
+                                                      " (in 'reduce_sum_m3.stan', line 154, column 2 to column 14)",
+                                                      " (in 'reduce_sum_m3.stan', line 155, column 2 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 156, column 2 to column 23)",
+                                                      " (in 'reduce_sum_m3.stan', line 157, column 2 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 158, column 2 to column 17)",
+                                                      " (in 'reduce_sum_m3.stan', line 159, column 2 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 160, column 2 to column 26)",
+                                                      " (in 'reduce_sum_m3.stan', line 161, column 2 to column 25)",
                                                       " (in 'reduce_sum_m3.stan', line 162, column 2 to column 11)",
-                                                      " (in 'reduce_sum_m3.stan', line 163, column 2 to column 14)",
-                                                      " (in 'reduce_sum_m3.stan', line 164, column 2 to column 17)",
+                                                      " (in 'reduce_sum_m3.stan', line 163, column 2 to column 17)",
+                                                      " (in 'reduce_sum_m3.stan', line 164, column 2 to column 21)",
                                                       " (in 'reduce_sum_m3.stan', line 165, column 2 to column 20)",
-                                                      " (in 'reduce_sum_m3.stan', line 166, column 2 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 170, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 171, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 172, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 173, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 166, column 2 to column 11)",
+                                                      " (in 'reduce_sum_m3.stan', line 167, column 2 to column 14)",
+                                                      " (in 'reduce_sum_m3.stan', line 168, column 2 to column 17)",
+                                                      " (in 'reduce_sum_m3.stan', line 169, column 2 to column 20)",
+                                                      " (in 'reduce_sum_m3.stan', line 170, column 2 to column 21)",
                                                       " (in 'reduce_sum_m3.stan', line 174, column 2 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 175, column 2 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 176, column 2 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 177, column 2 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 178, column 2 to column 37)",
-                                                      " (in 'reduce_sum_m3.stan', line 179, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 180, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 181, column 2 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 182, column 2 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 183, column 2 to column 43)",
-                                                      " (in 'reduce_sum_m3.stan', line 184, column 2 to column 43)",
-                                                      " (in 'reduce_sum_m3.stan', line 185, column 2 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 178, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 179, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 180, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 181, column 2 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 182, column 2 to column 37)",
+                                                      " (in 'reduce_sum_m3.stan', line 183, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 184, column 2 to column 39)",
+                                                      " (in 'reduce_sum_m3.stan', line 185, column 2 to column 39)",
                                                       " (in 'reduce_sum_m3.stan', line 186, column 2 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 187, column 2 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 188, column 2 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 189, column 2 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 187, column 2 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 188, column 2 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 189, column 2 to column 43)",
                                                       " (in 'reduce_sum_m3.stan', line 190, column 2 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 191, column 2 to column 44)",
-                                                      " (in 'reduce_sum_m3.stan', line 192, column 2 to column 44)",
-                                                      " (in 'reduce_sum_m3.stan', line 193, column 2 to column 44)",
-                                                      " (in 'reduce_sum_m3.stan', line 194, column 2 to line 197, column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 191, column 2 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 192, column 2 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 193, column 2 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 194, column 2 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 195, column 2 to column 44)",
+                                                      " (in 'reduce_sum_m3.stan', line 196, column 2 to column 44)",
+                                                      " (in 'reduce_sum_m3.stan', line 197, column 2 to column 44)",
+                                                      " (in 'reduce_sum_m3.stan', line 198, column 2 to line 201, column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 3, column 4 to column 15)",
                                                       " (in 'reduce_sum_m3.stan', line 2, column 46 to line 4, column 3)",
                                                       " (in 'reduce_sum_m3.stan', line 6, column 4 to column 15)",
@@ -16472,68 +16599,92 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m3.stan', line 68, column 64 to line 70, column 3)",
                                                       " (in 'reduce_sum_m3.stan', line 72, column 4 to column 15)",
                                                       " (in 'reduce_sum_m3.stan', line 71, column 60 to line 73, column 3)",
-                                                      " (in 'reduce_sum_m3.stan', line 79, column 4 to column 15)",
-                                                      " (in 'reduce_sum_m3.stan', line 78, column 32 to line 80, column 3)",
-                                                      " (in 'reduce_sum_m3.stan', line 82, column 4 to column 10)",
-                                                      " (in 'reduce_sum_m3.stan', line 83, column 4 to column 16)",
-                                                      " (in 'reduce_sum_m3.stan', line 84, column 4 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 85, column 4 to column 25)",
-                                                      " (in 'reduce_sum_m3.stan', line 86, column 4 to column 24)",
-                                                      " (in 'reduce_sum_m3.stan', line 87, column 4 to column 19)",
-                                                      " (in 'reduce_sum_m3.stan', line 88, column 4 to column 24)",
-                                                      " (in 'reduce_sum_m3.stan', line 89, column 4 to column 28)",
-                                                      " (in 'reduce_sum_m3.stan', line 90, column 4 to column 27)",
-                                                      " (in 'reduce_sum_m3.stan', line 91, column 4 to column 13)",
-                                                      " (in 'reduce_sum_m3.stan', line 92, column 4 to column 19)",
-                                                      " (in 'reduce_sum_m3.stan', line 93, column 4 to column 23)",
-                                                      " (in 'reduce_sum_m3.stan', line 94, column 4 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 79, column 4 to line 83, column 28)",
+                                                      " (in 'reduce_sum_m3.stan', line 78, column 32 to line 84, column 3)",
+                                                      " (in 'reduce_sum_m3.stan', line 86, column 4 to column 10)",
+                                                      " (in 'reduce_sum_m3.stan', line 87, column 4 to column 16)",
+                                                      " (in 'reduce_sum_m3.stan', line 88, column 4 to column 21)",
+                                                      " (in 'reduce_sum_m3.stan', line 89, column 4 to column 25)",
+                                                      " (in 'reduce_sum_m3.stan', line 90, column 4 to column 24)",
+                                                      " (in 'reduce_sum_m3.stan', line 91, column 4 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 92, column 4 to column 24)",
+                                                      " (in 'reduce_sum_m3.stan', line 93, column 4 to column 28)",
+                                                      " (in 'reduce_sum_m3.stan', line 94, column 4 to column 27)",
                                                       " (in 'reduce_sum_m3.stan', line 95, column 4 to column 13)",
-                                                      " (in 'reduce_sum_m3.stan', line 96, column 4 to column 16)",
-                                                      " (in 'reduce_sum_m3.stan', line 97, column 4 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 96, column 4 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 97, column 4 to column 23)",
                                                       " (in 'reduce_sum_m3.stan', line 98, column 4 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 99, column 4 to column 23)",
-                                                      " (in 'reduce_sum_m3.stan', line 101, column 4 to column 15)",
-                                                      " (in 'reduce_sum_m3.stan', line 102, column 4 to column 20)",
-                                                      " (in 'reduce_sum_m3.stan', line 103, column 4 to column 24)",
-                                                      " (in 'reduce_sum_m3.stan', line 104, column 4 to column 23)",
-                                                      " (in 'reduce_sum_m3.stan', line 105, column 4 to column 18)",
-                                                      " (in 'reduce_sum_m3.stan', line 106, column 4 to column 23)",
-                                                      " (in 'reduce_sum_m3.stan', line 107, column 4 to column 27)",
-                                                      " (in 'reduce_sum_m3.stan', line 108, column 4 to column 26)",
-                                                      " (in 'reduce_sum_m3.stan', line 109, column 4 to column 12)",
-                                                      " (in 'reduce_sum_m3.stan', line 110, column 4 to column 18)",
-                                                      " (in 'reduce_sum_m3.stan', line 111, column 4 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 112, column 4 to column 21)",
-                                                      " (in 'reduce_sum_m3.stan', line 113, column 4 to column 22)",
-                                                      " (in 'reduce_sum_m3.stan', line 115, column 4 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 116, column 4 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 117, column 4 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 118, column 4 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 99, column 4 to column 13)",
+                                                      " (in 'reduce_sum_m3.stan', line 100, column 4 to column 16)",
+                                                      " (in 'reduce_sum_m3.stan', line 101, column 4 to column 19)",
+                                                      " (in 'reduce_sum_m3.stan', line 102, column 4 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 103, column 4 to column 23)",
+                                                      " (in 'reduce_sum_m3.stan', line 105, column 4 to column 15)",
+                                                      " (in 'reduce_sum_m3.stan', line 106, column 4 to column 20)",
+                                                      " (in 'reduce_sum_m3.stan', line 107, column 4 to column 24)",
+                                                      " (in 'reduce_sum_m3.stan', line 108, column 4 to column 23)",
+                                                      " (in 'reduce_sum_m3.stan', line 109, column 4 to column 18)",
+                                                      " (in 'reduce_sum_m3.stan', line 110, column 4 to column 23)",
+                                                      " (in 'reduce_sum_m3.stan', line 111, column 4 to column 27)",
+                                                      " (in 'reduce_sum_m3.stan', line 112, column 4 to column 26)",
+                                                      " (in 'reduce_sum_m3.stan', line 113, column 4 to column 12)",
+                                                      " (in 'reduce_sum_m3.stan', line 114, column 4 to column 18)",
+                                                      " (in 'reduce_sum_m3.stan', line 115, column 4 to column 22)",
+                                                      " (in 'reduce_sum_m3.stan', line 116, column 4 to column 21)",
+                                                      " (in 'reduce_sum_m3.stan', line 117, column 4 to column 22)",
                                                       " (in 'reduce_sum_m3.stan', line 119, column 4 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 120, column 4 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 121, column 4 to column 36)",
                                                       " (in 'reduce_sum_m3.stan', line 122, column 4 to column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 123, column 4 to column 38)",
-                                                      " (in 'reduce_sum_m3.stan', line 124, column 4 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 125, column 4 to column 40)",
-                                                      " (in 'reduce_sum_m3.stan', line 126, column 4 to column 39)",
-                                                      " (in 'reduce_sum_m3.stan', line 127, column 4 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 128, column 4 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 129, column 4 to column 42)",
-                                                      " (in 'reduce_sum_m3.stan', line 130, column 4 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 123, column 4 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 124, column 4 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 125, column 4 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 126, column 4 to column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 127, column 4 to column 38)",
+                                                      " (in 'reduce_sum_m3.stan', line 128, column 4 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 129, column 4 to column 40)",
+                                                      " (in 'reduce_sum_m3.stan', line 130, column 4 to column 39)",
                                                       " (in 'reduce_sum_m3.stan', line 131, column 4 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 132, column 4 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 133, column 4 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 134, column 4 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 132, column 4 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 133, column 4 to column 42)",
+                                                      " (in 'reduce_sum_m3.stan', line 134, column 4 to column 42)",
                                                       " (in 'reduce_sum_m3.stan', line 135, column 4 to column 41)",
-                                                      " (in 'reduce_sum_m3.stan', line 136, column 4 to column 43)",
-                                                      " (in 'reduce_sum_m3.stan', line 137, column 4 to column 43)",
-                                                      " (in 'reduce_sum_m3.stan', line 138, column 4 to column 43)",
-                                                      " (in 'reduce_sum_m3.stan', line 139, column 4 to line 142, column 36)",
-                                                      " (in 'reduce_sum_m3.stan', line 144, column 4 to column 15)",
-                                                      " (in 'reduce_sum_m3.stan', line 81, column 11 to line 145, column 3)"};
+                                                      " (in 'reduce_sum_m3.stan', line 136, column 4 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 137, column 4 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 138, column 4 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 139, column 4 to column 41)",
+                                                      " (in 'reduce_sum_m3.stan', line 140, column 4 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 141, column 4 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 142, column 4 to column 43)",
+                                                      " (in 'reduce_sum_m3.stan', line 143, column 4 to line 146, column 36)",
+                                                      " (in 'reduce_sum_m3.stan', line 148, column 4 to column 15)",
+                                                      " (in 'reduce_sum_m3.stan', line 85, column 11 to line 149, column 3)"};
 
-struct s_rsfunctor__;struct g12_rsfunctor__;struct g11_rsfunctor__;struct g10_rsfunctor__;struct g9_rsfunctor__;struct g8_rsfunctor__;struct g7_rsfunctor__;struct g6_rsfunctor__;struct g5_rsfunctor__;struct g4_rsfunctor__;struct g3_rsfunctor__;struct g2_rsfunctor__;struct g1_rsfunctor__;struct f12_rsfunctor__;struct f11_rsfunctor__;struct f10_rsfunctor__;struct f9_rsfunctor__;struct f8_rsfunctor__;struct f7_rsfunctor__;struct f6_rsfunctor__;struct f5_rsfunctor__;struct f4_rsfunctor__;struct f3_rsfunctor__;struct f2_rsfunctor__;struct f1_rsfunctor__;
+struct s_rsfunctor__;
+struct g12_rsfunctor__;
+struct g11_rsfunctor__;
+struct g10_rsfunctor__;
+struct g9_rsfunctor__;
+struct g8_rsfunctor__;
+struct g7_rsfunctor__;
+struct g6_rsfunctor__;
+struct g5_rsfunctor__;
+struct g4_rsfunctor__;
+struct g3_rsfunctor__;
+struct g2_rsfunctor__;
+struct g1_rsfunctor__;
+struct f12_rsfunctor__;
+struct f11_rsfunctor__;
+struct f10_rsfunctor__;
+struct f9_rsfunctor__;
+struct f8_rsfunctor__;
+struct f7_rsfunctor__;
+struct f6_rsfunctor__;
+struct f5_rsfunctor__;
+struct f4_rsfunctor__;
+struct f3_rsfunctor__;
+struct f2_rsfunctor__;
+struct f1_rsfunctor__;
 template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 f1(const int& start, const int& end, const std::vector<T2__>& y_slice,
@@ -17634,7 +17785,8 @@ s(const int& start, const int& end, const std::vector<T2__>& y_slice,
   
   try {
     current_statement__ = 156;
-    return 0.0;
+    return reduce_sum<s_rsfunctor__>(y_slice, 1, pstream__, a, b, c, d, e, f,
+             g, h, i, j, k, l, m, n, o, p, q);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
