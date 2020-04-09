@@ -327,15 +327,24 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   pp_method_b ppf "void" "write_array" params intro generate_quantities
 
-let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
+let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st) =
   let iter d pp_body =
     let loopvar, gensym_exit = Common.Gensym.enter () in
-    pp_for_loop ppf
+    match st with
+    | SizedType.SSparseMatrix _ | SStaticSparseMatrix _ ->
+      pp_for_loop ppf
       ( loopvar
-      , Expr.Helpers.loop_bottom
+      , Expr.Helpers.zero
       , d
       , pp_block
       , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
+    | _ ->
+      pp_for_loop ppf
+        ( loopvar
+        , Expr.Helpers.loop_bottom
+        , d
+        , pp_block
+        , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
     gensym_exit ()
   in
   match dims with
@@ -343,7 +352,7 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
   | dim :: dims ->
       iter dim (fun ppf (i, idcs) ->
           pf ppf "%a" pp_block
-            (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
+            (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body, st)) )
 
 let pp_constrained_param_names ppf {Program.output_vars; _} =
   let params =
@@ -370,7 +379,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
   in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name, st)
   in
   pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
@@ -421,7 +430,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
   in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name, st)
   in
   pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
