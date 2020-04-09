@@ -42,6 +42,7 @@ let rec pp ppf = function
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
       (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   match ad_ty with
   | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
