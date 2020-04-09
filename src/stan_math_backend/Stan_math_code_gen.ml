@@ -316,7 +316,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param ppbody (?A pretty printer of the method's body) 
  *)
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>%s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
     params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
@@ -371,7 +371,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ]
   in
   let intro =
-    [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
+    [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (prog_name, "write_array")
     ; strf "%a" pp_unused "function__"

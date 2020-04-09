@@ -564,8 +564,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1226,12 +1227,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimize_glm_model_namespace::write_array";
@@ -1342,9 +1344,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -1530,7 +1533,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha_v");
@@ -1544,7 +1547,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     names__.push_back("X_rv_p");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(k);
@@ -1578,9 +1581,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -1625,9 +1629,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -1672,13 +1677,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();

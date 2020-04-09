@@ -182,8 +182,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -250,12 +251,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
@@ -319,9 +321,10 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -372,7 +375,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mu");
@@ -381,7 +384,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     names__.push_back("theta");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -397,9 +400,10 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     param_names__.push_back(std::string() + "tau");
@@ -420,9 +424,10 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     param_names__.push_back(std::string() + "tau");
@@ -443,13 +448,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -1098,21 +1103,19 @@ return foo(n, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
+std::vector<stan::promote_args_t<T0__, T1__,
+T2__>>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) ;
 
 template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
+std::vector<stan::promote_args_t<T0__, T1__,
+T2__>>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1141,8 +1144,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
 
 struct sho_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
+std::vector<stan::promote_args_t<T0__, T1__,
+T2__>>
 operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<double>& x,
            const std::vector<int>& x_int, std::ostream* pstream__)  const 
@@ -1177,9 +1180,9 @@ return foo_bar0(pstream__);
 };
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 foo_bar1(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1196,7 +1199,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
@@ -1204,11 +1207,10 @@ return foo_bar1(x, pstream__);
 };
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1225,8 +1227,8 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct foo_bar2_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return foo_bar2(x, y, pstream__);
@@ -1234,9 +1236,9 @@ return foo_bar2(x, y, pstream__);
 };
 
 template <bool propto__, typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T1__>;
   
   try {
     current_statement__ = 275;
@@ -1251,7 +1253,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lpmf_functor__ {
 template <bool propto__, typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lpmf(y, lambda, pstream__);
@@ -1259,9 +1261,9 @@ return foo_lpmf(y, lambda, pstream__);
 };
 
 template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1278,7 +1280,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lcdf_functor__ {
 template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lcdf(y, lambda, pstream__);
@@ -1286,9 +1288,9 @@ return foo_lcdf(y, lambda, pstream__);
 };
 
 template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1305,7 +1307,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lccdf_functor__ {
 template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
+stan::promote_args_t<T1__>
 operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lccdf(y, lambda, pstream__);
@@ -1313,12 +1315,11 @@ return foo_lccdf(y, lambda, pstream__);
 };
 
 template <typename T0__, typename T1__, typename RNG>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
         std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1335,8 +1336,8 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
 
 struct foo_rng_functor__ {
 template <typename T0__, typename T1__, typename RNG>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
            std::ostream* pstream__)  const 
 {
@@ -1349,7 +1350,7 @@ typename T_lp_accum__>
 void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   
   try {
     current_statement__ = 283;
@@ -1692,9 +1693,9 @@ return foo_2(a, pstream__);
 };
 
 template <typename T0__>
-std::vector<typename boost::math::tools::promote_args<T0__>::type>
+std::vector<stan::promote_args_t<T0__>>
 foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1711,7 +1712,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
 
 struct foo_3_functor__ {
 template <typename T0__>
-std::vector<typename boost::math::tools::promote_args<T0__>::type>
+std::vector<stan::promote_args_t<T0__>>
 operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
 {
 return foo_3(t, n, pstream__);
@@ -1720,10 +1721,10 @@ return foo_3(t, n, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   
   try {
     current_statement__ = 376;
@@ -1739,7 +1740,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -1750,7 +1751,7 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1778,14 +1779,11 @@ return foo_4(x, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
+stan::promote_args_t<T0__, T1__, T2__,
+T3__>
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
               const T3__& min_, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1838,8 +1836,8 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
 
 struct relative_diff_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
+stan::promote_args_t<T0__, T1__, T2__,
+T3__>
 operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__& min_,
            std::ostream* pstream__)  const 
 {
@@ -1848,14 +1846,13 @@ return relative_diff(x, y, max_, min_, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, 1>
 foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
       const Eigen::Matrix<T1__, -1, 1>& job_params,
       const std::vector<double>& data_r, const std::vector<int>& data_i,
       std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1873,8 +1870,8 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
 
 struct foo_5_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const Eigen::Matrix<T1__, -1, 1>& job_params,
            const std::vector<double>& data_r, const std::vector<int>& data_i,
@@ -1886,15 +1883,15 @@ return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type
+stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__>
 foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
               const T4__& x5, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+  using local_scalar_t__ = stan::promote_args_t<T0__,
           T1__,
           T2__,
           T3__,
-          T4__>::type;
+          T4__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -1912,8 +1909,8 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
 struct foo_five_args_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type
+stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__>
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, std::ostream* pstream__)  const 
 {
@@ -1924,17 +1921,17 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type
+stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__, stan::promote_args_t<T5__>>
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
                  const T3__& x4, const T4__& x5, const T5__& x6,
                  T_lp__& lp__, T_lp_accum__& lp_accum__,
                  std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+  using local_scalar_t__ = stan::promote_args_t<T0__,
           T1__,
           T2__,
           T3__,
-          T4__, typename boost::math::tools::promote_args<T5__>::type>::type;
+          T4__, stan::promote_args_t<T5__>>;
   
   try {
     current_statement__ = 394;
@@ -1951,8 +1948,8 @@ struct foo_five_args_lp_functor__ {
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type
+stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__, stan::promote_args_t<T5__>>
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, const T5__& x6, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
@@ -1962,10 +1959,10 @@ return foo_five_args_lp(x1, x2, x3, x4, x5, x6, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, -1>
 covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2011,7 +2008,7 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
 
 struct covsqrt2corsqrt_functor__ {
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
            std::ostream* pstream__)  const 
 {
@@ -2032,14 +2029,14 @@ f0(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2090,14 +2087,14 @@ f1(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2145,14 +2142,14 @@ f2(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2200,14 +2197,14 @@ f3(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2244,9 +2241,9 @@ return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type
+stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>
 f4(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2257,14 +2254,14 @@ f4(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2282,9 +2279,9 @@ f4(const int& a1, const std::vector<int>& a2,
 struct f4_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type
+stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2303,9 +2300,9 @@ return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>
+std::vector<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>>
 f5(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2316,14 +2313,14 @@ f5(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2341,9 +2338,9 @@ f5(const int& a1, const std::vector<int>& a2,
 struct f5_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>
+std::vector<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2362,9 +2359,9 @@ return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>>
+std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>>>
 f6(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2375,14 +2372,14 @@ f6(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2400,9 +2397,9 @@ f6(const int& a1, const std::vector<int>& a2,
 struct f6_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>>
+std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2421,9 +2418,9 @@ return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>
 f7(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2434,14 +2431,14 @@ f7(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2459,9 +2456,9 @@ f7(const int& a1, const std::vector<int>& a2,
 struct f7_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2480,9 +2477,9 @@ return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>
+std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>>
 f8(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2493,14 +2490,14 @@ f8(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2518,9 +2515,9 @@ f8(const int& a1, const std::vector<int>& a2,
 struct f8_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>
+std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2539,9 +2536,9 @@ return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>>
+std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>>>
 f9(const int& a1, const std::vector<int>& a2,
    const std::vector<std::vector<int>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2552,14 +2549,14 @@ f9(const int& a1, const std::vector<int>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2577,9 +2574,9 @@ f9(const int& a1, const std::vector<int>& a2,
 struct f9_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>>
+std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, 1>>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2598,9 +2595,9 @@ return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>
 f10(const int& a1, const std::vector<int>& a2,
     const std::vector<std::vector<int>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2611,14 +2608,14 @@ f10(const int& a1, const std::vector<int>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2636,9 +2633,9 @@ f10(const int& a1, const std::vector<int>& a2,
 struct f10_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2657,9 +2654,9 @@ return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>
+std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>>
 f11(const int& a1, const std::vector<int>& a2,
     const std::vector<std::vector<int>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2670,14 +2667,14 @@ f11(const int& a1, const std::vector<int>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2695,9 +2692,9 @@ f11(const int& a1, const std::vector<int>& a2,
 struct f11_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>
+std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2716,9 +2713,9 @@ return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>>
+std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>>>
 f12(const int& a1, const std::vector<int>& a2,
     const std::vector<std::vector<int>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2729,14 +2726,14 @@ f12(const int& a1, const std::vector<int>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__, typename boost::math::tools::promote_args<T8__,
+          T7__, stan::promote_args_t<T8__,
           T9__,
           T10__,
-          T11__>::type>::type;
+          T11__>>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2754,9 +2751,9 @@ f12(const int& a1, const std::vector<int>& a2,
 struct f12_functor__ {
 template <typename T3__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>>
+std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, T6__, T7__, stan::promote_args_t<T8__,
+T9__, T10__,
+T11__>>, -1, -1>>>
 operator()(const int& a1, const std::vector<int>& a2,
            const std::vector<std::vector<int>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2904,9 +2901,9 @@ return vecfoo(pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 vecmufoo(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2936,7 +2933,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmufoo_functor__ {
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmufoo(mu, pstream__);
@@ -2944,9 +2941,9 @@ return vecmufoo(mu, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 vecmubar(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -2981,7 +2978,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmubar_functor__ {
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmubar(mu, pstream__);
@@ -2989,15 +2986,13 @@ return vecmubar(mu, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
                const Eigen::Matrix<T1__, -1, 1>& y,
                const std::vector<T2__>& dat, const std::vector<int>& dat_int,
                std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -3030,8 +3025,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
 
 struct algebra_system_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
            const std::vector<int>& dat_int, std::ostream* pstream__)  const 
@@ -3041,14 +3036,13 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, 1>
 binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
           const Eigen::Matrix<T1__, -1, 1>& theta,
           const std::vector<double>& x_r, const std::vector<int>& x_i,
           std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -3079,8 +3073,8 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
 
 struct binomialf_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
            const Eigen::Matrix<T1__, -1, 1>& theta,
            const std::vector<double>& x_r, const std::vector<int>& x_i,
@@ -4222,8 +4216,9 @@ class mother_model : public model_base_crtp<mother_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5270,12 +5265,13 @@ class mother_model : public model_base_crtp<mother_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "mother_model_namespace::write_array";
@@ -7098,9 +7094,10 @@ class mother_model : public model_base_crtp<mother_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -7770,7 +7767,7 @@ class mother_model : public model_base_crtp<mother_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("p_real");
@@ -7837,7 +7834,7 @@ class mother_model : public model_base_crtp<mother_model> {
     names__.push_back("idx_res5");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -8184,9 +8181,10 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "p_real");
     for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -8672,9 +8670,10 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "p_real");
     for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -9142,13 +9141,13 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -9464,15 +9463,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<T3__>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -9501,8 +9497,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
 
 struct sho_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x,
            const std::vector<int>& x_int, std::ostream* pstream__)  const 
@@ -9512,15 +9508,12 @@ return sho(t, y, theta, x, x_int, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
+stan::promote_args_t<T0__, T1__, T2__,
+T3__>
 integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
           const std::vector<T3__>& x_r, const std::vector<int>& x_i,
           std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -9537,8 +9530,8 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
 
 struct integrand_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
+stan::promote_args_t<T0__, T1__, T2__,
+T3__>
 operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
            const std::vector<T3__>& x_r, const std::vector<int>& x_i,
            std::ostream* pstream__)  const 
@@ -9548,15 +9541,13 @@ return integrand(x, xc, theta, x_r, x_i, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
     const Eigen::Matrix<T1__, -1, 1>& job_params,
     const std::vector<T2__>& data_r, const std::vector<int>& data_i,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -9574,8 +9565,8 @@ foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
 
 struct foo_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const Eigen::Matrix<T1__, -1, 1>& job_params,
            const std::vector<T2__>& data_r, const std::vector<int>& data_i,
@@ -9586,9 +9577,9 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 };
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 map_rectfake(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -9605,7 +9596,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
 
 struct map_rectfake_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+stan::promote_args_t<T0__>
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return map_rectfake(x, pstream__);
@@ -9613,15 +9604,13 @@ return map_rectfake(x, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
                const Eigen::Matrix<T1__, -1, 1>& y,
                const std::vector<T2__>& dat, const std::vector<int>& dat_int,
                std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -9654,8 +9643,8 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
 
 struct algebra_system_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& x,
            const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
            const std::vector<int>& dat_int, std::ostream* pstream__)  const 
@@ -9919,8 +9908,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10296,12 +10286,13 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "motherHOF_model_namespace::write_array";
@@ -10709,9 +10700,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -10840,7 +10832,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("y0_p");
@@ -10868,7 +10860,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.push_back("y_hat_gq");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(2);
@@ -10939,9 +10931,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
@@ -11025,9 +11018,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
@@ -11111,13 +11105,13 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -11727,8 +11721,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12344,12 +12339,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimize_glm_model_namespace::write_array";
@@ -12460,9 +12456,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -12648,7 +12645,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha_v");
@@ -12662,7 +12659,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     names__.push_back("X_rv_p");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(k);
@@ -12696,9 +12693,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -12743,9 +12741,10 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -12790,13 +12789,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -13011,8 +13010,9 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13070,12 +13070,13 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "tilde_block_model_namespace::write_array";
@@ -13109,9 +13110,10 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -13134,13 +13136,13 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("x");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -13148,9 +13150,10 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -13163,9 +13166,10 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -13178,13 +13182,13 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -13419,8 +13423,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13538,12 +13543,13 @@ class truncate_model : public model_base_crtp<truncate_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "truncate_model_namespace::write_array";
@@ -13582,9 +13588,10 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -13612,14 +13619,14 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("m");
     names__.push_back("y");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -13629,9 +13636,10 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "m");
     param_names__.push_back(std::string() + "y");
@@ -13645,9 +13653,10 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "m");
     param_names__.push_back(std::string() + "y");
@@ -13661,13 +13670,13 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -13834,11 +13843,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'user_constrain.stan', line 2, column 36 to line 4, column 3)"};
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13855,8 +13863,8 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct lb_constrain_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
+stan::promote_args_t<T0__,
+T1__>
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return lb_constrain(x, y, pstream__);
@@ -13902,8 +13910,9 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13939,12 +13948,13 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "user_constrain_model_namespace::write_array";
@@ -13978,9 +13988,10 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -14003,13 +14014,13 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("x");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -14017,9 +14028,10 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -14032,9 +14044,10 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -14047,13 +14060,13 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
