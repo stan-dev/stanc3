@@ -629,6 +629,7 @@ using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
+using std::pow;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
