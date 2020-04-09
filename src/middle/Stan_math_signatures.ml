@@ -83,9 +83,16 @@ let rec ints_to_real = function
   | x -> x
 
 let allowed_slice_types =
-  [ UnsizedType.UArray UReal; UArray UInt; UArray UMatrix; UArray UVector
-  ; UArray URowVector; UArray (UArray UReal) ]
-
+  let allowed_dimensionality = [1; 2; 3; 4; 5; 6; 7] in
+  let base_slice_type i = [bare_array_type (UnsizedType.UReal, i);
+                           bare_array_type (UnsizedType.UInt, i);
+                           bare_array_type (UnsizedType.UMatrix, i);
+                           bare_array_type (UnsizedType.UVector, i);
+                           bare_array_type (UnsizedType.URowVector, i)
+                           ]
+  in
+  List.concat (List.map ~f:base_slice_type allowed_dimensionality)  
+  
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]

@@ -136,9 +136,9 @@ parameters {
   vector[N] a2[N];
   real a1[N];
   
-  //matrix[N, N] y8[N, N];
-  //row_vector[N] y7[N, N]; 
-  //vector[N] y6[N, N];
+  matrix[N, N] y8[N, N];
+  row_vector[N] y7[N, N]; 
+  vector[N] y6[N, N];
   real y5[N, N];
   matrix[N, N] y4[N];
   row_vector[N] y3[N]; 
@@ -156,9 +156,9 @@ model {
   target += reduce_sum(h2, x, 1, a2);
   target += reduce_sum(h1, x, 1, a1);
   
-  //target += reduce_sum(g8, y8, 1);
-  //target += reduce_sum(g7, y7, 1);
-  //target += reduce_sum(g6, y6, 1);
+  target += reduce_sum(g8, y8, 1);
+  target += reduce_sum(g7, y7, 1);
+  target += reduce_sum(g6, y6, 1);
   target += reduce_sum(g5, y5, 1);
   target += reduce_sum(g4, y4, 1);
   target += reduce_sum(g3, y3, 1);

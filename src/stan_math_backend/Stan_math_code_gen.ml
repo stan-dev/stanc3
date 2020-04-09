@@ -699,8 +699,26 @@ let pp_prog ppf (p : Program.Typed.t) =
   let pp_fun_def_with_rs_list ppf fblock =
     pp_fun_def ppf fblock (fun_used_in_reduce_sum p)
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %a@ %a@ }@ @]" version
+  let remove_elt e l =
+  let rec go l acc = match l with
+    | [] -> List.rev acc
+    | x::xs when e = x -> go xs acc
+    | x::xs -> go xs (x::acc)
+  in
+  go l []
+  in
+  let remove_duplicates l =
+  let rec go l acc = match l with
+    | [] -> List.rev acc
+    | x :: xs -> go (remove_elt x xs) (x::acc)
+  in 
+  go l []
+  in
+  let reduce_sum_struct_decl = 
+    List.map ~f:(fun x -> "struct "^ x ^ reduce_sum_functor_suffix ^ ";") (remove_duplicates (fun_used_in_reduce_sum p)) in
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s%a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
+    (String.concat ~sep:"" reduce_sum_struct_decl)
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
