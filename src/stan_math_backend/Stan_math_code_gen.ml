@@ -684,15 +684,13 @@ let fun_used_in_reduce_sum p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     match pattern with
     | FunApp (StanLib, "reduce_sum", {pattern= Var f; _} :: _) -> f :: accum
-    | FunApp (StanLib, _, fk) -> 
-    List.concat [List.concat (List.map ~f:(fun i -> (find_functors_expr String.Set.empty i)) fk);accum]
-    | _ -> accum
+    | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x
   in
   let rec find_functors_stmt accum stmt =
     Stmt.Fixed.(
       Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt String.Set.empty p
+  Program.fold find_functors_expr find_functors_stmt [] p
 
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)

@@ -14,6 +14,8 @@ let functions_requiring_namespace =
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
     ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
 
+(* let reduce_sum_functions = ("reduce_sum" | "reduce_sum_static") *)
+
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
