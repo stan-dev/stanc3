@@ -268,7 +268,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const final " rt name (list ~sep:comma string)
     params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
@@ -283,10 +283,10 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       pf ppf "names__.clear();@ " ;
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
-  let pp_get_dims ppf {Program.output_vars; _} =
-  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@}" 
+let pp_get_dims ppf {Program.output_vars; _} =
+  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" 
     (list ~sep:comma pp_expr) inner_dims in
-  let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);" pp_pack dims in
+  let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);@," pp_pack dims in
   let pp_output_var ppf =
     (list ~sep:cut pp_add_pack)
       ppf
@@ -298,8 +298,7 @@ let pp_get_param_names ppf {Program.output_vars; _} =
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
-    ["dimss__.clear();"
-    ; "std::vector<size_t> dims__;"] (fun ppf ->
+    ["dimss__.clear();"] (fun ppf ->
       pp_output_var ppf ; )
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
@@ -489,7 +488,7 @@ let pp_overloads ppf () =
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = 0) const {
+                     std::ostream* pstream = 0) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -504,7 +503,7 @@ let pp_overloads ppf () =
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = 0) const {
+               std::ostream* pstream = 0) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -515,7 +514,7 @@ let pp_overloads ppf () =
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__) const {
+                         std::ostream* pstream__) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
