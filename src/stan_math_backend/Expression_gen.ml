@@ -309,11 +309,7 @@ and gen_fun_app ppf fname es =
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( true
-        , "reduce_sum"
-        , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
-          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
-      | ( true
-        , "reduce_sum_static"
+        , ("reduce_sum" | "reduce_sum_static")
         , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->

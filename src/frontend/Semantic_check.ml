@@ -315,9 +315,13 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Validate.error
 
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
+  let arg_match (x_ad, x_t) y = 
+    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
+    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
+  in
   let args_match a b =
     if List.length a = List.length b then
-      List.for_all2_exn ~f:(fun (_, x) y -> x = y.emeta.type_) a b
+      List.for_all2_exn ~f:arg_match a b
     else false
   in
   let return_generic_error =

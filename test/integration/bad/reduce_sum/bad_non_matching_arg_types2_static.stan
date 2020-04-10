@@ -4,10 +4,14 @@ functions {
   }  
 }
 
+transformed data {
+  real b[5];
+}
+
 parameters {
   real a[5];
 }
 
 model {
-    target += reduce_sum_static(my_func, a, 1, 0.0, 0);
+    target += reduce_sum_static(my_func, a, 1, 0.0, b);
 }
