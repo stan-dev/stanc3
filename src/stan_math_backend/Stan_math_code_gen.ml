@@ -682,45 +682,29 @@ let pp_register_map_rect_functors ppf p =
 
 let fun_used_in_reduce_sum p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
-    match pattern with
-    | FunApp (StanLib, x, {pattern= Var f; _} :: _) when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x -> f :: accum
-    | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x
+    String.Set.union accum
+    (match pattern with
+    | FunApp (StanLib, x, {pattern= Var f; _} :: _) when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x -> String.Set.of_list [f]
+    | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x)
   in
   let rec find_functors_stmt accum stmt =
     Stmt.Fixed.(
       Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt [] p
+  Program.fold find_functors_expr find_functors_stmt String.Set.empty p
 
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   let pp_fun_def_with_rs_list ppf fblock =
-    pp_fun_def ppf fblock (fun_used_in_reduce_sum p)
-  in
-  let remove_elt e l =
-    let rec go l acc =
-      match l with
-      | [] -> List.rev acc
-      | x :: xs when e = x -> go xs acc
-      | x :: xs -> go xs (x :: acc)
-    in
-    go l []
-  in
-  let remove_duplicates l =
-    let rec go l acc =
-      match l with
-      | [] -> List.rev acc
-      | x :: xs -> go (remove_elt x xs) (x :: acc)
-    in
-    go l []
+    pp_fun_def ppf fblock (String.Set.to_list (fun_used_in_reduce_sum p))
   in
   let reduce_sum_struct_decl =
     List.map
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
-      (remove_duplicates (fun_used_in_reduce_sum p))
+      (String.Set.to_list (fun_used_in_reduce_sum p))
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s%a@ %a@ }@ @]" version
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
     (String.concat ~sep:"\n" reduce_sum_struct_decl)
     (list ~sep:cut pp_fun_def_with_rs_list)

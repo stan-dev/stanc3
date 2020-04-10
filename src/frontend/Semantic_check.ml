@@ -321,8 +321,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
     && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
   in
   let args_match a b =
-    if List.length a = List.length b then List.for_all2_exn ~f:arg_match a b
-    else false
+    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
   in
   let return_generic_error =
     es

@@ -104,6 +104,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'eight_schools_ncp.stan', line 4, column 2 to column 25)"};
 
 
+
 class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> {
 
  private:
@@ -1063,6 +1064,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 311, column 4 to column 18)",
                                                       " (in 'mother.stan', line 312, column 4 to column 16)",
                                                       " (in 'mother.stan', line 309, column 78 to line 313, column 3)"};
+
 
 int
 foo(const int& n, std::ostream* pstream__) ;
@@ -9463,6 +9465,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 29, column 4 to column 15)",
                                                       " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
 
+
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type>
@@ -11477,6 +11480,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimize_glm.stan', line 22, column 2 to column 16)"};
 
 
+
 class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 
  private:
@@ -12975,8 +12979,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m1.stan', line 10, column 4 to line 14, column 5)",
                                                       " (in 'reduce_sum_m1.stan', line 9, column 55 to line 15, column 3)"};
 
+struct g_rsfunctor__;
 struct h_rsfunctor__;
-struct g_rsfunctor__;template <typename T2__>
+template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 g(const int& start, const int& end, const std::vector<T2__>& y_slice,
   std::ostream* pstream__) {
@@ -16666,32 +16671,32 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m3.stan', line 152, column 4 to column 15)",
                                                       " (in 'reduce_sum_m3.stan', line 88, column 11 to line 153, column 3)"};
 
-struct s_rsfunctor__;
-struct g12_rsfunctor__;
-struct g11_rsfunctor__;
-struct g10_rsfunctor__;
-struct g9_rsfunctor__;
-struct g8_rsfunctor__;
-struct g7_rsfunctor__;
-struct g6_rsfunctor__;
-struct g5_rsfunctor__;
-struct g4_rsfunctor__;
-struct g3_rsfunctor__;
-struct g2_rsfunctor__;
-struct g1_rsfunctor__;
-struct f12_rsfunctor__;
-struct f11_rsfunctor__;
-struct f10_rsfunctor__;
-struct f9_rsfunctor__;
-struct f8_rsfunctor__;
-struct f7_rsfunctor__;
-struct f6_rsfunctor__;
-struct f5_rsfunctor__;
-struct f4_rsfunctor__;
-struct f3_rsfunctor__;
-struct f2_rsfunctor__;
-struct f1a_rsfunctor__;
 struct f1_rsfunctor__;
+struct f10_rsfunctor__;
+struct f11_rsfunctor__;
+struct f12_rsfunctor__;
+struct f1a_rsfunctor__;
+struct f2_rsfunctor__;
+struct f3_rsfunctor__;
+struct f4_rsfunctor__;
+struct f5_rsfunctor__;
+struct f6_rsfunctor__;
+struct f7_rsfunctor__;
+struct f8_rsfunctor__;
+struct f9_rsfunctor__;
+struct g1_rsfunctor__;
+struct g10_rsfunctor__;
+struct g11_rsfunctor__;
+struct g12_rsfunctor__;
+struct g2_rsfunctor__;
+struct g3_rsfunctor__;
+struct g4_rsfunctor__;
+struct g5_rsfunctor__;
+struct g6_rsfunctor__;
+struct g7_rsfunctor__;
+struct g8_rsfunctor__;
+struct g9_rsfunctor__;
+struct s_rsfunctor__;
 template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 f1(const int& start, const int& end, const std::vector<T2__>& y_slice,
@@ -20787,6 +20792,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'tilde-block.stan', line 2, column 4 to column 10)"};
 
 
+
 class tilde_block_model : public model_base_crtp<tilde_block_model> {
 
  private:
@@ -21186,6 +21192,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'truncate.stan', line 17, column 4 to column 28)",
                                                       " (in 'truncate.stan', line 2, column 4 to column 10)",
                                                       " (in 'truncate.stan', line 3, column 4 to column 11)"};
+
 
 
 class truncate_model : public model_base_crtp<truncate_model> {
@@ -21653,6 +21660,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'user_constrain.stan', line 10, column 2 to column 19)",
                                                       " (in 'user_constrain.stan', line 3, column 4 to column 13)",
                                                       " (in 'user_constrain.stan', line 2, column 36 to line 4, column 3)"};
+
 
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
