@@ -139,8 +139,7 @@ let check_fresh_variable_basic id is_nullary_function =
       Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
          || Stan_math_signatures.stan_math_returntype id.name [] = None )
-      || String.equal id.name "reduce_sum"
-      || String.equal id.name "reduce_sum_static"
+      || (List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions id.name)
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -375,7 +374,7 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib when String.equal id.name "reduce_sum" ->
+  | StanLib when List.mem ~equal:String.equal Stan_math_signatures.reduce_sum_functions id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
   | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es

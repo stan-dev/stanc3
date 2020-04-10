@@ -1,6 +1,5 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
-
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
@@ -140,6 +139,8 @@ let mk_declarative_sig (fnkinds, name, args) =
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
+let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
+
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
   ; (full_lpdf, "beta", [DVReal; DVReal; DVReal])
@@ -264,7 +265,7 @@ let stan_math_returntype name args =
       namematches
   in
   match name with
-  | "reduce_sum" | "reduce_sum_static" -> Some (UnsizedType.ReturnType UReal)
+  | x when List.mem ~equal:(String.equal) reduce_sum_functions x -> Some (UnsizedType.ReturnType UReal)
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)

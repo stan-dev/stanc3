@@ -14,8 +14,6 @@ let functions_requiring_namespace =
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
     ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
 
-(* let reduce_sum_functions = ("reduce_sum" | "reduce_sum_static") *)
-
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
@@ -149,7 +147,7 @@ let reduce_sum_functor_suffix = "_rsfunctor__"
 
 let functor_suffix_select f =
   match f with
-  | "reduce_sum" | "reduce_sum_static" -> reduce_sum_functor_suffix
+  | x when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x  -> reduce_sum_functor_suffix
   | _ -> functor_suffix
 
 let rec pp_index ppf = function
@@ -311,8 +309,8 @@ and gen_fun_app ppf fname es =
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( true
-        , ("reduce_sum" | "reduce_sum_static")
-        , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) ->
+        , x
+        , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
