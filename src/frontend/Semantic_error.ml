@@ -122,7 +122,7 @@ module TypeError = struct
         let lines =
           List.map
             ~f:(fun i -> type_string (UInt, UInt, i, UReal, i, UInt))
-            Stan_math_signatures.allowed_slice_types
+            Stan_math_signatures.reduce_sum_slice_types
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\

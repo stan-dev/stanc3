@@ -82,7 +82,7 @@ let rec ints_to_real = function
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
-let allowed_slice_types =
+let reduce_sum_slice_types =
   let allowed_dimensionality = [1; 2; 3; 4; 5; 6; 7] in
   let base_slice_type i =
     [ bare_array_type (UnsizedType.UReal, i)
