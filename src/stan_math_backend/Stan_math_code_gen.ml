@@ -283,25 +283,24 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       pf ppf "names__.clear();@ " ;
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
-let pp_get_dims ppf {Program.output_vars; _} =
-  let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
-  let pp_dim_sep ppf () =
-    pf ppf "dimss__.emplace_back(dims__);@,dims__.clear();@,"
-  in
+  let pp_get_dims ppf {Program.output_vars; _} =
+  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@}" 
+    (list ~sep:comma pp_expr) inner_dims in
+  let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);" pp_pack dims in
   let pp_output_var ppf =
-    (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
+    (list ~sep:cut pp_add_pack)
       ppf
       List.(
         map ~f:SizedType.get_dims
           (map
-             ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st)
-             output_vars))
+              ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st)
+              output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
     ["dimss__.clear();"
     ; "std::vector<size_t> dims__;"] (fun ppf ->
-      pp_output_var ppf ; pp_dim_sep ppf () )
+      pp_output_var ppf ; )
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
   pp_method ppf rt name params intro
