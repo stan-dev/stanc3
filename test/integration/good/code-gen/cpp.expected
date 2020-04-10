@@ -16671,10 +16671,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m3.stan', line 152, column 4 to column 15)",
                                                       " (in 'reduce_sum_m3.stan', line 88, column 11 to line 153, column 3)"};
 
-struct f1_rsfunctor__;
 struct f10_rsfunctor__;
 struct f11_rsfunctor__;
 struct f12_rsfunctor__;
+struct f1_rsfunctor__;
 struct f1a_rsfunctor__;
 struct f2_rsfunctor__;
 struct f3_rsfunctor__;
@@ -16684,10 +16684,10 @@ struct f6_rsfunctor__;
 struct f7_rsfunctor__;
 struct f8_rsfunctor__;
 struct f9_rsfunctor__;
-struct g1_rsfunctor__;
 struct g10_rsfunctor__;
 struct g11_rsfunctor__;
 struct g12_rsfunctor__;
+struct g1_rsfunctor__;
 struct g2_rsfunctor__;
 struct g3_rsfunctor__;
 struct g4_rsfunctor__;

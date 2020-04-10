@@ -125,7 +125,7 @@ let pp_template_decorator ppf = function
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
-    funs_used_in_reduce_sum_ =
+    funs_used_in_reduce_sum =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -190,7 +190,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
       (* Produces the reduce_sum functors that has the pstream argument
       as the third and not last argument *)
       let first_two, rest_fdargs = List.split_n fdargs 2 in
-      if List.mem funs_used_in_reduce_sum_ fdname ~equal:( = ) then
+      if String.Set.mem funs_used_in_reduce_sum fdname then
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
           reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
           ( fdname
@@ -697,16 +697,17 @@ let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   let pp_fun_def_with_rs_list ppf fblock =
-    pp_fun_def ppf fblock (String.Set.to_list (fun_used_in_reduce_sum p))
+    pp_fun_def ppf fblock (fun_used_in_reduce_sum p)
   in
   let reduce_sum_struct_decl =
-    List.map
+    String.Set.map
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
-      (String.Set.to_list (fun_used_in_reduce_sum p))
+      (fun_used_in_reduce_sum p)
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
-    (String.concat ~sep:"\n" reduce_sum_struct_decl)
+    (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
+    (* String.Set.fold ~f:String.concat ~init:"" (reduce_sum_struct_decl) *)
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
