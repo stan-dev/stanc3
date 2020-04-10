@@ -2,6 +2,9 @@ functions {
   real f1(int start, int end, real[] y_slice) {
     return 0.0;
   }
+  real f1a(int start, int end, real[] y_slice) {
+    return 0.0;
+  }
   real f2(int start, int end, vector[] y_slice) {
     return 0.0;
   }
@@ -117,6 +120,7 @@ functions {
     real y17[N, N, N];
     
     real t1 = reduce_sum(f1, y1, 1);
+    real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
     real t2 = reduce_sum(f2, y2, 1);
     real t3 = reduce_sum(f3, y3, 1);
     real t4 = reduce_sum(f4, y4, 1);
@@ -172,6 +176,7 @@ data {
 
 transformed data {
   real td1 = reduce_sum(f1, y1d, 1);
+  real td1a = reduce_sum(f1, y1d, 1) + reduce_sum(f1a, y1d, 1);
   real td2 = reduce_sum(f2, y2d, 1);
   real td3 = reduce_sum(f3, y3d, 1);
   real td4 = reduce_sum(f4, y4d, 1);
@@ -219,6 +224,7 @@ parameters {
 
 model {
   real t1 = reduce_sum(f1, y1, 1);
+  real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
   real t2 = reduce_sum(f2, y2, 1);
   real t3 = reduce_sum(f3, y3, 1);
   real t4 = reduce_sum(f4, y4, 1);
@@ -252,6 +258,7 @@ model {
 
 generated quantities {
   real t1 = reduce_sum(f1, y1, 1);
+  real t1a = reduce_sum(f1, y1, 1) + reduce_sum(f1a, y1, 1);
   real t2 = reduce_sum(f2, y2, 1);
   real t3 = reduce_sum(f3, y3, 1);
   real t4 = reduce_sum(f4, y4, 1);
