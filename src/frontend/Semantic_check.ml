@@ -136,9 +136,9 @@ let check_fresh_variable_basic id is_nullary_function =
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
     if
-      (Stan_math_signatures.is_stan_math_function_name id.name
+      Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None ))
+         || Stan_math_signatures.stan_math_returntype id.name [] = None )
       || String.equal id.name "reduce_sum"
       || String.equal id.name "reduce_sum_static"
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error

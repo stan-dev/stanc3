@@ -84,7 +84,7 @@ let rec ints_to_real = function
 
 let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
 
-let reduce_sum_slice_types =  
+let reduce_sum_slice_types =
   let base_slice_type i =
     [ bare_array_type (UnsizedType.UReal, i)
     ; bare_array_type (UnsizedType.UInt, i)
