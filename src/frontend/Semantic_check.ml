@@ -315,13 +315,12 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Validate.error
 
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
-  let arg_match (x_ad, x_t) y = 
+  let arg_match (x_ad, x_t) y =
     UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
     && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
   in
   let args_match a b =
-    if List.length a = List.length b then
-      List.for_all2_exn ~f:arg_match a b
+    if List.length a = List.length b then List.for_all2_exn ~f:arg_match a b
     else false
   in
   let return_generic_error =
@@ -334,16 +333,17 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ((_, UInt) :: (_, UInt) :: ((_,sliced_arg_fun_type) as sliced_arg_fun) :: fun_args, ReturnType UReal); _
-        }; _ }
-    :: sliced :: grainsize :: args ->
+              ( (_, UInt)
+                :: (_, UInt)
+                   :: ((_, sliced_arg_fun_type) as sliced_arg_fun) :: fun_args
+              , ReturnType UReal ); _ }; _ }
+    :: sliced :: {emeta= {type_= UInt; _}; _} :: args ->
       if
-        grainsize.emeta.type_ = UInt
-        && List.mem Stan_math_signatures.reduce_sum_slice_types sliced.emeta.type_
-             ~equal:( = )
+        arg_match sliced_arg_fun sliced
+        && List.mem Stan_math_signatures.reduce_sum_slice_types
+             sliced.emeta.type_ ~equal:( = )
         && List.mem Stan_math_signatures.reduce_sum_slice_types
              sliced_arg_fun_type ~equal:( = )
-        && sliced_arg_fun_type = sliced.emeta.type_
       then
         if args_match fun_args args then
           mk_typed_expression
@@ -376,10 +376,10 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match (id.name, fn_kind_from_application id es) with
-    | "reduce_sum", _ | "reduce_sum_static", _ ->
-        semantic_check_reduce_sum ~is_cond_dist ~loc id es
-    | _, StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-    | _, UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  | "reduce_sum", _ | "reduce_sum_static", _ ->
+      semantic_check_reduce_sum ~is_cond_dist ~loc id es
+  | _, StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | _, UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
