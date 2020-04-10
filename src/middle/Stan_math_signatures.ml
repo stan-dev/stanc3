@@ -82,8 +82,9 @@ let rec ints_to_real = function
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
-let reduce_sum_slice_types =
-  let allowed_dimensionality = [1; 2; 3; 4; 5; 6; 7] in
+let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
+
+let reduce_sum_slice_types =  
   let base_slice_type i =
     [ bare_array_type (UnsizedType.UReal, i)
     ; bare_array_type (UnsizedType.UInt, i)
@@ -91,7 +92,7 @@ let reduce_sum_slice_types =
     ; bare_array_type (UnsizedType.UVector, i)
     ; bare_array_type (UnsizedType.URowVector, i) ]
   in
-  List.concat (List.map ~f:base_slice_type allowed_dimensionality)
+  List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function

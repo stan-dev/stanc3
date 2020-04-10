@@ -113,20 +113,25 @@ module TypeError = struct
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedReduceSumBasic (name, arg_tys) ->
-        let type_string (a, b, c, d, e, f) =
-          Fmt.strf "(%a, %a, %a, ...) => %a, %a, %a, ...\n"
+        let rec n_commas n =
+            if n = 0 then "" else "," ^ n_commas (n - 1)
+        in
+        let type_string (a, b, c, d) i =
+          Fmt.strf "(%a, %a, T[%s], ...) => %a, %a, T[%s], ...\n"
             Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+            (n_commas i)
             Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-            Pretty_printing.pp_unsizedtype e Pretty_printing.pp_unsizedtype f
+            (n_commas i)
         in
         let lines =
           List.map
-            ~f:(fun i -> type_string (UInt, UInt, i, UReal, i, UInt))
-            Stan_math_signatures.reduce_sum_slice_types
+            ~f:(fun i -> type_string (UInt, UInt, UReal, UInt) i)
+            Stan_math_signatures.reduce_sum_allowed_dimensionalities
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %s@[<h>Instead supplied arguments of incompatible type: %a@]"
+           %sWhere T is any one of int, real, vector, row_vector or matrix.\
+           @[<h>Instead supplied arguments of incompatible type: %a@]"
           name
           (String.concat ~sep:"" lines)
           Fmt.(list UnsizedType.pp ~sep:comma)
