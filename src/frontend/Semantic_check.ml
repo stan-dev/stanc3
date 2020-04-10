@@ -136,9 +136,11 @@ let check_fresh_variable_basic id is_nullary_function =
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
     if
-      Stan_math_signatures.is_stan_math_function_name id.name
+      (Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None )
+         || Stan_math_signatures.stan_math_returntype id.name [] = None ))
+      || String.equal id.name "reduce_sum"
+      || String.equal id.name "reduce_sum_static"
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -337,25 +339,22 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
                 :: (_, UInt)
                    :: ((_, sliced_arg_fun_type) as sliced_arg_fun) :: fun_args
               , ReturnType UReal ); _ }; _ }
-    :: sliced :: {emeta= {type_= UInt; _}; _} :: args ->
-      if
-        arg_match sliced_arg_fun sliced
-        && List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced.emeta.type_ ~equal:( = )
-        && List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced_arg_fun_type ~equal:( = )
-      then
-        if args_match fun_args args then
-          mk_typed_expression
-            ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-            ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
-          |> Validate.ok
-        else
-          Semantic_error.illtyped_reduce_sum loc id.name
-            (List.map ~f:type_of_expr_typed es)
-            (sliced_arg_fun :: fun_args)
-          |> Validate.error
-      else return_generic_error
+    :: sliced :: {emeta= {type_= UInt; _}; _} :: args
+    when arg_match sliced_arg_fun sliced
+         && List.mem Stan_math_signatures.reduce_sum_slice_types
+              sliced.emeta.type_ ~equal:( = )
+         && List.mem Stan_math_signatures.reduce_sum_slice_types
+              sliced_arg_fun_type ~equal:( = ) ->
+      if args_match fun_args args then
+        mk_typed_expression
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+          ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
+        |> Validate.ok
+      else
+        Semantic_error.illtyped_reduce_sum loc id.name
+          (List.map ~f:type_of_expr_typed es)
+          (sliced_arg_fun :: fun_args)
+        |> Validate.error
   | _ -> return_generic_error
 
 let fn_kind_from_application id es =
@@ -375,11 +374,11 @@ let fn_kind_from_application id es =
     corresponding semantic check
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
-  match (id.name, fn_kind_from_application id es) with
-  | "reduce_sum", _ | "reduce_sum_static", _ ->
+  match fn_kind_from_application id es with
+  | StanLib when String.equal id.name "reduce_sum" ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
-  | _, StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | _, UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 

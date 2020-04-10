@@ -262,13 +262,16 @@ let stan_math_returntype name args =
         UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
       namematches
   in
-  if List.length filteredmatches = 0 then None
-    (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-  else
-    Some
-      (List.hd_exn
-         (List.sort ~compare:UnsizedType.compare_returntype
-            (List.map ~f:fst filteredmatches)))
+  match name with
+  | "reduce_sum" | "reduce_sum_static" -> Some (UnsizedType.ReturnType UReal)
+  | _ ->
+      if List.length filteredmatches = 0 then None
+        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+      else
+        Some
+          (List.hd_exn
+             (List.sort ~compare:UnsizedType.compare_returntype
+                (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
