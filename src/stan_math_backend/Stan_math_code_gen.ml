@@ -242,7 +242,7 @@ let pp_ctor ppf p =
   in
   pp_block ppf
     ( (fun ppf {Program.prog_name; prepare_data; output_vars; _} ->
-        pf ppf "typedef double local_scalar_t__;@ " ;
+        pf ppf "using local_scalar_t__ = double ;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
@@ -268,7 +268,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>%s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
     params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
@@ -277,16 +277,16 @@ let pp_method ppf rt name params intro ?(outro = []) ppbody =
   pf ppf "@,} // %s() @,@]" name
 
 let pp_get_param_names ppf {Program.output_vars; _} =
-  let add_param = fmt "names__.push_back(%S);" in
+  let add_param = fmt "names__.emplace_back(%S);" in
   pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names__"]
     [] (fun ppf ->
-      pf ppf "names__.resize(0);@ " ;
+      pf ppf "names__.clear();@ " ;
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
 let pp_get_dims ppf {Program.output_vars; _} =
   let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
   let pp_dim_sep ppf () =
-    pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
+    pf ppf "dimss__.emplace_back(dims__);@,dims__.clear();@,"
   in
   let pp_output_var ppf =
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
@@ -299,7 +299,8 @@ let pp_get_dims ppf {Program.output_vars; _} =
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
-    ["dimss__.resize(0);"; "std::vector<size_t> dims__;"] (fun ppf ->
+    ["dimss__.clear();"
+    ; "std::vector<size_t> dims__;"] (fun ppf ->
       pp_output_var ppf ; pp_dim_sep ppf () )
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
@@ -317,8 +318,9 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ]
   in
   let intro =
-    [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
-    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+    [ "using local_scalar_t__ = double;"
+    ; "vars__.clear();"
+    ; "const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (prog_name, "write_array")
     ; strf "%a" pp_unused "function__"
     ; "double lp__ = 0.0;"
@@ -364,7 +366,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
   in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.push_back(std::string() + %a);"
+    pf ppf "param_names__.emplace_back(std::string() + %a);"
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
@@ -415,7 +417,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
   in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.push_back(std::string() + %a);"
+    pf ppf "param_names__.emplace_back(std::string() + %a);"
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
@@ -436,7 +438,7 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
     ; "std::vector<double>& vars__"; "std::ostream* pstream__" ]
   in
   let intro =
-    [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
+    [ "using local_scalar_t__ = double;"; "vars__.clear();"
     ; "vars__.reserve(num_params_r__);" ]
   in
   pp_method_b ppf "void" "transform_inits" params intro transform_inits
@@ -448,10 +450,11 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "std::ostream* pstream__ = 0" ]
   in
   let intro =
-    [ "typedef T__ local_scalar_t__;"; "T__ lp__(0.0);"
+    [ "using local_scalar_t__ = T__;"
+    ; "T__ lp__(0.0);"
     ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
-    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
+    ; "const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro
@@ -482,7 +485,7 @@ let pp_overloads ppf () =
     {|
     // Begin method overload boilerplate
     template <typename RNG>
-    void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
@@ -501,7 +504,7 @@ let pp_overloads ppf () =
     }
 
     template <bool propto__, bool jacobian__, typename T_>
-    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
                std::ostream* pstream = 0) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
@@ -511,7 +514,7 @@ let pp_overloads ppf () =
       return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
-    void transform_inits(const stan::io::var_context& context,
+    inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream__) const {
       std::vector<double> params_r_vec;
@@ -569,37 +572,25 @@ using namespace stan::math; |}
 (* XXX probably move these to the Stan repo when these repos are joined. *)
 let custom_functions =
   {|
-template <typename T, typename S>
-std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+
+template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
+inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
   dst.resize(src.size());
-  return dst;
+  return std::forward<T>(dst);
 }
 
 template <typename T>
-Eigen::Matrix<T, -1, -1>
+inline Eigen::Matrix<T, -1, -1>&
 resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
-template <typename T>
-Eigen::Matrix<T, 1, -1>
-resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, 1>
-resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-std::vector<double> to_doubles__(std::initializer_list<double> x) {
+inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
   return x;
 }
 
-std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+inline inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
 }
 
@@ -662,7 +653,7 @@ let pp_prog ppf (p : Program.Typed.t) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
-  pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
+  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
   pf ppf
     {|
 #ifndef USING_R

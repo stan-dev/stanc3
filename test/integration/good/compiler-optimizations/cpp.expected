@@ -4,37 +4,25 @@
 #include <stan/model/model_header.hpp>
 namespace optimizations_model_namespace {
 
-template <typename T, typename S>
-std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+
+template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
+inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
   dst.resize(src.size());
-  return dst;
+  return std::forward<T>(dst);
 }
 
 template <typename T>
-Eigen::Matrix<T, -1, -1>
+inline Eigen::Matrix<T, -1, -1>&
 resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
   dst.resize(src.rows(), src.cols());
   return dst;
 }
 
-template <typename T>
-Eigen::Matrix<T, 1, -1>
-resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, 1>
-resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-std::vector<double> to_doubles__(std::initializer_list<double> x) {
+inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
   return x;
 }
 
-std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+inline inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
 }
 
@@ -299,7 +287,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
-    typedef double local_scalar_t__;
+    using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
@@ -338,15 +326,16 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
-    typedef T__ local_scalar_t__;
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "optimizations_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ sym112__;
@@ -1058,14 +1047,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
+    vars__.clear();
+    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimizations_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -1133,15 +1123,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         stan::math::cov_matrix_constrain(x_cov_in__, 2),
         "assigning variable sym68__");
       assign(x_cov, nil_index_list(), sym68__, "assigning variable x_cov");
-      vars__.push_back(theta);
-      vars__.push_back(phi);
+      vars__.emplace_back(theta);
+      vars__.emplace_back(phi);
       {
         {
           {
             {
               {
                 {
-                  vars__.push_back(
+                  vars__.emplace_back(
                     rvalue(x_matrix,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
@@ -1149,7 +1139,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1158,7 +1148,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(3),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1173,7 +1163,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
@@ -1181,7 +1171,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(x_matrix,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1190,7 +1180,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(x_matrix,
                           cons_list(index_uni(3),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1206,11 +1196,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         {
           {
-            vars__.push_back(x_vector[(1 - 1)]);
+            vars__.emplace_back(x_vector[(1 - 1)]);
           }
           {
             {
-              vars__.push_back(x_vector[(2 - 1)]);
+              vars__.emplace_back(x_vector[(2 - 1)]);
             }
           }
         }
@@ -1221,7 +1211,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(
+                  vars__.emplace_back(
                     rvalue(sym68__,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
@@ -1229,7 +1219,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(sym68__,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1244,7 +1234,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(sym68__,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
@@ -1252,7 +1242,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(sym68__,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1283,11 +1273,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
+    using local_scalar_t__ = double;
+    vars__.clear();
     vars__.reserve(num_params_r__);
     
     try {
@@ -1510,15 +1501,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       assign(x_cov, nil_index_list(), stan::math::cov_matrix_free(x_cov),
         "assigning variable x_cov");
-      vars__.push_back(sym55__);
-      vars__.push_back(sym54__);
+      vars__.emplace_back(sym55__);
+      vars__.emplace_back(sym54__);
       {
         {
           {
             {
               {
                 {
-                  vars__.push_back(
+                  vars__.emplace_back(
                     rvalue(x_matrix,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
@@ -1526,7 +1517,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1535,7 +1526,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(3),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1550,7 +1541,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_matrix,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
@@ -1558,7 +1549,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(x_matrix,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1567,7 +1558,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(x_matrix,
                           cons_list(index_uni(3),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1583,11 +1574,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         {
           {
-            vars__.push_back(x_vector[(1 - 1)]);
+            vars__.emplace_back(x_vector[(1 - 1)]);
           }
           {
             {
-              vars__.push_back(x_vector[(2 - 1)]);
+              vars__.emplace_back(x_vector[(2 - 1)]);
             }
           }
         }
@@ -1598,14 +1589,14 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               {
                 {
-                  vars__.push_back(
+                  vars__.emplace_back(
                     rvalue(x_cov,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())), "x_cov"));
                 }
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_cov,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
@@ -1620,7 +1611,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    vars__.push_back(
+                    vars__.emplace_back(
                       rvalue(x_cov,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
@@ -1628,7 +1619,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      vars__.push_back(
+                      vars__.emplace_back(
                         rvalue(x_cov,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
@@ -1648,61 +1639,62 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.resize(0);
-    names__.push_back("theta");
-    names__.push_back("phi");
-    names__.push_back("x_matrix");
-    names__.push_back("x_vector");
-    names__.push_back("x_cov");
+    names__.clear();
+    names__.emplace_back("theta");
+    names__.emplace_back("phi");
+    names__.emplace_back("x_matrix");
+    names__.emplace_back("x_vector");
+    names__.emplace_back("x_cov");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.resize(0);
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.clear();
     std::vector<size_t> dims__;
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(dims__);
+    dims__.clear();
+    dimss__.emplace_back(dims__);
+    dims__.clear();
     dims__.push_back(3);
     
     dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(dims__);
+    dims__.clear();
     dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(dims__);
+    dims__.clear();
     dims__.push_back(2);
     
     dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(dims__);
+    dims__.clear();
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
-    param_names__.push_back(std::string() + "theta");
-    param_names__.push_back(std::string() + "phi");
+    param_names__.emplace_back(std::string() + "theta");
+    param_names__.emplace_back(std::string() + "phi");
     for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
         for (size_t sym114__ = 1; sym114__ <= 3; ++sym114__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
           }}
       }}
     for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym113__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym113__));
       }}
     for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
         for (size_t sym114__ = 1; sym114__ <= 2; ++sym114__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
+            param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -1715,26 +1707,27 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
-    param_names__.push_back(std::string() + "theta");
-    param_names__.push_back(std::string() + "phi");
+    param_names__.emplace_back(std::string() + "theta");
+    param_names__.emplace_back(std::string() + "phi");
     for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
         for (size_t sym114__ = 1; sym114__ <= 3; ++sym114__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
+            param_names__.emplace_back(std::string() + "x_matrix" + '.' + std::to_string(sym114__) + '.' + std::to_string(sym113__));
           }}
       }}
     for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym113__));
+        param_names__.emplace_back(std::string() + "x_vector" + '.' + std::to_string(sym113__));
       }}
     for (size_t sym113__ = 1; sym113__ <= 3; ++sym113__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym113__));
+        param_names__.emplace_back(std::string() + "x_cov" + '.' + std::to_string(sym113__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -1746,13 +1739,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -1761,7 +1754,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   
     // Begin method overload boilerplate
     template <typename RNG>
-    void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
@@ -1780,7 +1773,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
 
     template <bool propto__, bool jacobian__, typename T_>
-    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
                std::ostream* pstream = 0) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
@@ -1790,7 +1783,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
-    void transform_inits(const stan::io::var_context& context,
+    inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream__) const {
       std::vector<double> params_r_vec;
@@ -1803,7 +1796,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
 };
 }
-typedef optimizations_model_namespace::optimizations_model stan_model;
+using stan_model = optimizations_model_namespace::optimizations_model;
 
 #ifndef USING_R
 
