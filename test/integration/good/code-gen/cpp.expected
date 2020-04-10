@@ -16691,6 +16691,7 @@ struct f4_rsfunctor__;
 struct f3_rsfunctor__;
 struct f2_rsfunctor__;
 struct f1_rsfunctor__;
+struct f1a_rsfunctor__;
 template <typename T2__>
 typename boost::math::tools::promote_args<T2__>::type
 f1(const int& start, const int& end, const std::vector<T2__>& y_slice,
@@ -16757,6 +16758,17 @@ operator()(const int& start, const int& end,
            const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
 {
 return f1a(start, end, y_slice, pstream__);
+}
+};
+
+
+struct f1a_rsfunctor__ {
+template <typename T2__>
+typename boost::math::tools::promote_args<T2__>::type
+operator()(const int& start, const int& end,
+           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+{
+return f1a(start + 1, end + 1, y_slice, pstream__);
 }
 };
 
