@@ -328,7 +328,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const final {
+                      std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1052,7 +1052,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const final {
+                          std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -1276,7 +1276,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const final {
+                              std::ostream* pstream__) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -1639,7 +1639,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const final {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("theta");
@@ -1649,7 +1649,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     names__.emplace_back("x_cov");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const final {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -1666,7 +1666,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const final {
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
@@ -1701,7 +1701,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const final {
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
@@ -1730,13 +1730,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const final {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const final {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -1750,7 +1750,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = 0) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -1765,7 +1765,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = 0) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -1776,7 +1776,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
