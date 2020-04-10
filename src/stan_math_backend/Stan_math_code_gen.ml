@@ -588,7 +588,7 @@ inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
   return x;
 }
 
-inline inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
 }
 
