@@ -78,17 +78,14 @@ let rec dims_of st =
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
-let rec get_dims = function
+let rec get_dims st
+  : [ `Dim of Expr.Typed.t
+    | `SparseIterator of (Expr.Typed.t * Expr.Typed.t * Expr.Typed.t)] List.t =
+  match st with
   | SInt | SReal -> []
-  | SVector d | SRowVector d -> [d]
-  | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SSparseMatrix (nz_rows, nz_cols, dim1, dim2) -> [nz_rows; nz_cols; dim1; dim2]
-  | SStaticSparseMatrix (dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims t
-
-let%expect_test "dims" =
-  let open Fmt in
-  strf "@[%a@]" (list ~sep:comma string)
-    (get_dims (SArray (SMatrix ("x", "y"), "z")))
-  |> print_endline ;
-  [%expect {| z, x, y |}]
+  | SVector d | SRowVector d -> [`Dim d]
+  | SMatrix (dim1, dim2) -> [`Dim dim1; `Dim dim2]
+  | SSparseMatrix (nz_rows, nz_cols, _, _) -> [`SparseIterator (nz_rows, nz_cols, 
+     Expr.Helpers.internal_funapp FnLength [nz_rows] Expr.Typed.Meta.empty)]
+  | SStaticSparseMatrix (dim1, dim2) -> [`Dim dim1;`Dim dim2]
+  | SArray (t, dim) -> `Dim dim :: get_dims t
