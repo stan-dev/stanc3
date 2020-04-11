@@ -599,7 +599,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
               "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a\n@]%s@.@]"
               (Location_span.to_string x.emeta.loc)
               Pretty_printing.pp_expression {expr; emeta}
-              "Values will be rounded to zero." ;
+              "Values will be rounded towards zero." ;
             (x, y)
         | _ -> (x, y)
       in

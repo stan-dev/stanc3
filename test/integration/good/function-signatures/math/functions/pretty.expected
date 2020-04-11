@@ -2076,10 +2076,10 @@ model {
 
 Info: Found int division at 'operators_int.stan', line 10, column 25 to column 30:
   d_int / d_int
-Values will be rounded to zero.
+Values will be rounded towards zero.
 Info: Found int division at 'operators_int.stan', line 24, column 27 to column 32:
   d_int / d_int
-Values will be rounded to zero.
+Values will be rounded towards zero.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
 data {
   int d_int;
@@ -2163,10 +2163,10 @@ model {
 
 Info: Found int division at 'operators_real.stan', line 23, column 26 to column 31:
   d_int / d_int
-Values will be rounded to zero.
+Values will be rounded towards zero.
 Info: Found int division at 'operators_real.stan', line 67, column 27 to column 32:
   d_int / d_int
-Values will be rounded to zero.
+Values will be rounded towards zero.
   $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;
