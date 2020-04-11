@@ -267,9 +267,9 @@ let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.filter_map ~f:decl prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
-let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
-    params ;
+let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) ppbody =
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name (list ~sep:comma string)
+    params (list ~sep:cut string) cv_attr;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;
@@ -298,15 +298,16 @@ let pp_get_dims ppf {Program.output_vars; _} =
               output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
+  let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "get_dims" params
     ["dimss__.clear();"] (fun ppf ->
-      pp_output_var ppf ; )
+      pp_output_var ppf ; ) ~cv_attr
 
 
-let pp_method_b ppf rt name params intro ?(outro = []) body =
+let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) body =
   pp_method ppf rt name params intro
     (fun ppf -> pp_located_error_b ppf body)
-    ~outro
+    ~outro ~cv_attr
 
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   pf ppf "template <typename RNG>@ " ;
@@ -327,7 +328,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ; "(void) lp__;  // dummy to suppress unused var warning"
     ; "stan::math::accumulator<double> lp_accum__;" ]
   in
-  pp_method_b ppf "void" "write_array" params intro generate_quantities
+  pp_method_b ppf "void" "write_array" params intro generate_quantities 
 
 let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
   let iter d pp_body =
@@ -374,12 +375,13 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
     let dims = List.rev (SizedType.get_dims st) in
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
+  let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) )
+        (list ~sep:cut pp_param_names, gqvars) ) ~cv_attr
 
 (* XXX This is just a copy of constrained, I need to figure out which one is wrong
    and fix it eventually. From Bob,
@@ -425,12 +427,13 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     let dims = List.rev (SizedType.get_dims st) in
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
+  let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) )
+        (list ~sep:cut pp_param_names, gqvars) ) ~cv_attr
 
 let pp_transform_inits ppf {Program.transform_inits; _} =
   let params =
@@ -441,7 +444,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
     [ "using local_scalar_t__ = double;"; "vars__.clear();"
     ; "vars__.reserve(num_params_r__);" ]
   in
-  pp_method_b ppf "void" "transform_inits" params intro transform_inits
+  let cv_attr = ["const"; "final"] in
+  pp_method_b ppf "void" "transform_inits" params intro transform_inits ~cv_attr
 
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
@@ -457,7 +461,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
-  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro
+  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro 
 
 let pp_outvar_metadata ppf (method_name, outvars) =
   let intro = ["stringstream s__;"] in
@@ -546,7 +550,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
-  pf ppf "@ @ std::string model_name() const { return \"%s\"; }" prog_name ;
+  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }" prog_name ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 let usings =

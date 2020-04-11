@@ -102,7 +102,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
  public:
   ~eight_schools_ncp_model() { }
   
-  std::string model_name() const { return "eight_schools_ncp_model"; }
+  std::string model_name() const final { return "eight_schools_ncp_model"; }
   
   eight_schools_ncp_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
@@ -311,7 +311,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -371,7 +372,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     names__.emplace_back("theta");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -386,7 +388,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "tau");
@@ -410,7 +413,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "tau");
@@ -3114,7 +3118,7 @@ class mother_model : public model_base_crtp<mother_model> {
  public:
   ~mother_model() { }
   
-  std::string model_name() const { return "mother_model"; }
+  std::string model_name() const final { return "mother_model"; }
   
   mother_model(stan::io::var_context& context__,
                unsigned int random_seed__ = 0,
@@ -7078,7 +7082,8 @@ class mother_model : public model_base_crtp<mother_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -7815,7 +7820,8 @@ class mother_model : public model_base_crtp<mother_model> {
     names__.emplace_back("idx_res5");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -8025,7 +8031,8 @@ class mother_model : public model_base_crtp<mother_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "p_real");
     for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -8514,7 +8521,8 @@ class mother_model : public model_base_crtp<mother_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "p_real");
     for (size_t sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -9512,7 +9520,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
  public:
   ~motherHOF_model() { }
   
-  std::string model_name() const { return "motherHOF_model"; }
+  std::string model_name() const final { return "motherHOF_model"; }
   
   motherHOF_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -10541,7 +10549,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -10698,7 +10707,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.emplace_back("y_hat_gq");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
@@ -10753,7 +10763,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
@@ -10840,7 +10851,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
@@ -11303,7 +11315,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
  public:
   ~optimize_glm_model() { }
   
-  std::string model_name() const { return "optimize_glm_model"; }
+  std::string model_name() const final { return "optimize_glm_model"; }
   
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
@@ -12265,7 +12277,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -12465,7 +12478,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     names__.emplace_back("X_rv_p");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(k)});
     
@@ -12492,7 +12506,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -12540,7 +12555,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
       {
@@ -12757,7 +12773,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
  public:
   ~tilde_block_model() { }
   
-  std::string model_name() const { return "tilde_block_model"; }
+  std::string model_name() const final { return "tilde_block_model"; }
   
   tilde_block_model(stan::io::var_context& context__,
                     unsigned int random_seed__ = 0,
@@ -12896,7 +12912,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -12925,7 +12942,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     names__.emplace_back("x");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -12934,7 +12952,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -12950,7 +12969,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -13149,7 +13169,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
  public:
   ~truncate_model() { }
   
-  std::string model_name() const { return "truncate_model"; }
+  std::string model_name() const final { return "truncate_model"; }
   
   truncate_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
@@ -13359,7 +13379,8 @@ class truncate_model : public model_base_crtp<truncate_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -13394,7 +13415,8 @@ class truncate_model : public model_base_crtp<truncate_model> {
     names__.emplace_back("y");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -13405,7 +13427,8 @@ class truncate_model : public model_base_crtp<truncate_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "m");
     param_names__.emplace_back(std::string() + "y");
@@ -13422,7 +13445,8 @@ class truncate_model : public model_base_crtp<truncate_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "m");
     param_names__.emplace_back(std::string() + "y");
@@ -13633,7 +13657,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
  public:
   ~user_constrain_model() { }
   
-  std::string model_name() const { return "user_constrain_model"; }
+  std::string model_name() const final { return "user_constrain_model"; }
   
   user_constrain_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
@@ -13745,7 +13769,8 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -13774,7 +13799,8 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     names__.emplace_back("x");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -13783,7 +13809,8 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -13799,7 +13826,8 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "x");
     if (emit_transformed_parameters__) {

@@ -282,7 +282,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
  public:
   ~optimizations_model() { }
   
-  std::string model_name() const { return "optimizations_model"; }
+  std::string model_name() const final { return "optimizations_model"; }
   
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
@@ -1276,7 +1276,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
+                              std::ostream* pstream__) const
+    final {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
@@ -1649,7 +1650,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     names__.emplace_back("x_cov");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
@@ -1668,7 +1670,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
@@ -1703,7 +1706,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
