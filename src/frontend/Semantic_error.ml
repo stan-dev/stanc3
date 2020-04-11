@@ -117,7 +117,7 @@ module TypeError = struct
         let type_string (a, b, c, d) i =
           Fmt.strf "(%a, %a, T[%s], ...) => %a, %a, T[%s], ...\n"
             Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-            (n_commas i) Pretty_printing.pp_unsizedtype c
+            (n_commas (i-1)) Pretty_printing.pp_unsizedtype c
             Pretty_printing.pp_unsizedtype d (n_commas i)
         in
         let lines =
