@@ -260,7 +260,9 @@ let%expect_test "Unused param warning" =
       Warning:
         The parameter d was declared but was not used in the model.
       Warning:
-        The parameter e was declared but was not used in the model. |}]
+        The parameter e was declared but was not used in the model.
+      Warning:
+        The parameter f was declared but was not used in the model. |}]
 
 let param_dependant_cf_example =
       {|
