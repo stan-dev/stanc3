@@ -373,13 +373,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({J}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
     
-    dimss__.emplace_back(std::vector<size_t>({J}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
     
     } // get_dims() 
     
@@ -7817,129 +7817,208 @@ class mother_model : public model_base_crtp<mother_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({5}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(4),
+                                             static_cast<size_t>(5),
+                                             static_cast<size_t>(2),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(K),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(4),
+                                             static_cast<size_t>(5),
+                                             static_cast<size_t>(2),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(K),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(4),
+                                             static_cast<size_t>(5),
+                                             static_cast<size_t>(2),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(M),
+                                             static_cast<size_t>(K),
+                                             static_cast<size_t>(N)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(K),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 4}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(4)});
     
-    dimss__.emplace_back(std::vector<size_t>({2, 2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2),
+                                             static_cast<size_t>(2)});
     
     } // get_dims() 
     
@@ -10621,51 +10700,53 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({1}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(1)});
     
-    dimss__.emplace_back(std::vector<size_t>({1}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(1)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({T, 2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(T),
+                                             static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({3}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3)});
     
     } // get_dims() 
     
@@ -12386,23 +12467,25 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({k}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(k)});
     
-    dimss__.emplace_back(std::vector<size_t>({k}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(k)});
     
-    dimss__.emplace_back(std::vector<size_t>({k}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(k)});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({n, k}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n),
+                                             static_cast<size_t>(k)});
     
-    dimss__.emplace_back(std::vector<size_t>({n, k}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n),
+                                             static_cast<size_t>(k)});
     
-    dimss__.emplace_back(std::vector<size_t>({n}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n)});
     
     } // get_dims() 
     
@@ -12844,7 +12927,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     
@@ -13313,9 +13396,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     
@@ -13693,7 +13776,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     

@@ -1651,15 +1651,17 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({}));
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>({3, 2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
+                                             static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>({2, 2}));
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2),
+                                             static_cast<size_t>(2)});
     
     } // get_dims() 
     

@@ -284,8 +284,9 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
 let pp_get_dims ppf {Program.output_vars; _} =
-  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>({@[<hov>@,%a@]})" 
-    (list ~sep:comma pp_expr) inner_dims in
+  let pp_cast ppf cast_dims = pf ppf "static_cast<size_t>(%a)@," pp_expr cast_dims in
+  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" 
+    (list ~sep:comma pp_cast) inner_dims in
   let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);@," pp_pack dims in
   let pp_output_var ppf =
     (list ~sep:cut pp_add_pack)
@@ -300,6 +301,7 @@ let pp_get_dims ppf {Program.output_vars; _} =
   pp_method ppf "void" "get_dims" params
     ["dimss__.clear();"] (fun ppf ->
       pp_output_var ppf ; )
+
 
 let pp_method_b ppf rt name params intro ?(outro = []) body =
   pp_method ppf rt name params intro
