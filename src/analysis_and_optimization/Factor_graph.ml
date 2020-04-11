@@ -153,8 +153,16 @@ let list_priors ?factor_graph: (fg_opt=None) (mir : Program.Typed.t)
   let fg = Option.value ~default:(prog_factor_graph mir) fg_opt in
   let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
+  let likely_sizes = Set.Poly.diff data
+      (Set.Poly.map ~f:(fun v -> VVar v) (data_set ~exclude_ints:true mir))
+  in
+  let fg' = Set.Poly.fold
+      ~init:fg
+      ~f:(fun fg likely_size -> fg_remove_var likely_size fg)
+      likely_sizes
+  in
   (* for each param, apply fg_var_priors and collect results in a map*)
-  generate_map params ~f:(fun p -> fg_var_priors p data fg)
+  generate_map params ~f:(fun p -> fg_var_priors p data fg')
 
 let string_of_factor (factor : factor) : string =
   match factor with

@@ -14,7 +14,7 @@ val is_dist : string -> bool
 
 val chop_dist_name : string -> string Option.t
 
-val data_set : Program.Typed.t -> string Set.Poly.t
+val data_set : ?exclude_ints:bool -> Program.Typed.t -> string Set.Poly.t
 
 val parameter_set : ?include_transformed:bool -> Program.Typed.t -> (string * Expr.Typed.t Program.transformation) Set.Poly.t
 

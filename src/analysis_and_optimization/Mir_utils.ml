@@ -82,9 +82,14 @@ let chop_dist_name (fname : string) : string Option.t =
 let is_dist (fname : string) : bool =
   Option.is_some (chop_dist_name fname)
 
-let data_set (mir : Program.Typed.t) : string Set.Poly.t =
-  Set.Poly.of_list
-    (List.map ~f:fst mir.input_vars)
+let data_set ?exclude_ints:(exclude_ints=false) (mir : Program.Typed.t) : string Set.Poly.t =
+  let remove_ints =
+    Set.Poly.filter ~f:(fun (_, st) -> st <> SizedType.SInt)
+  in
+  Set.Poly.map ~f:fst
+    ((if exclude_ints then remove_ints else ident)
+       (Set.Poly.of_list mir.input_vars))
+
 
 let parameter_set ?include_transformed:(include_transformed = false)
     (mir : Program.Typed.t) =
