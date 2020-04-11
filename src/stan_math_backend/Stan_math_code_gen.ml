@@ -284,7 +284,7 @@ let pp_get_param_names ppf {Program.output_vars; _} =
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
 let pp_get_dims ppf {Program.output_vars; _} =
-  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" 
+  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>({@[<hov>@,%a@]})" 
     (list ~sep:comma pp_expr) inner_dims in
   let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);@," pp_pack dims in
   let pp_output_var ppf =
@@ -452,7 +452,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "T__ lp__(0.0);"
     ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
-    ; "const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
+    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro

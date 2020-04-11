@@ -335,7 +335,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     static const char* function__ = "optimizations_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ sym112__;
@@ -1651,15 +1651,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 2});
+    dimss__.emplace_back(std::vector<size_t>({3, 2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2, 2});
+    dimss__.emplace_back(std::vector<size_t>({2, 2}));
     
     } // get_dims() 
     

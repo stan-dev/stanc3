@@ -178,7 +178,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     static const char* function__ = "eight_schools_ncp_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ mu;
@@ -373,13 +373,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{J});
+    dimss__.emplace_back(std::vector<size_t>({J}));
     
-    dimss__.emplace_back(std::vector<size_t>{J});
+    dimss__.emplace_back(std::vector<size_t>({J}));
     
     } // get_dims() 
     
@@ -4206,7 +4206,7 @@ class mother_model : public model_base_crtp<mother_model> {
     static const char* function__ = "mother_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ p_real;
@@ -7817,129 +7817,129 @@ class mother_model : public model_base_crtp<mother_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{5});
+    dimss__.emplace_back(std::vector<size_t>({5}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{4, 5, 2, 3});
+    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{K, 3, 3});
+    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{4, 5, 2, 3});
+    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{K, 3, 3});
+    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{4, 5, 2, 3});
+    dimss__.emplace_back(std::vector<size_t>({4, 5, 2, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{N});
+    dimss__.emplace_back(std::vector<size_t>({N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, N});
+    dimss__.emplace_back(std::vector<size_t>({N, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{N, M, K, N});
+    dimss__.emplace_back(std::vector<size_t>({N, M, K, N}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{K, 3, 3});
+    dimss__.emplace_back(std::vector<size_t>({K, 3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 3, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3, 4});
+    dimss__.emplace_back(std::vector<size_t>({3, 3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 3, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3, 4});
+    dimss__.emplace_back(std::vector<size_t>({3, 3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{5, 3, 4});
+    dimss__.emplace_back(std::vector<size_t>({5, 3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 4});
+    dimss__.emplace_back(std::vector<size_t>({3, 4}));
     
-    dimss__.emplace_back(std::vector<size_t>{2, 2});
+    dimss__.emplace_back(std::vector<size_t>({2, 2}));
     
     } // get_dims() 
     
@@ -9676,7 +9676,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     static const char* function__ = "motherHOF_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       current_statement__ = 1;
@@ -10621,51 +10621,51 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{1});
+    dimss__.emplace_back(std::vector<size_t>({1}));
     
-    dimss__.emplace_back(std::vector<size_t>{1});
+    dimss__.emplace_back(std::vector<size_t>({1}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3, 3});
+    dimss__.emplace_back(std::vector<size_t>({3, 3}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{2});
+    dimss__.emplace_back(std::vector<size_t>({2}));
     
-    dimss__.emplace_back(std::vector<size_t>{T, 2});
+    dimss__.emplace_back(std::vector<size_t>({T, 2}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{3});
+    dimss__.emplace_back(std::vector<size_t>({3}));
     
     } // get_dims() 
     
@@ -11455,7 +11455,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     static const char* function__ = "optimize_glm_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       current_statement__ = 1;
@@ -12386,23 +12386,23 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{k});
+    dimss__.emplace_back(std::vector<size_t>({k}));
     
-    dimss__.emplace_back(std::vector<size_t>{k});
+    dimss__.emplace_back(std::vector<size_t>({k}));
     
-    dimss__.emplace_back(std::vector<size_t>{k});
+    dimss__.emplace_back(std::vector<size_t>({k}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{n, k});
+    dimss__.emplace_back(std::vector<size_t>({n, k}));
     
-    dimss__.emplace_back(std::vector<size_t>{n, k});
+    dimss__.emplace_back(std::vector<size_t>({n, k}));
     
-    dimss__.emplace_back(std::vector<size_t>{n});
+    dimss__.emplace_back(std::vector<size_t>({n}));
     
     } // get_dims() 
     
@@ -12719,7 +12719,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     static const char* function__ = "tilde_block_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ x;
@@ -12844,7 +12844,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
     } // get_dims() 
     
@@ -13117,7 +13117,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
     static const char* function__ = "truncate_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ m;
@@ -13313,9 +13313,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
     } // get_dims() 
     
@@ -13590,7 +13590,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     static const char* function__ = "user_constrain_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
       local_scalar_t__ x;
@@ -13693,7 +13693,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__.emplace_back(std::vector<size_t>({}));
     
     } // get_dims() 
     
