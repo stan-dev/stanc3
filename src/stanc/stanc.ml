@@ -171,7 +171,7 @@ let model_file_err () =
   exit 127
 
 let model_file_start_char_err () =
-  eprintf "%s" "Model name must not start with a number or symbol other than underscore.";
+  eprintf "%s" "Model name must not start with a number or symbol other than underscore.\n";
   exit 127
 
 let add_file filename =
@@ -240,12 +240,12 @@ let main () =
     exit 0 ) ;
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
-  if not (Str.string_match model_name_check_regex !model_file 0) then
-    model_file_start_char_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
       remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
       ^ "_model" ;
+  if not (Str.string_match model_name_check_regex !Semantic_check.model_name 0) then
+    model_file_start_char_err () ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
