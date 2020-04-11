@@ -52,9 +52,9 @@ let factor_rhs (factor : factor) : vexpr Set.Poly.t =
   | Reject -> Set.Poly.empty
   | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:vexpr_of_expr_exn)
 
-let factor_var_dependencies vars statement_map (label, factor) =
+let factor_var_dependencies statement_map blockers (label, factor) =
   let rhs = factor_rhs factor in
-  let dep_labels = node_vars_dependencies statement_map (Set.Poly.diff rhs vars) label in
+  let dep_labels = node_vars_dependencies statement_map ~blockers rhs label in
   let label_vars l =
     Set.Poly.map
       (stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l)))
@@ -89,7 +89,7 @@ let prog_factor_graph prog : factor_graph =
   in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->
-        (l, fac, Set.Poly.inter vars (factor_var_dependencies vars statement_map (l, fac))) )
+        (l, fac, Set.Poly.inter vars (factor_var_dependencies statement_map vars (l, fac))) )
   in build_adjacency_maps factor_list
 
 let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
@@ -155,26 +155,6 @@ let list_priors ?factor_graph: (fg_opt=None) (mir : Program.Typed.t)
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   (* for each param, apply fg_var_priors and collect results in a map*)
   generate_map params ~f:(fun p -> fg_var_priors p data fg)
-
-(* let factor_graph_to_dot (factors : (label * factor * vexpr Set.Poly.t) list) : string =
- *   let names = List.map ~f:(fun (_, f, ps) -> (string_of_factor f, List.map ~f:string_of_vexpr (Set.Poly.to_list ps))) factors in
- *   let (factor_names, param_name_lists) = List.unzip names in
- *   let factor_strings = List.map factor_names ~f:(fun n -> String.concat [n; " [shape=box]"]) in
- *   let param_strings = List.dedup_and_sort ~compare:String.compare (List.concat param_name_lists) in
- *   let edge_strings = List.concat_map ~f:(fun (f, ps) -> List.map ~f:(fun p -> String.concat [f; " -- "; p]) ps) names in
- *   [ [ "graph {" ]
- *   ; factor_strings
- *   ; param_strings
- *   ; edge_strings
- *   ; [ "}" ]
- *   ]
- *   |> List.concat
- *   |> String.concat ~sep:"\n" *)
-
-(* type factor_graph =
- *   { factor_map : (factor * label, vexpr Set.Poly.t) Map.Poly.t
- *   ; var_map : (vexpr, (factor * label) Set.Poly.t) Map.Poly.t
- *   } *)
 
 let string_of_factor (factor : factor) : string =
   match factor with

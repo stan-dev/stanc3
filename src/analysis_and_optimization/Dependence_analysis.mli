@@ -33,6 +33,7 @@ val node_immediate_dependencies :
      ( label
      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
      Map.Poly.t
+  -> ?blockers:vexpr Set.Poly.t
   -> label
   -> label Set.Poly.t
 (**
@@ -55,12 +56,15 @@ val node_vars_dependencies :
      ( label
      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
      Map.Poly.t
+  -> ?blockers:vexpr Set.Poly.t
   -> vexpr Set.Poly.t
   -> label
   -> label Set.Poly.t
 (**
    Given dependency information for each node, find all of the dependencies of a set of
    variables at single node.
+
+   'blockers' are variables which will not be traversed.
 *)
 
 val log_prob_build_dep_info_map :

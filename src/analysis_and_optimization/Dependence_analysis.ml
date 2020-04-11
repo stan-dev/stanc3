@@ -28,11 +28,13 @@ let node_immediate_dependencies
     (statement_map :
        ( label
        , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-         Map.Poly.t) (label : label) : label Set.Poly.t =
+         Map.Poly.t)
+    ?blockers:(blockers: vexpr Set.Poly.t=Set.Poly.empty)
+    (label : label) : label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
   let rhs_deps =
-    union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry)
+    union_map (Set.Poly.diff rhs_set blockers) ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
   Set.Poly.union info.parents rhs_deps
 
@@ -44,12 +46,15 @@ let rec node_dependencies_rec
     (statement_map :
        ( label
        , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-         Map.Poly.t) (visited : label Set.Poly.t) (label : label) :
+         Map.Poly.t)
+    ?blockers:(blockers: vexpr Set.Poly.t=Set.Poly.empty )
+    (visited : label Set.Poly.t)
+    (label : label) :
   label Set.Poly.t =
   if Set.Poly.mem visited label then visited
   else
     let visited' = Set.Poly.add visited label in
-    let deps = node_immediate_dependencies statement_map label in
+    let deps = node_immediate_dependencies statement_map ~blockers label in
     Set.Poly.fold deps ~init:visited' ~f:(node_dependencies_rec statement_map)
 
 let node_dependencies
@@ -63,16 +68,19 @@ let node_vars_dependencies
     (statement_map :
        ( label
        , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-         Map.Poly.t) (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t
+         Map.Poly.t)
+    ?blockers:(blockers: vexpr Set.Poly.t=Set.Poly.empty )
+    (vars : vexpr Set.Poly.t)
+    (label : label) : label Set.Poly.t
   =
   let _, info = Map.Poly.find_exn statement_map label in
   let var_deps =
-    union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry)
+    union_map (Set.Poly.diff vars blockers) ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
   Set.Poly.fold
     (Set.union info.parents var_deps)
     ~init:Set.Poly.empty
-    ~f:(node_dependencies_rec statement_map)
+    ~f:(node_dependencies_rec statement_map ~blockers)
 
 (*
    The strategy here is to write an update function on the whole dependency graph in terms
