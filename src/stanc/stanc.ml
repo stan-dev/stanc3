@@ -170,6 +170,10 @@ let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
   exit 127
 
+let model_file_start_char_err () =
+  eprintf "%s" "Model name must not start with a number or symbol other than underscore.";
+  exit 127
+
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
 
@@ -225,6 +229,8 @@ let use_file filename =
 
 let remove_dotstan s = String.drop_suffix s 5
 
+let model_name_check_regex = Str.regexp "^[a-zA-Z_].*$"
+
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
@@ -234,6 +240,8 @@ let main () =
     exit 0 ) ;
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
+  if not (Str.string_match model_name_check_regex !model_file 0) then
+    model_file_start_char_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
       remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
