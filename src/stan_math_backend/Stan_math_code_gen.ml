@@ -318,7 +318,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   let intro =
     [ "using local_scalar_t__ = double;"
     ; "vars__.clear();"
-    ; "const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (prog_name, "write_array")
     ; strf "%a" pp_unused "function__"
     ; "double lp__ = 0.0;"

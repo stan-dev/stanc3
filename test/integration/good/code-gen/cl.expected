@@ -1222,7 +1222,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimize_glm_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 

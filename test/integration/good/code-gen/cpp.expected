@@ -246,7 +246,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -5254,7 +5254,7 @@ class mother_model : public model_base_crtp<mother_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "mother_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -10053,7 +10053,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "motherHOF_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -12072,7 +12072,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimize_glm_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -12778,7 +12778,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "tilde_block_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -13236,7 +13236,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "truncate_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
@@ -13627,7 +13627,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
                           std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
-    const stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "user_constrain_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
