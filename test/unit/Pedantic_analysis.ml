@@ -260,9 +260,7 @@ let%expect_test "Unused param warning" =
       Warning:
         The parameter d was declared but was not used in the model.
       Warning:
-        The parameter e was declared but was not used in the model.
-      Warning:
-        The parameter f was declared but was not used in the model. |}]
+        The parameter e was declared but was not used in the model. |}]
 
 let param_dependant_cf_example =
       {|
@@ -618,11 +616,17 @@ let%expect_test "Dist warnings" =
       Warning:
         The parameter ord has no priors.
       Warning:
+        The parameter pos_p has 19 priors.
+      Warning:
         The parameter pos_vec has no priors.
       Warning:
-        The parameter unb_p has no priors.
+        The parameter sim has 2 priors.
       Warning:
-        The parameter unit_p has no priors.
+        The parameter unb_p has 15 priors.
+      Warning:
+        The parameter unit_p has 2 priors.
+      Warning:
+        The parameter vec has 2 priors.
       Warning:
         The parameter x has no priors.
       Warning:
