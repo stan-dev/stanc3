@@ -128,7 +128,7 @@ let is_ctrl_flow pattern =
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
 *)
-let build_cf_graphs statement_map =
+let build_cf_graphs ?flatten_loops:(flatten_loops=false) statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
       (label : label) : cf_state * (label, cf_edges) Map.Poly.t =
@@ -168,10 +168,13 @@ let build_cf_graphs statement_map =
               loop statement
         *)
         let loop_exits =
-          Set.Poly.union_list
-            [ (*1*) Set.Poly.singleton label
-            ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
-            ]
+          if flatten_loops then
+            substmt_state_unlooped.exits
+          else
+            Set.Poly.union_list
+              [ (*1*) Set.Poly.singleton label
+              ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+              ]
         in
         ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       in
@@ -242,6 +245,6 @@ let build_cf_graph statement_map =
   cf_graph
 
 (** See interface file *)
-let build_predecessor_graph statement_map =
-  let exits, pred_graph, _ = build_cf_graphs statement_map in
+let build_predecessor_graph ?flatten_loops:(flatten_loops=false) statement_map =
+  let exits, pred_graph, _ = build_cf_graphs ~flatten_loops statement_map in
   (exits, pred_graph)

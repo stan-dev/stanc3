@@ -168,7 +168,7 @@ let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt
+    Monotone_framework.forward_flowgraph_of_stmt ~flatten_loops:true stmt
   in
   let (module Flowgraph) = flowgraph in
   let labels = all_labels (module Flowgraph) in

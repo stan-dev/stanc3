@@ -6,7 +6,7 @@ open Mir_utils
 open Middle
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
+let inverse_flowgraph_of_stmt ?flatten_loops:(flatten_loops=false) (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
@@ -16,7 +16,7 @@ let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
       stmt
   in
   let initials, successors =
-    Dataflow_utils.build_predecessor_graph flowgraph_to_mir
+    Dataflow_utils.build_predecessor_graph ~flatten_loops flowgraph_to_mir
   in
   ( ( module struct
       type labels = int
@@ -58,8 +58,8 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 (** Compute the forward flowgraph of a Stan statement (for forward analyses) *)
-let forward_flowgraph_of_stmt stmt =
-  let inv_flowgraph = inverse_flowgraph_of_stmt stmt in
+let forward_flowgraph_of_stmt ?flatten_loops:(flatten_loops=false) stmt =
+  let inv_flowgraph = inverse_flowgraph_of_stmt ~flatten_loops stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
 
 (**  The lattice of sets of some values, with the inclusion order, set union
