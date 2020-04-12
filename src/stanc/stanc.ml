@@ -236,8 +236,8 @@ let main () =
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
-      remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
-      ^ "_model" ;
+      Stan_math_code_gen.model_prefix
+      ^ remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))) ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 

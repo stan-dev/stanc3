@@ -539,11 +539,13 @@ let pp_model_public ppf p =
   (* Boilerplate *)
   pf ppf "@ %a" pp_overloads ()
 
+let model_prefix = "model_"
+
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
-  pf ppf "@ @ std::string model_name() const { return \"%s\"; }" prog_name ;
+  pf ppf "@ @ std::string model_name() const { return \"%s\"; }" (String.drop_prefix prog_name (String.length model_prefix));
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 let usings =
