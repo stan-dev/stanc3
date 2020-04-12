@@ -235,9 +235,11 @@ let main () =
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
-    Semantic_check.model_name :=
+    (Semantic_check.model_name :=
       Stan_math_code_gen.model_prefix
-      ^ remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))) ;
+      ^ remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
+  else
+    Semantic_check.model_name := Stan_math_code_gen.model_prefix ^ !Semantic_check.model_name;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
