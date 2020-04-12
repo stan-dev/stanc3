@@ -963,3 +963,38 @@ let%expect_test "Dist warnings" =
         A inv_wishart distribution is given parameter mat as a scale matrix
         (argument 2), but mat was not constrained to be covariance.
     |}]
+
+let fundef_cf_example =
+  {|
+functions {
+  real func(real b) {
+    if(b > 0.0) {
+      return(1.0);
+    } else {
+      return(0.0);
+    }
+  }
+}
+data {
+  int N;
+  real x[N];
+}
+parameters {
+  real<lower = 0.0> sigma;
+}
+model {
+  x ~ normal(0, func(sigma));
+}
+|}
+
+let%expect_test "Function body parameter-dependent control flow" =
+  print_warn_pedantic (build_program fundef_cf_example) ;
+[%expect
+    {|
+      Warning:
+        The parameter sigma has no priors.
+      Warning at 'string', line 4, column 4 to line 8, column 5:
+        A control flow statement inside function func depends on argument b. At
+        'string', line 19, column 21 to column 26, the value of b depends on
+        parameter(s): sigma.
+    |}]

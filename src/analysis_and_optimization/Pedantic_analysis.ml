@@ -70,39 +70,161 @@ let list_multi_twiddles (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_twiddles
 
-let list_param_dependant_cf (mir : Program.Typed.t)
+(* Find all of the targets which are dependencies for a given label *)
+let var_deps info_map label ?expr:(expr_opt:Expr.Typed.t option=None) (targets : string Set.Poly.t) : string Set.Poly.t =
+  (* Labels of dependencies *)
+  let dep_labels = match expr_opt with
+    | None -> node_dependencies info_map label
+    | Some expr ->
+      let vars = Set.Poly.map ~f:fst (expr_var_set expr)
+      in node_vars_dependencies info_map vars label
+  in
+  (* expressions of dependencies *)
+  let dep_exprs =
+    union_map dep_labels ~f:(fun label ->
+        let stmt, _ = Map.Poly.find_exn info_map label in
+        stmt_rhs_var_set stmt)
+  in
+  (* variable dependencies *)
+  let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
+  (* target dependencies *)
+  Set.Poly.inter targets dep_vars
+
+let list_target_dependant_cf
+    (info_map :
+       ( label
+       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info ) Map.Poly.t)
+    (targets : string Set.Poly.t)
   : (Location_span.t * string Set.Poly.t) Set.Poly.t =
-  let params = parameter_names_set mir in
-  (* build dataflow data structure *)
-  let info_map = log_prob_build_dep_info_map mir in
   (* Find all the control flow nodes *)
   let cf_labels = Set.Poly.of_list
       (Map.Poly.keys
          (Map.Poly.filter info_map ~f:(fun (stmt, _) ->
               is_ctrl_flow stmt)))
   in
-  (* Find all of the parameters which are dependencies for a given label *)
-  let label_var_deps label : (Location_span.t * string Set.Poly.t) =
-    (* Labels of dependencies *)
-    let dep_labels = node_dependencies info_map label in
-    (* expressions of dependencies *)
-    let dep_exprs =
-      union_map dep_labels ~f:(fun label ->
-          let stmt, _ = Map.Poly.find_exn info_map label in
-          stmt_rhs_var_set stmt)
-    in
-    (* variable dependencies *)
-    let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
-    (* parameter dependencies *)
-    let dep_params = Set.Poly.inter params dep_vars in
-    let _, info = Map.Poly.find_exn info_map label in
-    (info.meta, dep_params)
+  Set.Poly.filter_map
+    ~f:(fun label ->
+        let deps = var_deps info_map label targets in
+        if Set.Poly.is_empty deps then
+          None
+        else
+          let (_, info) = Map.Poly.find_exn info_map label in
+          Some (info.meta, deps))
+    cf_labels
+
+let list_param_dependant_cf (mir : Program.Typed.t)
+  : (Location_span.t * string Set.Poly.t) Set.Poly.t =
+  let params = parameter_names_set mir in
+  (* build dataflow data structure *)
+  let info_map = log_prob_build_dep_info_map mir in
+  list_target_dependant_cf info_map params
+
+let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
+    (fun_def : 'a Program.fun_def)
+  : (Location_span.t * int * string) Set.Poly.t =
+  let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
+  (* build dataflow data structure *)
+  let info_map = build_dep_info_map mir fun_def.fdbody in
+  let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
+  union_map cf_deps ~f:(fun (loc, names) ->
+      Set.Poly.map names ~f:(fun name ->
+          let (ix, _) =
+            Option.value_exn
+              ~message:
+                "INTERNAL ERROR: Pedantic mode found CF dependent on an arg,\
+                 but the arg is mismatched. Please report a bug.\n"
+              (List.findi args ~f:(fun _ arg -> arg = name))
+          in (loc, ix, name)))
+
+let expr_collect_exprs
+    (expr : Expr.Typed.t)
+    ~f
+  : 'a Set.Poly.t =
+  let collect_expr s (expr : Expr.Typed.t) =
+    match f expr with
+    | Some a -> Set.Poly.add s a
+    | _ -> s
   in
-  let all_cf_var_deps = Set.Poly.map ~f:label_var_deps cf_labels in
-  (* remove empty dependency sets *)
-  Set.Poly.filter
-    ~f:(fun (_, vars) -> not (Set.Poly.is_empty vars))
-    all_cf_var_deps
+  fold_expr
+    ~init:Set.Poly.empty
+    ~take_expr:(fun s e -> collect_expr s e)
+    expr
+
+let stmts_collect_exprs
+    (stmts : ((Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) List.t)
+    ~f
+  : 'a Set.Poly.t =
+  let collect_expr s (expr : Expr.Typed.t) =
+    match f expr with
+    | Some a -> Set.Poly.add s a
+    | _ -> s
+  in
+  fold_stmts
+    ~init:Set.Poly.empty
+    ~take_stmt:(fun s _ -> s)
+    ~take_expr:(fun s e -> collect_expr s e)
+    stmts
+
+let list_param_dependant_fundef_cf
+    (mir : Program.Typed.t)
+    (info_map :
+       ( label
+       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info ) Map.Poly.t)
+    (fun_def : 'a Program.fun_def)
+  : (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t =
+  let dep_args = list_arg_dependant_fundef_cf mir fun_def in
+  let fun_calls : (Expr.Typed.t * label) Set.Poly.t =
+    Set.Poly.union_list
+      (List.map ~f:snd (Map.Poly.to_alist
+         (Map.Poly.filter_mapi info_map ~f:(fun ~key:label ~data:(stmt, _) ->
+              let funapps =
+                union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
+                    expr_collect_exprs
+                      rhs_expr
+                      ~f:(fun rhs_subexpr ->
+                          match rhs_subexpr.pattern with
+                          | Expr.Fixed.Pattern.FunApp
+                              (UserDefined, fname, _)
+                            when fname = fun_def.fdname ->
+                            Some (rhs_subexpr, label)
+                          | _ -> None))
+              in
+              if Set.Poly.is_empty funapps then
+                None
+              else
+                Some funapps))))
+  in
+  let arg_exprs (fcall_expr : Expr.Typed.t) = match fcall_expr with
+    | ({pattern= Expr.Fixed.Pattern.FunApp (UserDefined, fname, arg_exprs); _})
+      when fname = fun_def.fdname ->
+      Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
+          (loc, List.nth_exn arg_exprs ix, arg_name))
+    | _ -> raise (Failure
+                    "In finding searching for parameter dependent function\
+                     arguments, mismatched function. Please report a bug.\n")
+  in
+  let arg_param_deps label arg_expr =
+    var_deps info_map ~expr:(Some arg_expr) label (parameter_names_set mir)
+  in
+  union_map fun_calls ~f:(fun (fcall_expr, label) ->
+      Set.Poly.filter_map
+        (arg_exprs fcall_expr)
+        ~f:(fun (cf_loc, arg_expr, arg_name) ->
+            let deps = arg_param_deps label arg_expr in
+            if Set.Poly.is_empty deps then
+              None
+            else
+              Some (cf_loc, deps, arg_name, arg_expr.meta.loc)))
+
+let list_param_dependant_fundefs_cf
+    (mir : Program.Typed.t)
+  : (string * Location_span.t * string Set.Poly.t * string * Location_span.t)
+      Set.Poly.t =
+  let info_map = log_prob_build_dep_info_map mir in
+  union_map (Set.Poly.of_list mir.functions_block) ~f:(fun fun_def ->
+      let dependant_args = list_param_dependant_fundef_cf mir info_map fun_def in
+      Set.Poly.map dependant_args ~f:(fun (cf_loc, deps, arg_name, arg_loc) ->
+          (fun_def.fdname, cf_loc, deps, arg_name, arg_loc)))
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t)
   : (string * int) Set.Poly.t =
@@ -148,8 +270,7 @@ let compiletime_value_of_expr
    nature of their first argument
 *)
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
-  let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
-    match expr.pattern with
+  let take_dist (expr : Expr.Typed.t) = match expr.pattern with
     | Expr.Fixed.Pattern.FunApp
         (StanLib, fname, arg_exprs) ->
       (match chop_dist_name fname with
@@ -159,21 +280,51 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
          let args =
            List.map ~f:(compiletime_value_of_expr params data) arg_exprs
          in
-         Set.Poly.add s
+         Some
            { name = dname
            ; loc = expr.meta.loc
            ; args = args
            }
-       | _ -> s)
-    | _ -> s
+       | _ -> None)
+    | _ -> None
   in
-  fold_stmts
-    ~init:Set.Poly.empty
-    ~take_stmt:(fun s _ -> s)
-    ~take_expr:(fun s e -> collect_distribution_expr s e)
+  stmts_collect_exprs
     (List.append
        mir.log_prob
        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
+    ~f:take_dist
+
+(* (\* Scrape all distributions from the program by searching for their function
+ *    names and function type, and wrangle some useful data about them, like the
+ *    nature of their first argument
+ * *\)
+ * let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
+ *   let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
+ *     match expr.pattern with
+ *     | Expr.Fixed.Pattern.FunApp
+ *         (StanLib, fname, arg_exprs) ->
+ *       (match chop_dist_name fname with
+ *        | Some dname ->
+ *          let params = parameter_set mir in
+ *          let data = data_set mir in
+ *          let args =
+ *            List.map ~f:(compiletime_value_of_expr params data) arg_exprs
+ *          in
+ *          Set.Poly.add s
+ *            { name = dname
+ *            ; loc = expr.meta.loc
+ *            ; args = args
+ *            }
+ *        | _ -> s)
+ *     | _ -> s
+ *   in
+ *   fold_stmts
+ *     ~init:Set.Poly.empty
+ *     ~take_stmt:(fun s _ -> s)
+ *     ~take_expr:(fun s e -> collect_distribution_expr s e)
+ *     (List.append
+ *        mir.log_prob
+ *        (List.map ~f:(fun f -> f.fdbody) mir.functions_block)) *)
 
 (* Our definition of 'unscaled' for constants used in distributions *)
 let is_unscaled_value (v : float) =
@@ -283,6 +434,24 @@ let param_dependant_cf_warnings (mir : Program.Typed.t) =
     ~f:(fun (loc, plist) -> (loc, param_dependant_cf_message plist))
     cfs
 
+let param_dependant_fundef_cf_message
+    (fname : string)
+    (plist : string Set.Poly.t)
+    (arg_name : string)
+    (callsite : Location_span.t)
+  : string =
+  let plistStr = String.concat ~sep:", " (Set.Poly.to_list plist) in
+  Printf.sprintf
+    "A control flow statement inside function %s depends on argument \
+     %s. At %s, the value of %s depends on parameter(s): %s."
+    fname arg_name (Location_span.to_string callsite) arg_name plistStr
+
+let param_dependant_fundef_cf_warnings (mir : Program.Typed.t) =
+  Set.Poly.map
+    ~f:(fun (fname, cf_loc, deps, arg_name, arg_loc) ->
+        (cf_loc, param_dependant_fundef_cf_message fname deps arg_name arg_loc))
+    (list_param_dependant_fundefs_cf mir)
+
 let unused_params_message (pname : string) : string =
   Printf.sprintf
     "The parameter %s was declared but was not used in the model."
@@ -356,6 +525,7 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
     ; hard_constrained_warnings mir
     ; unused_params_warnings factor_graph mir
     ; param_dependant_cf_warnings mir
+    ; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info
     ]

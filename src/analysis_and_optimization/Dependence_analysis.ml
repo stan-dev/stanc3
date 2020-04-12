@@ -238,21 +238,19 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                (Set.Poly.union arg_vars globals)
                fdbody )) ]
 
-let log_prob_build_dep_info_map (mir : Program.Typed.t) :
+let build_dep_info_map (mir : Program.Typed.t)
+    (stmt : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
   ( label
   , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
     Map.Poly.t =
-  let log_prob_stmt =
-    Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob}
-  in
   let statement_map =
     build_statement_map
       (fun Stmt.Fixed.({pattern; _}) -> pattern)
       (fun Stmt.Fixed.({meta; _}) -> meta)
-      log_prob_stmt
+      stmt
   in
   let _, preds, parents = build_cf_graphs statement_map in
-  let rd_map = mir_reaching_definitions mir log_prob_stmt in
+  let rd_map = mir_reaching_definitions mir stmt in
   Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, meta) ->
       let rds = Map.find_exn rd_map label in
       ( stmt
@@ -261,6 +259,16 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
         ; meta= meta} ) )
+
+
+let log_prob_build_dep_info_map (mir : Program.Typed.t) :
+  ( label
+  , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
+    Map.Poly.t =
+  let log_prob_stmt =
+    Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob}
+  in
+  build_dep_info_map mir log_prob_stmt
 
 let log_prob_dependency_graph (mir : Program.Typed.t) :
   (label, label Set.Poly.t) Map.Poly.t =

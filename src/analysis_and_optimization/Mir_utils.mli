@@ -20,6 +20,12 @@ val parameter_set : ?include_transformed:bool -> Program.Typed.t -> (string * Ex
 
 val parameter_names_set : ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t
 
+val fold_expr :
+  take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
+  -> init:'c
+  -> Expr.Typed.t
+  -> 'c
+
 val fold_stmts :
   take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
   -> take_stmt:('c -> Stmt.Located.t -> 'c)
@@ -124,7 +130,7 @@ val index_var_set :
    For use in RHS sets, not LHS assignment sets, except in a target term
 *)
 
-val stmt_rhs : (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.Set.t
+val stmt_rhs : (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.t Set.Poly.t
 (**
    The set of variables that can affect the value or behavior of the expression, i.e. rhs.
    Using Set.Poly instead of ExprSet so that 'e can be polymorphic, it usually doesn't

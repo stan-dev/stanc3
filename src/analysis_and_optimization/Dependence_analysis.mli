@@ -67,6 +67,16 @@ val node_vars_dependencies :
    'blockers' are variables which will not be traversed.
 *)
 
+val build_dep_info_map :
+  Program.Typed.t
+  -> (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t
+  -> ( label
+     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
+    Map.Poly.t
+(**
+   Build the dependency information for each node in the log_prob section of a program
+*)
+
 val log_prob_build_dep_info_map :
      Program.Typed.t
   -> ( label

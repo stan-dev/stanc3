@@ -4,21 +4,31 @@ open Middle.Program
 open Middle.Expr
 open Dataflow_types
 
+let rec fold_expr
+    ~take_expr
+    ~(init:'c)
+    (expr : Expr.Typed.t)
+  : 'c =
+  Expr.Fixed.Pattern.fold_left
+    ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
+    ~init
+    expr.pattern
+
 let fold_stmts
     ~take_expr
     ~take_stmt
     ~(init:'c)
     (stmts : Stmt.Located.t List.t)
   : 'c =
-  let rec fold_expr (state : 'c) (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
-    Expr.Fixed.Pattern.fold_left
-      ~f:(fun a e -> fold_expr (take_expr a e) e)
-      ~init:state
-      expr.pattern
-  in
+  (* let rec fold_expr (state : 'c) (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
+   *   Expr.Fixed.Pattern.fold_left
+   *     ~f:(fun a e -> fold_expr (take_expr a e) e)
+   *     ~init:state
+   *     expr.pattern
+   * in *)
   let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
     Stmt.Fixed.Pattern.fold_left
-      ~f:(fun a e -> fold_expr (take_expr a e) e)
+      ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
       ~g:(fun a s -> fold_stmt (take_stmt a s) s)
       ~init:state
       stmt.pattern
@@ -256,16 +266,16 @@ and index_var_set ix =
 let stmt_rhs stmt =
   match stmt with
   | Stmt.Fixed.Pattern.For vars ->
-      Expr.Typed.Set.of_list [vars.lower; vars.upper]
-  | NRFunApp (_, _, exprs) -> Expr.Typed.Set.of_list exprs
+      Set.Poly.of_list [vars.lower; vars.upper]
+  | NRFunApp (_, _, exprs) -> Set.Poly.of_list exprs
   | IfElse (rhs, _, _)
    |While (rhs, _)
    |Assignment (_, rhs)
    |TargetPE rhs
    |Return (Some rhs) ->
-      Expr.Typed.Set.singleton rhs
+      Set.Poly.singleton rhs
   | Return None | Break | Continue | Skip | Decl _ | Block _ | SList _ ->
-      Expr.Typed.Set.empty
+      Set.Poly.empty
 
 let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
   Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.Poly.union s (f a))
