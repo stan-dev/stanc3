@@ -1,6 +1,6 @@
 data {
   // declare matching model name should fail
-  int bad_model_name_var_model;  
+  int model_bad_model_name_var;  
 }
 parameters {
    real bar;
