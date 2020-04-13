@@ -2048,7 +2048,7 @@ Syntax error in 'location-scale-bad9.stan', line 1, column 28 to column 29, pars
                                       ^
    -------------------------------------------------
 
-Expected '>' or lower expression after multiplier expression.
+Expected '>' or offset expression after multiplier expression.
 
 
   $ ../../../../../install/default/bin/stanc mystery1.stan

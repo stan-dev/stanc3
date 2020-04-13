@@ -13639,7 +13639,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA WHILE
 ## MULTIPLIER ASSIGN constr_expression COMMA
 ##
 
-Expected '>' or lower expression after multiplier expression.
+Expected '>' or offset expression after multiplier expression.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET WHILE
 ##
