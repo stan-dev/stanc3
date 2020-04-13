@@ -9337,117 +9337,117 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'motherHOF.stan', line 48, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 49, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 50, column 2 to column 14)",
-                                                      " (in 'motherHOF.stan', line 51, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 52, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 53, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 54, column 2 to column 11)",
-                                                      " (in 'motherHOF.stan', line 57, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 58, column 2 to column 37)",
-                                                      " (in 'motherHOF.stan', line 59, column 2 to column 33)",
-                                                      " (in 'motherHOF.stan', line 60, column 2 to line 61, column 69)",
-                                                      " (in 'motherHOF.stan', line 62, column 2 to line 63, column 69)",
-                                                      " (in 'motherHOF.stan', line 64, column 2 to line 65, column 69)",
-                                                      " (in 'motherHOF.stan', line 66, column 2 to column 23)",
-                                                      " (in 'motherHOF.stan', line 67, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 68, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 69, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 70, column 2 to column 70)",
-                                                      " (in 'motherHOF.stan', line 71, column 2 to column 86)",
-                                                      " (in 'motherHOF.stan', line 72, column 2 to column 86)",
-                                                      " (in 'motherHOF.stan', line 73, column 2 to column 72)",
-                                                      " (in 'motherHOF.stan', line 75, column 2 to column 88)",
-                                                      " (in 'motherHOF.stan', line 76, column 2 to column 72)",
-                                                      " (in 'motherHOF.stan', line 77, column 2 to column 88)",
-                                                      " (in 'motherHOF.stan', line 132, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 133, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 134, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 135, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 136, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 138, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 139, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 140, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 141, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 143, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 144, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 145, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 146, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 148, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 149, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 150, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 151, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 153, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 154, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 155, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 156, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 158, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 159, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 160, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 161, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 163, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 164, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 165, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 166, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 168, column 2 to column 34)",
-                                                      " (in 'motherHOF.stan', line 169, column 2 to column 38)",
-                                                      " (in 'motherHOF.stan', line 170, column 2 to line 171, column 69)",
-                                                      " (in 'motherHOF.stan', line 81, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 82, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 83, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 84, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 86, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 87, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 88, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 90, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 91, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 92, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 93, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 95, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 96, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 97, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 98, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 100, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 101, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 102, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 103, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 105, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 106, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 107, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 108, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 109, column 2 to column 56)",
-                                                      " (in 'motherHOF.stan', line 110, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 52, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 53, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 54, column 2 to column 14)",
+                                                      " (in 'motherHOF.stan', line 55, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 56, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 57, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 58, column 2 to column 11)",
+                                                      " (in 'motherHOF.stan', line 61, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 62, column 2 to column 37)",
+                                                      " (in 'motherHOF.stan', line 63, column 2 to column 33)",
+                                                      " (in 'motherHOF.stan', line 64, column 2 to line 66, column 71)",
+                                                      " (in 'motherHOF.stan', line 67, column 2 to line 68, column 69)",
+                                                      " (in 'motherHOF.stan', line 69, column 2 to line 70, column 69)",
+                                                      " (in 'motherHOF.stan', line 71, column 2 to column 23)",
+                                                      " (in 'motherHOF.stan', line 72, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 73, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 74, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 75, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 76, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 77, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 78, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 80, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 81, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 82, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 137, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 138, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 139, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 140, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 141, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 143, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 144, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 145, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 146, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 148, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 149, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 150, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 151, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 153, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 154, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 155, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 156, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 158, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 159, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 160, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 161, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 163, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 164, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 165, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 166, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 168, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 169, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 170, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 171, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 173, column 2 to column 34)",
+                                                      " (in 'motherHOF.stan', line 174, column 2 to column 38)",
+                                                      " (in 'motherHOF.stan', line 175, column 2 to line 176, column 69)",
+                                                      " (in 'motherHOF.stan', line 86, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 87, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 88, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 89, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 91, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 92, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 93, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 95, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 96, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 97, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 98, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 100, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 101, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 102, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 103, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 105, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 106, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 107, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 108, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 110, column 2 to column 61)",
                                                       " (in 'motherHOF.stan', line 111, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 112, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 113, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 114, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 115, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 117, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 118, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 119, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 120, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 121, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 122, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 112, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 113, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 114, column 2 to column 56)",
+                                                      " (in 'motherHOF.stan', line 115, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 116, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 117, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 118, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 119, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 120, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 122, column 2 to column 67)",
                                                       " (in 'motherHOF.stan', line 123, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 124, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 125, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 126, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 127, column 2 to column 70)",
-                                                      " (in 'motherHOF.stan', line 129, column 2 to column 36)",
-                                                      " (in 'motherHOF.stan', line 33, column 2 to column 17)",
-                                                      " (in 'motherHOF.stan', line 34, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 35, column 2 to column 10)",
-                                                      " (in 'motherHOF.stan', line 36, column 2 to column 13)",
-                                                      " (in 'motherHOF.stan', line 37, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 38, column 2 to column 12)",
-                                                      " (in 'motherHOF.stan', line 39, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 40, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 41, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 42, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 43, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 44, column 2 to column 20)",
-                                                      " (in 'motherHOF.stan', line 45, column 2 to column 19)",
+                                                      " (in 'motherHOF.stan', line 124, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 125, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 126, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 127, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 128, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 129, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 130, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 131, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 132, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 134, column 2 to column 36)",
+                                                      " (in 'motherHOF.stan', line 37, column 2 to column 17)",
+                                                      " (in 'motherHOF.stan', line 38, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 39, column 2 to column 10)",
+                                                      " (in 'motherHOF.stan', line 40, column 2 to column 13)",
+                                                      " (in 'motherHOF.stan', line 41, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 42, column 2 to column 12)",
+                                                      " (in 'motherHOF.stan', line 43, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 44, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 45, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 46, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 47, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 48, column 2 to column 20)",
+                                                      " (in 'motherHOF.stan', line 49, column 2 to column 19)",
                                                       " (in 'motherHOF.stan', line 7, column 4 to column 17)",
                                                       " (in 'motherHOF.stan', line 8, column 4 to column 19)",
                                                       " (in 'motherHOF.stan', line 9, column 4 to column 38)",
@@ -9457,13 +9457,15 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 12, column 71 to line 14, column 3)",
                                                       " (in 'motherHOF.stan', line 17, column 4 to column 22)",
                                                       " (in 'motherHOF.stan', line 16, column 42 to line 18, column 3)",
-                                                      " (in 'motherHOF.stan', line 20, column 4 to column 17)",
-                                                      " (in 'motherHOF.stan', line 19, column 28 to line 21, column 3)",
-                                                      " (in 'motherHOF.stan', line 26, column 4 to column 18)",
-                                                      " (in 'motherHOF.stan', line 27, column 4 to column 25)",
-                                                      " (in 'motherHOF.stan', line 28, column 4 to column 25)",
-                                                      " (in 'motherHOF.stan', line 29, column 4 to column 15)",
-                                                      " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
+                                                      " (in 'motherHOF.stan', line 21, column 4 to column 22)",
+                                                      " (in 'motherHOF.stan', line 20, column 42 to line 22, column 3)",
+                                                      " (in 'motherHOF.stan', line 24, column 4 to column 17)",
+                                                      " (in 'motherHOF.stan', line 23, column 28 to line 25, column 3)",
+                                                      " (in 'motherHOF.stan', line 30, column 4 to column 18)",
+                                                      " (in 'motherHOF.stan', line 31, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 32, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 33, column 4 to column 15)",
+                                                      " (in 'motherHOF.stan', line 29, column 39 to line 34, column 3)"};
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
@@ -9588,6 +9590,44 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 }
 };
 
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+boo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+    const Eigen::Matrix<T1__, -1, 1>& job_params,
+    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 121;
+    return transpose(stan::math::to_row_vector(
+             stan::math::array_builder<int>().add(4).add(5).add(6).array()));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct boo_functor__ {
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+           const Eigen::Matrix<T1__, -1, 1>& job_params,
+           const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+           std::ostream* pstream__)  const 
+{
+return boo(shared_params, job_params, data_r, data_i, pstream__);
+}
+};
+
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 map_rectfake(const T0__& x, std::ostream* pstream__) {
@@ -9596,7 +9636,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 121;
+    current_statement__ = 123;
     return (2 * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9629,23 +9669,23 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) propto__;
   
   try {
-    current_statement__ = 123;
+    current_statement__ = 125;
     validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     
-    current_statement__ = 123;
+    current_statement__ = 125;
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      current_statement__ = 123;
+      current_statement__ = 125;
       assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
         std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
-    current_statement__ = 124;
+    current_statement__ = 126;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
-    current_statement__ = 125;
+    current_statement__ = 127;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
       (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
-    current_statement__ = 126;
+    current_statement__ = 128;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10024,8 +10064,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable y_hat_tp1");}
       current_statement__ = 11;
       assign(y_hat_tp1, nil_index_list(),
-        map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
-          data_i, pstream__), "assigning variable y_hat_tp1");
+        add(
+          map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
+            data_i, pstream__),
+          map_rect<2, boo_functor__>(shared_params_p, job_params_d, data_r,
+            data_i, pstream__)), "assigning variable y_hat_tp1");
       current_statement__ = 12;
       validate_non_negative_index("y_hat_tp2", "3", 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
@@ -10039,7 +10082,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable y_hat_tp2");}
       current_statement__ = 12;
       assign(y_hat_tp2, nil_index_list(),
-        map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
+        map_rect<3, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
       current_statement__ = 13;
       validate_non_negative_index("y_hat_tp3", "3", 3);
@@ -10054,7 +10097,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable y_hat_tp3");}
       current_statement__ = 13;
       assign(y_hat_tp3, nil_index_list(),
-        map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
+        map_rect<4, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
       current_statement__ = 14;
       validate_non_negative_index("theta_p_as", "2", 2);
@@ -10492,15 +10535,18 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       abc3_p = map_rectfake(12, pstream__);
       current_statement__ = 11;
       assign(y_hat_tp1, nil_index_list(),
-        map_rect<4, foo_functor__>(shared_params_p, job_params_d, data_r,
-          data_i, pstream__), "assigning variable y_hat_tp1");
+        add(
+          map_rect<5, foo_functor__>(shared_params_p, job_params_d, data_r,
+            data_i, pstream__),
+          map_rect<6, boo_functor__>(shared_params_p, job_params_d, data_r,
+            data_i, pstream__)), "assigning variable y_hat_tp1");
       current_statement__ = 12;
       assign(y_hat_tp2, nil_index_list(),
-        map_rect<5, foo_functor__>(shared_params_d, job_params_p, data_r,
+        map_rect<7, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
       current_statement__ = 13;
       assign(y_hat_tp3, nil_index_list(),
-        map_rect<6, foo_functor__>(shared_params_p, job_params_d, data_r,
+        map_rect<8, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
       current_statement__ = 18;
       assign(theta_p_as, nil_index_list(),
@@ -10694,7 +10740,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable y_hat_gq");}
       current_statement__ = 56;
       assign(y_hat_gq, nil_index_list(),
-        map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
+        map_rect<9, foo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_gq");
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= T; ++sym2__) {
@@ -11192,8 +11238,6 @@ STAN_REGISTER_MAP_RECT(2, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(3, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(4, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(5, motherHOF_model_namespace::foo_functor__)
-STAN_REGISTER_MAP_RECT(6, motherHOF_model_namespace::foo_functor__)
-STAN_REGISTER_MAP_RECT(7, motherHOF_model_namespace::foo_functor__)
   $ ../../../../../install/default/bin/stanc --print-cpp optimize_glm.stan
 
 // Code generated by %%NAME%% %%VERSION%%
