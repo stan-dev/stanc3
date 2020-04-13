@@ -4055,7 +4055,7 @@
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Lit Str offset_multiplier))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 1))
+                  ((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6659,7 +6659,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Str offset_multiplier))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 1))
+                  ((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -9657,7 +9657,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Str offset_multiplier))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 1))
+                  ((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10407,7 +10407,7 @@
      (out_block Parameters)
      (out_trans
       (Offset
-       ((pattern (Lit Int 1))
+       ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (p_real_1d_ar
     ((out_unconstrained_st
