@@ -291,7 +291,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) ppbody =
-  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name (list ~sep:comma string)
+  pf ppf "@[<v 2> %s %s(@[<hov>@,%a@]) %a " rt name (list ~sep:comma string)
     params (list ~sep:cut string) cv_attr;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;

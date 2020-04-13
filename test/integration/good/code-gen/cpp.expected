@@ -171,9 +171,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -240,12 +239,12 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -310,10 +309,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -365,7 +363,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("mu");
@@ -374,7 +372,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     names__.emplace_back("theta");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
@@ -387,10 +385,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "mu");
@@ -412,10 +409,9 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "mu");
@@ -437,13 +433,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -4205,9 +4201,8 @@ class mother_model : public model_base_crtp<mother_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5254,12 +5249,12 @@ class mother_model : public model_base_crtp<mother_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -7083,10 +7078,9 @@ class mother_model : public model_base_crtp<mother_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -7757,7 +7751,7 @@ class mother_model : public model_base_crtp<mother_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("p_real");
@@ -7824,7 +7818,7 @@ class mother_model : public model_base_crtp<mother_model> {
     names__.emplace_back("idx_res5");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
@@ -8032,10 +8026,9 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "p_real");
@@ -8522,10 +8515,9 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "p_real");
@@ -8994,13 +8986,13 @@ class mother_model : public model_base_crtp<mother_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -9760,9 +9752,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10138,12 +10129,12 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -10552,10 +10543,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -10685,7 +10675,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("y0_p");
@@ -10713,7 +10703,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.emplace_back("y_hat_gq");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
@@ -10766,10 +10756,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -10854,10 +10843,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -10942,13 +10930,13 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -11547,9 +11535,8 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12165,12 +12152,12 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -12282,10 +12269,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -12472,7 +12458,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("alpha_v");
@@ -12486,7 +12472,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     names__.emplace_back("X_rv_p");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(k)});
@@ -12511,10 +12497,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -12560,10 +12545,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -12609,13 +12593,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -12932,9 +12916,8 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12980,12 +12963,12 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -13037,10 +13020,9 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -13077,14 +13059,14 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("y1");
     names__.emplace_back("y2");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
@@ -13093,10 +13075,9 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -13117,10 +13098,9 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -13141,13 +13121,13 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
@@ -14476,9 +14456,8 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -14772,12 +14751,12 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -15127,10 +15106,9 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -15659,7 +15637,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("a8");
@@ -15680,7 +15658,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     names__.emplace_back("y1");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
@@ -15741,10 +15719,9 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -15893,10 +15870,9 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -16045,13 +16021,13 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
@@ -18743,9 +18719,8 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -19099,12 +19074,12 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -19542,10 +19517,9 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -19935,7 +19909,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("y1");
@@ -19979,7 +19953,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     names__.emplace_back("tgs");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
@@ -20077,10 +20051,9 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -20212,10 +20185,9 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -20347,13 +20319,13 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y9\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y10\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y11\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y12\",\"type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y17\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"t1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t1a\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tgs\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y9\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y10\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y11\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y12\",\"type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y17\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"t1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t1a\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tgs\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -20557,9 +20529,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -20617,12 +20588,12 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -20657,10 +20628,9 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -20684,23 +20654,22 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("x");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "x");
@@ -20714,10 +20683,9 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "x");
@@ -20731,13 +20699,13 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -20961,9 +20929,8 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21081,12 +21048,12 @@ class truncate_model : public model_base_crtp<truncate_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -21126,10 +21093,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -21158,14 +21124,14 @@ class truncate_model : public model_base_crtp<truncate_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("m");
     names__.emplace_back("y");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
@@ -21174,10 +21140,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "m");
@@ -21192,10 +21157,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "m");
@@ -21210,13 +21174,13 @@ class truncate_model : public model_base_crtp<truncate_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -21440,9 +21404,8 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  inline T__ log_prob(std::vector<T__>& params_r__,
-                      std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+                std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21478,12 +21441,12 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     } // log_prob() 
     
   template <typename RNG>
-  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                          std::vector<int>& params_i__,
-                          std::vector<double>& vars__,
-                          bool emit_transformed_parameters__ = true,
-                          bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                    std::vector<int>& params_i__,
+                    std::vector<double>& vars__,
+                    bool emit_transformed_parameters__ = true,
+                    bool emit_generated_quantities__ = true,
+                    std::ostream* pstream__ = 0) const {
     using local_scalar_t__ = double;
     vars__.clear();
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -21518,10 +21481,9 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
     } // write_array() 
     
-  inline void transform_inits(const stan::io::var_context& context__,
-                              std::vector<int>& params_i__,
-                              std::vector<double>& vars__,
-                              std::ostream* pstream__) const
+   void transform_inits(const stan::io::var_context& context__,
+                        std::vector<int>& params_i__,
+                        std::vector<double>& vars__, std::ostream* pstream__) const
     final {
     using local_scalar_t__ = double;
     vars__.clear();
@@ -21545,23 +21507,22 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     }
     } // transform_inits() 
     
-  inline void get_param_names(std::vector<std::string>& names__) const {
+   void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
     names__.emplace_back("x");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+   void get_dims(std::vector<std::vector<size_t>>& dimss__) const
     final {
     dimss__.clear();
     dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     
-  inline void constrained_param_names(
-                                      std::vector<std::string>& param_names__,
-                                      bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const
+   void constrained_param_names(std::vector<std::string>& param_names__,
+                                bool emit_transformed_parameters__ = true,
+                                bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "x");
@@ -21575,10 +21536,9 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     } // constrained_param_names() 
     
-  inline void unconstrained_param_names(
-                                        std::vector<std::string>& param_names__,
-                                        bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const
+   void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                  bool emit_transformed_parameters__ = true,
+                                  bool emit_generated_quantities__ = true) const
     final {
     
     param_names__.emplace_back(std::string() + "x");
@@ -21592,13 +21552,13 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
+   std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
+   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
