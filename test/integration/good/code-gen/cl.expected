@@ -62,6 +62,7 @@ using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
+using std::pow;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
@@ -269,6 +270,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimize_glm.stan', line 20, column 2 to column 20)",
                                                       " (in 'optimize_glm.stan', line 21, column 2 to column 15)",
                                                       " (in 'optimize_glm.stan', line 22, column 2 to column 16)"};
+
 
 
 class optimize_glm_model : public model_base_crtp<optimize_glm_model> {

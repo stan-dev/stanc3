@@ -62,6 +62,7 @@ using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
+using std::pow;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::model_base_crtp;
@@ -167,6 +168,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 16, column 8 to column 18)"};
+
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
