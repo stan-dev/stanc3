@@ -145,10 +145,9 @@ let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
 
-let functor_suffix_select f =
-  match f with
-  | x when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x  -> reduce_sum_functor_suffix
-  | _ -> functor_suffix
+let functor_suffix_select hof =
+  if Stan_math_signatures.is_reduce_sum_fn hof then reduce_sum_functor_suffix
+  else functor_suffix
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -308,9 +307,8 @@ and gen_fun_app ppf fname es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-      | ( true
-        , x
-        , {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl ) when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x->
+      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+        when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;

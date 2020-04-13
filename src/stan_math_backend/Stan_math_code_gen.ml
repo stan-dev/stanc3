@@ -187,10 +187,10 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
         ( fdname
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         ) ;
-      (* Produces the reduce_sum functors that has the pstream argument
-      as the third and not last argument *)
-      let first_two, rest_fdargs = List.split_n fdargs 2 in
       if String.Set.mem funs_used_in_reduce_sum fdname then
+        (* Produces the reduce_sum functors that has the pstream argument
+        as the third and not last argument *)
+        let first_two, rest_fdargs = List.split_n fdargs 2 in
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
           reduce_sum_functor_suffix pp_sig_rs "operator()" pp_call_str
           ( fdname
@@ -683,9 +683,11 @@ let pp_register_map_rect_functors ppf p =
 let fun_used_in_reduce_sum p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
-    (match pattern with
-    | FunApp (StanLib, x, {pattern= Var f; _} :: _) when List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions x -> String.Set.of_list [f]
-    | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x)
+      ( match pattern with
+      | FunApp (StanLib, x, {pattern= Var f; _} :: _)
+        when Stan_math_signatures.is_reduce_sum_fn x ->
+          String.Set.of_list [f]
+      | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
   in
   let rec find_functors_stmt accum stmt =
     Stmt.Fixed.(
@@ -707,7 +709,6 @@ let pp_prog ppf (p : Program.Typed.t) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
-    (* String.Set.fold ~f:String.concat ~init:"" (reduce_sum_struct_decl) *)
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;

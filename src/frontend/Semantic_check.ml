@@ -139,7 +139,7 @@ let check_fresh_variable_basic id is_nullary_function =
       Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
          || Stan_math_signatures.stan_math_returntype id.name [] = None )
-      || (List.mem ~equal:(String.equal) Stan_math_signatures.reduce_sum_functions id.name)
+      || Stan_math_signatures.is_reduce_sum_fn id.name
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -323,12 +323,6 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   let args_match a b =
     List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
   in
-  let return_generic_error =
-    es
-    |> List.map ~f:type_of_expr_typed
-    |> Semantic_error.illtyped_reduce_sum_generic loc id.name
-    |> Validate.error
-  in
   match es with
   | { emeta=
         { type_=
@@ -353,7 +347,11 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
           (List.map ~f:type_of_expr_typed es)
           (sliced_arg_fun :: fun_args)
         |> Validate.error
-  | _ -> return_generic_error
+  | _ ->
+      es
+      |> List.map ~f:type_of_expr_typed
+      |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+      |> Validate.error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
@@ -373,7 +371,7 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib when List.mem ~equal:String.equal Stan_math_signatures.reduce_sum_functions id.name ->
+  | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
   | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es

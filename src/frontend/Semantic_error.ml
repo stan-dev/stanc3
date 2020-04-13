@@ -19,7 +19,7 @@ module TypeError = struct
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedReduceSumBasic of string * UnsizedType.t list
+    | IllTypedReduceSumGeneric of string * UnsizedType.t list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -112,13 +112,14 @@ module TypeError = struct
           generate_reduce_sum_sig
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-    | IllTypedReduceSumBasic (name, arg_tys) ->
+    | IllTypedReduceSumGeneric (name, arg_tys) ->
         let rec n_commas n = if n = 0 then "" else "," ^ n_commas (n - 1) in
         let type_string (a, b, c, d) i =
           Fmt.strf "(%a, %a, T[%s], ...) => %a, %a, T[%s], ...\n"
             Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-            (n_commas (i-1)) Pretty_printing.pp_unsizedtype c
-            Pretty_printing.pp_unsizedtype d (n_commas i)
+            (n_commas (i - 1))
+            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
+            (n_commas i)
         in
         let lines =
           List.map
@@ -450,7 +451,7 @@ let illtyped_reduce_sum loc name arg_tys args =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args))
 
 let illtyped_reduce_sum_generic loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedReduceSumBasic (name, arg_tys))
+  TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
