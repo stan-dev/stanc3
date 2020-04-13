@@ -364,9 +364,17 @@ let pp_warning ppf (loc, msg) =
 
 (* Print a set of 'warnings', where each warning comes with its location.
    By tupling with location and using a set, we're also sorting the warning
-   messages by increasing location. *)
+   messages by increasing location.
+
+   I am not using Fmt to print to stderr here because there was a pretty awful
+   bug where it would unpredictably fail to flush. It would flush when using
+   stdout or when trying to print some strings and not others. I tried using
+   Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
+   string, and Out_channel to write it.
+*)
 let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
-  Set.Poly.iter warnings ~f:(pp_warning Fmt.stderr)
+  let str = Fmt.strf "%a" (Fmt.list ~sep:Fmt.nop pp_warning) (Set.Poly.to_list warnings) in
+  Out_channel.output_string Out_channel.stderr str
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
@@ -530,4 +538,6 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
     ; distribution_warnings distributions_info
     ]
   in
-  print_warning_set warning_set
+  print_warning_set warning_set;
+  (* Out_channel.flush Out_channel.stderr; *)
+  (* Fmt.pf Fmt.stderr "asdlkfja;slkdfj;asldkjf\n"; *)
