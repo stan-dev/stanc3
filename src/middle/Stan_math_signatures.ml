@@ -1,6 +1,5 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
-
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
@@ -82,6 +81,18 @@ let rec ints_to_real = function
   | UArray t -> UArray (ints_to_real t)
   | x -> x
 
+let reduce_sum_allowed_dimensionalities = [1; 2; 3; 4; 5; 6; 7]
+
+let reduce_sum_slice_types =
+  let base_slice_type i =
+    [ bare_array_type (UnsizedType.UReal, i)
+    ; bare_array_type (UnsizedType.UInt, i)
+    ; bare_array_type (UnsizedType.UMatrix, i)
+    ; bare_array_type (UnsizedType.UVector, i)
+    ; bare_array_type (UnsizedType.URowVector, i) ]
+  in
+  List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
+
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
@@ -127,6 +138,10 @@ let mk_declarative_sig (fnkinds, name, args) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
+
+let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
+
+let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
@@ -251,13 +266,16 @@ let stan_math_returntype name args =
         UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
       namematches
   in
-  if List.length filteredmatches = 0 then None
-    (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-  else
-    Some
-      (List.hd_exn
-         (List.sort ~compare:UnsizedType.compare_returntype
-            (List.map ~f:fst filteredmatches)))
+  match name with
+  | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
+  | _ ->
+      if List.length filteredmatches = 0 then None
+        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+      else
+        Some
+          (List.hd_exn
+             (List.sort ~compare:UnsizedType.compare_returntype
+                (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
