@@ -2042,13 +2042,13 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad9.stan
 
-Syntax error in 'location-scale-bad9.stan', line 1, column 27 to column 28, parsing error:
+Syntax error in 'location-scale-bad9.stan', line 1, column 28 to column 29, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier = y,> x;}
-                                     ^
+                                      ^
    -------------------------------------------------
 
-Expected ">" after "multiplier =" expression.
+Expected '>' or lower expression after multiplier expression.
 
 
   $ ../../../../../install/default/bin/stanc mystery1.stan
@@ -3740,13 +3740,13 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad13.stan
 
-Syntax error in 'transformations-bad13.stan', line 1, column 22 to column 23, parsing error:
+Syntax error in 'transformations-bad13.stan', line 1, column 23 to column 24, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = T,> x;}
-                                ^
+                                 ^
    -------------------------------------------------
 
-Expected expression (not containing binary logical operators) ">" after "upper =".
+'>' or lower expression expected after upper expression.
 
 
   $ ../../../../../install/default/bin/stanc transformations-bad14.stan
