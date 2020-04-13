@@ -67,9 +67,6 @@ generated quantities {
 
 }
 
-Info: Found int division at 'kidney.stan', line 39, column 16 to column 17:
-  1 / tau
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'kidney.stan', line 1, column 0:
    -------------------------------------------------
