@@ -662,17 +662,6 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
 
 let pp_register_map_rect_functors ppf p =
-  (* let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
-    String.Set.union accum (
-    match pattern with
-    | FunApp (StanLib, "map_rect", {pattern= Var f; _} :: _) -> String.Set.of_list [f]
-    | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x)
-  in
-  let rec find_functors_stmt accum stmt =
-    Stmt.Fixed.(
-      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
-  in
-  let functors = Program.fold find_functors_expr find_functors_stmt String.Set.empty p in *)
   let pp_register_functor ppf (i, f) =
     pf ppf "STAN_REGISTER_MAP_RECT(%d, %s::%s)" i (namespace p) f
   in
