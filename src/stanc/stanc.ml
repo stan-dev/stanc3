@@ -125,18 +125,19 @@ let options =
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
 let optimization_settings () : Optimize.optimization_settings =
-  { function_inlining= !optimize
-  ; static_loop_unrolling= !optimize
-  ; one_step_loop_unrolling= !optimize
-  ; list_collapsing= !optimize
-  ; block_fixing= !optimize
-  ; constant_propagation= !optimize
-  ; expression_propagation= !optimize
-  ; copy_propagation= !optimize
-  ; dead_code_elimination= !optimize
-  ; partial_evaluation= !optimize
-  ; lazy_code_motion= !optimize
-  ; optimize_ad_levels= true }
+  { function_inlining= true
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= true
+  }
 
 let print_warn_uninitialized
     (uninit_vars : (Location_span.t * string) Set.Poly.t) =

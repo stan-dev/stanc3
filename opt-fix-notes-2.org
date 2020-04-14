@@ -1,0 +1,180 @@
+* Basic tests
+** files
+stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix/low_dim_gauss_mix.stan
+
+** Failing sets
+*** 1
+  { function_inlining= false
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= true
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= true
+  }
+**** Adding expression prop made it fail to compile
+*** 2
+  { function_inlining= false
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= true
+  ; optimize_ad_levels= true
+  }
+**** Adding lazy code motion gives gold fails
+'stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan' had fails '[('mu', 6.109845000000001, 2.33795743355, 5.844783999999999), ('tau', 3.6286705, 17.909876540440834, 8.07591206), ('theta.1', 7.568446000000002, 58.52058177134668, 12.6306438), ('theta.2', 7.978434, 50.99874420188001, 4.748827), ('theta.3', 3.998913, 26.64411834273667, 4.748827), ('theta.4', 6.635608, 55.76740554871998, 4.748827), ('theta.5', 2.3191904, 98.85220142277814, 4.748827), ('theta.6', 5.294193, 39.86568307933666, 4.748827), ('theta.7', 8.21416, 30.40222421866667, 4.748827), ('theta.8', 5.955347, 28.555317575736662, 4.748827), ('theta_tilde.1', 0.07762187, 3.146498216988974, 0.15829919999999995), ('theta_tilde.2', 0.29127192, 2.082355481716592, 0.15684631), ('theta_tilde.3', -0.3404136, 1.4504123902928, 0.15684631), ('theta_tilde.4', 0.0362377, 2.228888469351367, 0.15684631), ('theta_tilde.5', -0.78378907, 5.701379301019746, 0.15684631), ('theta_tilde.6', -0.1637409, 3.215517962164967, 0.15684631), ('theta_tilde.7', 0.5688685, 4.003366874360166, 0.15684631), ('theta_tilde.8', 0.3939001, 5.354923534725636, 0.15684631)]' and errors '[]'
+** Minimal failing sets
+*** Expression propagation only
+*** Lazy code motion only, but it might need support
+** Maximal working sets
+*** 1
+  { function_inlining= true
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= true
+  }
+* Bigger tests
+** files
+stat_comp_benchmarks/benchmarks/arK/arK.stan
+stat_comp_benchmarks/benchmarks/arma/arma.stan
+stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan
+stat_comp_benchmarks/benchmarks/garch/garch.stan
+stat_comp_benchmarks/benchmarks/gp_pois_regr/gp_pois_regr.stan
+stat_comp_benchmarks/benchmarks/gp_regr/gen_gp_data.stan
+stat_comp_benchmarks/benchmarks/gp_regr/gp_regr.stan
+stat_comp_benchmarks/benchmarks/irt_2pl/irt_2pl.stan
+stat_comp_benchmarks/benchmarks/low_dim_corr_gauss/low_dim_corr_gauss.stan, 20000
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix/low_dim_gauss_mix.stan
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix_collapse/low_dim_gauss_mix_collapse.stan
+stat_comp_benchmarks/benchmarks/sir/sir.stan
+** REMOVED OUTLIER files
+stat_comp_benchmarks/benchmarks/pkpd/one_comp_mm_elim_abs.stan
+stat_comp_benchmarks/benchmarks/pkpd/sim_one_comp_mm_elim_abs.stan
+*** Results
+    Both had weird errors with their 'gold' csv files
+** Control?
+   PASSED
+** Failing sets
+*** 1
+**** settings
+   { function_inlining= true
+   ; static_loop_unrolling= true
+   ; one_step_loop_unrolling= true
+   ; list_collapsing= true
+   ; block_fixing= true
+   ; constant_propagation= true
+   ; expression_propagation= false
+   ; copy_propagation= true
+   ; dead_code_elimination= true
+   ; partial_evaluation= true
+   ; lazy_code_motion= false
+   ; optimize_ad_levels= true
+   }
+**** results
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/arK/arK.stan'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/arma/arma.stan' had fails '[]' and errors '['Did not compile!']'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/garch/garch.stan' had fails '[]' and errors '['Did not compile!']'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/gp_pois_regr/gp_pois_regr.stan'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/gp_regr/gen_gp_data.stan'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/gp_regr/gp_regr.stan'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/irt_2pl/irt_2pl.stan'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/low_dim_corr_gauss/low_dim_corr_gauss.stan' had fails '[]' and errors '['Did not compile!']'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/low_dim_gauss_mix/low_dim_gauss_mix.stan'
+TEST PASSED: 'stat_comp_benchmarks/benchmarks/low_dim_gauss_mix_collapse/low_dim_gauss_mix_collapse.stan'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/pkpd/one_comp_mm_elim_abs.stan' had fails '[]' and errors '['Did not compile!']'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/pkpd/sim_one_comp_mm_elim_abs.stan' had fails '[]' and errors '['Did not compile!']'
+TEST FAILED: 'stat_comp_benchmarks/benchmarks/sir/sir.stan' had fails '[]' and errors '['Did not compile!']'
+TEST PASSED: 'performance.compilation'
+***** example sir.hpp
+../stat_comp_benchmarks/benchmarks/sir/sir.hpp:166:12: error: could not convert ‘dydt’ from ‘vector<double>’ to ‘vector<stan::math::var>’
+     return dydt;
+** Minimal failing sets
+** Maximal working sets
+*** 1
+  { function_inlining= true
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= false
+  }
+* Technical notes
+** Remember to run the golds when switching sets!
+** "has fails" means the gold check failed
+** The fails are in format (k, mean, stdev, summary[k][0])
+* Notes
+** Expression prop fails to compile
+** Solid example of optimize_ad_levels in sir.hpp
+** Performance appears to show dramatically worse performance (example)
+   It would be good to go through tests again to look at performance. But first I should get them all working, since some might be worth leaving in to get other things to work.
+*** Profile
+  { function_inlining= true
+  ; static_loop_unrolling= true
+  ; one_step_loop_unrolling= true
+  ; list_collapsing= true
+  ; block_fixing= true
+  ; constant_propagation= true
+  ; expression_propagation= false
+  ; copy_propagation= true
+  ; dead_code_elimination= true
+  ; partial_evaluation= true
+  ; lazy_code_motion= false
+  ; optimize_ad_levels= true
+  }
+*** Rates
++++ python ./comparePerformance.py reference_performance.csv performance.csv csv
+Name, Old Result, New Result, Ratio, Performance change( 1 - new / old )
+stat_comp_benchmarks/benchmarks/arK/arK.stan, 0.02, 0.06, 0.3, -228.97% slower
+stat_comp_benchmarks/benchmarks/arma/arma.stan, 0.02, 0.02, 0.72, -38.15% slower
+stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan, 0.01, 0.01, 0.55, -82.56% slower
+stat_comp_benchmarks/benchmarks/garch/garch.stan, 0.03, 0.03, 0.93, -7.55% slower
+stat_comp_benchmarks/benchmarks/gp_pois_regr/gp_pois_regr.stan, 0.05, 0.06, 0.87, -15.38% slower
+stat_comp_benchmarks/benchmarks/gp_regr/gen_gp_data.stan, 0.06, 0.07, 0.98, -2.5% slower
+stat_comp_benchmarks/benchmarks/gp_regr/gp_regr.stan, 0.01, 0.02, 0.52, -93.66% slower
+stat_comp_benchmarks/benchmarks/irt_2pl/irt_2pl.stan, 0.22, 0.27, 0.84, -18.9% slower
+stat_comp_benchmarks/benchmarks/low_dim_corr_gauss/low_dim_corr_gauss.stan, 0.02, 0.01, 1.48, 32.54% faster
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix/low_dim_gauss_mix.stan, 0.11, 0.11, 1.01, 1.25% faster
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix_collapse/low_dim_gauss_mix_collapse.stan, 0.18, 0.17, 1.08, 7.34% faster
+stat_comp_benchmarks/benchmarks/sir/sir.stan, 20.38, 20.81, 0.98, -2.12% slower
+performance.compilation, 156.65, 164.46, 0.95, -4.98% slower
+Mean result: 0.8623900829040724
+*** Files
+stat_comp_benchmarks/benchmarks/arK/arK.stan
+stat_comp_benchmarks/benchmarks/arma/arma.stan
+stat_comp_benchmarks/benchmarks/eight_schools/eight_schools.stan
+stat_comp_benchmarks/benchmarks/garch/garch.stan
+stat_comp_benchmarks/benchmarks/gp_pois_regr/gp_pois_regr.stan
+stat_comp_benchmarks/benchmarks/gp_regr/gen_gp_data.stan
+stat_comp_benchmarks/benchmarks/gp_regr/gp_regr.stan
+stat_comp_benchmarks/benchmarks/irt_2pl/irt_2pl.stan
+stat_comp_benchmarks/benchmarks/low_dim_corr_gauss/low_dim_corr_gauss.stan, 20000
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix/low_dim_gauss_mix.stan
+stat_comp_benchmarks/benchmarks/low_dim_gauss_mix_collapse/low_dim_gauss_mix_collapse.stan
+stat_comp_benchmarks/benchmarks/sir/sir.stan
