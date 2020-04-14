@@ -1,3 +1,5 @@
+  $ ../../../../install/default/bin/stanc 1_starts_with_number.stan
+Model name must not start with a number or symbol other than underscore.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:

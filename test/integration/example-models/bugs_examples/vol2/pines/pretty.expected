@@ -193,9 +193,6 @@ generated quantities {
   lambda = softmax(log_py)[1];
 }
 
-Info: Found int division at 'pines-3.stan', line 23, column 15 to column 16:
-  1 / sqrt(tau[i])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../../../install/default/bin/stanc --auto-format pines-4.stan
 data {
   int<lower=0> N;
@@ -239,9 +236,6 @@ model {
   target += log_sum_exp(log_p);
 }
 
-Info: Found int division at 'pines-4.stan', line 28, column 16 to column 17:
-  1 / sqrt(tau[i])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'pines-4.stan', line 12, column 9:
    -------------------------------------------------
@@ -474,21 +468,6 @@ generated quantities {
   pM2 <- bernoulli_rng(softmax(log_py)[2]);
 }
 
-Info: Found int division at 'pines.stan', line 29, column 16 to column 17:
-  1 / sqrt(tau[i])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'pines.stan', line 37, column 32 to column 33:
-  1 / 400.0
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'pines.stan', line 38, column 32 to column 33:
-  1 / 400.0
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'pines.stan', line 48, column 32 to column 33:
-  1 / 256.0
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'pines.stan', line 49, column 31 to column 32:
-  1 / 256.0
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'pines.stan', line 12, column 9:
    -------------------------------------------------

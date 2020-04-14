@@ -50,6 +50,7 @@ let parse parse_fun lexbuf =
             if !Debugging.grammar_logging then
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
             else ""
+             | _ -> "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
         in
         Errors.Parsing
           (message, Location_span.of_positions_exn start_pos end_pos)
