@@ -299,6 +299,7 @@ range_constraint:
 
 range:
   | LOWER ASSIGN e1=constr_expression COMMA UPPER ASSIGN e2=constr_expression
+  | UPPER ASSIGN e2=constr_expression COMMA LOWER ASSIGN e1=constr_expression
     { grammar_logger "lower_upper_range" ; Program.LowerUpper (e1, e2) }
   | LOWER ASSIGN e=constr_expression
     {  grammar_logger "lower_range" ; Lower e }
@@ -307,6 +308,7 @@ range:
 
 offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
+  | MULTIPLIER ASSIGN e2=constr_expression COMMA OFFSET ASSIGN e1=constr_expression
     { grammar_logger "offset_mult" ; Program.OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
     { grammar_logger "offset" ; Offset e }
