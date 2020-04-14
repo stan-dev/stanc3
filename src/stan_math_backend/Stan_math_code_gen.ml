@@ -181,12 +181,21 @@ let includes = "#include <stan/model/model_header.hpp>"
 let pp_validate_data ppf (name, st) =
   if String.is_suffix ~suffix:"__" name then ()
   else
+  List.iter (SizedType.get_dims st) ~f:(fun dim ->
+  match dim with
+  | `Dim e  ->
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
       "data initialization" name
       (stantype_prim_str (SizedType.to_unsized st))
       pp_call
-      ("context__.to_vec", pp_expr, SizedType.get_dims st)
-
+      ("context__.to_vec", pp_expr, [e])
+  | `SparseIterator (_, _, nz_length)  ->
+    pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
+    "data initialization" name
+    (stantype_prim_str (SizedType.to_unsized st))
+    pp_call
+    ("context__.to_vec", pp_expr, [nz_length])
+  )
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -226,7 +235,8 @@ let pp_ctor ppf p =
         let dims_check = Transform_Mir.validate_sized decl_id meta (Some tr) in
         match SizedType.get_dims st with
         | [] -> Some (dims_check cst, [Expr.Helpers.loop_bottom])
-        | ls -> Some (dims_check cst, ls) )
+        | [`Dim ls | `SparseIterator (_, _, ls)] -> Some (dims_check cst, [ls]) 
+        | _ -> Some (dims_check cst, [Expr.Helpers.loop_bottom]))
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
@@ -287,8 +297,8 @@ let pp_get_dims ppf {Program.output_vars; _} =
   let pp_dim ppf dim = 
     match dim with
     | `Dim e -> pf ppf "dims__.push_back(%a);@," pp_expr e
-    | `SparseIterator (nz_row, nz_col, _) ->  
-        pf ppf "dims__.push_back(%a, %a);@," pp_expr nz_row pp_expr nz_col
+    | `SparseIterator (_, _, nz_len) ->  
+        pf ppf "dims__.push_back(%a);@," pp_expr nz_len
     in
   let pp_dim_sep ppf () =
     pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
@@ -340,7 +350,7 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st)
       pp_for_loop ppf
         ( loopvar
         , Expr.Helpers.loop_bottom
-        , d
+        , e
         , pp_block
         , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
     | `SparseIterator (nz_row, nz_col, nz_length) ->
@@ -353,8 +363,8 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st)
    in
    let row_idx = Expr.Helpers.add_int_index nz_row (idx loopvar) in
    let col_idx = Expr.Helpers.add_int_index nz_col (idx loopvar) in
-   let pp_row = pp_expr ppf row_idx in
-   let pp_col = pp_expr ppf col_idx in
+   let pp_row = Fmt.strf "%a" pp_expr row_idx in
+   let pp_col = Fmt.strf "%a" pp_expr col_idx in
       pp_for_loop ppf
       ( loopvar
       , Expr.Helpers.loop_bottom

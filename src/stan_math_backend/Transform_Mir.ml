@@ -529,8 +529,13 @@ let rec contains_eigen = function
   | UMatrix | URowVector | UVector | USparseMatrix -> true
   | _ -> false
 
+let rec is_sparse = function
+  | UnsizedType.UArray t -> is_sparse t
+  | USparseMatrix -> true
+  | _ -> false
+
 let type_needs_fill decl_id ut =
-  Utils.is_user_ident decl_id
+  Utils.is_user_ident decl_id && not (is_sparse ut)
   && (contains_eigen ut || match ut with UReal -> true | _ -> false)
 
 let rec add_fill no_fill_required = function

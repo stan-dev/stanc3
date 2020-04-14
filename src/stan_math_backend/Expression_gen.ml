@@ -134,6 +134,7 @@ let fn_renames =
   List.map
     ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
     [ (Internal_fun.FnLength, "stan::math::size")
+    ; (FnNonZero, "stan::math::nonzero_size")
     ; (FnNegInf, "stan::math::negative_infinity")
     ; (FnResizeToMatch, "resize_to_match")
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
