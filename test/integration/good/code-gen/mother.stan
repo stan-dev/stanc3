@@ -381,6 +381,10 @@ transformed data {
     for (v in blocked_tdata_vs) {
       z = 0;
     }
+    int indices[4] = {1,2,3,4};
+    for (i in indices[1:3]) {
+      z = i;
+    }
   }
   // some indexing tests for multi indices and slices
   td_1dk = td_1d[td_1dk];
