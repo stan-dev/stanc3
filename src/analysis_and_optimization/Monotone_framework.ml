@@ -742,7 +742,7 @@ let autodiff_level_rev_transfer
         | Decl {decl_id; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
-      transfer_gen_kill_alt p gen kill
+      transfer_gen_kill_alt p gen kill (* gens and then kills *)
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
@@ -1019,6 +1019,15 @@ let lazy_expressions_mfp
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
+
+(** Debugging tool to print out MFP sets **) 
+let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) : unit =
+  let print_set s =
+    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string_hum
+  in
+  Map.iteri mfp ~f:(fun ~key ~data ->
+      print_endline (string_of_int key ^ ":\t "
+                     ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
 (** Perform the analysis for ad-levels, using both the fwd and reverse pass *)
 let autodiff_level_mfp

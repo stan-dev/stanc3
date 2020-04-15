@@ -47,9 +47,10 @@ let transform_program (mir : Program.Typed.t)
    Apply the transformation to each function body and to each program block separately.
 *)
 let transform_program_blockwise (mir : Program.Typed.t)
-    (transform : Stmt.Located.t -> Stmt.Located.t) : Program.Typed.t =
-  let transform' s =
-    match transform {pattern= SList s; meta= Location_span.empty} with
+    (transform : Stmt.Located.t Program.fun_def option -> Stmt.Located.t ->
+     Stmt.Located.t) : Program.Typed.t =
+  let transform' fd s =
+    match transform fd {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList l; _} -> l
     | _ ->
         raise
@@ -57,14 +58,15 @@ let transform_program_blockwise (mir : Program.Typed.t)
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
+        {fs with fdbody= transform (Some fs) fs.fdbody} )
   in
   { mir with
     functions_block= transformed_functions
-  ; prepare_data= transform' mir.prepare_data
-  ; transform_inits= transform' mir.transform_inits
-  ; log_prob= transform' mir.log_prob
-  ; generate_quantities= transform' mir.generate_quantities }
+  ; prepare_data= transform' None mir.prepare_data
+  ; transform_inits= transform' None mir.transform_inits
+  ; log_prob= transform' None mir.log_prob
+  ; generate_quantities= transform' None mir.generate_quantities
+  }
 
 let map_no_loc l =
   List.map ~f:(fun s -> Stmt.Fixed.{pattern= s; meta= Location_span.empty}) l
@@ -421,7 +423,7 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-let unroll_static_loops_statement =
+let unroll_static_loops_statement _ =
   let f stmt =
     match stmt with
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} -> (
@@ -460,7 +462,7 @@ let unroll_static_loops_statement =
 let static_loop_unrolling mir =
   transform_program_blockwise mir unroll_static_loops_statement
 
-let unroll_loop_one_step_statement =
+let unroll_loop_one_step_statement _ =
   let f stmt =
     match stmt with
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
@@ -503,7 +505,7 @@ let unroll_loop_one_step_statement =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
-let collapse_lists_statement =
+let collapse_lists_statement _ =
   let rec collapse_lists l =
     match l with
     | [] -> []
@@ -809,11 +811,12 @@ let lazy_code_motion (mir : Program.Typed.t) =
             @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
       ; meta= Location_span.empty }
   in
-  transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
+  transform_program_blockwise mir (fun _ x -> transform (preprocess_flowgraph x))
 
 let block_fixing mir =
   transform_program_blockwise mir
-    (map_rec_stmt_loc (fun stmt ->
+    (fun _ x ->
+       (map_rec_stmt_loc (fun stmt ->
          match stmt with
          | IfElse
              ( e
@@ -832,6 +835,7 @@ let block_fixing mir =
          | For {loopvar; lower; upper; body= {pattern= SList l; meta}} ->
              For {loopvar; lower; upper; body= {pattern= Block l; meta}}
          | _ -> stmt ))
+         x)
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
@@ -840,7 +844,14 @@ let block_fixing mir =
 (* TODO: add pass to get rid of redundant declarations? *)
 
 let optimize_ad_levels (mir : Program.Typed.t) =
-  let transform s =
+  let global_initial_ad_variables =
+    Set.Poly.of_list
+      (List.filter_map
+         ~f:(fun (v, Program.({out_block; _})) ->
+             match out_block with Parameters -> Some v | _ -> None )
+         mir.output_vars)
+  in
+  let transform fundef_opt s =
     let rev_flowgraph, flowgraph_to_mir =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
@@ -848,11 +859,18 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     let (module Rev_Flowgraph) = rev_flowgraph in
     let (module Fwd_Flowgraph) = fwd_flowgraph in
     let initial_ad_variables =
-      Set.Poly.of_list
-        (List.filter_map
-           ~f:(fun (v, Program.({out_block; _})) ->
-             match out_block with Parameters -> Some v | _ -> None )
-           mir.output_vars)
+      match (fundef_opt : Stmt.Located.t Program.fun_def option) with
+      | None -> global_initial_ad_variables
+      | Some {fdargs; _} ->
+        Set.Poly.union global_initial_ad_variables
+          (Set.Poly.of_list
+             (List.filter_map fdargs
+                ~f:(fun (_, name, ut) ->
+                    if UnsizedType.is_autodiffable ut then
+                      Some name
+                    else
+                      None
+                  )))
     in
     let ad_levels =
       Monotone_framework.autodiff_level_mfp

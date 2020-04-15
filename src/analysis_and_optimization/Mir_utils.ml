@@ -278,12 +278,12 @@ let rec update_expr_ad_levels autodiffable_variables
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
       { pattern= EOr (e1, e2)
       ; meta= {e.meta with adlevel= ad_level_sup [e1; e2]} }
-  | Indexed (e, i_list) ->
-      let e = update_expr_ad_levels autodiffable_variables e in
+  | Indexed (ixed, i_list) ->
+      let ixed = update_expr_ad_levels autodiffable_variables ixed in
       let i_list =
         List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list
       in
-      { pattern= Indexed (e, i_list)
+      { pattern= Indexed (ixed, i_list)
       ; meta=
           { e.meta with
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
