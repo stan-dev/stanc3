@@ -384,6 +384,28 @@ Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
 Where T is any one of int, real, vector, row_vector or matrix.
 Instead supplied arguments of incompatible type: (real[], int, int) => int, real[], int
 
+  $ ../../../../../install/default/bin/stanc bad_return_type_static.stan
+
+Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum_static(my_func_0, a, 1);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
+(T[], int, int, ...) => real, T[], int, ...
+(T[,], int, int, ...) => real, T[,], int, ...
+(T[,,], int, int, ...) => real, T[,,], int, ...
+(T[,,,], int, int, ...) => real, T[,,,], int, ...
+(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
+(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
+(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
+Where T is any one of int, real, vector, row_vector or matrix.
+Instead supplied arguments of incompatible type: (real[], int, int) => int, real[], int
+
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum.stan
 
 Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 17:
