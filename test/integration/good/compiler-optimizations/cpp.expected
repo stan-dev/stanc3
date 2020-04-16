@@ -1389,6 +1389,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   cons_list(index_uni(2),
                     cons_list(index_uni(2), nil_index_list())),
                   x_cov_flat__[(pos__ - 1)], "assigning variable x_cov");
+                current_statement__ = 5;
+                pos__ = (pos__ + 1);
               }
             }
           }
