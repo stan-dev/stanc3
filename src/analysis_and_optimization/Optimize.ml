@@ -610,7 +610,17 @@ let dead_code_elimination (mir : Program.Typed.t) =
       | Stmt.Fixed.Pattern.Assignment ((x, _, []), rhs) ->
           if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
             stmt
-          else Skip
+          else
+            (* let s =
+             *   "Killing var " ^ x
+             *   ^ " at ix " ^ string_of_int i
+             *   ^ " with entry set " ^
+             *   ([%sexp (live_variables_s : string Set.Poly.t)] |> Sexp.to_string_hum)
+             *   ^ " with stmt " ^
+             *   ([%sexp (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)] |> Sexp.to_string_hum)
+             * in
+             * let _ = print_endline s in *)
+            Skip
       | Assignment ((x, _, is), rhs) ->
           if
             Set.Poly.mem live_variables_s x

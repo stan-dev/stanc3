@@ -149,23 +149,20 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; constant_propagation= true
     ; expression_propagation= false
     ; copy_propagation= true
-    ; dead_code_elimination= true
+    ; dead_code_elimination= false
     ; partial_evaluation= true
     ; lazy_code_motion= false
     ; optimize_ad_levels= true
     }
   in match lvl with
   | 1 ->
-    {max_safe with
-     (* partial_evaluation= false
-      * ; one_step_loop_unrolling= false
-      * ; static_loop_unrolling= false
-      * ; optimize_ad_levels= false *)
-      dead_code_elimination= true
-      (* ; copy_propagation= false *)
+    { max_safe with
+      dead_code_elimination = true
     }
   | 2 ->
-    max_safe
+    { max_safe with
+      dead_code_elimination = true
+    }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))
 

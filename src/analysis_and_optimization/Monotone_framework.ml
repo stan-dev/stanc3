@@ -5,6 +5,19 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
+(** Debugging tool to print out MFP sets **) 
+let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
+  let print_set s =
+    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string_hum
+  in
+  let print_stmt s =
+    [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum
+  in
+  Map.iteri mfp ~f:(fun ~key ~data ->
+      print_endline (string_of_int key ^ ":\n "
+                     ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key) ^ ":\n "
+                     ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
+
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
@@ -943,6 +956,7 @@ let live_variables_mfp (prog : Program.Typed.t)
       (* NOTE: global generated quantities, (transformed) parameters and target are always observable
    so should be live. *)
       let initial =
+        let i =
         Set.Poly.union_list
           [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
           (* It is not strictly necessary to exclude data variables from DCE.
@@ -956,6 +970,11 @@ let live_variables_mfp (prog : Program.Typed.t)
           ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
           ; Set.Poly.singleton "target"
           ]
+        in
+        let _ =
+          1
+          (* print_endline ([%sexp (i : string Set.Poly.t)] |> Sexp.to_string_hum) *)
+        in i
     end
     : INITIALTYPE
       with type vals = string )
@@ -965,7 +984,9 @@ let live_variables_mfp (prog : Program.Typed.t)
   let (module Mf) =
     monotone_framework (module Rev_Flowgraph) (module Lattice) (module Transfer)
   in
-  Mf.mfp ()
+  let mfp = Mf.mfp () in
+  (* let _ = print_mfp ident mfp flowgraph_to_mir in *)
+  mfp
 
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
@@ -1029,15 +1050,6 @@ let lazy_expressions_mfp
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
-
-(** Debugging tool to print out MFP sets **) 
-let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) : unit =
-  let print_set s =
-    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string_hum
-  in
-  Map.iteri mfp ~f:(fun ~key ~data ->
-      print_endline (string_of_int key ^ ":\t "
-                     ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
 (** Perform the analysis for ad-levels, using both the fwd and reverse pass *)
 let autodiff_level_mfp

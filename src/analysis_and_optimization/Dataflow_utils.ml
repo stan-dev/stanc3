@@ -24,7 +24,7 @@ let branching_traverse_statement stmt ~join ~init ~f =
     | IfElse (pred, then_s, else_s_opt) ->
         let s', c = f init then_s in
         Option.value_map else_s_opt
-          ~default:(s', IfElse (pred, c, None))
+          ~default:(join s' init, IfElse (pred, c, None))
           ~f:(fun else_s ->
             let s'', c' = f init else_s in
             (join s' s'', IfElse (pred, c, Some c')) )
