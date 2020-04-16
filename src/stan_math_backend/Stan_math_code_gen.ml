@@ -212,9 +212,9 @@ let pp_validate_data ppf (name, st) =
 
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
-   1. find vals_%s__ from context__.vals_%s(vident)
-   1. keep track of pos__
-   1. run checks on resulting vident
+   2. find vals_%s__ from context__.vals_%s(vident)
+   3. keep track of pos__
+   4. run checks on resulting vident
 *)
 let pp_ctor ppf p =
   let params =

@@ -125,6 +125,21 @@ let options =
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
 let optimization_settings lvl : Optimize.optimization_settings =
+  let _ : Optimize.optimization_settings =
+    { function_inlining= false
+    ; static_loop_unrolling= false
+    ; one_step_loop_unrolling= false
+    ; list_collapsing= false
+    ; block_fixing= false
+    ; constant_propagation= false
+    ; expression_propagation= false
+    ; copy_propagation= false
+    ; dead_code_elimination= false
+    ; partial_evaluation= false
+    ; lazy_code_motion= false
+    ; optimize_ad_levels= false
+    }
+  in
   let max_safe : Optimize.optimization_settings =
     { function_inlining= true
     ; static_loop_unrolling= true
@@ -137,13 +152,20 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; dead_code_elimination= true
     ; partial_evaluation= true
     ; lazy_code_motion= false
-    ; optimize_ad_levels= false
+    ; optimize_ad_levels= true
     }
   in match lvl with
   | 1 ->
-    max_safe
+    {max_safe with
+     (* partial_evaluation= false
+      * ; one_step_loop_unrolling= false
+      * ; static_loop_unrolling= false
+      * ; optimize_ad_levels= false *)
+      dead_code_elimination= true
+      (* ; copy_propagation= false *)
+    }
   | 2 ->
-    {max_safe with optimize_ad_levels= true}
+    max_safe
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))
 

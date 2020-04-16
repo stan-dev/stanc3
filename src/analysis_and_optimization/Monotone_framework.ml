@@ -943,9 +943,19 @@ let live_variables_mfp (prog : Program.Typed.t)
       (* NOTE: global generated quantities, (transformed) parameters and target are always observable
    so should be live. *)
       let initial =
-        Set.Poly.add
-          (Set.Poly.of_list (List.map ~f:fst prog.output_vars))
-          "target"
+        Set.Poly.union_list
+          [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
+          (* It is not strictly necessary to exclude data variables from DCE.
+             However,
+             1. We don't currently check for usage of data variables in
+                corners of the MIR, such as in the sizes of parameters
+             2. There is code added in codegen that is never represented in
+                the MIR that may use data variables as if they're initialized
+          *)
+          ; Set.Poly.of_list (List.map ~f:fst prog.input_vars)
+          ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
+          ; Set.Poly.singleton "target"
+          ]
     end
     : INITIALTYPE
       with type vals = string )

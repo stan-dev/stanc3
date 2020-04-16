@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 open Dataflow_types
+val var_declarations :
+  ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
 
 val map_rec_expr :
      (Expr.Typed.t Expr.Fixed.Pattern.t -> Expr.Typed.t Expr.Fixed.Pattern.t)
