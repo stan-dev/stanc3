@@ -1706,6 +1706,9 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix]) ;
+
+  add_unqualified
+    ("solve_quadprog", ReturnType UVector, [UMatrix; UVector; UMatrix; UVector;UMatrix;UVector]) ;
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
