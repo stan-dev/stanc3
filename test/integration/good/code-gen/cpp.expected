@@ -12961,11 +12961,13 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'reduce_sum_m1.stan', line 23, column 2 to column 13)",
-                                                      " (in 'reduce_sum_m1.stan', line 24, column 2 to column 13)",
-                                                      " (in 'reduce_sum_m1.stan', line 28, column 2 to column 33)",
-                                                      " (in 'reduce_sum_m1.stan', line 29, column 2 to column 37)",
-                                                      " (in 'reduce_sum_m1.stan', line 19, column 2 to column 14)",
+                                                      " (in 'reduce_sum_m1.stan', line 26, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 27, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 28, column 2 to column 13)",
+                                                      " (in 'reduce_sum_m1.stan', line 32, column 2 to column 33)",
+                                                      " (in 'reduce_sum_m1.stan', line 33, column 2 to column 37)",
+                                                      " (in 'reduce_sum_m1.stan', line 34, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m1.stan', line 22, column 2 to column 14)",
                                                       " (in 'reduce_sum_m1.stan', line 6, column 6 to column 41)",
                                                       " (in 'reduce_sum_m1.stan', line 5, column 11 to line 7, column 5)",
                                                       " (in 'reduce_sum_m1.stan', line 4, column 6 to column 39)",
@@ -12977,25 +12979,28 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m1.stan', line 11, column 6 to column 53)",
                                                       " (in 'reduce_sum_m1.stan', line 10, column 20 to line 12, column 5)",
                                                       " (in 'reduce_sum_m1.stan', line 10, column 4 to line 14, column 5)",
-                                                      " (in 'reduce_sum_m1.stan', line 9, column 55 to line 15, column 3)"};
+                                                      " (in 'reduce_sum_m1.stan', line 9, column 55 to line 15, column 3)",
+                                                      " (in 'reduce_sum_m1.stan', line 17, column 4 to column 38)",
+                                                      " (in 'reduce_sum_m1.stan', line 16, column 52 to line 18, column 3)"};
 
+struct foo_lpdf_rsfunctor__;
 struct g_rsfunctor__;
 struct h_rsfunctor__;
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g(const int& start, const int& end, const std::vector<T2__>& y_slice,
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g(const std::vector<T0__>& y_slice, const int& start, const int& end,
   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
-    current_statement__ = 10;
+    current_statement__ = 12;
     if (logical_gt(size(y_slice), 1)) {
-      current_statement__ = 8;
+      current_statement__ = 10;
       return reduce_sum<g_rsfunctor__>(y_slice, 1, pstream__);
     } else {
-      current_statement__ = 6;
+      current_statement__ = 8;
       return normal_lpdf<false>(y_slice, 0, 1);
     }
   } catch (const std::exception& e) {
@@ -13007,45 +13012,45 @@ g(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g(start, end, y_slice, pstream__);
+return g(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g(start + 1, end + 1, y_slice, pstream__);
+return g(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h(const int& start, const int& end, const std::vector<T2__>& y_slice,
+h(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const std::vector<T3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
-    current_statement__ = 16;
+    current_statement__ = 18;
     if (logical_gt(size(a), 1)) {
-      current_statement__ = 14;
+      current_statement__ = 16;
       return reduce_sum<h_rsfunctor__>(y_slice, 1, pstream__,
                rvalue(a,
                  cons_list(index_min_max(start, end), nil_index_list()), "a"));
     } else {
-      current_statement__ = 12;
+      current_statement__ = 14;
       return normal_lpdf<false>(a, 0, 1);
     }
   } catch (const std::exception& e) {
@@ -13057,27 +13062,65 @@ h(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct h_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, const std::vector<T3__>& a,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<T3__>& a,
            std::ostream* pstream__)  const 
 {
-return h(start, end, y_slice, a, pstream__);
+return h(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct h_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<T3__>& a)  const 
 {
-return h(start + 1, end + 1, y_slice, a, pstream__);
+return h(y_slice, start + 1, end + 1, a, pstream__);
+}
+};
+
+template <bool propto__, typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
+         std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  
+  try {
+    current_statement__ = 20;
+    return normal_lpdf<false>(y_slice, 0, 1);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct foo_lpdf_functor__ {
+template <bool propto__, typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
+{
+return foo_lpdf(y_slice, start, end, pstream__);
+}
+};
+
+
+struct foo_lpdf_rsfunctor__ {
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
+{
+return foo_lpdf<false>(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
@@ -13106,7 +13149,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       
       pos__ = 1;
       
-      current_statement__ = 5;
+      current_statement__ = 7;
       N = 100;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13121,6 +13164,9 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       num_params_r__ += N;
       current_statement__ = 2;
       validate_non_negative_index("y2", "N", N);
+      num_params_r__ += N;
+      current_statement__ = 3;
+      validate_non_negative_index("y3", "N", N);
       num_params_r__ += N;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13160,11 +13206,23 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
         current_statement__ = 2;
         assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable y2");}
-      {
+      current_statement__ = 3;
+      validate_non_negative_index("y3", "N", N);
+      std::vector<local_scalar_t__> y3;
+      y3 = std::vector<local_scalar_t__>(N, 0);
+      
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 3;
-        lp_accum__.add(reduce_sum<g_rsfunctor__>(y1, 1, pstream__));
+        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y3");}
+      {
         current_statement__ = 4;
+        lp_accum__.add(reduce_sum<g_rsfunctor__>(y1, 1, pstream__));
+        current_statement__ = 5;
         lp_accum__.add(reduce_sum<h_rsfunctor__>(y2, 1, pstream__, y2));
+        current_statement__ = 6;
+        lp_accum__.add(reduce_sum<foo_lpdf_rsfunctor__>(y3, 1, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13214,10 +13272,22 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
         current_statement__ = 2;
         assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable y2");}
+      current_statement__ = 3;
+      validate_non_negative_index("y3", "N", N);
+      std::vector<double> y3;
+      y3 = std::vector<double>(N, 0);
+      
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 3;
+        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y3");}
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y1[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y2[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        vars__.push_back(y3[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -13259,10 +13329,20 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       current_statement__ = 2;
       assign(y2, nil_index_list(), context__.vals_r("y2"),
         "assigning variable y2");
+      current_statement__ = 3;
+      validate_non_negative_index("y3", "N", N);
+      std::vector<double> y3;
+      y3 = std::vector<double>(N, 0);
+      
+      current_statement__ = 3;
+      assign(y3, nil_index_list(), context__.vals_r("y3"),
+        "assigning variable y3");
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y1[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y2[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        vars__.push_back(y3[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -13275,11 +13355,15 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     names__.resize(0);
     names__.push_back("y1");
     names__.push_back("y2");
+    names__.push_back("y3");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
     dims__.push_back(N);
     dimss__.push_back(dims__);
     dims__.resize(0);
@@ -13300,6 +13384,10 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
         param_names__.push_back(std::string() + "y2" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y3" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -13323,6 +13411,10 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       {
         param_names__.push_back(std::string() + "y2" + '.' + std::to_string(sym1__));
       }}
+    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y3" + '.' + std::to_string(sym1__));
+      }}
     if (emit_transformed_parameters__) {
       
     }
@@ -13335,13 +13427,13 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
@@ -13655,11 +13747,11 @@ struct h5_rsfunctor__;
 struct h6_rsfunctor__;
 struct h7_rsfunctor__;
 struct h8_rsfunctor__;
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g1(const int& start, const int& end, const std::vector<T2__>& y_slice,
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13675,32 +13767,31 @@ g1(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g1_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g1(start, end, y_slice, pstream__);
+return g1(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g1_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g1(start + 1, end + 1, y_slice, pstream__);
+return g1(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g2(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13726,34 +13817,31 @@ g2(const int& start, const int& end,
 }
 
 struct g2_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g2(start, end, y_slice, pstream__);
+return g2(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g2_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g2(start + 1, end + 1, y_slice, pstream__);
+return g2(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g3(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13779,34 +13867,31 @@ g3(const int& start, const int& end,
 }
 
 struct g3_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g3(start, end, y_slice, pstream__);
+return g3(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g3_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g3(start + 1, end + 1, y_slice, pstream__);
+return g3(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g4(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13833,33 +13918,31 @@ g4(const int& start, const int& end,
 }
 
 struct g4_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g4(start, end, y_slice, pstream__);
+return g4(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g4_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g4(start + 1, end + 1, y_slice, pstream__);
+return g4(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g5(const int& start, const int& end,
-   const std::vector<std::vector<T2__>>& y_slice, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13888,34 +13971,31 @@ g5(const int& start, const int& end,
 }
 
 struct g5_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<T2__>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g5(start, end, y_slice, pstream__);
+return g5(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g5_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<T2__>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return g5(start + 1, end + 1, y_slice, pstream__);
+return g5(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g6(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -13945,34 +14025,31 @@ g6(const int& start, const int& end,
 }
 
 struct g6_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g6(start, end, y_slice, pstream__);
+return g6(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g6_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g6(start + 1, end + 1, y_slice, pstream__);
+return g6(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g7(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -14002,34 +14079,31 @@ g7(const int& start, const int& end,
 }
 
 struct g7_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g7(start, end, y_slice, pstream__);
+return g7(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g7_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g7(start + 1, end + 1, y_slice, pstream__);
+return g7(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-g8(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -14059,34 +14133,32 @@ g8(const int& start, const int& end,
 }
 
 struct g8_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g8(start, end, y_slice, pstream__);
+return g8(y_slice, start, end, pstream__);
 }
 };
 
 
 struct g8_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return g8(start + 1, end + 1, y_slice, pstream__);
+return g8(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h1(const int& start, const int& end, const std::vector<T2__>& y,
+h1(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14106,34 +14178,34 @@ h1(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h1_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<T3__>& a, std::ostream* pstream__)  const 
 {
-return h1(start, end, y, a, pstream__);
+return h1(y, start, end, a, pstream__);
 }
 };
 
 
 struct h1_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__, const std::vector<T3__>& a)  const 
 {
-return h1(start + 1, end + 1, y, a, pstream__);
+return h1(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h2(const int& start, const int& end, const std::vector<T2__>& y,
+h2(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14160,36 +14232,36 @@ h2(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h2_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<Eigen::Matrix<T3__, -1, 1>>& a,
            std::ostream* pstream__)  const 
 {
-return h2(start, end, y, a, pstream__);
+return h2(y, start, end, a, pstream__);
 }
 };
 
 
 struct h2_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, -1, 1>>& a)  const 
 {
-return h2(start + 1, end + 1, y, a, pstream__);
+return h2(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h3(const int& start, const int& end, const std::vector<T2__>& y,
+h3(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14216,36 +14288,36 @@ h3(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h3_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<Eigen::Matrix<T3__, 1, -1>>& a,
            std::ostream* pstream__)  const 
 {
-return h3(start, end, y, a, pstream__);
+return h3(y, start, end, a, pstream__);
 }
 };
 
 
 struct h3_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, 1, -1>>& a)  const 
 {
-return h3(start + 1, end + 1, y, a, pstream__);
+return h3(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h4(const int& start, const int& end, const std::vector<T2__>& y,
+h4(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14273,36 +14345,36 @@ h4(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h4_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<Eigen::Matrix<T3__, -1, -1>>& a,
            std::ostream* pstream__)  const 
 {
-return h4(start, end, y, a, pstream__);
+return h4(y, start, end, a, pstream__);
 }
 };
 
 
 struct h4_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, -1, -1>>& a)  const 
 {
-return h4(start + 1, end + 1, y, a, pstream__);
+return h4(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h5(const int& start, const int& end, const std::vector<T2__>& y,
+h5(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14332,35 +14404,35 @@ h5(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h5_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<std::vector<T3__>>& a, std::ostream* pstream__)  const 
 {
-return h5(start, end, y, a, pstream__);
+return h5(y, start, end, a, pstream__);
 }
 };
 
 
 struct h5_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__, const std::vector<std::vector<T3__>>& a)  const 
 {
-return h5(start + 1, end + 1, y, a, pstream__);
+return h5(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h6(const int& start, const int& end, const std::vector<T2__>& y,
+h6(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14391,37 +14463,37 @@ h6(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h6_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
            std::ostream* pstream__)  const 
 {
-return h6(start, end, y, a, pstream__);
+return h6(y, start, end, a, pstream__);
 }
 };
 
 
 struct h6_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a)  const 
 {
-return h6(start + 1, end + 1, y, a, pstream__);
+return h6(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h7(const int& start, const int& end, const std::vector<T2__>& y,
+h7(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14452,37 +14524,37 @@ h7(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h7_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
            std::ostream* pstream__)  const 
 {
-return h7(start, end, y, a, pstream__);
+return h7(y, start, end, a, pstream__);
 }
 };
 
 
 struct h7_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a)  const 
 {
-return h7(start + 1, end + 1, y, a, pstream__);
+return h7(y, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-h8(const int& start, const int& end, const std::vector<T2__>& y,
+h8(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -14513,27 +14585,27 @@ h8(const int& start, const int& end, const std::vector<T2__>& y,
 }
 
 struct h8_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
            std::ostream* pstream__)  const 
 {
-return h8(start, end, y, a, pstream__);
+return h8(y, start, end, a, pstream__);
 }
 };
 
 
 struct h8_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end, const std::vector<T2__>& y,
+operator()(const std::vector<T0__>& y, const int& start, const int& end,
            std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a)  const 
 {
-return h8(start + 1, end + 1, y, a, pstream__);
+return h8(y, start + 1, end + 1, a, pstream__);
 }
 };
 
@@ -16697,11 +16769,11 @@ struct g7_rsfunctor__;
 struct g8_rsfunctor__;
 struct g9_rsfunctor__;
 struct s_rsfunctor__;
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f1(const int& start, const int& end, const std::vector<T2__>& y_slice,
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16717,31 +16789,31 @@ f1(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct f1_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f1(start, end, y_slice, pstream__);
+return f1(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f1_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f1(start + 1, end + 1, y_slice, pstream__);
+return f1(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f1a(const int& start, const int& end, const std::vector<T2__>& y_slice,
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16757,32 +16829,31 @@ f1a(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct f1a_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f1a(start, end, y_slice, pstream__);
+return f1a(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f1a_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f1a(start + 1, end + 1, y_slice, pstream__);
+return f1a(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f2(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16798,34 +16869,31 @@ f2(const int& start, const int& end,
 }
 
 struct f2_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f2(start, end, y_slice, pstream__);
+return f2(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f2_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, 1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f2(start + 1, end + 1, y_slice, pstream__);
+return f2(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f3(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16841,34 +16909,31 @@ f3(const int& start, const int& end,
 }
 
 struct f3_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f3(start, end, y_slice, pstream__);
+return f3(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f3_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, 1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f3(start + 1, end + 1, y_slice, pstream__);
+return f3(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f4(const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16884,33 +16949,31 @@ f4(const int& start, const int& end,
 }
 
 struct f4_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f4(start, end, y_slice, pstream__);
+return f4(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f4_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<Eigen::Matrix<T2__, -1, -1>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f4(start + 1, end + 1, y_slice, pstream__);
+return f4(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f5(const int& start, const int& end,
-   const std::vector<std::vector<T2__>>& y_slice, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+   const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16926,34 +16989,31 @@ f5(const int& start, const int& end,
 }
 
 struct f5_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<T2__>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f5(start, end, y_slice, pstream__);
+return f5(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f5_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<T2__>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f5(start + 1, end + 1, y_slice, pstream__);
+return f5(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f6(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -16969,34 +17029,31 @@ f6(const int& start, const int& end,
 }
 
 struct f6_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f6(start, end, y_slice, pstream__);
+return f6(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f6_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, 1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f6(start + 1, end + 1, y_slice, pstream__);
+return f6(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f7(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -17012,34 +17069,31 @@ f7(const int& start, const int& end,
 }
 
 struct f7_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f7(start, end, y_slice, pstream__);
+return f7(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f7_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, 1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f7(start + 1, end + 1, y_slice, pstream__);
+return f7(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f8(const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+   const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -17055,30 +17109,28 @@ f8(const int& start, const int& end,
 }
 
 struct f8_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f8(start, end, y_slice, pstream__);
+return f8(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f8_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<Eigen::Matrix<T2__, -1, -1>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f8(start + 1, end + 1, y_slice, pstream__);
+return f8(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 double
-f9(const int& start, const int& end, const std::vector<int>& y_slice,
+f9(const std::vector<int>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
@@ -17097,26 +17149,26 @@ f9(const int& start, const int& end, const std::vector<int>& y_slice,
 
 struct f9_functor__ {
 double
-operator()(const int& start, const int& end, const std::vector<int>& y_slice,
+operator()(const std::vector<int>& y_slice, const int& start, const int& end,
            std::ostream* pstream__)  const 
 {
-return f9(start, end, y_slice, pstream__);
+return f9(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f9_rsfunctor__ {
 double
-operator()(const int& start, const int& end, const std::vector<int>& y_slice,
+operator()(const std::vector<int>& y_slice, const int& start, const int& end,
            std::ostream* pstream__)  const 
 {
-return f9(start + 1, end + 1, y_slice, pstream__);
+return f9(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 double
-f10(const int& start, const int& end,
-    const std::vector<std::vector<int>>& y_slice, std::ostream* pstream__) {
+f10(const std::vector<std::vector<int>>& y_slice, const int& start,
+    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
@@ -17134,29 +17186,26 @@ f10(const int& start, const int& end,
 
 struct f10_functor__ {
 double
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<int>>& y_slice,
-           std::ostream* pstream__)  const 
+operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f10(start, end, y_slice, pstream__);
+return f10(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f10_rsfunctor__ {
 double
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<int>>& y_slice,
-           std::ostream* pstream__)  const 
+operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__)  const 
 {
-return f10(start + 1, end + 1, y_slice, pstream__);
+return f10(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 double
-f11(const int& start, const int& end,
-    const std::vector<std::vector<std::vector<int>>>& y_slice,
-    std::ostream* pstream__) {
+f11(const std::vector<std::vector<std::vector<int>>>& y_slice,
+    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
@@ -17174,31 +17223,28 @@ f11(const int& start, const int& end,
 
 struct f11_functor__ {
 double
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<std::vector<int>>>& y_slice,
-           std::ostream* pstream__)  const 
+operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f11(start, end, y_slice, pstream__);
+return f11(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f11_rsfunctor__ {
 double
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<std::vector<int>>>& y_slice,
-           std::ostream* pstream__)  const 
+operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f11(start + 1, end + 1, y_slice, pstream__);
+return f11(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-f12(const int& start, const int& end,
-    const std::vector<std::vector<std::vector<T2__>>>& y_slice,
-    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__>::type;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
+    const int& start, const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
@@ -17214,34 +17260,32 @@ f12(const int& start, const int& end,
 }
 
 struct f12_functor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<std::vector<T2__>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f12(start, end, y_slice, pstream__);
+return f12(y_slice, start, end, pstream__);
 }
 };
 
 
 struct f12_rsfunctor__ {
-template <typename T2__>
-typename boost::math::tools::promote_args<T2__>::type
-operator()(const int& start, const int& end,
-           const std::vector<std::vector<std::vector<T2__>>>& y_slice,
-           std::ostream* pstream__)  const 
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
+           const int& start, const int& end, std::ostream* pstream__)  const 
 {
-return f12(start + 1, end + 1, y_slice, pstream__);
+return f12(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g1(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17258,36 +17302,34 @@ g1(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g1_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, const T3__& a,
-           std::ostream* pstream__)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
-return g1(start, end, y_slice, a, pstream__);
+return g1(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g1_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
-           const T3__& a)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
-return g1(start + 1, end + 1, y_slice, a, pstream__);
+return g1(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g2(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const Eigen::Matrix<T3__, -1, 1>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17304,36 +17346,36 @@ g2(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g2_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const Eigen::Matrix<T3__, -1, 1>& a, std::ostream* pstream__)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const Eigen::Matrix<T3__, -1, 1>& a,
+           std::ostream* pstream__)  const 
 {
-return g2(start, end, y_slice, a, pstream__);
+return g2(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g2_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const Eigen::Matrix<T3__, -1, 1>& a)  const 
 {
-return g2(start + 1, end + 1, y_slice, a, pstream__);
+return g2(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g3(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const Eigen::Matrix<T3__, 1, -1>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17350,36 +17392,36 @@ g3(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g3_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const Eigen::Matrix<T3__, 1, -1>& a, std::ostream* pstream__)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const Eigen::Matrix<T3__, 1, -1>& a,
+           std::ostream* pstream__)  const 
 {
-return g3(start, end, y_slice, a, pstream__);
+return g3(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g3_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const Eigen::Matrix<T3__, 1, -1>& a)  const 
 {
-return g3(start + 1, end + 1, y_slice, a, pstream__);
+return g3(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g4(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const Eigen::Matrix<T3__, -1, -1>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17396,36 +17438,36 @@ g4(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g4_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const Eigen::Matrix<T3__, -1, -1>& a, std::ostream* pstream__)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const Eigen::Matrix<T3__, -1, -1>& a,
+           std::ostream* pstream__)  const 
 {
-return g4(start, end, y_slice, a, pstream__);
+return g4(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g4_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const Eigen::Matrix<T3__, -1, -1>& a)  const 
 {
-return g4(start + 1, end + 1, y_slice, a, pstream__);
+return g4(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g5(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17442,36 +17484,36 @@ g5(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g5_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, const std::vector<T3__>& a,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<T3__>& a,
            std::ostream* pstream__)  const 
 {
-return g5(start, end, y_slice, a, pstream__);
+return g5(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g5_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<T3__>& a)  const 
 {
-return g5(start + 1, end + 1, y_slice, a, pstream__);
+return g5(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g6(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17488,37 +17530,36 @@ g6(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g6_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const std::vector<Eigen::Matrix<T3__, -1, 1>>& a,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<Eigen::Matrix<T3__, -1, 1>>& a,
            std::ostream* pstream__)  const 
 {
-return g6(start, end, y_slice, a, pstream__);
+return g6(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g6_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, -1, 1>>& a)  const 
 {
-return g6(start + 1, end + 1, y_slice, a, pstream__);
+return g6(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g7(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17535,37 +17576,36 @@ g7(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g7_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const std::vector<Eigen::Matrix<T3__, 1, -1>>& a,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<Eigen::Matrix<T3__, 1, -1>>& a,
            std::ostream* pstream__)  const 
 {
-return g7(start, end, y_slice, a, pstream__);
+return g7(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g7_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, 1, -1>>& a)  const 
 {
-return g7(start + 1, end + 1, y_slice, a, pstream__);
+return g7(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g8(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17582,37 +17622,36 @@ g8(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g8_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const std::vector<Eigen::Matrix<T3__, -1, -1>>& a,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<Eigen::Matrix<T3__, -1, -1>>& a,
            std::ostream* pstream__)  const 
 {
-return g8(start, end, y_slice, a, pstream__);
+return g8(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g8_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<Eigen::Matrix<T3__, -1, -1>>& a)  const 
 {
-return g8(start + 1, end + 1, y_slice, a, pstream__);
+return g8(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g9(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17629,37 +17668,37 @@ g9(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g9_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
-           const std::vector<std::vector<T3__>>& a, std::ostream* pstream__)  const 
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const std::vector<std::vector<T3__>>& a,
+           std::ostream* pstream__)  const 
 {
-return g9(start, end, y_slice, a, pstream__);
+return g9(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g9_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<std::vector<T3__>>& a)  const 
 {
-return g9(start + 1, end + 1, y_slice, a, pstream__);
+return g9(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g10(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17676,38 +17715,38 @@ g10(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g10_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
            std::ostream* pstream__)  const 
 {
-return g10(start, end, y_slice, a, pstream__);
+return g10(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g10_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a)  const 
 {
-return g10(start + 1, end + 1, y_slice, a, pstream__);
+return g10(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g11(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17724,38 +17763,38 @@ g11(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g11_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
            std::ostream* pstream__)  const 
 {
-return g11(start, end, y_slice, a, pstream__);
+return g11(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g11_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a)  const 
 {
-return g11(start + 1, end + 1, y_slice, a, pstream__);
+return g11(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-g12(const int& start, const int& end, const std::vector<T2__>& y_slice,
+g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
@@ -17772,40 +17811,40 @@ g12(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct g12_functor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
            std::ostream* pstream__)  const 
 {
-return g12(start, end, y_slice, a, pstream__);
+return g12(y_slice, start, end, a, pstream__);
 }
 };
 
 
 struct g12_rsfunctor__ {
-template <typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T2__,
+template <typename T0__, typename T3__>
+typename boost::math::tools::promote_args<T0__,
 T3__>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__,
            const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a)  const 
 {
-return g12(start + 1, end + 1, y_slice, a, pstream__);
+return g12(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
-template <typename T2__, typename T4__, typename T5__, typename T6__,
+template <typename T0__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T9__, typename T10__, typename T11__, typename T12__,
 typename T14__, typename T15__, typename T16__, typename T17__,
 typename T19__>
-typename boost::math::tools::promote_args<T2__, T4__, T5__, T6__,
+typename boost::math::tools::promote_args<T0__, T4__, T5__, T6__,
 T7__, typename boost::math::tools::promote_args<T9__, T10__, T11__, T12__,
 T14__, typename boost::math::tools::promote_args<T15__, T16__, T17__,
 T19__>::type>::type>::type
-s(const int& start, const int& end, const std::vector<T2__>& y_slice,
+s(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const int& a, const T4__& b, const Eigen::Matrix<T5__, -1, 1>& c,
   const Eigen::Matrix<T6__, 1, -1>& d, const Eigen::Matrix<T7__, -1, -1>& e,
   const std::vector<int>& f, const std::vector<T9__>& g,
@@ -17820,7 +17859,7 @@ s(const int& start, const int& end, const std::vector<T2__>& y_slice,
   const std::vector<std::vector<std::vector<int>>>& p,
   const std::vector<std::vector<std::vector<T19__>>>& q,
   std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T4__,
           T5__,
           T6__,
@@ -17848,16 +17887,16 @@ s(const int& start, const int& end, const std::vector<T2__>& y_slice,
 }
 
 struct s_functor__ {
-template <typename T2__, typename T4__, typename T5__, typename T6__,
+template <typename T0__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T9__, typename T10__, typename T11__, typename T12__,
 typename T14__, typename T15__, typename T16__, typename T17__,
 typename T19__>
-typename boost::math::tools::promote_args<T2__, T4__, T5__, T6__,
+typename boost::math::tools::promote_args<T0__, T4__, T5__, T6__,
 T7__, typename boost::math::tools::promote_args<T9__, T10__, T11__, T12__,
 T14__, typename boost::math::tools::promote_args<T15__, T16__, T17__,
 T19__>::type>::type>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, const int& a, const T4__& b,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, const int& a, const T4__& b,
            const Eigen::Matrix<T5__, -1, 1>& c,
            const Eigen::Matrix<T6__, 1, -1>& d,
            const Eigen::Matrix<T7__, -1, -1>& e, const std::vector<int>& f,
@@ -17874,24 +17913,24 @@ operator()(const int& start, const int& end,
            const std::vector<std::vector<std::vector<T19__>>>& q,
            std::ostream* pstream__)  const 
 {
-return s(start, end, y_slice, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
+return s(y_slice, start, end, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
          q, pstream__);
 }
 };
 
 
 struct s_rsfunctor__ {
-template <typename T2__, typename T4__, typename T5__, typename T6__,
+template <typename T0__, typename T4__, typename T5__, typename T6__,
 typename T7__, typename T9__, typename T10__, typename T11__, typename T12__,
 typename T14__, typename T15__, typename T16__, typename T17__,
 typename T19__>
-typename boost::math::tools::promote_args<T2__, T4__, T5__, T6__,
+typename boost::math::tools::promote_args<T0__, T4__, T5__, T6__,
 T7__, typename boost::math::tools::promote_args<T9__, T10__, T11__, T12__,
 T14__, typename boost::math::tools::promote_args<T15__, T16__, T17__,
 T19__>::type>::type>::type
-operator()(const int& start, const int& end,
-           const std::vector<T2__>& y_slice, std::ostream* pstream__,
-           const int& a, const T4__& b, const Eigen::Matrix<T5__, -1, 1>& c,
+operator()(const std::vector<T0__>& y_slice, const int& start,
+           const int& end, std::ostream* pstream__, const int& a,
+           const T4__& b, const Eigen::Matrix<T5__, -1, 1>& c,
            const Eigen::Matrix<T6__, 1, -1>& d,
            const Eigen::Matrix<T7__, -1, -1>& e, const std::vector<int>& f,
            const std::vector<T9__>& g,
@@ -17906,7 +17945,7 @@ operator()(const int& start, const int& end,
            const std::vector<std::vector<std::vector<int>>>& p,
            const std::vector<std::vector<std::vector<T19__>>>& q)  const 
 {
-return s(start + 1, end + 1, y_slice, a, b, c, d, e, f, g, h, i, j, k, l, m,
+return s(y_slice, start + 1, end + 1, a, b, c, d, e, f, g, h, i, j, k, l, m,
          n, o, p, q, pstream__);
 }
 };
