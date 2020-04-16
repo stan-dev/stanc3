@@ -7563,10 +7563,11 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 15;
             pos__ = (pos__ + 1);}}
       }
+      Eigen::Matrix<double, -1, 1> p_cfcov_54_free__;
       current_statement__ = 15;
-      assign(p_cfcov_54, nil_index_list(),
+      assign(p_cfcov_54_free__, nil_index_list(),
         stan::math::cholesky_factor_free(p_cfcov_54),
-        "assigning variable p_cfcov_54");
+        "assigning variable p_cfcov_54_free__");
       current_statement__ = 16;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
                              "num rows (must be greater or equal to num cols)",
@@ -7596,10 +7597,11 @@ class mother_model : public model_base_crtp<mother_model> {
             current_statement__ = 16;
             pos__ = (pos__ + 1);}}
       }
+      Eigen::Matrix<double, -1, 1> p_cfcov_33_free__;
       current_statement__ = 16;
-      assign(p_cfcov_33, nil_index_list(),
+      assign(p_cfcov_33_free__, nil_index_list(),
         stan::math::cholesky_factor_free(p_cfcov_33),
-        "assigning variable p_cfcov_33");
+        "assigning variable p_cfcov_33_free__");
       current_statement__ = 17;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
       current_statement__ = 17;
@@ -7635,12 +7637,14 @@ class mother_model : public model_base_crtp<mother_model> {
               current_statement__ = 17;
               pos__ = (pos__ + 1);}}}
       }
+      std::vector<Eigen::Matrix<double, -1, 1>> p_cfcov_33_ar_free__;
       current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         current_statement__ = 17;
-        assign(p_cfcov_33_ar, cons_list(index_uni(sym1__), nil_index_list()),
+        assign(p_cfcov_33_ar_free__,
+          cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::cholesky_factor_free(p_cfcov_33_ar[(sym1__ - 1)]),
-          "assigning variable p_cfcov_33_ar");}
+          "assigning variable p_cfcov_33_ar_free__");}
       current_statement__ = 18;
       validate_non_negative_index("x_p", "2", 2);
       Eigen::Matrix<double, -1, 1> x_p;
@@ -7726,41 +7730,29 @@ class mother_model : public model_base_crtp<mother_model> {
                       cons_list(index_uni(sym2__),
                         cons_list(index_uni(sym1__), nil_index_list())))),
                   "p_ar_mat"));}}}}
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
         vars__.push_back(p_simplex[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (size_t sym3__ = 1; sym3__ <= M; ++sym3__) {
             for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.push_back(
                 p_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                 (sym1__ - 1)]);}}}}
-      for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          vars__.push_back(
-            rvalue(p_cfcov_54,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              "p_cfcov_54"));}}
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.push_back(
-            rvalue(p_cfcov_33,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              "p_cfcov_33"));}}
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
-            vars__.push_back(
-              rvalue(p_cfcov_33_ar,
-                cons_list(index_uni(sym3__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list()))),
-                "p_cfcov_33_ar"));}}}
+      for (size_t sym1__ = 1;
+           sym1__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)); ++sym1__) {
+        vars__.push_back(p_cfcov_54_free__[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1;
+           sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym1__) {
+        vars__.push_back(p_cfcov_33_free__[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1;
+           sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          vars__.push_back(p_cfcov_33_ar_free__[(sym2__ - 1)][(sym1__ - 1)]);
+        }}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(x_p[(sym1__ - 1)]);}
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {

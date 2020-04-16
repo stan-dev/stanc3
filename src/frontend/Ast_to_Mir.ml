@@ -348,10 +348,25 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
         { var with
           Expr.Fixed.pattern= FunApp (CompilerInternal, fname, args var) }
       in
-      [ (constraint_forl t) st
-          (Stmt.Helpers.assign_indexed (SizedType.to_unsized st) decl_id smeta
-             constrainvar)
-          decl_var smeta ]
+      let unconstrained_decls, decl_id, ut =
+        let ut = SizedType.to_unsized (param_size t st) in
+        match dconstrain with
+        | Some Unconstrain when SizedType.to_unsized st <> ut ->
+            ( [ Stmt.Fixed.
+                  { pattern=
+                      Decl
+                        { decl_adtype= DataOnly
+                        ; decl_id= decl_id ^ "_free__"
+                        ; decl_type= Unsized ut }
+                  ; meta= smeta } ]
+            , decl_id ^ "_free__"
+            , ut )
+        | _ -> ([], decl_id, SizedType.to_unsized st)
+      in
+      unconstrained_decls
+      @ [ (constraint_forl t) st
+            (Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar)
+            decl_var smeta ]
 
 let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
