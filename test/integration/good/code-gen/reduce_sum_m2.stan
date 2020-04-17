@@ -1,29 +1,29 @@
 functions {
-  real g1(int start, int end, real[] y_slice) {
+  real g1(real[] y_slice, int start, int end) {
     return normal_lpdf(y_slice | 0, 1);
   }
-  real g2(int start, int end, vector[] y_slice) {
+  real g2(vector[] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       sum_lpdf += normal_lpdf(y_slice[n] | 0, 1);
     }
     return sum_lpdf;
   }
-  real g3(int start, int end, row_vector[] y_slice) {
+  real g3(row_vector[] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       sum_lpdf += normal_lpdf(y_slice[n] | 0, 1);
     }
     return sum_lpdf;
   }
-  real g4(int start, int end, matrix[] y_slice) {
+  real g4(matrix[] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       sum_lpdf += normal_lpdf(to_vector(y_slice[n]) | 0, 1);
     }
     return sum_lpdf;
   }
-  real g5(int start, int end, real[,] y_slice) {
+  real g5(real[,] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       for(m in 1:size(y_slice[n])) {
@@ -32,7 +32,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real g6(int start, int end, vector[,] y_slice) {
+  real g6(vector[,] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       for(m in 1:size(y_slice[n])) {
@@ -41,7 +41,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real g7(int start, int end, row_vector[,] y_slice) {
+  real g7(row_vector[,] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       for(m in 1:size(y_slice[n])) {
@@ -50,7 +50,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real g8(int start, int end, matrix[,] y_slice) {
+  real g8(matrix[,] y_slice, int start, int end) {
     real sum_lpdf = 0.0;
     for(n in 1:size(y_slice)) {
       for(m in 1:size(y_slice[n])) {
@@ -59,31 +59,31 @@ functions {
     }
     return sum_lpdf;
   }
-  real h1(int start, int end, real[] y, real[] a) {
+  real h1(real[] y, int start, int end, real[] a) {
     return normal_lpdf(a[start:end] | 0, 1);
   }
-  real h2(int start, int end, real[] y, vector[] a) {
+  real h2(real[] y, int start, int end, vector[] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       sum_lpdf += normal_lpdf(a[n] | 0, 1);
     }
     return sum_lpdf;
   }
-  real h3(int start, int end, real[] y, row_vector[] a) {
+  real h3(real[] y, int start, int end, row_vector[] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       sum_lpdf += normal_lpdf(a[n] | 0, 1);
     }
     return sum_lpdf;
   }
-  real h4(int start, int end, real[] y, matrix[] a) {
+  real h4(real[] y, int start, int end, matrix[] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       sum_lpdf += normal_lpdf(to_vector(a[n]) | 0, 1);
     }
     return sum_lpdf;
   }
-  real h5(int start, int end, real[] y, real[,] a) {
+  real h5(real[] y, int start, int end, real[,] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       for(m in 1:size(a[n])) {
@@ -92,7 +92,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real h6(int start, int end, real[] y, vector[,] a) {
+  real h6(real[] y, int start, int end, vector[,] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       for(m in 1:size(a[n])) {
@@ -101,7 +101,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real h7(int start, int end, real[] y, row_vector[,] a) {
+  real h7(real[] y, int start, int end, row_vector[,] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       for(m in 1:size(a[n])) {
@@ -110,7 +110,7 @@ functions {
     }
     return sum_lpdf;
   }
-  real h8(int start, int end, real[] y, matrix[,] a) {
+  real h8(real[] y, int start, int end, matrix[,] a) {
     real sum_lpdf = 0.0;
     for(n in start:end) {
       for(m in 1:size(a[n])) {
