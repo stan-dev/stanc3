@@ -357,7 +357,7 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
                       Decl
                         { decl_adtype= DataOnly
                         ; decl_id= decl_id ^ "_free__"
-                        ; decl_type= Unsized ut }
+                        ; decl_type= Sized (param_size t st) }
                   ; meta= smeta } ]
             , decl_id ^ "_free__"
             , ut )
