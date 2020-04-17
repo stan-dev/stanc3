@@ -1768,14 +1768,12 @@ let%expect_test "copy propagation" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed data {
+      model {
         int i;
         int j;
         j = i;
         int k;
         k = 2 * j;
-      }
-      model {
         for (x in 1:i) {
           print(i + j + k);
         }
@@ -1788,16 +1786,13 @@ let%expect_test "copy propagation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      prepare_data {
-        data int i;
-        data int j;
-        j = i;
-        data int k;
-        k = (2 * i);
-      }
-
       log_prob {
         {
+          int i;
+          int j;
+          j = i;
+          int k;
+          k = (2 * i);
           for(x in 1:i) {
             FnPrint__(((i + i) + k));
           }

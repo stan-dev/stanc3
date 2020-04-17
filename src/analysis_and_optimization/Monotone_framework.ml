@@ -290,6 +290,7 @@ let expression_propagation_transfer
 
 (** The transfer function for a copy propagation analysis *)
 let copy_propagation_transfer
+    (globals : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -302,10 +303,11 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
           Some
             ( match mir_node with
-            | Assignment ((s, _, []), {pattern= Var t; meta}) ->
-                Map.set m ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
+              | Assignment ((s, _, []), {pattern= Var t; meta})
+                when not (Set.Poly.mem globals s) ->
+              Map.set m ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-                Map.remove m s
+              Map.remove m s
             | Assignment (_, _)
              |TargetPE _
              |NRFunApp (_, _, _)
@@ -943,6 +945,21 @@ let initialized_vars_mfp (total : string Set.Poly.t)
   in
   Mf.mfp ()
 
+let globals (prog : Program.Typed.t) =
+  Set.Poly.union_list
+    [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
+    (* It is not strictly necessary to exclude data variables from DCE.
+       However,
+       1. We don't currently check for usage of data variables in
+          corners of the MIR, such as in the sizes of parameters
+       2. There is code added in codegen that is never represented in
+          the MIR that may use data variables as if they're initialized
+    *)
+    ; Set.Poly.of_list (List.map ~f:fst prog.input_vars)
+    ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
+    ; Set.Poly.singleton "target"
+    ]
+
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
 let live_variables_mfp (prog : Program.Typed.t)
@@ -955,26 +972,7 @@ let live_variables_mfp (prog : Program.Typed.t)
 
       (* NOTE: global generated quantities, (transformed) parameters and target are always observable
    so should be live. *)
-      let initial =
-        let i =
-        Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
-          (* It is not strictly necessary to exclude data variables from DCE.
-             However,
-             1. We don't currently check for usage of data variables in
-                corners of the MIR, such as in the sizes of parameters
-             2. There is code added in codegen that is never represented in
-                the MIR that may use data variables as if they're initialized
-          *)
-          ; Set.Poly.of_list (List.map ~f:fst prog.input_vars)
-          ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
-          ; Set.Poly.singleton "target"
-          ]
-        in
-        let _ =
-          1
-          (* print_endline ([%sexp (i : string Set.Poly.t)] |> Sexp.to_string_hum) *)
-        in i
+      let initial = globals prog
     end
     : INITIALTYPE
       with type vals = string )

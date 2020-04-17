@@ -156,7 +156,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
     }
   in
   let max_safe : Optimize.optimization_settings =
-    { function_inlining= false
+    { function_inlining= true
     ; static_loop_unrolling= true
     ; one_step_loop_unrolling= true
     ; list_collapsing= true
@@ -174,7 +174,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
     max_safe
   | 2 ->
     { max_safe with
-      function_inlining = true
+      copy_propagation = true
     }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))

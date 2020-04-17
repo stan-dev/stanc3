@@ -630,7 +630,9 @@ let expression_propagation =
   propagation
     (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
 
-let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
+let copy_propagation prog =
+  let globals = Monotone_framework.globals prog in
+  propagation (Monotone_framework.copy_propagation_transfer globals) prog
 
 let is_skip_break_continue s =
   match s with

@@ -970,7 +970,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 46;
         z = x;
         current_statement__ = 47;
-        lp_accum__.add(z);
+        lp_accum__.add(x);
         current_statement__ = 49;
         if (logical_gt(theta, 46)) {
           current_statement__ = 48;
