@@ -128,32 +128,83 @@ let subst_args_stmt args es =
   subst_stmt m
 
 (* TODO: only handle early returns if that's necessary *)
+(* The strategy here is to wrap the function body in a dummy loop, then replace
+   returns with breaks. One issue is early return from internal loops - in
+   those cases, a break would only break out of the inner loop. The solution is
+   a flag variable to indicate whether a 'return' break has been called, and
+   then to check if that flag is set after each loop. Then, if a 'return' break
+   is called from an inner loop, there's a cascade of breaks all the way out of
+   the dummy loop. *)
 let handle_early_returns opt_triple b =
+  let returned = Gensym.generate () in
   let f = function
     | Stmt.Fixed.Pattern.Return opt_ret -> (
-      match (opt_triple, opt_ret) with
-      | None, None -> Stmt.Fixed.Pattern.Break
-      | Some (Some _, _, name), Some e ->
+        match (opt_triple, opt_ret) with
+        | None, None -> Stmt.Fixed.Pattern.Break
+        | Some (Some _, _, name), Some e ->
           SList
             [ Stmt.Fixed.
+                { pattern= Assignment ((returned, UInt, []),
+                                       Expr.Fixed.
+                                         { pattern= Lit (Int, "1")
+                                         ; meta=
+                                             Expr.Typed.Meta.
+                                               {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} })
+                ; meta= Location_span.empty }
+            ; Stmt.Fixed.
                 { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
                 ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
-      | _, _ -> raise_s [%sexp ("" : string)] )
+        | _, _ -> raise_s [%sexp ("" : string)] )
+    | (Stmt.Fixed.Pattern.For _ as loop) ->
+      Stmt.Fixed.Pattern.SList
+        [ Stmt.Fixed.
+            { pattern= loop
+            ; meta= Location_span.empty }
+        ; Stmt.Fixed.
+            { pattern= IfElse
+                  ( Expr.Fixed.
+                      { pattern= Var returned
+                      ; meta=
+                          Expr.Typed.Meta.
+                            {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
+                  , {pattern= Break; meta= Location_span.empty}
+                  , None)
+            ; meta= Location_span.empty }
+        ]
     | x -> x
   in
-  Stmt.Fixed.Pattern.For
-    { loopvar= Gensym.generate ()
-    ; lower=
-        Expr.Fixed.
-          { pattern= Lit (Int, "1")
-          ; meta=
-              Expr.Typed.Meta.
-                {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
-    ; upper=
-        { pattern= Lit (Int, "1")
-        ; meta= {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
-    ; body= map_rec_stmt_loc f b }
+  Stmt.Fixed.Pattern.SList
+    [ Stmt.Fixed.
+        { pattern= Decl
+              { decl_adtype= DataOnly
+              ; decl_id= returned
+              ; decl_type= Sized SInt
+              }
+        ; meta= Location_span.empty }
+    ; Stmt.Fixed.
+        { pattern= Assignment ((returned, UInt, []),
+                               Expr.Fixed.
+                                 { pattern= Lit (Int, "0")
+                                 ; meta=
+                                     Expr.Typed.Meta.
+                                       {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} })
+        ; meta= Location_span.empty }
+    ; Stmt.Fixed.
+        { pattern= Stmt.Fixed.Pattern.For
+              { loopvar= Gensym.generate ()
+              ; lower=
+                  Expr.Fixed.
+                    { pattern= Lit (Int, "1")
+                    ; meta=
+                        Expr.Typed.Meta.
+                          {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
+              ; upper=
+                  { pattern= Lit (Int, "1")
+                  ; meta= {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
+              ; body= map_rec_stmt_loc f b }
+        ; meta= Location_span.empty }
+    ]
 
 let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
   match pattern with
