@@ -284,6 +284,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimize_glm.stan', line 22, column 2 to column 16)"};
 
 
+
 class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 
  private:

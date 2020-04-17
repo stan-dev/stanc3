@@ -9949,7 +9949,11 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_cfcov_54 UMatrix ())
+     (Decl (decl_adtype DataOnly) (decl_id p_cfcov_54_free__)
+      (decl_type (Unsized UVector))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_cfcov_54_free__ UVector ())
       ((pattern
         (FunApp CompilerInternal FnUnconstrain__
          (((pattern (Var p_cfcov_54))
@@ -9969,7 +9973,11 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_cfcov_33 UMatrix ())
+     (Decl (decl_adtype DataOnly) (decl_id p_cfcov_33_free__)
+      (decl_type (Unsized UVector))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_cfcov_33_free__ UVector ())
       ((pattern
         (FunApp CompilerInternal FnUnconstrain__
          (((pattern (Var p_cfcov_33))
@@ -9992,6 +10000,10 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_cfcov_33_ar_free__)
+      (decl_type (Unsized (UArray UVector)))))
+    (meta <opaque>))
+   ((pattern
      (For (loopvar sym1__)
       (lower
        ((pattern (Lit Int 1))
@@ -10004,7 +10016,7 @@
          (Block
           (((pattern
              (Assignment
-              (p_cfcov_33_ar (UArray UMatrix)
+              (p_cfcov_33_ar_free__ (UArray UVector)
                ((Single
                  ((pattern (Var sym1__))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))

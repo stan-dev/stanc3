@@ -31,18 +31,6 @@ generated quantities {
   sigmasq_within <- 1 / tau_within;
 }
 
-Info: Found int division at 'dyes.stan', line 21, column 19 to column 20:
-  1 / sqrt(tau_between)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'dyes.stan', line 22, column 18 to column 19:
-  1 / sqrt(tau_within)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'dyes.stan', line 39, column 21 to column 22:
-  1 / tau_between
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'dyes.stan', line 40, column 20 to column 21:
-  1 / tau_within
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'dyes.stan', line 1, column 0:
    -------------------------------------------------

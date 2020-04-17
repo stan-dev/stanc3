@@ -115,9 +115,6 @@ generated quantities {
   p_sd <- (sd_y_rep >= sd_y);
 }
 
-Info: Found int division at 'hier-logit.stan', line 70, column 23 to column 36:
-  (y[n] + z[n]) / (0.0 + K[n] + K_new[n])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'hier-logit.stan', line 15, column 9:
    -------------------------------------------------
@@ -508,9 +505,6 @@ generated quantities {
   p_sd <- (sd_y_rep >= sd_y);
 }
 
-Info: Found int division at 'hier.stan', line 64, column 23 to column 36:
-  (y[n] + z[n]) / (0.0 + K[n] + K_new[n])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'hier.stan', line 15, column 9:
    -------------------------------------------------
@@ -880,9 +874,6 @@ generated quantities {
   p_sd <- (sd_y_rep >= sd_y);
 }
 
-Info: Found int division at 'no-pool.stan', line 59, column 23 to column 36:
-  (y[n] + z[n]) / (0.0 + K[n] + K_new[n])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'no-pool.stan', line 15, column 9:
    -------------------------------------------------
@@ -1231,9 +1222,6 @@ generated quantities {
   p_sd <- (sd_y_rep >= sd_y);
 }
 
-Info: Found int division at 'pool.stan', line 60, column 23 to column 36:
-  (y[n] + z[n]) / (0.0 + K[n] + K_new[n])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'pool.stan', line 15, column 9:
    -------------------------------------------------

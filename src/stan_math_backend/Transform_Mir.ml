@@ -518,7 +518,20 @@ let trans_prog (p : Program.Typed.t) =
         Some (name, out_constrained_st)
     | _ -> None
   in
+  let get_pname_ust = function
+    | ( name
+      , { Program.out_block= Parameters
+        ; out_constrained_st
+        ; out_unconstrained_st; _ } )
+      when SizedType.to_unsized out_constrained_st
+           = SizedType.to_unsized out_unconstrained_st ->
+        Some (name, out_unconstrained_st)
+    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
+        Some (name ^ "_free__", out_unconstrained_st)
+    | _ -> None
+  in
   let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars
       ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
@@ -635,7 +648,7 @@ let trans_prog (p : Program.Typed.t) =
         init_pos
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write constrained_params
+        @ List.map ~f:gen_write free_params
     ; generate_quantities }
   in
   Program.(

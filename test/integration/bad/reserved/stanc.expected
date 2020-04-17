@@ -195,16 +195,16 @@ Identifier 'bool' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc break.stan
 
-Syntax error in 'break.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'break.stan', line 2, column 7 to column 12, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real break;
-               ^
+                     ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'break'
 
 
   $ ../../../../../install/default/bin/stanc case.stan
@@ -274,30 +274,30 @@ Identifier 'char32_t' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc cholesky_factor_corr.stan
 
-Syntax error in 'cholesky_factor_corr.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cholesky_factor_corr;
-               ^
+                                    ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'cholesky_factor_corr'
 
 
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
 
-Syntax error in 'cholesky_factor_cov.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cholesky_factor_cov;
-               ^
+                                   ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'cholesky_factor_cov'
 
 
   $ ../../../../../install/default/bin/stanc class.stan
@@ -367,44 +367,44 @@ Identifier 'constexpr' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc continue.stan
 
-Syntax error in 'continue.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real continue;
-               ^
+                        ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'continue'
 
 
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
 
-Syntax error in 'corr_matrix.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real corr_matrix;
-               ^
+                           ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'corr_matrix'
 
 
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
 
-Syntax error in 'cov_matrix.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cov_matrix;
-               ^
+                          ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'cov_matrix'
 
 
   $ ../../../../../install/default/bin/stanc decltype.stan
@@ -487,16 +487,16 @@ Identifier 'dynamic_cast' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc else.stan
 
-Syntax error in 'else.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real else;
-               ^
+                    ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'else'
 
 
   $ ../../../../../install/default/bin/stanc enum.stan
@@ -579,16 +579,16 @@ Identifier 'float' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc for.stan
 
-Syntax error in 'for.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'for.stan', line 2, column 7 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real for;
-               ^
+                   ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'for'
 
 
   $ ../../../../../install/default/bin/stanc friend.stan
@@ -632,30 +632,30 @@ Identifier 'goto' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc if.stan
 
-Syntax error in 'if.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'if.stan', line 2, column 7 to column 9, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real if;
-               ^
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'if'
 
 
   $ ../../../../../install/default/bin/stanc in.stan
 
-Syntax error in 'in.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real in;
-               ^
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'in'
 
 
   $ ../../../../../install/default/bin/stanc inline.stan
@@ -673,16 +673,16 @@ Identifier 'inline' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc int.stan
 
-Syntax error in 'int.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real int;
-               ^
+                   ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'int'
 
 
   $ ../../../../../install/default/bin/stanc long.stan
@@ -700,16 +700,16 @@ Identifier 'long' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc matrix.stan
 
-Syntax error in 'matrix.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real matrix;
-               ^
+                      ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'matrix'
 
 
   $ ../../../../../install/default/bin/stanc mutable.stan
@@ -844,30 +844,30 @@ Identifier 'or_eq' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc ordered.stan
 
-Syntax error in 'ordered.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real ordered;
-               ^
+                       ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'ordered'
 
 
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
 
-Syntax error in 'positive_ordered.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real positive_ordered;
-               ^
+                                ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'positive_ordered'
 
 
   $ ../../../../../install/default/bin/stanc private.stan
@@ -911,16 +911,16 @@ Identifier 'public' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc real.stan
 
-Syntax error in 'real.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'real.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real real;
-               ^
+                    ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'real'
 
 
   $ ../../../../../install/default/bin/stanc register.stan
@@ -964,30 +964,30 @@ Identifier 'repeat' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc return.stan
 
-Syntax error in 'return.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real return;
-               ^
+                      ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'return'
 
 
   $ ../../../../../install/default/bin/stanc row_vector.stan
 
-Syntax error in 'row_vector.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real row_vector;
-               ^
+                          ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'row_vector'
 
 
   $ ../../../../../install/default/bin/stanc short.stan
@@ -1018,16 +1018,16 @@ Identifier 'signed' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc simplex.stan
 
-Syntax error in 'simplex.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real simplex;
-               ^
+                       ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'simplex'
 
 
   $ ../../../../../install/default/bin/stanc sizeof.stan
@@ -1253,16 +1253,16 @@ Identifier 'union' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc unit_vector.stan
 
-Syntax error in 'unit_vector.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'unit_vector.stan', line 2, column 7 to column 18, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real unit_vector;
-               ^
+                           ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'unit_vector'
 
 
   $ ../../../../../install/default/bin/stanc unsigned.stan
@@ -1319,16 +1319,16 @@ Identifier 'var' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc vector.stan
 
-Syntax error in 'vector.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'vector.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real vector;
-               ^
+                      ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'vector'
 
 
   $ ../../../../../install/default/bin/stanc virtual.stan
@@ -1346,16 +1346,16 @@ Identifier 'virtual' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc void.stan
 
-Syntax error in 'void.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real void;
-               ^
+                    ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'void'
 
 
   $ ../../../../../install/default/bin/stanc volatile.stan
@@ -1386,16 +1386,16 @@ Identifier 'wchar_t' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc while.stan
 
-Syntax error in 'while.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real while;
-               ^
+                     ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
+Expected identifier, but found reserved keyword 'while'
 
 
   $ ../../../../../install/default/bin/stanc xor.stan
