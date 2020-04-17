@@ -91,6 +91,22 @@ let replace_fresh_local_vars s' =
                       { type_= Type.to_unsized decl_type
                       ; adlevel= decl_adtype
                       ; loc= Location_span.empty } } )
+    | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
+      let fresh_name = Gensym.generate () in
+      ( Stmt.Fixed.Pattern.For
+          { loopvar= fresh_name
+          ; lower= lower
+          ; upper= upper
+          ; body= body }
+      , Map.Poly.set m ~key:loopvar
+          ~data:
+            Expr.Fixed.
+              { pattern= Var fresh_name
+              ; meta=
+                  Expr.Typed.Meta.
+                    { type_= UInt
+                    ; adlevel= DataOnly
+                    ; loc= Location_span.empty } } )
     | Assignment ((var_name, ut, l), e) ->
         let var_name =
           match Map.Poly.find m var_name with
@@ -103,25 +119,6 @@ let replace_fresh_local_vars s' =
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
   subst_stmt m s
-
-let replace_fresh_local_vars_triple (d_list, s_list, e) =
-  let s =
-    slist_no_loc
-      ([slist_no_loc d_list] @ [slist_no_loc s_list] @ [Return (Some e)])
-  in
-  let s =
-    (replace_fresh_local_vars {pattern= s; meta= Location_span.empty}).pattern
-  in
-  match s with
-  | SList
-      [ {pattern= SList d_list; _}
-      ; {pattern= SList s_list; _}
-      ; {pattern= Return (Some e); _} ] ->
-      ( List.map ~f:(fun x -> x.pattern) d_list
-      , List.map ~f:(fun x -> x.pattern) s_list
-      , e )
-  | _ ->
-      raise_s [%sexp (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)]
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
@@ -206,6 +203,7 @@ let handle_early_returns opt_triple b =
         ; meta= Location_span.empty }
     ]
 
+(* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
   match pattern with
   | Var _ -> ([], [], e)
@@ -224,16 +222,20 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
       | None -> (d_list, s_list, {e with pattern= FunApp (t, s, es)})
       | Some (rt, args, b) ->
           let x = Gensym.generate () in
-          let b = handle_early_returns (Some (rt, adt, x)) b in
-          let d_list2, s_list2, e =
-            replace_fresh_local_vars_triple
-              ( [ Decl
+          let handle = handle_early_returns (Some (rt, adt, x)) in
+          let d_list2, s_list2, (e:Expr.Typed.t) =
+              ( [ Stmt.Fixed.Pattern.Decl
                     { decl_adtype= adt
                     ; decl_id= x
                     ; decl_type= Option.value_exn rt } ]
-              , [ (subst_args_stmt args es
-                     {pattern= b; meta= Location_span.empty})
-                    .pattern ]
+                (* We should minimize the code that's having its variables
+                   replaced to avoid conflict with the (two) new dummy
+                   variables introduced by inlining *)
+              , [ handle
+                    (replace_fresh_local_vars
+                       (subst_args_stmt args es
+                          b))
+                ]
               , { pattern= Var x
                 ; meta=
                     Expr.Typed.Meta.
@@ -662,15 +664,6 @@ let dead_code_elimination (mir : Program.Typed.t) =
           if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
             stmt
           else
-            (* let s =
-             *   "Killing var " ^ x
-             *   ^ " at ix " ^ string_of_int i
-             *   ^ " with entry set " ^
-             *   ([%sexp (live_variables_s : string Set.Poly.t)] |> Sexp.to_string_hum)
-             *   ^ " with stmt " ^
-             *   ([%sexp (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)] |> Sexp.to_string_hum)
-             * in
-             * let _ = print_endline s in *)
             Skip
       | Assignment ((x, _, is), rhs) ->
           if

@@ -99,11 +99,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 27, column 4 to column 11)",
                                                       " (in 'optimizations.stan', line 5, column 8 to column 20)",
                                                       " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
-                                                      " (in 'optimizations.stan', line 28, column 4 to column 19)",
                                                       " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
                                                       " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
                                                       " (in 'optimizations.stan', line 30, column 17 to column 28)",
-                                                      " (in 'optimizations.stan', line 33, column 6 to column 22)",
                                                       " (in 'optimizations.stan', line 31, column 33 to line 34, column 5)",
                                                       " (in 'optimizations.stan', line 36, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 35, column 4 to line 37, column 5)",
@@ -197,9 +195,9 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   
   try {
-    current_statement__ = 93;
+    current_statement__ = 91;
     if (logical_gt(x, 342)) {
-      current_statement__ = 92;
+      current_statement__ = 90;
       return ;
     } 
     current_statement__ = 7;
@@ -230,12 +228,12 @@ rfun(const int& y, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 10;
+    current_statement__ = 9;
     if (logical_gt(y, 2)) {
-      current_statement__ = 94;
+      current_statement__ = 92;
       return (y + 24);
     } 
-    current_statement__ = 95;
+    current_statement__ = 93;
     return (y + 2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -259,9 +257,9 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   
   try {
-    current_statement__ = 62;
+    current_statement__ = 60;
     lp_accum__.add(2);
-    current_statement__ = 96;
+    current_statement__ = 94;
     return 24;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -382,121 +380,140 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         double x;
         
-        current_statement__ = 9;
-        for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        int sym1__;
+        
+        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
           current_statement__ = 7;
           lp_accum__.add(3);}
+        int sym3__;
         int sym4__;
-        for (size_t sym3__ = 1; sym3__ <= 1; ++sym3__) {
+        
+        for (size_t sym5__ = 1; sym5__ <= 1; ++sym5__) {
           {
-            sym4__ = 27;
+            sym3__ = 27;
             break;
           }
-          sym4__ = 5;
+          sym3__ = 5;
           break;}
         if (pstream__) {
-          stan_print(pstream__, sym4__);
+          stan_print(pstream__, sym3__);
           stan_print(pstream__, "\n");
         }
+        int sym6__;
         int sym7__;
-        for (size_t sym6__ = 1; sym6__ <= 1; ++sym6__) {
+        
+        for (size_t sym8__ = 1; sym8__ <= 1; ++sym8__) {
           {
-            sym7__ = 28;
+            sym6__ = 28;
             break;
           }
-          sym7__ = 6;
+          sym6__ = 6;
           break;}
-        if (sym7__) {
-          current_statement__ = 12;
+        if (sym6__) {
+          current_statement__ = 11;
           if (pstream__) {
             stan_print(pstream__, "a");
             stan_print(pstream__, "\n");
           }
         } 
+        int sym9__;
+        int sym12__;
         int sym10__;
+        
+        for (size_t sym11__ = 1; sym11__ <= 1; ++sym11__) {
+          {
+            sym9__ = 31;
+            break;
+          }
+          sym9__ = 9;
+          break;}
         int sym13__;
-        for (size_t sym9__ = 1; sym9__ <= 1; ++sym9__) {
+        
+        for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
           {
-            sym10__ = 31;
+            sym12__ = 29;
             break;
           }
-          sym10__ = 9;
+          sym12__ = 7;
           break;}
-        for (size_t sym12__ = 1; sym12__ <= 1; ++sym12__) {
-          {
-            sym13__ = 29;
-            break;
-          }
-          sym13__ = 7;
-          break;}
-        if (logical_lte(sym10__, sym13__)) {
+        if (logical_lte(sym9__, sym12__)) {
           {
             {
+              int sym15__;
               int sym16__;
-              for (size_t sym15__ = 1; sym15__ <= 1; ++sym15__) {
+              
+              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
                 {
-                  sym16__ = 32;
+                  sym15__ = 32;
                   break;
                 }
-                sym16__ = 10;
+                sym15__ = 10;
                 break;}
-              lp_accum__.add(sym16__);
-              current_statement__ = 13;
-              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
+              lp_accum__.add(sym15__);
+              int sym18__;
+              
+              for (size_t sym19__ = 1; sym19__ <= 1; ++sym19__) {
                 current_statement__ = 7;
                 lp_accum__.add(3);}
             }
-            for (size_t sym12__ = 1; sym12__ <= 1; ++sym12__) {
+            int sym13__;
+            
+            for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
               {
-                sym13__ = 29;
+                sym12__ = 29;
                 break;
               }
-              sym13__ = 7;
+              sym12__ = 7;
               break;}
           }
-          for (size_t i = (sym10__ + 1); i <= sym13__; ++i) {
+          for (size_t i = (sym9__ + 1); i <= sym12__; ++i) {
             {
+              int sym15__;
               int sym16__;
-              for (size_t sym15__ = 1; sym15__ <= 1; ++sym15__) {
+              
+              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
                 {
-                  sym16__ = 32;
+                  sym15__ = 32;
                   break;
                 }
-                sym16__ = 10;
+                sym15__ = 10;
                 break;}
-              lp_accum__.add(sym16__);
-              current_statement__ = 13;
-              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
+              lp_accum__.add(sym15__);
+              int sym18__;
+              
+              for (size_t sym19__ = 1; sym19__ <= 1; ++sym19__) {
                 current_statement__ = 7;
                 lp_accum__.add(3);}
             }
-            for (size_t sym12__ = 1; sym12__ <= 1; ++sym12__) {
+            int sym13__;
+            
+            for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
               {
-                sym13__ = 29;
+                sym12__ = 29;
                 break;
               }
-              sym13__ = 7;
+              sym12__ = 7;
               break;}}
         } 
         {
           {
-            current_statement__ = 15;
+            current_statement__ = 13;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 13;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 13;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 13;
             lp_accum__.add(53);
           }
           {
-            current_statement__ = 15;
+            current_statement__ = 13;
             lp_accum__.add(53);
           }
         }
@@ -506,49 +523,49 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 }
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(2, (2 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(3, (3 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
@@ -556,67 +573,67 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            current_statement__ = 19;
+            current_statement__ = 17;
             if (logical_lte(2, (2 + 2))) {
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(2, (2 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(3, (3 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(4, (4 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
@@ -624,79 +641,79 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            current_statement__ = 19;
+            current_statement__ = 17;
             if (logical_lte(3, (3 + 2))) {
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(3, (3 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(4, (4 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(5, (5 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
@@ -704,91 +721,91 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            current_statement__ = 19;
+            current_statement__ = 17;
             if (logical_lte(4, (4 + 2))) {
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(4, (4 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(5, (5 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(6, (6 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
@@ -796,103 +813,103 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            current_statement__ = 19;
+            current_statement__ = 17;
             if (logical_lte(5, (5 + 2))) {
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(5, (5 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(6, (6 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
               }
               {
-                current_statement__ = 18;
+                current_statement__ = 16;
                 if (logical_lte(7, (7 * 2))) {
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                   {
-                    current_statement__ = 17;
+                    current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 } 
@@ -900,97 +917,101 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             } 
           }
         }
-        current_statement__ = 25;
+        current_statement__ = 23;
         for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 22;
+          current_statement__ = 20;
           if (logical_gt(i, 4)) {
             break;
           } 
-          current_statement__ = 23;
+          current_statement__ = 21;
           lp_accum__.add(2);}
-        current_statement__ = 30;
+        current_statement__ = 28;
         for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 27;
+          current_statement__ = 25;
           if (logical_gt(i, 4)) {
             continue;
           } 
-          current_statement__ = 28;
+          current_statement__ = 26;
           lp_accum__.add(2);}
-        current_statement__ = 35;
+        current_statement__ = 33;
         for (size_t i = 1; i <= 5; ++i) {
-          current_statement__ = 32;
+          current_statement__ = 30;
           if (logical_gt(i, 4)) {
             continue;
           } 
-          current_statement__ = 33;
+          current_statement__ = 31;
           lp_accum__.add(2);}
-        current_statement__ = 36;
+        current_statement__ = 34;
         x = 3;
-        current_statement__ = 37;
+        current_statement__ = 35;
         lp_accum__.add(3);
-        current_statement__ = 39;
+        current_statement__ = 37;
         if (logical_gt(theta, 2)) {
-          current_statement__ = 38;
+          current_statement__ = 36;
           x = 2;
         } 
-        current_statement__ = 40;
+        current_statement__ = 38;
         lp_accum__.add(x);
-        current_statement__ = 41;
+        current_statement__ = 39;
         lp_accum__.add(247);
-        current_statement__ = 42;
+        current_statement__ = 40;
         x = 576;
-        current_statement__ = 43;
+        current_statement__ = 41;
         lp_accum__.add(576);
-        current_statement__ = 45;
+        current_statement__ = 43;
         if (logical_gt(theta, 46)) {
-          current_statement__ = 44;
+          current_statement__ = 42;
           x = 5880;
         } 
-        current_statement__ = 46;
+        current_statement__ = 44;
         lp_accum__.add(x);
         double z;
         
-        current_statement__ = 48;
+        current_statement__ = 46;
         z = x;
+        current_statement__ = 47;
+        lp_accum__.add(z);
         current_statement__ = 49;
-        lp_accum__.add(x);
-        current_statement__ = 51;
         if (logical_gt(theta, 46)) {
-          current_statement__ = 50;
+          current_statement__ = 48;
           z = x;
         } 
-        current_statement__ = 52;
+        current_statement__ = 50;
         lp_accum__.add(z);
-        current_statement__ = 53;
+        current_statement__ = 51;
         lp_accum__.add(2);
         {
           double y;
           
-          current_statement__ = 55;
+          current_statement__ = 53;
           lp_accum__.add(24);
         }
         {
           double y;
           
-          current_statement__ = 58;
+          current_statement__ = 56;
           lp_accum__.add(245);
         }
         {
-          current_statement__ = 60;
+          current_statement__ = 58;
           lp_accum__.add(2);
         }
         int sym20__;
-        for (size_t sym19__ = 1; sym19__ <= 1; ++sym19__) {
-          current_statement__ = 62;
+        int sym21__;
+        
+        for (size_t sym22__ = 1; sym22__ <= 1; ++sym22__) {
+          current_statement__ = 60;
           lp_accum__.add(2);
           break;}
-        current_statement__ = 65;
+        current_statement__ = 63;
         while (576) {
           break;
         }
         int sym23__;
-        for (size_t sym22__ = 1; sym22__ <= 1; ++sym22__) {
-          current_statement__ = 62;
+        int sym24__;
+        
+        for (size_t sym25__ = 1; sym25__ <= 1; ++sym25__) {
+          current_statement__ = 60;
           lp_accum__.add(2);
           sym23__ = 24;
           break;}
@@ -998,51 +1019,59 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           {
             break;
           }
-          for (size_t sym22__ = 1; sym22__ <= 1; ++sym22__) {
-            current_statement__ = 62;
+          int sym24__;
+          
+          for (size_t sym25__ = 1; sym25__ <= 1; ++sym25__) {
+            current_statement__ = 60;
             lp_accum__.add(2);
             sym23__ = 24;
             break;}
         }
-        current_statement__ = 68;
+        current_statement__ = 66;
         for (size_t i = 31; i <= 225; ++i) { continue;}
-        current_statement__ = 70;
+        current_statement__ = 68;
         for (size_t i = 31; i <= 225; ++i) { break;}
         int sym26__;
-        for (size_t sym25__ = 1; sym25__ <= 1; ++sym25__) {
-          current_statement__ = 62;
+        int sym27__;
+        
+        for (size_t sym28__ = 1; sym28__ <= 1; ++sym28__) {
+          current_statement__ = 60;
           lp_accum__.add(2);
           sym26__ = 24;
           break;}
         for (size_t i = sym26__; i <= 225; ++i) { continue;}
         int sym29__;
-        for (size_t sym28__ = 1; sym28__ <= 1; ++sym28__) {
-          current_statement__ = 62;
+        int sym30__;
+        
+        for (size_t sym31__ = 1; sym31__ <= 1; ++sym31__) {
+          current_statement__ = 60;
           lp_accum__.add(2);
           sym29__ = 24;
           break;}
         for (size_t i = sym29__; i <= 225; ++i) { break;}
         int sym32__;
-        for (size_t sym31__ = 1; sym31__ <= 1; ++sym31__) {
-          current_statement__ = 62;
+        int sym33__;
+        
+        for (size_t sym34__ = 1; sym34__ <= 1; ++sym34__) {
+          current_statement__ = 60;
           lp_accum__.add(2);
           break;}
         {
-          current_statement__ = 73;
+          current_statement__ = 71;
           lp_accum__.add(1);
-          current_statement__ = 74;
+          current_statement__ = 72;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 76;
+            current_statement__ = 74;
             lp_accum__.add(1);
           }
         }
         double temp;
         
         {
-          current_statement__ = 80;
+          current_statement__ = 78;
           if (pstream__) {
             stan_print(pstream__, "hello");
             stan_print(pstream__, "\n");
@@ -1052,31 +1081,31 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         
         {
           {
-            current_statement__ = 83;
+            current_statement__ = 81;
             lp_accum__.add(4);
-            current_statement__ = 84;
+            current_statement__ = 82;
             lp_accum__.add(6);
           }
           {
-            current_statement__ = 83;
+            current_statement__ = 81;
             lp_accum__.add(4);
-            current_statement__ = 84;
+            current_statement__ = 82;
             lp_accum__.add(6);
           }
         }
         double dataonlyvar;
         
-        current_statement__ = 86;
+        current_statement__ = 84;
         dataonlyvar = 3;
-        current_statement__ = 87;
+        current_statement__ = 85;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar;
         
         {
-          current_statement__ = 89;
+          current_statement__ = 87;
           paramvar = (theta * 34);
         }
-        current_statement__ = 91;
+        current_statement__ = 89;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -1156,19 +1185,19 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(3),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
           }
         }
@@ -1178,29 +1207,29 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(3),
-                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
             }
           }
         }
       }
       {
         {
-          vars__.push_back(x_vector[(1 - 1)]);
+          vars__.push_back(x_vector[(0 - 1)]);
         }
         {
-          vars__.push_back(x_vector[(2 - 1)]);
+          vars__.push_back(x_vector[(0 - 1)]);
         }
       }
       {
@@ -1210,13 +1239,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               vars__.push_back(
                 rvalue(x_cov,
                   cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())), "x_cov"));
+                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
             }
             {
               vars__.push_back(
                 rvalue(x_cov,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())), "x_cov"));
+                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
             }
           }
         }
@@ -1226,13 +1255,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               vars__.push_back(
                 rvalue(x_cov,
                   cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())), "x_cov"));
+                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
             }
             {
               vars__.push_back(
                 rvalue(x_cov,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(2), nil_index_list())), "x_cov"));
+                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
             }
           }
         }
@@ -1567,22 +1596,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
       {
-        for (size_t sym34__ = 1; sym34__ <= 3; ++sym34__) {
+        for (size_t sym36__ = 1; sym36__ <= 3; ++sym36__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym34__) + '.' + std::to_string(sym33__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
           }}
       }}
-    for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym33__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym35__));
       }}
-    for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
       {
-        for (size_t sym34__ = 1; sym34__ <= 2; ++sym34__) {
+        for (size_t sym36__ = 1; sym36__ <= 2; ++sym36__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym34__) + '.' + std::to_string(sym33__));
+            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -1601,20 +1630,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
       {
-        for (size_t sym34__ = 1; sym34__ <= 3; ++sym34__) {
+        for (size_t sym36__ = 1; sym36__ <= 3; ++sym36__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym34__) + '.' + std::to_string(sym33__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
           }}
       }}
-    for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym33__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym35__));
       }}
-    for (size_t sym33__ = 1; sym33__ <= 3; ++sym33__) {
+    for (size_t sym35__ = 1; sym35__ <= 3; ++sym35__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym33__));
+        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym35__));
       }}
     if (emit_transformed_parameters__) {
       

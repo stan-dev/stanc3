@@ -163,7 +163,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; block_fixing= true
     ; constant_propagation= true
     ; expression_propagation= false
-    ; copy_propagation= true
+    ; copy_propagation= false
     ; dead_code_elimination= true
     ; partial_evaluation= true
     ; lazy_code_motion= false
@@ -171,9 +171,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
     }
   in match lvl with
   | 1 ->
-    { max_safe with
-      function_inlining = true
-    }
+    max_safe
   | 2 ->
     { max_safe with
       function_inlining = true

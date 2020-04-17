@@ -153,16 +153,21 @@ let%expect_test "inline functions" =
 
       log_prob {
         {
-          for(sym1__ in 1:1) {
+          data int sym1__;
+          sym1__ = 0;
+          for(sym2__ in 1:1) {
             FnPrint__(3);
             FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-          real sym4__;
-          for(sym3__ in 1:1) {
-            sym4__ = (53 ^ 2);
+          real sym3__;
+          data int sym4__;
+          sym4__ = 0;
+          for(sym5__ in 1:1) {
+            sym4__ = 1;
+            sym3__ = (53 ^ 2);
             break;
           }
-          FnReject__(sym4__);
+          FnReject__(sym3__);
         }
       }
 
@@ -219,10 +224,15 @@ let%expect_test "inline functions 2" =
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        for(sym3__ in 1:1) {
-          for(sym1__ in 1:1) {
+        data int sym7__;
+        sym7__ = 0;
+        for(sym8__ in 1:1) {
+          data int sym5__;
+          sym5__ = 0;
+          for(sym6__ in 1:1) {
 
           }
+          if(sym7__) break;
         }
       } |}]
 
@@ -292,7 +302,16 @@ let%expect_test "list collapsing" =
       (((pattern
          (Block
           (((pattern
-             (For (loopvar sym1__)
+             (Decl (decl_adtype DataOnly) (decl_id sym1__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (sym1__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar sym2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -339,11 +358,20 @@ let%expect_test "list collapsing" =
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
+             (Decl (decl_adtype AutoDiffable) (decl_id sym3__)
               (decl_type (Unsized UReal))))
             (meta <opaque>))
            ((pattern
-             (For (loopvar sym3__)
+             (Decl (decl_adtype DataOnly) (decl_id sym4__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (sym4__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar sym5__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -354,7 +382,12 @@ let%expect_test "list collapsing" =
                ((pattern
                  (Block
                   (((pattern
-                     (Assignment (sym4__ UReal ())
+                     (Assignment (sym4__ UInt ())
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment (sym3__ UReal ())
                       ((pattern
                         (FunApp StanLib Pow__
                          (((pattern (Lit Int 53))
@@ -370,7 +403,7 @@ let%expect_test "list collapsing" =
             (meta <opaque>))
            ((pattern
              (NRFunApp CompilerInternal FnReject__
-              (((pattern (Var sym4__))
+              (((pattern (Var sym3__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
@@ -502,25 +535,34 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          int sym4__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__("f");
-            sym3__ = 42;
+            sym2__ = 1;
+            sym1__ = 42;
             break;
           }
-          for(sym5__ in 1:1) {
+          data int sym5__;
+          sym5__ = 0;
+          for(sym6__ in 1:1) {
             FnPrint__("g");
-            sym6__ = (3 + 24);
+            sym5__ = 1;
+            sym4__ = (3 + 24);
             break;
           }
-          for(i in sym3__:sym6__) {
+          for(i in sym1__:sym4__) {
             {
               FnPrint__("body");
             }
-            for(sym5__ in 1:1) {
+            data int sym5__;
+            sym5__ = 0;
+            for(sym6__ in 1:1) {
               FnPrint__("g");
-              sym6__ = (3 + 24);
+              sym5__ = 1;
+              sym4__ = (3 + 24);
               break;
             }
           }
@@ -582,37 +624,54 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-          int sym9__;
-          int sym12__;
-          for(sym8__ in 1:1) {
+          int sym7__;
+          int sym10__;
+          data int sym8__;
+          sym8__ = 0;
+          for(sym9__ in 1:1) {
             FnPrint__("f");
-            sym9__ = 42;
+            sym8__ = 1;
+            sym7__ = 42;
             break;
           }
-          for(sym11__ in 1:1) {
+          data int sym14__;
+          sym14__ = 0;
+          for(sym15__ in 1:1) {
             FnPrint__("g");
-            int sym13__;
-            for(sym5__ in 1:1) {
+            int sym11__;
+            data int sym12__;
+            sym12__ = 0;
+            for(sym13__ in 1:1) {
               FnPrint__("f");
-              sym13__ = 42;
+              sym12__ = 1;
+              sym11__ = 42;
               break;
             }
-            sym12__ = (sym13__ + 24);
+            if(sym14__) break;
+            sym14__ = 1;
+            sym10__ = (sym11__ + 24);
             break;
           }
-          for(i in sym9__:sym12__) {
+          for(i in sym7__:sym10__) {
             {
               FnPrint__("body");
             }
-            for(sym11__ in 1:1) {
+            data int sym14__;
+            sym14__ = 0;
+            for(sym15__ in 1:1) {
               FnPrint__("g");
-              int sym13__;
-              for(sym5__ in 1:1) {
+              int sym11__;
+              data int sym12__;
+              sym12__ = 0;
+              for(sym13__ in 1:1) {
                 FnPrint__("f");
-                sym13__ = 42;
+                sym12__ = 1;
+                sym11__ = 42;
                 break;
               }
-              sym12__ = (sym13__ + 24);
+              if(sym14__) break;
+              sym14__ = 1;
+              sym10__ = (sym11__ + 24);
               break;
             }
           }
@@ -672,17 +731,23 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__("g");
-            sym3__ = (3 + 24);
+            sym2__ = 1;
+            sym1__ = (3 + 24);
             break;
           }
-          while(sym3__) {
+          while(sym1__) {
             FnPrint__("body");
-            for(sym2__ in 1:1) {
+            data int sym2__;
+            sym2__ = 0;
+            for(sym3__ in 1:1) {
               FnPrint__("g");
-              sym3__ = (3 + 24);
+              sym2__ = 1;
+              sym1__ = (3 + 24);
               break;
             }
           }
@@ -742,13 +807,16 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__("g");
-            sym3__ = (3 + 24);
+            sym2__ = 1;
+            sym1__ = (3 + 24);
             break;
           }
-          if(sym3__) FnPrint__("body");
+          if(sym1__) FnPrint__("body");
         }
       }
 
@@ -817,28 +885,37 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          int sym9__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          int sym4__;
+          int sym7__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__("f");
-            sym3__ = 42;
+            sym2__ = 1;
+            sym1__ = 42;
             break;
           }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
+          if(sym1__) {
+            data int sym5__;
+            sym5__ = 0;
+            for(sym6__ in 1:1) {
               FnPrint__("g");
-              sym6__ = (3 + 24);
+              sym5__ = 1;
+              sym4__ = (3 + 24);
               break;
             }
           } else {
-            for(sym8__ in 1:1) {
+            data int sym8__;
+            sym8__ = 0;
+            for(sym9__ in 1:1) {
               FnPrint__("h");
-              sym9__ = (4 + 4);
+              sym8__ = 1;
+              sym7__ = (4 + 4);
               break;
             }
           }
-          FnPrint__(sym3__ ?sym6__: sym9__);
+          FnPrint__(sym1__ ?sym4__: sym7__);
         }
       }
 
@@ -891,17 +968,21 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
-              sym3__ = 42;
+              sym2__ = 1;
+              sym1__ = 42;
               break;
             }
-            sym3__ = 6;
+            sym2__ = 1;
+            sym1__ = 6;
             break;
           }
-          FnPrint__(sym3__);
+          FnPrint__(sym1__);
         }
       }
 
@@ -950,19 +1031,25 @@ let%expect_test "inline function indices " =
       log_prob {
         {
           array[array[int, 2], 2] a;
-          int sym6__;
-          int sym3__;
-          for(sym5__ in 1:1) {
+          int sym4__;
+          int sym1__;
+          data int sym5__;
+          sym5__ = 0;
+          for(sym6__ in 1:1) {
             FnPrint__(2);
-            sym6__ = 42;
+            sym5__ = 1;
+            sym4__ = 42;
             break;
           }
-          for(sym2__ in 1:1) {
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            sym2__ = 1;
+            sym1__ = 42;
             break;
           }
-          FnPrint__(a[sym3__, sym6__]);
+          FnPrint__(a[sym1__, sym4__]);
         }
       }
 
@@ -1010,21 +1097,27 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          int sym4__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            sym2__ = 1;
+            sym1__ = 42;
             break;
           }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
+          if(sym1__) {
+            data int sym5__;
+            sym5__ = 0;
+            for(sym6__ in 1:1) {
               FnPrint__(2);
-              sym6__ = 42;
+              sym5__ = 1;
+              sym4__ = 42;
               break;
             }
           }
-          FnPrint__(sym3__ && sym6__);
+          FnPrint__(sym1__ && sym4__);
         }
       }
 
@@ -1071,21 +1164,27 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int sym1__;
+          int sym4__;
+          data int sym2__;
+          sym2__ = 0;
+          for(sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            sym2__ = 1;
+            sym1__ = 42;
             break;
           }
-          if(sym3__) ; else {
-            for(sym5__ in 1:1) {
+          if(sym1__) ; else {
+            data int sym5__;
+            sym5__ = 0;
+            for(sym6__ in 1:1) {
               FnPrint__(2);
-              sym6__ = 42;
+              sym5__ = 1;
+              sym4__ = 42;
               break;
             }
           }
-          FnPrint__(sym3__ || sym6__);
+          FnPrint__(sym1__ || sym4__);
         }
       }
 
