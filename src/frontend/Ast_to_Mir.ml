@@ -611,7 +611,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
           ; meta= smeta }
       in
-      [Stmt.Helpers.for_each bodyfn iteratee' smeta]
+      Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
       raise_s
         [%message
