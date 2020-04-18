@@ -554,10 +554,11 @@ let rec eval_expr (e : Expr.Typed.t) =
             | "Minus__", [{pattern= FunApp (StanLib, "exp", l'); _}; x]
               when is_int 1 x ->
                 FunApp (StanLib, "expm1", l')
-            | "Plus__", [{pattern= FunApp (StanLib, "Times__", [x; y]); _}; z]
-             |"Plus__", [z; {pattern= FunApp (StanLib, "Times__", [x; y]); _}]
-              ->
-                FunApp (StanLib, "fma", [x; y; z])
+                  (* DO NOT MERGE THIS TO MASTER, JUST FOR TESTING *)
+            (* | "Plus__", [{pattern= FunApp (StanLib, "Times__", [x; y]); _}; z]
+             *  |"Plus__", [z; {pattern= FunApp (StanLib, "Times__", [x; y]); _}]
+             *   ->
+             *     FunApp (StanLib, "fma", [x; y; z]) *)
             | "Minus__", [x; {pattern= FunApp (StanLib, "gamma_p", l); _}]
               when is_int 1 x ->
                 FunApp (StanLib, "gamma_q", l)

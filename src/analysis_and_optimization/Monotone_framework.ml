@@ -464,6 +464,7 @@ let top_free_vars_stmt
 
 (** The transfer function for a live variables analysis *)
 let live_variables_transfer
+    (never_kill : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -485,7 +486,7 @@ let live_variables_transfer
          |Assignment ((_, _, _ :: _), _) ->
             Set.Poly.empty
       in
-      transfer_gen_kill p gen kill
+      transfer_gen_kill p gen (Set.Poly.diff kill never_kill)
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
@@ -966,24 +967,27 @@ let live_variables_mfp (prog : Program.Typed.t)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
+  let never_kill = globals prog in
   let variables =
     ( module struct
       type vals = string
 
       (* NOTE: global generated quantities, (transformed) parameters and target are always observable
    so should be live. *)
-      let initial = globals prog
+      let initial = never_kill
     end
     : INITIALTYPE
       with type vals = string )
   in
   let (module Lattice) = powerset_lattice variables in
-  let (module Transfer) = live_variables_transfer flowgraph_to_mir in
+  let (module Transfer) = live_variables_transfer never_kill flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Rev_Flowgraph) (module Lattice) (module Transfer)
   in
   let mfp = Mf.mfp () in
-  (* let _ = print_mfp ident mfp flowgraph_to_mir in *)
+  (* let _ = print_endline "STARTING BLOCK {" in
+   * let _ = print_mfp ident mfp flowgraph_to_mir in
+   * let _ = print_endline "} ENDING BLOCK" in *)
   mfp
 
 (** Instantiate all four instances of the monotone framework for lazy

@@ -141,6 +141,24 @@ let optimization_settings lvl : Optimize.optimization_settings =
     }
   in
   let _ : Optimize.optimization_settings =
+    (*Good for all except:
+      example-models/ARM/Ch.23/electric_1b.stan
+     *example-models/bugs_examples/vol1/kidney/kidney.stan *)
+    { function_inlining= false
+    ; static_loop_unrolling= true
+    ; one_step_loop_unrolling= true
+    ; list_collapsing= true
+    ; block_fixing= true
+    ; constant_propagation= true
+    ; expression_propagation= false
+    ; copy_propagation= false
+    ; dead_code_elimination= false
+    ; partial_evaluation= true
+    ; lazy_code_motion= false
+    ; optimize_ad_levels= false
+    }
+  in
+  let max_safe : Optimize.optimization_settings =
     { function_inlining= true
     ; static_loop_unrolling= true
     ; one_step_loop_unrolling= true
@@ -154,27 +172,14 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; lazy_code_motion= false
     ; optimize_ad_levels= true
     }
-  in
-  let max_safe : Optimize.optimization_settings =
-    { function_inlining= true
-    ; static_loop_unrolling= true
-    ; one_step_loop_unrolling= true
-    ; list_collapsing= true
-    ; block_fixing= true
-    ; constant_propagation= true
-    ; expression_propagation= false
-    ; copy_propagation= false
-    ; dead_code_elimination= true
-    ; partial_evaluation= true
-    ; lazy_code_motion= false
-    ; optimize_ad_levels= true
-    }
   in match lvl with
   | 1 ->
-    max_safe
+    { max_safe with
+      function_inlining = false
+    }
   | 2 ->
     { max_safe with
-      copy_propagation = true
+      function_inlining = true
     }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))
