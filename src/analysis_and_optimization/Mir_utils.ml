@@ -199,33 +199,46 @@ let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
 let stmt_of_block b =
   Stmt.Fixed.{pattern= SList b; meta= Stmt.Located.Meta.empty}
 
-let rec subst_expr m (Expr.Fixed.({pattern; _}) as e) =
-  match pattern with
-  | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | _ -> Expr.Fixed.{e with pattern= Pattern.map (subst_expr m) pattern}
+let rec fn_subst_expr m e =
+  match m e with
+  | Some e' -> e'
+  | _ -> Expr.Fixed.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
 
-let subst_idx m = Index.map (subst_expr m)
+let fn_subst_idx m = Index.map (fn_subst_expr m)
 
-let subst_stmt_base_helper g h b =
+let fn_subst_stmt_base_helper g h b =
   Stmt.Fixed.Pattern.(
     match b with
     | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
     | x -> map g (fun y -> y) x)
 
-let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
+let fn_subst_stmt_base m = fn_subst_stmt_base_helper (fn_subst_expr m) (fn_subst_idx m)
+let fn_subst_stmt m = map_rec_stmt_loc (fn_subst_stmt_base m)
+
+let name_map m (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var s ->
+    (match Map.Poly.find m s with
+     | Some s' -> Some {e with pattern = Var s'}
+     | None -> None)
+  | _ -> None
+
+let name_subst_stmt m = fn_subst_stmt (name_map m)
+
+let var_map m (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var s -> Map.find m s
+  | _ -> None
+let subst_expr m e = fn_subst_expr (var_map m) e
+let subst_idx m = Index.map (subst_expr m)
+let subst_stmt_base m = fn_subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = map_rec_stmt_loc (subst_stmt_base m)
 
-let rec expr_subst_expr m e =
-  match Map.find m e with
-  | Some e' -> e'
-  | None ->
-      Expr.Fixed.{e with pattern= Pattern.map (expr_subst_expr m) e.pattern}
-
+let expr_map m (e : Expr.Typed.t) = Map.find m e
+let expr_subst_expr m e = fn_subst_expr (expr_map m) e
 let expr_subst_idx m = Index.map (expr_subst_expr m)
-
 let expr_subst_stmt_base m =
-  subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
-
+  fn_subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
 let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 
 let rec expr_depth Expr.Fixed.({pattern; _}) =

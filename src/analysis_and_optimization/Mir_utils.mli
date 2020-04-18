@@ -146,6 +146,11 @@ val subst_stmt :
   (string, Expr.Typed.t) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
 (** Substitute variables occurring anywhere in a statement according to the provided Map. *)
 
+val name_subst_stmt :
+  (string, string) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
+(** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
+
+
 val expr_subst_expr :
   Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t
 (** Substitute subexpressions in an expression according to the provided Map, trying

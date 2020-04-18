@@ -175,7 +175,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
   in match lvl with
   | 1 ->
     { max_safe with
-      function_inlining = false
+      function_inlining = true
     }
   | 2 ->
     { max_safe with

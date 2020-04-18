@@ -80,45 +80,41 @@ let slist_concat_no_loc l stmt =
 let replace_fresh_local_vars s' =
   let f m = function
     | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id} ->
-        let fresh_name = Gensym.generate () in
-        ( Stmt.Fixed.Pattern.Decl {decl_adtype; decl_id= fresh_name; decl_type}
-        , Map.Poly.set m ~key:decl_id
-            ~data:
-              Expr.Fixed.
-                { pattern= Var fresh_name
-                ; meta=
-                    Expr.Typed.Meta.
-                      { type_= Type.to_unsized decl_type
-                      ; adlevel= decl_adtype
-                      ; loc= Location_span.empty } } )
+      let new_name = match Map.Poly.find m decl_id with
+        | Some existing -> existing
+        | None -> Gensym.generate ()
+      in
+      ( Stmt.Fixed.Pattern.Decl {decl_adtype; decl_id= new_name; decl_type}
+      , Map.Poly.set m ~key:decl_id ~data:new_name
+      )
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
-      let fresh_name = Gensym.generate () in
+      let new_name = match Map.Poly.find m loopvar with
+        | Some existing -> existing
+        | None -> Gensym.generate ()
+      in
       ( Stmt.Fixed.Pattern.For
-          { loopvar= fresh_name
+          { loopvar= new_name
           ; lower= lower
           ; upper= upper
           ; body= body }
-      , Map.Poly.set m ~key:loopvar
-          ~data:
-            Expr.Fixed.
-              { pattern= Var fresh_name
-              ; meta=
-                  Expr.Typed.Meta.
-                    { type_= UInt
-                    ; adlevel= DataOnly
-                    ; loc= Location_span.empty } } )
+      , Map.Poly.set m ~key:loopvar ~data:new_name)
     | Assignment ((var_name, ut, l), e) ->
         let var_name =
           match Map.Poly.find m var_name with
           | None -> var_name
-          | Some Expr.Fixed.({pattern= Var var_name; _}) -> var_name
-          | Some e -> raise_s [%sexp (e : Expr.Typed.t)]
+          | Some var_name -> var_name
         in
         (Stmt.Fixed.Pattern.Assignment ((var_name, ut, l), e), m)
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
-  subst_stmt m s
+  (* let _ = Map.Poly.iteri m ~f:(fun ~key ~data ->
+   *     print_endline (
+   *       key ^ " -> " ^ data
+   *     )
+   *   )
+   * in *)
+  name_subst_stmt m s
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
