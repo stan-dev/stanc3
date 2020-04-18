@@ -611,6 +611,11 @@ let rec can_side_effect_expr (e : Expr.Typed.t) =
       || (t = CompilerInternal && f = Internal_fun.to_string FnReadParam)
       || (t = CompilerInternal && f = Internal_fun.to_string FnReadData)
       || (t = CompilerInternal && f = Internal_fun.to_string FnWriteParam)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnConstrain)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSize)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSize)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSizeSimplex)
+      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSizeUnitVector)
       || (t = CompilerInternal && f = Internal_fun.to_string FnUnconstrain)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->

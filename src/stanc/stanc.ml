@@ -175,7 +175,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
   in match lvl with
   | 1 ->
     { max_safe with
-      expression_propagation = true
+      expression_propagation = false
     }
   | 2 ->
     { max_safe with
