@@ -165,7 +165,7 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; list_collapsing= true
     ; block_fixing= true
     ; constant_propagation= true
-    ; expression_propagation= false
+    ; expression_propagation= true
     ; copy_propagation= true
     ; dead_code_elimination= true
     ; partial_evaluation= true
@@ -175,11 +175,11 @@ let optimization_settings lvl : Optimize.optimization_settings =
   in match lvl with
   | 1 ->
     { max_safe with
-      function_inlining = true
+      expression_propagation = true
     }
   | 2 ->
     { max_safe with
-      function_inlining = true
+      expression_propagation = true
     }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))
