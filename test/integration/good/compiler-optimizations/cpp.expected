@@ -1548,7 +1548,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
       }
+      current_statement__ = 5;
+      validate_non_negative_index("x_cov_free__",
+                                  "(2 + ((2 * (2 - 1)) / 2))", 3);
       Eigen::Matrix<double, -1, 1> x_cov_free__;
+      x_cov_free__ = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(x_cov_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 5;
       assign(x_cov_free__, nil_index_list(),
         stan::math::cov_matrix_free(x_cov), "assigning variable x_cov_free__");

@@ -257,8 +257,8 @@ let constraint_forl = function
 
 let extract_transform_args = function
   | Program.Lower a | Upper a -> [a]
-  | Offset a -> [{a with Expr.Fixed.pattern= Lit (Int, "0")}; a]
-  | Multiplier a -> [a; {a with pattern= Lit (Int, "1")}]
+  | Offset a -> [a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
+  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
@@ -357,7 +357,7 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
                       Decl
                         { decl_adtype= DataOnly
                         ; decl_id= decl_id ^ "_free__"
-                        ; decl_type= Unsized ut }
+                        ; decl_type= Sized (param_size t st) }
                   ; meta= smeta } ]
             , decl_id ^ "_free__"
             , ut )
@@ -611,7 +611,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
           ; meta= smeta }
       in
-      [Stmt.Helpers.for_each bodyfn iteratee' smeta]
+      Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
       raise_s
         [%message
