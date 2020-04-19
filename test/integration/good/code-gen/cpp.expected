@@ -4325,14 +4325,14 @@ class mother_model : public model_base_crtp<mother_model> {
           assign(no_offset_multiplier,
             cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(
-              no_offset_multiplier[(sym1__ - 1)], 0.0, 2, lp__),
+              no_offset_multiplier[(sym1__ - 1)], 0, 2, lp__),
             "assigning variable no_offset_multiplier");
         } else {
           current_statement__ = 3;
           assign(no_offset_multiplier,
             cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(
-              no_offset_multiplier[(sym1__ - 1)], 0.0, 2),
+              no_offset_multiplier[(sym1__ - 1)], 0, 2),
             "assigning variable no_offset_multiplier");
         }}
       current_statement__ = 4;
@@ -5430,7 +5430,7 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(no_offset_multiplier,
           cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_constrain(
-            no_offset_multiplier[(sym1__ - 1)], 0.0, 2),
+            no_offset_multiplier[(sym1__ - 1)], 0, 2),
           "assigning variable no_offset_multiplier");}
       current_statement__ = 4;
       validate_non_negative_index("offset_no_multiplier", "5", 5);
@@ -7288,7 +7288,7 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(no_offset_multiplier,
           cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_free(
-            no_offset_multiplier[(sym1__ - 1)], 0.0, 2),
+            no_offset_multiplier[(sym1__ - 1)], 0, 2),
           "assigning variable no_offset_multiplier");}
       current_statement__ = 4;
       validate_non_negative_index("offset_no_multiplier", "5", 5);

@@ -258,7 +258,7 @@ let constraint_forl = function
 let extract_transform_args = function
   | Program.Lower a | Upper a -> [a]
   | Offset a -> [a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
-  | Multiplier a -> [{a with pattern= Lit (Real, "0.0")}; a]
+  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
