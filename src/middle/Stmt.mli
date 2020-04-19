@@ -115,6 +115,9 @@ module Numbered : sig
 end
 
 module Helpers : sig
+  val ensure_var :
+    (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
+
   val internal_nrfunapp :
     Internal_fun.t -> 'a Fixed.First.t list -> 'b -> ('a, 'b) Fixed.t
 

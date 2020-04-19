@@ -99,7 +99,8 @@ module TypeError = struct
         let generate_reduce_sum_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UInt) :: (AutoDiffable, UInt) :: args
+                  ( List.hd_exn args :: (AutoDiffable, UInt)
+                    :: (AutoDiffable, UInt) :: List.tl_exn args
                   , ReturnType UReal ) ]
             ; first; [UInt]; rest ]
         in
@@ -115,11 +116,12 @@ module TypeError = struct
     | IllTypedReduceSumGeneric (name, arg_tys) ->
         let rec n_commas n = if n = 0 then "" else "," ^ n_commas (n - 1) in
         let type_string (a, b, c, d) i =
-          Fmt.strf "(%a, %a, T[%s], ...) => %a, %a, T[%s], ...\n"
-            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+          Fmt.strf "(T[%s], %a, %a, ...) => %a, T[%s], %a, ...\n"
             (n_commas (i - 1))
-            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-            (n_commas i)
+            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+            Pretty_printing.pp_unsizedtype c
+            (n_commas (i - 1))
+            Pretty_printing.pp_unsizedtype d
         in
         let lines =
           List.map

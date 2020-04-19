@@ -327,9 +327,8 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( (_, UInt)
-                :: (_, UInt)
-                   :: ((_, sliced_arg_fun_type) as sliced_arg_fun) :: fun_args
+              ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
+                :: (_, UInt) :: (_, UInt) :: fun_args
               , ReturnType UReal ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
@@ -635,13 +634,12 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and re = semantic_check_expression cf e2
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
-        | UInt, UReal, Divide | UInt, UInt, Divide ->
+        | UInt, UInt, Divide ->
             Fmt.pr
-              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
+              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a\n@]%s@.@]"
               (Location_span.to_string x.emeta.loc)
               Pretty_printing.pp_expression {expr; emeta}
-              "Positive values rounded down, negative values rounded up or \
-               down in platform-dependent way." ;
+              "Values will be rounded towards zero." ;
             (x, y)
         | _ -> (x, y)
       in
