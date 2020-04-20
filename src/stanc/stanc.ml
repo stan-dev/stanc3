@@ -172,13 +172,14 @@ let optimization_settings lvl : Optimize.optimization_settings =
   in match lvl with
   | 1 ->
     { max_safe with
-      expression_propagation = true
-    ; lazy_code_motion= true
+      lazy_code_motion = true
+    ; expression_propagation = true
+    ; copy_propagation = false
     }
   | 2 ->
     { max_safe with
-      expression_propagation = true
-    ; lazy_code_motion= true
+      lazy_code_motion = true
+    ; expression_propagation = true
     }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))

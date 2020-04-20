@@ -592,6 +592,20 @@ let propagation
         (module Flowgraph)
         flowgraph_to_mir propagation_transfer
     in
+    let _ =
+      if false then (
+        let print_stmt s =
+          [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum
+        in
+        Map.iteri values ~f:(fun ~key ~data ->
+            print_endline (string_of_int key ^ ":\n "
+                           ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key) ^ ":\n "
+                           ^ ([%sexp (data.entry : (string, Expr.Typed.t) Map.Poly.t option)] |> Sexp.to_string_hum)
+                           ^ " \t-> "
+                           ^ ([%sexp (data.exit : (string, Expr.Typed.t) Map.Poly.t option)] |> Sexp.to_string_hum))
+          )
+      )
+    in
     let propagate_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
           subst_stmt_base
@@ -632,13 +646,38 @@ and can_side_effect_idx (i : Expr.Typed.t Index.t) =
   | Single e | Upfrom e | MultiIndex e -> can_side_effect_expr e
   | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
 
-let expression_propagation =
-  propagation
-    (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
+let expression_propagation mir =
+  let res =
+    propagation
+      (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
+      mir
+  in
+  let _ = if Monotone_framework.exprop_debug then (
+      print_endline "Input program: {!";
+      Program.Typed.pp Fmt.stdout mir;
+      print_endline "}!";
+      print_endline "Output program: {!";
+      Program.Typed.pp Fmt.stdout res;
+      print_endline "}!";
+    )
+  in
+  res
 
-let copy_propagation prog =
-  let globals = Monotone_framework.globals prog in
-  propagation (Monotone_framework.copy_propagation_transfer globals) prog
+let copy_propagation mir =
+  let globals = Monotone_framework.globals mir in
+  let res =
+    propagation (Monotone_framework.copy_propagation_transfer globals) mir
+  in
+  let _ = if false then (
+      print_endline "Input program: {!";
+      Program.Typed.pp Fmt.stdout mir;
+      print_endline "}!";
+      print_endline "Output program: {!";
+      Program.Typed.pp Fmt.stdout res;
+      print_endline "}!";
+    )
+  in
+  res
 
 let is_skip_break_continue s =
   match s with
@@ -737,6 +776,13 @@ let lazy_code_motion (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
      simultaneously *)
+  let _ =
+    if Monotone_framework.lcm_debug then (
+      print_endline "Input program: {!";
+      Program.Typed.pp Fmt.stdout mir;
+      print_endline "}!";
+    )
+  in
   let preprocess_flowgraph =
     let preprocess_flowgraph_base
         (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
@@ -797,17 +843,18 @@ let lazy_code_motion (mir : Program.Typed.t) =
       Set.fold (Monotone_framework.used_expressions_stmt s.pattern)
         ~init:Expr.Typed.Map.empty ~f:collect_expressions
     in
-    (* let print_expr (e:Expr.Typed.t) =
-     *   [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
-     * in
-     * let _ =
-     *   print_endline "Expression map:";
-     *   Map.iteri expression_map ~f:(fun ~key ~data ->
-     *     print_endline (
-     *       "\t" ^ print_expr key ^ " -> " ^ data
-     *     )
-     *   )
-     * in *)
+    let print_expr (e:Expr.Typed.t) =
+      [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
+    in
+    let _ =
+      if Monotone_framework.lcm_debug then
+        (print_endline "Expression map:";
+         Map.iteri expression_map ~f:(fun ~key ~data ->
+             print_endline (
+               "\t" ^ print_expr key ^ " -> " ^ data
+             )
+           ))
+    in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
@@ -867,15 +914,16 @@ let lazy_code_motion (mir : Program.Typed.t) =
           (Map.mapi expression_map ~f:(fun ~key ~data ->
                {key with pattern= Var data} ))
       in
-      (* let _ =
-       *   print_endline (string_of_int i ^ ": expression replacement map: {");
-       *   Map.iteri expr_map ~f:(fun ~key ~data ->
-       *       print_endline (
-       *         "\t" ^ print_expr key ^ " -> " ^ print_expr data
-       *       )
-       *     );
-       *   print_endline "}";
-       * in *)
+      let _ =
+        if Monotone_framework.lcm_debug then
+          (print_endline (string_of_int i ^ ": expression replacement map: {");
+           Map.iteri expr_map ~f:(fun ~key ~data ->
+               print_endline (
+                 "\t" ^ print_expr key ^ " -> " ^ print_expr data
+               )
+             );
+           print_endline "}";)
+      in
       let f =
         expr_subst_stmt_except_initial_assign expr_map
       in
@@ -925,6 +973,13 @@ let lazy_code_motion (mir : Program.Typed.t) =
   (* let _ = print_endline ("Done 2") in *)
   let res = transform_program_blockwise mir (fun _ x -> cleanup (transform (preprocess_flowgraph x))) in
   (* let _ = print_endline ("Done 3") in *)
+  let _ =
+    if Monotone_framework.lcm_debug then (
+      print_endline "Output program: {!";
+      Program.Typed.pp Fmt.stdout res;
+      print_endline "}!";
+    )
+  in
   res
 
 let block_fixing mir =

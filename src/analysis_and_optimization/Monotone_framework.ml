@@ -334,6 +334,8 @@ let label_top_decls
      * in *)
     Set.Poly.empty
 
+let exprop_debug = false
+
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
@@ -371,7 +373,7 @@ let expression_propagation_transfer
                 m'
               else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-                Map.remove m s
+              kill_var m s
             | Block b ->
               let kills =
                 Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
@@ -408,15 +410,35 @@ let copy_propagation_transfer
       | None -> None
       | Some m ->
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
+          let kill_var m v =
+            Map.filteri m ~f:(fun ~key ~(data : Expr.Typed.t) ->
+                not (key = v || data.pattern = Var v))
+          in
           Some
             ( match mir_node with
-              | Assignment ((s, _, []), {pattern= Var t; meta})
-                when not (Set.Poly.mem globals s) ->
-                (* let _ = print_endline ("Adding " ^ s ^ " -> " ^ t) in *)
-                Map.set m ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-              | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-                Map.remove m s
-              | Assignment (_, _)
+              | Assignment ((s, _, []), {pattern= Var t; meta}) ->
+                let m' = kill_var m s in
+                (* let _ = print_endline ("killing " ^ s) in *)
+                if (Set.Poly.mem globals s) then
+                  m'
+                else
+                  let m'' =
+                    Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
+                  in
+                  let _ =
+                    if false then
+                      print_endline (
+                        "Updating map on assignment " ^ s ^ ":=" ^ t ^ " :"
+                        ^ ([%sexp (m : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
+                        ^ " -> "
+                        ^ ([%sexp (m' : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
+                        ^ " -> "
+                        ^ ([%sexp (m'' : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
+                      )
+                  in
+                  m''
+              | Decl {decl_id= s; _} | Assignment ((s, _, _), _) ->
+                kill_var m s
               |TargetPE _
               |NRFunApp (_, _, _)
               |Break | Continue | Return _ | Skip
@@ -1040,6 +1062,8 @@ let live_variables_mfp (prog : Program.Typed.t)
    * let _ = print_endline "} ENDING BLOCK" in *)
   mfp
 
+let lcm_debug = false
+
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
 let lazy_expressions_mfp
@@ -1102,7 +1126,7 @@ let lazy_expressions_mfp
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   let _ =
-    if false then
+    if lcm_debug then
       let print_set s to_string =
         [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
       in
