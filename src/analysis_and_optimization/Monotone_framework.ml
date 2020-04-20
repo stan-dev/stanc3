@@ -217,6 +217,7 @@ let dual_partial_function_lattice (type dv cv)
   ( module struct
     type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
+    (* intersection *)
     let lub s1 s2 =
       let f ~key ~data = Map.find s2 key = Some data in
       Map.filteri ~f s1
@@ -311,6 +312,24 @@ let constant_propagation_transfer
     with type labels = int
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
+let label_top_decls
+  (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
+  label : string Set.Poly.t =
+  let stmt = Map.Poly.find_exn flowgraph_to_mir label in
+  match stmt.pattern with
+  | Decl {decl_id= s; _} ->
+    (* let _ = print_endline
+     *     ( "stmt: " ^ ([%sexp (stmt : Middle.Stmt.Located.Non_recursive.t)] |> Sexp.to_string)
+     *     ^ " decl " ^ s)
+     * in *)
+    Set.Poly.singleton s
+  | _ ->
+    (* let _ = print_endline
+     *     ("stmt: " ^ ([%sexp (stmt : Middle.Stmt.Located.Non_recursive.t)] |> Sexp.to_string)
+     *      ^ "nodecl" )
+     * in *)
+    Set.Poly.empty
+
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
@@ -326,24 +345,45 @@ let expression_propagation_transfer
       | None -> None
       | Some m ->
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
+          let kill_var m v =
+            (* let ms =
+             *   [%sexp (m : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string
+             * in
+             * let _ = if v = "x" then print_endline (
+             *     "killing var " ^ v ^ " in map " ^ ms
+             *   )
+             * in *)
+            Map.filteri m ~f:(fun ~key ~data ->
+                not (key = v || Set.Poly.mem (free_vars_expr data) v))
+          in
           Some
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Stmt.Fixed.Pattern.Assignment ((s, _, []), e) ->
-                if (can_side_effect_expr e
-                      (* Don't prop expression if this assignment kills it *)
-                    || Set.Poly.mem (free_vars_expr e) s)
-                then Map.remove m s
-                else Map.set m ~key:s ~data:(subst_expr m e)
+              let m' = kill_var m s in
+              if can_side_effect_expr e then
+                m'
+              else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
+            | Block b ->
+              let kills =
+                Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
+              in
+              (* let _ =
+               *   let print_set s to_string =
+               *     [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
+               *   in
+               *   print_endline ("Kill set: " ^ print_set kills ident)
+               * in *)
+              Set.Poly.fold kills ~init:m ~f:kill_var
             | TargetPE _
              |NRFunApp (_, _, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
-             |For _ | Block _ | SList _ ->
+             |For _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION

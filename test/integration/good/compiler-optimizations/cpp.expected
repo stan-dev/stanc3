@@ -300,6 +300,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     try {
       
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -377,129 +378,143 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
+      current_statement__ = 5;
+      if (jacobian__) {
+        current_statement__ = 5;
+        assign(x_cov, nil_index_list(),
+          stan::math::cov_matrix_constrain(x_cov_in__, 2, lp__),
+          "assigning variable x_cov");
+      } else {
+        current_statement__ = 5;
+        assign(x_cov, nil_index_list(),
+          stan::math::cov_matrix_constrain(x_cov_in__, 2),
+          "assigning variable x_cov");
+      }
       {
         double x;
         
-        int sym1__;
+        int inline_sym1__;
         
-        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        for (size_t inline_sym2__ = 1; inline_sym2__ <= 1; ++inline_sym2__) {
           current_statement__ = 7;
           lp_accum__.add(3);}
-        int sym3__;
-        int sym4__;
+        int inline_sym3__;
+        int inline_sym4__;
         
-        for (size_t sym5__ = 1; sym5__ <= 1; ++sym5__) {
+        for (size_t inline_sym5__ = 1; inline_sym5__ <= 1; ++inline_sym5__) {
           {
-            sym3__ = 27;
+            inline_sym3__ = 27;
             break;
           }
-          sym3__ = 5;
+          inline_sym3__ = 5;
           break;}
         if (pstream__) {
-          stan_print(pstream__, sym3__);
+          stan_print(pstream__, inline_sym3__);
           stan_print(pstream__, "\n");
         }
-        int sym6__;
-        int sym7__;
+        int inline_sym6__;
+        int inline_sym7__;
         
-        for (size_t sym8__ = 1; sym8__ <= 1; ++sym8__) {
+        for (size_t inline_sym8__ = 1; inline_sym8__ <= 1; ++inline_sym8__) {
           {
-            sym6__ = 28;
+            inline_sym6__ = 28;
             break;
           }
-          sym6__ = 6;
+          inline_sym6__ = 6;
           break;}
-        if (sym6__) {
+        if (inline_sym6__) {
           current_statement__ = 11;
           if (pstream__) {
             stan_print(pstream__, "a");
             stan_print(pstream__, "\n");
           }
         } 
-        int sym9__;
-        int sym12__;
-        int sym10__;
+        int inline_sym9__;
+        int inline_sym12__;
+        int inline_sym10__;
         
-        for (size_t sym11__ = 1; sym11__ <= 1; ++sym11__) {
+        for (size_t inline_sym11__ = 1; inline_sym11__ <= 1; ++inline_sym11__) {
           {
-            sym9__ = 31;
+            inline_sym9__ = 31;
             break;
           }
-          sym9__ = 9;
+          inline_sym9__ = 9;
           break;}
-        int sym13__;
+        int inline_sym13__;
         
-        for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
+        for (size_t inline_sym14__ = 1; inline_sym14__ <= 1; ++inline_sym14__) {
           {
-            sym12__ = 29;
+            inline_sym12__ = 29;
             break;
           }
-          sym12__ = 7;
+          inline_sym12__ = 7;
           break;}
-        if (logical_lte(sym9__, sym12__)) {
+        if (logical_gte(inline_sym12__, inline_sym9__)) {
           {
-            {
-              int sym15__;
-              int sym16__;
-              
-              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
-                {
-                  sym15__ = 32;
-                  break;
-                }
-                sym15__ = 10;
-                break;}
-              lp_accum__.add(sym15__);
-              int sym18__;
-              
-              for (size_t sym19__ = 1; sym19__ <= 1; ++sym19__) {
-                current_statement__ = 7;
-                lp_accum__.add(3);}
-            }
-            int sym13__;
+            int inline_sym15__;
+            int inline_sym16__;
             
-            for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
+            for (size_t inline_sym17__ = 1; inline_sym17__ <= 1;
+                 ++inline_sym17__) {
               {
-                sym12__ = 29;
+                inline_sym15__ = 32;
                 break;
               }
-              sym12__ = 7;
+              inline_sym15__ = 10;
               break;}
+            lp_accum__.add(inline_sym15__);
+            int inline_sym18__;
+            
+            for (size_t inline_sym19__ = 1; inline_sym19__ <= 1;
+                 ++inline_sym19__) {
+              current_statement__ = 7;
+              lp_accum__.add(3);}
           }
-          for (size_t i = (sym9__ + 1); i <= sym12__; ++i) {
+          int inline_sym13__;
+          
+          for (size_t inline_sym14__ = 1; inline_sym14__ <= 1;
+               ++inline_sym14__) {
             {
-              int sym15__;
-              int sym16__;
+              inline_sym12__ = 29;
+              break;
+            }
+            inline_sym12__ = 7;
+            break;}
+          for (size_t i = (inline_sym9__ + 1); i <= inline_sym12__; ++i) {
+            {
+              int inline_sym15__;
+              int inline_sym16__;
               
-              for (size_t sym17__ = 1; sym17__ <= 1; ++sym17__) {
+              for (size_t inline_sym17__ = 1; inline_sym17__ <= 1;
+                   ++inline_sym17__) {
                 {
-                  sym15__ = 32;
+                  inline_sym15__ = 32;
                   break;
                 }
-                sym15__ = 10;
+                inline_sym15__ = 10;
                 break;}
-              lp_accum__.add(sym15__);
-              int sym18__;
+              lp_accum__.add(inline_sym15__);
+              int inline_sym18__;
               
-              for (size_t sym19__ = 1; sym19__ <= 1; ++sym19__) {
+              for (size_t inline_sym19__ = 1; inline_sym19__ <= 1;
+                   ++inline_sym19__) {
                 current_statement__ = 7;
                 lp_accum__.add(3);}
             }
-            int sym13__;
+            int inline_sym13__;
             
-            for (size_t sym14__ = 1; sym14__ <= 1; ++sym14__) {
+            for (size_t inline_sym14__ = 1; inline_sym14__ <= 1;
+                 ++inline_sym14__) {
               {
-                sym12__ = 29;
+                inline_sym12__ = 29;
                 break;
               }
-              sym12__ = 7;
+              inline_sym12__ = 7;
               break;}}
         } 
         {
-          {
-            current_statement__ = 13;
-            lp_accum__.add(53);
-          }
+          current_statement__ = 13;
+          lp_accum__.add(53);
           {
             current_statement__ = 13;
             lp_accum__.add(53);
@@ -520,64 +535,69 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         {
           {
             {
+              current_statement__ = 15;
+              lp_accum__.add(53);
               {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+              }
+            }
+            {
+              current_statement__ = 16;
+              if (logical_gte((2 * 2), 2)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
                 {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                 }
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(2, (2 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(3, (3 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
+            }
+            {
+              current_statement__ = 16;
+              if (logical_gte((3 * 2), 3)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
             }
           }
           {
             current_statement__ = 17;
-            if (logical_lte(2, (2 + 2))) {
+            if (logical_gte((2 + 2), 2)) {
+              current_statement__ = 16;
+              if (logical_gte((2 * 2), 2)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
               {
                 current_statement__ = 16;
-                if (logical_lte(2, (2 * 2))) {
+                if (logical_gte((3 * 2), 3)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -594,7 +614,54 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               }
               {
                 current_statement__ = 16;
-                if (logical_lte(3, (3 * 2))) {
+                if (logical_gte((4 * 2), 4)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                  {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);
+                  }
+                  {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);
+                  }
+                  {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);
+                  }
+                  {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);
+                  }
+                } 
+              }
+            } 
+          }
+          {
+            current_statement__ = 17;
+            if (logical_gte((3 + 2), 3)) {
+              current_statement__ = 16;
+              if (logical_gte((3 * 2), 3)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
+              {
+                current_statement__ = 16;
+                if (logical_gte((4 * 2), 4)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -615,7 +682,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               }
               {
                 current_statement__ = 16;
-                if (logical_lte(4, (4 * 2))) {
+                if (logical_gte((5 * 2), 5)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -642,90 +711,33 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
           {
             current_statement__ = 17;
-            if (logical_lte(3, (3 + 2))) {
+            if (logical_gte((4 + 2), 4)) {
+              current_statement__ = 16;
+              if (logical_gte((4 * 2), 4)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
               {
                 current_statement__ = 16;
-                if (logical_lte(3, (3 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(4, (4 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(5, (5 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-            } 
-          }
-          {
-            current_statement__ = 17;
-            if (logical_lte(4, (4 + 2))) {
-              {
-                current_statement__ = 16;
-                if (logical_lte(4, (4 * 2))) {
+                if (logical_gte((5 * 2), 5)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -750,40 +762,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               }
               {
                 current_statement__ = 16;
-                if (logical_lte(5, (5 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(6, (6 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
+                if (logical_gte((6 * 2), 6)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -814,10 +795,37 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
           {
             current_statement__ = 17;
-            if (logical_lte(5, (5 + 2))) {
+            if (logical_gte((5 + 2), 5)) {
+              current_statement__ = 16;
+              if (logical_gte((5 * 2), 5)) {
+                current_statement__ = 15;
+                lp_accum__.add(53);
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+                {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
+                }
+              } 
               {
                 current_statement__ = 16;
-                if (logical_lte(5, (5 * 2))) {
+                if (logical_gte((6 * 2), 6)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -846,44 +854,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               }
               {
                 current_statement__ = 16;
-                if (logical_lte(6, (6 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
-              {
-                current_statement__ = 16;
-                if (logical_lte(7, (7 * 2))) {
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
+                if (logical_gte((7 * 2), 7)) {
+                  current_statement__ = 15;
+                  lp_accum__.add(53);
                   {
                     current_statement__ = 15;
                     lp_accum__.add(53);
@@ -996,10 +969,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           current_statement__ = 58;
           lp_accum__.add(2);
         }
-        int sym20__;
-        int sym21__;
+        int inline_sym20__;
+        int inline_sym21__;
         
-        for (size_t sym22__ = 1; sym22__ <= 1; ++sym22__) {
+        for (size_t inline_sym22__ = 1; inline_sym22__ <= 1; ++inline_sym22__) {
           current_statement__ = 60;
           lp_accum__.add(2);
           break;}
@@ -1007,52 +980,53 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         while (576) {
           break;
         }
-        int sym23__;
-        int sym24__;
+        int inline_sym23__;
+        int inline_sym24__;
         
-        for (size_t sym25__ = 1; sym25__ <= 1; ++sym25__) {
+        for (size_t inline_sym25__ = 1; inline_sym25__ <= 1; ++inline_sym25__) {
           current_statement__ = 60;
           lp_accum__.add(2);
-          sym23__ = 24;
+          inline_sym23__ = 24;
           break;}
-        while (sym23__) {
+        while (inline_sym23__) {
           {
             break;
           }
-          int sym24__;
+          int inline_sym24__;
           
-          for (size_t sym25__ = 1; sym25__ <= 1; ++sym25__) {
+          for (size_t inline_sym25__ = 1; inline_sym25__ <= 1;
+               ++inline_sym25__) {
             current_statement__ = 60;
             lp_accum__.add(2);
-            sym23__ = 24;
+            inline_sym23__ = 24;
             break;}
         }
         current_statement__ = 66;
         for (size_t i = 31; i <= 225; ++i) { continue;}
         current_statement__ = 68;
         for (size_t i = 31; i <= 225; ++i) { break;}
-        int sym26__;
-        int sym27__;
+        int inline_sym26__;
+        int inline_sym27__;
         
-        for (size_t sym28__ = 1; sym28__ <= 1; ++sym28__) {
+        for (size_t inline_sym28__ = 1; inline_sym28__ <= 1; ++inline_sym28__) {
           current_statement__ = 60;
           lp_accum__.add(2);
-          sym26__ = 24;
+          inline_sym26__ = 24;
           break;}
-        for (size_t i = sym26__; i <= 225; ++i) { continue;}
-        int sym29__;
-        int sym30__;
+        for (size_t i = inline_sym26__; i <= 225; ++i) { continue;}
+        int inline_sym29__;
+        int inline_sym30__;
         
-        for (size_t sym31__ = 1; sym31__ <= 1; ++sym31__) {
+        for (size_t inline_sym31__ = 1; inline_sym31__ <= 1; ++inline_sym31__) {
           current_statement__ = 60;
           lp_accum__.add(2);
-          sym29__ = 24;
+          inline_sym29__ = 24;
           break;}
-        for (size_t i = sym29__; i <= 225; ++i) { break;}
-        int sym32__;
-        int sym33__;
+        for (size_t i = inline_sym29__; i <= 225; ++i) { break;}
+        int inline_sym32__;
+        int inline_sym33__;
         
-        for (size_t sym34__ = 1; sym34__ <= 1; ++sym34__) {
+        for (size_t inline_sym34__ = 1; inline_sym34__ <= 1; ++inline_sym34__) {
           current_statement__ = 60;
           lp_accum__.add(2);
           break;}
@@ -1080,12 +1054,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         double temp2;
         
         {
-          {
-            current_statement__ = 81;
-            lp_accum__.add(4);
-            current_statement__ = 82;
-            lp_accum__.add(6);
-          }
+          current_statement__ = 81;
+          lp_accum__.add(4);
+          current_statement__ = 82;
+          lp_accum__.add(6);
           {
             current_statement__ = 81;
             lp_accum__.add(4);
@@ -1180,88 +1152,74 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       vars__.push_back(phi);
       {
         {
+          vars__.push_back(
+            rvalue(x_matrix,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())), "x_matrix"));
           {
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
-            }
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+          }
+          {
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(3),
+                  cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+          }
+        }
+        {
+          {
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())), "x_matrix"));
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
             }
             {
               vars__.push_back(
                 rvalue(x_matrix,
                   cons_list(index_uni(3),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
-            }
-          }
-        }
-        {
-          {
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(3),
-                    cons_list(index_uni(0), nil_index_list())), "x_matrix"));
+                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
             }
           }
         }
       }
       {
+        vars__.push_back(x_vector[(1 - 1)]);
         {
-          vars__.push_back(x_vector[(0 - 1)]);
-        }
-        {
-          vars__.push_back(x_vector[(0 - 1)]);
+          vars__.push_back(x_vector[(2 - 1)]);
         }
       }
       {
         {
+          vars__.push_back(
+            rvalue(x_cov,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())), "x_cov"));
           {
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
-            }
+            vars__.push_back(
+              rvalue(x_cov,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())), "x_cov"));
           }
         }
         {
           {
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
-            }
+            vars__.push_back(
+              rvalue(x_cov,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())), "x_cov"));
             {
               vars__.push_back(
                 rvalue(x_cov,
                   cons_list(index_uni(2),
-                    cons_list(index_uni(0), nil_index_list())), "x_cov"));
+                    cons_list(index_uni(2), nil_index_list())), "x_cov"));
             }
           }
         }
@@ -1290,6 +1248,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     try {
       int pos__;
       
+      pos__ = 1;
       double theta;
       
       current_statement__ = 1;
@@ -1310,49 +1269,45 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 3;
         assign(x_matrix_flat__, nil_index_list(),
           context__.vals_r("x_matrix"), "assigning variable x_matrix_flat__");
+        current_statement__ = 3;
+        pos__ = 1;
         {
           {
+            current_statement__ = 3;
+            assign(x_matrix,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())),
+              x_matrix_flat__[(1 - 1)], "assigning variable x_matrix");
+            current_statement__ = 3;
+            pos__ = 2;
             {
-              {
-                current_statement__ = 3;
-                assign(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())),
-                  x_matrix_flat__[(1 - 1)], "assigning variable x_matrix");
-                current_statement__ = 3;
-                pos__ = (1 + 1);
-              }
-              {
-                current_statement__ = 3;
-                assign(x_matrix,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())),
-                  x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
-                current_statement__ = 3;
-                pos__ = (pos__ + 1);
-              }
-              {
-                current_statement__ = 3;
-                assign(x_matrix,
-                  cons_list(index_uni(3),
-                    cons_list(index_uni(1), nil_index_list())),
-                  x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
-                current_statement__ = 3;
-                pos__ = (pos__ + 1);
-              }
+              current_statement__ = 3;
+              assign(x_matrix,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())),
+                x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 3;
+              pos__ = (pos__ + 1);
+            }
+            {
+              current_statement__ = 3;
+              assign(x_matrix,
+                cons_list(index_uni(3),
+                  cons_list(index_uni(1), nil_index_list())),
+                x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 3;
+              pos__ = (pos__ + 1);
             }
           }
           {
             {
-              {
-                current_statement__ = 3;
-                assign(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())),
-                  x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
-                current_statement__ = 3;
-                pos__ = (pos__ + 1);
-              }
+              current_statement__ = 3;
+              assign(x_matrix,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())),
+                x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
+              current_statement__ = 3;
+              pos__ = (pos__ + 1);
               {
                 current_statement__ = 3;
                 assign(x_matrix,
@@ -1368,6 +1323,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   cons_list(index_uni(3),
                     cons_list(index_uni(2), nil_index_list())),
                   x_matrix_flat__[(pos__ - 1)], "assigning variable x_matrix");
+                current_statement__ = 3;
+                pos__ = (pos__ + 1);
               }
             }
           }
@@ -1383,18 +1340,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 4;
         assign(x_vector_flat__, nil_index_list(),
           context__.vals_r("x_vector"), "assigning variable x_vector_flat__");
+        current_statement__ = 4;
+        pos__ = 1;
         {
-          {
-            current_statement__ = 4;
-            assign(x_vector, cons_list(index_uni(1), nil_index_list()),
-              x_vector_flat__[(1 - 1)], "assigning variable x_vector");
-            current_statement__ = 4;
-            pos__ = (1 + 1);
-          }
+          current_statement__ = 4;
+          assign(x_vector, cons_list(index_uni(1), nil_index_list()),
+            x_vector_flat__[(1 - 1)], "assigning variable x_vector");
+          current_statement__ = 4;
+          pos__ = 2;
           {
             current_statement__ = 4;
             assign(x_vector, cons_list(index_uni(2), nil_index_list()),
               x_vector_flat__[(pos__ - 1)], "assigning variable x_vector");
+            current_statement__ = 4;
+            pos__ = (pos__ + 1);
           }
         }
       }
@@ -1410,40 +1369,36 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 5;
         assign(x_cov_flat__, nil_index_list(), context__.vals_r("x_cov"),
           "assigning variable x_cov_flat__");
+        current_statement__ = 5;
+        pos__ = 1;
         {
           {
+            current_statement__ = 5;
+            assign(x_cov,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())),
+              x_cov_flat__[(1 - 1)], "assigning variable x_cov");
+            current_statement__ = 5;
+            pos__ = 2;
             {
-              {
-                current_statement__ = 5;
-                assign(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())),
-                  x_cov_flat__[(1 - 1)], "assigning variable x_cov");
-                current_statement__ = 5;
-                pos__ = (1 + 1);
-              }
-              {
-                current_statement__ = 5;
-                assign(x_cov,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())),
-                  x_cov_flat__[(pos__ - 1)], "assigning variable x_cov");
-                current_statement__ = 5;
-                pos__ = (pos__ + 1);
-              }
+              current_statement__ = 5;
+              assign(x_cov,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())),
+                x_cov_flat__[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 5;
+              pos__ = (pos__ + 1);
             }
           }
           {
             {
-              {
-                current_statement__ = 5;
-                assign(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())),
-                  x_cov_flat__[(pos__ - 1)], "assigning variable x_cov");
-                current_statement__ = 5;
-                pos__ = (pos__ + 1);
-              }
+              current_statement__ = 5;
+              assign(x_cov,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())),
+                x_cov_flat__[(pos__ - 1)], "assigning variable x_cov");
+              current_statement__ = 5;
+              pos__ = (pos__ + 1);
               {
                 current_statement__ = 5;
                 assign(x_cov,
@@ -1464,35 +1419,29 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       vars__.push_back(phi);
       {
         {
+          vars__.push_back(
+            rvalue(x_matrix,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())), "x_matrix"));
           {
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(3),
-                    cons_list(index_uni(1), nil_index_list())), "x_matrix"));
-            }
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())), "x_matrix"));
+          }
+          {
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(3),
+                  cons_list(index_uni(1), nil_index_list())), "x_matrix"));
           }
         }
         {
           {
-            {
-              vars__.push_back(
-                rvalue(x_matrix,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())), "x_matrix"));
-            }
+            vars__.push_back(
+              rvalue(x_matrix,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())), "x_matrix"));
             {
               vars__.push_back(
                 rvalue(x_matrix,
@@ -1509,38 +1458,30 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         }
       }
       {
-        {
-          vars__.push_back(x_vector[(1 - 1)]);
-        }
+        vars__.push_back(x_vector[(1 - 1)]);
         {
           vars__.push_back(x_vector[(2 - 1)]);
         }
       }
       {
         {
+          vars__.push_back(
+            rvalue(x_cov,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1), nil_index_list())), "x_cov"));
           {
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(1), nil_index_list())), "x_cov"));
-            }
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(1), nil_index_list())), "x_cov"));
-            }
+            vars__.push_back(
+              rvalue(x_cov,
+                cons_list(index_uni(2),
+                  cons_list(index_uni(1), nil_index_list())), "x_cov"));
           }
         }
         {
           {
-            {
-              vars__.push_back(
-                rvalue(x_cov,
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list())), "x_cov"));
-            }
+            vars__.push_back(
+              rvalue(x_cov,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())), "x_cov"));
             {
               vars__.push_back(
                 rvalue(x_cov,
