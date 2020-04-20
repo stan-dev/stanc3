@@ -777,7 +777,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
   in
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s
+      Monotone_framework.inverse_flowgraph_of_stmt ~blocks_after_body:false s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
     let latest_expr, used_not_latest_expressions_mfp =
@@ -785,24 +785,22 @@ let lazy_code_motion (mir : Program.Typed.t) =
         flowgraph_to_mir
     in
     let expression_map =
+      let rec collect_expressions accum (e : Expr.Typed.t) =
+        match e.pattern with
+        | Lit (_, _) -> accum
+        | Var _ -> accum
+        | _ when can_side_effect_expr e ->
+          (* Immovable expressions might have movable subexpressions *)
+          Expr.Fixed.Pattern.fold collect_expressions accum e.pattern
+        | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
+      in
       Set.fold (Monotone_framework.used_expressions_stmt s.pattern)
-        ~init:Expr.Typed.Map.empty ~f:(fun accum e ->
-          match e.pattern with
-          | Lit (_, _) -> accum
-          | Var _ -> accum
-          | _ when can_side_effect_expr e -> accum
-          | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ()) )
+        ~init:Expr.Typed.Map.empty ~f:collect_expressions
     in
-    (* let print_set s to_string =
-     *   [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
-     * in *)
     (* let print_expr (e:Expr.Typed.t) =
      *   [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
-     * in *)
-    (* let print_expr_set s =
-     *   print_set s print_expr
-     * in *)
-    (* let _ =
+     * in
+     * let _ =
      *   print_endline "Expression map:";
      *   Map.iteri expression_map ~f:(fun ~key ~data ->
      *     print_endline (

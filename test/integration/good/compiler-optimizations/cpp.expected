@@ -133,7 +133,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 65, column 4 to column 16)",
                                                       " (in 'optimizations.stan', line 66, column 4 to column 16)",
                                                       " (in 'optimizations.stan', line 68, column 6 to column 19)",
-                                                      " (in 'optimizations.stan', line 67, column 4 to line 68, column 19)",
                                                       " (in 'optimizations.stan', line 69, column 4 to column 16)",
                                                       " (in 'optimizations.stan', line 70, column 4 to column 11)",
                                                       " (in 'optimizations.stan', line 71, column 4 to column 10)",
@@ -195,13 +194,16 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   
   try {
-    current_statement__ = 91;
-    if (logical_gt(x, 342)) {
+    int lcm_sym35__;
+    {
       current_statement__ = 90;
-      return ;
-    } 
-    current_statement__ = 7;
-    lp_accum__.add(y);
+      if (logical_gt(x, 342)) {
+        current_statement__ = 89;
+        return ;
+      } 
+      current_statement__ = 7;
+      lp_accum__.add(y);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -228,13 +230,18 @@ rfun(const int& y, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 9;
-    if (logical_gt(y, 2)) {
+    int lcm_sym38__;
+    int lcm_sym37__;
+    int lcm_sym36__;
+    {
+      current_statement__ = 9;
+      if (logical_gt(y, 2)) {
+        current_statement__ = 91;
+        return (y + 24);
+      } 
       current_statement__ = 92;
-      return (y + 24);
-    } 
-    current_statement__ = 93;
-    return (y + 2);
+      return (y + 2);
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -257,10 +264,12 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   
   try {
-    current_statement__ = 60;
-    lp_accum__.add(2);
-    current_statement__ = 94;
-    return 24;
+    {
+      current_statement__ = 59;
+      lp_accum__.add(2);
+      current_statement__ = 93;
+      return 24;
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -342,6 +351,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
+      double lcm_sym81__;
+      int lcm_sym80__;
+      int lcm_sym79__;
+      int lcm_sym78__;
+      int lcm_sym77__;
+      int lcm_sym76__;
+      int lcm_sym75__;
+      int lcm_sym74__;
+      int lcm_sym73__;
+      int lcm_sym72__;
+      int lcm_sym71__;
+      int lcm_sym70__;
+      int lcm_sym69__;
+      int lcm_sym68__;
       local_scalar_t__ theta;
       
       current_statement__ = 1;
@@ -472,15 +495,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
           int inline_sym13__;
           
+          lcm_sym77__ = (inline_sym9__ + 1);
           for (size_t inline_sym14__ = 1; inline_sym14__ <= 1;
                ++inline_sym14__) {
             {
               inline_sym12__ = 29;
+              lcm_sym77__ = (inline_sym9__ + 1);
               break;
             }
             inline_sym12__ = 7;
+            lcm_sym77__ = (inline_sym9__ + 1);
             break;}
-          for (size_t i = (inline_sym9__ + 1); i <= inline_sym12__; ++i) {
+          for (size_t i = lcm_sym77__; i <= inline_sym12__; ++i) {
             {
               int inline_sym15__;
               int inline_sym16__;
@@ -543,350 +569,128 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               }
             }
             {
-              current_statement__ = 16;
-              if (logical_gte((2 * 2), 2)) {
-                current_statement__ = 15;
+              lcm_sym80__ = (2 * 2);
+              if (logical_gte(lcm_sym80__, 2)) {
+                lcm_sym78__ = (2 + 1);
                 lp_accum__.add(53);
-                {
+                for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                   current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
+                  lp_accum__.add(53);}
               } 
             }
             {
-              current_statement__ = 16;
-              if (logical_gte((3 * 2), 3)) {
-                current_statement__ = 15;
+              lcm_sym80__ = (3 * 2);
+              if (logical_gte(lcm_sym80__, 3)) {
+                lcm_sym78__ = (3 + 1);
                 lp_accum__.add(53);
-                {
+                for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                   current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
+                  lp_accum__.add(53);}
               } 
             }
           }
           {
-            current_statement__ = 17;
-            if (logical_gte((2 + 2), 2)) {
-              current_statement__ = 16;
-              if (logical_gte((2 * 2), 2)) {
-                current_statement__ = 15;
-                lp_accum__.add(53);
+            lcm_sym76__ = (2 + 2);
+            if (logical_gte(lcm_sym76__, 2)) {
+              lcm_sym79__ = (2 * 2);
+              if (logical_gte(lcm_sym79__, 2)) {
                 {
-                  current_statement__ = 15;
+                  lcm_sym75__ = (2 + 1);
                   lp_accum__.add(53);
+                  for (size_t k = lcm_sym75__; k <= lcm_sym79__; ++k) {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);}
                 }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-              } 
-              {
-                current_statement__ = 16;
-                if (logical_gte((3 * 2), 3)) {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
+              } else {
+                lcm_sym75__ = (2 + 1);
               }
-              {
-                current_statement__ = 16;
-                if (logical_gte((4 * 2), 4)) {
-                  current_statement__ = 15;
+              for (size_t j = lcm_sym75__; j <= lcm_sym76__; ++j) {
+                lcm_sym80__ = (j * 2);
+                if (logical_gte(lcm_sym80__, j)) {
+                  lcm_sym78__ = (j + 1);
                   lp_accum__.add(53);
-                  {
+                  for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                     current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
+                    lp_accum__.add(53);}
+                } }
             } 
           }
           {
-            current_statement__ = 17;
-            if (logical_gte((3 + 2), 3)) {
-              current_statement__ = 16;
-              if (logical_gte((3 * 2), 3)) {
-                current_statement__ = 15;
-                lp_accum__.add(53);
+            lcm_sym76__ = (3 + 2);
+            if (logical_gte(lcm_sym76__, 3)) {
+              lcm_sym79__ = (3 * 2);
+              if (logical_gte(lcm_sym79__, 3)) {
                 {
-                  current_statement__ = 15;
+                  lcm_sym75__ = (3 + 1);
                   lp_accum__.add(53);
+                  for (size_t k = lcm_sym75__; k <= lcm_sym79__; ++k) {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);}
                 }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-              } 
-              {
-                current_statement__ = 16;
-                if (logical_gte((4 * 2), 4)) {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
+              } else {
+                lcm_sym75__ = (3 + 1);
               }
-              {
-                current_statement__ = 16;
-                if (logical_gte((5 * 2), 5)) {
-                  current_statement__ = 15;
+              for (size_t j = lcm_sym75__; j <= lcm_sym76__; ++j) {
+                lcm_sym80__ = (j * 2);
+                if (logical_gte(lcm_sym80__, j)) {
+                  lcm_sym78__ = (j + 1);
                   lp_accum__.add(53);
-                  {
+                  for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                     current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
+                    lp_accum__.add(53);}
+                } }
             } 
           }
           {
-            current_statement__ = 17;
-            if (logical_gte((4 + 2), 4)) {
-              current_statement__ = 16;
-              if (logical_gte((4 * 2), 4)) {
-                current_statement__ = 15;
-                lp_accum__.add(53);
+            lcm_sym76__ = (4 + 2);
+            if (logical_gte(lcm_sym76__, 4)) {
+              lcm_sym79__ = (4 * 2);
+              if (logical_gte(lcm_sym79__, 4)) {
                 {
-                  current_statement__ = 15;
+                  lcm_sym75__ = (4 + 1);
                   lp_accum__.add(53);
+                  for (size_t k = lcm_sym75__; k <= lcm_sym79__; ++k) {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);}
                 }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-              } 
-              {
-                current_statement__ = 16;
-                if (logical_gte((5 * 2), 5)) {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
+              } else {
+                lcm_sym75__ = (4 + 1);
               }
-              {
-                current_statement__ = 16;
-                if (logical_gte((6 * 2), 6)) {
-                  current_statement__ = 15;
+              for (size_t j = lcm_sym75__; j <= lcm_sym76__; ++j) {
+                lcm_sym80__ = (j * 2);
+                if (logical_gte(lcm_sym80__, j)) {
+                  lcm_sym78__ = (j + 1);
                   lp_accum__.add(53);
-                  {
+                  for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                     current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
+                    lp_accum__.add(53);}
+                } }
             } 
           }
           {
-            current_statement__ = 17;
-            if (logical_gte((5 + 2), 5)) {
-              current_statement__ = 16;
-              if (logical_gte((5 * 2), 5)) {
-                current_statement__ = 15;
-                lp_accum__.add(53);
+            lcm_sym76__ = (5 + 2);
+            if (logical_gte(lcm_sym76__, 5)) {
+              lcm_sym79__ = (5 * 2);
+              if (logical_gte(lcm_sym79__, 5)) {
                 {
-                  current_statement__ = 15;
+                  lcm_sym75__ = (5 + 1);
                   lp_accum__.add(53);
+                  for (size_t k = lcm_sym75__; k <= lcm_sym79__; ++k) {
+                    current_statement__ = 15;
+                    lp_accum__.add(53);}
                 }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-                {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                }
-              } 
-              {
-                current_statement__ = 16;
-                if (logical_gte((6 * 2), 6)) {
-                  current_statement__ = 15;
-                  lp_accum__.add(53);
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
+              } else {
+                lcm_sym75__ = (5 + 1);
               }
-              {
-                current_statement__ = 16;
-                if (logical_gte((7 * 2), 7)) {
-                  current_statement__ = 15;
+              for (size_t j = lcm_sym75__; j <= lcm_sym76__; ++j) {
+                lcm_sym80__ = (j * 2);
+                if (logical_gte(lcm_sym80__, j)) {
+                  lcm_sym78__ = (j + 1);
                   lp_accum__.add(53);
-                  {
+                  for (size_t k = lcm_sym78__; k <= lcm_sym80__; ++k) {
                     current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                  {
-                    current_statement__ = 15;
-                    lp_accum__.add(53);
-                  }
-                } 
-              }
+                    lp_accum__.add(53);}
+                } }
             } 
           }
         }
@@ -931,52 +735,52 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         x = 576;
         current_statement__ = 41;
         lp_accum__.add(576);
-        current_statement__ = 43;
-        if (logical_gt(theta, 46)) {
+        lcm_sym74__ = logical_gt(theta, 46);
+        if (lcm_sym74__) {
           current_statement__ = 42;
           x = 5880;
         } 
-        current_statement__ = 44;
+        current_statement__ = 43;
         lp_accum__.add(x);
         double z;
         
-        current_statement__ = 46;
+        current_statement__ = 45;
         z = x;
-        current_statement__ = 47;
+        current_statement__ = 46;
         lp_accum__.add(x);
-        current_statement__ = 49;
-        if (logical_gt(theta, 46)) {
-          current_statement__ = 48;
+        current_statement__ = 48;
+        if (lcm_sym74__) {
+          current_statement__ = 47;
           z = x;
         } 
-        current_statement__ = 50;
+        current_statement__ = 49;
         lp_accum__.add(z);
-        current_statement__ = 51;
+        current_statement__ = 50;
         lp_accum__.add(2);
         {
           double y;
           
-          current_statement__ = 53;
+          current_statement__ = 52;
           lp_accum__.add(24);
         }
         {
           double y;
           
-          current_statement__ = 56;
+          current_statement__ = 55;
           lp_accum__.add(245);
         }
         {
-          current_statement__ = 58;
+          current_statement__ = 57;
           lp_accum__.add(2);
         }
         int inline_sym20__;
         int inline_sym21__;
         
         for (size_t inline_sym22__ = 1; inline_sym22__ <= 1; ++inline_sym22__) {
-          current_statement__ = 60;
+          current_statement__ = 59;
           lp_accum__.add(2);
           break;}
-        current_statement__ = 63;
+        current_statement__ = 62;
         while (576) {
           break;
         }
@@ -984,7 +788,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         int inline_sym24__;
         
         for (size_t inline_sym25__ = 1; inline_sym25__ <= 1; ++inline_sym25__) {
-          current_statement__ = 60;
+          current_statement__ = 59;
           lp_accum__.add(2);
           inline_sym23__ = 24;
           break;}
@@ -996,20 +800,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           
           for (size_t inline_sym25__ = 1; inline_sym25__ <= 1;
                ++inline_sym25__) {
-            current_statement__ = 60;
+            current_statement__ = 59;
             lp_accum__.add(2);
             inline_sym23__ = 24;
             break;}
         }
-        current_statement__ = 66;
+        current_statement__ = 65;
         for (size_t i = 31; i <= 225; ++i) { continue;}
-        current_statement__ = 68;
+        current_statement__ = 67;
         for (size_t i = 31; i <= 225; ++i) { break;}
         int inline_sym26__;
         int inline_sym27__;
         
         for (size_t inline_sym28__ = 1; inline_sym28__ <= 1; ++inline_sym28__) {
-          current_statement__ = 60;
+          current_statement__ = 59;
           lp_accum__.add(2);
           inline_sym26__ = 24;
           break;}
@@ -1018,7 +822,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         int inline_sym30__;
         
         for (size_t inline_sym31__ = 1; inline_sym31__ <= 1; ++inline_sym31__) {
-          current_statement__ = 60;
+          current_statement__ = 59;
           lp_accum__.add(2);
           inline_sym29__ = 24;
           break;}
@@ -1027,25 +831,25 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         int inline_sym33__;
         
         for (size_t inline_sym34__ = 1; inline_sym34__ <= 1; ++inline_sym34__) {
-          current_statement__ = 60;
+          current_statement__ = 59;
           lp_accum__.add(2);
           break;}
         {
-          current_statement__ = 71;
+          current_statement__ = 70;
           lp_accum__.add(1);
-          current_statement__ = 72;
+          current_statement__ = 71;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 74;
+            current_statement__ = 73;
             lp_accum__.add(1);
           }
         }
         double temp;
         
         {
-          current_statement__ = 78;
+          current_statement__ = 77;
           if (pstream__) {
             stan_print(pstream__, "hello");
             stan_print(pstream__, "\n");
@@ -1054,30 +858,30 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         double temp2;
         
         {
-          current_statement__ = 81;
+          current_statement__ = 80;
           lp_accum__.add(4);
-          current_statement__ = 82;
+          current_statement__ = 81;
           lp_accum__.add(6);
           {
-            current_statement__ = 81;
+            current_statement__ = 80;
             lp_accum__.add(4);
-            current_statement__ = 82;
+            current_statement__ = 81;
             lp_accum__.add(6);
           }
         }
         double dataonlyvar;
         
-        current_statement__ = 84;
+        current_statement__ = 83;
         dataonlyvar = 3;
-        current_statement__ = 85;
+        current_statement__ = 84;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar;
         
         {
-          current_statement__ = 87;
+          current_statement__ = 86;
           paramvar = (theta * 34);
         }
-        current_statement__ = 89;
+        current_statement__ = 88;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -1108,6 +912,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     stan::math::accumulator<double> lp_accum__;
     
     try {
+      double lcm_sym67__;
+      double lcm_sym66__;
+      double lcm_sym65__;
+      double lcm_sym64__;
+      double lcm_sym63__;
+      double lcm_sym62__;
+      double lcm_sym61__;
+      double lcm_sym60__;
+      double lcm_sym59__;
+      double lcm_sym58__;
+      int lcm_sym57__;
+      int lcm_sym56__;
       double theta;
       
       current_statement__ = 1;
@@ -1246,6 +1062,23 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     vars__.reserve(num_params_r__);
     
     try {
+      double lcm_sym55__;
+      double lcm_sym54__;
+      double lcm_sym53__;
+      double lcm_sym52__;
+      double lcm_sym51__;
+      double lcm_sym50__;
+      double lcm_sym49__;
+      double lcm_sym48__;
+      double lcm_sym47__;
+      double lcm_sym46__;
+      double lcm_sym45__;
+      double lcm_sym44__;
+      double lcm_sym43__;
+      double lcm_sym42__;
+      double lcm_sym41__;
+      double lcm_sym40__;
+      int lcm_sym39__;
       int pos__;
       
       pos__ = 1;
@@ -1537,22 +1370,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 2; ++sym82__) {
       {
-        for (size_t sym36__ = 1; sym36__ <= 3; ++sym36__) {
+        for (size_t sym83__ = 1; sym83__ <= 3; ++sym83__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym83__) + '.' + std::to_string(sym82__));
           }}
       }}
-    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 2; ++sym82__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym35__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym82__));
       }}
-    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 2; ++sym82__) {
       {
-        for (size_t sym36__ = 1; sym36__ <= 2; ++sym36__) {
+        for (size_t sym83__ = 1; sym83__ <= 2; ++sym83__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
+            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym83__) + '.' + std::to_string(sym82__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -1571,20 +1404,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 2; ++sym82__) {
       {
-        for (size_t sym36__ = 1; sym36__ <= 3; ++sym36__) {
+        for (size_t sym83__ = 1; sym83__ <= 3; ++sym83__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym36__) + '.' + std::to_string(sym35__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym83__) + '.' + std::to_string(sym82__));
           }}
       }}
-    for (size_t sym35__ = 1; sym35__ <= 2; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 2; ++sym82__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym35__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym82__));
       }}
-    for (size_t sym35__ = 1; sym35__ <= 3; ++sym35__) {
+    for (size_t sym82__ = 1; sym82__ <= 3; ++sym82__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym35__));
+        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym82__));
       }}
     if (emit_transformed_parameters__) {
       

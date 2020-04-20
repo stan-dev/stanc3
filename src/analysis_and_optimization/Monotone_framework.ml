@@ -78,7 +78,9 @@ let top_free_vars_stmt
 
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
+let inverse_flowgraph_of_stmt
+    ?blocks_after_body:(blocks_after_body=true)
+    (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
@@ -88,7 +90,7 @@ let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
       stmt
   in
   let initials, successors =
-    Dataflow_utils.build_predecessor_graph flowgraph_to_mir
+    Dataflow_utils.build_predecessor_graph ~blocks_after_body flowgraph_to_mir
   in
   ( ( module struct
       type labels = int
@@ -130,8 +132,10 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 (** Compute the forward flowgraph of a Stan statement (for forward analyses) *)
-let forward_flowgraph_of_stmt stmt =
-  let inv_flowgraph = inverse_flowgraph_of_stmt stmt in
+let forward_flowgraph_of_stmt
+    ?blocks_after_body:(blocks_after_body=true)
+    stmt =
+  let inv_flowgraph = inverse_flowgraph_of_stmt ~blocks_after_body stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
 
 (**  The lattice of sets of some values, with the inclusion order, set union
@@ -345,6 +349,7 @@ let expression_propagation_transfer
       | None -> None
       | Some m ->
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
+          (* TODO: Could probably use killed_expressions_stmt *)
           let kill_var m v =
             (* let ms =
              *   [%sexp (m : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string
