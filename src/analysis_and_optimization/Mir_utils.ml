@@ -201,7 +201,12 @@ let stmt_of_block b =
 
 let rec fn_subst_expr m e =
   match m e with
-  | Some e' -> e'
+  | Some e' ->
+    (* let print_expr (e:Expr.Typed.t) = *)
+      (* [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string *)
+    (* in *)
+    (* let _ = print_endline ("Replaced expr: " ^ print_expr e ^ " -> " ^ print_expr e') in *)
+    e'
   | _ -> Expr.Fixed.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
 
 let fn_subst_idx m = Index.map (fn_subst_expr m)

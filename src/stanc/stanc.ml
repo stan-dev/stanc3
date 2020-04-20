@@ -141,9 +141,6 @@ let optimization_settings lvl : Optimize.optimization_settings =
     }
   in
   let _ : Optimize.optimization_settings =
-    (*Good for all except:
-      example-models/ARM/Ch.23/electric_1b.stan
-     *example-models/bugs_examples/vol1/kidney/kidney.stan *)
     { function_inlining= false
     ; static_loop_unrolling= true
     ; one_step_loop_unrolling= true

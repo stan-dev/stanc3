@@ -18,6 +18,65 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) (flowgraph_to_mi
                      ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key) ^ ":\n "
                      ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
+(** Calculate the free (non-bound) variables in an expression *)
+let rec free_vars_expr (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var x -> Set.Poly.singleton x
+  | Lit (_, _) -> Set.Poly.empty
+  | FunApp (_, f, l) ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | TernaryIf (e1, e2, e3) ->
+      Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
+  | Indexed (e, l) ->
+      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+  | EAnd (e1, e2) | EOr (e1, e2) ->
+      Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
+
+(** Calculate the free (non-bound) variables in an index*)
+and free_vars_idx (i : Expr.Typed.t Index.t) =
+  match i with
+  | All -> Set.Poly.empty
+  | Single e | Upfrom e | MultiIndex e -> free_vars_expr e
+  | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
+
+(** Calculate the free (non-bound) variables in a statement *)
+let rec free_vars_stmt
+    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
+  match s with
+  | Assignment ((_, _, []), e) | Return (Some e) | TargetPE e ->
+      free_vars_expr e
+  | Assignment ((_, _, l), e) ->
+      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+  | NRFunApp (_, f, l) ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | IfElse (e, b1, Some b2) ->
+      Set.Poly.union_list
+        [free_vars_expr e; free_vars_stmt b1.pattern; free_vars_stmt b2.pattern]
+  | IfElse (e, b, None) | While (e, b) ->
+      Set.Poly.union (free_vars_expr e) (free_vars_stmt b.pattern)
+  | For {lower= e1; upper= e2; body= b; _} ->
+      Set.Poly.union_list
+        [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
+  | Block l | SList l ->
+      Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
+  | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
+
+(** A variation on free_vars_stmt, where we do not recursively count free
+    variables in sub statements  *)
+let top_free_vars_stmt
+    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+  match s with
+  | Assignment _ | Return _ | TargetPE _ | NRFunApp _ | Decl _ | Break
+   |Continue | Skip ->
+      free_vars_stmt
+        (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
+  | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
+  | For {lower= e1; upper= e2; _} ->
+      Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
+  | Block _ | SList _ -> Set.Poly.empty
+
+
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
@@ -272,7 +331,10 @@ let expression_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Stmt.Fixed.Pattern.Assignment ((s, _, []), e) ->
-                if can_side_effect_expr e then m
+                if (can_side_effect_expr e
+                      (* Don't prop expression if this assignment kills it *)
+                    || Set.Poly.mem (free_vars_expr e) s)
+                then Map.remove m s
                 else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
@@ -305,16 +367,17 @@ let copy_propagation_transfer
             ( match mir_node with
               | Assignment ((s, _, []), {pattern= Var t; meta})
                 when not (Set.Poly.mem globals s) ->
-              Map.set m ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-            | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-              Map.remove m s
-            | Assignment (_, _)
-             |TargetPE _
-             |NRFunApp (_, _, _)
-             |Break | Continue | Return _ | Skip
-             |IfElse (_, _, _)
-             |While (_, _)
-             |For _ | Block _ | SList _ ->
+                (* let _ = print_endline ("Adding " ^ s ^ " -> " ^ t) in *)
+                Map.set m ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
+              | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
+                Map.remove m s
+              | Assignment (_, _)
+              |TargetPE _
+              |NRFunApp (_, _, _)
+              |Break | Continue | Return _ | Skip
+              |IfElse (_, _, _)
+              |While (_, _)
+              |For _ | Block _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION
@@ -403,64 +466,6 @@ let initialized_vars_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
-
-(** Calculate the free (non-bound) variables in an expression *)
-let rec free_vars_expr (e : Expr.Typed.t) =
-  match e.pattern with
-  | Var x -> Set.Poly.singleton x
-  | Lit (_, _) -> Set.Poly.empty
-  | FunApp (_, f, l) ->
-      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-  | TernaryIf (e1, e2, e3) ->
-      Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
-  | Indexed (e, l) ->
-      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
-  | EAnd (e1, e2) | EOr (e1, e2) ->
-      Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
-
-(** Calculate the free (non-bound) variables in an index*)
-and free_vars_idx (i : Expr.Typed.t Index.t) =
-  match i with
-  | All -> Set.Poly.empty
-  | Single e | Upfrom e | MultiIndex e -> free_vars_expr e
-  | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
-
-(** Calculate the free (non-bound) variables in a statement *)
-let rec free_vars_stmt
-    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
-  match s with
-  | Assignment ((_, _, []), e) | Return (Some e) | TargetPE e ->
-      free_vars_expr e
-  | Assignment ((_, _, l), e) ->
-      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
-  | NRFunApp (_, f, l) ->
-      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-  | IfElse (e, b1, Some b2) ->
-      Set.Poly.union_list
-        [free_vars_expr e; free_vars_stmt b1.pattern; free_vars_stmt b2.pattern]
-  | IfElse (e, b, None) | While (e, b) ->
-      Set.Poly.union (free_vars_expr e) (free_vars_stmt b.pattern)
-  | For {lower= e1; upper= e2; body= b; _} ->
-      Set.Poly.union_list
-        [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
-  | Block l | SList l ->
-      Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
-  | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
-
-(** A variation on free_vars_stmt, where we do not recursively count free
-    variables in sub statements  *)
-let top_free_vars_stmt
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
-  match s with
-  | Assignment _ | Return _ | TargetPE _ | NRFunApp _ | Decl _ | Break
-   |Continue | Skip ->
-      free_vars_stmt
-        (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
-  | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
-  | For {lower= e1; upper= e2; _} ->
-      Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
-  | Block _ | SList _ -> Set.Poly.empty
 
 (** The transfer function for a live variables analysis *)
 let live_variables_transfer
@@ -1051,6 +1056,46 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
+  let _ =
+    if false then
+      let print_set s to_string =
+        [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
+      in
+      let print_expr (e:Expr.Typed.t) =
+        [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
+      in
+      let print_expr_set s =
+        print_set s print_expr
+      in
+      let print_stmt s =
+        [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum
+      in
+      Map.iteri flowgraph_to_mir ~f:(fun ~key ~data ->
+          let used = Map.Poly.find_exn used_expr key in
+          let ant = Map.Poly.find_exn anticipated_expressions_mfp key in
+          let avl = Map.Poly.find_exn available_expressions_mfp key in
+          let earliest = Map.Poly.find_exn earliest_expr key in
+          let post = Map.Poly.find_exn postponable_expressions_mfp key in
+          let latest = Map.Poly.find_exn latest_expr key in
+          let used_not_latest = Map.Poly.find_exn used_not_latest_expressions_mfp key in
+          List.iter ~f:print_endline
+            [ string_of_int key ^ ":"
+            ; "\tStmt: " ^ print_stmt data
+            ; "\tUsed: " ^ print_expr_set used
+            ; "\tAnticipated.entry: " ^ print_expr_set ant.entry
+            ; "\tAnticipated.exit: " ^ print_expr_set ant.exit
+            ; "\tAvailable.entry: " ^ print_expr_set avl.entry
+            ; "\tAvailable.exit: " ^ print_expr_set avl.exit
+            ; "\tEarliest: " ^ print_expr_set earliest
+            ; "\tPostponable.entry: " ^ print_expr_set post.entry
+            ; "\tPostponable.exit: " ^ print_expr_set post.exit
+            ; "\tLatest: " ^ print_expr_set latest
+            ; "\tUsed_not_latest.entry: " ^ print_expr_set used_not_latest.entry
+            ; "\tUsed_not_latest.exit: " ^ print_expr_set used_not_latest.exit
+            ; ""
+            ]
+        )
+  in
   (latest_expr, used_not_latest_expressions_mfp)
 
 (** Perform the analysis for ad-levels, using both the fwd and reverse pass *)
