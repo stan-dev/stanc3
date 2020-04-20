@@ -439,12 +439,17 @@ let copy_propagation_transfer
                   m''
               | Decl {decl_id= s; _} | Assignment ((s, _, _), _) ->
                 kill_var m s
+              | Block b ->
+                let kills =
+                  Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
+                in
+                Set.Poly.fold kills ~init:m ~f:kill_var
               |TargetPE _
               |NRFunApp (_, _, _)
               |Break | Continue | Return _ | Skip
               |IfElse (_, _, _)
               |While (_, _)
-              |For _ | Block _ | SList _ ->
+              |For _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION
