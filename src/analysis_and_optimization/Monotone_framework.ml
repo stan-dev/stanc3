@@ -369,7 +369,7 @@ let expression_propagation_transfer
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Stmt.Fixed.Pattern.Assignment ((s, _, []), e) ->
               let m' = kill_var m s in
-              if can_side_effect_expr e then
+              if can_side_effect_expr e || Set.Poly.mem (free_vars_expr e) s then
                 m'
               else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->

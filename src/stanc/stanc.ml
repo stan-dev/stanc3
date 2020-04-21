@@ -125,7 +125,7 @@ let options =
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
 let optimization_settings lvl : Optimize.optimization_settings =
-  let empty : Optimize.optimization_settings =
+  let _ : Optimize.optimization_settings =
     { function_inlining= false
     ; static_loop_unrolling= false
     ; one_step_loop_unrolling= false
@@ -171,8 +171,9 @@ let optimization_settings lvl : Optimize.optimization_settings =
     }
   in match lvl with
   | 1 ->
-    { empty with
+    { max_safe with
       copy_propagation = true
+    ; expression_propagation = false
     }
   | 2 ->
     { max_safe with
