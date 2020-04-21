@@ -2448,7 +2448,8 @@ model {
         data vector[2] x_vector;
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
-        x_cov = FnUnconstrain__(x_cov, "cov_matrix");
+        data vector[3] x_cov_free__;
+        x_cov_free__ = FnUnconstrain__(x_cov, "cov_matrix");
         data real theta_u;
         data real phi_u;
       }
