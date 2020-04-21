@@ -29,6 +29,7 @@ let optimize = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
+let standalone_functions = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -120,7 +121,10 @@ let options =
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
-      , " If set, try to use matrix_cl signatures." ) ]
+      , " If set, try to use matrix_cl signatures." )
+    ; ( "--standalone_functions"
+      , Arg.Set standalone_functions
+      , " If set, the generated C++ will be the standalone functions C++ code." ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
@@ -223,7 +227,11 @@ let use_file filename =
         opt )
       else tx_mir
     in
+    let cpp_sf = Fmt.strf "%a" Stan_math_code_gen.pp_standalone_functions opt_mir in
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+    if !standalone_functions then 
+    Out_channel.write_all !output_file ~data:cpp_sf 
+    else
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
@@ -238,6 +246,7 @@ let main () =
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
+
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
