@@ -29,7 +29,6 @@ let optimize = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
-let standalone_functions = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -123,7 +122,7 @@ let options =
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." )
     ; ( "--standalone_functions"
-      , Arg.Set standalone_functions
+      , Arg.Set Stan_math_code_gen.standalone_functions
       , " If set, the generated C++ will be the standalone functions C++ code." ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
@@ -227,11 +226,7 @@ let use_file filename =
         opt )
       else tx_mir
     in
-    let cpp_sf = Fmt.strf "%a" Stan_math_code_gen.pp_standalone_functions opt_mir in
-    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
-    if !standalone_functions then 
-    Out_channel.write_all !output_file ~data:cpp_sf 
-    else
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir  in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 

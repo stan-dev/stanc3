@@ -22,6 +22,8 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
+let standalone_functions = ref false
+
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
 let pp_function__ ppf (prog_name, fname) =
@@ -710,7 +712,15 @@ let pp_prog ppf (p : Program.Typed.t) =
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
       (fun_used_in_reduce_sum p)
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
+  if !standalone_functions then
+  (pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
+    includes (namespace p) custom_functions usings Locations.pp_globals s
+    (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
+    (list ~sep:cut pp_fun_def_with_rs_list)
+    p.functions_block pp_model p ;
+  )
+  else
+  (pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
     (list ~sep:cut pp_fun_def_with_rs_list)
@@ -731,38 +741,4 @@ stan::model::model_base& new_model(
 
 #endif
 |} ;
-  pf ppf "@[<v>%a@]" pp_register_map_rect_functors p
-
-let pp_standalone_functions ppf (_p : Program.Typed.t) =
-  (* First, do some transformations on the MIR itself before we begin printing it.*)
-  (* let p, s = Locations.prepare_prog p in
-  let pp_fun_def_with_rs_list ppf fblock =
-    pp_fun_def ppf fblock (fun_used_in_reduce_sum p)
-  in
-  let reduce_sum_struct_decl =
-    String.Set.map
-      ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
-      (fun_used_in_reduce_sum p)
-  in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) custom_functions usings Locations.pp_globals s
-    (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
-    (list ~sep:cut pp_fun_def_with_rs_list)
-    p.functions_block pp_model p ;
-  pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ; *)
-  pf ppf
-    {|
-#ifndef USING_R
-
-// Boilerplate
-stan::model::model_base& new_model(
-        stan::io::var_context& data_context,
-        unsigned int seed,
-        std::ostream* msg_stream) {
-  stan_model* m = new stan_model(data_context, seed, msg_stream);
-  return *m;
-}
-
-#endif
-|} ;
-  (* pf ppf "@[<v>%a@]" pp_register_map_rect_functors p *)
+  pf ppf "@[<v>%a@]" pp_register_map_rect_functors p)
