@@ -713,11 +713,11 @@ let pp_prog ppf (p : Program.Typed.t) =
       (fun_used_in_reduce_sum p)
   in
   if !standalone_functions then
-  (pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) custom_functions usings Locations.pp_globals s
+  (pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ }@ @]" version
+    includes (namespace p) usings Locations.pp_globals s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
     (list ~sep:cut pp_fun_def_with_rs_list)
-    p.functions_block pp_model p ;
+    p.functions_block ;
   )
   else
   (pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
@@ -742,3 +742,4 @@ stan::model::model_base& new_model(
 #endif
 |} ;
   pf ppf "@[<v>%a@]" pp_register_map_rect_functors p)
+  
