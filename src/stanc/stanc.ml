@@ -140,21 +140,6 @@ let optimization_settings lvl : Optimize.optimization_settings =
     ; optimize_ad_levels= false
     }
   in
-  let _ : Optimize.optimization_settings =
-    { function_inlining= false
-    ; static_loop_unrolling= true
-    ; one_step_loop_unrolling= true
-    ; list_collapsing= true
-    ; block_fixing= true
-    ; constant_propagation= true
-    ; expression_propagation= false
-    ; copy_propagation= false
-    ; dead_code_elimination= false
-    ; partial_evaluation= true
-    ; lazy_code_motion= false
-    ; optimize_ad_levels= false
-    }
-  in
   let max_safe : Optimize.optimization_settings =
     { function_inlining= true
     ; static_loop_unrolling= true

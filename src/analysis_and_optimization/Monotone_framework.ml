@@ -321,18 +321,8 @@ let label_top_decls
   label : string Set.Poly.t =
   let stmt = Map.Poly.find_exn flowgraph_to_mir label in
   match stmt.pattern with
-  | Decl {decl_id= s; _} ->
-    (* let _ = print_endline
-     *     ( "stmt: " ^ ([%sexp (stmt : Middle.Stmt.Located.Non_recursive.t)] |> Sexp.to_string)
-     *     ^ " decl " ^ s)
-     * in *)
-    Set.Poly.singleton s
-  | _ ->
-    (* let _ = print_endline
-     *     ("stmt: " ^ ([%sexp (stmt : Middle.Stmt.Located.Non_recursive.t)] |> Sexp.to_string)
-     *      ^ "nodecl" )
-     * in *)
-    Set.Poly.empty
+  | Decl {decl_id= s; _} -> Set.Poly.singleton s
+  | _ -> Set.Poly.empty
 
 let exprop_debug = false
 
@@ -351,15 +341,7 @@ let expression_propagation_transfer
       | None -> None
       | Some m ->
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-          (* TODO: Could probably use killed_expressions_stmt *)
           let kill_var m v =
-            (* let ms =
-             *   [%sexp (m : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string
-             * in
-             * let _ = if v = "x" then print_endline (
-             *     "killing var " ^ v ^ " in map " ^ ms
-             *   )
-             * in *)
             Map.filteri m ~f:(fun ~key ~data ->
                 not (key = v || Set.Poly.mem (free_vars_expr data) v))
           in
@@ -378,12 +360,6 @@ let expression_propagation_transfer
               let kills =
                 Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
               in
-              (* let _ =
-               *   let print_set s to_string =
-               *     [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
-               *   in
-               *   print_endline ("Kill set: " ^ print_set kills ident)
-               * in *)
               Set.Poly.fold kills ~init:m ~f:kill_var
             | TargetPE _
              |NRFunApp (_, _, _)
@@ -418,25 +394,10 @@ let copy_propagation_transfer
             ( match mir_node with
               | Assignment ((s, _, []), {pattern= Var t; meta}) ->
                 let m' = kill_var m s in
-                (* let _ = print_endline ("killing " ^ s) in *)
                 if (Set.Poly.mem globals s) then
                   m'
                 else
-                  let m'' =
-                    Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-                  in
-                  let _ =
-                    if false then
-                      print_endline (
-                        "Updating map on assignment " ^ s ^ ":=" ^ t ^ " :"
-                        ^ ([%sexp (m : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
-                        ^ " -> "
-                        ^ ([%sexp (m' : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
-                        ^ " -> "
-                        ^ ([%sexp (m'' : (string, Expr.Typed.t) Map.Poly.t)] |> Sexp.to_string_hum)
-                      )
-                  in
-                  m''
+                  Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
               | Decl {decl_id= s; _} | Assignment ((s, _, _), _) ->
                 kill_var m s
               | Block b ->
@@ -1061,11 +1022,7 @@ let live_variables_mfp (prog : Program.Typed.t)
   let (module Mf) =
     monotone_framework (module Rev_Flowgraph) (module Lattice) (module Transfer)
   in
-  let mfp = Mf.mfp () in
-  (* let _ = print_endline "STARTING BLOCK {" in
-   * let _ = print_mfp ident mfp flowgraph_to_mir in
-   * let _ = print_endline "} ENDING BLOCK" in *)
-  mfp
+  Mf.mfp ()
 
 let lcm_debug = false
 
