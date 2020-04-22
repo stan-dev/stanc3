@@ -27,11 +27,15 @@ static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'basic.stan', line 4, column 8 to column 28)",
                                                       " (in 'basic.stan', line 3, column 30 to line 5, column 5)",
-                                                      " (in 'basic.stan', line 10, column 2 to column 43)",
-                                                      " (in 'basic.stan', line 11, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 9, column 1 to line 12, column 2)",
-                                                      " (in 'basic.stan', line 15, column 2 to column 13)",
-                                                      " (in 'basic.stan', line 14, column 43 to line 16, column 2)"};
+                                                      " (in 'basic.stan', line 9, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 8, column 1 to line 10, column 2)",
+                                                      " (in 'basic.stan', line 14, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 13, column 1 to line 15, column 2)",
+                                                      " (in 'basic.stan', line 19, column 2 to column 43)",
+                                                      " (in 'basic.stan', line 20, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 18, column 1 to line 21, column 2)",
+                                                      " (in 'basic.stan', line 24, column 2 to column 13)",
+                                                      " (in 'basic.stan', line 23, column 43 to line 25, column 2)"};
 
 
 template <typename T0__>
@@ -62,6 +66,58 @@ return my_log1p_exp(x, pstream__);
 };
 
 template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 3;
+    return sum(a);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct array_fun_functor__ {
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const std::vector<T0__>& a, std::ostream* pstream__)  const 
+{
+return array_fun(a, pstream__);
+}
+};
+
+double
+int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 5;
+    return sum(a);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct int_array_fun_functor__ {
+double
+operator()(const std::vector<int>& a, std::ostream* pstream__)  const 
+{
+return int_array_fun(a, pstream__);
+}
+};
+
+template <typename T0__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
 my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
                    std::ostream* pstream__) {
@@ -70,21 +126,21 @@ my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) propto__;
   
   try {
-    current_statement__ = 3;
+    current_statement__ = 7;
     validate_non_negative_index("result", "num_elements(x)", num_elements(x));
     Eigen::Matrix<local_scalar_t__, -1, 1> result;
     result = Eigen::Matrix<local_scalar_t__, -1, 1>(num_elements(x));
     
-    current_statement__ = 3;
+    current_statement__ = 7;
     for (size_t sym1__ = 1; sym1__ <= num_elements(x); ++sym1__) {
-      current_statement__ = 3;
+      current_statement__ = 7;
       assign(result, cons_list(index_uni(sym1__), nil_index_list()),
         std::numeric_limits<double>::quiet_NaN(), "assigning variable result");
     }
-    current_statement__ = 3;
+    current_statement__ = 7;
     assign(result, nil_index_list(), multiply(x, 5.0),
       "assigning variable result");
-    current_statement__ = 4;
+    current_statement__ = 8;
     return result;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -110,7 +166,7 @@ int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 6;
+    current_statement__ = 10;
     return (a * b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -133,6 +189,22 @@ return int_only_multiplication(a, b, pstream__);
 auto my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr)  
 {
 return basic_model_namespace::my_log1p_exp(x, pstream__);
+}
+
+
+
+auto array_fun(const std::vector<double>& a,
+               std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::array_fun(a, pstream__);
+}
+
+
+
+auto int_array_fun(const std::vector<int>& a,
+                   std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::int_array_fun(a, pstream__);
 }
 
 

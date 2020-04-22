@@ -103,15 +103,6 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
   in
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (scalar, ut) name
 
-let pp_arg2 ppf (custom_scalar_opt, (_, name, ut)) =
-  let scalar =
-    match custom_scalar_opt with
-    | Some _ -> "double"
-    | None -> stantype_prim_str ut
-  in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (scalar, ut) name
-
-
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf body_stmts =
   pp_located_error ppf
@@ -225,13 +216,12 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _}) namespace_fu
   let mk_extra_args templates args =
     List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
   in
-  let argtypetemplates = maybe_templated_arg_types fdargs in
-  let args2 = List.map
-      ~f:(fun a -> strf "%a" pp_arg2 a)
-      (List.zip_exn argtypetemplates fdargs) in
+  let args = List.map
+      ~f:(fun (_, name, ut) -> strf "const %a& %s" pp_unsizedtype_custom_scalar (stantype_prim_str ut, ut) name)
+      (fdargs) in
   let pp_sig_standalone ppf name =
     let arg_strs =
-      args2 @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__ = nullptr"]
+      args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__ = nullptr"]
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
