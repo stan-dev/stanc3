@@ -123,7 +123,8 @@ let options =
       , " If set, try to use matrix_cl signatures." )
     ; ( "--standalone_functions"
       , Arg.Set Stan_math_code_gen.standalone_functions
-      , " If set, the generated C++ will be the standalone functions C++ code." ) ]
+      , " If set, the generated C++ will be the standalone functions C++ code."
+      ) ]
 
 (* Whether or not to run each optimization. Currently it's all or nothing
    depending on the --O flag.*)
@@ -174,7 +175,8 @@ let model_file_err () =
   exit 127
 
 let model_file_start_char_err () =
-  eprintf "%s" "Model name must not start with a number or symbol other than underscore.\n";
+  eprintf "%s"
+    "Model name must not start with a number or symbol other than underscore.\n" ;
   exit 127
 
 let add_file filename =
@@ -231,7 +233,6 @@ let use_file filename =
     if !print_model_cpp then print_endline cpp )
 
 let remove_dotstan s = String.drop_suffix s 5
-
 let model_name_check_regex = Str.regexp "^[a-zA-Z_].*$"
 
 let main () =
@@ -247,8 +248,8 @@ let main () =
     Semantic_check.model_name :=
       remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
       ^ "_model" ;
-  if not (Str.string_match model_name_check_regex !Semantic_check.model_name 0) then
-    model_file_start_char_err () ;
+  if not (Str.string_match model_name_check_regex !Semantic_check.model_name 0)
+  then model_file_start_char_err () ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
