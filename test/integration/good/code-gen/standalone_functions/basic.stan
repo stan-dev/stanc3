@@ -1,4 +1,3 @@
-//Test compilation of a file that only has functions block
 functions {
     real my_log1p_exp(real x) {
         return log1p_exp(x);
@@ -22,6 +21,23 @@ functions {
 
 	int int_only_multiplication(int a, int b) {
 		return a*b;
+	}
+
+	real test_lgamma(real x) {
+        return lgamma(x);
+    }
+
+	// test special functions
+	void test_lp(real a) {
+    	a ~ normal(0, 1);
+	}
+
+	real test_rng(real a) {
+		return normal_rng(a, 1);
+	}
+
+	real test_lpdf(real a, real b) {
+		return normal_lpdf(a | b, 1);
 	}
 }
 

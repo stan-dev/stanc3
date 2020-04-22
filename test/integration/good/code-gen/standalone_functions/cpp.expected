@@ -25,17 +25,25 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'basic.stan', line 4, column 8 to column 28)",
-                                                      " (in 'basic.stan', line 3, column 30 to line 5, column 5)",
-                                                      " (in 'basic.stan', line 9, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 8, column 1 to line 10, column 2)",
-                                                      " (in 'basic.stan', line 14, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 13, column 1 to line 15, column 2)",
-                                                      " (in 'basic.stan', line 19, column 2 to column 43)",
-                                                      " (in 'basic.stan', line 20, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 18, column 1 to line 21, column 2)",
-                                                      " (in 'basic.stan', line 24, column 2 to column 13)",
-                                                      " (in 'basic.stan', line 23, column 43 to line 25, column 2)"};
+                                                      " (in 'basic.stan', line 3, column 8 to column 28)",
+                                                      " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
+                                                      " (in 'basic.stan', line 8, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
+                                                      " (in 'basic.stan', line 13, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
+                                                      " (in 'basic.stan', line 18, column 2 to column 43)",
+                                                      " (in 'basic.stan', line 19, column 2 to column 16)",
+                                                      " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
+                                                      " (in 'basic.stan', line 23, column 2 to column 13)",
+                                                      " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
+                                                      " (in 'basic.stan', line 27, column 8 to column 25)",
+                                                      " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
+                                                      " (in 'basic.stan', line 32, column 5 to column 22)",
+                                                      " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
+                                                      " (in 'basic.stan', line 36, column 2 to column 26)",
+                                                      " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
+                                                      " (in 'basic.stan', line 40, column 2 to column 31)",
+                                                      " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
 
 
 template <typename T0__>
@@ -183,6 +191,117 @@ operator()(const int& a, const int& b, std::ostream* pstream__)  const
 return int_only_multiplication(a, b, pstream__);
 }
 };
+
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+test_lgamma(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 12;
+    return stan::math::lgamma(x);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct test_lgamma_functor__ {
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const T0__& x, std::ostream* pstream__)  const 
+{
+return test_lgamma(x, pstream__);
+}
+};
+
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  
+  try {
+    current_statement__ = 14;
+    lp_accum__.add(normal_log<propto__>(a, 0, 1));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct test_lp_functor__ {
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
+           std::ostream* pstream__)  const 
+{
+return test_lp(a, lp__, lp_accum__, pstream__);
+}
+};
+
+template <typename T0__, typename RNG>
+typename boost::math::tools::promote_args<T0__>::type
+test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 16;
+    return normal_rng(a, 1, base_rng__);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct test_rng_functor__ {
+template <typename T0__, typename RNG>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
+{
+return test_rng(a, base_rng__, pstream__);
+}
+};
+
+template <bool propto__, typename T0__, typename T1__>
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
+test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__>::type;
+  
+  try {
+    current_statement__ = 18;
+    return normal_lpdf<false>(a, b, 1);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct test_lpdf_functor__ {
+template <bool propto__, typename T0__, typename T1__>
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+{
+return test_lpdf(a, b, pstream__);
+}
+};
 }
 
 
@@ -221,6 +340,38 @@ auto int_only_multiplication(const int& a, const int& b,
                              std::ostream* pstream__ = nullptr)  
 {
 return basic_model_namespace::int_only_multiplication(a, b, pstream__);
+}
+
+
+
+auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::test_lgamma(x, pstream__);
+}
+
+
+
+auto test_lp(const double& a, double& lp__,
+             stan::math::accumulator<double>& lp_accum__,
+             std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::test_lp<false>(a, lp__, lp_accum__, pstream__);
+}
+
+
+
+auto test_rng(const double& a, boost::ecuyer1988& base_rng__,
+              std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::test_rng(a, base_rng__, pstream__);
+}
+
+
+
+auto test_lpdf(const double& a, const double& b,
+               std::ostream* pstream__ = nullptr)  
+{
+return basic_model_namespace::test_lpdf<false>(a, b, pstream__);
 }
 
 
@@ -399,218 +550,6 @@ return integrate_model_namespace::integrand_ode(r, f, theta, x_r, x_i,
 auto ode_integrate(std::ostream* pstream__ = nullptr)  
 {
 return integrate_model_namespace::ode_integrate(pstream__);
-}
-
-
-  $ ../../../../../../install/default/bin/stanc --standalone_functions --print-cpp lgamma.stan
-
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace lgamma_model_namespace {
-
-using std::istream;
-using std::string;
-using std::stringstream;
-using std::vector;
-using std::pow;
-using stan::io::dump;
-using stan::math::lgamma;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::nil_index_list;
-using namespace stan::math; 
-
-static int current_statement__ = 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'lgamma.stan', line 4, column 8 to column 25)",
-                                                      " (in 'lgamma.stan', line 3, column 29 to line 5, column 5)"};
-
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-test_lgamma(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  const static bool propto__ = true;
-  (void) propto__;
-  
-  try {
-    current_statement__ = 1;
-    return stan::math::lgamma(x);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct test_lgamma_functor__ {
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& x, std::ostream* pstream__)  const 
-{
-return test_lgamma(x, pstream__);
-}
-};
-}
-
-
-auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr)  
-{
-return lgamma_model_namespace::test_lgamma(x, pstream__);
-}
-
-
-  $ ../../../../../../install/default/bin/stanc --standalone_functions --print-cpp special_functions.stan
-
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace special_functions_model_namespace {
-
-using std::istream;
-using std::string;
-using std::stringstream;
-using std::vector;
-using std::pow;
-using stan::io::dump;
-using stan::math::lgamma;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
-using stan::model::index_uni;
-using stan::model::index_max;
-using stan::model::index_min;
-using stan::model::index_min_max;
-using stan::model::index_multi;
-using stan::model::index_omni;
-using stan::model::nil_index_list;
-using namespace stan::math; 
-
-static int current_statement__ = 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'special_functions.stan', line 4, column 4 to column 21)",
-                                                      " (in 'special_functions.stan', line 3, column 23 to line 5, column 3)",
-                                                      " (in 'special_functions.stan', line 8, column 4 to column 28)",
-                                                      " (in 'special_functions.stan', line 7, column 24 to line 9, column 3)",
-                                                      " (in 'special_functions.stan', line 12, column 4 to column 33)",
-                                                      " (in 'special_functions.stan', line 11, column 33 to line 13, column 3)"};
-
-
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
-        std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  
-  try {
-    current_statement__ = 1;
-    lp_accum__.add(normal_log<propto__>(a, 0, 1));
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct test_lp_functor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
-{
-return test_lp(a, lp__, lp_accum__, pstream__);
-}
-};
-
-template <typename T0__, typename RNG>
-typename boost::math::tools::promote_args<T0__>::type
-test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
-  const static bool propto__ = true;
-  (void) propto__;
-  
-  try {
-    current_statement__ = 3;
-    return normal_rng(a, 1, base_rng__);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct test_rng_functor__ {
-template <typename T0__, typename RNG>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
-{
-return test_rng(a, base_rng__, pstream__);
-}
-};
-
-template <bool propto__, typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
-  
-  try {
-    current_statement__ = 5;
-    return normal_lpdf<false>(a, b, 1);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct test_lpdf_functor__ {
-template <bool propto__, typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
-{
-return test_lpdf(a, b, pstream__);
-}
-};
-}
-
-
-auto test_lp(const double& a, double& lp__,
-             stan::math::accumulator<double>& lp_accum__,
-             std::ostream* pstream__ = nullptr)  
-{
-return special_functions_model_namespace::test_lp<false>(a, lp__, lp_accum__,
-                                            pstream__);
-}
-
-
-
-auto test_rng(const double& a, boost::ecuyer1988& base_rng__,
-              std::ostream* pstream__ = nullptr)  
-{
-return special_functions_model_namespace::test_rng(a, base_rng__, pstream__);
-}
-
-
-
-auto test_lpdf(const double& a, const double& b,
-               std::ostream* pstream__ = nullptr)  
-{
-return special_functions_model_namespace::test_lpdf<false>(a, b, pstream__);
 }
 
 

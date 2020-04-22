@@ -226,7 +226,7 @@ let use_file filename =
         opt )
       else tx_mir
     in
-    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir  in
+    let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
 
@@ -241,7 +241,6 @@ let main () =
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
-
   (* Just translate a stan program *)
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
