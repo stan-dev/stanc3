@@ -136,10 +136,11 @@ let check_fresh_variable_basic id is_nullary_function =
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
     if
-      Stan_math_signatures.is_stan_math_function_name id.name
+      (Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None )
+         || Stan_math_signatures.stan_math_returntype id.name [] = None ))
       || Stan_math_signatures.is_reduce_sum_fn id.name
+      || Stan_math_signatures.is_variadic_ode_fn id.name
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -352,6 +353,55 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_reduce_sum_generic loc id.name
       |> Validate.error
 
+(* real[ , ] ode_bdf(function ode_rhs, real[] initial_state,
+                  real initial_time, real[] times,
+                  data real rel_tol, data real abs_tol, data int max_num_steps,
+                  T1 arg1, T2 arg2, ...)
+
+
+real[] my_ode_func(real time, real[] state, T1 arg1, T2 arg2, ...) *)
+
+let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
+  let arg_match (x_ad, x_t) y =
+    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
+    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
+  in
+  let args_match a b =
+    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
+  in
+  match es with
+  | { emeta=
+        { type_=
+            UnsizedType.UFun
+              ( (_, UReal) (* time *)
+                :: (_, UnsizedType.UArray UReal) (* initial_state *)
+                :: fun_args
+              , ReturnType UnsizedType.UArray UReal); _ }; _ }
+    :: initial_state :: initial_time :: times :: rel_tol :: abs_tol
+    :: {emeta= {type_= UInt; ad_level = UnsizedType.DataOnly; _}; _} (* max_num_steps *)
+    :: args when 
+      (arg_match (AutoDiffable, UReal) initial_time) &&
+      (arg_match (AutoDiffable, UArray UReal) initial_state) &&
+      (arg_match (AutoDiffable, UArray UReal) times) &&
+      (arg_match (DataOnly, UReal) rel_tol) &&
+      (arg_match (DataOnly, UReal) abs_tol) &&
+      (List.length args >= 2)
+      -> 
+      if args_match fun_args args then
+        mk_typed_expression
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+          ~ad_level:(lub_ad_e es) ~type_:(UnsizedType.UArray (UnsizedType.UArray UReal)) ~loc
+        |> Validate.ok
+      else
+        Semantic_error.illtyped_variadic_ode loc id.name
+          (List.map ~f:type_of_expr_typed es) fun_args
+        |> Validate.error
+  | _ ->
+      es
+      |> List.map ~f:type_of_expr_typed
+      |> Semantic_error.illtyped_variadic_ode_generic loc id.name
+      |> Validate.error
+
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
      function because, technically, user defined functions can shadow
@@ -372,6 +422,8 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
   | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
+  | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
+      semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
   | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 

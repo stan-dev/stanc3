@@ -310,6 +310,9 @@ and gen_fun_app ppf fname es =
       | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+        when Stan_math_signatures.is_variadic_ode_fn x ->
+          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])

@@ -140,8 +140,10 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
+let variadic_ode_functions = ["ode_bdf"]
 
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
+let is_variadic_ode_fn f = List.mem ~equal:String.equal variadic_ode_functions f
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
@@ -268,6 +270,7 @@ let stan_math_returntype name args =
   in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
+  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray (UArray UReal)))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
