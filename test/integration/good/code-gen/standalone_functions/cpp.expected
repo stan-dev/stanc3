@@ -304,14 +304,14 @@ return test_lpdf(a, b, pstream__);
 };
 }
 
-
+// [[Rcpp::export]]
 auto my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr)  
 {
 return basic_model_namespace::my_log1p_exp(x, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto array_fun(const std::vector<double>& a,
                std::ostream* pstream__ = nullptr)  
 {
@@ -319,7 +319,7 @@ return basic_model_namespace::array_fun(a, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto int_array_fun(const std::vector<int>& a,
                    std::ostream* pstream__ = nullptr)  
 {
@@ -327,7 +327,7 @@ return basic_model_namespace::int_array_fun(a, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto my_vector_mul_by_5(const Eigen::Matrix<double, -1, 1>& x,
                         std::ostream* pstream__ = nullptr)  
 {
@@ -335,7 +335,7 @@ return basic_model_namespace::my_vector_mul_by_5(x, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto int_only_multiplication(const int& a, const int& b,
                              std::ostream* pstream__ = nullptr)  
 {
@@ -343,14 +343,14 @@ return basic_model_namespace::int_only_multiplication(a, b, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr)  
 {
 return basic_model_namespace::test_lgamma(x, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto test_lp(const double& a, double& lp__,
              stan::math::accumulator<double>& lp_accum__,
              std::ostream* pstream__ = nullptr)  
@@ -359,7 +359,7 @@ return basic_model_namespace::test_lp<false>(a, lp__, lp_accum__, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto test_rng(const double& a, boost::ecuyer1988& base_rng__,
               std::ostream* pstream__ = nullptr)  
 {
@@ -367,7 +367,7 @@ return basic_model_namespace::test_rng(a, base_rng__, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto test_lpdf(const double& a, const double& b,
                std::ostream* pstream__ = nullptr)  
 {
@@ -526,7 +526,7 @@ return ode_integrate(pstream__);
 };
 }
 
-
+// [[Rcpp::export]]
 auto integrand(const Eigen::Matrix<double, -1, 1>& x,
                std::ostream* pstream__ = nullptr)  
 {
@@ -534,7 +534,7 @@ return integrate_model_namespace::integrand(x, pstream__);
 }
 
 
-
+// [[Rcpp::export]]
 auto integrand_ode(const double& r, const std::vector<double>& f,
                    const std::vector<double>& theta,
                    const std::vector<double>& x_r,
@@ -546,7 +546,7 @@ return integrate_model_namespace::integrand_ode(r, f, theta, x_r, x_i,
 }
 
 
-
+// [[Rcpp::export]]
 auto ode_integrate(std::ostream* pstream__ = nullptr)  
 {
 return integrate_model_namespace::ode_integrate(pstream__);

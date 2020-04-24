@@ -233,7 +233,8 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
   match Stmt.Fixed.(fdbody.pattern) with
   | Skip -> pf ppf ";@ "
   | _ ->
-      pf ppf "@,@,auto %s%a @,{@,return %s::%a;@,}@," fdname pp_sig_standalone
+      pf ppf "@,// [[Rcpp::export]]@,auto %s%a @,{@,return %s::%a;@,}@,"
+      fdname pp_sig_standalone
         "" namespace_fun pp_call_str
         ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
           else fdname )
