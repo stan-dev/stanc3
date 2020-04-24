@@ -144,10 +144,14 @@ let fn_renames =
 let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
+let variadic_ode_functor_suffix = "_odefunctor__"
 
 let functor_suffix_select hof =
-  if Stan_math_signatures.is_reduce_sum_fn hof then reduce_sum_functor_suffix
-  else functor_suffix
+  match hof with
+  | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
+  | x when Stan_math_signatures.is_variadic_ode_fn x ->
+      variadic_ode_functor_suffix
+  | _ -> functor_suffix
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -310,9 +314,11 @@ and gen_fun_app ppf fname es =
       | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
-      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+      | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
-          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+          ( fname
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
+            :: tl )
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])

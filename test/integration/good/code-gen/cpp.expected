@@ -11601,6 +11601,20 @@ return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
 }
 };
 
+
+struct dz_dt_odefunctor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+typename T4__, typename T5__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__, typename boost::math::tools::promote_args<T5__>::type>::type>
+operator()(const T0__& t, const std::vector<T1__>& z,
+           std::ostream* pstream__, const T2__& alpha, const T3__& beta,
+           const T4__& gamma, const T5__& delta)  const 
+{
+return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
+}
+};
+
 class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
 
  private:
@@ -11830,8 +11844,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf<dz_dt_functor__>(z_init, 0.0, pstream__, ts, 1e-5, 1e-3, 500,
-          alpha, beta, gamma, delta), "assigning variable z");
+        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0.0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
@@ -11968,8 +11982,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       } 
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf<dz_dt_functor__>(z_init, 0.0, pstream__, ts, 1e-5, 1e-3, 500,
-          alpha, beta, gamma, delta), "assigning variable z");
+        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0.0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}

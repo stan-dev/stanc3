@@ -25,6 +25,11 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
     | IllTypedVariadicODEGeneric of string * UnsizedType.t list
+    | IllTypedVariadicODETol of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
+    | IllTypedVariadicODEGenericTol of string * UnsizedType.t list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -146,9 +151,12 @@ module TypeError = struct
         let generate_reduce_sum_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UReal) :: (AutoDiffable, (UArray UReal)) :: args
+                  ( (AutoDiffable, UReal)
+                    :: (AutoDiffable, UArray UReal)
+                    :: args
                   , ReturnType (UArray UReal) ) ]
-            ; [(UArray UReal); UReal; (UArray UReal); UReal; UReal; UInt] ; arg_types ]
+            ; [UArray UReal; UReal; UArray UReal;]
+            ; arg_types ]
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Expected \
@@ -161,31 +169,79 @@ module TypeError = struct
           arg_tys
     | IllTypedVariadicODEGeneric (name, arg_tys) ->
         let variadic_ode_generic_signature =
-          Fmt.strf "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, %a, %a, %a, T1, T2, ...\n"
-            Pretty_printing.pp_unsizedtype UReal (* fun: time *)
-            Pretty_printing.pp_unsizedtype (UArray UReal) (* fun: state *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)  (* fun: return *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)  (* initial_state *)
-            Pretty_printing.pp_unsizedtype (UReal) (* initial_time *)
-            Pretty_printing.pp_unsizedtype (UArray UReal) (* times *)
-            Pretty_printing.pp_unsizedtype (UReal) (* rel_tol *)
-            Pretty_printing.pp_unsizedtype (UReal) (* abs_tol *)
-            Pretty_printing.pp_unsizedtype (UInt) (* max_num_steps *)
+          Fmt.strf
+            "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, T1, T2, ...\n"
+            Pretty_printing.pp_unsizedtype UReal
+            (* fun: time *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* fun: state *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* fun: return *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* initial_state *)
+            Pretty_printing.pp_unsizedtype UReal
+            (* initial_time *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* times *)
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %sWhere T1 and T2 are of any type.@[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          variadic_ode_generic_signature
+           %sWhere T1 and T2 are of any type.@[<h>Instead supplied arguments \
+           of incompatible type: %a@]"
+          name variadic_ode_generic_signature
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-    (* real[ , ] ode_bdf(function ode_rhs, real[] initial_state,
-                  real initial_time, real[] times,
-                  data real rel_tol, data real abs_tol, data int max_num_steps,
-                  T1 arg1, T2 arg2, ...)
-
-
-real[] my_ode_func(real time, real[] state, T1 arg1, T2 arg2, ...) *)
+    | IllTypedVariadicODETol (name, arg_tys, args) ->
+        let arg_types = List.map ~f:(fun (_, t) -> t) args in
+        let generate_reduce_sum_sig =
+          List.concat
+            [ [ UnsizedType.UFun
+                  ( (AutoDiffable, UReal)
+                    :: (AutoDiffable, UArray UReal)
+                    :: args
+                  , ReturnType (UArray UReal) ) ]
+            ; [UArray UReal; UReal; UArray UReal; UReal; UReal; UInt]
+            ; arg_types ]
+        in
+        Fmt.pf ppf
+          "Ill-typed arguments supplied to function '%s'. Expected \
+           arguments:@[<h>%a@]\n\
+           @[<h>Instead supplied arguments of incompatible type: %a@]"
+          name
+          Fmt.(list UnsizedType.pp ~sep:comma)
+          generate_reduce_sum_sig
+          Fmt.(list UnsizedType.pp ~sep:comma)
+          arg_tys
+    | IllTypedVariadicODEGenericTol (name, arg_tys) ->
+        let variadic_ode_generic_signature =
+          Fmt.strf
+            "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, %a, %a, %a, T1, T2, ...\n"
+            Pretty_printing.pp_unsizedtype UReal
+            (* fun: time *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* fun: state *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* fun: return *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* initial_state *)
+            Pretty_printing.pp_unsizedtype UReal
+            (* initial_time *)
+            Pretty_printing.pp_unsizedtype (UArray UReal)
+            (* times *)
+            Pretty_printing.pp_unsizedtype UReal
+            (* rel_tol *)
+            Pretty_printing.pp_unsizedtype UReal
+            (* abs_tol *)
+            Pretty_printing.pp_unsizedtype UInt
+          (* max_num_steps *)
+        in
+        Fmt.pf ppf
+          "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
+           %sWhere T1 and T2 are of any type.@[<h>Instead supplied arguments \
+           of incompatible type: %a@]"
+          name variadic_ode_generic_signature
+          Fmt.(list UnsizedType.pp ~sep:comma)
+          arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -510,6 +566,12 @@ let illtyped_variadic_ode loc name arg_tys args =
 
 let illtyped_variadic_ode_generic loc name arg_tys =
   TypeError (loc, TypeError.IllTypedVariadicODEGeneric (name, arg_tys))
+
+let illtyped_variadic_ode_tol loc name arg_tys args =
+  TypeError (loc, TypeError.IllTypedVariadicODETol (name, arg_tys, args))
+
+let illtyped_variadic_ode_generic_tol loc name arg_tys =
+  TypeError (loc, TypeError.IllTypedVariadicODEGenericTol (name, arg_tys))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

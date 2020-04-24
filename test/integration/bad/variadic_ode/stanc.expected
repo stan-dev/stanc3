@@ -4,13 +4,13 @@ Semantic error in 'bad_abs_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
     28:  transformed parameters {
     29:    real z[N, 2]
-    30:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     31:              a, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], real, real[], real[], real, int, real, real
@@ -21,13 +21,13 @@ Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column
    -------------------------------------------------
     27:  transformed parameters {
     28:    real z[N, 2]
-    29:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    29:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     30:              1e-5, 1e-3, 500,
     31:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real, real, real[], real, real, int, real, real
@@ -38,13 +38,13 @@ Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 
    -------------------------------------------------
     28:  transformed parameters {
     29:    real z[N, 2]
-    30:    = ode_bdf(dz_dt, z_init, t, ts,
+    30:    = ode_bdf_tol(dz_dt, z_init, t, ts,
              ^
     31:              1e-5, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], vector, real[], real, real, int, real, real
@@ -55,13 +55,13 @@ Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column
    -------------------------------------------------
     28:  transformed parameters {
     29:    real z[N, 2]
-    30:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     31:              1e-5, 1e-3, a,
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], real, real[], real, real, real[], real, real
@@ -72,13 +72,13 @@ Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
    -------------------------------------------------
     23:  transformed parameters {
     24:    real z[N, 2]
-    25:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    25:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     26:              1e-5, 1e-3, 500);
     27:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[]) => real[], real[], real, real[], real, real, int
@@ -89,13 +89,13 @@ Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, co
    -------------------------------------------------
     27:  transformed parameters {
     28:    real z[N, 2]
-    29:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    29:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     30:              1e-5, 1e-3, 500,
     31:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Expected arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
 (real, real[], real, real[]) => real[], real[], real, real[], real, real, int, real, real[]
 
 Instead supplied arguments of incompatible type: (real, real[], real, real[]) => real[], real[], real, real[], real, real, int, real, real
@@ -106,13 +106,13 @@ Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real z[N, 2]
-    27:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    27:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     28:              1e-5, 1e-3, 500,
     29:              alpha);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real) => real[], real[], real, real[], real, real, int, real
@@ -123,30 +123,47 @@ Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
     28:  transformed parameters {
     29:    real z[N, 2]
-    30:    = ode_bdf(dz_dt, z_init, 0.0, ts,
+    30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
              ^
     31:              1e-5, a, 500,
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], real, real[], real, real[], int, real, real
 
   $ ../../../../../install/default/bin/stanc bad_times.stan
 
-Semantic error in 'bad_times.stan', line 30, column 4 to line 32, column 24:
+Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
    -------------------------------------------------
     28:  transformed parameters {
     29:    real z[N, 2]
     30:    = ode_bdf(dz_dt, z_init, 0.0, ts,
              ^
+    31:              alpha, beta);
+    32:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+(real, real[], T1, T2, ...) => real[], real[], real, real[], T1, T2, ...
+Where T1 and T2 are of any type.
+Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], real, vector[], real, real
+
+  $ ../../../../../install/default/bin/stanc bad_times_tol.stan
+
+Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
+   -------------------------------------------------
+    28:  transformed parameters {
+    29:    real z[N, 2]
+    30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
+             ^
     31:              1e-5, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf'. Available arguments:
+Ill-typed arguments supplied to function 'ode_bdf_tol'. Available arguments:
 (real, real[], T1, T2, ...) => real[], real[], real, real[], real, real, int, T1, T2, ...
 Where T1 and T2 are of any type.
 Instead supplied arguments of incompatible type: (real, real[], real, real) => real[], real[], real, vector[], real, real, int, real, real

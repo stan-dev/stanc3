@@ -27,7 +27,7 @@ parameters {
 }
 transformed parameters {
   real z[N, 2]
-  = ode_bdf(dz_dt, z_init, 0.0, ts,
+  = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
             a, 1e-3, 500,
             alpha, beta);
 }
