@@ -3,6 +3,7 @@ transformed data {
   real<offset=2> a = 3;
 }
 parameters {
+  matrix<multiplier=3,offset=-412>[3,1] theta_[2];
   matrix<offset=-412,multiplier=3>[3,1] theta[2];
   real<offset=1,multiplier=5> x;
   real<offset=42> w;

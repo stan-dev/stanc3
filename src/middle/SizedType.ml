@@ -87,6 +87,6 @@ let rec get_dims st
   | SMatrix (dim1, dim2) -> [`Dim dim1; `Dim dim2]
   | SSparseMatrix (nz_rows, nz_cols, _, _) -> 
   [`SparseIterator (nz_rows, nz_cols, 
-     Expr.Helpers.internal_funapp FnNonZero [nz_rows] Expr.Typed.Meta.empty)]
+     Expr.Helpers.internal_funapp FnLength [nz_rows] Expr.Typed.Meta.empty)]
   | SStaticSparseMatrix (dim1, dim2) -> [`Dim dim1;`Dim dim2]
   | SArray (t, dim) -> `Dim dim :: get_dims t

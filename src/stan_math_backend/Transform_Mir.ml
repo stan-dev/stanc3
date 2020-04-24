@@ -55,7 +55,9 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
-  let trim_propto f = String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f in
+  let trim_propto f =
+    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
+  in
   match pattern with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
       let trigger = Map.find_exn opencl_triggers (trim_propto f) in
@@ -572,7 +574,20 @@ let trans_prog (p : Program.Typed.t) =
         Some (name, out_constrained_st)
     | _ -> None
   in
+  let get_pname_ust = function
+    | ( name
+      , { Program.out_block= Parameters
+        ; out_constrained_st
+        ; out_unconstrained_st; _ } )
+      when SizedType.to_unsized out_constrained_st
+           = SizedType.to_unsized out_unconstrained_st ->
+        Some (name, out_unconstrained_st)
+    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
+        Some (name ^ "_free__", out_unconstrained_st)
+    | _ -> None
+  in
   let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars
       ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
@@ -692,7 +707,7 @@ let trans_prog (p : Program.Typed.t) =
         init_pos
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write constrained_params
+        @ List.map ~f:gen_write free_params
     ; generate_quantities }
   in
   Program.(

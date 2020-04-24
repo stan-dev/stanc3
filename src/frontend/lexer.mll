@@ -41,9 +41,10 @@ rule token = parse
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
     ( ( space | newline)+)
-    ( '"' [^ '"']* '"'
-    | non_space_or_newline*
-    as fname)                 { lexer_logger ("include " ^ fname) ;
+    ( '"' ([^ '"']* as fname) '"'
+    | '<' ([^ '>']* as fname) '>'
+    | (non_space_or_newline* as fname)
+    )                         { lexer_logger ("include " ^ fname) ;
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
