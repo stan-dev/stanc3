@@ -324,8 +324,6 @@ let label_top_decls
   | Decl {decl_id= s; _} -> Set.Poly.singleton s
   | _ -> Set.Poly.empty
 
-let exprop_debug = false
-
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
@@ -1024,8 +1022,6 @@ let live_variables_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-let lcm_debug = false
-
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
 let lazy_expressions_mfp
@@ -1087,46 +1083,6 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
-  let _ =
-    if lcm_debug then
-      let print_set s to_string =
-        [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string
-      in
-      let print_expr (e:Expr.Typed.t) =
-        [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
-      in
-      let print_expr_set s =
-        print_set s print_expr
-      in
-      let print_stmt s =
-        [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum
-      in
-      Map.iteri flowgraph_to_mir ~f:(fun ~key ~data ->
-          let used = Map.Poly.find_exn used_expr key in
-          let ant = Map.Poly.find_exn anticipated_expressions_mfp key in
-          let avl = Map.Poly.find_exn available_expressions_mfp key in
-          let earliest = Map.Poly.find_exn earliest_expr key in
-          let post = Map.Poly.find_exn postponable_expressions_mfp key in
-          let latest = Map.Poly.find_exn latest_expr key in
-          let used_not_latest = Map.Poly.find_exn used_not_latest_expressions_mfp key in
-          List.iter ~f:print_endline
-            [ string_of_int key ^ ":"
-            ; "\tStmt: " ^ print_stmt data
-            ; "\tUsed: " ^ print_expr_set used
-            ; "\tAnticipated.entry: " ^ print_expr_set ant.entry
-            ; "\tAnticipated.exit: " ^ print_expr_set ant.exit
-            ; "\tAvailable.entry: " ^ print_expr_set avl.entry
-            ; "\tAvailable.exit: " ^ print_expr_set avl.exit
-            ; "\tEarliest: " ^ print_expr_set earliest
-            ; "\tPostponable.entry: " ^ print_expr_set post.entry
-            ; "\tPostponable.exit: " ^ print_expr_set post.exit
-            ; "\tLatest: " ^ print_expr_set latest
-            ; "\tUsed_not_latest.entry: " ^ print_expr_set used_not_latest.entry
-            ; "\tUsed_not_latest.exit: " ^ print_expr_set used_not_latest.exit
-            ; ""
-            ]
-        )
-  in
   (latest_expr, used_not_latest_expressions_mfp)
 
 (** Perform the analysis for ad-levels, using both the fwd and reverse pass *)

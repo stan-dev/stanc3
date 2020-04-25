@@ -637,21 +637,9 @@ let cannot_remove_expr (e : Expr.Typed.t) =
   expr_any can_side_effect_top_expr e
 
 let expression_propagation mir =
-  let res =
-    propagation
-      (Monotone_framework.expression_propagation_transfer cannot_duplicate_expr)
-      mir
-  in
-  let _ = if Monotone_framework.exprop_debug then (
-      print_endline "Input program: {!";
-      Program.Typed.pp Fmt.stdout mir;
-      print_endline "}!";
-      print_endline "Output program: {!";
-      Program.Typed.pp Fmt.stdout res;
-      print_endline "}!";
-    )
-  in
-  res
+  propagation
+    (Monotone_framework.expression_propagation_transfer cannot_duplicate_expr)
+    mir
 
 let copy_propagation mir =
   let globals = Monotone_framework.globals mir in
@@ -754,13 +742,6 @@ let lazy_code_motion (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
      simultaneously *)
-  let _ =
-    if Monotone_framework.lcm_debug then (
-      print_endline "Input program: {!";
-      Program.Typed.pp Fmt.stdout mir;
-      print_endline "}!";
-    )
-  in
   let preprocess_flowgraph =
     let preprocess_flowgraph_base
         (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
@@ -821,18 +802,6 @@ let lazy_code_motion (mir : Program.Typed.t) =
       Set.fold (Monotone_framework.used_expressions_stmt s.pattern)
         ~init:Expr.Typed.Map.empty ~f:collect_expressions
     in
-    let _ =
-      if Monotone_framework.lcm_debug then
-        let print_expr (e:Expr.Typed.t) =
-          [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string
-        in
-        (print_endline "Expression map:";
-         Map.iteri expression_map ~f:(fun ~key ~data ->
-             print_endline (
-               "\t" ^ print_expr key ^ " -> " ^ data
-             )
-           ))
-    in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
@@ -892,20 +861,6 @@ let lazy_code_motion (mir : Program.Typed.t) =
           (Map.mapi expression_map ~f:(fun ~key ~data ->
                {key with pattern= Var data} ))
       in
-      let _ =
-        if Monotone_framework.lcm_debug then
-          let print_expr (e:Expr.Typed.t) =
-            [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)]
-            |> Sexp.to_string
-          in
-          (print_endline (string_of_int i ^ ": expression replacement map: {");
-           Map.iteri expr_map ~f:(fun ~key ~data ->
-               print_endline (
-                 "\t" ^ print_expr key ^ " -> " ^ print_expr data
-               )
-             );
-           print_endline "}";)
-      in
       let f =
         expr_subst_stmt_except_initial_assign expr_map
       in
@@ -951,15 +906,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
     in
     map_rec_stmt_loc cleanup_base
   in
-  let res = transform_program_blockwise mir (fun _ x -> cleanup (transform (preprocess_flowgraph x))) in
-  let _ =
-    if Monotone_framework.lcm_debug then (
-      print_endline "Output program: {!";
-      Program.Typed.pp Fmt.stdout res;
-      print_endline "}!";
-    )
-  in
-  res
+  transform_program_blockwise mir (fun _ x -> cleanup (transform (preprocess_flowgraph x)))
 
 let block_fixing mir =
   transform_program_blockwise mir
