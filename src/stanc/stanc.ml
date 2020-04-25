@@ -25,7 +25,7 @@ let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
-let optimize_lvl = ref 0
+let optimize = ref false
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -98,9 +98,9 @@ let options =
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--O"
-      , Arg.Set_int optimize_lvl
+      , Arg.Set optimize
       , "Allow the compiler to apply all optimizations to the Stan \
-         code.WARNING: This is currently an experimental feature!" )
+         code." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -121,56 +121,6 @@ let options =
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." ) ]
-
-(* Whether or not to run each optimization. Currently it's all or nothing
-   depending on the --O flag.*)
-let optimization_settings lvl : Optimize.optimization_settings =
-  let _ : Optimize.optimization_settings =
-    { function_inlining= false
-    ; static_loop_unrolling= false
-    ; one_step_loop_unrolling= false
-    ; list_collapsing= false
-    ; block_fixing= false
-    ; constant_propagation= false
-    ; expression_propagation= false
-    ; copy_propagation= false
-    ; dead_code_elimination= false
-    ; partial_evaluation= false
-    ; lazy_code_motion= false
-    ; optimize_ad_levels= false
-    }
-  in
-  let max_safe : Optimize.optimization_settings =
-    { function_inlining= true
-    ; static_loop_unrolling= true
-    ; one_step_loop_unrolling= true
-    ; list_collapsing= true
-    ; block_fixing= true
-    ; constant_propagation= true
-    ; expression_propagation= true
-    ; copy_propagation= true
-    ; dead_code_elimination= true
-    ; partial_evaluation= true
-    ; lazy_code_motion= true
-    ; optimize_ad_levels= true
-    }
-  in match lvl with
-  | 1 ->
-    { max_safe with
-      copy_propagation = true
-    ; expression_propagation = false
-    }
-  | 2 ->
-    { max_safe with
-      lazy_code_motion = true
-    ; expression_propagation = true
-    ; function_inlining = true
-    ; dead_code_elimination = true
-    ; optimize_ad_levels = true
-    ; partial_evaluation = true
-    }
-  | _ ->
-    raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))
 
 let print_warn_uninitialized
     (uninit_vars : (Location_span.t * string) Set.Poly.t) =
@@ -246,9 +196,9 @@ let use_file filename =
         [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
-      if !optimize_lvl > 0 then (
+      if !optimize then (
         let opt =
-          Optimize.optimization_suite (optimization_settings !optimize_lvl) tx_mir
+          Optimize.optimization_suite tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter

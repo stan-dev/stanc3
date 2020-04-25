@@ -1070,7 +1070,27 @@ type optimization_settings =
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool }
 
-let optimization_suite settings mir =
+let const_optimizations b : optimization_settings =
+  { function_inlining= b
+  ; static_loop_unrolling= b
+  ; one_step_loop_unrolling= b
+  ; list_collapsing= b
+  ; block_fixing= b
+  ; constant_propagation= b
+  ; expression_propagation= b
+  ; copy_propagation= b
+  ; dead_code_elimination= b
+  ; partial_evaluation= b
+  ; lazy_code_motion= b
+  ; optimize_ad_levels= b }
+
+let all_optimizations : optimization_settings =
+  const_optimizations true
+
+let no_optimizations : optimization_settings =
+  const_optimizations false
+
+let optimization_suite ?settings:(settings=all_optimizations) mir =
   let maybe_optimizations =
     [ (* Phase order. See phase-ordering-nodes.org for details *)
       (* Book section A *)
