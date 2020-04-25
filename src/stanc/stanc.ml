@@ -164,6 +164,10 @@ let optimization_settings lvl : Optimize.optimization_settings =
     { max_safe with
       lazy_code_motion = true
     ; expression_propagation = true
+    ; function_inlining = true
+    ; dead_code_elimination = true
+    ; optimize_ad_levels = true
+    ; partial_evaluation = true
     }
   | _ ->
     raise (Failure ("Unsupported optimization level " ^ string_of_int lvl))

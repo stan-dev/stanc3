@@ -599,13 +599,20 @@ let propagation
 let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
 
-let rec can_side_effect_expr (e : Expr.Typed.t) =
+let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
-  | Var _ | Lit (_, _) -> false
-  | FunApp (t, f, es) ->
+  | Indexed (e, is) ->
+    expr_any pred e || List.exists ~f:(idx_any pred) is
+  | _ ->
+    pred e || Expr.Fixed.Pattern.fold (accum_any pred) false e.pattern
+and idx_any pred (i : Expr.Typed.t Index.t) =
+  Index.fold (accum_any pred) false i
+and accum_any pred b e = b || expr_any pred e
+
+let can_side_effect_top_expr (e : Expr.Typed.t) =
+  match e.pattern with
+  | FunApp (t, f, _) ->
       String.suffix f 3 = "_lp"
-      || String.suffix f 4 = "_rng"
-      || List.exists ~f:can_side_effect_expr es
       || (t = CompilerInternal && f = Internal_fun.to_string FnReadParam)
       || (t = CompilerInternal && f = Internal_fun.to_string FnReadData)
       || (t = CompilerInternal && f = Internal_fun.to_string FnWriteParam)
@@ -615,21 +622,24 @@ let rec can_side_effect_expr (e : Expr.Typed.t) =
       || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSizeSimplex)
       || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSizeUnitVector)
       || (t = CompilerInternal && f = Internal_fun.to_string FnUnconstrain)
-  | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
-  | Indexed (e, is) ->
-      can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
-  | EAnd (e1, e2) | EOr (e1, e2) -> List.exists ~f:can_side_effect_expr [e1; e2]
+  | _ -> false
 
-and can_side_effect_idx (i : Expr.Typed.t Index.t) =
-  match i with
-  | All -> false
-  | Single e | Upfrom e | MultiIndex e -> can_side_effect_expr e
-  | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+let cannot_duplicate_expr (e : Expr.Typed.t) =
+  let pred e = can_side_effect_top_expr e || (
+      match e.pattern with
+      | FunApp (_, f, _) ->
+        String.suffix f 4 = "_rng"
+      | _ -> false
+    )
+  in expr_any pred e
+
+let cannot_remove_expr (e : Expr.Typed.t) =
+  expr_any can_side_effect_top_expr e
 
 let expression_propagation mir =
   let res =
     propagation
-      (Monotone_framework.expression_propagation_transfer can_side_effect_expr)
+      (Monotone_framework.expression_propagation_transfer cannot_duplicate_expr)
       mir
   in
   let _ = if Monotone_framework.exprop_debug then (
@@ -676,15 +686,15 @@ let dead_code_elimination (mir : Program.Typed.t) =
       in
       match stmt with
       | Stmt.Fixed.Pattern.Assignment ((x, _, []), rhs) ->
-          if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
+          if Set.Poly.mem live_variables_s x || cannot_remove_expr rhs then
             stmt
           else
             Skip
       | Assignment ((x, _, is), rhs) ->
           if
             Set.Poly.mem live_variables_s x
-            || can_side_effect_expr rhs
-            || List.exists ~f:can_side_effect_idx is
+            || cannot_remove_expr rhs
+            || List.exists ~f:(idx_any cannot_remove_expr) is
           then stmt
           else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
@@ -698,7 +708,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
       | IfElse (e, b1, b2) -> (
           if
             (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-            (not (can_side_effect_expr e))
+            (not (cannot_remove_expr e))
             && b1.Stmt.Fixed.pattern = Skip
             && ( Option.map ~f:(fun Stmt.Fixed.({pattern; _}) -> pattern) b2
                  = Some Skip
@@ -712,15 +722,15 @@ let dead_code_elimination (mir : Program.Typed.t) =
             | Lit (_, _) -> b1.pattern
             | _ -> IfElse (e, b1, b2) )
       | While (e, b) -> (
-          if (not (can_side_effect_expr e)) && b.pattern = Break then Skip
+          if (not (cannot_remove_expr e)) && b.pattern = Break then Skip
           else
             match e.pattern with
             | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
             | _ -> While (e, b) )
       | For {loopvar; lower; upper; body} ->
           if
-            (not (can_side_effect_expr lower))
-            && (not (can_side_effect_expr upper))
+            (not (cannot_remove_expr lower))
+            && (not (cannot_remove_expr upper))
             && is_skip_break_continue body.pattern
           then Skip
           else For {loopvar; lower; upper; body}
@@ -803,7 +813,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
         match e.pattern with
         | Lit (_, _) -> accum
         | Var _ -> accum
-        | _ when can_side_effect_expr e ->
+        | _ when cannot_duplicate_expr e ->
           (* Immovable expressions might have movable subexpressions *)
           Expr.Fixed.Pattern.fold collect_expressions accum e.pattern
         | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
