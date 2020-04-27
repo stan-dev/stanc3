@@ -369,24 +369,48 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   pp_method_b ppf "void" "write_array" params intro generate_quantities
 
-let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st) =
+  let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st) =
   let iter d pp_body =
     let loopvar, gensym_exit = Common.Gensym.enter () in
-      match d with
-      | `Dim e ->
-        pp_for_loop ppf
-          ( loopvar
-          , Expr.Helpers.loop_bottom
-          , e
-          , pp_block
-          , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
-      | `SparseIterator (nz_row, nz_col, nz_length) ->
-      let idx s = 
-        let meta = 
-          Expr.Typed.Meta.create ~type_:UInt ~loc:Location_span.empty ~adlevel:DataOnly ()
-        in
-        let expr = Expr.Fixed.{meta; pattern= Var s} in
-        Index.Single expr
+    match st with
+    | SizedType.SStaticSparseMatrix _ ->
+    let idx s = 
+      let meta = 
+        Expr.Typed.Meta.create ~type_:UInt ~loc:Location_span.empty ~adlevel:DataOnly ()
+      in
+      let expr = Expr.Fixed.{meta; pattern= Var s} in
+      Index.Single expr
+    in
+      let pp_mat = Fmt.strf "%s_iteratee_" iteratee in
+      let meta_val = Expr.Typed.Meta.{loc= Location_span.empty; adlevel= DataOnly; type_= UVector} in
+      let iter_var = Expr.Fixed.{meta=meta_val; pattern= Var pp_mat} in
+      let row_idx = Expr.Helpers.add_int_index iter_var (idx loopvar) in
+      let col_idx = Expr.Helpers.add_int_index iter_var (idx loopvar) in
+      let pp_row = Fmt.strf "%a[1]" pp_expr row_idx in
+      let pp_col = Fmt.strf "%a[2]" pp_expr col_idx in
+      let pp_size = Expr.Helpers.internal_funapp FnLength [iter_var] Expr.Typed.Meta.empty in
+      pp_for_loop ppf
+      ( loopvar
+      , Expr.Helpers.loop_bottom
+      , pp_size
+      , pp_block
+      , (pp_body, (iteratee, pp_row :: [pp_col])) ) ;
+    |_ ->
+    match d with
+    | `Dim e ->
+      pp_for_loop ppf
+        ( loopvar
+        , Expr.Helpers.loop_bottom
+        , e
+        , pp_block
+        , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
+    | `SparseIterator (nz_row, nz_col, nz_length) ->
+    let idx s = 
+      let meta = 
+        Expr.Typed.Meta.create ~type_:UInt ~loc:Location_span.empty ~adlevel:DataOnly ()
+      in
+      let expr = Expr.Fixed.{meta; pattern= Var s} in
+      Index.Single expr
     in
     let row_idx = Expr.Helpers.add_int_index nz_row (idx loopvar) in
     let col_idx = Expr.Helpers.add_int_index nz_col (idx loopvar) in
@@ -403,18 +427,6 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st)
   match dims with
   | [] -> pp_body ppf (iteratee, index_ids)
   | dim :: dims ->
-  match st with 
-  | SizedType.SStaticSparseMatrix _ ->
-    let loopvar, gensym_exit = Common.Gensym.enter () in
-    let pp_funner index_stuff = (pp_body, (iteratee, index_stuff)) in
-    pp_sparse_loop ppf
-    ( loopvar
-    , Expr.Helpers.zero
-    , iteratee
-    , pp_block
-    , pp_funner) ;    
-      gensym_exit ()
-  | _ ->
       iter dim (fun ppf (i, idcs) ->
           pf ppf "%a" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body, st)) )

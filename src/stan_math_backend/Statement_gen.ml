@@ -42,21 +42,6 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
-
-let pp_sparse_loop_inner ppf (loopvar, upper, pp_body, body) =
-  let inner_loopvar, gensym_exit = Common.Gensym.enter () in
-  pf ppf "@[<hov>for (@[<hov>Eigen::SparseMatrix<double>::InnerIterator %s(%s,%s); %s; ++%s@])"  
-    inner_loopvar upper loopvar inner_loopvar inner_loopvar;
-  let row_num = Fmt.strf "%s.row()" inner_loopvar in
-  let col_num = Fmt.strf "%s.col()" inner_loopvar in
-  pf ppf " %a@]" pp_body (body [row_num; col_num]);
-  gensym_exit ()
-
-let pp_sparse_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %s.outerSize();@ ++%s@])" loopvar
-    pp_expr lower loopvar upper loopvar ;
-  pp_sparse_loop_inner ppf (loopvar, upper, pp_body, body)
-
 let rec integer_el_type = function
   | SizedType.SReal | SVector _ | SMatrix _  | SSparseMatrix _ | SStaticSparseMatrix _ | SRowVector _ -> false
   | SInt -> true
