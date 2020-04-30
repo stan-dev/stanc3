@@ -378,10 +378,8 @@ let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
-    "A distribution argument %s is less than 0.1 or more than 10 in magnitude. \
-     This suggests that you might have parameters in your model that have not \
-     been scale to roughly order 1. We suggest rescaling using a multiplier; \
-     see section 22.12 of the manual for an example."
+    "Augment %s suggests there may be parameters that are not unit scale; \
+     consider rescaling with a multiplier (see manual section 22.12)."
     name
 
 let unscaled_constants_warnings (distributions_list : dist_info Set.Poly.t) =
@@ -396,12 +394,12 @@ let nonsense_constrained_message (pname : string) : string =
 
 let hard_constrained_message (pname : string) : string =
   Printf.sprintf
-    "Your Stan program has a parameter %s with hard constraints in its \
-     declaration. Hard constraints are not recommended, for two reasons: (a) \
-     Except when there are logical or physical constraints, it is very unusual \
-     for you to be sure that a parameter will fall inside a specified range, \
-     and (b) The infinite gradient induced by a hard constraint can cause \
-     difficulties for Stan's sampling algorithm. As a consequence, we \
+    "Your Stan program has a parameter %s with a lower and upper bound in its \
+     declaration. These hard constraints are not recommended, for two reasons: \
+     (a) Except when there are logical or physical constraints, it is very \
+     unusual for you to be sure that a parameter will fall inside a specified \
+     range, and (b) The infinite gradient induced by a hard constraint can
+     cause difficulties for Stan's sampling algorithm. As a consequence, we \
      recommend soft constraints rather than hard constraints; for example, \
      instead of constraining an elasticity parameter to fall between 0, and 1, \
      leave it unconstrained and give it a normal(0.5,0.5) prior distribution."
@@ -462,7 +460,7 @@ let param_dependant_fundef_cf_warnings (mir : Program.Typed.t) =
 
 let unused_params_message (pname : string) : string =
   Printf.sprintf
-    "The parameter %s was declared but was not used in the model."
+    "The parameter %s was declared but was not used in the density calculation."
     pname
 
 let unused_params_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) =
@@ -488,7 +486,7 @@ let non_one_priors_warnings (factor_graph:factor_graph) (mir : Program.Typed.t) 
 
 let uninitialized_message (vname : string) : string =
   Printf.sprintf
-    "The variable %s may not have been initialized before its use."
+    "The variable %s may not have been assigned a value before its use."
     vname
 
 let uninitialized_warnings (mir : Program.Typed.t) =
