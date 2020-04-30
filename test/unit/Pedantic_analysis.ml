@@ -39,15 +39,15 @@ let%expect_test "Unbounded sigma warning" =
       Warning:
         The parameter x has 6 priors.
       Warning:
-        Your Stan program has a parameter sigma_e with hard constraints in its
-        declaration. Hard constraints are not recommended, for two reasons: (a)
-        Except when there are logical or physical constraints, it is very unusual
-        for you to be sure that a parameter will fall inside a specified range, and
-        (b) The infinite gradient induced by a hard constraint can cause
-        difficulties for Stan's sampling algorithm. As a consequence, we recommend
-        soft constraints rather than hard constraints; for example, instead of
-        constraining an elasticity parameter to fall between 0, and 1, leave it
-        unconstrained and give it a normal(0.5,0.5) prior distribution.
+        Your Stan program has a parameter sigma_e with a lower and upper bound in
+        its declaration. These hard constraints are not recommended, for two
+        reasons: (a) Except when there are logical or physical constraints, it is
+        very unusual for you to be sure that a parameter will fall inside a
+        specified range, and (b) The infinite gradient induced by a hard constraint
+        can cause difficulties for Stan's sampling algorithm. As a consequence, we
+        recommend soft constraints rather than hard constraints; for example,
+        instead of constraining an elasticity parameter to fall between 0, and 1,
+        leave it unconstrained and give it a normal(0.5,0.5) prior distribution.
       Warning at 'string', line 11, column 10 to column 34:
         The parameter x is on the left-hand side of more than one twiddle
         statement.
@@ -136,15 +136,11 @@ let%expect_test "Unscaled warning" =
   [%expect
     {|
       Warning at 'string', line 11, column 21 to column 26:
-        A distribution argument 0.001 is less than 0.1 or more than 10 in
-        magnitude. This suggests that you might have parameters in your model that
-        have not been scale to roughly order 1. We suggest rescaling using a
-        multiplier; see section 22.12 of the manual for an example.
+        Augment 0.001 suggests there may be parameters that are not unit scale;
+        consider rescaling with a multiplier (see manual section 22.12).
       Warning at 'string', line 11, column 28 to column 33:
-        A distribution argument 10000 is less than 0.1 or more than 10 in
-        magnitude. This suggests that you might have parameters in your model that
-        have not been scale to roughly order 1. We suggest rescaling using a
-        multiplier; see section 22.12 of the manual for an example. |}]
+        Augment 10000 suggests there may be parameters that are not unit scale;
+        consider rescaling with a multiplier (see manual section 22.12). |}]
 
 let multi_twiddle_example =
       {|
@@ -196,33 +192,33 @@ let%expect_test "Hard constraint warning" =
         Parameter f has constraints that don't make sense. The lower bound should
         be strictly less than the upper bound.
       Warning:
-        The parameter a was declared but was not used in the model.
+        The parameter a was declared but was not used in the density calculation.
       Warning:
-        The parameter b was declared but was not used in the model.
+        The parameter b was declared but was not used in the density calculation.
       Warning:
-        The parameter c was declared but was not used in the model.
+        The parameter c was declared but was not used in the density calculation.
       Warning:
-        The parameter d was declared but was not used in the model.
+        The parameter d was declared but was not used in the density calculation.
       Warning:
-        The parameter e was declared but was not used in the model.
+        The parameter e was declared but was not used in the density calculation.
       Warning:
-        The parameter f was declared but was not used in the model.
+        The parameter f was declared but was not used in the density calculation.
       Warning:
-        Your Stan program has a parameter c with hard constraints in its
-        declaration. Hard constraints are not recommended, for two reasons: (a)
-        Except when there are logical or physical constraints, it is very unusual
-        for you to be sure that a parameter will fall inside a specified range, and
-        (b) The infinite gradient induced by a hard constraint can cause
+        Your Stan program has a parameter c with a lower and upper bound in its
+        declaration. These hard constraints are not recommended, for two reasons:
+        (a) Except when there are logical or physical constraints, it is very
+        unusual for you to be sure that a parameter will fall inside a specified
+        range, and (b) The infinite gradient induced by a hard constraint can cause
         difficulties for Stan's sampling algorithm. As a consequence, we recommend
         soft constraints rather than hard constraints; for example, instead of
         constraining an elasticity parameter to fall between 0, and 1, leave it
         unconstrained and give it a normal(0.5,0.5) prior distribution.
       Warning:
-        Your Stan program has a parameter d with hard constraints in its
-        declaration. Hard constraints are not recommended, for two reasons: (a)
-        Except when there are logical or physical constraints, it is very unusual
-        for you to be sure that a parameter will fall inside a specified range, and
-        (b) The infinite gradient induced by a hard constraint can cause
+        Your Stan program has a parameter d with a lower and upper bound in its
+        declaration. These hard constraints are not recommended, for two reasons:
+        (a) Except when there are logical or physical constraints, it is very
+        unusual for you to be sure that a parameter will fall inside a specified
+        range, and (b) The infinite gradient induced by a hard constraint can cause
         difficulties for Stan's sampling algorithm. As a consequence, we recommend
         soft constraints rather than hard constraints; for example, instead of
         constraining an elasticity parameter to fall between 0, and 1, leave it
@@ -256,13 +252,13 @@ let%expect_test "Unused param warning" =
       Warning:
         The parameter b has 2 priors.
       Warning:
-        The parameter c was declared but was not used in the model.
+        The parameter c was declared but was not used in the density calculation.
       Warning:
-        The parameter d was declared but was not used in the model.
+        The parameter d was declared but was not used in the density calculation.
       Warning:
-        The parameter e was declared but was not used in the model.
+        The parameter e was declared but was not used in the density calculation.
       Warning:
-        The parameter f was declared but was not used in the model. |}]
+        The parameter f was declared but was not used in the density calculation. |}]
 
 let param_dependant_cf_example =
       {|
