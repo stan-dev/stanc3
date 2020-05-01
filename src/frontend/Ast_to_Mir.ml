@@ -278,7 +278,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
-    | SInt | SReal | SRowVector _ | SSparseMatrix _ | SStaticSparseMatrix _ ->
+    | SInt | SReal | SRowVector _ | SSparseMatrix _  ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -287,7 +287,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (d1, d2) -> SVector (f d1 d2)
-    | SInt | SReal | SRowVector _ | SVector _ | SSparseMatrix _ | SStaticSparseMatrix _ ->
+    | SInt | SReal | SRowVector _ | SVector _ | SSparseMatrix _  ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in

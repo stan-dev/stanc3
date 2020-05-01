@@ -336,13 +336,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     try {
       
       pos__ = 1;
-      context__.validate_dims("data initialization","k","int",
-          context__.to_vec());
       
       current_statement__ = 174;
       k = context__.vals_i("k")[(1 - 1)];
-      context__.validate_dims("data initialization","n","int",
-          context__.to_vec());
       
       current_statement__ = 175;
       n = context__.vals_i("n")[(1 - 1)];
@@ -351,7 +347,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 176;
       validate_non_negative_index("X_d", "k", k);
       context__.validate_dims("data initialization","X_d","double",
-          context__.to_vec(n, k));
+          context__.to_vec(n));
+      context__.validate_dims("data initialization","X_d","double",
+          context__.to_vec(k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
       {
@@ -433,13 +431,9 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 180;
       assign(y2_vi_d, nil_index_list(), context__.vals_i("y2_vi_d"),
         "assigning variable y2_vi_d");
-      context__.validate_dims("data initialization","y_s_d","int",
-          context__.to_vec());
       
       current_statement__ = 181;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
-      context__.validate_dims("data initialization","y_r_d","double",
-          context__.to_vec());
       
       current_statement__ = 182;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
@@ -549,12 +543,12 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_p", "n", n);
       current_statement__ = 7;
       validate_non_negative_index("X_p", "k", k);
-      num_params_r__ += n * k;
+      num_params_r__ += 1;
       current_statement__ = 8;
       validate_non_negative_index("beta_m", "n", n);
       current_statement__ = 8;
       validate_non_negative_index("beta_m", "k", k);
-      num_params_r__ += n * k;
+      num_params_r__ += 1;
       current_statement__ = 9;
       validate_non_negative_index("X_rv_p", "n", n);
       num_params_r__ += n;
@@ -1587,34 +1581,34 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       {
         param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym2__ = 1; sym2__ <= k; ++sym2__) {
       {
-        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym2__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym3__ = 1; sym3__ <= k; ++sym3__) {
       {
-        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym3__));
       }}
     param_names__.push_back(std::string() + "sigma");
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym4__ = 1; sym4__ <= k; ++sym4__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+        for (size_t sym5__ = 1; sym5__ <= n; ++sym5__) {
           {
-            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym6__ = 1; sym6__ <= k; ++sym6__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+        for (size_t sym7__ = 1; sym7__ <= n; ++sym7__) {
           {
-            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+    for (size_t sym8__ = 1; sym8__ <= n; ++sym8__) {
       {
-        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym8__));
       }}
     if (emit_transformed_parameters__) {
       
@@ -1630,38 +1624,38 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
                                  bool emit_transformed_parameters__ = true,
                                  bool emit_generated_quantities__ = true) const {
     
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym9__ = 1; sym9__ <= k; ++sym9__) {
       {
-        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "alpha_v" + '.' + std::to_string(sym9__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym10__ = 1; sym10__ <= k; ++sym10__) {
       {
-        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "beta" + '.' + std::to_string(sym10__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym11__ = 1; sym11__ <= k; ++sym11__) {
       {
-        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "cuts" + '.' + std::to_string(sym11__));
       }}
     param_names__.push_back(std::string() + "sigma");
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym12__ = 1; sym12__ <= k; ++sym12__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+        for (size_t sym13__ = 1; sym13__ <= n; ++sym13__) {
           {
-            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "X_p" + '.' + std::to_string(sym13__) + '.' + std::to_string(sym12__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= k; ++sym1__) {
+    for (size_t sym14__ = 1; sym14__ <= k; ++sym14__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= n; ++sym2__) {
+        for (size_t sym15__ = 1; sym15__ <= n; ++sym15__) {
           {
-            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "beta_m" + '.' + std::to_string(sym15__) + '.' + std::to_string(sym14__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
+    for (size_t sym16__ = 1; sym16__ <= n; ++sym16__) {
       {
-        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym1__));
+        param_names__.push_back(std::string() + "X_rv_p" + '.' + std::to_string(sym16__));
       }}
     if (emit_transformed_parameters__) {
       

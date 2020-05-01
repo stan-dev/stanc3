@@ -139,8 +139,6 @@ let rec generate_value m st t =
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SSparseMatrix (_, _, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
-  | SStaticSparseMatrix (e1, e2) ->
-      gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t

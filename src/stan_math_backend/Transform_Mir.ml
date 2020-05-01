@@ -69,7 +69,7 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
 
 let rec base_type = function
   | SizedType.SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ | SStaticSparseMatrix _ -> UnsizedType.UReal
+  | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _  -> UnsizedType.UReal
   | x -> SizedType.to_unsized x
 
 let pos = "pos__"
@@ -463,10 +463,6 @@ let validate_sized decl_id meta transform st =
         in
         [validate_rows; check FnValidateSize cols]
     | SSparseMatrix (_, _, rows, cols) ->
-        let validate_rows = check FnValidateSize rows
-        in
-        [validate_rows; check FnValidateSize cols]
-    | SStaticSparseMatrix (rows, cols) ->
         let validate_rows = check FnValidateSize rows
         in
         [validate_rows; check FnValidateSize cols]

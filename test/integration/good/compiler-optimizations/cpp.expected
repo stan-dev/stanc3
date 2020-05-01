@@ -324,7 +324,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_matrix", "3", 3);
       current_statement__ = 3;
       validate_non_negative_index("x_matrix", "2", 2);
-      num_params_r__ += 3 * 2;
+      num_params_r__ += 1;
       current_statement__ = 4;
       validate_non_negative_index("x_vector", "2", 2);
       num_params_r__ += 2;
@@ -1668,15 +1668,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
           }}
       }}
-    for (size_t sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (size_t sym113__ = 1; sym113__ <= 2; ++sym113__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym113__));
       }}
-    for (size_t sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (size_t sym114__ = 1; sym114__ <= 2; ++sym114__) {
       {
-        for (size_t sym112__ = 1; sym112__ <= 2; ++sym112__) {
+        for (size_t sym115__ = 1; sym115__ <= 2; ++sym115__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
+            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym115__) + '.' + std::to_string(sym114__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -1695,20 +1695,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (size_t sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (size_t sym116__ = 1; sym116__ <= 2; ++sym116__) {
       {
-        for (size_t sym112__ = 1; sym112__ <= 3; ++sym112__) {
+        for (size_t sym117__ = 1; sym117__ <= 3; ++sym117__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym117__) + '.' + std::to_string(sym116__));
           }}
       }}
-    for (size_t sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (size_t sym118__ = 1; sym118__ <= 2; ++sym118__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym118__));
       }}
-    for (size_t sym111__ = 1; sym111__ <= 3; ++sym111__) {
+    for (size_t sym119__ = 1; sym119__ <= 3; ++sym119__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym119__));
       }}
     if (emit_transformed_parameters__) {
       

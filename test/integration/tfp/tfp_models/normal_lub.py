@@ -54,7 +54,7 @@ class normal_lub_model(tfd__.Distribution):
     y_lub = self.y_lub
     y_ub = self.y_ub
     y_lb = self.y_lb
-    return [(nchains__, ), (nchains__, ), (nchains__, )]
+    return [, , ]
      
   def parameter_bijectors(self):
     y_lub = self.y_lub

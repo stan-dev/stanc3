@@ -66,7 +66,6 @@ val illtyped_binary_op :
 
 val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
 val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
-val invalid_staticsparsematrix_decl_location : Location_span.t -> string -> t
 val not_indexable : Location_span.t -> UnsizedType.t -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t

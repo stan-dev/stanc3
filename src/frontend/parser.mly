@@ -247,8 +247,6 @@ sized_basic_type:
     { grammar_logger "MATRIX_var_type" ; SizedType.SMatrix (e1, e2) }
   | SPARSEMATRIX LBRACK e1=expression COMMA e2=expression COMMA e3=expression COMMA e4=expression RBRACK
     { grammar_logger "SPARSEMATRIX_var_type" ; SizedType.SSparseMatrix (e1, e2, e3, e4) }
-  | SPARSEMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "SPARSEMATRIX_var_type" ; SizedType.SStaticSparseMatrix (e1, e2) }
 top_var_decl_no_assign:
   | tvt=top_var_type id=decl_identifier d=option(dims) SEMICOLON
     {
@@ -291,8 +289,6 @@ top_var_type:
     { grammar_logger "MATRIX_top_var_type" ; (SMatrix (e1, e2), c) }
   | SPARSEMATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression COMMA e3=expression COMMA e4=expression RBRACK
     { grammar_logger "SPARSEMATRIX_top_var_type" ; (SSparseMatrix (e1, e2, e3, e4), c) }
-  | SPARSEMATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "SPARSEMATRIX_top_var_type" ; (SStaticSparseMatrix (e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
     { grammar_logger "ORDERED_top_var_type" ; (SVector e, Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK

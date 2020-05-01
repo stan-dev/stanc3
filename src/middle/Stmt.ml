@@ -344,7 +344,7 @@ module Helpers = struct
 *)
   let rec for_eigen st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _ | SStaticSparseMatrix _ ->
+    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ | SSparseMatrix _  ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
@@ -363,7 +363,7 @@ module Helpers = struct
     match st with
     | SizedType.SInt | SReal -> bodyfn var
     | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-    | SMatrix (d1, d2) | SStaticSparseMatrix (d1, d2) ->
+    | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SSparseMatrix (nonzero_rows, nonzero_cols, _, _) -> 
       mkfortnite nonzero_rows nonzero_cols bodyfn var smeta

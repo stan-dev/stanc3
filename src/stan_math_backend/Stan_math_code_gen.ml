@@ -372,30 +372,6 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body, st) =
   let iter d pp_body =
     let loopvar, gensym_exit = Common.Gensym.enter () in
-    match st with
-    | SizedType.SStaticSparseMatrix _ ->
-    let idx s = 
-      let meta = 
-        Expr.Typed.Meta.create ~type_:UInt ~loc:Location_span.empty ~adlevel:DataOnly ()
-      in
-      let expr = Expr.Fixed.{meta; pattern= Var s} in
-      Index.Single expr
-    in
-      let pp_mat = Fmt.strf "%s_iteratee_" iteratee in
-      let meta_val = Expr.Typed.Meta.{loc= Location_span.empty; adlevel= DataOnly; type_= UVector} in
-      let iter_var = Expr.Fixed.{meta=meta_val; pattern= Var pp_mat} in
-      let row_idx = Expr.Helpers.add_int_index iter_var (idx loopvar) in
-      let col_idx = Expr.Helpers.add_int_index iter_var (idx loopvar) in
-      let pp_row = Fmt.strf "%a[1]" pp_expr row_idx in
-      let pp_col = Fmt.strf "%a[2]" pp_expr col_idx in
-      let pp_size = Expr.Helpers.internal_funapp FnLength [iter_var] Expr.Typed.Meta.empty in
-      pp_for_loop ppf
-      ( loopvar
-      , Expr.Helpers.loop_bottom
-      , pp_size
-      , pp_block
-      , (pp_body, (iteratee, pp_row :: [pp_col])) ) ;
-    |_ ->
     match d with
     | `Dim e ->
       pp_for_loop ppf

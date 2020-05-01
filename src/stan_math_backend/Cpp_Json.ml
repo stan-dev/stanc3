@@ -22,11 +22,6 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
         [ ("name", `String "sparse_matrix")
         ; ("rows", `String (emit_cpp_expr d1))
         ; ("cols", `String (emit_cpp_expr d2)) ]
-  | SStaticSparseMatrix (d1, d2) ->
-  `Assoc
-    [ ("name", `String "sparse_matrix")
-    ; ("rows", `String (emit_cpp_expr d1))
-    ; ("cols", `String (emit_cpp_expr d2)) ]
   | SArray (st, d) ->
       `Assoc
         [ ("name", `String "array")
