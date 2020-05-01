@@ -378,7 +378,7 @@ let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
-    "Augment %s suggests there may be parameters that are not unit scale; \
+    "Argument %s suggests there may be parameters that are not unit scale; \
      consider rescaling with a multiplier (see manual section 22.12)."
     name
 
