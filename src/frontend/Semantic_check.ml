@@ -785,11 +785,15 @@ let rec semantic_check_sizedtype ~loc cf = function
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
       Validate.liftA2 (fun ue1 ue2 -> SizedType.SMatrix (ue1, ue2)) ue1 ue2
   | SSparseMatrix (e1, e2, e3, e4) ->
-      let ue1 = semantic_check_expression_of_int_array_or_range_type cf e1 "Sparse Matrix sizes"
-      and ue2 = semantic_check_expression_of_int_array_or_range_type cf e2 "Sparse Matrix sizes"
-      and ue3 = semantic_check_expression_of_int_type cf e3 "Sparse Matrix sizes"
-      and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
-      Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SizedType.SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4
+    (match cf.current_block with
+    | TData -> Validate.error (Semantic_error.invalid_sparsematrix_decl_location loc "Transformed Data")
+    | TParam -> Validate.error (Semantic_error.invalid_sparsematrix_decl_location loc "Transformed Parameters")
+    | _ ->
+    let ue1 = semantic_check_expression_of_int_array_or_range_type cf e1 "Sparse Matrix nonzero rows"
+        and ue2 = semantic_check_expression_of_int_array_or_range_type cf e2 "Sparse Matrix nonzero cols"
+        and ue3 = semantic_check_expression_of_int_type cf e3 "Sparse Matrix sizes"
+        and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
+        Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SizedType.SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4)
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype ~loc cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
