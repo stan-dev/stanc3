@@ -136,10 +136,10 @@ let%expect_test "Unscaled warning" =
   [%expect
     {|
       Warning at 'string', line 11, column 21 to column 26:
-        Augment 0.001 suggests there may be parameters that are not unit scale;
+        Argument 0.001 suggests there may be parameters that are not unit scale;
         consider rescaling with a multiplier (see manual section 22.12).
       Warning at 'string', line 11, column 28 to column 33:
-        Augment 10000 suggests there may be parameters that are not unit scale;
+        Argument 10000 suggests there may be parameters that are not unit scale;
         consider rescaling with a multiplier (see manual section 22.12). |}]
 
 let multi_twiddle_example =
