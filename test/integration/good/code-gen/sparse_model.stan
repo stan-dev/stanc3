@@ -2,7 +2,6 @@ data {
   int N_dt;
   int M_dt;
   int nz_vals_dt;
-  int TEST[2, N_dt];
   int nz_rows_dt[nz_vals_dt];
   int nz_cols_dt[nz_vals_dt];
   int N_tdt;

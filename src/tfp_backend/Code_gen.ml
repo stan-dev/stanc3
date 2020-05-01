@@ -190,16 +190,17 @@ let get_params p =
 
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
-    List.iter (SizedType.get_dims out_unconstrained_st) ~f:(fun dim ->
+    let lister =
+    let out_cons = (SizedType.get_dims out_unconstrained_st) in
+    List.map out_cons ~f:(fun dim ->
     match dim with
     | `Dim e  ->
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
-      ([e])
+      e
     | `SparseIterator (_, _, nz_length)  ->
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
-      ([nz_length])
+      nz_length
     )
   in
+  pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr) lister in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;
     pf ppf "return [@[<hov>%a@]]" (list ~sep:comma pp_shape) (get_params p)

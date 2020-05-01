@@ -35,7 +35,7 @@ class transformed_data_model(tfd__.Distribution):
      
   def parameter_shapes(self, nchains__):
     X = self.X
-    return []
+    return [(nchains__, )]
      
   def parameter_bijectors(self):
     X = self.X

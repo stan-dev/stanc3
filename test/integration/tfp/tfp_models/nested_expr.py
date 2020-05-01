@@ -41,7 +41,7 @@ class nested_expr_model(tfd__.Distribution):
   def parameter_shapes(self, nchains__):
     x = self.x
     y = self.y
-    return []
+    return [(nchains__, )]
      
   def parameter_bijectors(self):
     x = self.x

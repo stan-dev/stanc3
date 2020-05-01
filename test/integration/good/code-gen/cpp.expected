@@ -131,6 +131,8 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","J","int",
+          context__.to_vec());
       
       current_statement__ = 9;
       J = context__.vals_i("J")[(1 - 1)];
@@ -3161,12 +3163,18 @@ class mother_model : public model_base_crtp<mother_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","N","int",
+          context__.to_vec());
       
       current_statement__ = 181;
       N = context__.vals_i("N")[(1 - 1)];
+      context__.validate_dims("data initialization","M","int",
+          context__.to_vec());
       
       current_statement__ = 182;
       M = context__.vals_i("M")[(1 - 1)];
+      context__.validate_dims("data initialization","K","int",
+          context__.to_vec());
       
       current_statement__ = 183;
       K = context__.vals_i("K")[(1 - 1)];
@@ -3186,11 +3194,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 185;
       validate_non_negative_index("d_int_3d_ar", "K", K);
       context__.validate_dims("data initialization","d_int_3d_ar","int",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_int_3d_ar","int",
-          context__.to_vec(M));
-      context__.validate_dims("data initialization","d_int_3d_ar","int",
-          context__.to_vec(K));
+          context__.to_vec(N, M, K));
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, 0)));
       
       {
@@ -3217,6 +3221,8 @@ class mother_model : public model_base_crtp<mother_model> {
               current_statement__ = 185;
               pos__ = (pos__ + 1);}}}
       }
+      context__.validate_dims("data initialization","J","double",
+          context__.to_vec());
       
       current_statement__ = 186;
       J = context__.vals_r("J")[(1 - 1)];
@@ -3236,11 +3242,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 188;
       validate_non_negative_index("d_real_3d_ar", "K", K);
       context__.validate_dims("data initialization","d_real_3d_ar","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_real_3d_ar","double",
-          context__.to_vec(M));
-      context__.validate_dims("data initialization","d_real_3d_ar","double",
-          context__.to_vec(K));
+          context__.to_vec(N, M, K));
       d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
       
       {
@@ -3293,9 +3295,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 190;
       validate_non_negative_index("d_1d_vec", "N", N);
       context__.validate_dims("data initialization","d_1d_vec","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_1d_vec","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       {
@@ -3326,13 +3326,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 191;
       validate_non_negative_index("d_3d_vec", "N", N);
       context__.validate_dims("data initialization","d_3d_vec","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_3d_vec","double",
-          context__.to_vec(M));
-      context__.validate_dims("data initialization","d_3d_vec","double",
-          context__.to_vec(K));
-      context__.validate_dims("data initialization","d_3d_vec","double",
-          context__.to_vec(N));
+          context__.to_vec(N, M, K, N));
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       {
@@ -3387,9 +3381,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 193;
       validate_non_negative_index("d_1d_row_vec", "N", N);
       context__.validate_dims("data initialization","d_1d_row_vec","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_1d_row_vec","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
       {
@@ -3422,13 +3414,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 194;
       validate_non_negative_index("d_3d_row_vec", "N", N);
       context__.validate_dims("data initialization","d_3d_row_vec","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_3d_row_vec","double",
-          context__.to_vec(M));
-      context__.validate_dims("data initialization","d_3d_row_vec","double",
-          context__.to_vec(K));
-      context__.validate_dims("data initialization","d_3d_row_vec","double",
-          context__.to_vec(N));
+          context__.to_vec(N, M, K, N));
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       
       {
@@ -3467,13 +3453,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 195;
       validate_non_negative_index("d_ar_mat", "3", 3);
       context__.validate_dims("data initialization","d_ar_mat","double",
-          context__.to_vec(4));
-      context__.validate_dims("data initialization","d_ar_mat","double",
-          context__.to_vec(5));
-      context__.validate_dims("data initialization","d_ar_mat","double",
-          context__.to_vec(2));
-      context__.validate_dims("data initialization","d_ar_mat","double",
-          context__.to_vec(3));
+          context__.to_vec(4, 5, 2, 3));
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       
       {
@@ -3528,9 +3508,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 197;
       validate_non_negative_index("d_1d_simplex", "N", N);
       context__.validate_dims("data initialization","d_1d_simplex","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_1d_simplex","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       {
@@ -3563,13 +3541,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 198;
       validate_non_negative_index("d_3d_simplex", "N", N);
       context__.validate_dims("data initialization","d_3d_simplex","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","d_3d_simplex","double",
-          context__.to_vec(M));
-      context__.validate_dims("data initialization","d_3d_simplex","double",
-          context__.to_vec(K));
-      context__.validate_dims("data initialization","d_3d_simplex","double",
-          context__.to_vec(N));
+          context__.to_vec(N, M, K, N));
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       
       {
@@ -3604,9 +3576,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 199;
       validate_non_negative_index("d_cfcov_54", "4", 4);
       context__.validate_dims("data initialization","d_cfcov_54","double",
-          context__.to_vec(5));
-      context__.validate_dims("data initialization","d_cfcov_54","double",
-          context__.to_vec(4));
+          context__.to_vec(5, 4));
       d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
       {
@@ -3634,9 +3604,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 200;
       validate_non_negative_index("d_cfcov_33", "3", 3);
       context__.validate_dims("data initialization","d_cfcov_33","double",
-          context__.to_vec(3));
-      context__.validate_dims("data initialization","d_cfcov_33","double",
-          context__.to_vec(3));
+          context__.to_vec(3, 3));
       d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       {
@@ -3666,11 +3634,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 201;
       validate_non_negative_index("d_cfcov_33_ar", "3", 3);
       context__.validate_dims("data initialization","d_cfcov_33_ar","double",
-          context__.to_vec(K));
-      context__.validate_dims("data initialization","d_cfcov_33_ar","double",
-          context__.to_vec(3));
-      context__.validate_dims("data initialization","d_cfcov_33_ar","double",
-          context__.to_vec(3));
+          context__.to_vec(K, 3, 3));
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
       {
@@ -9966,6 +9930,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","T","int",
+          context__.to_vec());
       
       current_statement__ = 99;
       T = context__.vals_i("T")[(1 - 1)];
@@ -9978,6 +9944,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       current_statement__ = 100;
       assign(y0_d, nil_index_list(), context__.vals_r("y0_d"),
         "assigning variable y0_d");
+      context__.validate_dims("data initialization","t0","double",
+          context__.to_vec());
       
       current_statement__ = 101;
       t0 = context__.vals_r("t0")[(1 - 1)];
@@ -10064,9 +10032,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       current_statement__ = 109;
       validate_non_negative_index("job_params_d", "3", 3);
       context__.validate_dims("data initialization","job_params_d","double",
-          context__.to_vec(3));
-      context__.validate_dims("data initialization","job_params_d","double",
-          context__.to_vec(3));
+          context__.to_vec(3, 3));
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       
       {
@@ -10095,9 +10061,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       current_statement__ = 110;
       validate_non_negative_index("data_r", "3", 3);
       context__.validate_dims("data initialization","data_r","double",
-          context__.to_vec(3));
-      context__.validate_dims("data initialization","data_r","double",
-          context__.to_vec(3));
+          context__.to_vec(3, 3));
       data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, 0));
       
       {
@@ -10124,9 +10088,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       current_statement__ = 111;
       validate_non_negative_index("data_i", "3", 3);
       context__.validate_dims("data initialization","data_i","int",
-          context__.to_vec(3));
-      context__.validate_dims("data initialization","data_i","int",
-          context__.to_vec(3));
+          context__.to_vec(3, 3));
       data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
       
       {
@@ -11787,9 +11749,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","k","int",
+          context__.to_vec());
       
       current_statement__ = 174;
       k = context__.vals_i("k")[(1 - 1)];
+      context__.validate_dims("data initialization","n","int",
+          context__.to_vec());
       
       current_statement__ = 175;
       n = context__.vals_i("n")[(1 - 1)];
@@ -11798,9 +11764,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 176;
       validate_non_negative_index("X_d", "k", k);
       context__.validate_dims("data initialization","X_d","double",
-          context__.to_vec(n));
-      context__.validate_dims("data initialization","X_d","double",
-          context__.to_vec(k));
+          context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
       
       {
@@ -11882,9 +11846,13 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 180;
       assign(y2_vi_d, nil_index_list(), context__.vals_i("y2_vi_d"),
         "assigning variable y2_vi_d");
+      context__.validate_dims("data initialization","y_s_d","int",
+          context__.to_vec());
       
       current_statement__ = 181;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
+      context__.validate_dims("data initialization","y_r_d","double",
+          context__.to_vec());
       
       current_statement__ = 182;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
@@ -18668,6 +18636,8 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","N","int",
+          context__.to_vec());
       
       current_statement__ = 67;
       N = context__.vals_i("N")[(1 - 1)];
@@ -18685,9 +18655,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 69;
       validate_non_negative_index("y2d", "N", N);
       context__.validate_dims("data initialization","y2d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y2d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       y2d = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       
       {
@@ -18714,9 +18682,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 70;
       validate_non_negative_index("y3d", "N", N);
       context__.validate_dims("data initialization","y3d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y3d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       y3d = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       
       {
@@ -18745,11 +18711,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 71;
       validate_non_negative_index("y4d", "N", N);
       context__.validate_dims("data initialization","y4d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y4d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y4d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N));
       y4d = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
       
       {
@@ -18779,9 +18741,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 72;
       validate_non_negative_index("y5d", "N", N);
       context__.validate_dims("data initialization","y5d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y5d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       y5d = std::vector<std::vector<double>>(N, std::vector<double>(N, 0));
       
       {
@@ -18810,11 +18770,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 73;
       validate_non_negative_index("y6d", "N", N);
       context__.validate_dims("data initialization","y6d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y6d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y6d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N));
       y6d = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
       
       {
@@ -18846,11 +18802,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 74;
       validate_non_negative_index("y7d", "N", N);
       context__.validate_dims("data initialization","y7d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y7d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y7d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N));
       y7d = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
       
       {
@@ -18884,13 +18836,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 75;
       validate_non_negative_index("y8d", "N", N);
       context__.validate_dims("data initialization","y8d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y8d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y8d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y8d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N, N));
       y8d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
       
       {
@@ -18918,6 +18864,8 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
                 current_statement__ = 75;
                 pos__ = (pos__ + 1);}}}}
       }
+      context__.validate_dims("data initialization","y9d","double",
+          context__.to_vec());
       
       current_statement__ = 76;
       y9d = context__.vals_r("y9d")[(1 - 1)];
@@ -18968,9 +18916,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 79;
       validate_non_negative_index("y12d", "N", N);
       context__.validate_dims("data initialization","y12d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y12d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       y12d = Eigen::Matrix<double, -1, -1>(N, N);
       
       {
@@ -18992,6 +18938,8 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
             current_statement__ = 79;
             pos__ = (pos__ + 1);}}
       }
+      context__.validate_dims("data initialization","y13d","int",
+          context__.to_vec());
       
       current_statement__ = 80;
       y13d = context__.vals_i("y13d")[(1 - 1)];
@@ -19009,9 +18957,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 82;
       validate_non_negative_index("y15d", "N", N);
       context__.validate_dims("data initialization","y15d","int",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y15d","int",
-          context__.to_vec(N));
+          context__.to_vec(N, N));
       y15d = std::vector<std::vector<int>>(N, std::vector<int>(N, 0));
       
       {
@@ -19040,11 +18986,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 83;
       validate_non_negative_index("y16d", "N", N);
       context__.validate_dims("data initialization","y16d","int",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y16d","int",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y16d","int",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N));
       y16d = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(N, std::vector<int>(N, 0)));
       
       {
@@ -19076,11 +19018,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 84;
       validate_non_negative_index("y17d", "N", N);
       context__.validate_dims("data initialization","y17d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y17d","double",
-          context__.to_vec(N));
-      context__.validate_dims("data initialization","y17d","double",
-          context__.to_vec(N));
+          context__.to_vec(N, N, N));
       y17d = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, 0)));
       
       {
@@ -21111,33 +21049,32 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'sparse_model.stan', line 37, column 2 to column 63)",
-                                                      " (in 'sparse_model.stan', line 42, column 2 to column 95)",
-                                                      " (in 'sparse_model.stan', line 47, column 2 to column 94)",
+                                                      " (in 'sparse_model.stan', line 36, column 2 to column 63)",
+                                                      " (in 'sparse_model.stan', line 41, column 2 to column 95)",
+                                                      " (in 'sparse_model.stan', line 46, column 2 to column 94)",
                                                       " (in 'sparse_model.stan', line 2, column 2 to column 11)",
                                                       " (in 'sparse_model.stan', line 3, column 2 to column 11)",
                                                       " (in 'sparse_model.stan', line 4, column 2 to column 17)",
-                                                      " (in 'sparse_model.stan', line 5, column 2 to column 20)",
+                                                      " (in 'sparse_model.stan', line 5, column 2 to column 29)",
                                                       " (in 'sparse_model.stan', line 6, column 2 to column 29)",
-                                                      " (in 'sparse_model.stan', line 7, column 2 to column 29)",
+                                                      " (in 'sparse_model.stan', line 7, column 2 to column 12)",
                                                       " (in 'sparse_model.stan', line 8, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 9, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 10, column 2 to column 18)",
+                                                      " (in 'sparse_model.stan', line 9, column 2 to column 18)",
+                                                      " (in 'sparse_model.stan', line 10, column 2 to column 31)",
                                                       " (in 'sparse_model.stan', line 11, column 2 to column 31)",
-                                                      " (in 'sparse_model.stan', line 12, column 2 to column 31)",
+                                                      " (in 'sparse_model.stan', line 12, column 2 to column 12)",
                                                       " (in 'sparse_model.stan', line 13, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 14, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 15, column 2 to column 18)",
+                                                      " (in 'sparse_model.stan', line 14, column 2 to column 18)",
+                                                      " (in 'sparse_model.stan', line 15, column 2 to column 31)",
                                                       " (in 'sparse_model.stan', line 16, column 2 to column 31)",
-                                                      " (in 'sparse_model.stan', line 17, column 2 to column 31)",
+                                                      " (in 'sparse_model.stan', line 17, column 2 to column 13)",
                                                       " (in 'sparse_model.stan', line 18, column 2 to column 13)",
-                                                      " (in 'sparse_model.stan', line 19, column 2 to column 13)",
-                                                      " (in 'sparse_model.stan', line 20, column 2 to column 19)",
+                                                      " (in 'sparse_model.stan', line 19, column 2 to column 19)",
+                                                      " (in 'sparse_model.stan', line 20, column 2 to column 33)",
                                                       " (in 'sparse_model.stan', line 21, column 2 to column 33)",
-                                                      " (in 'sparse_model.stan', line 22, column 2 to column 33)",
-                                                      " (in 'sparse_model.stan', line 23, column 2 to column 57)",
-                                                      " (in 'sparse_model.stan', line 28, column 2 to column 88)",
-                                                      " (in 'sparse_model.stan', line 30, column 2 to column 32)"};
+                                                      " (in 'sparse_model.stan', line 22, column 2 to column 57)",
+                                                      " (in 'sparse_model.stan', line 27, column 2 to column 88)",
+                                                      " (in 'sparse_model.stan', line 29, column 2 to column 32)"};
 
 
 
@@ -21148,7 +21085,6 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
   int N_dt;
   int M_dt;
   int nz_vals_dt;
-  std::vector<std::vector<int>> TEST;
   std::vector<int> nz_rows_dt;
   std::vector<int> nz_cols_dt;
   int N_tdt;
@@ -21188,148 +21124,143 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","N_dt","int",
+          context__.to_vec());
       
       current_statement__ = 4;
       N_dt = context__.vals_i("N_dt")[(1 - 1)];
+      context__.validate_dims("data initialization","M_dt","int",
+          context__.to_vec());
       
       current_statement__ = 5;
       M_dt = context__.vals_i("M_dt")[(1 - 1)];
+      context__.validate_dims("data initialization","nz_vals_dt","int",
+          context__.to_vec());
       
       current_statement__ = 6;
       nz_vals_dt = context__.vals_i("nz_vals_dt")[(1 - 1)];
       current_statement__ = 7;
-      validate_non_negative_index("TEST", "2", 2);
-      current_statement__ = 7;
-      validate_non_negative_index("TEST", "N_dt", N_dt);
-      context__.validate_dims("data initialization","TEST","int",
-          context__.to_vec(2));
-      context__.validate_dims("data initialization","TEST","int",
-          context__.to_vec(N_dt));
-      TEST = std::vector<std::vector<int>>(2, std::vector<int>(N_dt, 0));
-      
-      {
-        std::vector<int> TEST_flat__;
-        current_statement__ = 7;
-        assign(TEST_flat__, nil_index_list(), context__.vals_i("TEST"),
-          "assigning variable TEST_flat__");
-        current_statement__ = 7;
-        pos__ = 1;
-        current_statement__ = 7;
-        for (size_t sym1__ = 1; sym1__ <= N_dt; ++sym1__) {
-          current_statement__ = 7;
-          for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 7;
-            assign(TEST,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              TEST_flat__[(pos__ - 1)], "assigning variable TEST");
-            current_statement__ = 7;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 8;
       validate_non_negative_index("nz_rows_dt", "nz_vals_dt", nz_vals_dt);
       context__.validate_dims("data initialization","nz_rows_dt","int",
           context__.to_vec(nz_vals_dt));
       nz_rows_dt = std::vector<int>(nz_vals_dt, 0);
       
-      current_statement__ = 8;
+      current_statement__ = 7;
       assign(nz_rows_dt, nil_index_list(), context__.vals_i("nz_rows_dt"),
         "assigning variable nz_rows_dt");
-      current_statement__ = 9;
+      current_statement__ = 8;
       validate_non_negative_index("nz_cols_dt", "nz_vals_dt", nz_vals_dt);
       context__.validate_dims("data initialization","nz_cols_dt","int",
           context__.to_vec(nz_vals_dt));
       nz_cols_dt = std::vector<int>(nz_vals_dt, 0);
       
-      current_statement__ = 9;
+      current_statement__ = 8;
       assign(nz_cols_dt, nil_index_list(), context__.vals_i("nz_cols_dt"),
         "assigning variable nz_cols_dt");
+      context__.validate_dims("data initialization","N_tdt","int",
+          context__.to_vec());
+      
+      current_statement__ = 9;
+      N_tdt = context__.vals_i("N_tdt")[(1 - 1)];
+      context__.validate_dims("data initialization","M_tdt","int",
+          context__.to_vec());
       
       current_statement__ = 10;
-      N_tdt = context__.vals_i("N_tdt")[(1 - 1)];
+      M_tdt = context__.vals_i("M_tdt")[(1 - 1)];
+      context__.validate_dims("data initialization","nz_vals_tdt","int",
+          context__.to_vec());
       
       current_statement__ = 11;
-      M_tdt = context__.vals_i("M_tdt")[(1 - 1)];
-      
-      current_statement__ = 12;
       nz_vals_tdt = context__.vals_i("nz_vals_tdt")[(1 - 1)];
-      current_statement__ = 13;
+      current_statement__ = 12;
       validate_non_negative_index("nz_rows_tdt", "nz_vals_tdt", nz_vals_tdt);
       context__.validate_dims("data initialization","nz_rows_tdt","int",
           context__.to_vec(nz_vals_tdt));
       nz_rows_tdt = std::vector<int>(nz_vals_tdt, 0);
       
-      current_statement__ = 13;
+      current_statement__ = 12;
       assign(nz_rows_tdt, nil_index_list(), context__.vals_i("nz_rows_tdt"),
         "assigning variable nz_rows_tdt");
-      current_statement__ = 14;
+      current_statement__ = 13;
       validate_non_negative_index("nz_cols_tdt", "nz_vals_tdt", nz_vals_tdt);
       context__.validate_dims("data initialization","nz_cols_tdt","int",
           context__.to_vec(nz_vals_tdt));
       nz_cols_tdt = std::vector<int>(nz_vals_tdt, 0);
       
-      current_statement__ = 14;
+      current_statement__ = 13;
       assign(nz_cols_tdt, nil_index_list(), context__.vals_i("nz_cols_tdt"),
         "assigning variable nz_cols_tdt");
+      context__.validate_dims("data initialization","N_par","int",
+          context__.to_vec());
+      
+      current_statement__ = 14;
+      N_par = context__.vals_i("N_par")[(1 - 1)];
+      context__.validate_dims("data initialization","M_par","int",
+          context__.to_vec());
       
       current_statement__ = 15;
-      N_par = context__.vals_i("N_par")[(1 - 1)];
+      M_par = context__.vals_i("M_par")[(1 - 1)];
+      context__.validate_dims("data initialization","nz_vals_par","int",
+          context__.to_vec());
       
       current_statement__ = 16;
-      M_par = context__.vals_i("M_par")[(1 - 1)];
-      
-      current_statement__ = 17;
       nz_vals_par = context__.vals_i("nz_vals_par")[(1 - 1)];
-      current_statement__ = 18;
+      current_statement__ = 17;
       validate_non_negative_index("nz_rows_par", "nz_vals_par", nz_vals_par);
       context__.validate_dims("data initialization","nz_rows_par","int",
           context__.to_vec(nz_vals_par));
       nz_rows_par = std::vector<int>(nz_vals_par, 0);
       
-      current_statement__ = 18;
+      current_statement__ = 17;
       assign(nz_rows_par, nil_index_list(), context__.vals_i("nz_rows_par"),
         "assigning variable nz_rows_par");
-      current_statement__ = 19;
+      current_statement__ = 18;
       validate_non_negative_index("nz_cols_par", "nz_vals_par", nz_vals_par);
       context__.validate_dims("data initialization","nz_cols_par","int",
           context__.to_vec(nz_vals_par));
       nz_cols_par = std::vector<int>(nz_vals_par, 0);
       
-      current_statement__ = 19;
+      current_statement__ = 18;
       assign(nz_cols_par, nil_index_list(), context__.vals_i("nz_cols_par"),
         "assigning variable nz_cols_par");
+      context__.validate_dims("data initialization","N_tpar","int",
+          context__.to_vec());
+      
+      current_statement__ = 19;
+      N_tpar = context__.vals_i("N_tpar")[(1 - 1)];
+      context__.validate_dims("data initialization","M_tpar","int",
+          context__.to_vec());
       
       current_statement__ = 20;
-      N_tpar = context__.vals_i("N_tpar")[(1 - 1)];
+      M_tpar = context__.vals_i("M_tpar")[(1 - 1)];
+      context__.validate_dims("data initialization","nz_vals_tpar","int",
+          context__.to_vec());
       
       current_statement__ = 21;
-      M_tpar = context__.vals_i("M_tpar")[(1 - 1)];
-      
-      current_statement__ = 22;
       nz_vals_tpar = context__.vals_i("nz_vals_tpar")[(1 - 1)];
-      current_statement__ = 23;
+      current_statement__ = 22;
       validate_non_negative_index("nz_rows_tpar", "nz_vals_tpar",
                                   nz_vals_tpar);
       context__.validate_dims("data initialization","nz_rows_tpar","int",
           context__.to_vec(nz_vals_tpar));
       nz_rows_tpar = std::vector<int>(nz_vals_tpar, 0);
       
-      current_statement__ = 23;
+      current_statement__ = 22;
       assign(nz_rows_tpar, nil_index_list(),
         context__.vals_i("nz_rows_tpar"), "assigning variable nz_rows_tpar");
-      current_statement__ = 24;
+      current_statement__ = 23;
       validate_non_negative_index("nz_cols_tpar", "nz_vals_tpar",
                                   nz_vals_tpar);
       context__.validate_dims("data initialization","nz_cols_tpar","int",
           context__.to_vec(nz_vals_tpar));
       nz_cols_tpar = std::vector<int>(nz_vals_tpar, 0);
       
-      current_statement__ = 24;
+      current_statement__ = 23;
       assign(nz_cols_tpar, nil_index_list(),
         context__.vals_i("nz_cols_tpar"), "assigning variable nz_cols_tpar");
-      current_statement__ = 25;
+      current_statement__ = 24;
       validate_non_negative_index("X_dt", "N_dt", N_dt);
-      current_statement__ = 25;
+      current_statement__ = 24;
       validate_non_negative_index("X_dt", "M_dt", M_dt);
       context__.validate_dims("data initialization","X_dt","double",
           context__.to_vec(stan::math::nonzero_size(nz_rows_dt)));
@@ -21337,36 +21268,36 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
       
       {
         std::vector<local_scalar_t__> X_dt_flat__;
-        current_statement__ = 25;
+        current_statement__ = 24;
         assign(X_dt_flat__, nil_index_list(), context__.vals_r("X_dt"),
           "assigning variable X_dt_flat__");
-        current_statement__ = 25;
+        current_statement__ = 24;
         pos__ = 1;
-        current_statement__ = 25;
+        current_statement__ = 24;
         for (size_t sym1__ = 1; sym1__ <= stan::math::size(nz_rows_dt);
              ++sym1__) {
-          current_statement__ = 25;
+          current_statement__ = 24;
           assign(X_dt,
             cons_list(index_uni(nz_cols_dt[(sym1__ - 1)]),
               cons_list(index_uni(nz_rows_dt[(sym1__ - 1)]),
                 nil_index_list())), X_dt_flat__[(pos__ - 1)],
             "assigning variable X_dt");
-          current_statement__ = 25;
+          current_statement__ = 24;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 26;
+      current_statement__ = 25;
       validate_non_negative_index("YY_tdt", "N_tdt", N_tdt);
-      current_statement__ = 26;
+      current_statement__ = 25;
       validate_non_negative_index("YY_tdt", "M_tdt", M_tdt);
       YY_tdt = Eigen::SparseMatrix<double>(N_tdt, M_tdt);
       
-      current_statement__ = 26;
+      current_statement__ = 25;
       assign(YY_tdt, nil_index_list(), multiply(X_dt, transpose(X_dt)),
         "assigning variable YY_tdt");
       
-      current_statement__ = 27;
+      current_statement__ = 26;
       data_cool = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 27;
+      current_statement__ = 26;
       data_cool = rvalue(YY_tdt,
                     cons_list(index_uni(1),
                       cons_list(index_uni(1), nil_index_list())), "YY_tdt");
@@ -21841,6 +21772,8 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","t","int",
+          context__.to_vec());
       
       current_statement__ = 7;
       t = context__.vals_i("t")[(1 - 1)];
@@ -22242,9 +22175,13 @@ class truncate_model : public model_base_crtp<truncate_model> {
     try {
       
       pos__ = 1;
+      context__.validate_dims("data initialization","n","int",
+          context__.to_vec());
       
       current_statement__ = 19;
       n = context__.vals_i("n")[(1 - 1)];
+      context__.validate_dims("data initialization","x","double",
+          context__.to_vec());
       
       current_statement__ = 20;
       x = context__.vals_r("x")[(1 - 1)];

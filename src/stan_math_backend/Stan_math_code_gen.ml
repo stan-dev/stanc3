@@ -208,21 +208,20 @@ let includes = "#include <stan/model/model_header.hpp>"
 let pp_validate_data ppf (name, st) =
   if String.is_suffix ~suffix:"__" name then ()
   else
-  List.iter (SizedType.get_dims st) ~f:(fun dim ->
+  let lister =
+  List.map (SizedType.get_dims st) ~f:(fun dim ->
   match dim with
   | `Dim e  ->
-    pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
-      "data initialization" name
-      (stantype_prim_str (SizedType.to_unsized st))
-      pp_call
-      ("context__.to_vec", pp_expr, [e])
+   e
   | `SparseIterator (_, _, nz_length)  ->
-    pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
-    "data initialization" name
-    (stantype_prim_str (SizedType.to_unsized st))
-    pp_call
-    ("context__.to_vec", pp_expr, [nz_length])
+   nz_length
   )
+  in
+  pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
+  "data initialization" name
+  (stantype_prim_str (SizedType.to_unsized st))
+  pp_call
+  ("context__.to_vec", pp_expr, lister)
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
