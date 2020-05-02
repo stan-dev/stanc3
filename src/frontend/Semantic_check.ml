@@ -95,7 +95,12 @@ let calculate_autodifftype at ut =
 
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
-
+(**
+let has_same_size ue ude = 
+  let ue_dim = SizedType.dims_of ue in
+  let ude_dim = SizedType.dims_of ude in
+  ue_dim = ude_dim
+*)
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
 
@@ -769,7 +774,15 @@ and semantic_check_expression_of_int_array_or_range_type cf e name =
     >>= fun ue ->
     if has_int_array_type ue then ok ue
     else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
-
+(**
+and semantic_check_expression_has_same_size cf e1 e2 name =
+  Validate.(
+    semantic_check_expression (e1 e2)
+    >>= fun ue ->
+    if (has_same_size e1 e2) then ok ue
+    else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
+*)
+    
 (* -- Sized Types ----------------------------------------------------------- *)
 let rec semantic_check_sizedtype ~loc cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
@@ -793,6 +806,7 @@ let rec semantic_check_sizedtype ~loc cf = function
         and ue2 = semantic_check_expression_of_int_array_or_range_type cf e2 "Sparse Matrix nonzero cols"
         and ue3 = semantic_check_expression_of_int_type cf e3 "Sparse Matrix sizes"
         and ue4 = semantic_check_expression_of_int_type cf e4 "Sparse Matrix sizes" in
+        (*and ue5 = semantic_check_expression_has_same_size e1 e2 "Sparse Matrix NonZero Values" in*)
         Validate.liftA4 (fun ue1 ue2 ue3 ue4 -> SizedType.SSparseMatrix (ue1, ue2, ue3, ue4)) ue1 ue2 ue3 ue4)
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype ~loc cf st

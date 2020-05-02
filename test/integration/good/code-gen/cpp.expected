@@ -21049,9 +21049,7 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'sparse_model.stan', line 36, column 2 to column 63)",
-                                                      " (in 'sparse_model.stan', line 41, column 2 to column 95)",
-                                                      " (in 'sparse_model.stan', line 46, column 2 to column 94)",
+                                                      " (in 'sparse_model.stan', line 24, column 2 to column 63)",
                                                       " (in 'sparse_model.stan', line 2, column 2 to column 11)",
                                                       " (in 'sparse_model.stan', line 3, column 2 to column 11)",
                                                       " (in 'sparse_model.stan', line 4, column 2 to column 17)",
@@ -21062,19 +21060,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'sparse_model.stan', line 9, column 2 to column 18)",
                                                       " (in 'sparse_model.stan', line 10, column 2 to column 31)",
                                                       " (in 'sparse_model.stan', line 11, column 2 to column 31)",
-                                                      " (in 'sparse_model.stan', line 12, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 13, column 2 to column 12)",
-                                                      " (in 'sparse_model.stan', line 14, column 2 to column 18)",
-                                                      " (in 'sparse_model.stan', line 15, column 2 to column 31)",
-                                                      " (in 'sparse_model.stan', line 16, column 2 to column 31)",
-                                                      " (in 'sparse_model.stan', line 17, column 2 to column 13)",
-                                                      " (in 'sparse_model.stan', line 18, column 2 to column 13)",
-                                                      " (in 'sparse_model.stan', line 19, column 2 to column 19)",
-                                                      " (in 'sparse_model.stan', line 20, column 2 to column 33)",
-                                                      " (in 'sparse_model.stan', line 21, column 2 to column 33)",
-                                                      " (in 'sparse_model.stan', line 22, column 2 to column 57)",
-                                                      " (in 'sparse_model.stan', line 27, column 2 to column 88)",
-                                                      " (in 'sparse_model.stan', line 29, column 2 to column 32)"};
+                                                      " (in 'sparse_model.stan', line 12, column 2 to column 57)",
+                                                      " (in 'sparse_model.stan', line 17, column 2 to column 30)"};
 
 
 
@@ -21087,23 +21074,12 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
   int nz_vals_dt;
   std::vector<int> nz_rows_dt;
   std::vector<int> nz_cols_dt;
-  int N_tdt;
-  int M_tdt;
-  int nz_vals_tdt;
-  std::vector<int> nz_rows_tdt;
-  std::vector<int> nz_cols_tdt;
   int N_par;
   int M_par;
   int nz_vals_par;
   std::vector<int> nz_rows_par;
   std::vector<int> nz_cols_par;
-  int N_tpar;
-  int M_tpar;
-  int nz_vals_tpar;
-  std::vector<int> nz_rows_tpar;
-  std::vector<int> nz_cols_tpar;
   Eigen::SparseMatrix<double> X_dt;
-  Eigen::SparseMatrix<double> YY_tdt;
   double data_cool;
  
  public:
@@ -21127,140 +21103,72 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
       context__.validate_dims("data initialization","N_dt","int",
           context__.to_vec());
       
-      current_statement__ = 4;
+      current_statement__ = 2;
       N_dt = context__.vals_i("N_dt")[(1 - 1)];
       context__.validate_dims("data initialization","M_dt","int",
           context__.to_vec());
       
-      current_statement__ = 5;
+      current_statement__ = 3;
       M_dt = context__.vals_i("M_dt")[(1 - 1)];
       context__.validate_dims("data initialization","nz_vals_dt","int",
           context__.to_vec());
       
-      current_statement__ = 6;
+      current_statement__ = 4;
       nz_vals_dt = context__.vals_i("nz_vals_dt")[(1 - 1)];
-      current_statement__ = 7;
+      current_statement__ = 5;
       validate_non_negative_index("nz_rows_dt", "nz_vals_dt", nz_vals_dt);
       context__.validate_dims("data initialization","nz_rows_dt","int",
           context__.to_vec(nz_vals_dt));
       nz_rows_dt = std::vector<int>(nz_vals_dt, 0);
       
-      current_statement__ = 7;
+      current_statement__ = 5;
       assign(nz_rows_dt, nil_index_list(), context__.vals_i("nz_rows_dt"),
         "assigning variable nz_rows_dt");
-      current_statement__ = 8;
+      current_statement__ = 6;
       validate_non_negative_index("nz_cols_dt", "nz_vals_dt", nz_vals_dt);
       context__.validate_dims("data initialization","nz_cols_dt","int",
           context__.to_vec(nz_vals_dt));
       nz_cols_dt = std::vector<int>(nz_vals_dt, 0);
       
-      current_statement__ = 8;
+      current_statement__ = 6;
       assign(nz_cols_dt, nil_index_list(), context__.vals_i("nz_cols_dt"),
         "assigning variable nz_cols_dt");
-      context__.validate_dims("data initialization","N_tdt","int",
-          context__.to_vec());
-      
-      current_statement__ = 9;
-      N_tdt = context__.vals_i("N_tdt")[(1 - 1)];
-      context__.validate_dims("data initialization","M_tdt","int",
-          context__.to_vec());
-      
-      current_statement__ = 10;
-      M_tdt = context__.vals_i("M_tdt")[(1 - 1)];
-      context__.validate_dims("data initialization","nz_vals_tdt","int",
-          context__.to_vec());
-      
-      current_statement__ = 11;
-      nz_vals_tdt = context__.vals_i("nz_vals_tdt")[(1 - 1)];
-      current_statement__ = 12;
-      validate_non_negative_index("nz_rows_tdt", "nz_vals_tdt", nz_vals_tdt);
-      context__.validate_dims("data initialization","nz_rows_tdt","int",
-          context__.to_vec(nz_vals_tdt));
-      nz_rows_tdt = std::vector<int>(nz_vals_tdt, 0);
-      
-      current_statement__ = 12;
-      assign(nz_rows_tdt, nil_index_list(), context__.vals_i("nz_rows_tdt"),
-        "assigning variable nz_rows_tdt");
-      current_statement__ = 13;
-      validate_non_negative_index("nz_cols_tdt", "nz_vals_tdt", nz_vals_tdt);
-      context__.validate_dims("data initialization","nz_cols_tdt","int",
-          context__.to_vec(nz_vals_tdt));
-      nz_cols_tdt = std::vector<int>(nz_vals_tdt, 0);
-      
-      current_statement__ = 13;
-      assign(nz_cols_tdt, nil_index_list(), context__.vals_i("nz_cols_tdt"),
-        "assigning variable nz_cols_tdt");
       context__.validate_dims("data initialization","N_par","int",
           context__.to_vec());
       
-      current_statement__ = 14;
+      current_statement__ = 7;
       N_par = context__.vals_i("N_par")[(1 - 1)];
       context__.validate_dims("data initialization","M_par","int",
           context__.to_vec());
       
-      current_statement__ = 15;
+      current_statement__ = 8;
       M_par = context__.vals_i("M_par")[(1 - 1)];
       context__.validate_dims("data initialization","nz_vals_par","int",
           context__.to_vec());
       
-      current_statement__ = 16;
+      current_statement__ = 9;
       nz_vals_par = context__.vals_i("nz_vals_par")[(1 - 1)];
-      current_statement__ = 17;
+      current_statement__ = 10;
       validate_non_negative_index("nz_rows_par", "nz_vals_par", nz_vals_par);
       context__.validate_dims("data initialization","nz_rows_par","int",
           context__.to_vec(nz_vals_par));
       nz_rows_par = std::vector<int>(nz_vals_par, 0);
       
-      current_statement__ = 17;
+      current_statement__ = 10;
       assign(nz_rows_par, nil_index_list(), context__.vals_i("nz_rows_par"),
         "assigning variable nz_rows_par");
-      current_statement__ = 18;
+      current_statement__ = 11;
       validate_non_negative_index("nz_cols_par", "nz_vals_par", nz_vals_par);
       context__.validate_dims("data initialization","nz_cols_par","int",
           context__.to_vec(nz_vals_par));
       nz_cols_par = std::vector<int>(nz_vals_par, 0);
       
-      current_statement__ = 18;
+      current_statement__ = 11;
       assign(nz_cols_par, nil_index_list(), context__.vals_i("nz_cols_par"),
         "assigning variable nz_cols_par");
-      context__.validate_dims("data initialization","N_tpar","int",
-          context__.to_vec());
-      
-      current_statement__ = 19;
-      N_tpar = context__.vals_i("N_tpar")[(1 - 1)];
-      context__.validate_dims("data initialization","M_tpar","int",
-          context__.to_vec());
-      
-      current_statement__ = 20;
-      M_tpar = context__.vals_i("M_tpar")[(1 - 1)];
-      context__.validate_dims("data initialization","nz_vals_tpar","int",
-          context__.to_vec());
-      
-      current_statement__ = 21;
-      nz_vals_tpar = context__.vals_i("nz_vals_tpar")[(1 - 1)];
-      current_statement__ = 22;
-      validate_non_negative_index("nz_rows_tpar", "nz_vals_tpar",
-                                  nz_vals_tpar);
-      context__.validate_dims("data initialization","nz_rows_tpar","int",
-          context__.to_vec(nz_vals_tpar));
-      nz_rows_tpar = std::vector<int>(nz_vals_tpar, 0);
-      
-      current_statement__ = 22;
-      assign(nz_rows_tpar, nil_index_list(),
-        context__.vals_i("nz_rows_tpar"), "assigning variable nz_rows_tpar");
-      current_statement__ = 23;
-      validate_non_negative_index("nz_cols_tpar", "nz_vals_tpar",
-                                  nz_vals_tpar);
-      context__.validate_dims("data initialization","nz_cols_tpar","int",
-          context__.to_vec(nz_vals_tpar));
-      nz_cols_tpar = std::vector<int>(nz_vals_tpar, 0);
-      
-      current_statement__ = 23;
-      assign(nz_cols_tpar, nil_index_list(),
-        context__.vals_i("nz_cols_tpar"), "assigning variable nz_cols_tpar");
-      current_statement__ = 24;
+      current_statement__ = 12;
       validate_non_negative_index("X_dt", "N_dt", N_dt);
-      current_statement__ = 24;
+      current_statement__ = 12;
       validate_non_negative_index("X_dt", "M_dt", M_dt);
       context__.validate_dims("data initialization","X_dt","double",
           context__.to_vec(stan::math::nonzero_size(nz_rows_dt)));
@@ -21268,39 +21176,30 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
       
       {
         std::vector<local_scalar_t__> X_dt_flat__;
-        current_statement__ = 24;
+        current_statement__ = 12;
         assign(X_dt_flat__, nil_index_list(), context__.vals_r("X_dt"),
           "assigning variable X_dt_flat__");
-        current_statement__ = 24;
+        current_statement__ = 12;
         pos__ = 1;
-        current_statement__ = 24;
+        current_statement__ = 12;
         for (size_t sym1__ = 1; sym1__ <= stan::math::size(nz_rows_dt);
              ++sym1__) {
-          current_statement__ = 24;
+          current_statement__ = 12;
           assign(X_dt,
             cons_list(index_uni(nz_cols_dt[(sym1__ - 1)]),
               cons_list(index_uni(nz_rows_dt[(sym1__ - 1)]),
                 nil_index_list())), X_dt_flat__[(pos__ - 1)],
             "assigning variable X_dt");
-          current_statement__ = 24;
+          current_statement__ = 12;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 25;
-      validate_non_negative_index("YY_tdt", "N_tdt", N_tdt);
-      current_statement__ = 25;
-      validate_non_negative_index("YY_tdt", "M_tdt", M_tdt);
-      YY_tdt = Eigen::SparseMatrix<double>(N_tdt, M_tdt);
       
-      current_statement__ = 25;
-      assign(YY_tdt, nil_index_list(), multiply(X_dt, transpose(X_dt)),
-        "assigning variable YY_tdt");
-      
-      current_statement__ = 26;
+      current_statement__ = 13;
       data_cool = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 26;
-      data_cool = rvalue(YY_tdt,
+      current_statement__ = 13;
+      data_cool = rvalue(X_dt,
                     cons_list(index_uni(1),
-                      cons_list(index_uni(1), nil_index_list())), "YY_tdt");
+                      cons_list(index_uni(1), nil_index_list())), "X_dt");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -21341,16 +21240,6 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
       
       current_statement__ = 1;
       XX_par = in__.sparse_matrix(nz_rows_par, nz_cols_par, N_par, M_par);
-      current_statement__ = 2;
-      validate_non_negative_index("VV_tpar", "N_tpar", N_tpar);
-      current_statement__ = 2;
-      validate_non_negative_index("VV_tpar", "M_tpar", M_tpar);
-      Eigen::SparseMatrix<local_scalar_t__> VV_tpar;
-      VV_tpar = Eigen::SparseMatrix<local_scalar_t__>(N_tpar, M_tpar);
-      
-      current_statement__ = 2;
-      assign(VV_tpar, nil_index_list(), multiply(XX_par, transpose(X_dt)),
-        "assigning variable VV_tpar");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -21388,13 +21277,6 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
       
       current_statement__ = 1;
       XX_par = in__.sparse_matrix(nz_rows_par, nz_cols_par, N_par, M_par);
-      current_statement__ = 2;
-      validate_non_negative_index("VV_tpar", "N_tpar", N_tpar);
-      current_statement__ = 2;
-      validate_non_negative_index("VV_tpar", "M_tpar", M_tpar);
-      Eigen::SparseMatrix<double> VV_tpar;
-      VV_tpar = Eigen::SparseMatrix<double>(N_tpar, M_tpar);
-      
       for (size_t sym1__ = 1; sym1__ <= stan::math::size(nz_rows_par);
            ++sym1__) {
         vars__.push_back(
@@ -21406,36 +21288,9 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 2;
-      assign(VV_tpar, nil_index_list(), multiply(XX_par, transpose(X_dt)),
-        "assigning variable VV_tpar");
-      for (size_t sym1__ = 1; sym1__ <= stan::math::size(nz_rows_tpar);
-           ++sym1__) {
-        vars__.push_back(
-          rvalue(VV_tpar,
-            cons_list(index_uni(nz_cols_tpar[(sym1__ - 1)]),
-              cons_list(index_uni(nz_rows_tpar[(sym1__ - 1)]),
-                nil_index_list())), "VV_tpar"));}
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-      current_statement__ = 3;
-      validate_non_negative_index("VV_gen", "N_tpar", N_tpar);
-      current_statement__ = 3;
-      validate_non_negative_index("VV_gen", "M_tpar", M_tpar);
-      Eigen::SparseMatrix<double> VV_gen;
-      VV_gen = Eigen::SparseMatrix<double>(N_tpar, M_tpar);
-      
-      current_statement__ = 3;
-      assign(VV_gen, nil_index_list(), multiply(XX_par, transpose(X_dt)),
-        "assigning variable VV_gen");
-      for (size_t sym1__ = 1; sym1__ <= stan::math::size(nz_rows_tpar);
-           ++sym1__) {
-        vars__.push_back(
-          rvalue(VV_gen,
-            cons_list(index_uni(nz_cols_tpar[(sym1__ - 1)]),
-              cons_list(index_uni(nz_rows_tpar[(sym1__ - 1)]),
-                nil_index_list())), "VV_gen"));}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -21498,20 +21353,12 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
     
     names__.resize(0);
     names__.push_back("XX_par");
-    names__.push_back("VV_tpar");
-    names__.push_back("VV_gen");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(stan::math::nonzero_size(nz_rows_par));
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(stan::math::nonzero_size(nz_rows_tpar));
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(stan::math::nonzero_size(nz_rows_tpar));
     dimss__.push_back(dims__);
     dims__.resize(0);
     
@@ -21527,19 +21374,11 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
         param_names__.push_back(std::string() + "XX_par" + '.' + std::to_string(nz_rows_par[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_par[(sym1__ - 1)]));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1;
-           sym1__ <= stan::math::nonzero_size(nz_rows_tpar); ++sym1__) {
-        {
-          param_names__.push_back(std::string() + "VV_tpar" + '.' + std::to_string(nz_rows_tpar[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_tpar[(sym1__ - 1)]));
-        }}
+      
     }
     
     if (emit_generated_quantities__) {
-      for (size_t sym1__ = 1;
-           sym1__ <= stan::math::nonzero_size(nz_rows_tpar); ++sym1__) {
-        {
-          param_names__.push_back(std::string() + "VV_gen" + '.' + std::to_string(nz_rows_tpar[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_tpar[(sym1__ - 1)]));
-        }}
+      
     }
     
     } // constrained_param_names() 
@@ -21554,32 +21393,24 @@ class sparse_model_model : public model_base_crtp<sparse_model_model> {
         param_names__.push_back(std::string() + "XX_par" + '.' + std::to_string(nz_rows_par[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_par[(sym1__ - 1)]));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1;
-           sym1__ <= stan::math::nonzero_size(nz_rows_tpar); ++sym1__) {
-        {
-          param_names__.push_back(std::string() + "VV_tpar" + '.' + std::to_string(nz_rows_tpar[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_tpar[(sym1__ - 1)]));
-        }}
+      
     }
     
     if (emit_generated_quantities__) {
-      for (size_t sym1__ = 1;
-           sym1__ <= stan::math::nonzero_size(nz_rows_tpar); ++sym1__) {
-        {
-          param_names__.push_back(std::string() + "VV_gen" + '.' + std::to_string(nz_rows_tpar[(sym1__ - 1)]) + '.' + std::to_string(nz_cols_tpar[(sym1__ - 1)]));
-        }}
+      
     }
     
     } // unconstrained_param_names() 
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"XX_par\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_par << ",\"cols\":" << M_par << "},\"block\":\"parameters\"},{\"name\":\"VV_tpar\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_tpar << ",\"cols\":" << M_tpar << "},\"block\":\"transformed_parameters\"},{\"name\":\"VV_gen\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_tpar << ",\"cols\":" << M_tpar << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"XX_par\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_par << ",\"cols\":" << M_par << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"XX_par\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_par << ",\"cols\":" << M_par << "},\"block\":\"parameters\"},{\"name\":\"VV_tpar\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_tpar << ",\"cols\":" << M_tpar << "},\"block\":\"transformed_parameters\"},{\"name\":\"VV_gen\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_tpar << ",\"cols\":" << M_tpar << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"XX_par\",\"type\":{\"name\":\"sparse_matrix\",\"rows\":" << N_par << ",\"cols\":" << M_par << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     

@@ -96,7 +96,7 @@ module TypeError = struct
           UnsizedType.pp ut1
     | InvalidSparseMatrixDeclLocation blockname ->
       Fmt.pf ppf
-        "Incorrect sparse_matrix declaration in the %s block; nonzero element location arrays are required."
+        "Incorrect sparse_matrix declaration in the %s block; Declerations with known nonzero values can only be defined in the data or parameters blocks."
         blockname
     | IllTypedReduceSum (name, arg_tys, args) ->
         let arg_types = List.map ~f:(fun (_, t) -> t) args in
