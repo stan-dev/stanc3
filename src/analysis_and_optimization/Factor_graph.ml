@@ -79,19 +79,11 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) 
              (Set.Poly.to_list vars)))
   in { factor_map; var_map }
 
-(* Build a factor graph from prog.log_prob using dependency analysis *)
-let prog_factor_graph ?include_data:(include_data:bool=true) prog : factor_graph =
-  let statement_map = log_prob_build_dep_info_map prog in
-  let factors = extract_factors statement_map 1 in
-  let vars = Set.Poly.map
-      ~f:(fun v -> VVar v)
-      ((if include_data then Set.Poly.union (data_set prog) else ident)
-         (parameter_names_set prog))
+let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
+  let factor_map =
+    Map.Poly.remove fg.factor_map fac
   in
-  let factor_list =
-    List.map factors ~f:(fun (l, fac) ->
-        (l, fac, Set.Poly.inter vars (factor_var_dependencies statement_map vars (l, fac))) )
-  in build_adjacency_maps factor_list
+  {fg with factor_map= factor_map}
 
 let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
   let factor_map =
@@ -101,6 +93,34 @@ let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
     Map.Poly.remove fg.var_map var
   in
   {factor_map; var_map}
+
+let remove_touching vars fg =
+  let facs = union_map vars ~f:(Map.Poly.find_exn fg.var_map) in
+  let without_vars =
+    Set.fold ~f:(fun g v -> fg_remove_var v g) ~init:fg vars
+  in
+  let without_facs =
+    Set.fold ~f:(fun g f -> fg_remove_fac f g) ~init:without_vars facs
+  in
+  without_facs
+
+(* Build a factor graph from prog.log_prob using dependency analysis *)
+let prog_factor_graph ?exclude_data_facs:(exclude_data_facs:bool=false) prog : factor_graph =
+  let statement_map = log_prob_build_dep_info_map prog in
+  let factors = extract_factors statement_map 1 in
+  let data_vars = data_set prog in
+  let vars = Set.Poly.map
+      ~f:(fun v -> VVar v)
+      (Set.Poly.union data_vars (parameter_names_set prog))
+  in
+  let factor_list =
+    List.map factors ~f:(fun (l, fac) ->
+        (l, fac, Set.Poly.inter vars (factor_var_dependencies statement_map vars (l, fac))) )
+  in
+  let fg = build_adjacency_maps factor_list in
+  if exclude_data_facs then
+    remove_touching (Set.Poly.map ~f:(fun v -> VVar v) data_vars) fg
+  else fg
 
 (* BFS on 'fg' with initial frontier 'starts' and terminating at any
    element of 'goals' *)
