@@ -1709,6 +1709,9 @@ let () =
 
   add_unqualified
     ("solve_quadprog", ReturnType UVector, [UMatrix; UVector; UMatrix; UVector;UMatrix;UVector]) ;
+  add_unqualified
+    ("solve_quadprog_chol", ReturnType UVector, [UMatrix; UVector; UMatrix; UVector;UMatrix;UVector]) ;
+
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
