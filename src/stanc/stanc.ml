@@ -186,7 +186,7 @@ let use_file filename =
     ( Option.iter !emit_factor_graph
         ~f:(fun filepath ->
            let dot =
-             Factor_graph.factor_graph_to_dot (Factor_graph.prog_factor_graph mir)
+             Factor_graph.factor_graph_to_dot (Factor_graph.prog_factor_graph ~include_data:false mir)
            in Out_channel.write_all filepath ~data:dot)) ;
     ( if !warn_uninitialized then
       Pedantic_analysis.print_warn_uninitialized mir ) ;

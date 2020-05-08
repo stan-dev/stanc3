@@ -80,12 +80,13 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t) 
   in { factor_map; var_map }
 
 (* Build a factor graph from prog.log_prob using dependency analysis *)
-let prog_factor_graph prog : factor_graph =
+let prog_factor_graph ?include_data:(include_data:bool=true) prog : factor_graph =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
   let vars = Set.Poly.map
       ~f:(fun v -> VVar v)
-      (Set.Poly.union (parameter_names_set prog) (data_set prog))
+      ((if include_data then Set.Poly.union (data_set prog) else ident)
+         (parameter_names_set prog))
   in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->
