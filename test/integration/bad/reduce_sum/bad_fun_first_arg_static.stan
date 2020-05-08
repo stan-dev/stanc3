@@ -1,5 +1,5 @@
 functions {
-  real my_func(real start, int end, real[] y_slice, real mu, real sigma) {
+  real my_func(real[] y_slice, real start, int end, real mu, real sigma) {
     return normal_lpdf(y_slice | mu, sigma);
   }  
 }
