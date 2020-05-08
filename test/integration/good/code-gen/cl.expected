@@ -526,7 +526,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       
       y_vi_d_td_opencl__ = to_matrix_cl(y_vi_d_td);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -559,7 +559,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_p", "n", n);
       num_params_r__ += n;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1218,7 +1218,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             beta_m));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1337,7 +1337,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1525,7 +1525,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }

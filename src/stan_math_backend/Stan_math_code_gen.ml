@@ -31,7 +31,7 @@ let pp_function__ ppf (prog_name, fname) =
 
 let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    {|stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
 

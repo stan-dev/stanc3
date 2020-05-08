@@ -164,7 +164,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -177,7 +177,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       validate_non_negative_index("theta_tilde", "J", J);
       num_params_r__ += J;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -242,7 +242,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         lp_accum__.add(normal_log<propto__>(y, theta, sigma));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -314,7 +314,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -367,7 +367,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(theta_tilde[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -1091,7 +1091,7 @@ foo(const int& n, std::ostream* pstream__) {
     current_statement__ = 268;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1141,7 +1141,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
     current_statement__ = 274;
     return dydt;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1170,7 +1170,7 @@ foo_bar0(std::ostream* pstream__) {
     current_statement__ = 276;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1196,7 +1196,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
     current_statement__ = 278;
     return 1.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1225,7 +1225,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
     current_statement__ = 280;
     return 2.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1251,7 +1251,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
     current_statement__ = 282;
     return 1.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1278,7 +1278,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
     current_statement__ = 284;
     return 1.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1305,7 +1305,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
     current_statement__ = 286;
     return 1.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1335,7 +1335,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
     current_statement__ = 288;
     return normal_rng(mu, sigma, base_rng__);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1366,7 +1366,7 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
     current_statement__ = 291;
     lp_accum__.add(uniform_log<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1644,7 +1644,7 @@ foo_1(const int& a, std::ostream* pstream__) {
     current_statement__ = 373;
     return 0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1685,7 +1685,7 @@ foo_2(const int& a, std::ostream* pstream__) {
     current_statement__ = 379;
     return 0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1711,7 +1711,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
     current_statement__ = 381;
     return rep_array(t, n);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1738,7 +1738,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
     current_statement__ = 383;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1770,7 +1770,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
     errmsg_stream__ << x;
     throw std::domain_error(errmsg_stream__.str());
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1838,7 +1838,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     current_statement__ = 395;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1873,7 +1873,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1911,7 +1911,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
     current_statement__ = 399;
     return x1;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -1949,7 +1949,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
     current_statement__ = 401;
     return x1;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2011,7 +2011,7 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
     current_statement__ = 407;
     return o;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2059,7 +2059,7 @@ f0(const int& a1, const std::vector<int>& a2,
       stan_print(pstream__, "\n");
     }
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2114,7 +2114,7 @@ f1(const int& a1, const std::vector<int>& a2,
     current_statement__ = 411;
     return a1;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2169,7 +2169,7 @@ f2(const int& a1, const std::vector<int>& a2,
     current_statement__ = 413;
     return a2;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2224,7 +2224,7 @@ f3(const int& a1, const std::vector<int>& a2,
     current_statement__ = 415;
     return a3;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2281,7 +2281,7 @@ f4(const int& a1, const std::vector<int>& a2,
     current_statement__ = 417;
     return a4;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2340,7 +2340,7 @@ f5(const int& a1, const std::vector<int>& a2,
     current_statement__ = 419;
     return a5;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2399,7 +2399,7 @@ f6(const int& a1, const std::vector<int>& a2,
     current_statement__ = 421;
     return a6;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2458,7 +2458,7 @@ f7(const int& a1, const std::vector<int>& a2,
     current_statement__ = 423;
     return a7;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2517,7 +2517,7 @@ f8(const int& a1, const std::vector<int>& a2,
     current_statement__ = 425;
     return a8;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2576,7 +2576,7 @@ f9(const int& a1, const std::vector<int>& a2,
     current_statement__ = 427;
     return a9;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2635,7 +2635,7 @@ f10(const int& a1, const std::vector<int>& a2,
     current_statement__ = 429;
     return a10;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2694,7 +2694,7 @@ f11(const int& a1, const std::vector<int>& a2,
     current_statement__ = 431;
     return a11;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2753,7 +2753,7 @@ f12(const int& a1, const std::vector<int>& a2,
     current_statement__ = 433;
     return a12;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2836,7 +2836,7 @@ foo_6(std::ostream* pstream__) {
           cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())))),
       b, "assigning variable ar_mat");
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2870,7 +2870,7 @@ matfoo(std::ostream* pstream__) {
         .add(1).add(2).add(3).add(4).add(5).add(6).add(7).add(8).add(9)
         .add(10).array())).array());
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2897,7 +2897,7 @@ vecfoo(std::ostream* pstream__) {
              stan::math::array_builder<int>().add(1).add(2).add(3).add(4)
              .add(5).add(6).add(7).add(8).add(9).add(10).array()));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2936,7 +2936,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     current_statement__ = 446;
     return l;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -2981,7 +2981,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
              cons_list(index_multi(stan::math::array_builder<int>().add(1)
                .add(2).add(3).add(4).add(5).array()), nil_index_list()), "l");
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -3030,7 +3030,7 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     current_statement__ = 454;
     return f_x;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -3079,7 +3079,7 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
     current_statement__ = 458;
     return lpmf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -4139,7 +4139,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 213;
       check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -4256,7 +4256,7 @@ class mother_model : public model_base_crtp<mother_model> {
       validate_non_negative_index("y_p", "2", 2);
       num_params_r__ += 2;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -5363,7 +5363,7 @@ class mother_model : public model_base_crtp<mother_model> {
           map_rect<1, binomialf_functor__>(tmp, tmp2, x_r, x_i, pstream__));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -7236,7 +7236,7 @@ class mother_model : public model_base_crtp<mother_model> {
         for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
           vars__.push_back(idx_res5[(sym2__ - 1)][(sym1__ - 1)]);}}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -7963,7 +7963,7 @@ class mother_model : public model_base_crtp<mother_model> {
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(y_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -9716,7 +9716,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
     current_statement__ = 115;
     return dydt;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -9752,7 +9752,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
     current_statement__ = 117;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -9789,7 +9789,7 @@ foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -9820,7 +9820,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
     current_statement__ = 121;
     return (2 * x);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -9869,7 +9869,7 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     current_statement__ = 126;
     return f_x;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -10108,7 +10108,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       current_statement__ = 99;
       check_greater_or_equal(function__, "T", T, 1);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -10137,7 +10137,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       num_params_r__ += 3 * 3;
       num_params_r__ += 1;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -10511,7 +10511,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         abc_m = map_rectfake(abc1_p, pstream__);
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -10927,7 +10927,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(y_hat_gq[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -11058,7 +11058,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           vars__.push_back(job_params_p[(sym2__ - 1)][(sym1__ - 1)]);}}
       vars__.push_back(x_r);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -11913,7 +11913,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 184;
       check_greater_or_equal(function__, "n_td", n_td, 0);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -11946,7 +11946,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_p", "n", n);
       num_params_r__ += n;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -12560,7 +12560,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
             beta_m));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -12679,7 +12679,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -12867,7 +12867,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       for (size_t sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.push_back(X_rv_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13225,7 +13225,7 @@ g(const std::vector<T0__>& y_slice, const int& start, const int& end,
       return normal_lpdf<false>(y_slice, 0, 1);
     }
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -13275,7 +13275,7 @@ h(const std::vector<T0__>& y_slice, const int& start, const int& end,
       return normal_lpdf<false>(a, 0, 1);
     }
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -13317,7 +13317,7 @@ foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 20;
     return normal_lpdf<false>(y_slice, 0, 1);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -13373,7 +13373,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       current_statement__ = 7;
       N = 100;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13390,7 +13390,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       validate_non_negative_index("y3", "N", N);
       num_params_r__ += N;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13446,7 +13446,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
         lp_accum__.add(reduce_sum<foo_lpdf_rsfunctor__>(y3, 1, pstream__));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13517,7 +13517,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13565,7 +13565,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y3[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -13980,7 +13980,7 @@ g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 35;
     return normal_lpdf<false>(y_slice, 0, 1);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14030,7 +14030,7 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
     current_statement__ = 41;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14080,7 +14080,7 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
     current_statement__ = 47;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14131,7 +14131,7 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
     current_statement__ = 53;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14184,7 +14184,7 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
     current_statement__ = 61;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14238,7 +14238,7 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
     current_statement__ = 69;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14292,7 +14292,7 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
     current_statement__ = 77;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14346,7 +14346,7 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
     current_statement__ = 85;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14391,7 +14391,7 @@ h1(const std::vector<T0__>& y, const int& start, const int& end,
                cons_list(index_min_max(start, end), nil_index_list()), "a"),
              0, 1);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14445,7 +14445,7 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 93;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14501,7 +14501,7 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 99;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14558,7 +14558,7 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 105;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14617,7 +14617,7 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 113;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14676,7 +14676,7 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 121;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14737,7 +14737,7 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 129;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14798,7 +14798,7 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 137;
     return sum_lpdf;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -14863,7 +14863,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
       x = std::vector<double>(N, 0);
       
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -14967,7 +14967,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
       validate_non_negative_index("y1", "N", N);
       num_params_r__ += N;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -15259,7 +15259,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
         lp_accum__.add(reduce_sum<g1_rsfunctor__>(y1, 1, pstream__));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -15616,7 +15616,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -16146,7 +16146,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
       for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.push_back(y1[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -17002,7 +17002,7 @@ f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 111;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17042,7 +17042,7 @@ f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 113;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17082,7 +17082,7 @@ f2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
     current_statement__ = 115;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17122,7 +17122,7 @@ f3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
     current_statement__ = 117;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17162,7 +17162,7 @@ f4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
     current_statement__ = 119;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17202,7 +17202,7 @@ f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
     current_statement__ = 121;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17242,7 +17242,7 @@ f6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
     current_statement__ = 123;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17282,7 +17282,7 @@ f7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
     current_statement__ = 125;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17322,7 +17322,7 @@ f8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
     current_statement__ = 127;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17361,7 +17361,7 @@ f9(const std::vector<int>& y_slice, const int& start, const int& end,
     current_statement__ = 129;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17398,7 +17398,7 @@ f10(const std::vector<std::vector<int>>& y_slice, const int& start,
     current_statement__ = 131;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17435,7 +17435,7 @@ f11(const std::vector<std::vector<std::vector<int>>>& y_slice,
     current_statement__ = 133;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17473,7 +17473,7 @@ f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
     current_statement__ = 135;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17515,7 +17515,7 @@ g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 137;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17559,7 +17559,7 @@ g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 139;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17605,7 +17605,7 @@ g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 141;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17651,7 +17651,7 @@ g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 143;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17697,7 +17697,7 @@ g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 145;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17743,7 +17743,7 @@ g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 147;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17789,7 +17789,7 @@ g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 149;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17835,7 +17835,7 @@ g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 151;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17881,7 +17881,7 @@ g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 153;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17928,7 +17928,7 @@ g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 155;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -17976,7 +17976,7 @@ g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 157;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -18024,7 +18024,7 @@ g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
     current_statement__ = 159;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -18100,7 +18100,7 @@ s(const std::vector<T0__>& y_slice, const int& start, const int& end,
     return reduce_sum<s_rsfunctor__>(y_slice, 1, pstream__, a, b, c, d, e, f,
              g, h, i, j, k, l, m, n, o, p, q);
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -18548,7 +18548,7 @@ r(std::ostream* pstream__) {
     current_statement__ = 220;
     return 0.0;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -19171,7 +19171,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
               y11d, y12d, y14d, y1d, y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d,
               y16d, y17d);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -19246,7 +19246,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y17", "N", N);
       num_params_r__ += N * N * N;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -19598,7 +19598,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
         tt = r(pstream__);
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -20043,7 +20043,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
       vars__.push_back(tg12);
       vars__.push_back(tgs);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -20434,7 +20434,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
             vars__.push_back(y17[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}
         }}
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21083,7 +21083,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
       current_statement__ = 7;
       t = context__.vals_i("t")[(1 - 1)];
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21092,7 +21092,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
     try {
       num_params_r__ += 1;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21148,7 +21148,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
         }
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21190,7 +21190,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21215,7 +21215,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
       x = stan::math::lb_free(x, 0);
       vars__.push_back(x);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21491,7 +21491,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
       current_statement__ = 20;
       x = context__.vals_r("x")[(1 - 1)];
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21501,7 +21501,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
       num_params_r__ += 1;
       num_params_r__ += 1;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21617,7 +21617,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
         lp_accum__.add(poisson_log<propto__>(n, y));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21664,7 +21664,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21694,7 +21694,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
       vars__.push_back(m);
       vars__.push_back(y);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21935,7 +21935,7 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
     current_statement__ = 3;
     return x;
   } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -21976,7 +21976,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
       
       pos__ = 1;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -21985,7 +21985,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
     try {
       num_params_r__ += 1;
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -22019,7 +22019,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
         lp_accum__.add(std_normal_log<propto__>(x));
       }
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -22061,7 +22061,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
         return ;
       } 
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -22086,7 +22086,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
       x = stan::math::lb_free(x, 0);
       vars__.push_back(x);
     } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      stan::model::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
