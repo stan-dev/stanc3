@@ -1585,7 +1585,7 @@ and semantic_check_fundef_return_tys ~loc id return_type body =
     then ok ()
     else error @@ Semantic_error.incompatible_return_types loc)
 
-and semantic_check_fundef ~loc ~cf return_ty id args body =
+and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
   let uargs =
     List.map args ~f:(fun (at, ut, id) ->
         Validate.(
@@ -1652,7 +1652,13 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
            (* WARNING: SIDE EFFECTING *)
            Symbol_table.end_scope vm ;
            let stmt =
-             FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
+             FunDef
+               { returntype= urt
+               ; funname= id
+               ; is_closure
+               ; captures= []
+               ; arguments= uargs
+               ; body= ub }
            in
            mk_typed_statement ~return_type:NoReturnType ~loc ~stmt ))
 
@@ -1692,8 +1698,9 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       ; is_global } ->
       semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
-  | FunDef {returntype; funname; arguments; body} ->
-      semantic_check_fundef ~loc ~cf returntype funname arguments body
+  | FunDef {returntype; funname; is_closure; captures= (); arguments; body} ->
+      semantic_check_fundef ~loc ~cf returntype funname is_closure arguments
+        body
 
 (* == Untyped programs ====================================================== *)
 

@@ -176,6 +176,21 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
+                           is_closure = false;
+                           captures = ();
+                           arguments = args; body=b;};
+       smeta={loc=Location_span.of_positions_exn $startpos $endpos}
+      }
+    }
+
+closure_def:
+  | FUNCTIONBLOCK rt=return_type name=decl_identifier
+    LPAREN args=separated_list(COMMA, arg_decl) RPAREN b=statement
+    {
+      grammar_logger "function_def" ;
+      {stmt=FunDef {returntype = rt; funname = name;
+                           is_closure = true;
+                           captures = ();
                            arguments = args; body=b;};
        smeta={loc=Location_span.of_positions_exn $startpos $endpos}
       }
@@ -635,9 +650,13 @@ vardecl_or_statement:
     { grammar_logger "vardecl_or_statement_statement" ; s }
   | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
+  | f=closure_def
+    { grammar_logger "vardecl_or_statement_vardecl" ; f }
 
 top_vardecl_or_statement:
   | s=statement
     { grammar_logger "top_vardecl_or_statement_statement" ;  s }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }
+  | f=closure_def
+    { grammar_logger "vardecl_or_statement_vardecl" ; f }

@@ -631,7 +631,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef {returntype; funname; arguments; body} ->
+  | Ast.FunDef
+      {returntype; funname; is_closure= _; captures= _; arguments; body} ->
       [ Program.
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)
