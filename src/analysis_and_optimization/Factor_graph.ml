@@ -95,7 +95,9 @@ let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
   {factor_map; var_map}
 
 let remove_touching vars fg =
-  let facs = union_map vars ~f:(Map.Poly.find_exn fg.var_map) in
+  let facs = union_map vars ~f:(fun v ->
+      Option.value ~default:Set.Poly.empty (Map.Poly.find fg.var_map v))
+  in
   let without_vars =
     Set.fold ~f:(fun g v -> fg_remove_var v g) ~init:fg vars
   in
