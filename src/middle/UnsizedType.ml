@@ -8,8 +8,10 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype
+  | UFun of (autodifftype * t) list * returntype * functiontype
   | UMathLibraryFunction
+
+and functiontype = Function | Closure
 
 and autodifftype = DataOnly | AutoDiffable
 
@@ -36,7 +38,7 @@ let rec pp ppf = function
       let ty, depth = unsized_array_depth ut in
       let commas = String.make depth ',' in
       Fmt.pf ppf "%a[%s]" pp ty commas
-  | UFun (argtypes, rt) ->
+  | UFun (argtypes, rt, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
@@ -61,7 +63,7 @@ let check_of_same_type_mod_conv name t1 t2 =
   else
     match (t1, t2) with
     | UReal, UInt -> true
-    | UFun (l1, rt1), UFun (l2, rt2) ->
+    | UFun (l1, rt1, _), UFun (l2, rt2, _) ->
         rt1 = rt2
         && List.for_all
              ~f:(fun x -> x = true)

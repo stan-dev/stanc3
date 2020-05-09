@@ -75,19 +75,7 @@ Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 14:
      5:    }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type (real) => real and rhs has type real. Available signatures:
-(int, int) => void
-(real, int) => void
-(real, real) => void
-(vector, int) => void
-(vector, real) => void
-(vector, vector) => void
-(row_vector, int) => void
-(row_vector, real) => void
-(row_vector, row_vector) => void
-(matrix, int) => void
-(matrix, real) => void
-(matrix, matrix) => void
+Cannot assign to read-only identifier 'foo'.
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
 

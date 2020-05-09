@@ -202,7 +202,7 @@ type typed_statement =
   , stmt_typed_located_meta
   , typed_lval
   , fun_kind
-  , (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier) list
+  , (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * string) list
   )
   statement_with
 [@@deriving sexp, compare, map, hash]

@@ -66,7 +66,7 @@ and pp_unsizedtype ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
-  | UFun (argtypes, rt) ->
+  | UFun (argtypes, rt, _) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
         Fmt.(list ~sep:comma_no_break pp_argtype)
         argtypes pp_returntype rt

@@ -10,7 +10,7 @@ Semantic error in 'assign_to_loop_var1.stan', line 5, column 18 to column 24:
      7:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var2.stan
 
@@ -24,7 +24,7 @@ Semantic error in 'assign_to_loop_var2.stan', line 5, column 18 to column 24:
      7:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var3.stan
 
@@ -38,7 +38,7 @@ Semantic error in 'assign_to_loop_var3.stan', line 6, column 6 to column 15:
      8:      }        
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var4.stan
 
@@ -52,7 +52,7 @@ Semantic error in 'assign_to_loop_var4.stan', line 5, column 6 to column 12:
      7:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var5.stan
 
@@ -66,7 +66,7 @@ Semantic error in 'assign_to_loop_var5.stan', line 5, column 6 to column 14:
      7:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var6.stan
 
@@ -80,7 +80,7 @@ Semantic error in 'assign_to_loop_var6.stan', line 4, column 4 to column 12:
      6:  }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var7.stan
 
@@ -108,7 +108,7 @@ Semantic error in 'for_statements_bad_indices0.stan', line 5, column 20 to colum
      7:      return 0;
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices1.stan
 
@@ -136,7 +136,7 @@ Semantic error in 'for_statements_bad_indices2.stan', line 5, column 20 to colum
      7:      return 0;
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'v'.
+Cannot assign to read-only identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices3.stan
 

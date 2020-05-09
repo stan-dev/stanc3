@@ -1,5 +1,6 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
+
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
@@ -138,9 +139,7 @@ let mk_declarative_sig (fnkinds, name, args) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
-
 let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
-
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
 
 let distributions =
@@ -338,7 +337,7 @@ let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
-let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt))
+let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt, Function))
 
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
@@ -451,7 +450,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , Function ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -461,7 +461,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , Function ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
@@ -983,7 +984,8 @@ let () =
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
+            , ReturnType UReal
+            , Function ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
@@ -995,7 +997,8 @@ let () =
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
+            , ReturnType UReal
+            , Function ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
@@ -1009,7 +1012,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1024,7 +1028,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1039,7 +1044,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1055,7 +1061,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1070,7 +1077,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1086,7 +1094,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1101,7 +1110,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , Function ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1186,7 +1196,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , Function ) )
       ; (AutoDiffable, UVector)
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))

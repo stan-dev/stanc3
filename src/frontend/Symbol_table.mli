@@ -18,6 +18,10 @@ val begin_scope : 'a state -> unit
 val end_scope : 'a state -> unit
 (** Used to end a local scope, purging the symbol table of all symbols added in that scope *)
 
+val with_scope : 'a state -> ('b -> 'c) -> 'b -> 'c
+
+val with_closure : 'a state -> (Core_kernel.String.Set.t ref -> 'b -> 'c) -> 'b -> 'c
+
 val set_read_only : 'a state -> string -> unit
 (** Used to add a read only label to an identifier *)
 

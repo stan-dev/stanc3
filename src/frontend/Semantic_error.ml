@@ -101,7 +101,8 @@ module TypeError = struct
             [ [ UnsizedType.UFun
                   ( List.hd_exn args :: (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal ) ]
+                  , ReturnType UReal
+                  , Function ) ]
             ; first; [UInt]; rest ]
         in
         Fmt.pf ppf
@@ -186,7 +187,7 @@ module TypeError = struct
            signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name UnsizedType.pp
-          (UFun (listed_tys, return_ty))
+          (UFun (listed_tys, return_ty, Function))
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->
@@ -297,11 +298,12 @@ module StatementError = struct
     | ProbMassNonIntVariate of UnsizedType.t option
     | DuplicateArgNames
     | IncompatibleReturnType
+    | InvalidForwardDecl
+    | SpecialClosure
 
   let pp ppf = function
     | CannotAssignToReadOnly name ->
-        Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+        Fmt.pf ppf "Cannot assign to read-only identifier '%s'." name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
@@ -396,6 +398,12 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
         Fmt.pf ppf
           "Function bodies must contain a return statement of correct type in \
            every branch."
+    | InvalidForwardDecl ->
+        Fmt.pf ppf "Cannot declare a closure without definition."
+    | SpecialClosure ->
+        Fmt.pf ppf
+          "Cannot declare a closure with suffix _lpdf, _lpmf, _log, _lcdf, \
+           _lccdf, _rng or _lp."
 end
 
 type t =
@@ -588,3 +596,8 @@ let duplicate_arg_names loc =
 
 let incompatible_return_types loc =
   StatementError (loc, StatementError.IncompatibleReturnType)
+
+let invalid_forward_decl loc =
+  StatementError (loc, StatementError.InvalidForwardDecl)
+
+let invalid_special_fn loc = StatementError (loc, StatementError.SpecialClosure)

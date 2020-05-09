@@ -108,3 +108,5 @@ val prob_density_non_real_variate :
 val prob_mass_non_int_variate : Location_span.t -> UnsizedType.t option -> t
 val duplicate_arg_names : Location_span.t -> t
 val incompatible_return_types : Location_span.t -> t
+val invalid_forward_decl : Location_span.t -> t
+val invalid_special_fn : Location_span.t -> t

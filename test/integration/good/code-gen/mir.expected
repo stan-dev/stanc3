@@ -5281,7 +5281,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -5303,7 +5303,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -5331,7 +5331,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -5359,7 +5359,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -5381,7 +5381,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -5409,7 +5409,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -5431,7 +5431,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -6591,7 +6591,7 @@
                   (UFun
                    ((AutoDiffable UVector) (AutoDiffable UVector)
                     (DataOnly (UArray UReal)) (DataOnly (UArray UInt)))
-                   (ReturnType UVector)))
+                   (ReturnType UVector) Function))
                  (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var tmp))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -7892,7 +7892,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -7914,7 +7914,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -7942,7 +7942,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -7970,7 +7970,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -7992,7 +7992,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8020,7 +8020,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8042,7 +8042,7 @@
               (UFun
                ((AutoDiffable UVector) (AutoDiffable UVector)
                 (AutoDiffable (UArray UReal)) (AutoDiffable (UArray UInt)))
-               (ReturnType UVector)))
+               (ReturnType UVector) Function))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x_p))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))

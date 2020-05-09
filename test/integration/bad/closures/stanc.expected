@@ -1,0 +1,84 @@
+  $ ../../../../../install/default/bin/stanc closure_lp.stan
+
+Semantic error in 'closure_lp.stan', line 6, column 7 to column 13:
+   -------------------------------------------------
+     4:  model {
+     5:    functions
+     6:    real foo_lp(real x) {
+                ^
+     7:        return x + 1;
+     8:    }
+   -------------------------------------------------
+
+Cannot declare a closure with suffix _lpdf, _lpmf, _log, _lcdf, _lccdf, _rng or _lp.
+
+  $ ../../../../../install/default/bin/stanc closure_rng.stan
+
+Semantic error in 'closure_rng.stan', line 6, column 7 to column 14:
+   -------------------------------------------------
+     4:  model {
+     5:    functions
+     6:    real foo_rng(real x) {
+                ^
+     7:        return x + 1;
+     8:    }
+   -------------------------------------------------
+
+Cannot declare a closure with suffix _lpdf, _lpmf, _log, _lcdf, _lccdf, _rng or _lp.
+
+  $ ../../../../../install/default/bin/stanc forward-declaration.stan
+
+Semantic error in 'forward-declaration.stan', line 5, column 2 to line 6, column 19:
+   -------------------------------------------------
+     3:  }
+     4:  model {
+     5:    functions
+           ^
+     6:    real foo(real x);
+     7:    functions
+   -------------------------------------------------
+
+Cannot declare a closure without definition.
+
+  $ ../../../../../install/default/bin/stanc mutate1.stan
+
+Semantic error in 'mutate1.stan', line 8, column 6 to column 12:
+   -------------------------------------------------
+     6:    functions
+     7:    real foo(real z) {
+     8:        x = 2;
+               ^
+     9:        return x + z;
+    10:    }
+   -------------------------------------------------
+
+Cannot assign to read-only identifier 'x'.
+
+  $ ../../../../../install/default/bin/stanc mutate2.stan
+
+Semantic error in 'mutate2.stan', line 10, column 2 to column 8:
+   -------------------------------------------------
+     8:        return x + z;
+     9:    }
+    10:    x = 2;
+           ^
+    11:    y ~ normal(0,1);
+    12:  }
+   -------------------------------------------------
+
+Cannot assign to read-only identifier 'x'.
+
+  $ ../../../../../install/default/bin/stanc shadowing.stan
+
+Semantic error in 'shadowing.stan', line 5, column 9 to column 12:
+   -------------------------------------------------
+     3:    real bar(real y) {
+     4:      functions
+     5:      real foo(real z) {
+                  ^
+     6:        return z - 1;
+     7:      }
+   -------------------------------------------------
+
+Identifier 'foo' is already in use.
+
