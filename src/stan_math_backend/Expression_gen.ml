@@ -48,6 +48,12 @@ let rec local_scalar ut ad =
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
+let rec captured_scalar ut ad =
+  match (ut, ad) with
+  | UnsizedType.UArray t, _ -> captured_scalar t ad
+  | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
+  | _, AutoDiffable -> "captured_t__"
+
 let minus_one e =
   { e with
     Expr.Fixed.pattern=
@@ -100,6 +106,11 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
   pp_unsizedtype_custom_scalar ppf (s, ut)
+
+let pp_unsizedtype_captured ppf (adtype, ut) =
+  let s = captured_scalar ut adtype in
+  pp_unsizedtype_custom_scalar ppf (s, ut)
+
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
@@ -359,6 +370,12 @@ and pp_compiler_internal_fn ut f ppf es =
         raise_s
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
+  | Some FnMakeClosure -> (
+    match es with
+    | {Expr.Fixed.pattern= Lit (Str, clname); _} :: captures ->
+        pf ppf "@[<hov 2>%s__<local_scalar_t__>(@,%a)@]" clname
+          (list ~sep:comma pp_expr) captures
+    | _ -> raise_s [%message "Bad closure " (es : Expr.Typed.t list)] )
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es

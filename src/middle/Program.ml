@@ -5,6 +5,13 @@ open Helpers
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
 
+type 'a closure_def =
+  { cdrt: UnsizedType.t option
+  ; cdcaptures: (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; cdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; cdbody: 'a }
+[@@deriving compare, hash, map, sexp, map, fold]
+
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
@@ -42,8 +49,19 @@ type 'e outvar =
   ; out_trans: 'e transformation }
 [@@deriving sexp, map, hash, fold]
 
+module StringMap = struct
+  include String.Map
+
+  let map f = map ~f
+
+  let fold f init =
+    let f ~key:_ ~data accum = f accum data in
+    fold ~init ~f
+end
+
 type ('a, 'b) t =
-  { functions_block: 'b fun_def list
+  { closures: 'b closure_def StringMap.t
+  ; functions_block: 'b fun_def list
   ; input_vars: (string * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)

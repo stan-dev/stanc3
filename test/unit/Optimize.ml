@@ -253,7 +253,8 @@ let%expect_test "list collapsing" =
   print_s [%sexp (mir : Middle.Program.Typed.t)] ;
   [%expect
     {|
-    ((functions_block
+    ((closures ())
+     (functions_block
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
@@ -3238,7 +3239,7 @@ let%expect_test "block fixing" =
   print_s [%sexp (mir : Program.Typed.t)] ;
   [%expect
     {|
-      ((functions_block ()) (input_vars ()) (prepare_data ())
+      ((closures ()) (functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((pattern
            (IfElse

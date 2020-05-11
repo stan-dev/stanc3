@@ -1,5 +1,6 @@
   $ ../../../../../install/default/bin/stanc --debug-mir mother.stan
-((functions_block
+((closures ())
+ (functions_block
   (((fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable n UInt)))
     (fdbody ((pattern Skip) (meta <opaque>))) (fdloc <opaque>))
    ((fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable n UInt)))

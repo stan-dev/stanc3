@@ -4,6 +4,7 @@ type t =
   | FnLength
   | FnMakeArray
   | FnMakeRowVec
+  | FnMakeClosure
   | FnNegInf
   | FnReadData
   (* XXX move these to a backend specific file?*)

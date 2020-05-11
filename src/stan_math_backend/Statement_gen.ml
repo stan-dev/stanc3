@@ -90,6 +90,8 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
+  | Assignment ((vident, UFun _, []), rhs) ->
+      pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
@@ -190,6 +192,7 @@ let rec pp_statement (ppf : Format.formatter)
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
+  | Decl {decl_adtype= _; decl_id= _; decl_type= Unsized (UFun _)} -> ()
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
 

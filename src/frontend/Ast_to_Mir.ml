@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 
+let closures = ref String.Map.empty
+
 (* XXX fix exn *)
 let unwrap_return_exn = function
   | Some (UnsizedType.ReturnType ut) -> ut
@@ -612,10 +614,52 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta }
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
-  | Ast.FunDef _ ->
+  | Ast.FunDef {is_closure= false; _} ->
       raise_s
         [%message
           "Found function definition statement outside of function block"]
+  | Ast.FunDef
+      {returntype; funname; is_closure= true; captures; arguments; body} ->
+      let clname = Fmt.strf "closure%d" (Map.length !closures) in
+      let type_ =
+        UnsizedType.UFun
+          (List.map arguments ~f:(fun (a, t, _) -> (a, t)), returntype, Closure)
+      in
+      ( match
+          Map.add !closures ~key:clname
+            ~data:
+              { Program.cdrt=
+                  ( match returntype with
+                  | Void -> None
+                  | ReturnType ut -> Some ut )
+              ; cdcaptures= List.map captures ~f:(fun (a, t, n) -> (a, n, t))
+              ; cdargs= List.map arguments ~f:trans_arg
+              ; cdbody= trans_stmt body |> unwrap_block_or_skip }
+        with
+      | `Ok x -> closures := x
+      | `Duplicate -> () ) ;
+      [ Stmt.
+          { Fixed.pattern=
+              Decl
+                { decl_adtype= declc.dadlevel
+                ; decl_id= funname.name
+                ; decl_type= Unsized type_ }
+          ; meta= smeta }
+      ; { pattern=
+            Assignment
+              ( (funname.name, type_, [])
+              , Expr.
+                  { pattern=
+                      FunApp
+                        ( CompilerInternal
+                        , Internal_fun.to_string FnMakeClosure
+                        , Helpers.str clname
+                          :: List.map captures ~f:(fun (adlevel, type_, id) ->
+                                 { Fixed.pattern= Var id
+                                 ; meta= {Typed.Meta.type_; adlevel; loc= smeta}
+                                 } ) )
+                  ; meta= {type_; adlevel= declc.dadlevel; loc= smeta} } )
+        ; meta= smeta } ]
   | Ast.VarDecl
       {decl_type; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
@@ -632,7 +676,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef
-      {returntype; funname; is_closure= _; captures= _; arguments; body} ->
+      {returntype; funname; is_closure= false; captures= []; arguments; body}
+    ->
       [ Program.
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)
@@ -766,7 +811,8 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
-  { functions_block= map (trans_fun_def ud_dists) functionblock
+  { closures= !closures
+  ; functions_block= map (trans_fun_def ud_dists) functionblock
   ; input_vars
   ; prepare_data
   ; log_prob

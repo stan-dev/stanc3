@@ -85,6 +85,17 @@ let pp_returntype ppf arg_types rt =
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
+let pp_returntype_closure ppf (arg_types, rt) =
+  let scalar =
+    strf "typename boost::math::tools::promote_args<captured_t__,@ %a>::type"
+      pp_promoted_scalar arg_types
+  in
+  match rt with
+  | Some ut when contains_int ut ->
+      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
+  | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
+  | None -> pf ppf "void@,"
+
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
@@ -124,7 +135,7 @@ let pp_template_decorator ppf = function
 (* XXX refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
+let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
     funs_used_in_reduce_sum =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
@@ -181,26 +192,93 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
   pp_sig ppf fdname ;
   match Stmt.Fixed.(fdbody.pattern) with
   | Skip -> pf ppf ";@ "
-  | _ -> (
+  | _ ->
       pp_block ppf (pp_body, fdbody) ;
-      pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-        functor_suffix pp_sig "operator()" pp_call_str
-        ( fdname
-        , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
-        ) ;
-      if String.Set.mem funs_used_in_reduce_sum fdname then
-        (* Produces the reduce_sum functors that has the pstream argument
-        as the third and not last argument *)
-        match fdargs with
-        | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
-            pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              fdname reduce_sum_functor_suffix pp_sig_rs "operator()"
-              pp_call_str
-              ( (if is_dist then fdname ^ "<false>" else fdname)
-              , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
-                :: List.map ~f:(fun (_, name, _) -> name) rest
-                @ extra @ ["pstream__"] )
-        | _ -> raise_s [%message "impossible!"] )
+      if not is_closure then (
+        pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
+          functor_suffix pp_sig "operator()" pp_call_str
+          ( fdname
+          , List.map ~f:(fun (_, name, _) -> name) fdargs
+            @ extra @ ["pstream__"] ) ;
+        if String.Set.mem funs_used_in_reduce_sum fdname then
+          (* Produces the reduce_sum functors that has the pstream argument
+             as the third and not last argument *)
+          match fdargs with
+          | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
+              pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
+                fdname reduce_sum_functor_suffix pp_sig_rs "operator()"
+                pp_call_str
+                ( (if is_dist then fdname ^ "<false>" else fdname)
+                , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
+                  :: List.map ~f:(fun (_, name, _) -> name) rest
+                  @ extra @ ["pstream__"] )
+          | _ -> raise_s [%message "impossible!"] )
+
+let forward_decl fun_def =
+  Program.{fun_def with fdbody= {fun_def.fdbody with Stmt.Fixed.pattern= Skip}}
+
+let closure_to_function clname Program.({cdrt; cdcaptures; cdargs; cdbody}) =
+  Program.
+    { fdname= clname ^ "_impl__"
+    ; fdrt= cdrt
+    ; fdargs= cdargs @ cdcaptures
+    ; fdbody= cdbody
+    ; fdloc= Location_span.empty }
+
+let pp_closure_defs ppf closures =
+  let pp_arg ppf (ad, id, ut) =
+    if UnsizedType.is_scalar_type ut then
+      pf ppf "const %a %s" pp_unsizedtype_captured (ad, ut) id
+    else pf ppf "const %a& %s" pp_unsizedtype_captured (ad, ut) id
+  in
+  let pp_members ppf captures =
+    (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
+  in
+  let pp_ctor ppf (clname, captures) =
+    let pp_count ppf captures =
+      if List.is_empty captures then pf ppf "0"
+      else
+        (list
+           ~sep:(fun ppf () -> pf ppf "@ +@ ")
+           (fun ppf (_, n, t) ->
+             if UnsizedType.is_scalar_type t then pf ppf "1"
+             else pf ppf "num_elements(%s__)" n ))
+          ppf captures
+    in
+    pf ppf "@[<hov>%s__(%a)@ : %a%snum_vars__(%a) { }@]" clname
+      (list ~sep:comma (fun ppf a -> pf ppf "%a__" pp_arg a))
+      captures
+      (list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s__)" id id))
+      captures
+      (if List.is_empty captures then "" else ", ")
+      pp_count
+      (List.filter
+         ~f:(fun (ad, _, _) -> ad = UnsizedType.AutoDiffable)
+         captures)
+  in
+  let pp_op ppf (rt, name, captures, args) =
+    let argtypetemplates, s_args = get_templates_and_args args in
+    pp_template_decorator ppf List.(map ~f:typename argtypetemplates) ;
+    pf ppf
+      "@[<hov>%aoperator()(%a%sstd::ostream* pstream__) const {@ return \
+       %a;@,}@]"
+      pp_returntype_closure (args, rt) (list ~sep:comma text) s_args
+      (if List.is_empty args then "" else ", ")
+      pp_call
+      ( name ^ "_impl__"
+      , text
+      , List.map ~f:(fun (_, n, _) -> n) (args @ captures) @ ["pstream__"] )
+  in
+  let f ~key ~data:Program.({cdrt; cdargs; cdcaptures; _}) =
+    pf ppf
+      "@,%a@[<v 2>class %s__ {@ %a@ public:@ %s@ const int num_vars__;@ %a@ \
+       %a@]@,};@,"
+      pp_template_decorator ["typename captured_t__"] key pp_members cdcaptures
+      "using captured_scalar_t__ = captured_t__;" pp_ctor (key, cdcaptures)
+      pp_op
+      (cdrt, key, cdcaptures, cdargs)
+  in
+  String.Map.iteri ~f closures
 
 let version = "// Code generated by %%NAME%% %%VERSION%%"
 let includes = "#include <stan/model/model_header.hpp>"
@@ -287,6 +365,7 @@ let pp_ctor ppf p =
 let pp_model_private ppf {Program.prepare_data; _} =
   let decl Stmt.Fixed.({pattern; _}) =
     match pattern with
+    | Decl {decl_type= Unsized (UFun _); _} -> None
     | Decl d ->
         Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)
     | _ -> None
@@ -703,18 +782,39 @@ let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
   let pp_fun_def_with_rs_list ppf fblock =
-    pp_fun_def ppf fblock (fun_used_in_reduce_sum p)
+    pp_fun_def ppf fblock false (fun_used_in_reduce_sum p)
   in
   let reduce_sum_struct_decl =
     String.Set.map
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
       (fun_used_in_reduce_sum p)
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) custom_functions usings Locations.pp_globals s
+  (* Closures may call user-defined functions so functions must be declared before closures.
+     But closures may also appear inside functions so closures must be defined before functions.
+     Redundant forward declarations are harmless so just declare all user functions first
+     then define closure classes and after that define user functions.
+     TODO: nested closures are still broken. *)
+  pf ppf
+    "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ %a@ %a@ %a@ %a@ \
+     }@ @]"
+    version includes (namespace p) custom_functions usings Locations.pp_globals
+    s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
     (list ~sep:cut pp_fun_def_with_rs_list)
-    p.functions_block pp_model p ;
+    (List.map ~f:forward_decl p.functions_block)
+    (list ~sep:cut pp_fun_def_with_rs_list)
+    (Map.fold ~init:[]
+       ~f:(fun ~key ~data accum ->
+         (closure_to_function key data |> forward_decl) :: accum )
+       p.closures)
+    pp_closure_defs p.closures
+    (list ~sep:cut pp_fun_def_with_rs_list)
+    p.functions_block
+    (list ~sep:cut (fun ppf fd -> pp_fun_def ppf fd true String.Set.empty))
+    (Map.fold ~init:[]
+       ~f:(fun ~key ~data accum -> closure_to_function key data :: accum)
+       p.closures)
+    pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;
   pf ppf
     {|

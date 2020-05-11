@@ -679,10 +679,22 @@ let trans_prog (p : Program.Typed.t) =
                     ; meta= Expr.Typed.Meta.empty } )
           ; meta= Location_span.empty } ] )
   in
+  let recreate_closures =
+    (* Closures are not default-constructible so they cannot be
+       private class members like all other transformed data.
+       The workaround is to recreate them at the start of each block. *)
+    List.filter_map p.prepare_data ~f:(function
+      | Stmt.Fixed.({pattern= Decl {decl_type= Unsized (UFun _); _}; _}) as d
+        ->
+          Some d
+      | Stmt.Fixed.({pattern= Assignment ((_, UFun _, _), _); _}) as d ->
+          Some d
+      | _ -> None )
+  in
   let p =
     { p with
       functions_block
-    ; log_prob
+    ; log_prob= recreate_closures @ log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
@@ -694,7 +706,7 @@ let trans_prog (p : Program.Typed.t) =
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
         @ List.map ~f:gen_write free_params
-    ; generate_quantities }
+    ; generate_quantities= recreate_closures @ generate_quantities }
   in
   Program.(
     p
