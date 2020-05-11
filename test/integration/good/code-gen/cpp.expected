@@ -1132,11 +1132,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     dydt = std::vector<local_scalar_t__>(2, 0);
     
     current_statement__ = 272;
-    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
+    assign(dydt, cons_list(index_uni(1), nil_index_list()),
+      rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
     current_statement__ = 273;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
-      (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
+      (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
+        (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
+          rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
     current_statement__ = 274;
     return dydt;
@@ -3023,10 +3026,14 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
         std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
     current_statement__ = 452;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
-      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 453;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
-      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 454;
     return f_x;
   } catch (const std::exception& e) {
@@ -3898,7 +3905,10 @@ class mother_model : public model_base_crtp<mother_model> {
                 std::numeric_limits<double>::quiet_NaN(),
                 "assigning variable l_mat");}}
           current_statement__ = 242;
-          assign(l_mat, nil_index_list(), d_ar_mat[(i - 1)][(j - 1)],
+          assign(l_mat, nil_index_list(),
+            rvalue(d_ar_mat,
+              cons_list(index_uni(i),
+                cons_list(index_uni(j), nil_index_list())), "d_ar_mat"),
             "assigning variable l_mat");
           current_statement__ = 243;
           if (pstream__) {
@@ -5142,10 +5152,14 @@ class mother_model : public model_base_crtp<mother_model> {
       for (size_t i = 1; i <= N; ++i) {
         current_statement__ = 57;
         assign(tp_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable tp_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable tp_vec");}
       current_statement__ = 59;
-      assign(tp_row_vec, nil_index_list(), transpose(tp_1d_vec[(1 - 1)]),
-        "assigning variable tp_row_vec");
+      assign(tp_row_vec, nil_index_list(),
+        transpose(
+          rvalue(tp_1d_vec, cons_list(index_uni(1), nil_index_list()),
+            "tp_1d_vec")), "assigning variable tp_row_vec");
       current_statement__ = 60;
       assign(tp_1d_row_vec, nil_index_list(), p_1d_row_vec,
         "assigning variable tp_1d_row_vec");
@@ -5305,13 +5319,24 @@ class mother_model : public model_base_crtp<mother_model> {
         for (size_t n = 1; n <= N; ++n) {
           current_statement__ = 154;
           lp_accum__.add(
-            normal_log<propto__>(to_vector(p_1d_vec[(n - 1)]), 0, 1));
+            normal_log<propto__>(
+              to_vector(
+                rvalue(p_1d_vec, cons_list(index_uni(n), nil_index_list()),
+                  "p_1d_vec")), 0, 1));
           current_statement__ = 155;
           lp_accum__.add(
-            normal_log<propto__>(to_vector(p_1d_row_vec[(n - 1)]), 0, 1));
+            normal_log<propto__>(
+              to_vector(
+                rvalue(p_1d_row_vec,
+                  cons_list(index_uni(n), nil_index_list()), "p_1d_row_vec")),
+              0, 1));
           current_statement__ = 156;
           lp_accum__.add(
-            normal_log<propto__>(to_vector(p_1d_simplex[(n - 1)]), 0, 1));
+            normal_log<propto__>(
+              to_vector(
+                rvalue(p_1d_simplex,
+                  cons_list(index_uni(n), nil_index_list()), "p_1d_simplex")),
+              0, 1));
           current_statement__ = 164;
           for (size_t m = 1; m <= M; ++m) {
             current_statement__ = 162;
@@ -5319,35 +5344,79 @@ class mother_model : public model_base_crtp<mother_model> {
               current_statement__ = 157;
               lp_accum__.add(
                 normal_log<propto__>(
-                  to_vector(p_3d_vec[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_vec[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_vec,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_vec")),
+                  rvalue(d_3d_vec,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_vec"), 1));
               current_statement__ = 158;
               lp_accum__.add(
                 normal_log<propto__>(
-                  to_vector(p_3d_row_vec[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_row_vec[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_row_vec,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_row_vec")),
+                  rvalue(d_3d_row_vec,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_row_vec"), 1));
               current_statement__ = 159;
               lp_accum__.add(
                 normal_log<propto__>(
-                  to_vector(p_3d_simplex[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_simplex[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_simplex,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_simplex")),
+                  rvalue(d_3d_simplex,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_simplex"), 1));
               current_statement__ = 160;
               lp_accum__.add(
-                normal_log<propto__>(p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)],
-                  p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)], 1));}}}
+                normal_log<propto__>(
+                  rvalue(p_real_3d_ar,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "p_real_3d_ar"),
+                  rvalue(p_real_3d_ar,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "p_real_3d_ar"), 1));}}}
         current_statement__ = 171;
         for (size_t i = 1; i <= 4; ++i) {
           current_statement__ = 169;
           for (size_t j = 1; j <= 5; ++j) {
             current_statement__ = 167;
             lp_accum__.add(
-              normal_log<propto__>(to_vector(p_ar_mat[(i - 1)][(j - 1)]), 0,
-                1));}}
+              normal_log<propto__>(
+                to_vector(
+                  rvalue(p_ar_mat,
+                    cons_list(index_uni(i),
+                      cons_list(index_uni(j), nil_index_list())), "p_ar_mat")),
+                0, 1));}}
         current_statement__ = 174;
         for (size_t k = 1; k <= K; ++k) {
           current_statement__ = 172;
           lp_accum__.add(
-            normal_log<propto__>(to_vector(p_cfcov_33_ar[(k - 1)]), 0, 1));}
+            normal_log<propto__>(
+              to_vector(
+                rvalue(p_cfcov_33_ar,
+                  cons_list(index_uni(k), nil_index_list()), "p_cfcov_33_ar")),
+              0, 1));}
         current_statement__ = 175;
         lp_accum__.add(normal_log<propto__>(to_vector(p_vec), d_vec, 1));
         current_statement__ = 176;
@@ -6217,10 +6286,14 @@ class mother_model : public model_base_crtp<mother_model> {
       for (size_t i = 1; i <= N; ++i) {
         current_statement__ = 57;
         assign(tp_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable tp_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable tp_vec");}
       current_statement__ = 59;
-      assign(tp_row_vec, nil_index_list(), transpose(tp_1d_vec[(1 - 1)]),
-        "assigning variable tp_row_vec");
+      assign(tp_row_vec, nil_index_list(),
+        transpose(
+          rvalue(tp_1d_vec, cons_list(index_uni(1), nil_index_list()),
+            "tp_1d_vec")), "assigning variable tp_row_vec");
       current_statement__ = 60;
       assign(tp_1d_row_vec, nil_index_list(), p_1d_row_vec,
         "assigning variable tp_1d_row_vec");
@@ -6870,7 +6943,9 @@ class mother_model : public model_base_crtp<mother_model> {
       for (size_t i = 1; i <= N; ++i) {
         current_statement__ = 118;
         assign(gq_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable gq_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable gq_vec");}
       current_statement__ = 123;
       for (size_t i = 1; i <= 3; ++i) {
         current_statement__ = 122;
@@ -6893,8 +6968,14 @@ class mother_model : public model_base_crtp<mother_model> {
             cons_list(index_uni(i),
               cons_list(index_uni(j), nil_index_list())),
             rvalue(indexing_mat,
-              cons_list(index_uni(indices[(i - 1)]),
-                cons_list(index_uni(indices[(j - 1)]), nil_index_list())),
+              cons_list(
+                index_uni(rvalue(indices,
+                            cons_list(index_uni(i), nil_index_list()),
+                            "indices")),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(j), nil_index_list()),
+                              "indices")), nil_index_list())),
               "indexing_mat"), "assigning variable idx_res1");}}
       current_statement__ = 127;
       assign(idx_res11, nil_index_list(),
@@ -6931,7 +7012,10 @@ class mother_model : public model_base_crtp<mother_model> {
               cons_list(index_uni(j), nil_index_list())),
             rvalue(indexing_mat,
               cons_list(index_uni(i),
-                cons_list(index_uni(indices[(j - 1)]), nil_index_list())),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(j), nil_index_list()),
+                              "indices")), nil_index_list())),
               "indexing_mat"), "assigning variable idx_res2");}}
       current_statement__ = 133;
       assign(idx_res21, nil_index_list(),
@@ -6970,9 +7054,15 @@ class mother_model : public model_base_crtp<mother_model> {
                 cons_list(index_uni(j),
                   cons_list(index_uni(k), nil_index_list()))),
               rvalue(indexing_mat,
-                cons_list(index_uni(indices[(i - 1)]),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(i), nil_index_list()),
+                              "indices")),
                   cons_list(index_uni(j),
-                    cons_list(index_uni(indices[(k - 1)]), nil_index_list()))),
+                    cons_list(
+                      index_uni(rvalue(indices,
+                                  cons_list(index_uni(k), nil_index_list()),
+                                  "indices")), nil_index_list()))),
                 "indexing_mat"), "assigning variable idx_res3");}}}
       current_statement__ = 140;
       assign(idx_res31, nil_index_list(),
@@ -9707,11 +9797,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     dydt = std::vector<local_scalar_t__>(2, 0);
     
     current_statement__ = 113;
-    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
+    assign(dydt, cons_list(index_uni(1), nil_index_list()),
+      rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
     current_statement__ = 114;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
-      (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
+      (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
+        (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
+          rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
     current_statement__ = 115;
     return dydt;
@@ -9862,10 +9955,14 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
         std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
     current_statement__ = 124;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
-      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 125;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
-      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 126;
     return f_x;
   } catch (const std::exception& e) {
@@ -14026,7 +14123,11 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
     current_statement__ = 40;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 38;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(y_slice[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(y_slice,
+                       cons_list(index_uni(n), nil_index_list()), "y_slice"),
+                     0, 1));}
     current_statement__ = 41;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14076,7 +14177,11 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
     current_statement__ = 46;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 44;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(y_slice[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(y_slice,
+                       cons_list(index_uni(n), nil_index_list()), "y_slice"),
+                     0, 1));}
     current_statement__ = 47;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14127,7 +14232,11 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 50;
       sum_lpdf = (sum_lpdf +
-                   normal_lpdf<false>(to_vector(y_slice[(n - 1)]), 0, 1));}
+                   normal_lpdf<false>(
+                     to_vector(
+                       rvalue(y_slice,
+                         cons_list(index_uni(n), nil_index_list()),
+                         "y_slice")), 0, 1));}
     current_statement__ = 53;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14177,10 +14286,17 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
     current_statement__ = 60;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 58;
-      for (size_t m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 56;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(y_slice[(n - 1)][(m - 1)], 0, 1));}}
+                     normal_lpdf<false>(
+                       rvalue(y_slice,
+                         cons_list(index_uni(n),
+                           cons_list(index_uni(m), nil_index_list())),
+                         "y_slice"), 0, 1));}}
     current_statement__ = 61;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14230,11 +14346,18 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
     current_statement__ = 68;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 66;
-      for (size_t m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 64;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 69;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14284,11 +14407,18 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
     current_statement__ = 76;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 74;
-      for (size_t m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 72;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 77;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14338,11 +14468,18 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
     current_statement__ = 84;
     for (size_t n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 82;
-      for (size_t m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 80;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 85;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14441,7 +14578,10 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 92;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 90;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                       "a"), 0, 1));}
     current_statement__ = 93;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14497,7 +14637,10 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 98;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 96;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                       "a"), 0, 1));}
     current_statement__ = 99;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14553,8 +14696,11 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 104;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 102;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(to_vector(a[(n - 1)]), 0, 1));
-    }
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     to_vector(
+                       rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                         "a")), 0, 1));}
     current_statement__ = 105;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14610,10 +14756,17 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 112;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 110;
-      for (size_t m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 108;
-        sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)][(m - 1)], 0, 1));
-      }}
+        sum_lpdf = (sum_lpdf +
+                     normal_lpdf<false>(
+                       rvalue(a,
+                         cons_list(index_uni(n),
+                           cons_list(index_uni(m), nil_index_list())), "a"),
+                       0, 1));}}
     current_statement__ = 113;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14668,11 +14821,18 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 120;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 118;
-      for (size_t m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 116;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 121;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14729,11 +14889,18 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 128;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 126;
-      for (size_t m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 124;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 129;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -14790,11 +14957,18 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 136;
     for (size_t n = start; n <= end; ++n) {
       current_statement__ = 134;
-      for (size_t m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (size_t m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 132;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 137;
     return sum_lpdf;
   } catch (const std::exception& e) {

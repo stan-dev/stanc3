@@ -1208,11 +1208,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         {
           {
-            vars__.push_back(x_vector[(1 - 1)]);
+            vars__.push_back(
+              rvalue(x_vector, cons_list(index_uni(1), nil_index_list()),
+                "x_vector"));
           }
           {
             {
-              vars__.push_back(x_vector[(2 - 1)]);
+              vars__.push_back(
+                rvalue(x_vector, cons_list(index_uni(2), nil_index_list()),
+                  "x_vector"));
             }
           }
         }
@@ -1344,7 +1348,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     assign(x_matrix,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
-                      sym42__[(1 - 1)], "assigning variable x_matrix");
+                      rvalue(sym42__,
+                        cons_list(index_uni(1), nil_index_list()), "sym42__"),
+                      "assigning variable x_matrix");
                     current_statement__ = 3;
                     pos__ = 2;
                   }
@@ -1426,7 +1432,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             {
               current_statement__ = 4;
               assign(x_vector, cons_list(index_uni(1), nil_index_list()),
-                sym43__[(1 - 1)], "assigning variable x_vector");
+                rvalue(sym43__, cons_list(index_uni(1), nil_index_list()),
+                  "sym43__"), "assigning variable x_vector");
               current_statement__ = 4;
               pos__ = 2;
             }
@@ -1461,7 +1468,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     assign(x_cov,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
-                      sym41__[(1 - 1)], "assigning variable x_cov");
+                      rvalue(sym41__,
+                        cons_list(index_uni(1), nil_index_list()), "sym41__"),
+                      "assigning variable x_cov");
                     current_statement__ = 5;
                     pos__ = 2;
                   }
@@ -1589,11 +1598,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         {
           {
-            vars__.push_back(x_vector[(1 - 1)]);
+            vars__.push_back(
+              rvalue(x_vector, cons_list(index_uni(1), nil_index_list()),
+                "x_vector"));
           }
           {
             {
-              vars__.push_back(x_vector[(2 - 1)]);
+              vars__.push_back(
+                rvalue(x_vector, cons_list(index_uni(2), nil_index_list()),
+                  "x_vector"));
             }
           }
         }
@@ -1601,16 +1614,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       {
         {
           {
-            vars__.push_back(x_cov_free__[(1 - 1)]);
+            vars__.push_back(
+              rvalue(x_cov_free__, cons_list(index_uni(1), nil_index_list()),
+                "x_cov_free__"));
           }
           {
             {
-              vars__.push_back(x_cov_free__[(2 - 1)]);
+              vars__.push_back(
+                rvalue(x_cov_free__,
+                  cons_list(index_uni(2), nil_index_list()), "x_cov_free__"));
             }
           }
           {
             {
-              vars__.push_back(x_cov_free__[(3 - 1)]);
+              vars__.push_back(
+                rvalue(x_cov_free__,
+                  cons_list(index_uni(3), nil_index_list()), "x_cov_free__"));
             }
           }
         }
