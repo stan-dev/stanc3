@@ -155,16 +155,6 @@ let prog_rhs_variables
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
-  match pattern with
-  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
-  | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
-  | IfElse (_, s1, Some s2) ->
-    Set.Poly.union (var_declarations s1) (var_declarations s2)
-  | Block slist | SList slist ->
-    Set.Poly.union_list (List.map ~f:var_declarations slist)
-  | _ -> Set.Poly.empty
-
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
@@ -195,12 +185,8 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
 let mir_uninitialized_variables (mir : Program.Typed.t) :
   (Location_span.t * string) Set.Poly.t =
   let flag_variables = List.map ~f:Flag_vars.to_string Flag_vars.enumerate in
-  let data_vars =
-    Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v))
-  in
-  let prep_vars =
-    Set.Poly.union_list (List.map ~f:var_declarations mir.prepare_data)
-  in
+  let data_vars = data_set ~exclude_transformed:true mir in
+  let trans_data_vars = data_set ~exclude_transformed:false mir in
   let globals =
     Set.Poly.union
       (Set.Poly.of_list flag_variables)
@@ -215,7 +201,7 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   in
   let globals_data = Set.Poly.union globals data_vars in
   let globals_data_prep =
-    Set.Poly.union_list [globals_data; prep_vars; parameters]
+    Set.Poly.union_list [globals_data; trans_data_vars; parameters]
   in
   Set.Poly.union_list
     [ (* prepare_data scope: data *)

@@ -92,14 +92,33 @@ let chop_dist_name (fname : string) : string Option.t =
 let is_dist (fname : string) : bool =
   Option.is_some (chop_dist_name fname)
 
-let data_set ?exclude_ints:(exclude_ints=false) (mir : Program.Typed.t) : string Set.Poly.t =
-  let remove_ints =
-    Set.Poly.filter ~f:(fun (_, st) -> st <> SizedType.SInt)
-  in
-  Set.Poly.map ~f:fst
-    ((if exclude_ints then remove_ints else ident)
-       (Set.Poly.of_list mir.input_vars))
+let top_var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
+  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+  | _ -> Set.Poly.empty
 
+let data_set
+    ?exclude_transformed:(exclude_transformed=false)
+    ?exclude_ints:(exclude_ints=false)
+    (mir : Program.Typed.t) : string Set.Poly.t =
+  (* Data are input_vars *)
+  let data = Set.Poly.of_list mir.input_vars in
+  (* Possibly remove ints from the data set *)
+  let filtered_data =
+    let remove_ints =
+      Set.Poly.filter ~f:(fun (_, st) -> st <> SizedType.SInt)
+    in
+    (Set.Poly.map ~f:fst
+       ((if exclude_ints then remove_ints else ident) data))
+  in
+  (* Transformed data are declarations in prepare_data but excluding data *)
+  if exclude_transformed then filtered_data else
+    let trans_data =
+      Set.Poly.diff
+        (Set.Poly.union_list (List.map ~f:top_var_declarations mir.prepare_data))
+        (Set.Poly.map ~f:fst data)
+    in
+    Set.Poly.union trans_data filtered_data
 
 let parameter_set ?include_transformed:(include_transformed = false)
     (mir : Program.Typed.t) =
