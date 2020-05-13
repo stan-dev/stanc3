@@ -162,6 +162,7 @@ let distributions =
   ; (full_lpdf, "frechet", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "gamma", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "gumbel", [DVReal; DVReal; DVReal])
+  ; (full_lpdf, "hmm_marginal_lpdf", [DMatrix; DMatrix; DVectors])
   ; (full_lpdf, "inv_chi_square", [DVReal; DVReal])
   ; (full_lpdf, "inv_gamma", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal])
