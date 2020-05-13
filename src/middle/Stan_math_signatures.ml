@@ -162,7 +162,6 @@ let distributions =
   ; (full_lpdf, "frechet", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "gamma", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "gumbel", [DVReal; DVReal; DVReal])
-  ; (full_lpdf, "hmm_marginal", [DMatrix; DMatrix; DVectors])
   ; (full_lpdf, "inv_chi_square", [DVReal; DVReal])
   ; (full_lpdf, "inv_gamma", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "logistic", [DVReal; DVReal; DVReal])
@@ -944,6 +943,8 @@ let () =
       , ReturnType (bare_array_type (bare_types i, 3))
       , [bare_array_type (bare_types i, 3); UInt] )
   done ;
+  add_unqualified
+    ("hmm_marginal_lpdf", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
   add_unqualified
     ("hypergeometric_log", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified

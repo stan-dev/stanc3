@@ -34,15 +34,15 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 
-  log_omega ~ hmm_marginal(Gamma, rho);
-  log_omega ~ hmm_marginal(Gamma_v, rho);
-  log_omega ~ hmm_marginal(Gamma, rho_v);
-  log_omega ~ hmm_marginal(Gamma_v, rho_v);
+  // log_omega ~ hmm_marginal(Gamma, rho);
+  // log_omega ~ hmm_marginal(Gamma_v, rho);
+  // log_omega ~ hmm_marginal(Gamma, rho_v);
+  // log_omega ~ hmm_marginal(Gamma_v, rho_v);
 
-  log_omega_v ~ hmm_marginal(Gamma, rho);
-  log_omega_v ~ hmm_marginal(Gamma_v, rho);
-  log_omega_v ~ hmm_marginal(Gamma, rho_v);
-  log_omega_v ~ hmm_marginal(Gamma_v, rho_v);
+  // log_omega_v ~ hmm_marginal(Gamma, rho);
+  // log_omega_v ~ hmm_marginal(Gamma_v, rho);
+  // log_omega_v ~ hmm_marginal(Gamma, rho_v);
+  // log_omega_v ~ hmm_marginal(Gamma_v, rho_v);
 
   target += hmm_marginal_lpdf(log_omega | Gamma, rho);
   target += hmm_marginal_lpdf(log_omega | Gamma_v, rho);
@@ -52,5 +52,9 @@ model {
   target += hmm_marginal_lpdf(log_omega_v | Gamma_v, rho);
   target += hmm_marginal_lpdf(log_omega_v | Gamma, rho_v);
   target += hmm_marginal_lpdf(log_omega_v | Gamma_v, rho_v);
+}
 
+generated quantities {
+  // rng function doesn't exist (and shouldn't)
+  // real dummy[N] = hmm_marginal_rng(Gamma, rho);
 }
