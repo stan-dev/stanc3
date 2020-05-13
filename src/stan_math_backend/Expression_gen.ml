@@ -111,7 +111,6 @@ let pp_unsizedtype_captured ppf (adtype, ut) =
   let s = captured_scalar ut adtype in
   pp_unsizedtype_custom_scalar ppf (s, ut)
 
-
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
@@ -282,8 +281,8 @@ and gen_fun_app ppf fname es =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
-      | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
-        as e ->
+      | { Expr.Fixed.pattern= Var name
+        ; meta= {Expr.Typed.Meta.type_= UFun (_, _, Function); _} } as e ->
           { e with
             pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
           }
@@ -307,10 +306,10 @@ and gen_fun_app ppf fname es =
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
       | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
           (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
+      | _, "integrate_ode_bdf", f :: y0 :: t0 :: ts :: tl ->
+          let args, tols = List.split_n tl (List.length tl - 3) in
+          ("ode_bdf_tol", (f :: y0 :: t0 :: ts :: tols) @ (msgs :: args))
       | ( true
-        , "integrate_ode_bdf"
-        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
-       |( true
         , "integrate_ode_adams"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
        |( true

@@ -74,6 +74,16 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | Variable {name; _} -> Var name
         | IntNumeral x -> Lit (Int, format_number x)
         | RealNumeral x -> Lit (Real, format_number x)
+        | FunApp
+            ( Ast.StanLib
+            , {name= "integrate_ode_bdf"; _}
+            , ({emeta= {type_= UFun (fargs, _, _); _}; _} :: _ as args) )
+          when 2 + List.length fargs = List.length args ->
+            FunApp
+              ( Fun_kind.StanLib
+              , "integrate_ode_bdf"
+              , trans_exprs args
+                @ Expr.Helpers.[float 1e-10; float 1e-10; float 1e8] )
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
@@ -469,6 +479,9 @@ let%expect_test "dist name suffix" =
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
+  let trans_stmt_ad =
+    trans_stmt ud_dists {dconstrain= None; dadlevel= AutoDiffable}
+  in
   let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
   let trans_single_stmt s =
     match trans_stmt s with
@@ -634,7 +647,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                   | ReturnType ut -> Some ut )
               ; cdcaptures= List.map captures ~f:(fun (a, t, n) -> (a, n, t))
               ; cdargs= List.map arguments ~f:trans_arg
-              ; cdbody= trans_stmt body |> unwrap_block_or_skip }
+              ; cdbody= trans_stmt_ad body |> unwrap_block_or_skip }
         with
       | `Ok x -> closures := x
       | `Duplicate -> () ) ;

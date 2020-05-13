@@ -1054,37 +1054,60 @@ let () =
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
-    , ReturnType (UArray (UArray UReal))
+    , ReturnType (UArray UVector)
     , [ ( AutoDiffable
         , UFun
             ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UVector)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal)
+            , ReturnType (UVector)
             , Function ) )
-      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UVector)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
-    , ReturnType (UArray (UArray UReal))
+    , ReturnType (UArray (UVector))
     , [ ( AutoDiffable
         , UFun
             ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UVector)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal)
+            , ReturnType (UVector)
             , Function ) )
-      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UVector)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+  add_qualified
+    ( "integrate_ode_bdf"
+    , ReturnType (UArray UVector)
+    , [ ( AutoDiffable
+        , UFun
+            ( [(AutoDiffable, UReal); (AutoDiffable, UVector)]
+            , ReturnType UVector
+            , Function ) )
+      ; (AutoDiffable, UVector)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal) ] ) ;
+  add_qualified
+    ( "integrate_ode_bdf"
+    , ReturnType (UArray UVector)
+    , [ ( AutoDiffable
+        , UFun
+            ( [(AutoDiffable, UReal); (AutoDiffable, UVector)]
+            , ReturnType (UVector)
+            , Function ) )
+      ; (AutoDiffable, UVector)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UReal); (DataOnly, UReal); (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (UArray (UArray UReal))

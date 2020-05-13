@@ -85,10 +85,12 @@ let pp_returntype ppf arg_types rt =
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
-let pp_returntype_closure ppf (arg_types, rt) =
+let pp_returntype_closure ppf (arg_types, (rt, promote)) =
   let scalar =
-    strf "typename boost::math::tools::promote_args<captured_t__,@ %a>::type"
-      pp_promoted_scalar arg_types
+    if promote then
+      strf "typename boost::math::tools::promote_args<captured_t__,@ %a>::type"
+        pp_promoted_scalar arg_types
+    else strf "%a" pp_promoted_scalar arg_types
   in
   match rt with
   | Some ut when contains_int ut ->
@@ -176,6 +178,15 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
+  let pp_ode_sig ppf name =
+    pp_template_decorator ppf templates ;
+    pp_returntype ppf fdargs fdrt ;
+    let arg_strs =
+      let two, rest = List.split_n args 2 in
+      two @ ["std::ostream* pstream__"] @ rest
+    in
+    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
+  in
   let pp_sig_rs ppf name =
     if is_dist then pp_template_decorator ppf (List.tl_exn templates)
     else pp_template_decorator ppf templates ;
@@ -195,11 +206,34 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
   | _ ->
       pp_block ppf (pp_body, fdbody) ;
       if not is_closure then (
-        pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-          functor_suffix pp_sig "operator()" pp_call_str
+        let pp_zeros ppf () = pf ppf "void set_zero_adjoints() const { }" in
+        let pp_adjoints ppf () =
+          pf ppf "void accumulate_adjoints(double*) const { }"
+        in
+        let pp_varis ppf () = pf ppf "void save_varis(vari**) const { }" in
+        let pp_valueof ppf () =
+          pf ppf "using ValueOf__ = %s%s;" fdname functor_suffix
+        in
+        let pp_deepcopy ppf () =
+          pf ppf "using DeepCopy__ = %s%s;" fdname functor_suffix
+        in
+        let pp_ode ppf () =
+          if not (is_dist || is_lp || is_rng || List.length args < 3) then
+            pf ppf "%a const @,{@,return %a;@,}@,%a@,%a@,%a@,%a@,%a@,%s"
+              pp_ode_sig "operator()" pp_call_str
+              ( fdname
+              , List.map ~f:(fun (_, name, _) -> name) fdargs
+                @ extra @ ["pstream__"] )
+              pp_zeros () pp_varis () pp_adjoints () pp_valueof () pp_deepcopy
+              () "using captured_scalar_t__ = double;"
+        in
+        pf ppf "@,@,struct %s%s {@,%s@,%a const @,{@,return %a;}@,%a};@,"
+          fdname functor_suffix "const static int num_vars__ = 0;" pp_sig
+          "operator()" pp_call_str
           ( fdname
           , List.map ~f:(fun (_, name, _) -> name) fdargs
-            @ extra @ ["pstream__"] ) ;
+            @ extra @ ["pstream__"] )
+          pp_ode () ;
         if String.Set.mem funs_used_in_reduce_sum fdname then
           (* Produces the reduce_sum functors that has the pstream argument
              as the third and not last argument *)
@@ -245,7 +279,10 @@ let pp_closure_defs ppf closures =
              else pf ppf "num_elements(%s__)" n ))
           ppf captures
     in
-    pf ppf "@[<hov>%s__(%a)@ : %a%snum_vars__(%a) { }@]" clname
+    pf ppf
+      "@[<hov>%s__(@[<hov>%a@])@ : \
+       %a%snum_vars__(@[stan::is_var<captured_t__>::value ?@ %a : 0@]) { }@]"
+      clname
       (list ~sep:comma (fun ppf a -> pf ppf "%a__" pp_arg a))
       captures
       (list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s__)" id id))
@@ -258,25 +295,121 @@ let pp_closure_defs ppf closures =
   in
   let pp_op ppf (rt, name, captures, args) =
     let argtypetemplates, s_args = get_templates_and_args args in
+    let pp_ode ppf () =
+      if List.length s_args > 2 then (
+        let two, tl = List.split_n s_args 2 in
+        pp_template_decorator ppf List.(map ~f:typename argtypetemplates) ;
+        pf ppf
+          "@[<v>%aoperator()(@[<hov>%a, std::ostream* pstream__, %a@]) const \
+           {@ @[<hov>return %a;@]@,}@]@,"
+          pp_returntype_closure (args, rt) (list ~sep:comma text) two
+          (list ~sep:comma text) tl pp_call
+          ( name ^ "_impl__"
+          , text
+          , List.map ~f:(fun (_, n, _) -> n) (args @ captures) @ ["pstream__"]
+          ) )
+    in
     pp_template_decorator ppf List.(map ~f:typename argtypetemplates) ;
     pf ppf
-      "@[<hov>%aoperator()(%a%sstd::ostream* pstream__) const {@ return \
-       %a;@,}@]"
+      "@[<v>%aoperator()(@[<hov>%a%sstd::ostream* pstream__@]) const {@ \
+       @[<hov>return %a;@]@,}@]@,%a"
       pp_returntype_closure (args, rt) (list ~sep:comma text) s_args
       (if List.is_empty args then "" else ", ")
       pp_call
       ( name ^ "_impl__"
       , text
       , List.map ~f:(fun (_, n, _) -> n) (args @ captures) @ ["pstream__"] )
+      pp_ode ()
+  in
+  let pp_valueof ppf (rt, name, captures, args) =
+    let pp_arg ppf (ad, id, ut) =
+      if UnsizedType.is_scalar_type ut || ad = UnsizedType.AutoDiffable then
+        pf ppf "const %a %s" pp_unsizedtype_captured (DataOnly, ut) id
+      else pf ppf "const %a& %s" pp_unsizedtype_captured (DataOnly, ut) id
+    in
+    let pp_mem ppf captures =
+      (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
+    in
+    let pp_init ppf (name, captures) =
+      let pp_items ppf captures =
+        if List.is_empty captures then pf ppf ""
+        else
+          pf ppf " : %a"
+            (list ~sep:comma (fun ppf (ad, n, _) ->
+                 if ad = UnsizedType.AutoDiffable then
+                   pf ppf "%s(value_of(init.%s))" n n
+                 else pf ppf "%s(init.%s)" n n ))
+            captures
+      in
+      pf ppf "@[<hov>ValueOf__(const %s__& init)%a { }@]" name pp_items
+        captures
+    in
+    pf ppf "@[<v 2>class ValueOf__ {@ %a@ public:@ %a@ %a};@]" pp_mem captures
+      pp_init (name, captures) pp_op
+      ((rt, false), name, captures, args)
+  in
+  let pp_zeroadjoints ppf captures =
+    let pp_loop ppf (ad, id, _) =
+      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+    in
+    pf ppf "@[<hov 2>void set_zero_adjoints() const {@ %a@ }@]"
+      (list ~sep:cut pp_loop) captures
+  in
+  let pp_accumulateadjoints ppf captures =
+    let pp_loop ppf (ad, id, _) =
+      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+    in
+    pf ppf "@[<hov 2>void accumulate_adjoints(double*) const {@ %a}@]"
+      (list ~sep:cut pp_loop) captures
+  in
+  let pp_savevaris ppf captures =
+    let pp_loop ppf (ad, id, _) =
+      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+    in
+    pf ppf "@[<hov 2>void save_varis(vari**) const {@ %a}@]"
+      (list ~sep:cut pp_loop) captures
+  in
+  let pp_deepcopy ppf (rt, id, captures, args) =
+    let pp_arg ppf (ad, id, ut) =
+      if UnsizedType.is_scalar_type ut || ad = UnsizedType.AutoDiffable then
+        pf ppf "const %a %s" pp_unsizedtype_captured (ad, ut) id
+      else pf ppf "const %a& %s" pp_unsizedtype_captured (ad, ut) id
+    in
+    let pp_members ppf captures =
+      (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
+    in
+    let pp_init ppf (id, captures) =
+      let pp_items ppf captures =
+        if List.is_empty captures then pf ppf ""
+        else
+          pf ppf " : %a"
+            (list ~sep:comma (fun ppf (ad, n, _) ->
+                 if ad = UnsizedType.AutoDiffable then
+                   pf ppf "%s(deep_copy_vars(init.%s))" n n
+                 else pf ppf "%s(init.%s)" n n ))
+            captures
+      in
+      pf ppf "@[<hov>DeepCopy__(const %s__& init)%a { }@]" id pp_items captures
+    in
+    pf ppf "@[<v 2>class DeepCopy__ {@ %a@ public:@ %a@ %a@ %a@ };@]"
+      pp_members captures pp_init (id, captures) pp_op
+      ((rt, true), id, captures, args)
+      pp_accumulateadjoints captures
   in
   let f ~key ~data:Program.({cdrt; cdargs; cdcaptures; _}) =
     pf ppf
       "@,%a@[<v 2>class %s__ {@ %a@ public:@ %s@ const int num_vars__;@ %a@ \
-       %a@]@,};@,"
+       %a@ %a@ %a@ %a@ %a@ %a@]@,};@,"
       pp_template_decorator ["typename captured_t__"] key pp_members cdcaptures
       "using captured_scalar_t__ = captured_t__;" pp_ctor (key, cdcaptures)
       pp_op
+      ((cdrt, true), key, cdcaptures, cdargs)
+      pp_valueof
       (cdrt, key, cdcaptures, cdargs)
+      pp_deepcopy
+      (cdrt, key, cdcaptures, cdargs)
+      pp_zeroadjoints cdcaptures pp_accumulateadjoints cdcaptures pp_savevaris
+      cdcaptures
   in
   String.Map.iteri ~f closures
 
