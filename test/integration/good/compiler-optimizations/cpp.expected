@@ -188,6 +188,8 @@ void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym34__;
@@ -227,6 +229,8 @@ rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     int sym37__;
@@ -263,6 +267,8 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     {
@@ -307,8 +313,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "optimizations_model_namespace::optimizations_model";
     (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      pos__ = std::numeric_limits<int>::min();
       
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -349,6 +358,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       local_scalar_t__ sym110__;
@@ -386,10 +398,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       int sym78__;
       int sym77__;
       local_scalar_t__ theta;
+      theta = DUMMY_VAR__;
       
       current_statement__ = 1;
       theta = in__.scalar();
       local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
       
       current_statement__ = 2;
       phi = in__.scalar();
@@ -399,6 +413,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
+      stan::math::fill(x_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       x_matrix = in__.matrix(3, 2);
@@ -406,6 +421,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_vector = in__.vector(2);
@@ -415,14 +431,17 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
+      stan::math::fill(x_cov, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> x_cov_in__;
       x_cov_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(x_cov_in__, DUMMY_VAR__);
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
       {
         double x;
+        x = std::numeric_limits<double>::quiet_NaN();
         
         current_statement__ = 9;
         for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
@@ -898,6 +917,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         current_statement__ = 42;
         lp_accum__.add(5880);
         double z;
+        z = std::numeric_limits<double>::quiet_NaN();
         
         current_statement__ = 44;
         lp_accum__.add(5880);
@@ -907,12 +927,14 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         lp_accum__.add(2);
         {
           double y;
+          y = std::numeric_limits<double>::quiet_NaN();
           
           current_statement__ = 48;
           lp_accum__.add(24);
         }
         {
           double y;
+          y = std::numeric_limits<double>::quiet_NaN();
           
           current_statement__ = 51;
           lp_accum__.add(245);
@@ -1006,6 +1028,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
         double temp;
+        temp = std::numeric_limits<double>::quiet_NaN();
         
         {
           {
@@ -1017,6 +1040,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
         double temp2;
+        temp2 = std::numeric_limits<double>::quiet_NaN();
         
         {
           {
@@ -1037,10 +1061,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
           }
         }
         double dataonlyvar;
+        dataonlyvar = std::numeric_limits<double>::quiet_NaN();
         
         current_statement__ = 81;
         lp_accum__.add(159);
         double paramvar;
+        paramvar = std::numeric_limits<double>::quiet_NaN();
         
         {
           {
@@ -1076,6 +1102,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       double sym76__;
@@ -1096,10 +1125,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       int sym61__;
       double sym60__;
       double theta;
+      theta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       theta = in__.scalar();
       double phi;
+      phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       phi = in__.scalar();
@@ -1109,6 +1140,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
+      stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       x_matrix = in__.matrix(3, 2);
@@ -1116,6 +1148,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       x_vector = in__.vector(2);
@@ -1125,9 +1158,11 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
+      stan::math::fill(x_cov, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> x_cov_in__;
       x_cov_in__ = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(x_cov_in__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
@@ -1320,11 +1355,14 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       int sym39__;
       int sym38__;
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
       
       double theta;
+      theta = std::numeric_limits<double>::quiet_NaN();
       
       sym53__ = context__.vals_r("theta")[(1 - 1)];
       double phi;
+      phi = std::numeric_limits<double>::quiet_NaN();
       
       sym52__ = context__.vals_r("phi")[(1 - 1)];
       current_statement__ = 3;
@@ -1333,6 +1371,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_matrix", "2", 2);
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
+      stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<double> x_matrix_flat__;
@@ -1422,6 +1461,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_vector", "2", 2);
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(x_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<double> x_vector_flat__;
@@ -1453,6 +1493,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       validate_non_negative_index("x_cov", "2", 2);
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
+      stan::math::fill(x_cov, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<double> x_cov_flat__;
@@ -1521,6 +1562,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                                   "(2 + ((2 * (2 - 1)) / 2))", 3);
       Eigen::Matrix<double, -1, 1> x_cov_free__;
       x_cov_free__ = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(x_cov_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       assign(x_cov_free__, nil_index_list(),

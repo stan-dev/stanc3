@@ -497,48 +497,6 @@ and validate_dims_stmt stmt =
   in
   {stmt with pattern}
 
-let make_fill vident st loc =
-  let rhs =
-    Expr.(
-      Helpers.internal_funapp FnNaN []
-      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
-  in
-  let ut = SizedType.to_unsized st in
-  let var =
-    Expr.(
-      let meta = {Typed.Meta.empty with type_= ut; loc} in
-      Fixed.{meta; pattern= Var vident})
-  in
-  let bodyfn var =
-    Stmt.Fixed.
-      { pattern=
-          Assignment ((vident, ut, Expr.Helpers.collect_indices var), rhs)
-      ; meta= loc }
-  in
-  Stmt.Helpers.for_scalar st bodyfn var loc
-
-let rec contains_eigen = function
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | _ -> false
-
-let type_needs_fill decl_id ut =
-  Utils.is_user_ident decl_id
-  && (contains_eigen ut || match ut with UReal -> true | _ -> false)
-
-let rec add_fill no_fill_required = function
-  | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-    decl
-    when (not (Set.mem no_fill_required decl_id))
-         && type_needs_fill decl_id (SizedType.to_unsized st) ->
-      (* I *think* we only need to initialize eigen types and scalars because we already construct
-       std::vectors with 0s.
-    *)
-      Stmt.Fixed.{pattern= SList [decl; make_fill decl_id st meta]; meta}
-  | {pattern; meta} ->
-      Stmt.Fixed.
-        {pattern= Pattern.map Fn.id (add_fill no_fill_required) pattern; meta}
-
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -583,9 +541,6 @@ let trans_prog (p : Program.Typed.t) =
            | Parameters -> `Fst x
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x )
-  in
-  let data_and_params =
-    List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
   let tparam_start stmt =
     Stmt.Fixed.(
@@ -699,5 +654,4 @@ let trans_prog (p : Program.Typed.t) =
   Program.(
     p
     |> map Fn.id ensure_body_in_block
-    |> map Fn.id (add_fill (String.Set.of_list data_and_params))
     |> map_prog_stmt_lists flatten_slists_list)
