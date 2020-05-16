@@ -348,25 +348,79 @@ let pp_closure_defs ppf closures =
       pp_init (name, captures) pp_op
       ((rt, false), name, captures, args)
   in
-  let pp_zeroadjoints ppf captures =
-    let pp_loop ppf (ad, id, _) =
-      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+  let to_var adlevel type_ id =
+    Expr.{Fixed.pattern= Var id; meta= {Typed.Meta.empty with type_; adlevel}}
+  in
+  let rec for_each_scalar bodyfn (iteratee : Expr.Typed.t) =
+    let bodyfn' =
+      match iteratee.meta.type_ with
+      | UArray _ -> for_each_scalar bodyfn
+      | _ -> bodyfn
     in
-    pf ppf "@[<hov 2>void set_zero_adjoints() const {@ %a@ }@]"
+    Stmt.Helpers.for_each bodyfn' iteratee iteratee.meta.loc
+  in
+  let pp_zeroadjoints ppf captures =
+    let pp_loop ppf (adlevel, id, type_) =
+      let f v =
+        Stmt.Helpers.internal_nrfunapp FnZeroAdjoint [v]
+          Stmt.Numbered.Meta.empty
+      in
+      let s = for_each_scalar f (to_var adlevel type_ id) in
+      if adlevel = UnsizedType.AutoDiffable then pp_statement ppf s
+    in
+    pf ppf
+      "@[<v 2>void set_zero_adjoints() const {@ if \
+       (stan::is_var<captured_t__>::value) {@ %a@ }@ }@]"
       (list ~sep:cut pp_loop) captures
   in
+  let swrap pattern = Stmt.{Fixed.pattern; meta= Numbered.Meta.empty} in
+  let pos = Expr.{Fixed.pattern= Var "pos__"; meta= Typed.Meta.empty} in
+  let indexed v i =
+    Expr.{Fixed.pattern= Indexed (v, [Single i]); meta= Typed.Meta.empty}
+  in
   let pp_accumulateadjoints ppf captures =
-    let pp_loop ppf (ad, id, _) =
-      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+    let pp_loop ppf (ad, id, ut) =
+      let adj v =
+        Expr.Helpers.internal_funapp FnGetAdjoint [v] Expr.Typed.Meta.empty
+      in
+      let go v =
+        SList
+          [ Assignment
+              ( ("ptr", UReal, [Single pos])
+              , Expr.Helpers.binop
+                  (indexed (to_var DataOnly (UArray UReal) "ptr") pos)
+                  Plus (adj v) )
+            |> swrap
+          ; Assignment (("pos__", UInt, []), Expr.Helpers.(binop pos Plus one))
+            |> swrap ]
+        |> swrap
+      in
+      let s = for_each_scalar go (to_var ad ut id) in
+      if ad = UnsizedType.AutoDiffable then pp_statement ppf s
     in
-    pf ppf "@[<hov 2>void accumulate_adjoints(double*) const {@ %a}@]"
+    pf ppf
+      "@[<v 2>void accumulate_adjoints(double* ptr) const {@ if \
+       (stan::is_var<captured_t__>::value) {@ size_t pos__ = 1;@ %a@ }@ }@]"
       (list ~sep:cut pp_loop) captures
   in
   let pp_savevaris ppf captures =
-    let pp_loop ppf (ad, id, _) =
-      if ad = UnsizedType.AutoDiffable then pf ppf "/* %s */" id
+    let pp_loop ppf (ad, id, ut) =
+      let vari v =
+        Expr.Helpers.internal_funapp FnGetVariPtr [v] Expr.Typed.Meta.empty
+      in
+      let go v =
+        SList
+          [ Assignment (("ptr", UInt, [Single pos]), vari v) |> swrap
+          ; Assignment (("pos__", UInt, []), Expr.Helpers.(binop pos Plus one))
+            |> swrap ]
+        |> swrap
+      in
+      let s = for_each_scalar go (to_var ad ut id) in
+      if ad = UnsizedType.AutoDiffable then pp_statement ppf s
     in
-    pf ppf "@[<hov 2>void save_varis(vari**) const {@ %a}@]"
+    pf ppf
+      "@[<v 2>void save_varis(vari** ptr) const {@ if \
+       (stan::is_var<captured_t__>::value) {@ size_t pos__ = 1;@ %a@ }@ }@]"
       (list ~sep:cut pp_loop) captures
   in
   let pp_deepcopy ppf (rt, id, captures, args) =

@@ -261,14 +261,11 @@ module Helpers = struct
     in
     let loopvar, reset = Gensym.enter () in
     let lower = Expr.Helpers.loop_bottom in
-    let stmt =
-      Fixed.Pattern.Block
-        [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))]
-    in
+    let body = bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar)) in
     reset () ;
-    let body = Fixed.{meta; pattern= stmt} in
+    let body = Fixed.{body with pattern= Pattern.Block [body]} in
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
-    Fixed.{meta; pattern}
+    Fixed.{body with pattern}
 
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =

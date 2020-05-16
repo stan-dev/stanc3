@@ -20,6 +20,9 @@ type t =
   | FnReject
   | FnResizeToMatch
   | FnNaN
+  | FnZeroAdjoint
+  | FnGetAdjoint
+  | FnGetVariPtr
 [@@deriving sexp]
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"

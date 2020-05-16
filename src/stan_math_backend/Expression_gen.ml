@@ -375,6 +375,10 @@ and pp_compiler_internal_fn ut f ppf es =
         pf ppf "@[<hov 2>%s__<local_scalar_t__>(@,%a)@]" clname
           (list ~sep:comma pp_expr) captures
     | _ -> raise_s [%message "Bad closure " (es : Expr.Typed.t list)] )
+  | Some FnGetAdjoint -> 
+    pf ppf "%a.adj()" pp_expr (List.hd_exn es)
+  | Some FnGetVariPtr -> 
+    pf ppf "%a.vi_" pp_expr (List.hd_exn es)
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es

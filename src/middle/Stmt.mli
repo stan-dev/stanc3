@@ -125,34 +125,37 @@ module Helpers : sig
 
   val mkfor :
        Expr.Typed.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t -> (Expr.Typed.Meta.t, 'a) Fixed.t)
     -> Expr.Typed.t
     -> Location_span.t
-    -> Located.t
+    -> (Expr.Typed.Meta.t, 'a) Fixed.t
 
   val for_each :
-    (Expr.Typed.t -> Located.t) -> Expr.Typed.t -> Location_span.t -> Located.t
+       (Expr.Typed.t -> (Expr.Typed.Meta.t, 'a) Fixed.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> (Expr.Typed.Meta.t, 'a) Fixed.t
 
   val for_scalar :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t -> (Expr.Typed.Meta.t, 'a) Fixed.t)
     -> Expr.Typed.t
     -> Location_span.t
-    -> Located.t
+    -> (Expr.Typed.Meta.t, 'a) Fixed.t
 
   val for_scalar_inv :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t -> (Expr.Typed.Meta.t, 'a) Fixed.t)
     -> Expr.Typed.t
     -> Location_span.t
-    -> Located.t
+    -> (Expr.Typed.Meta.t, 'a) Fixed.t
 
   val for_eigen :
        Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
+    -> (Expr.Typed.t -> (Expr.Typed.Meta.t, 'a) Fixed.t)
     -> Expr.Typed.t
     -> Location_span.t
-    -> Located.t
+    -> (Expr.Typed.Meta.t, 'a) Fixed.t
 
   val assign_indexed :
        UnsizedType.t
