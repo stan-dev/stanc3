@@ -155,8 +155,7 @@ type ('e, 's, 'l, 'f, 'c) statement =
   | FunDef of
       { returntype: Middle.UnsizedType.returntype
       ; funname: identifier
-      ; is_closure: bool
-      ; captures: 'c
+      ; closure: 'c
       ; arguments:
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
@@ -183,9 +182,15 @@ type ('e, 'm, 'l, 'f, 'c) statement_with =
   ; smeta: 'm }
 [@@deriving sexp, compare, map, hash]
 
+type closure_info =
+  { clname: string
+  ; captures:
+      (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * string) list }
+[@@deriving sexp, compare, map, hash]
+
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
-  (untyped_expression, located_meta, untyped_lval, unit, unit) statement_with
+  (untyped_expression, located_meta, untyped_lval, unit, bool) statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -202,8 +207,7 @@ type typed_statement =
   , stmt_typed_located_meta
   , typed_lval
   , fun_kind
-  , (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * string) list
-  )
+  , closure_info option )
   statement_with
 [@@deriving sexp, compare, map, hash]
 
@@ -251,8 +255,7 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
         (fun _ -> ())
-        (fun _ -> ())
-        stmt
+        Option.is_some stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)

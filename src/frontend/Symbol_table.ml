@@ -12,6 +12,7 @@ type 'a state =
   ; isunassigned: (string, unit) Hashtbl.t
   ; locals: (string, unit) Hashtbl.t ref
   ; captures: String.Set.t ref
+  ; closures: String.Set.t ref
   ; globals: (string, unit) Hashtbl.t }
 
 let initialize () =
@@ -22,6 +23,7 @@ let initialize () =
   ; isunassigned= String.Table.create ()
   ; locals= ref (String.Table.create ())
   ; captures= ref String.Set.empty
+  ; closures= ref String.Set.empty
   ; globals= String.Table.create () }
 
 let enter s str ty =
@@ -90,6 +92,14 @@ let check_is_unassigned s str = Hashtbl.mem s.isunassigned str
 let check_some_id_is_unassigned s = not (Hashtbl.length s.isunassigned = 0)
 let is_global s str = Option.is_some (Hashtbl.find s.globals str)
 
+let new_clname vm =
+  let clname =
+    let n = Set.length !(vm.closures) in
+    if n < 10 then Fmt.strf "closure0%d" n else Fmt.strf "closure%d" n
+  in
+  vm.closures := Set.add !(vm.closures) clname ;
+  clname
+
 let unsafe_clear_symbol_table s =
   Hashtbl.clear s.table ;
   Stack.clear s.stack ;
@@ -97,5 +107,6 @@ let unsafe_clear_symbol_table s =
   Hashtbl.clear s.readonly ;
   Hashtbl.clear s.isunassigned ;
   s.captures := String.Set.empty ;
+  s.closures := String.Set.empty ;
   Hashtbl.clear !(s.locals) ;
   Hashtbl.clear s.globals

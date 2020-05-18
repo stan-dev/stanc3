@@ -45,3 +45,5 @@ val is_global : 'a state -> string -> bool
 
 val unsafe_clear_symbol_table : 'a state -> unit
 (** Used to clear the whole symbol table *)
+
+val new_clname : 'a state -> string

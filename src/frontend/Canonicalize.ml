@@ -143,8 +143,7 @@ let rec replace_deprecated_stmt {stmt; smeta} =
     | FunDef
         { returntype
         ; funname= {name; id_loc}
-        ; is_closure
-        ; captures
+        ; closure
         ; arguments
         ; body } ->
         FunDef
@@ -154,8 +153,7 @@ let rec replace_deprecated_stmt {stmt; smeta} =
                   Option.value ~default:name
                     (String.Table.find deprecated_userdefined name)
               ; id_loc }
-          ; is_closure
-          ; captures
+          ; closure
           ; arguments
           ; body= replace_deprecated_stmt body }
     | _ ->

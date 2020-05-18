@@ -1610,6 +1610,7 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
           |> map ~f:(fun at -> (at, ut, id))) )
     |> Validate.sequence
   in
+  let clname = if is_closure then Symbol_table.new_clname vm else "" in
   Validate.(
     uargs
     |> apply_const (semantic_check_identifier id)
@@ -1624,8 +1625,9 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
     >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
-      ( Functions
-      , UFun (uarg_types, urt, if is_closure then Closure else Function) ) ;
+      ( cf.current_block
+      , UFun (uarg_types, urt, if is_closure then Closure clname else Function)
+      ) ;
     Symbol_table.set_read_only vm id.name ;
     semantic_check_fundef_suffix ~loc:id.id_loc is_closure id
     |> apply_const (semantic_check_fundef_dist_rt ~loc id urt)
@@ -1673,16 +1675,23 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
              FunDef
                { returntype= urt
                ; funname= id
-               ; is_closure
-               ; captures=
-                   List.filter_map captures ~f:(fun name ->
-                       match Symbol_table.look vm name with
-                       | None | Some (Functions, UFun (_, _, Function)) -> None
-                       | Some (block, type_) ->
-                           Symbol_table.set_read_only vm name ;
-                           Some
-                             (calculate_autodifftype block type_, type_, name)
-                   )
+               ; closure=
+                   ( if is_closure then
+                     Some
+                       { clname
+                       ; captures=
+                           List.filter_map captures ~f:(fun name ->
+                               match Symbol_table.look vm name with
+                               | None | Some (Functions, UFun (_, _, Function))
+                                 ->
+                                   None
+                               | Some (block, type_) ->
+                                   Symbol_table.set_read_only vm name ;
+                                   Some
+                                     ( calculate_autodifftype block type_
+                                     , type_
+                                     , name ) ) }
+                   else None )
                ; arguments= uargs
                ; body= ub }
            in
@@ -1724,9 +1733,8 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       ; is_global } ->
       semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
-  | FunDef {returntype; funname; is_closure; captures= (); arguments; body} ->
-      semantic_check_fundef ~loc ~cf returntype funname is_closure arguments
-        body
+  | FunDef {returntype; funname; closure; arguments; body} ->
+      semantic_check_fundef ~loc ~cf returntype funname closure arguments body
 
 (* == Untyped programs ====================================================== *)
 

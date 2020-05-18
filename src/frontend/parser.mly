@@ -176,8 +176,7 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                           is_closure = false;
-                           captures = ();
+                           closure = false;
                            arguments = args; body=b;};
        smeta={loc=Location_span.of_positions_exn $startpos $endpos}
       }
@@ -189,8 +188,7 @@ closure_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                           is_closure = true;
-                           captures = ();
+                           closure = true;
                            arguments = args; body=b;};
        smeta={loc=Location_span.of_positions_exn $startpos $endpos}
       }

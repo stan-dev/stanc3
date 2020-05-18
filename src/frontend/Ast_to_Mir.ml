@@ -627,16 +627,16 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta }
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
-  | Ast.FunDef {is_closure= false; _} ->
+  | Ast.FunDef {closure= None; _} ->
       raise_s
         [%message
           "Found function definition statement outside of function block"]
   | Ast.FunDef
-      {returntype; funname; is_closure= true; captures; arguments; body} ->
-      let clname = Fmt.strf "closure%d" (Map.length !closures) in
+      {returntype; funname; closure= Some {clname; captures}; arguments; body}
+    ->
       let type_ =
         UnsizedType.UFun
-          (List.map arguments ~f:(fun (a, t, _) -> (a, t)), returntype, Closure)
+          (List.map arguments ~f:(fun (a, t, _) -> (a, t)), returntype, Closure clname)
       in
       ( match
           Map.add !closures ~key:clname
@@ -688,9 +688,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef
-      {returntype; funname; is_closure= false; captures= []; arguments; body}
-    ->
+  | Ast.FunDef {returntype; funname; closure= None; arguments; body} ->
       [ Program.
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)

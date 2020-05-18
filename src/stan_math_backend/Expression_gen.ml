@@ -95,7 +95,7 @@ let%expect_test "promote_unsized" =
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UnsizedType.UInt | UReal | UFun _ -> string ppf scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
@@ -349,7 +349,7 @@ and pp_user_defined_fun ppf (f, es) =
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn ut f ppf es =
+and pp_compiler_internal_fn (meta : Expr.Typed.Meta.t) f ppf es =
   let pp_array_literal ppf es =
     let pp_add_method ppf () = pf ppf ")@,.add(" in
     pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
@@ -361,27 +361,29 @@ and pp_compiler_internal_fn ut f ppf es =
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
-    match ut with
+    match meta.type_ with
     | UnsizedType.URowVector ->
         pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
     | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
     | _ ->
         raise_s
           [%message
-            "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
+            "Unexpected type for row vector literal"
+              (meta.type_ : UnsizedType.t)] )
   | Some FnMakeClosure -> (
     match es with
     | {Expr.Fixed.pattern= Lit (Str, clname); _} :: captures ->
-        pf ppf "@[<hov 2>%s__<local_scalar_t__>(@,%a)@]" clname
+        let scalar_t =
+          if meta.adlevel = AutoDiffable then "local_scalar_t__" else "double"
+        in
+        pf ppf "@[<hov 2>%s__<%s>(@,%a)@]" clname scalar_t
           (list ~sep:comma pp_expr) captures
     | _ -> raise_s [%message "Bad closure " (es : Expr.Typed.t list)] )
-  | Some FnGetAdjoint -> 
-    pf ppf "%a.adj()" pp_expr (List.hd_exn es)
-  | Some FnGetVariPtr -> 
-    pf ppf "%a.vi_" pp_expr (List.hd_exn es)
+  | Some FnGetAdjoint -> pf ppf "%a.adj()" pp_expr (List.hd_exn es)
+  | Some FnGetVariPtr -> pf ppf "%a.vi_" pp_expr (List.hd_exn es)
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
-  | Some FnReadData -> read_data ut ppf es
+  | Some FnReadData -> read_data meta.type_ ppf es
   | Some FnReadParam -> (
     match es with
     | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
@@ -422,7 +424,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn meta (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2

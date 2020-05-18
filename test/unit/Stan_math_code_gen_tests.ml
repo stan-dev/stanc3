@@ -42,6 +42,7 @@ let%expect_test "udf" =
     }
 
     struct sars_functor__ {
+    const static int num_vars__ = 0;
     template <typename T1__>
     void
     operator()(const Eigen::Matrix<double, -1, -1>& x,

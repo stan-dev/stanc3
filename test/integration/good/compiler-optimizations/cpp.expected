@@ -227,6 +227,7 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 }
 
 struct nrfun_lp_functor__ {
+const static int num_vars__ = 0;
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
@@ -267,6 +268,7 @@ rfun(const int& y, std::ostream* pstream__) {
 }
 
 struct rfun_functor__ {
+const static int num_vars__ = 0;
 int
 operator()(const int& y, std::ostream* pstream__)  const 
 {
@@ -295,6 +297,7 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
 }
 
 struct rfun_lp_functor__ {
+const static int num_vars__ = 0;
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 

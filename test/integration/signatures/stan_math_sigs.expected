@@ -7725,11 +7725,14 @@ real[,] integrate_ode_adams((real, real[], real[], data real[], data int[]) => r
 real[,] integrate_ode_adams((real, real[], real[], data real[], data int[]) => real[],
                               real[], real, real[], real[], real[], int[],
                               real, real, real)
-real[,] integrate_ode_bdf((real, real[], real[], data real[], data int[]) => real[],
-                            real[], real, real[], real[], real[], int[])
-real[,] integrate_ode_bdf((real, real[], real[], data real[], data int[]) => real[],
-                            real[], real, real[], real[], real[], int[],
-                            real, real, real)
+vector[] integrate_ode_bdf((real, vector) => vector, vector, real, real[])
+vector[] integrate_ode_bdf((real, vector) => vector, vector, real, real[],
+                             real, real, real)
+vector[] integrate_ode_bdf((real, vector, real[], data real[], data int[]) => vector,
+                             vector, real, real[], real[], real[], int[])
+vector[] integrate_ode_bdf((real, vector, real[], data real[], data int[]) => vector,
+                             vector, real, real[], real[], real[], int[],
+                             real, real, real)
 real[,] integrate_ode_rk45((real, real[], real[], data real[], data int[]) => real[],
                              real[], real, real[], real[], real[], int[])
 real[,] integrate_ode_rk45((real, real[], real[], data real[], data int[]) => real[],

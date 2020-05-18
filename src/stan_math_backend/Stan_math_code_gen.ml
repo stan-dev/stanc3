@@ -41,6 +41,7 @@ let rec contains_int = function
   | _ -> false
 
 let arg_needs_template = function
+  | _, _, UnsizedType.UFun _ -> true
   | UnsizedType.DataOnly, _, _ -> false
   | _, _, t when contains_int t -> false
   | _ -> true
@@ -227,7 +228,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
               pp_zeros () pp_varis () pp_adjoints () pp_valueof () pp_deepcopy
               () "using captured_scalar_t__ = double;"
         in
-        pf ppf "@,@,struct %s%s {@,%s@,%a const @,{@,return %a;}@,%a};@,"
+        pf ppf "@,@,struct %s%s {@,%s@,%a const @,{@,return %a;@,}@,%a};@,"
           fdname functor_suffix "const static int num_vars__ = 0;" pp_sig
           "operator()" pp_call_str
           ( fdname
@@ -260,30 +261,57 @@ let closure_to_function clname Program.({cdrt; cdcaptures; cdargs; cdbody}) =
     ; fdloc= Location_span.empty }
 
 let pp_closure_defs ppf closures =
-  let pp_arg ppf (ad, id, ut) =
-    if UnsizedType.is_scalar_type ut then
-      pf ppf "const %a %s" pp_unsizedtype_captured (ad, ut) id
-    else pf ppf "const %a& %s" pp_unsizedtype_captured (ad, ut) id
+  let pp_type ppf = function
+    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
+        pf ppf "%s__<double>&" clname
+    | AutoDiffable, UnsizedType.UFun (_, _, Closure clname) ->
+        pf ppf "%s__<captured_t__>&" clname
+    | ad, ut when UnsizedType.is_scalar_type ut ->
+        pp_unsizedtype_captured ppf (ad, ut)
+    | ad, ut -> pf ppf "%a&" pp_unsizedtype_captured (ad, ut)
   in
-  let pp_members ppf captures =
-    (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
+  let pp_valuetype ppf = function
+    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
+        pf ppf "typename %s__<double>::ValueOf__" clname
+    | AutoDiffable, UFun (_, _, Closure clname) ->
+        pf ppf "typename %s__<captured_t__>::ValueOf__" clname
+    | AutoDiffable, ut -> pp_unsizedtype_captured ppf (DataOnly, ut)
+    | _, ut when UnsizedType.is_scalar_type ut ->
+        pp_unsizedtype_captured ppf (DataOnly, ut)
+    | _, ut -> pf ppf "%a&" pp_unsizedtype_captured (DataOnly, ut)
+  in
+  let pp_copytype ppf = function
+    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
+        pf ppf "typename %s__<double>::DeepCopy__" clname
+    | AutoDiffable, UFun (_, _, Closure clname) ->
+        pf ppf "typename %s__<captured_t__>::DeepCopy__" clname
+    | ad, ut when UnsizedType.is_scalar_type ut ->
+        pp_unsizedtype_captured ppf (ad, ut)
+    | ad, ut -> pf ppf "%a&" pp_unsizedtype_captured (ad, ut)
+  in
+  let pp_members ppf (pp_type, captures) =
+    (list ~sep:cut (fun ppf (ad, id, ut) ->
+         pf ppf "const %a %s;" pp_type (ad, ut) id ))
+      ppf captures
   in
   let pp_ctor ppf (clname, captures) =
     let pp_count ppf captures =
       if List.is_empty captures then pf ppf "0"
       else
         (list
-           ~sep:(fun ppf () -> pf ppf "@ +@ ")
-           (fun ppf (_, n, t) ->
-             if UnsizedType.is_scalar_type t then pf ppf "1"
-             else pf ppf "num_elements(%s__)" n ))
+           ~sep:(fun ppf () -> pf ppf "@ + ")
+           (fun ppf -> function
+             | _, _, UnsizedType.(UReal | UInt) -> pf ppf "1"
+             | _, n, UFun _ -> pf ppf "%s__.num_vars__" n
+             | _, n, _ -> pf ppf "num_elements(%s__)" n ))
           ppf captures
     in
     pf ppf
       "@[<hov>%s__(@[<hov>%a@])@ : \
        %a%snum_vars__(@[stan::is_var<captured_t__>::value ?@ %a : 0@]) { }@]"
       clname
-      (list ~sep:comma (fun ppf a -> pf ppf "%a__" pp_arg a))
+      (list ~sep:comma (fun ppf (ad, id, ut) ->
+           pf ppf "const %a %s__" pp_type (ad, ut) id ))
       captures
       (list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s__)" id id))
       captures
@@ -322,30 +350,24 @@ let pp_closure_defs ppf closures =
       pp_ode ()
   in
   let pp_valueof ppf (rt, name, captures, args) =
-    let pp_arg ppf (ad, id, ut) =
-      if UnsizedType.is_scalar_type ut || ad = UnsizedType.AutoDiffable then
-        pf ppf "const %a %s" pp_unsizedtype_captured (DataOnly, ut) id
-      else pf ppf "const %a& %s" pp_unsizedtype_captured (DataOnly, ut) id
-    in
-    let pp_mem ppf captures =
-      (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
-    in
     let pp_init ppf (name, captures) =
       let pp_items ppf captures =
         if List.is_empty captures then pf ppf ""
         else
           pf ppf " : %a"
-            (list ~sep:comma (fun ppf (ad, n, _) ->
-                 if ad = UnsizedType.AutoDiffable then
-                   pf ppf "%s(value_of(init.%s))" n n
+            (list ~sep:comma (fun ppf (ad, n, ut) ->
+                 if
+                   ad = UnsizedType.AutoDiffable
+                   && not (UnsizedType.is_fun_type ut)
+                 then pf ppf "%s(value_of(init.%s))" n n
                  else pf ppf "%s(init.%s)" n n ))
             captures
       in
       pf ppf "@[<hov>ValueOf__(const %s__& init)%a { }@]" name pp_items
         captures
     in
-    pf ppf "@[<v 2>class ValueOf__ {@ %a@ public:@ %a@ %a};@]" pp_mem captures
-      pp_init (name, captures) pp_op
+    pf ppf "@[<v 2>class ValueOf__ {@ %a@ public:@ %a@ %a};@]" pp_members
+      (pp_valuetype, captures) pp_init (name, captures) pp_op
       ((rt, false), name, captures, args)
   in
   let to_var adlevel type_ id =
@@ -359,19 +381,24 @@ let pp_closure_defs ppf closures =
     in
     Stmt.Helpers.for_each bodyfn' iteratee iteratee.meta.loc
   in
+  let ad_filter = function
+    | UnsizedType.DataOnly, _, _ -> None
+    | AutoDiffable, id, type_ -> Some (id, type_)
+  in
   let pp_zeroadjoints ppf captures =
-    let pp_loop ppf (adlevel, id, type_) =
+    let pp_loop ppf (id, type_) =
       let f v =
         Stmt.Helpers.internal_nrfunapp FnZeroAdjoint [v]
           Stmt.Numbered.Meta.empty
       in
-      let s = for_each_scalar f (to_var adlevel type_ id) in
-      if adlevel = UnsizedType.AutoDiffable then pp_statement ppf s
+      if UnsizedType.is_fun_type type_ then pf ppf "%s.set_zero_adjoints();" id
+      else pp_statement ppf (for_each_scalar f (to_var AutoDiffable type_ id))
     in
     pf ppf
       "@[<v 2>void set_zero_adjoints() const {@ if \
        (stan::is_var<captured_t__>::value) {@ %a@ }@ }@]"
-      (list ~sep:cut pp_loop) captures
+      (list ~sep:cut pp_loop)
+      (List.filter_map captures ~f:ad_filter)
   in
   let swrap pattern = Stmt.{Fixed.pattern; meta= Numbered.Meta.empty} in
   let pos = Expr.{Fixed.pattern= Var "pos__"; meta= Typed.Meta.empty} in
@@ -379,7 +406,7 @@ let pp_closure_defs ppf closures =
     Expr.{Fixed.pattern= Indexed (v, [Single i]); meta= Typed.Meta.empty}
   in
   let pp_accumulateadjoints ppf captures =
-    let pp_loop ppf (ad, id, ut) =
+    let pp_loop ppf (id, ut) =
       let adj v =
         Expr.Helpers.internal_funapp FnGetAdjoint [v] Expr.Typed.Meta.empty
       in
@@ -395,16 +422,20 @@ let pp_closure_defs ppf closures =
             |> swrap ]
         |> swrap
       in
-      let s = for_each_scalar go (to_var ad ut id) in
-      if ad = UnsizedType.AutoDiffable then pp_statement ppf s
+      if UnsizedType.is_fun_type ut then
+        pf ppf
+          "%s.accumulate_adjoints(ptr + (pos__ - 1));@,pos__ += %s.num_vars__;"
+          id id
+      else pp_statement ppf (for_each_scalar go (to_var AutoDiffable ut id))
     in
     pf ppf
       "@[<v 2>void accumulate_adjoints(double* ptr) const {@ if \
        (stan::is_var<captured_t__>::value) {@ size_t pos__ = 1;@ %a@ }@ }@]"
-      (list ~sep:cut pp_loop) captures
+      (list ~sep:cut pp_loop)
+      (List.filter_map captures ~f:ad_filter)
   in
   let pp_savevaris ppf captures =
-    let pp_loop ppf (ad, id, ut) =
+    let pp_loop ppf (id, ut) =
       let vari v =
         Expr.Helpers.internal_funapp FnGetVariPtr [v] Expr.Typed.Meta.empty
       in
@@ -415,38 +446,35 @@ let pp_closure_defs ppf closures =
             |> swrap ]
         |> swrap
       in
-      let s = for_each_scalar go (to_var ad ut id) in
-      if ad = UnsizedType.AutoDiffable then pp_statement ppf s
+      if UnsizedType.is_fun_type ut then
+        pf ppf "%s.save_varis(ptr + (pos__ - 1));@,pos__ += %s.num_vars__;" id
+          id
+      else pp_statement ppf (for_each_scalar go (to_var AutoDiffable ut id))
     in
     pf ppf
       "@[<v 2>void save_varis(vari** ptr) const {@ if \
        (stan::is_var<captured_t__>::value) {@ size_t pos__ = 1;@ %a@ }@ }@]"
-      (list ~sep:cut pp_loop) captures
+      (list ~sep:cut pp_loop)
+      (List.filter_map captures ~f:ad_filter)
   in
   let pp_deepcopy ppf (rt, id, captures, args) =
-    let pp_arg ppf (ad, id, ut) =
-      if UnsizedType.is_scalar_type ut || ad = UnsizedType.AutoDiffable then
-        pf ppf "const %a %s" pp_unsizedtype_captured (ad, ut) id
-      else pf ppf "const %a& %s" pp_unsizedtype_captured (ad, ut) id
-    in
-    let pp_members ppf captures =
-      (list ~sep:cut (fun ppf a -> pf ppf "%a;" pp_arg a)) ppf captures
-    in
     let pp_init ppf (id, captures) =
       let pp_items ppf captures =
         if List.is_empty captures then pf ppf ""
         else
           pf ppf " : %a"
-            (list ~sep:comma (fun ppf (ad, n, _) ->
-                 if ad = UnsizedType.AutoDiffable then
-                   pf ppf "%s(deep_copy_vars(init.%s))" n n
+            (list ~sep:comma (fun ppf (ad, n, ut) ->
+                 if
+                   ad = UnsizedType.AutoDiffable
+                   && not (UnsizedType.is_fun_type ut)
+                 then pf ppf "%s(deep_copy_vars(init.%s))" n n
                  else pf ppf "%s(init.%s)" n n ))
             captures
       in
       pf ppf "@[<hov>DeepCopy__(const %s__& init)%a { }@]" id pp_items captures
     in
     pf ppf "@[<v 2>class DeepCopy__ {@ %a@ public:@ %a@ %a@ %a@ };@]"
-      pp_members captures pp_init (id, captures) pp_op
+      pp_members (pp_copytype, captures) pp_init (id, captures) pp_op
       ((rt, true), id, captures, args)
       pp_accumulateadjoints captures
   in
@@ -454,9 +482,9 @@ let pp_closure_defs ppf closures =
     pf ppf
       "@,%a@[<v 2>class %s__ {@ %a@ public:@ %s@ const int num_vars__;@ %a@ \
        %a@ %a@ %a@ %a@ %a@ %a@]@,};@,"
-      pp_template_decorator ["typename captured_t__"] key pp_members cdcaptures
-      "using captured_scalar_t__ = captured_t__;" pp_ctor (key, cdcaptures)
-      pp_op
+      pp_template_decorator ["typename captured_t__"] key pp_members
+      (pp_type, cdcaptures) "using captured_scalar_t__ = captured_t__;" pp_ctor
+      (key, cdcaptures) pp_op
       ((cdrt, true), key, cdcaptures, cdargs)
       pp_valueof
       (cdrt, key, cdcaptures, cdargs)

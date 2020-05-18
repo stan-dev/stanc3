@@ -11,7 +11,7 @@ type t =
   | UFun of (autodifftype * t) list * returntype * functiontype
   | UMathLibraryFunction
 
-and functiontype = Function | Closure
+and functiontype = Function | Closure of string
 
 and autodifftype = DataOnly | AutoDiffable
 
