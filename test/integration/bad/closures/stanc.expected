@@ -1,3 +1,17 @@
+  $ ../../../../../install/default/bin/stanc capture.stan
+
+Semantic error in 'capture.stan', line 3, column 8 to line 6, column 9:
+   -------------------------------------------------
+     1:  functions {
+     2:      real foo(real(real) g) {
+     3:          functions
+                 ^
+     4:          real f(real x) {
+     5:              return g(x)^2;
+   -------------------------------------------------
+
+Cannot capture 'g'.
+
   $ ../../../../../install/default/bin/stanc closure_lp.stan
 
 Semantic error in 'closure_lp.stan', line 6, column 7 to column 13:
@@ -67,6 +81,20 @@ Semantic error in 'mutate2.stan', line 10, column 2 to column 8:
    -------------------------------------------------
 
 Cannot assign to read-only identifier 'x'.
+
+  $ ../../../../../install/default/bin/stanc returntype.stan
+
+Semantic error in 'returntype.stan', line 5, column 4 to line 7, column 5:
+   -------------------------------------------------
+     3:          return 2*x;
+     4:      }
+     5:      real(real) bar(real x) {
+             ^
+     6:          return foo;
+     7:      }
+   -------------------------------------------------
+
+Return type cannot be a function type.
 
   $ ../../../../../install/default/bin/stanc shadowing.stan
 

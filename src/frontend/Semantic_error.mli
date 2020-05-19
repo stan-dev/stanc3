@@ -72,6 +72,7 @@ val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> t
+val template_capture : Location_span.t -> string -> t
 val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_rng_fn : Location_span.t -> t
 val conditional_notation_not_allowed : Location_span.t -> t
@@ -110,3 +111,4 @@ val duplicate_arg_names : Location_span.t -> t
 val incompatible_return_types : Location_span.t -> t
 val invalid_forward_decl : Location_span.t -> t
 val invalid_special_fn : Location_span.t -> t
+val invalid_return_type : Location_span.t -> t

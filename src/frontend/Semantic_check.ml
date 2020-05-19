@@ -165,8 +165,7 @@ let semantic_check_assignmentoperator op = Validate.ok op
 (* Probably nothing to do here *)
 let semantic_check_autodifftype at = Validate.ok at
 
-(* Probably nothing to do here *)
-let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
+let rec semantic_check_unsizedtype ~loc : UnsizedType.t -> unit Validate.t =
   function
   | UFun (l, rt, _) ->
       (* fold over argument types accumulating errors with initial state
@@ -176,16 +175,18 @@ let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
           Validate.(
             apply_const
               (apply_const v0 (semantic_check_autodifftype at))
-              (semantic_check_unsizedtype ut)) )
-        ~init:(semantic_check_returntype rt)
+              (semantic_check_unsizedtype ~loc ut)) )
+        ~init:(semantic_check_returntype ~loc rt)
         l
-  | UArray ut -> semantic_check_unsizedtype ut
+  | UArray ut -> semantic_check_unsizedtype ~loc ut
   | _ -> Validate.ok ()
 
-and semantic_check_returntype : UnsizedType.returntype -> unit Validate.t =
-  function
+and semantic_check_returntype ~loc : UnsizedType.returntype -> unit Validate.t
+    = function
   | Void -> Validate.ok ()
-  | ReturnType ut -> semantic_check_unsizedtype ut
+  | ReturnType (UFun _) ->
+      Validate.error (Semantic_error.invalid_return_type loc)
+  | ReturnType ut -> semantic_check_unsizedtype ~loc ut
 
 (* -- Indentifiers ---------------------------------------------------------- *)
 let reserved_keywords =
@@ -1605,7 +1606,7 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
     List.map args ~f:(fun (at, ut, id) ->
         Validate.(
           semantic_check_autodifftype at
-          |> apply_const (semantic_check_unsizedtype ut)
+          |> apply_const (semantic_check_unsizedtype ~loc ut)
           |> apply_const (semantic_check_identifier id)
           |> map ~f:(fun at -> (at, ut, id))) )
     |> Validate.sequence
@@ -1614,7 +1615,7 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
   Validate.(
     uargs
     |> apply_const (semantic_check_identifier id)
-    |> apply_const (semantic_check_returntype return_ty)
+    |> apply_const (semantic_check_returntype ~loc return_ty)
     >>= fun uargs ->
     let urt = return_ty in
     let uarg_types = List.map ~f:(fun (w, y, _) -> (w, y)) uargs in
@@ -1670,28 +1671,22 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
             >>= fun ub ->
             semantic_check_fundef_return_tys ~loc id urt ub
             |> map ~f:(fun ub -> (ub, Set.to_list !captures)) )
-    |> map ~f:(fun (ub, captures) ->
+    >>= fun (ub, captures) ->
+    List.filter_map captures ~f:(fun name ->
+        match Symbol_table.look vm name with
+        | None | Some (Functions, UFun (_, _, Function)) -> None
+        | Some (_, UFun (_, _, Template)) ->
+            Some (error (Semantic_error.template_capture loc name))
+        | Some (block, type_) ->
+            Symbol_table.set_read_only vm name ;
+            Some (ok (calculate_autodifftype block type_, type_, name)) )
+    |> sequence
+    |> map ~f:(fun captures ->
            let stmt =
              FunDef
                { returntype= urt
                ; funname= id
-               ; closure=
-                   ( if is_closure then
-                     Some
-                       { clname
-                       ; captures=
-                           List.filter_map captures ~f:(fun name ->
-                               match Symbol_table.look vm name with
-                               | None | Some (Functions, UFun (_, _, Function))
-                                 ->
-                                   None
-                               | Some (block, type_) ->
-                                   Symbol_table.set_read_only vm name ;
-                                   Some
-                                     ( calculate_autodifftype block type_
-                                     , type_
-                                     , name ) ) }
-                   else None )
+               ; closure= (if is_closure then Some {clname; captures} else None)
                ; arguments= uargs
                ; body= ub }
            in

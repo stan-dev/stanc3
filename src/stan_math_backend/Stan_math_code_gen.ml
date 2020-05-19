@@ -40,22 +40,20 @@ let rec contains_int = function
   | UArray t -> contains_int t
   | _ -> false
 
-let arg_needs_template = function
-  | _, _, UnsizedType.UFun _ -> true
-  | UnsizedType.DataOnly, _, _ -> false
-  | _, _, t when contains_int t -> false
-  | _ -> true
-
-let maybe_templated_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i a ->
-      match arg_needs_template a with
-      | true -> Some (sprintf "T%d__" i)
-      | false -> None )
+let maybe_templated_arg_types scalar (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i -> function
+    | _, _, UnsizedType.UFun _ ->
+        Some
+          ( if scalar then sprintf "typename T%d__::captured_scalar_t__" i
+          else sprintf "T%d__" i )
+    | UnsizedType.DataOnly, _, _ -> None
+    | _, _, t when contains_int t -> None
+    | _ -> Some (sprintf "T%d__" i) )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
-  |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
-  |> print_endline ;
+  |> maybe_templated_arg_types false
+  |> List.filter_opt |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
 
 let pp_promoted_scalar ppf args =
@@ -74,7 +72,8 @@ let pp_promoted_scalar ppf args =
       in
       promote_args_chunked ppf
         List.(
-          chunks_of ~length:5 (filter_opt (maybe_templated_arg_types args)))
+          chunks_of ~length:5
+            (filter_opt (maybe_templated_arg_types true args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
@@ -124,7 +123,7 @@ let pp_located_error_b ppf body_stmts =
 let typename = ( ^ ) "typename "
 
 let get_templates_and_args fdargs =
-  let argtypetemplates = maybe_templated_arg_types fdargs in
+  let argtypetemplates = maybe_templated_arg_types false fdargs in
   ( List.filter_opt argtypetemplates
   , List.map
       ~f:(fun a -> strf "%a" pp_arg a)

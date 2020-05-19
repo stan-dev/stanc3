@@ -226,6 +226,7 @@ module IdentifierError = struct
     | IsStanMathName of string
     | InUse of string
     | NotInScope of string
+    | TemplateCapture of string
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -237,6 +238,7 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
+    | TemplateCapture name -> Fmt.pf ppf "Cannot capture '%s'." name
 end
 
 module ExpressionError = struct
@@ -300,6 +302,7 @@ module StatementError = struct
     | IncompatibleReturnType
     | InvalidForwardDecl
     | SpecialClosure
+    | InvalidReturnType
 
   let pp ppf = function
     | CannotAssignToReadOnly name ->
@@ -404,6 +407,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
         Fmt.pf ppf
           "Cannot declare a closure with suffix _lpdf, _lpmf, _log, _lcdf, \
            _lccdf, _rng or _lp."
+    | InvalidReturnType -> Fmt.pf ppf "Return type cannot be a function type."
 end
 
 type t =
@@ -512,6 +516,9 @@ let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 let ident_not_in_scope loc name =
   IdentifierError (loc, IdentifierError.NotInScope name)
 
+let template_capture loc name =
+  IdentifierError (loc, IdentifierError.TemplateCapture name)
+
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
 
@@ -601,3 +608,6 @@ let invalid_forward_decl loc =
   StatementError (loc, StatementError.InvalidForwardDecl)
 
 let invalid_special_fn loc = StatementError (loc, StatementError.SpecialClosure)
+
+let invalid_return_type loc =
+  StatementError (loc, StatementError.InvalidReturnType)

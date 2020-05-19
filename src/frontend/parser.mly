@@ -205,15 +205,27 @@ arg_decl:
     {  grammar_logger "arg_decl" ;
        match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
+arg_type:
+  | od=option(DATABLOCK) ut=unsized_type
+    {  grammar_logger "arg_type" ;
+       match od with None -> (UnsizedType.AutoDiffable, ut) | _ -> (DataOnly, ut)  }
+
+type_args:
+  | LPAREN args=separated_list(COMMA, arg_type) RPAREN
+    {  grammar_logger "type_args" ;
+       args  }
+
 unsized_type:
-  | bt=basic_type ud=option(unsized_dims)
+  | bt=basic_type ud=option(unsized_dims) fa=option(type_args)
     {  grammar_logger "unsized_type" ;
        let rec reparray n x =
            if n <= 0 then x else reparray (n-1) (UnsizedType.UArray x) in
        let size =
-         match ud with Some d -> 1 + d | None -> 0
-       in
-       reparray size bt    }
+         match ud with Some d -> 1 + d | None -> 0 in
+       let t = reparray size bt in
+       match fa with
+       | None -> t
+       | Some args -> UnsizedType.UFun (args, UnsizedType.ReturnType t, Template)  }
 
 basic_type:
   | INT
