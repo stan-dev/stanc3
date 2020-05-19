@@ -34,3 +34,8 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
+
+generated quantities {
+  matrix[K, N + 1] prob_gen = hmm_hidden_state_prob(log_omega, Gamma, rho);
+  int states[N + 1] = hmm_latent_rng(log_omega, Gamma, rho);
+}
