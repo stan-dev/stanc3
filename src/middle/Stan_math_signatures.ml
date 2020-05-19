@@ -944,7 +944,7 @@ let () =
       , [bare_array_type (bare_types i, 3); UInt] )
   done ;
   add_unqualified
-    ("hmm_marginal_lpdf", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
+    ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
   add_unqualified
     ("hypergeometric_log", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified
