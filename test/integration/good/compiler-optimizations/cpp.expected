@@ -97,13 +97,11 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 23, column 4 to column 23)",
                                                       " (in 'optimizations.stan', line 24, column 4 to column 24)",
                                                       " (in 'optimizations.stan', line 27, column 4 to column 11)",
-                                                      " (in 'optimizations.stan', line 5, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
                                                       " (in 'optimizations.stan', line 28, column 4 to column 19)",
-                                                      " (in 'optimizations.stan', line 10, column 12 to column 26)",
-                                                      " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
-                                                      " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
+                                                      " (in 'optimizations.stan', line 29, column 4 to column 19)",
                                                       " (in 'optimizations.stan', line 30, column 17 to column 28)",
+                                                      " (in 'optimizations.stan', line 30, column 4 to column 28)",
+                                                      " (in 'optimizations.stan', line 32, column 6 to column 24)",
                                                       " (in 'optimizations.stan', line 33, column 6 to column 22)",
                                                       " (in 'optimizations.stan', line 31, column 33 to line 34, column 5)",
                                                       " (in 'optimizations.stan', line 36, column 8 to column 21)",
@@ -145,17 +143,21 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 84, column 4 to line 88, column 5)",
                                                       " (in 'optimizations.stan', line 90, column 11 to column 23)",
                                                       " (in 'optimizations.stan', line 90, column 4 to column 23)",
-                                                      " (in 'optimizations.stan', line 15, column 8 to column 20)",
-                                                      " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)",
+                                                      " (in 'optimizations.stan', line 95, column 4 to column 27)",
                                                       " (in 'optimizations.stan', line 97, column 20 to column 26)",
                                                       " (in 'optimizations.stan', line 97, column 4 to column 26)",
                                                       " (in 'optimizations.stan', line 98, column 22 to column 28)",
+                                                      " (in 'optimizations.stan', line 98, column 4 to column 28)",
                                                       " (in 'optimizations.stan', line 100, column 6 to column 15)",
                                                       " (in 'optimizations.stan', line 99, column 4 to line 100, column 15)",
                                                       " (in 'optimizations.stan', line 102, column 6 to column 12)",
                                                       " (in 'optimizations.stan', line 101, column 4 to line 102, column 12)",
                                                       " (in 'optimizations.stan', line 106, column 6 to column 15)",
+                                                      " (in 'optimizations.stan', line 105, column 4 to line 106, column 15)",
                                                       " (in 'optimizations.stan', line 108, column 6 to column 12)",
+                                                      " (in 'optimizations.stan', line 107, column 4 to line 108, column 12)",
+                                                      " (in 'optimizations.stan', line 110, column 6 to column 7)",
+                                                      " (in 'optimizations.stan', line 109, column 4 to line 110, column 7)",
                                                       " (in 'optimizations.stan', line 112, column 8 to column 20)",
                                                       " (in 'optimizations.stan', line 115, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 111, column 4 to line 116, column 5)",
@@ -178,8 +180,15 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 147, column 4 to column 23)",
                                                       " (in 'optimizations.stan', line 4, column 10 to column 17)",
                                                       " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
+                                                      " (in 'optimizations.stan', line 5, column 8 to column 20)",
+                                                      " (in 'optimizations.stan', line 2, column 33 to line 6, column 5)",
+                                                      " (in 'optimizations.stan', line 10, column 12 to column 26)",
+                                                      " (in 'optimizations.stan', line 9, column 8 to line 10, column 26)",
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
-                                                      " (in 'optimizations.stan', line 16, column 8 to column 18)"};
+                                                      " (in 'optimizations.stan', line 8, column 20 to line 12, column 5)",
+                                                      " (in 'optimizations.stan', line 15, column 8 to column 20)",
+                                                      " (in 'optimizations.stan', line 16, column 8 to column 18)",
+                                                      " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)"};
 
 
 template <bool propto__, typename T0__, typename T_lp__,
@@ -192,17 +201,17 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    int sym34__;
-    int sym33__;
+    int sym2__;
+    int sym1__;
     {
-      current_statement__ = 87;
+      current_statement__ = 89;
       if (logical_gt(x, 342)) {
         {
-          current_statement__ = 86;
+          current_statement__ = 88;
           return ;
         }
       } else ;
-      current_statement__ = 7;
+      current_statement__ = 90;
       lp_accum__.add(y);
     }
   } catch (const std::exception& e) {
@@ -233,18 +242,18 @@ rfun(const int& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    int sym37__;
-    int sym36__;
-    int sym35__;
+    int sym5__;
+    int sym4__;
+    int sym3__;
     {
-      current_statement__ = 11;
+      current_statement__ = 93;
       if (logical_gt(y, 2)) {
         {
-          current_statement__ = 10;
+          current_statement__ = 92;
           return (y + 24);
         }
       } else ;
-      current_statement__ = 88;
+      current_statement__ = 94;
       return (y + 2);
     }
   } catch (const std::exception& e) {
@@ -272,9 +281,9 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   
   try {
     {
-      current_statement__ = 55;
+      current_statement__ = 96;
       lp_accum__.add(2);
-      current_statement__ = 89;
+      current_statement__ = 97;
       return 24;
     }
   } catch (const std::exception& e) {
@@ -363,40 +372,25 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     
     try {
-      local_scalar_t__ sym110__;
-      int sym109__;
-      int sym108__;
-      int sym107__;
-      int sym106__;
-      int sym105__;
-      int sym104__;
-      int sym103__;
-      int sym102__;
-      int sym101__;
-      int sym100__;
-      int sym99__;
-      int sym98__;
-      int sym97__;
-      int sym96__;
-      int sym95__;
-      int sym94__;
-      int sym93__;
-      int sym92__;
-      int sym91__;
-      int sym90__;
-      int sym89__;
-      int sym88__;
-      int sym87__;
-      int sym86__;
-      int sym85__;
-      int sym84__;
-      int sym83__;
-      int sym82__;
-      int sym81__;
-      int sym80__;
-      int sym79__;
-      int sym78__;
-      int sym77__;
+      int sym63__;
+      int sym62__;
+      int sym61__;
+      int sym60__;
+      local_scalar_t__ sym59__;
+      int sym58__;
+      int sym57__;
+      int sym56__;
+      int sym55__;
+      int sym54__;
+      int sym53__;
+      int sym52__;
+      int sym51__;
+      int sym50__;
+      int sym49__;
+      int sym48__;
+      int sym47__;
+      int sym46__;
+      int sym45__;
       local_scalar_t__ theta;
       theta = DUMMY_VAR__;
       
@@ -443,176 +437,69 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         double x;
         x = std::numeric_limits<double>::quiet_NaN();
         
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-          {
-            current_statement__ = 7;
-            lp_accum__.add(3);
-          }}
-        int sym4__;
-        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
-          {
-            {
-              {
-                sym4__ = 27;
-                break;
-              }
-            }
-            sym4__ = 5;
-            break;
-          }}
+        current_statement__ = 7;
+        nrfun_lp<false>(4, 3, lp__, lp_accum__, pstream__);
+        current_statement__ = 8;
         if (pstream__) {
-          stan_print(pstream__, sym4__);
+          stan_print(pstream__, rfun(3, pstream__));
           stan_print(pstream__, "\n");
         }
-        int sym7__;
-        for (int sym6__ = 1; sym6__ <= 1; ++sym6__) {
+        current_statement__ = 10;
+        if (rfun(4, pstream__)) {
           {
-            {
-              {
-                sym7__ = 28;
-                break;
-              }
-            }
-            sym7__ = 6;
-            break;
-          }}
-        if (sym7__) {
-          {
-            current_statement__ = 13;
+            current_statement__ = 9;
             if (pstream__) {
               stan_print(pstream__, "a");
               stan_print(pstream__, "\n");
             }
           }
         } else ;
-        int sym10__;
-        int sym13__;
-        for (int sym9__ = 1; sym9__ <= 1; ++sym9__) {
+        sym62__ = rfun(5, pstream__);
+        if (logical_lte(rfun(7, pstream__), sym62__)) {
           {
             {
-              {
-                sym10__ = 31;
-                break;
-              }
+              sym63__ = rfun(8, pstream__);
+              lp_accum__.add(sym63__);
+              sym56__ = (rfun(7, pstream__) + 1);
+              nrfun_lp<false>(34, 3, lp__, lp_accum__, pstream__);
             }
-            sym10__ = 9;
-            break;
-          }}
-        for (int sym12__ = 1; sym12__ <= 1; ++sym12__) {
-          {
-            {
+            current_statement__ = 13;
+            for (int i = sym56__; i <= sym62__; ++i) {
               {
-                sym13__ = 29;
-                break;
-              }
-            }
-            sym13__ = 7;
-            break;
-          }}
-        if (logical_lte(sym10__, sym13__)) {
-          {
-            {
-              {
-                int sym16__;
-                for (int sym15__ = 1; sym15__ <= 1; ++sym15__) {
-                  {
-                    {
-                      {
-                        sym16__ = 32;
-                        break;
-                      }
-                    }
-                    sym16__ = 10;
-                    break;
-                  }}
-                lp_accum__.add(sym16__);
-                current_statement__ = 14;
-                for (int sym17__ = 1; sym17__ <= 1; ++sym17__) {
-                  {
-                    current_statement__ = 7;
-                    lp_accum__.add(3);
-                  }}
-              }
-              sym107__ = (sym10__ + 1);
-              for (int sym12__ = 1; sym12__ <= 1; ++sym12__) {
-                {
-                  {
-                    {
-                      sym13__ = 29;
-                      sym107__ = (sym10__ + 1);
-                      break;
-                    }
-                  }
-                  sym13__ = 7;
-                  sym107__ = (sym10__ + 1);
-                  break;
-                }}
-            }
-            for (int i = sym107__; i <= sym13__; ++i) {
-              {
-                {
-                  int sym16__;
-                  for (int sym15__ = 1; sym15__ <= 1; ++sym15__) {
-                    {
-                      {
-                        {
-                          sym16__ = 32;
-                          break;
-                        }
-                      }
-                      sym16__ = 10;
-                      break;
-                    }}
-                  lp_accum__.add(sym16__);
-                  current_statement__ = 14;
-                  for (int sym17__ = 1; sym17__ <= 1; ++sym17__) {
-                    {
-                      current_statement__ = 7;
-                      lp_accum__.add(3);
-                    }}
-                }
-                for (int sym12__ = 1; sym12__ <= 1; ++sym12__) {
-                  {
-                    {
-                      {
-                        sym13__ = 29;
-                        break;
-                      }
-                    }
-                    sym13__ = 7;
-                    break;
-                  }}
+                current_statement__ = 11;
+                lp_accum__.add(sym63__);
+                current_statement__ = 12;
+                nrfun_lp<false>(34, 3, lp__, lp_accum__, pstream__);
               }}
           }
         } else ;
         {
           {
             {
-              current_statement__ = 16;
+              current_statement__ = 14;
               lp_accum__.add(53);
             }
             {
               {
-                current_statement__ = 16;
+                current_statement__ = 14;
                 lp_accum__.add(53);
               }
             }
             {
               {
-                current_statement__ = 16;
+                current_statement__ = 14;
                 lp_accum__.add(53);
               }
             }
             {
               {
-                current_statement__ = 16;
+                current_statement__ = 14;
                 lp_accum__.add(53);
               }
             }
             {
               {
-                current_statement__ = 16;
+                current_statement__ = 14;
                 lp_accum__.add(53);
               }
             }
@@ -627,12 +514,12 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     {
                       {
                         {
-                          current_statement__ = 19;
+                          current_statement__ = 17;
                           lp_accum__.add(53);
                         }
                         {
                           {
-                            current_statement__ = 19;
+                            current_statement__ = 17;
                             lp_accum__.add(53);
                           }
                         }
@@ -641,17 +528,17 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      sym109__ = (2 * 2);
-                      if (logical_lte(2, sym109__)) {
+                      sym58__ = (2 * 2);
+                      if (logical_lte(2, sym58__)) {
                         {
                           {
-                            sym106__ = (2 + 1);
+                            sym55__ = (2 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym106__; k <= sym109__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym55__; k <= sym58__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
@@ -660,17 +547,17 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                   }
                   {
                     {
-                      sym109__ = (3 * 2);
-                      if (logical_lte(3, sym109__)) {
+                      sym58__ = (3 * 2);
+                      if (logical_lte(3, sym58__)) {
                         {
                           {
-                            sym106__ = (3 + 1);
+                            sym55__ = (3 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym106__; k <= sym109__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym55__; k <= sym58__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
@@ -682,42 +569,42 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym105__ = (2 + 2);
-                if (logical_lte(2, sym105__)) {
+                sym54__ = (2 + 2);
+                if (logical_lte(2, sym54__)) {
                   {
                     {
-                      sym108__ = (2 * 2);
-                      if (logical_lte(2, sym108__)) {
+                      sym57__ = (2 * 2);
+                      if (logical_lte(2, sym57__)) {
                         {
                           {
-                            sym104__ = (2 + 1);
+                            sym53__ = (2 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym104__; k <= sym108__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym53__; k <= sym57__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym104__ = (2 + 1);
+                        sym53__ = (2 + 1);
                       }
                     }
-                    current_statement__ = 20;
-                    for (int j = sym104__; j <= sym105__; ++j) {
+                    current_statement__ = 18;
+                    for (int j = sym53__; j <= sym54__; ++j) {
                       {
-                        sym109__ = (j * 2);
-                        if (logical_lte(j, sym109__)) {
+                        sym58__ = (j * 2);
+                        if (logical_lte(j, sym58__)) {
                           {
                             {
-                              sym106__ = (j + 1);
+                              sym55__ = (j + 1);
                               lp_accum__.add(53);
                             }
-                            current_statement__ = 19;
-                            for (int k = sym106__; k <= sym109__; ++k) {
+                            current_statement__ = 17;
+                            for (int k = sym55__; k <= sym58__; ++k) {
                               {
-                                current_statement__ = 19;
+                                current_statement__ = 17;
                                 lp_accum__.add(53);
                               }}
                           }
@@ -729,42 +616,42 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym105__ = (3 + 2);
-                if (logical_lte(3, sym105__)) {
+                sym54__ = (3 + 2);
+                if (logical_lte(3, sym54__)) {
                   {
                     {
-                      sym108__ = (3 * 2);
-                      if (logical_lte(3, sym108__)) {
+                      sym57__ = (3 * 2);
+                      if (logical_lte(3, sym57__)) {
                         {
                           {
-                            sym104__ = (3 + 1);
+                            sym53__ = (3 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym104__; k <= sym108__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym53__; k <= sym57__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym104__ = (3 + 1);
+                        sym53__ = (3 + 1);
                       }
                     }
-                    current_statement__ = 20;
-                    for (int j = sym104__; j <= sym105__; ++j) {
+                    current_statement__ = 18;
+                    for (int j = sym53__; j <= sym54__; ++j) {
                       {
-                        sym109__ = (j * 2);
-                        if (logical_lte(j, sym109__)) {
+                        sym58__ = (j * 2);
+                        if (logical_lte(j, sym58__)) {
                           {
                             {
-                              sym106__ = (j + 1);
+                              sym55__ = (j + 1);
                               lp_accum__.add(53);
                             }
-                            current_statement__ = 19;
-                            for (int k = sym106__; k <= sym109__; ++k) {
+                            current_statement__ = 17;
+                            for (int k = sym55__; k <= sym58__; ++k) {
                               {
-                                current_statement__ = 19;
+                                current_statement__ = 17;
                                 lp_accum__.add(53);
                               }}
                           }
@@ -776,42 +663,42 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym105__ = (4 + 2);
-                if (logical_lte(4, sym105__)) {
+                sym54__ = (4 + 2);
+                if (logical_lte(4, sym54__)) {
                   {
                     {
-                      sym108__ = (4 * 2);
-                      if (logical_lte(4, sym108__)) {
+                      sym57__ = (4 * 2);
+                      if (logical_lte(4, sym57__)) {
                         {
                           {
-                            sym104__ = (4 + 1);
+                            sym53__ = (4 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym104__; k <= sym108__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym53__; k <= sym57__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym104__ = (4 + 1);
+                        sym53__ = (4 + 1);
                       }
                     }
-                    current_statement__ = 20;
-                    for (int j = sym104__; j <= sym105__; ++j) {
+                    current_statement__ = 18;
+                    for (int j = sym53__; j <= sym54__; ++j) {
                       {
-                        sym109__ = (j * 2);
-                        if (logical_lte(j, sym109__)) {
+                        sym58__ = (j * 2);
+                        if (logical_lte(j, sym58__)) {
                           {
                             {
-                              sym106__ = (j + 1);
+                              sym55__ = (j + 1);
                               lp_accum__.add(53);
                             }
-                            current_statement__ = 19;
-                            for (int k = sym106__; k <= sym109__; ++k) {
+                            current_statement__ = 17;
+                            for (int k = sym55__; k <= sym58__; ++k) {
                               {
-                                current_statement__ = 19;
+                                current_statement__ = 17;
                                 lp_accum__.add(53);
                               }}
                           }
@@ -823,42 +710,42 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
             {
               {
-                sym105__ = (5 + 2);
-                if (logical_lte(5, sym105__)) {
+                sym54__ = (5 + 2);
+                if (logical_lte(5, sym54__)) {
                   {
                     {
-                      sym108__ = (5 * 2);
-                      if (logical_lte(5, sym108__)) {
+                      sym57__ = (5 * 2);
+                      if (logical_lte(5, sym57__)) {
                         {
                           {
-                            sym104__ = (5 + 1);
+                            sym53__ = (5 + 1);
                             lp_accum__.add(53);
                           }
-                          current_statement__ = 19;
-                          for (int k = sym104__; k <= sym108__; ++k) {
+                          current_statement__ = 17;
+                          for (int k = sym53__; k <= sym57__; ++k) {
                             {
-                              current_statement__ = 19;
+                              current_statement__ = 17;
                               lp_accum__.add(53);
                             }}
                         }
                       } else {
-                        sym104__ = (5 + 1);
+                        sym53__ = (5 + 1);
                       }
                     }
-                    current_statement__ = 20;
-                    for (int j = sym104__; j <= sym105__; ++j) {
+                    current_statement__ = 18;
+                    for (int j = sym53__; j <= sym54__; ++j) {
                       {
-                        sym109__ = (j * 2);
-                        if (logical_lte(j, sym109__)) {
+                        sym58__ = (j * 2);
+                        if (logical_lte(j, sym58__)) {
                           {
                             {
-                              sym106__ = (j + 1);
+                              sym55__ = (j + 1);
                               lp_accum__.add(53);
                             }
-                            current_statement__ = 19;
-                            for (int k = sym106__; k <= sym109__; ++k) {
+                            current_statement__ = 17;
+                            for (int k = sym55__; k <= sym58__; ++k) {
                               {
-                                current_statement__ = 19;
+                                current_statement__ = 17;
                                 lp_accum__.add(53);
                               }}
                           }
@@ -870,160 +757,130 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
             }
           }
         }
-        current_statement__ = 27;
+        current_statement__ = 25;
         for (int i = 1; i <= 5; ++i) {
           {
-            current_statement__ = 24;
+            current_statement__ = 22;
             if (logical_gt(i, 4)) {
               {
                 break;
               }
             } else ;
-            current_statement__ = 25;
+            current_statement__ = 23;
             lp_accum__.add(2);
           }}
-        current_statement__ = 32;
+        current_statement__ = 30;
         for (int i = 1; i <= 5; ++i) {
           {
-            current_statement__ = 29;
+            current_statement__ = 27;
             if (logical_gt(i, 4)) {
               {
                 continue;
               }
             } else ;
-            current_statement__ = 30;
+            current_statement__ = 28;
             lp_accum__.add(2);
           }}
-        current_statement__ = 37;
+        current_statement__ = 35;
         for (int i = 1; i <= 5; ++i) {
           {
-            current_statement__ = 34;
+            current_statement__ = 32;
             if (logical_gt(i, 4)) {
               {
                 continue;
               }
             } else ;
-            current_statement__ = 35;
+            current_statement__ = 33;
             lp_accum__.add(2);
           }}
-        current_statement__ = 38;
+        current_statement__ = 36;
         lp_accum__.add(3);
-        current_statement__ = 39;
+        current_statement__ = 37;
         lp_accum__.add(2);
-        current_statement__ = 40;
+        current_statement__ = 38;
         lp_accum__.add(247);
-        current_statement__ = 41;
+        current_statement__ = 39;
         lp_accum__.add(576);
-        current_statement__ = 42;
+        current_statement__ = 40;
         lp_accum__.add(5880);
         double z;
         z = std::numeric_limits<double>::quiet_NaN();
         
+        current_statement__ = 42;
+        lp_accum__.add(5880);
+        current_statement__ = 43;
+        lp_accum__.add(5880);
         current_statement__ = 44;
-        lp_accum__.add(5880);
-        current_statement__ = 45;
-        lp_accum__.add(5880);
-        current_statement__ = 46;
         lp_accum__.add(2);
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN();
           
-          current_statement__ = 48;
+          current_statement__ = 46;
           lp_accum__.add(24);
         }
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN();
           
-          current_statement__ = 51;
+          current_statement__ = 49;
           lp_accum__.add(245);
         }
         {
-          current_statement__ = 53;
+          current_statement__ = 51;
           lp_accum__.add(2);
         }
-        int sym20__;
-        for (int sym19__ = 1; sym19__ <= 1; ++sym19__) {
-          {
-            current_statement__ = 55;
-            lp_accum__.add(2);
-            break;
-          }}
-        current_statement__ = 58;
+        current_statement__ = 53;
+        if (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
+          ;
+        } else ;
+        current_statement__ = 55;
         while (576) {
           {
             break;
           }
         }
-        int sym23__;
-        for (int sym22__ = 1; sym22__ <= 1; ++sym22__) {
+        current_statement__ = 57;
+        while (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
           {
-            current_statement__ = 55;
-            lp_accum__.add(2);
-            sym23__ = 24;
             break;
-          }}
-        while (sym23__) {
-          {
-            {
-              break;
-            }
-            for (int sym22__ = 1; sym22__ <= 1; ++sym22__) {
-              {
-                current_statement__ = 55;
-                lp_accum__.add(2);
-                sym23__ = 24;
-                break;
-              }}
           }
         }
-        current_statement__ = 61;
+        current_statement__ = 59;
         for (int i = 31; i <= 225; ++i) { {
                                             continue;
                                           }}
-        current_statement__ = 63;
+        current_statement__ = 61;
         for (int i = 31; i <= 225; ++i) { {
                                             break;
                                           }}
-        int sym26__;
-        for (int sym25__ = 1; sym25__ <= 1; ++sym25__) {
+        current_statement__ = 63;
+        for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
+             ++i) { {
+                      continue;
+                    }}
+        current_statement__ = 65;
+        for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
+             ++i) { {
+                      break;
+                    }}
+        current_statement__ = 67;
+        if (logical_lte(rfun_lp<false>(lp__, lp_accum__, pstream__), 225)) {
           {
-            current_statement__ = 55;
-            lp_accum__.add(2);
-            sym26__ = 24;
-            break;
-          }}
-        for (int i = sym26__; i <= 225; ++i) { {
-                                                 continue;
-                                               }}
-        int sym29__;
-        for (int sym28__ = 1; sym28__ <= 1; ++sym28__) {
-          {
-            current_statement__ = 55;
-            lp_accum__.add(2);
-            sym29__ = 24;
-            break;
-          }}
-        for (int i = sym29__; i <= 225; ++i) { {
-                                                 break;
-                                               }}
-        int sym32__;
-        for (int sym31__ = 1; sym31__ <= 1; ++sym31__) {
-          {
-            current_statement__ = 55;
-            lp_accum__.add(2);
-            break;
-          }}
+            current_statement__ = 66;
+            for (int i = (rfun_lp<false>(lp__, lp_accum__, pstream__) + 1);
+                 i <= 225; ++i) ;
+          }
+        } else ;
         {
-          current_statement__ = 66;
+          current_statement__ = 68;
           lp_accum__.add(1);
-          current_statement__ = 67;
+          current_statement__ = 69;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 69;
+            current_statement__ = 71;
             lp_accum__.add(1);
           }
         }
@@ -1032,7 +889,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         
         {
           {
-            current_statement__ = 73;
+            current_statement__ = 75;
             if (pstream__) {
               stan_print(pstream__, "hello");
               stan_print(pstream__, "\n");
@@ -1045,16 +902,16 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         {
           {
             {
-              current_statement__ = 76;
+              current_statement__ = 78;
               lp_accum__.add(4);
-              current_statement__ = 77;
+              current_statement__ = 79;
               lp_accum__.add(6);
             }
             {
               {
-                current_statement__ = 76;
+                current_statement__ = 78;
                 lp_accum__.add(4);
-                current_statement__ = 77;
+                current_statement__ = 79;
                 lp_accum__.add(6);
               }
             }
@@ -1063,18 +920,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
         double dataonlyvar;
         dataonlyvar = std::numeric_limits<double>::quiet_NaN();
         
-        current_statement__ = 81;
+        current_statement__ = 83;
         lp_accum__.add(159);
         double paramvar;
         paramvar = std::numeric_limits<double>::quiet_NaN();
         
         {
           {
-            sym110__ = (theta * 34);
+            sym59__ = (theta * 34);
           }
         }
-        current_statement__ = 85;
-        lp_accum__.add(sym110__);
+        current_statement__ = 87;
+        lp_accum__.add(sym59__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1107,23 +964,23 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
 
     
     try {
-      double sym76__;
-      double sym75__;
-      double sym74__;
-      double sym73__;
-      double sym72__;
-      double sym71__;
-      double sym70__;
-      double sym69__;
-      double sym68__;
-      double sym67__;
-      Eigen::Matrix<double, -1, -1> sym66__;
-      int sym65__;
-      int sym64__;
-      double sym63__;
-      int sym62__;
-      int sym61__;
-      double sym60__;
+      double sym44__;
+      double sym43__;
+      double sym42__;
+      double sym41__;
+      double sym40__;
+      double sym39__;
+      double sym38__;
+      double sym37__;
+      double sym36__;
+      double sym35__;
+      Eigen::Matrix<double, -1, -1> sym34__;
+      int sym33__;
+      int sym32__;
+      double sym31__;
+      int sym30__;
+      int sym29__;
+      double sym28__;
       double theta;
       theta = std::numeric_limits<double>::quiet_NaN();
       
@@ -1166,10 +1023,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 5;
       x_cov_in__ = in__.vector(3);
-      assign(sym66__, nil_index_list(),
+      assign(sym34__, nil_index_list(),
         stan::math::cov_matrix_constrain(x_cov_in__, 2),
-        "assigning variable sym66__");
-      assign(x_cov, nil_index_list(), sym66__, "assigning variable x_cov");
+        "assigning variable sym34__");
+      assign(x_cov, nil_index_list(), sym34__, "assigning variable x_cov");
       vars__.push_back(theta);
       vars__.push_back(phi);
       {
@@ -1263,18 +1120,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 {
                   vars__.push_back(
-                    rvalue(sym66__,
+                    rvalue(sym34__,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
-                      "sym66__"));
+                      "sym34__"));
                 }
                 {
                   {
                     vars__.push_back(
-                      rvalue(sym66__,
+                      rvalue(sym34__,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
-                        "sym66__"));
+                        "sym34__"));
                   }
                 }
               }
@@ -1286,18 +1143,18 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                 {
                   {
                     vars__.push_back(
-                      rvalue(sym66__,
+                      rvalue(sym34__,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
-                        "sym66__"));
+                        "sym34__"));
                   }
                   {
                     {
                       vars__.push_back(
-                        rvalue(sym66__,
+                        rvalue(sym34__,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
-                          "sym66__"));
+                          "sym34__"));
                     }
                   }
                 }
@@ -1332,39 +1189,39 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     vars__.reserve(num_params_r__);
     
     try {
-      double sym59__;
-      double sym58__;
-      double sym57__;
-      double sym56__;
-      double sym55__;
-      double sym54__;
-      double sym53__;
-      double sym52__;
-      double sym51__;
-      double sym50__;
-      double sym49__;
-      double sym48__;
-      double sym47__;
-      double sym46__;
-      double sym45__;
-      double sym44__;
-      std::vector<double> sym43__;
-      std::vector<double> sym42__;
-      std::vector<double> sym41__;
-      int sym40__;
-      int sym39__;
-      int sym38__;
+      double sym27__;
+      double sym26__;
+      double sym25__;
+      double sym24__;
+      double sym23__;
+      double sym22__;
+      double sym21__;
+      double sym20__;
+      double sym19__;
+      double sym18__;
+      double sym17__;
+      double sym16__;
+      double sym15__;
+      double sym14__;
+      double sym13__;
+      double sym12__;
+      std::vector<double> sym11__;
+      std::vector<double> sym10__;
+      std::vector<double> sym9__;
+      int sym8__;
+      int sym7__;
+      int sym6__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       double theta;
       theta = std::numeric_limits<double>::quiet_NaN();
       
-      sym53__ = context__.vals_r("theta")[(1 - 1)];
+      sym21__ = context__.vals_r("theta")[(1 - 1)];
       double phi;
       phi = std::numeric_limits<double>::quiet_NaN();
       
-      sym52__ = context__.vals_r("phi")[(1 - 1)];
+      sym20__ = context__.vals_r("phi")[(1 - 1)];
       current_statement__ = 3;
       validate_non_negative_index("x_matrix", "3", 3);
       current_statement__ = 3;
@@ -1375,8 +1232,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       {
         std::vector<double> x_matrix_flat__;
-        assign(sym42__, nil_index_list(), context__.vals_r("x_matrix"),
-          "assigning variable sym42__");
+        assign(sym10__, nil_index_list(), context__.vals_r("x_matrix"),
+          "assigning variable sym10__");
         {
           {
             {
@@ -1387,8 +1244,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     assign(x_matrix,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
-                      rvalue(sym42__,
-                        cons_list(index_uni(1), nil_index_list()), "sym42__"),
+                      rvalue(sym10__,
+                        cons_list(index_uni(1), nil_index_list()), "sym10__"),
                       "assigning variable x_matrix");
                     current_statement__ = 3;
                     pos__ = 2;
@@ -1399,7 +1256,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       assign(x_matrix,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
-                        sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                        sym10__[(pos__ - 1)], "assigning variable x_matrix");
                       current_statement__ = 3;
                       pos__ = (pos__ + 1);
                     }
@@ -1410,7 +1267,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       assign(x_matrix,
                         cons_list(index_uni(3),
                           cons_list(index_uni(1), nil_index_list())),
-                        sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                        sym10__[(pos__ - 1)], "assigning variable x_matrix");
                       current_statement__ = 3;
                       pos__ = (pos__ + 1);
                     }
@@ -1426,7 +1283,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       assign(x_matrix,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
-                        sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                        sym10__[(pos__ - 1)], "assigning variable x_matrix");
                       current_statement__ = 3;
                       pos__ = (pos__ + 1);
                     }
@@ -1436,7 +1293,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                         assign(x_matrix,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
-                          sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                          sym10__[(pos__ - 1)], "assigning variable x_matrix");
                         current_statement__ = 3;
                         pos__ = (pos__ + 1);
                       }
@@ -1447,7 +1304,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                         assign(x_matrix,
                           cons_list(index_uni(3),
                             cons_list(index_uni(2), nil_index_list())),
-                          sym42__[(pos__ - 1)], "assigning variable x_matrix");
+                          sym10__[(pos__ - 1)], "assigning variable x_matrix");
                       }
                     }
                   }
@@ -1465,15 +1322,15 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       {
         std::vector<double> x_vector_flat__;
-        assign(sym43__, nil_index_list(), context__.vals_r("x_vector"),
-          "assigning variable sym43__");
+        assign(sym11__, nil_index_list(), context__.vals_r("x_vector"),
+          "assigning variable sym11__");
         {
           {
             {
               current_statement__ = 4;
               assign(x_vector, cons_list(index_uni(1), nil_index_list()),
-                rvalue(sym43__, cons_list(index_uni(1), nil_index_list()),
-                  "sym43__"), "assigning variable x_vector");
+                rvalue(sym11__, cons_list(index_uni(1), nil_index_list()),
+                  "sym11__"), "assigning variable x_vector");
               current_statement__ = 4;
               pos__ = 2;
             }
@@ -1481,7 +1338,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
               {
                 current_statement__ = 4;
                 assign(x_vector, cons_list(index_uni(2), nil_index_list()),
-                  sym43__[(pos__ - 1)], "assigning variable x_vector");
+                  sym11__[(pos__ - 1)], "assigning variable x_vector");
               }
             }
           }
@@ -1497,8 +1354,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       
       {
         std::vector<double> x_cov_flat__;
-        assign(sym41__, nil_index_list(), context__.vals_r("x_cov"),
-          "assigning variable sym41__");
+        assign(sym9__, nil_index_list(), context__.vals_r("x_cov"),
+          "assigning variable sym9__");
         {
           {
             {
@@ -1509,8 +1366,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                     assign(x_cov,
                       cons_list(index_uni(1),
                         cons_list(index_uni(1), nil_index_list())),
-                      rvalue(sym41__,
-                        cons_list(index_uni(1), nil_index_list()), "sym41__"),
+                      rvalue(sym9__,
+                        cons_list(index_uni(1), nil_index_list()), "sym9__"),
                       "assigning variable x_cov");
                     current_statement__ = 5;
                     pos__ = 2;
@@ -1521,7 +1378,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       assign(x_cov,
                         cons_list(index_uni(2),
                           cons_list(index_uni(1), nil_index_list())),
-                        sym41__[(pos__ - 1)], "assigning variable x_cov");
+                        sym9__[(pos__ - 1)], "assigning variable x_cov");
                       current_statement__ = 5;
                       pos__ = (pos__ + 1);
                     }
@@ -1537,7 +1394,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                       assign(x_cov,
                         cons_list(index_uni(1),
                           cons_list(index_uni(2), nil_index_list())),
-                        sym41__[(pos__ - 1)], "assigning variable x_cov");
+                        sym9__[(pos__ - 1)], "assigning variable x_cov");
                       current_statement__ = 5;
                       pos__ = (pos__ + 1);
                     }
@@ -1547,7 +1404,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
                         assign(x_cov,
                           cons_list(index_uni(2),
                             cons_list(index_uni(2), nil_index_list())),
-                          sym41__[(pos__ - 1)], "assigning variable x_cov");
+                          sym9__[(pos__ - 1)], "assigning variable x_cov");
                       }
                     }
                   }
@@ -1567,8 +1424,8 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       assign(x_cov_free__, nil_index_list(),
         stan::math::cov_matrix_free(x_cov), "assigning variable x_cov_free__");
-      vars__.push_back(sym53__);
-      vars__.push_back(sym52__);
+      vars__.push_back(sym21__);
+      vars__.push_back(sym20__);
       {
         {
           {
@@ -1722,22 +1579,22 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (int sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 2; ++sym64__) {
       {
-        for (int sym112__ = 1; sym112__ <= 3; ++sym112__) {
+        for (int sym65__ = 1; sym65__ <= 3; ++sym65__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym65__) + '.' + std::to_string(sym64__));
           }}
       }}
-    for (int sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 2; ++sym64__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym64__));
       }}
-    for (int sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 2; ++sym64__) {
       {
-        for (int sym112__ = 1; sym112__ <= 2; ++sym112__) {
+        for (int sym65__ = 1; sym65__ <= 2; ++sym65__) {
           {
-            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
+            param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym65__) + '.' + std::to_string(sym64__));
           }}
       }}
     if (emit_transformed_parameters__) {
@@ -1756,20 +1613,20 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
-    for (int sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 2; ++sym64__) {
       {
-        for (int sym112__ = 1; sym112__ <= 3; ++sym112__) {
+        for (int sym65__ = 1; sym65__ <= 3; ++sym65__) {
           {
-            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym112__) + '.' + std::to_string(sym111__));
+            param_names__.push_back(std::string() + "x_matrix" + '.' + std::to_string(sym65__) + '.' + std::to_string(sym64__));
           }}
       }}
-    for (int sym111__ = 1; sym111__ <= 2; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 2; ++sym64__) {
       {
-        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_vector" + '.' + std::to_string(sym64__));
       }}
-    for (int sym111__ = 1; sym111__ <= 3; ++sym111__) {
+    for (int sym64__ = 1; sym64__ <= 3; ++sym64__) {
       {
-        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym111__));
+        param_names__.push_back(std::string() + "x_cov" + '.' + std::to_string(sym64__));
       }}
     if (emit_transformed_parameters__) {
       

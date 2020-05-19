@@ -24,7 +24,7 @@ let transform_program (mir : Program.Typed.t)
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
+        {fs with fdbody= Option.map ~f:transform fs.fdbody} )
   in
   match transformed_prog_body with
   | { pattern=
@@ -57,7 +57,7 @@ let transform_program_blockwise (mir : Program.Typed.t)
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
+        {fs with fdbody= Option.map ~f:transform fs.fdbody} )
   in
   { mir with
     functions_block= transformed_functions
@@ -362,22 +362,32 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
 
 let create_function_inline_map adt l =
   (* We only add the first definition for each function to the inline map.
-   This will make sure we do not inline recursive functions. *)
-  let f accum fundef =
-    match fundef with Program.({fdname; fdargs; fdbody; fdrt; _}) -> (
-      match
-        Map.add accum ~key:fdname
-          ~data:
+     This will make sure we do not inline recursive functions.
+     We also don't want to add any function declaration (as opposed to
+     definitions), because that would replace the function call with a Skip.
+  *)
+  let f (accum, visited) Program.({fdname; fdargs; fdbody; fdrt; _}) =
+    if not (Set.mem visited fdname) then
+      (accum, visited)
+    else
+      let accum' = match fdbody with
+        | None -> accum
+        | Some fdbody ->
+          let data =
             ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
             , List.map ~f:(fun (_, name, _) -> name) fdargs
             , inline_function_statement adt accum fdbody )
-      with
-      | `Ok m -> m
-      | `Duplicate -> accum )
+          in
+          match Map.add accum ~key:fdname ~data:data with
+          | `Ok m -> m
+          | `Duplicate -> accum
+      in
+      let visited' = Set.add visited fdname in
+      (accum', visited')
   in
-  Map.filter
-    ~f:(fun (_, _, v) -> v.pattern <> Skip)
-    (List.fold l ~init:Map.Poly.empty ~f)
+  let (accum, _) = List.fold l ~init:(Map.Poly.empty, Set.Poly.empty) ~f in
+  accum
+
 
 let function_inlining (mir : Program.Typed.t) =
   let dataonly_inline_map =

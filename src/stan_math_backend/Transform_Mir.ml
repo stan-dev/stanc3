@@ -580,7 +580,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   let functions_block =
     List.map
-      ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
+      ~f:(fun def -> {def with fdbody= Option.map ~f:validate_dims_stmt def.fdbody})
       p.functions_block
   in
   let generate_quantities =

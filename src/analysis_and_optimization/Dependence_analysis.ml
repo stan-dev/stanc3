@@ -249,9 +249,11 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                Set.Poly.of_list
                  (List.map fdargs ~f:(fun (_, arg_name, _) -> arg_name))
              in
-             stmt_uninitialized_variables
-               (Set.Poly.union arg_vars globals)
-               fdbody )) ]
+             Option.value_map fdbody ~default:Set.Poly.empty ~f:(fun fdbody ->
+                 stmt_uninitialized_variables
+                   (Set.Poly.union arg_vars globals)
+                   fdbody )))
+    ]
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :
     ( label

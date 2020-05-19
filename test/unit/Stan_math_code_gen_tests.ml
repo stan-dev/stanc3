@@ -18,6 +18,7 @@ let%expect_test "udf" =
         (Some
            (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
+      |> Some
   ; fdloc= Location_span.empty }
   |> strf "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;

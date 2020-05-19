@@ -153,16 +153,8 @@ let%expect_test "inline functions" =
 
       log_prob {
         {
-          for(sym1__ in 1:1) {
-            FnPrint__(3);
-            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
-          }
-          real sym4__;
-          for(sym3__ in 1:1) {
-            sym4__ = (53 ^ 2);
-            break;
-          }
-          FnReject__(sym4__);
+          f(3, FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
+          FnReject__(g(53));
         }
       }
 
@@ -219,11 +211,7 @@ let%expect_test "inline functions 2" =
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        for(sym3__ in 1:1) {
-          for(sym1__ in 1:1) {
-
-          }
-        }
+        g();
       } |}]
 
 let%expect_test "list collapsing" =
@@ -257,121 +245,69 @@ let%expect_test "list collapsing" =
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
-         ((pattern
-           (Block
-            (((pattern
-               (NRFunApp CompilerInternal FnPrint__
-                (((pattern (Var x))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (meta <opaque>))
-             ((pattern
-               (NRFunApp CompilerInternal FnPrint__
-                (((pattern (Var y))
-                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-              (meta <opaque>)))))
-          (meta <opaque>)))
+         (((pattern
+            (Block
+             (((pattern
+                (NRFunApp CompilerInternal FnPrint__
+                 (((pattern (Var x))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp CompilerInternal FnPrint__
+                 (((pattern (Var y))
+                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
         (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
-         ((pattern
-           (Block
-            (((pattern
-               (Return
-                (((pattern
-                   (FunApp StanLib Pow__
-                    (((pattern (Var z))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 2))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-              (meta <opaque>)))))
-          (meta <opaque>)))
+         (((pattern
+            (Block
+             (((pattern
+                (Return
+                 (((pattern
+                    (FunApp StanLib Pow__
+                     (((pattern (Var z))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 2))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
         (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
       (((pattern
          (Block
           (((pattern
-             (For (loopvar sym1__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
+             (NRFunApp UserDefined f
+              (((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (Block
+                 (FunApp CompilerInternal FnMakeRowVec__
                   (((pattern
-                     (NRFunApp CompilerInternal FnPrint__
+                     (FunApp CompilerInternal FnMakeRowVec__
                       (((pattern (Lit Int 3))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Int 2))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta <opaque>))
+                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (NRFunApp CompilerInternal FnPrint__
-                      (((pattern
-                         (FunApp CompilerInternal FnMakeRowVec__
-                          (((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
-                              (((pattern (Lit Int 3))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 2))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                            (meta
-                             ((type_ URowVector) (loc <opaque>)
-                              (adlevel DataOnly))))
-                           ((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
-                              (((pattern (Lit Int 4))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                               ((pattern (Lit Int 6))
-                                (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                            (meta
-                             ((type_ URowVector) (loc <opaque>)
-                              (adlevel DataOnly)))))))
-                        (meta
-                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta <opaque>)))))
-                (meta <opaque>)))))
-            (meta <opaque>))
-           ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
-              (decl_type (Unsized UReal))))
-            (meta <opaque>))
-           ((pattern
-             (For (loopvar sym3__)
-              (lower
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (upper
-               ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (body
-               ((pattern
-                 (Block
-                  (((pattern
-                     (Assignment (sym4__ UReal ())
-                      ((pattern
-                        (FunApp StanLib Pow__
-                         (((pattern (Lit Int 53))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 2))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-                    (meta <opaque>))
-                   ((pattern Break) (meta <opaque>)))))
-                (meta <opaque>)))))
+                     (FunApp CompilerInternal FnMakeRowVec__
+                      (((pattern (Lit Int 4))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       ((pattern (Lit Int 6))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>))
            ((pattern
              (NRFunApp CompilerInternal FnReject__
-              (((pattern (Var sym4__))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+              (((pattern
+                 (FunApp UserDefined g
+                  (((pattern (Lit Int 53))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
      (generate_quantities
@@ -502,27 +438,8 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
-            FnPrint__("f");
-            sym3__ = 42;
-            break;
-          }
-          for(sym5__ in 1:1) {
-            FnPrint__("g");
-            sym6__ = (3 + 24);
-            break;
-          }
-          for(i in sym3__:sym6__) {
-            {
-              FnPrint__("body");
-            }
-            for(sym5__ in 1:1) {
-              FnPrint__("g");
-              sym6__ = (3 + 24);
-              break;
-            }
+          for(i in f(2):g(3)) {
+            FnPrint__("body");
           }
         }
       }
@@ -582,39 +499,8 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-          int sym9__;
-          int sym12__;
-          for(sym8__ in 1:1) {
-            FnPrint__("f");
-            sym9__ = 42;
-            break;
-          }
-          for(sym11__ in 1:1) {
-            FnPrint__("g");
-            int sym13__;
-            for(sym5__ in 1:1) {
-              FnPrint__("f");
-              sym13__ = 42;
-              break;
-            }
-            sym12__ = (sym13__ + 24);
-            break;
-          }
-          for(i in sym9__:sym12__) {
-            {
-              FnPrint__("body");
-            }
-            for(sym11__ in 1:1) {
-              FnPrint__("g");
-              int sym13__;
-              for(sym5__ in 1:1) {
-                FnPrint__("f");
-                sym13__ = 42;
-                break;
-              }
-              sym12__ = (sym13__ + 24);
-              break;
-            }
+          for(i in f(2):g(3)) {
+            FnPrint__("body");
           }
         }
       }
@@ -672,20 +558,7 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
-            FnPrint__("g");
-            sym3__ = (3 + 24);
-            break;
-          }
-          while(sym3__) {
-            FnPrint__("body");
-            for(sym2__ in 1:1) {
-              FnPrint__("g");
-              sym3__ = (3 + 24);
-              break;
-            }
-          }
+          while(g(3)) FnPrint__("body");
         }
       }
 
@@ -742,13 +615,7 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
-            FnPrint__("g");
-            sym3__ = (3 + 24);
-            break;
-          }
-          if(sym3__) FnPrint__("body");
+          if(g(3)) FnPrint__("body");
         }
       }
 
@@ -817,28 +684,12 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          int sym9__;
-          for(sym2__ in 1:1) {
-            FnPrint__("f");
-            sym3__ = 42;
-            break;
-          }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
-              FnPrint__("g");
-              sym6__ = (3 + 24);
-              break;
-            }
+          if(f(2)) {
+
           } else {
-            for(sym8__ in 1:1) {
-              FnPrint__("h");
-              sym9__ = (4 + 4);
-              break;
-            }
+
           }
-          FnPrint__(sym3__ ?sym6__: sym9__);
+          FnPrint__(f(2) ?g(3): h(4));
         }
       }
 
@@ -891,17 +742,7 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
-            if(2) {
-              FnPrint__("f");
-              sym3__ = 42;
-              break;
-            }
-            sym3__ = 6;
-            break;
-          }
-          FnPrint__(sym3__);
+          FnPrint__(f(2));
         }
       }
 
@@ -950,19 +791,7 @@ let%expect_test "inline function indices " =
       log_prob {
         {
           array[array[int, 2], 2] a;
-          int sym6__;
-          int sym3__;
-          for(sym5__ in 1:1) {
-            FnPrint__(2);
-            sym6__ = 42;
-            break;
-          }
-          for(sym2__ in 1:1) {
-            FnPrint__(1);
-            sym3__ = 42;
-            break;
-          }
-          FnPrint__(a[sym3__, sym6__]);
+          FnPrint__(a[f(1), f(2)]);
         }
       }
 
@@ -1010,21 +839,10 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
-            FnPrint__(1);
-            sym3__ = 42;
-            break;
+          if(f(1)) {
+
           }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
-              FnPrint__(2);
-              sym6__ = 42;
-              break;
-            }
-          }
-          FnPrint__(sym3__ && sym6__);
+          FnPrint__(f(1) && f(2));
         }
       }
 
@@ -1071,21 +889,10 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
-            FnPrint__(1);
-            sym3__ = 42;
-            break;
+          if(f(1)) ; else {
+
           }
-          if(sym3__) ; else {
-            for(sym5__ in 1:1) {
-              FnPrint__(2);
-              sym6__ = 42;
-              break;
-            }
-          }
-          FnPrint__(sym3__ || sym6__);
+          FnPrint__(f(1) || f(2));
         }
       }
 
