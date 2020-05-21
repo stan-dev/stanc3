@@ -1,17 +1,3 @@
-  $ ../../../../../install/default/bin/stanc capture.stan
-
-Semantic error in 'capture.stan', line 3, column 8 to line 6, column 9:
-   -------------------------------------------------
-     1:  functions {
-     2:      real foo(real(real) g) {
-     3:          functions
-                 ^
-     4:          real f(real x) {
-     5:              return g(x)^2;
-   -------------------------------------------------
-
-Cannot capture 'g'.
-
   $ ../../../../../install/default/bin/stanc closure_lp.stan
 
 Semantic error in 'closure_lp.stan', line 6, column 7 to column 13:

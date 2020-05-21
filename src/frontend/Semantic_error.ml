@@ -226,7 +226,6 @@ module IdentifierError = struct
     | IsStanMathName of string
     | InUse of string
     | NotInScope of string
-    | TemplateCapture of string
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -238,7 +237,6 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
-    | TemplateCapture name -> Fmt.pf ppf "Cannot capture '%s'." name
 end
 
 module ExpressionError = struct
@@ -515,9 +513,6 @@ let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 
 let ident_not_in_scope loc name =
   IdentifierError (loc, IdentifierError.NotInScope name)
-
-let template_capture loc name =
-  IdentifierError (loc, IdentifierError.TemplateCapture name)
 
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)

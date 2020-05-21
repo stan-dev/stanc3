@@ -1675,8 +1675,6 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
     List.filter_map captures ~f:(fun name ->
         match Symbol_table.look vm name with
         | None | Some (Functions, UFun (_, _, Function)) -> None
-        | Some (_, UFun (_, _, Template)) ->
-            Some (error (Semantic_error.template_capture loc name))
         | Some (block, type_) ->
             Symbol_table.set_read_only vm name ;
             Some (ok (calculate_autodifftype block type_, type_, name)) )

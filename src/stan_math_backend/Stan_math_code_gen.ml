@@ -248,10 +248,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
                   @ extra @ ["pstream__"] )
           | _ -> raise_s [%message "impossible!"] )
 
-let forward_decl fun_def =
-  Program.{fun_def with fdbody= {fun_def.fdbody with Stmt.Fixed.pattern= Skip}}
-
-let closure_to_function clname Program.({cdrt; cdcaptures; cdargs; cdbody}) =
+let function_from_closure clname Program.({cdrt; cdcaptures; cdargs; cdbody}) =
   Program.
     { fdname= clname ^ "_impl__"
     ; fdrt= cdrt
@@ -260,38 +257,38 @@ let closure_to_function clname Program.({cdrt; cdcaptures; cdargs; cdbody}) =
     ; fdloc= Location_span.empty }
 
 let pp_closure_defs ppf closures =
+  let numbered = List.mapi ~f:(fun i x -> (i, x)) in
   let pp_type ppf = function
-    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
-        pf ppf "%s__<double>&" clname
-    | AutoDiffable, UnsizedType.UFun (_, _, Closure clname) ->
-        pf ppf "%s__<captured_t__>&" clname
-    | ad, ut when UnsizedType.is_scalar_type ut ->
+    | i, (_, UnsizedType.UFun _) -> pf ppf "F%d__&" i
+    | _, (ad, ut) when UnsizedType.is_scalar_type ut ->
         pp_unsizedtype_captured ppf (ad, ut)
-    | ad, ut -> pf ppf "%a&" pp_unsizedtype_captured (ad, ut)
+    | _, (ad, ut) -> pf ppf "%a&" pp_unsizedtype_captured (ad, ut)
   in
   let pp_valuetype ppf = function
-    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
-        pf ppf "typename %s__<double>::ValueOf__" clname
-    | AutoDiffable, UFun (_, _, Closure clname) ->
-        pf ppf "typename %s__<captured_t__>::ValueOf__" clname
-    | AutoDiffable, ut -> pp_unsizedtype_captured ppf (DataOnly, ut)
-    | _, ut when UnsizedType.is_scalar_type ut ->
+    | i, (_, UnsizedType.UFun _) -> pf ppf "typename F%d__::ValueOf__" i
+    | _, (UnsizedType.AutoDiffable, ut) ->
         pp_unsizedtype_captured ppf (DataOnly, ut)
-    | _, ut -> pf ppf "%a&" pp_unsizedtype_captured (DataOnly, ut)
+    | _, (_, ut) when UnsizedType.is_scalar_type ut ->
+        pp_unsizedtype_captured ppf (DataOnly, ut)
+    | _, (DataOnly, ut) -> pf ppf "%a&" pp_unsizedtype_captured (DataOnly, ut)
   in
   let pp_copytype ppf = function
-    | UnsizedType.(DataOnly, UFun (_, _, Closure clname)) ->
-        pf ppf "typename %s__<double>::DeepCopy__" clname
-    | AutoDiffable, UFun (_, _, Closure clname) ->
-        pf ppf "typename %s__<captured_t__>::DeepCopy__" clname
-    | ad, ut when UnsizedType.is_scalar_type ut ->
-        pp_unsizedtype_captured ppf (ad, ut)
-    | ad, ut -> pf ppf "%a&" pp_unsizedtype_captured (ad, ut)
+    | i, (_, UnsizedType.UFun _) -> pf ppf "typename F%d__::DeepCopy__" i
+    | _, (UnsizedType.AutoDiffable, ut) ->
+        pp_unsizedtype_captured ppf (AutoDiffable, ut)
+    | _, (DataOnly, ut) when UnsizedType.is_scalar_type ut ->
+        pp_unsizedtype_captured ppf (DataOnly, ut)
+    | _, (DataOnly, ut) -> pf ppf "%a&" pp_unsizedtype_captured (DataOnly, ut)
+  in
+  let pp_args ppf captures =
+    (list ~sep:comma (fun ppf (i, (ad, id, ut)) ->
+         pf ppf "const %a %s" pp_type (i, (ad, ut)) id ))
+      ppf (numbered captures)
   in
   let pp_members ppf (pp_type, captures) =
-    (list ~sep:cut (fun ppf (ad, id, ut) ->
-         pf ppf "const %a %s;" pp_type (ad, ut) id ))
-      ppf captures
+    (list ~sep:cut (fun ppf (i, (ad, id, ut)) ->
+         pf ppf "const %a %s;" pp_type (i, (ad, ut)) id ))
+      ppf (numbered captures)
   in
   let pp_ctor ppf (clname, captures) =
     let pp_count ppf captures =
@@ -309,9 +306,9 @@ let pp_closure_defs ppf closures =
       "@[<hov>%s__(@[<hov>%a@])@ : \
        %a%snum_vars__(@[stan::is_var<captured_t__>::value ?@ %a : 0@]) { }@]"
       clname
-      (list ~sep:comma (fun ppf (ad, id, ut) ->
-           pf ppf "const %a %s__" pp_type (ad, ut) id ))
-      captures
+      (list ~sep:comma (fun ppf (i, (ad, id, ut)) ->
+           pf ppf "const %a %s__" pp_type (i, (ad, ut)) id ))
+      (numbered captures)
       (list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s__)" id id))
       captures
       (if List.is_empty captures then "" else ", ")
@@ -330,9 +327,8 @@ let pp_closure_defs ppf closures =
           "@[<v>%aoperator()(@[<hov>%a, std::ostream* pstream__, %a@]) const \
            {@ @[<hov>return %a;@]@,}@]@,"
           pp_returntype_closure (args, rt) (list ~sep:comma text) two
-          (list ~sep:comma text) tl pp_call
+          (list ~sep:comma text) tl pp_call_str
           ( name ^ "_impl__"
-          , text
           , List.map ~f:(fun (_, n, _) -> n) (args @ captures) @ ["pstream__"]
           ) )
     in
@@ -342,9 +338,8 @@ let pp_closure_defs ppf closures =
        @[<hov>return %a;@]@,}@]@,%a"
       pp_returntype_closure (args, rt) (list ~sep:comma text) s_args
       (if List.is_empty args then "" else ", ")
-      pp_call
+      pp_call_str
       ( name ^ "_impl__"
-      , text
       , List.map ~f:(fun (_, n, _) -> n) (args @ captures) @ ["pstream__"] )
       pp_ode ()
   in
@@ -362,11 +357,19 @@ let pp_closure_defs ppf closures =
                  else pf ppf "%s(init.%s)" n n ))
             captures
       in
-      pf ppf "@[<hov>ValueOf__(const %s__& init)%a { }@]" name pp_items
+      pf ppf "@[<hov>ValueOf_cl__(const %s__& init)%a { }@]@," name pp_items
+        captures ;
+      pf ppf "@[<hov>ValueOf_cl__(const DeepCopy_cl__& init)%a { }@]" pp_items
         captures
     in
-    pf ppf "@[<v 2>class ValueOf__ {@ %a@ public:@ %a@ %a};@]" pp_members
-      (pp_valuetype, captures) pp_init (name, captures) pp_op
+    pf ppf
+      "@[<v 2>class ValueOf_cl__ {@ %a@ public:@ const static int num_vars__ \
+       = 0;@ %a@ %a@ void set_zero_adjoints() const { }@ void \
+       accumulate_adjoints(double*) const { }@ void save_varis(vari**) const \
+       { }@ using captured_scalar_t__ = double;@ using ValueOf__ = \
+       ValueOf_cl__;@ using DeepCopy__ = ValueOf_cl__;@ };@]@ using ValueOf__ \
+       = ValueOf_cl__;"
+      pp_members (pp_valuetype, captures) pp_init (name, captures) pp_op
       ((rt, false), name, captures, args)
   in
   let to_var adlevel type_ id =
@@ -459,38 +462,67 @@ let pp_closure_defs ppf closures =
   let pp_deepcopy ppf (rt, id, captures, args) =
     let pp_init ppf (id, captures) =
       let pp_items ppf captures =
-        if List.is_empty captures then pf ppf ""
-        else
-          pf ppf " : %a"
-            (list ~sep:comma (fun ppf (ad, n, ut) ->
-                 if
-                   ad = UnsizedType.AutoDiffable
-                   && not (UnsizedType.is_fun_type ut)
-                 then pf ppf "%s(deep_copy_vars(init.%s))" n n
-                 else pf ppf "%s(init.%s)" n n ))
-            captures
+        (list ~sep:comma (fun ppf (ad, n, ut) ->
+             if
+               ad = UnsizedType.AutoDiffable
+               && not (UnsizedType.is_fun_type ut)
+             then pf ppf "%s(deep_copy_vars(init.%s))" n n
+             else pf ppf "%s(init.%s)" n n ))
+          ppf captures
       in
-      pf ppf "@[<hov>DeepCopy__(const %s__& init)%a { }@]" id pp_items captures
+      pf ppf
+        "@[<hov>DeepCopy_cl__(const %s__& init) : %a%s \
+         num_vars__(init.num_vars__) { }@]"
+        id pp_items captures
+        (if List.is_empty captures then "" else ", ")
     in
-    pf ppf "@[<v 2>class DeepCopy__ {@ %a@ public:@ %a@ %a@ %a@ };@]"
+    pf ppf
+      "@[<v 2>class DeepCopy_cl__ {@ %a@ public:@ %a@ %a@ %a@ const int \
+       num_vars__;@ using captured_scalar_t__ = captured_t__;@ %a@ using \
+       DeepCopy__ = DeepCopy_cl__;@ };@]@ using DeepCopy__ = DeepCopy_cl__;@ \
+       using ValueOf__ = typename DeepCopy__::ValueOf__;"
       pp_members (pp_copytype, captures) pp_init (id, captures) pp_op
       ((rt, true), id, captures, args)
-      pp_accumulateadjoints captures
+      pp_accumulateadjoints captures pp_valueof (rt, id, captures, args)
   in
-  let f ~key ~data:Program.({cdrt; cdargs; cdcaptures; _}) =
+  let f ~key ~data:Program.({cdrt; cdargs; cdcaptures; cdbody}) =
+    cut ppf () ;
+    pp_fun_def ppf
+      Program.
+        { fdname= key ^ "_impl__"
+        ; fdrt= cdrt
+        ; fdargs= cdargs @ cdcaptures
+        ; fdbody= {cdbody with Stmt.Fixed.pattern= Skip}
+        ; fdloc= Location_span.empty }
+      true String.Set.empty ;
     pf ppf
-      "@,%a@[<v 2>class %s__ {@ %a@ public:@ %s@ const int num_vars__;@ %a@ \
-       %a@ %a@ %a@ %a@ %a@ %a@]@,};@,"
-      pp_template_decorator ["typename captured_t__"] key pp_members
-      (pp_type, cdcaptures) "using captured_scalar_t__ = captured_t__;" pp_ctor
-      (key, cdcaptures) pp_op
+      "@,%a@[<v 2>class %s__ {@,%a@ public:@ %s@ const int num_vars__;@ %a@ \
+       %a@ %a@ %a@ %a@ %a@]@,};@,%a auto make_%s__(%a) {@,return \
+       %s__<%a>(%a);@,}"
+      pp_template_decorator
+      ( "typename captured_t__"
+      :: List.filter_mapi cdcaptures ~f:(fun i (_, _, ut) ->
+             if UnsizedType.is_fun_type ut then Some (strf "typename F%d__" i)
+             else None ) )
+      key pp_members (pp_type, cdcaptures)
+      "using captured_scalar_t__ = captured_t__;" pp_ctor (key, cdcaptures)
+      pp_op
       ((cdrt, true), key, cdcaptures, cdargs)
-      pp_valueof
-      (cdrt, key, cdcaptures, cdargs)
       pp_deepcopy
       (cdrt, key, cdcaptures, cdargs)
       pp_zeroadjoints cdcaptures pp_accumulateadjoints cdcaptures pp_savevaris
-      cdcaptures
+      cdcaptures pp_template_decorator
+      ( "typename captured_t__"
+      :: List.filter_mapi cdcaptures ~f:(fun i (_, _, ut) ->
+             if UnsizedType.is_fun_type ut then Some (strf "typename F%d__" i)
+             else None ) )
+      key pp_args cdcaptures key (list ~sep:comma string)
+      ( "captured_t__"
+      :: List.filter_mapi cdcaptures ~f:(fun i (_, _, ut) ->
+             if UnsizedType.is_fun_type ut then Some (strf "F%d__" i) else None
+         ) )
+      (list ~sep:comma string)
+      (List.map cdcaptures ~f:(fun (_, id, _) -> id))
   in
   String.Map.iteri ~f closures
 
@@ -890,6 +922,13 @@ using namespace stan::math; |}
 (* XXX probably move these to the Stan repo when these repos are joined. *)
 let custom_functions =
   {|
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -1003,30 +1042,16 @@ let pp_prog ppf (p : Program.Typed.t) =
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
       (fun_used_in_reduce_sum p)
   in
-  (* Closures may call user-defined functions so functions must be declared before closures.
-     But closures may also appear inside functions so closures must be defined before functions.
-     Redundant forward declarations are harmless so just declare all user functions first
-     then define closure classes and after that define user functions.
-     TODO: nested closures are still broken. *)
-  pf ppf
-    "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ %a@ %a@ %a@ %a@ \
-     }@ @]"
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ %a@ %a@ }@ @]"
     version includes (namespace p) custom_functions usings Locations.pp_globals
     s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
-    (list ~sep:cut pp_fun_def_with_rs_list)
-    (List.map ~f:forward_decl p.functions_block)
-    (list ~sep:cut pp_fun_def_with_rs_list)
-    (Map.fold ~init:[]
-       ~f:(fun ~key ~data accum ->
-         (closure_to_function key data |> forward_decl) :: accum )
-       p.closures)
     pp_closure_defs p.closures
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block
     (list ~sep:cut (fun ppf fd -> pp_fun_def ppf fd true String.Set.empty))
     (Map.fold ~init:[]
-       ~f:(fun ~key ~data accum -> closure_to_function key data :: accum)
+       ~f:(fun ~key ~data accum -> function_from_closure key data :: accum)
        p.closures)
     pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name ;

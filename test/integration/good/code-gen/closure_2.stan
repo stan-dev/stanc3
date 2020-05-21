@@ -24,4 +24,7 @@ transformed parameters {
     }
     return gar(s);
   }
+  real s1 = bar(1.0);
+  real s2 = baz(1.0);
+  real s3 = goo(1.0);
 }

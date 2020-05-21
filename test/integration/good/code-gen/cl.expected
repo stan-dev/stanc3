@@ -4,6 +4,13 @@
 #include <stan/model/model_header.hpp>
 namespace optimize_glm_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -282,8 +289,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimize_glm.stan', line 20, column 2 to column 20)",
                                                       " (in 'optimize_glm.stan', line 21, column 2 to column 15)",
                                                       " (in 'optimize_glm.stan', line 22, column 2 to column 16)"};
-
-
 
 
 

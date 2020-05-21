@@ -4,6 +4,13 @@
 #include <stan/model/model_header.hpp>
 namespace optimizations_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -180,20 +187,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 3, column 8 to line 4, column 17)",
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 16, column 8 to column 18)"};
-
-
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-         std::ostream* pstream__) ;
-
-int
-rfun(const int& y, std::ostream* pstream__) ;
-
-template <bool propto__, typename T_lp__, typename T_lp_accum__>
-int
-rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) ;
 
 
 

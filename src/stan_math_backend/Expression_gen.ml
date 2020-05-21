@@ -376,11 +376,9 @@ and pp_compiler_internal_fn (meta : Expr.Typed.Meta.t) f ppf es =
         let scalar_t =
           if meta.adlevel = AutoDiffable then "local_scalar_t__" else "double"
         in
-        pf ppf "@[<hov 2>%s__<%s>(@,%a)@]" clname scalar_t
+        pf ppf "@[<hov 2>make_%s__<%s>(@,%a)@]" clname scalar_t
           (list ~sep:comma pp_expr) captures
     | _ -> raise_s [%message "Bad closure " (es : Expr.Typed.t list)] )
-  | Some FnGetAdjoint -> pf ppf "%a.adj()" pp_expr (List.hd_exn es)
-  | Some FnGetVariPtr -> pf ppf "%a.vi_" pp_expr (List.hd_exn es)
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data meta.type_ ppf es

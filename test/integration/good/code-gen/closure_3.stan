@@ -1,6 +1,10 @@
 functions {
     real foo(real(real) g, real x) {
-        return g(1+x);
+        functions
+        real g2(real y) {
+            return g(y) * x;
+        }
+        return g2(1.0);
     }
 }
 transformed data {

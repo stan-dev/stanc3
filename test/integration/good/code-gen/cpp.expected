@@ -4,6 +4,13 @@
 #include <stan/model/model_header.hpp>
 namespace closure_1_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -111,23 +118,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 
 
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type
-closure01_impl__(const T0__& z, const Eigen::Matrix<T1__, 1, -1>& r,
-                 const T2__& p, const std::vector<T3__>& pa,
-                 const Eigen::Matrix<T4__, -1, 1>& pv,
-                 const Eigen::Matrix<double, -1, 1>& v, const double& x,
-                 const std::vector<double>& y, std::ostream* pstream__) ;
-
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
 closure00_impl__(const T0__& z, const Eigen::Matrix<T1__, 1, -1>& r,
                  const Eigen::Matrix<double, -1, 1>& v, const double& x,
                  const std::vector<double>& y, std::ostream* pstream__) ;
-
 
 template <typename captured_t__>
 class closure00__ {
@@ -149,26 +145,13 @@ T1__>::type>::type
   return closure00_impl__(z, r, v, x, y, pstream__);
   }
   
-  class ValueOf__ {
+  class DeepCopy_cl__ {
     const Eigen::Matrix<double, -1, 1>& v;
     const double x;
     const std::vector<double>& y;
     public:
-    ValueOf__(const closure00__& init) : v(init.v), x(init.x), y(init.y) { }
-    template <typename T0__, typename T1__>
-    typename boost::math::tools::promote_args<T0__,
-T1__>::type
-    operator()(const T0__& z, const Eigen::Matrix<T1__, 1, -1>&
-               r, std::ostream* pstream__) const {
-    return closure00_impl__(z, r, v, x, y, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    const Eigen::Matrix<double, -1, 1>& v;
-    const double x;
-    const std::vector<double>& y;
-    public:
-    DeepCopy__(const closure00__& init) : v(init.v), x(init.x), y(init.y) { }
+    DeepCopy_cl__(const closure00__& init) : v(init.v), x(init.x),
+    y(init.y),  num_vars__(init.num_vars__) { }
     template <typename T0__, typename T1__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__,
@@ -184,7 +167,38 @@ T1__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const Eigen::Matrix<double, -1, 1>& v;
+      const double x;
+      const std::vector<double>& y;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure00__& init) : v(init.v), x(init.x),
+      y(init.y) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : v(init.v), x(init.x),
+      y(init.y) { }
+      template <typename T0__, typename T1__>
+      typename boost::math::tools::promote_args<T0__,
+T1__>::type
+      operator()(const T0__& z, const Eigen::Matrix<T1__, 1, -1>&
+                 r, std::ostream* pstream__) const {
+      return closure00_impl__(z, r, v, x, y, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -203,6 +217,23 @@ T1__>::type>::type
     }
     }
 };
+template <typename captured_t__>
+ auto make_closure00__(const Eigen::Matrix<double, -1, 1>& v,
+const double x,
+const std::vector<double>& y) {
+return closure00__<captured_t__>(v,
+x,
+y);
+}
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type
+closure01_impl__(const T0__& z, const Eigen::Matrix<T1__, 1, -1>& r,
+                 const T2__& p, const std::vector<T3__>& pa,
+                 const Eigen::Matrix<T4__, -1, 1>& pv,
+                 const Eigen::Matrix<double, -1, 1>& v, const double& x,
+                 const std::vector<double>& y, std::ostream* pstream__) ;
 
 template <typename captured_t__>
 class closure01__ {
@@ -231,36 +262,17 @@ T1__>::type>::type
   return closure01_impl__(z, r, p, pa, pv, v, x, y, pstream__);
   }
   
-  class ValueOf__ {
-    const double p;
-    const std::vector<double> pa;
-    const Eigen::Matrix<double, -1, 1> pv;
-    const Eigen::Matrix<double, -1, 1>& v;
-    const double x;
-    const std::vector<double>& y;
-    public:
-    ValueOf__(const closure01__& init) : p(value_of(init.p)),
-    pa(value_of(init.pa)), pv(value_of(init.pv)), v(init.v), x(init.x),
-    y(init.y) { }
-    template <typename T0__, typename T1__>
-    typename boost::math::tools::promote_args<T0__,
-T1__>::type
-    operator()(const T0__& z, const Eigen::Matrix<T1__, 1, -1>&
-               r, std::ostream* pstream__) const {
-    return closure01_impl__(z, r, p, pa, pv, v, x, y, pstream__);
-    }
-    };
-  class DeepCopy__ {
+  class DeepCopy_cl__ {
     const captured_t__ p;
-    const std::vector<captured_t__>& pa;
-    const Eigen::Matrix<captured_t__, -1, 1>& pv;
+    const std::vector<captured_t__> pa;
+    const Eigen::Matrix<captured_t__, -1, 1> pv;
     const Eigen::Matrix<double, -1, 1>& v;
     const double x;
     const std::vector<double>& y;
     public:
-    DeepCopy__(const closure01__& init) : p(deep_copy_vars(init.p)),
+    DeepCopy_cl__(const closure01__& init) : p(deep_copy_vars(init.p)),
     pa(deep_copy_vars(init.pa)), pv(deep_copy_vars(init.pv)), v(init.v),
-    x(init.x), y(init.y) { }
+    x(init.x), y(init.y),  num_vars__(init.num_vars__) { }
     template <typename T0__, typename T1__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__,
@@ -273,54 +285,107 @@ T1__>::type>::type
     void accumulate_adjoints(double* ptr) const {
       if (stan::is_var<captured_t__>::value) {
       size_t pos__ = 1;
-      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + p.adj());
+      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(p));
       pos__ = (pos__ + 1);
       for (size_t sym1__ = 1; sym1__ <= stan::math::size(pa); ++sym1__) {
-        ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + pa[(sym1__ - 1)].adj());
+        ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] +
+                             FnGetAdjoint__(pa[(sym1__ - 1)]));
         pos__ = (pos__ + 1);}
       for (size_t sym1__ = 1; sym1__ <= stan::math::size(pv); ++sym1__) {
-        ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + pv[(sym1__ - 1)].adj());
+        ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] +
+                             FnGetAdjoint__(pv[(sym1__ - 1)]));
         pos__ = (pos__ + 1);}
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const double p;
+      const std::vector<double> pa;
+      const Eigen::Matrix<double, -1, 1> pv;
+      const Eigen::Matrix<double, -1, 1>& v;
+      const double x;
+      const std::vector<double>& y;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure01__& init) : p(value_of(init.p)),
+      pa(value_of(init.pa)), pv(value_of(init.pv)), v(init.v), x(init.x),
+      y(init.y) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : p(value_of(init.p)),
+      pa(value_of(init.pa)), pv(value_of(init.pv)), v(init.v), x(init.x),
+      y(init.y) { }
+      template <typename T0__, typename T1__>
+      typename boost::math::tools::promote_args<T0__,
+T1__>::type
+      operator()(const T0__& z, const Eigen::Matrix<T1__, 1, -1>&
+                 r, std::ostream* pstream__) const {
+      return closure01_impl__(z, r, p, pa, pv, v, x, y, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
-    p.set_zero_adjoint();
+    FnZeroAdjoint__(p);
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pa); ++sym1__) {
-      pa[(sym1__ - 1)].set_zero_adjoint();}
+      FnZeroAdjoint__(pa[(sym1__ - 1)]);}
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pv); ++sym1__) {
-      pv[(sym1__ - 1)].set_zero_adjoint();}
+      FnZeroAdjoint__(pv[(sym1__ - 1)]);}
     }
     }
   void accumulate_adjoints(double* ptr) const {
     if (stan::is_var<captured_t__>::value) {
     size_t pos__ = 1;
-    ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + p.adj());
+    ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(p));
     pos__ = (pos__ + 1);
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pa); ++sym1__) {
-      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + pa[(sym1__ - 1)].adj());
+      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] +
+                           FnGetAdjoint__(pa[(sym1__ - 1)]));
       pos__ = (pos__ + 1);}
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pv); ++sym1__) {
-      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + pv[(sym1__ - 1)].adj());
+      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] +
+                           FnGetAdjoint__(pv[(sym1__ - 1)]));
       pos__ = (pos__ + 1);}
     }
     }
   void save_varis(vari** ptr) const {
     if (stan::is_var<captured_t__>::value) {
     size_t pos__ = 1;
-    ptr[(pos__ - 1)] = p.vi_;
+    ptr[(pos__ - 1)] = FnGetVariPtr__(p);
     pos__ = (pos__ + 1);
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pa); ++sym1__) {
-      ptr[(pos__ - 1)] = pa[(sym1__ - 1)].vi_;
+      ptr[(pos__ - 1)] = FnGetVariPtr__(pa[(sym1__ - 1)]);
       pos__ = (pos__ + 1);}
     for (size_t sym1__ = 1; sym1__ <= stan::math::size(pv); ++sym1__) {
-      ptr[(pos__ - 1)] = pv[(sym1__ - 1)].vi_;
+      ptr[(pos__ - 1)] = FnGetVariPtr__(pv[(sym1__ - 1)]);
       pos__ = (pos__ + 1);}
     }
     }
 };
-
+template <typename captured_t__>
+ auto make_closure01__(const captured_t__ p,
+const std::vector<captured_t__>& pa,
+const Eigen::Matrix<captured_t__, -1, 1>& pv,
+const Eigen::Matrix<double, -1, 1>& v,
+const double x,
+const std::vector<double>& y) {
+return closure01__<captured_t__>(p,
+pa,
+pv,
+v,
+x,
+y);
+}
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
@@ -440,7 +505,7 @@ class closure_1_model : public model_base_crtp<closure_1_model> {
       }
       
       current_statement__ = 4;
-      auto foo = closure00__<double>(v, x, y);
+      auto foo = make_closure00__<double>(v, x, y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -476,7 +541,7 @@ class closure_1_model : public model_base_crtp<closure_1_model> {
     try {
       
       current_statement__ = 4;
-      auto foo = closure00__<double>(v, x, y);
+      auto foo = make_closure00__<double>(v, x, y);
       local_scalar_t__ p;
       
       current_statement__ = 1;
@@ -501,7 +566,7 @@ class closure_1_model : public model_base_crtp<closure_1_model> {
       {
         
         current_statement__ = 5;
-        auto bar = closure01__<local_scalar_t__>(p, pa, pv, v, x, y);
+        auto bar = make_closure01__<local_scalar_t__>(p, pa, pv, v, x, y);
         current_statement__ = 6;
         lp_accum__.add(
           foo(0.0, stan::math::to_row_vector(
@@ -549,7 +614,7 @@ class closure_1_model : public model_base_crtp<closure_1_model> {
     try {
       
       current_statement__ = 4;
-      auto foo = closure00__<double>(v, x, y);
+      auto foo = make_closure00__<double>(v, x, y);
       double p;
       
       current_statement__ = 1;
@@ -793,6 +858,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace closure_2_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -885,6 +957,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'closure_2.stan', line 6, column 2 to line 9, column 3)",
                                                       " (in 'closure_2.stan', line 15, column 2 to line 18, column 3)",
                                                       " (in 'closure_2.stan', line 19, column 2 to line 26, column 3)",
+                                                      " (in 'closure_2.stan', line 27, column 2 to column 21)",
+                                                      " (in 'closure_2.stan', line 28, column 2 to column 21)",
+                                                      " (in 'closure_2.stan', line 29, column 2 to column 21)",
                                                       " (in 'closure_2.stan', line 4, column 4 to column 13)",
                                                       " (in 'closure_2.stan', line 3, column 19 to line 5, column 3)",
                                                       " (in 'closure_2.stan', line 8, column 4 to column 18)",
@@ -901,26 +976,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
-closure04_impl__(const T0__& b, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-closure03_impl__(const T0__& s, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-typename T1__::captured_scalar_t__>::type
-closure02_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-typename T1__::captured_scalar_t__>::type
-closure01_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
 closure00_impl__(const T0__& x, std::ostream* pstream__) ;
-
 
 template <typename captured_t__>
 class closure00__ {
@@ -936,20 +992,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
   return closure00_impl__(x, pstream__);
   }
   
-  class ValueOf__ {
+  class DeepCopy_cl__ {
     
     public:
-    ValueOf__(const closure00__& init) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& x, std::ostream* pstream__) const {
-    return closure00_impl__(x, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    
-    public:
-    DeepCopy__(const closure00__& init) { }
+    DeepCopy_cl__(const closure00__& init) :  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
@@ -963,7 +1009,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure00__& init) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& x, std::ostream* pstream__) const {
+      return closure00_impl__(x, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -982,14 +1053,22 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
-
 template <typename captured_t__>
+ auto make_closure00__() {
+return closure00__<captured_t__>();
+}
+template <typename T0__, typename T1__>
+typename boost::math::tools::promote_args<T0__,
+typename T1__::captured_scalar_t__>::type
+closure01_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) ;
+
+template <typename captured_t__, typename F0__>
 class closure01__ {
-  const closure00__<double>& foo;
+  const F0__& foo;
   public:
   using captured_scalar_t__ = captured_t__;
   const int num_vars__;
-  closure01__(const closure00__<double>& foo__)
+  closure01__(const F0__& foo__)
   : foo(foo__), num_vars__(stan::is_var<captured_t__>::value ? 0 : 0) { }
   template <typename T0__>
   typename boost::math::tools::promote_args<captured_t__,
@@ -998,20 +1077,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
   return closure01_impl__(y, foo, pstream__);
   }
   
-  class ValueOf__ {
-    const typename closure00__<double>::ValueOf__ foo;
+  class DeepCopy_cl__ {
+    const typename F0__::DeepCopy__ foo;
     public:
-    ValueOf__(const closure01__& init) : foo(init.foo) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure01_impl__(y, foo, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    const typename closure00__<double>::DeepCopy__ foo;
-    public:
-    DeepCopy__(const closure01__& init) : foo(init.foo) { }
+    DeepCopy_cl__(const closure01__& init) : foo(init.foo),  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
@@ -1025,7 +1094,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const typename F0__::ValueOf__ foo;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure01__& init) : foo(init.foo) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : foo(init.foo) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& y, std::ostream* pstream__) const {
+      return closure01_impl__(y, foo, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -1044,14 +1138,23 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
+template <typename captured_t__, typename F0__>
+ auto make_closure01__(const F0__& foo) {
+return closure01__<captured_t__,
+F0__>(foo);
+}
+template <typename T0__, typename T1__>
+typename boost::math::tools::promote_args<T0__,
+typename T1__::captured_scalar_t__>::type
+closure02_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) ;
 
-template <typename captured_t__>
+template <typename captured_t__, typename F0__>
 class closure02__ {
-  const closure00__<double>& foo;
+  const F0__& foo;
   public:
   using captured_scalar_t__ = captured_t__;
   const int num_vars__;
-  closure02__(const closure00__<double>& foo__)
+  closure02__(const F0__& foo__)
   : foo(foo__), num_vars__(stan::is_var<captured_t__>::value ? 0 : 0) { }
   template <typename T0__>
   typename boost::math::tools::promote_args<captured_t__,
@@ -1060,20 +1163,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
   return closure02_impl__(y, foo, pstream__);
   }
   
-  class ValueOf__ {
-    const typename closure00__<double>::ValueOf__ foo;
+  class DeepCopy_cl__ {
+    const typename F0__::DeepCopy__ foo;
     public:
-    ValueOf__(const closure02__& init) : foo(init.foo) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure02_impl__(y, foo, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    const typename closure00__<double>::DeepCopy__ foo;
-    public:
-    DeepCopy__(const closure02__& init) : foo(init.foo) { }
+    DeepCopy_cl__(const closure02__& init) : foo(init.foo),  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
@@ -1087,7 +1180,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const typename F0__::ValueOf__ foo;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure02__& init) : foo(init.foo) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : foo(init.foo) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& y, std::ostream* pstream__) const {
+      return closure02_impl__(y, foo, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -1106,6 +1224,14 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
+template <typename captured_t__, typename F0__>
+ auto make_closure02__(const F0__& foo) {
+return closure02__<captured_t__,
+F0__>(foo);
+}
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+closure03_impl__(const T0__& s, std::ostream* pstream__) ;
 
 template <typename captured_t__>
 class closure03__ {
@@ -1121,20 +1247,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
   return closure03_impl__(s, pstream__);
   }
   
-  class ValueOf__ {
+  class DeepCopy_cl__ {
     
     public:
-    ValueOf__(const closure03__& init) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& s, std::ostream* pstream__) const {
-    return closure03_impl__(s, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    
-    public:
-    DeepCopy__(const closure03__& init) { }
+    DeepCopy_cl__(const closure03__& init) :  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
@@ -1148,7 +1264,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure03__& init) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& s, std::ostream* pstream__) const {
+      return closure03_impl__(s, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -1167,6 +1308,13 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
+template <typename captured_t__>
+ auto make_closure03__() {
+return closure03__<captured_t__>();
+}
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+closure04_impl__(const T0__& b, std::ostream* pstream__) ;
 
 template <typename captured_t__>
 class closure04__ {
@@ -1182,20 +1330,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
   return closure04_impl__(b, pstream__);
   }
   
-  class ValueOf__ {
+  class DeepCopy_cl__ {
     
     public:
-    ValueOf__(const closure04__& init) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& b, std::ostream* pstream__) const {
-    return closure04_impl__(b, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    
-    public:
-    DeepCopy__(const closure04__& init) { }
+    DeepCopy_cl__(const closure04__& init) :  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
@@ -1209,7 +1347,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure04__& init) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& b, std::ostream* pstream__) const {
+      return closure04_impl__(b, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -1228,7 +1391,10 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
-
+template <typename captured_t__>
+ auto make_closure04__() {
+return closure04__<captured_t__>();
+}
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -1238,7 +1404,7 @@ closure04_impl__(const T0__& b, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 15;
+    current_statement__ = 18;
     return b;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1256,9 +1422,9 @@ closure03_impl__(const T0__& s, std::ostream* pstream__) {
   
   try {
     
-    current_statement__ = 12;
-    auto gar = closure04__<local_scalar_t__>();
-    current_statement__ = 13;
+    current_statement__ = 15;
+    auto gar = make_closure04__<local_scalar_t__>();
+    current_statement__ = 16;
     return gar(s, pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1277,7 +1443,7 @@ closure02_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 10;
+    current_statement__ = 13;
     return foo(y, pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1296,7 +1462,7 @@ closure01_impl__(const T0__& y, const T1__& foo, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 8;
+    current_statement__ = 11;
     return foo(y, pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1313,7 +1479,7 @@ closure00_impl__(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   
   try {
-    current_statement__ = 6;
+    current_statement__ = 9;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1347,10 +1513,10 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
       pos__ = 1;
       
       current_statement__ = 2;
-      auto foo = closure00__<double>();
+      auto foo = make_closure00__<double>();
       
       current_statement__ = 3;
-      auto bar = closure01__<double>(foo);
+      auto bar = make_closure01__<double>(foo);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1380,20 +1546,38 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     try {
       
       current_statement__ = 2;
-      auto foo = closure00__<double>();
+      auto foo = make_closure00__<double>();
       
       current_statement__ = 3;
-      auto bar = closure01__<double>(foo);
+      auto bar = make_closure01__<double>(foo);
       local_scalar_t__ alpha;
       
       current_statement__ = 1;
       alpha = in__.scalar();
       
       current_statement__ = 4;
-      auto baz = closure02__<local_scalar_t__>(foo);
+      auto baz = make_closure02__<local_scalar_t__>(foo);
       
       current_statement__ = 5;
-      auto goo = closure03__<local_scalar_t__>();
+      auto goo = make_closure03__<local_scalar_t__>();
+      local_scalar_t__ s1;
+      
+      current_statement__ = 6;
+      s1 = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 6;
+      s1 = bar(1.0, pstream__);
+      local_scalar_t__ s2;
+      
+      current_statement__ = 7;
+      s2 = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 7;
+      s2 = baz(1.0, pstream__);
+      local_scalar_t__ s3;
+      
+      current_statement__ = 8;
+      s3 = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 8;
+      s3 = goo(1.0, pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1424,25 +1608,46 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     try {
       
       current_statement__ = 2;
-      auto foo = closure00__<double>();
+      auto foo = make_closure00__<double>();
       
       current_statement__ = 3;
-      auto bar = closure01__<double>(foo);
+      auto bar = make_closure01__<double>(foo);
       double alpha;
       
       current_statement__ = 1;
       alpha = in__.scalar();
       
       
+      double s1;
+      
+      current_statement__ = 6;
+      s1 = std::numeric_limits<double>::quiet_NaN();
+      double s2;
+      
+      current_statement__ = 7;
+      s2 = std::numeric_limits<double>::quiet_NaN();
+      double s3;
+      
+      current_statement__ = 8;
+      s3 = std::numeric_limits<double>::quiet_NaN();
       vars__.push_back(alpha);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
       current_statement__ = 4;
-      auto baz = closure02__<double>(foo);
+      auto baz = make_closure02__<double>(foo);
       current_statement__ = 5;
-      auto goo = closure03__<double>();
+      auto goo = make_closure03__<double>();
+      current_statement__ = 6;
+      s1 = bar(1.0, pstream__);
+      current_statement__ = 7;
+      s2 = baz(1.0, pstream__);
+      current_statement__ = 8;
+      s3 = goo(1.0, pstream__);
+      vars__.push_back(s1);
+      vars__.push_back(s2);
+      vars__.push_back(s3);
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -1480,11 +1685,20 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     
     names__.resize(0);
     names__.push_back("alpha");
+    names__.push_back("s1");
+    names__.push_back("s2");
+    names__.push_back("s3");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
     dimss__.push_back(dims__);
     dims__.resize(0);
     
@@ -1496,7 +1710,9 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     
     param_names__.push_back(std::string() + "alpha");
     if (emit_transformed_parameters__) {
-      
+      param_names__.push_back(std::string() + "s1");
+      param_names__.push_back(std::string() + "s2");
+      param_names__.push_back(std::string() + "s3");
     }
     
     if (emit_generated_quantities__) {
@@ -1511,7 +1727,9 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     
     param_names__.push_back(std::string() + "alpha");
     if (emit_transformed_parameters__) {
-      
+      param_names__.push_back(std::string() + "s1");
+      param_names__.push_back(std::string() + "s2");
+      param_names__.push_back(std::string() + "s3");
     }
     
     if (emit_generated_quantities__) {
@@ -1522,13 +1740,13 @@ class closure_2_model : public model_base_crtp<closure_2_model> {
     
   std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"s1\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"s2\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"s3\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
+    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"s1\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"s2\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"s3\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
@@ -1599,6 +1817,13 @@ stan::model::model_base& new_model(
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
 namespace closure_3_model_namespace {
+
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
@@ -1687,69 +1912,159 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'closure_3.stan', line 15, column 4 to column 11)",
-                                                      " (in 'closure_3.stan', line 8, column 4 to line 11, column 5)",
-                                                      " (in 'closure_3.stan', line 18, column 4 to line 21, column 5)",
-                                                      " (in 'closure_3.stan', line 22, column 4 to column 27)",
-                                                      " (in 'closure_3.stan', line 7, column 4 to column 17)",
-                                                      " (in 'closure_3.stan', line 12, column 4 to column 27)",
-                                                      " (in 'closure_3.stan', line 3, column 8 to column 22)",
-                                                      " (in 'closure_3.stan', line 2, column 35 to line 4, column 5)",
-                                                      " (in 'closure_3.stan', line 10, column 8 to column 19)",
-                                                      " (in 'closure_3.stan', line 9, column 21 to line 11, column 5)",
-                                                      " (in 'closure_3.stan', line 20, column 8 to column 19)",
-                                                      " (in 'closure_3.stan', line 19, column 21 to line 21, column 5)"};
+                                                      " (in 'closure_3.stan', line 19, column 4 to column 11)",
+                                                      " (in 'closure_3.stan', line 12, column 4 to line 15, column 5)",
+                                                      " (in 'closure_3.stan', line 22, column 4 to line 25, column 5)",
+                                                      " (in 'closure_3.stan', line 26, column 4 to column 27)",
+                                                      " (in 'closure_3.stan', line 11, column 4 to column 17)",
+                                                      " (in 'closure_3.stan', line 16, column 4 to column 27)",
+                                                      " (in 'closure_3.stan', line 3, column 8 to line 6, column 9)",
+                                                      " (in 'closure_3.stan', line 7, column 8 to column 23)",
+                                                      " (in 'closure_3.stan', line 2, column 35 to line 8, column 5)",
+                                                      " (in 'closure_3.stan', line 5, column 12 to column 28)",
+                                                      " (in 'closure_3.stan', line 4, column 24 to line 6, column 9)",
+                                                      " (in 'closure_3.stan', line 14, column 8 to column 19)",
+                                                      " (in 'closure_3.stan', line 13, column 21 to line 15, column 5)",
+                                                      " (in 'closure_3.stan', line 24, column 8 to column 19)",
+                                                      " (in 'closure_3.stan', line 23, column 21 to line 25, column 5)"};
 
 
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<typename T0__::captured_scalar_t__,
-T1__>::type
-foo(const T0__& g, const T1__& x, std::ostream* pstream__) ;
 
-template <typename T0__, typename T1__>
+template <typename T0__, typename T1__, typename T2__>
 typename boost::math::tools::promote_args<T0__,
-T1__>::type
-closure01_impl__(const T0__& y, const T1__& p, std::ostream* pstream__) ;
+typename T1__::captured_scalar_t__,
+T2__>::type
+closure00_impl__(const T0__& y, const T1__& g, const T2__& x,
+                 std::ostream* pstream__) ;
 
+template <typename captured_t__, typename F0__>
+class closure00__ {
+  const F0__& g;
+  const captured_t__ x;
+  public:
+  using captured_scalar_t__ = captured_t__;
+  const int num_vars__;
+  closure00__(const F0__& g__, const captured_t__ x__) : g(g__),
+  x(x__), num_vars__(stan::is_var<captured_t__>::value ? g__.num_vars__
+                     + 1 : 0) { }
+  template <typename T0__>
+  typename boost::math::tools::promote_args<captured_t__,
+typename boost::math::tools::promote_args<T0__>::type>::type
+  operator()(const T0__& y, std::ostream* pstream__) const {
+  return closure00_impl__(y, g, x, pstream__);
+  }
+  
+  class DeepCopy_cl__ {
+    const typename F0__::DeepCopy__ g;
+    const captured_t__ x;
+    public:
+    DeepCopy_cl__(const closure00__& init) : g(init.g),
+    x(deep_copy_vars(init.x)),  num_vars__(init.num_vars__) { }
+    template <typename T0__>
+    typename boost::math::tools::promote_args<captured_t__,
+typename boost::math::tools::promote_args<T0__>::type>::type
+    operator()(const T0__& y, std::ostream* pstream__) const {
+    return closure00_impl__(y, g, x, pstream__);
+    }
+    
+    void accumulate_adjoints(double* ptr) const {
+      if (stan::is_var<captured_t__>::value) {
+      size_t pos__ = 1;
+      g.accumulate_adjoints(ptr + (pos__ - 1));
+      pos__ += g.num_vars__;
+      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(x));
+      pos__ = (pos__ + 1);
+      }
+      }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const typename F0__::ValueOf__ g;
+      const double x;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure00__& init) : g(init.g),
+      x(value_of(init.x)) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : g(init.g),
+      x(value_of(init.x)) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& y, std::ostream* pstream__) const {
+      return closure00_impl__(y, g, x, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
+    };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
+  void set_zero_adjoints() const {
+    if (stan::is_var<captured_t__>::value) {
+    g.set_zero_adjoints();
+    FnZeroAdjoint__(x);
+    }
+    }
+  void accumulate_adjoints(double* ptr) const {
+    if (stan::is_var<captured_t__>::value) {
+    size_t pos__ = 1;
+    g.accumulate_adjoints(ptr + (pos__ - 1));
+    pos__ += g.num_vars__;
+    ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(x));
+    pos__ = (pos__ + 1);
+    }
+    }
+  void save_varis(vari** ptr) const {
+    if (stan::is_var<captured_t__>::value) {
+    size_t pos__ = 1;
+    g.save_varis(ptr + (pos__ - 1));
+    pos__ += g.num_vars__;
+    ptr[(pos__ - 1)] = FnGetVariPtr__(x);
+    pos__ = (pos__ + 1);
+    }
+    }
+};
+template <typename captured_t__, typename F0__>
+ auto make_closure00__(const F0__& g,
+const captured_t__ x) {
+return closure00__<captured_t__,
+F0__>(g,
+x);
+}
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
-closure00_impl__(const T0__& y, const double& x, std::ostream* pstream__) ;
-
+closure01_impl__(const T0__& y, const double& x, std::ostream* pstream__) ;
 
 template <typename captured_t__>
-class closure00__ {
+class closure01__ {
   const double x;
   public:
   using captured_scalar_t__ = captured_t__;
   const int num_vars__;
-  closure00__(const double x__)
+  closure01__(const double x__)
   : x(x__), num_vars__(stan::is_var<captured_t__>::value ? 0 : 0) { }
   template <typename T0__>
   typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
   operator()(const T0__& y, std::ostream* pstream__) const {
-  return closure00_impl__(y, x, pstream__);
+  return closure01_impl__(y, x, pstream__);
   }
   
-  class ValueOf__ {
+  class DeepCopy_cl__ {
     const double x;
     public:
-    ValueOf__(const closure00__& init) : x(init.x) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure00_impl__(y, x, pstream__);
-    }
-    };
-  class DeepCopy__ {
-    const double x;
-    public:
-    DeepCopy__(const closure00__& init) : x(init.x) { }
+    DeepCopy_cl__(const closure01__& init) : x(init.x),  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
     operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure00_impl__(y, x, pstream__);
+    return closure01_impl__(y, x, pstream__);
     }
     
     void accumulate_adjoints(double* ptr) const {
@@ -1758,7 +2073,32 @@ typename boost::math::tools::promote_args<T0__>::type>::type
       
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const double x;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure01__& init) : x(init.x) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : x(init.x) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& y, std::ostream* pstream__) const {
+      return closure01_impl__(y, x, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
     
@@ -1777,72 +2117,98 @@ typename boost::math::tools::promote_args<T0__>::type>::type
     }
     }
 };
+template <typename captured_t__>
+ auto make_closure01__(const double x) {
+return closure01__<captured_t__>(x);
+}
+template <typename T0__, typename T1__>
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
+closure02_impl__(const T0__& y, const T1__& p, std::ostream* pstream__) ;
 
 template <typename captured_t__>
-class closure01__ {
+class closure02__ {
   const captured_t__ p;
   public:
   using captured_scalar_t__ = captured_t__;
   const int num_vars__;
-  closure01__(const captured_t__ p__)
+  closure02__(const captured_t__ p__)
   : p(p__), num_vars__(stan::is_var<captured_t__>::value ? 1 : 0) { }
   template <typename T0__>
   typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
   operator()(const T0__& y, std::ostream* pstream__) const {
-  return closure01_impl__(y, p, pstream__);
+  return closure02_impl__(y, p, pstream__);
   }
   
-  class ValueOf__ {
-    const double p;
-    public:
-    ValueOf__(const closure01__& init) : p(value_of(init.p)) { }
-    template <typename T0__>
-    typename boost::math::tools::promote_args<T0__>::type
-    operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure01_impl__(y, p, pstream__);
-    }
-    };
-  class DeepCopy__ {
+  class DeepCopy_cl__ {
     const captured_t__ p;
     public:
-    DeepCopy__(const closure01__& init) : p(deep_copy_vars(init.p)) { }
+    DeepCopy_cl__(const closure02__& init) : p(deep_copy_vars(init.p)),  num_vars__(init.num_vars__) { }
     template <typename T0__>
     typename boost::math::tools::promote_args<captured_t__,
 typename boost::math::tools::promote_args<T0__>::type>::type
     operator()(const T0__& y, std::ostream* pstream__) const {
-    return closure01_impl__(y, p, pstream__);
+    return closure02_impl__(y, p, pstream__);
     }
     
     void accumulate_adjoints(double* ptr) const {
       if (stan::is_var<captured_t__>::value) {
       size_t pos__ = 1;
-      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + p.adj());
+      ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(p));
       pos__ = (pos__ + 1);
       }
       }
+    const int num_vars__;
+    using captured_scalar_t__ = captured_t__;
+    class ValueOf_cl__ {
+      const double p;
+      public:
+      const static int num_vars__ = 0;
+      ValueOf_cl__(const closure02__& init) : p(value_of(init.p)) { }
+      ValueOf_cl__(const DeepCopy_cl__& init) : p(value_of(init.p)) { }
+      template <typename T0__>
+      typename boost::math::tools::promote_args<T0__>::type
+      operator()(const T0__& y, std::ostream* pstream__) const {
+      return closure02_impl__(y, p, pstream__);
+      }
+      
+      void set_zero_adjoints() const { }
+      void accumulate_adjoints(double*) const { }
+      void save_varis(vari**) const { }
+      using captured_scalar_t__ = double;
+      using ValueOf__ = ValueOf_cl__;
+      using DeepCopy__ = ValueOf_cl__;
+      };
+    using ValueOf__ = ValueOf_cl__;
+    using DeepCopy__ = DeepCopy_cl__;
     };
+  using DeepCopy__ = DeepCopy_cl__;
+  using ValueOf__ = typename DeepCopy__::ValueOf__;
   void set_zero_adjoints() const {
     if (stan::is_var<captured_t__>::value) {
-    p.set_zero_adjoint();
+    FnZeroAdjoint__(p);
     }
     }
   void accumulate_adjoints(double* ptr) const {
     if (stan::is_var<captured_t__>::value) {
     size_t pos__ = 1;
-    ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + p.adj());
+    ptr[(pos__ - 1)] = (ptr[(pos__ - 1)] + FnGetAdjoint__(p));
     pos__ = (pos__ + 1);
     }
     }
   void save_varis(vari** ptr) const {
     if (stan::is_var<captured_t__>::value) {
     size_t pos__ = 1;
-    ptr[(pos__ - 1)] = p.vi_;
+    ptr[(pos__ - 1)] = FnGetVariPtr__(p);
     pos__ = (pos__ + 1);
     }
     }
 };
-
+template <typename captured_t__>
+ auto make_closure02__(const captured_t__ p) {
+return closure02__<captured_t__>(p);
+}
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<typename T0__::captured_scalar_t__,
 T1__>::type
@@ -1853,8 +2219,11 @@ foo(const T0__& g, const T1__& x, std::ostream* pstream__) {
   (void) propto__;
   
   try {
+    
     current_statement__ = 7;
-    return g((1 + x), pstream__);
+    auto g2 = make_closure00__<local_scalar_t__>(g, x);
+    current_statement__ = 8;
+    return g2(1.0, pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1877,14 +2246,14 @@ return foo(g, x, pstream__);
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
-closure01_impl__(const T0__& y, const T1__& p, std::ostream* pstream__) {
+closure02_impl__(const T0__& y, const T1__& p, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T1__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
-    current_statement__ = 11;
+    current_statement__ = 14;
     return (p * y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1895,14 +2264,36 @@ closure01_impl__(const T0__& y, const T1__& p, std::ostream* pstream__) {
 }
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
-closure00_impl__(const T0__& y, const double& x, std::ostream* pstream__) {
+closure01_impl__(const T0__& y, const double& x, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
   const static bool propto__ = true;
   (void) propto__;
   
   try {
-    current_statement__ = 9;
+    current_statement__ = 12;
     return (x * y);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <typename T0__, typename T1__, typename T2__>
+typename boost::math::tools::promote_args<T0__,
+typename T1__::captured_scalar_t__,
+T2__>::type
+closure00_impl__(const T0__& y, const T1__& g, const T2__& x,
+                 std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          typename T1__::captured_scalar_t__,
+          T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 10;
+    return (g(y, pstream__) * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1942,7 +2333,7 @@ class closure_3_model : public model_base_crtp<closure_3_model> {
       x = 2.0;
       
       current_statement__ = 2;
-      auto bar = closure00__<double>(x);
+      auto bar = make_closure01__<double>(x);
       
       current_statement__ = 6;
       z = std::numeric_limits<double>::quiet_NaN();
@@ -1977,14 +2368,14 @@ class closure_3_model : public model_base_crtp<closure_3_model> {
     try {
       
       current_statement__ = 2;
-      auto bar = closure00__<double>(x);
+      auto bar = make_closure01__<double>(x);
       local_scalar_t__ p;
       
       current_statement__ = 1;
       p = in__.scalar();
       
       current_statement__ = 3;
-      auto baz = closure01__<local_scalar_t__>(p);
+      auto baz = make_closure02__<local_scalar_t__>(p);
       local_scalar_t__ w;
       
       current_statement__ = 4;
@@ -2021,7 +2412,7 @@ class closure_3_model : public model_base_crtp<closure_3_model> {
     try {
       
       current_statement__ = 2;
-      auto bar = closure00__<double>(x);
+      auto bar = make_closure01__<double>(x);
       double p;
       
       current_statement__ = 1;
@@ -2037,7 +2428,7 @@ class closure_3_model : public model_base_crtp<closure_3_model> {
         return ;
       } 
       current_statement__ = 3;
-      auto baz = closure01__<double>(p);
+      auto baz = make_closure02__<double>(p);
       current_statement__ = 4;
       w = foo(baz, 1.0, pstream__);
       vars__.push_back(w);
@@ -2201,6 +2592,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace eight_schools_ncp_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -2299,8 +2697,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'eight_schools_ncp.stan', line 2, column 2 to column 17)",
                                                       " (in 'eight_schools_ncp.stan', line 3, column 2 to column 12)",
                                                       " (in 'eight_schools_ncp.stan', line 4, column 2 to column 25)"};
-
-
 
 
 
@@ -2725,6 +3121,13 @@ stan::model::model_base& new_model(
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
 namespace mother_model_namespace {
+
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
@@ -3272,352 +3675,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 311, column 4 to column 18)",
                                                       " (in 'mother.stan', line 312, column 4 to column 16)",
                                                       " (in 'mother.stan', line 309, column 78 to line 313, column 3)"};
-
-
-int
-foo(const int& n, std::ostream* pstream__) ;
-
-int
-foo(const int& n, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
-sho(const T0__& t, const std::vector<T1__>& y,
-    const std::vector<T2__>& theta, const std::vector<double>& x,
-    const std::vector<int>& x_int, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename T2__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type>
-sho(const T0__& t, const std::vector<T1__>& y,
-    const std::vector<T2__>& theta, const std::vector<double>& x,
-    const std::vector<int>& x_int, std::ostream* pstream__) ;
-
-double
-foo_bar0(std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-foo_bar1(const T0__& x, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) ;
-
-template <bool propto__, typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) ;
-
-template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) ;
-
-template <typename T1__>
-typename boost::math::tools::promote_args<T1__>::type
-foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename RNG>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
-        std::ostream* pstream__) ;
-
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
-               std::ostream* pstream__) ;
-
-int
-foo_1(const int& a, std::ostream* pstream__) ;
-
-int
-foo_2(const int& a, std::ostream* pstream__) ;
-
-template <typename T0__>
-std::vector<typename boost::math::tools::promote_args<T0__>::type>
-foo_3(const T0__& t, const int& n, std::ostream* pstream__) ;
-
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__>::type
-foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
-       std::ostream* pstream__) ;
-
-template <typename T0__>
-void
-foo_4(const T0__& x, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type
-relative_diff(const T0__& x, const T1__& y, const T2__& max_,
-              const T3__& min_, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
-foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
-      const Eigen::Matrix<T1__, -1, 1>& job_params,
-      const std::vector<double>& data_r, const std::vector<int>& data_i,
-      std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type
-foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
-              const T4__& x5, std::ostream* pstream__) ;
-
-template <bool propto__, typename T0__, typename T1__, typename T2__,
-typename T3__, typename T4__, typename T5__, typename T_lp__,
-typename T_lp_accum__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type
-foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
-                 const T3__& x4, const T4__& x5, const T5__& x6,
-                 T_lp__& lp__, T_lp_accum__& lp_accum__,
-                 std::ostream* pstream__) ;
-
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, -1>
-covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
-                std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-void
-f0(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-int
-f1(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<int>
-f2(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<int>>
-f3(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type
-f4(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>
-f5(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type>>
-f6(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>
-f7(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>
-f8(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, 1>>>
-f9(const int& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
-   const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-   const Eigen::Matrix<T6__, -1, 1>& a7,
-   const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-   const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-   const Eigen::Matrix<T9__, -1, -1>& a10,
-   const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-   const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-   std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>
-f10(const int& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
-    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-    const Eigen::Matrix<T6__, -1, 1>& a7,
-    const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-    const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-    const Eigen::Matrix<T9__, -1, -1>& a10,
-    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-    std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>
-f11(const int& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
-    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-    const Eigen::Matrix<T6__, -1, 1>& a7,
-    const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-    const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-    const Eigen::Matrix<T9__, -1, -1>& a10,
-    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-    std::ostream* pstream__) ;
-
-template <typename T3__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T8__, typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T3__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T8__, T9__, T10__,
-T11__>::type>::type, -1, -1>>>
-f12(const int& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
-    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
-    const Eigen::Matrix<T6__, -1, 1>& a7,
-    const std::vector<Eigen::Matrix<T7__, -1, 1>>& a8,
-    const std::vector<std::vector<Eigen::Matrix<T8__, -1, 1>>>& a9,
-    const Eigen::Matrix<T9__, -1, -1>& a10,
-    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
-    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
-    std::ostream* pstream__) ;
-
-void
-foo_6(std::ostream* pstream__) ;
-
-Eigen::Matrix<double, -1, -1>
-matfoo(std::ostream* pstream__) ;
-
-Eigen::Matrix<double, -1, 1>
-vecfoo(std::ostream* pstream__) ;
-
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
-vecmufoo(const T0__& mu, std::ostream* pstream__) ;
-
-template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
-vecmubar(const T0__& mu, std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
-algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
-               const Eigen::Matrix<T1__, -1, 1>& y,
-               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
-               std::ostream* pstream__) ;
-
-template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, 1>
-binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
-          const Eigen::Matrix<T1__, -1, 1>& theta,
-          const std::vector<double>& x_r, const std::vector<int>& x_i,
-          std::ostream* pstream__) ;
 
 
 
@@ -12454,6 +12511,13 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 #include <stan/model/model_header.hpp>
 namespace optimize_glm_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -12732,8 +12796,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimize_glm.stan', line 20, column 2 to column 20)",
                                                       " (in 'optimize_glm.stan', line 21, column 2 to column 15)",
                                                       " (in 'optimize_glm.stan', line 22, column 2 to column 16)"};
-
-
 
 
 
@@ -14132,6 +14194,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m1_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -14244,23 +14313,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 struct foo_lpdf_rsfunctor__;
 struct g_rsfunctor__;
 struct h_rsfunctor__;
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g(const std::vector<T0__>& y_slice, const int& start, const int& end,
-  std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h(const std::vector<T0__>& y_slice, const int& start, const int& end,
-  const std::vector<T3__>& a, std::ostream* pstream__) ;
-
-template <bool propto__, typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
-         std::ostream* pstream__) ;
-
-
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -14811,6 +14863,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m2_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -15053,98 +15112,6 @@ struct h5_rsfunctor__;
 struct h6_rsfunctor__;
 struct h7_rsfunctor__;
 struct h8_rsfunctor__;
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h1(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<T3__>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h2(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h3(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h4(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h5(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h6(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
-   std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h7(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
-   std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-h8(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
-   std::ostream* pstream__) ;
-
-
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -18058,6 +18025,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m3_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -18393,171 +18367,6 @@ struct g7_rsfunctor__;
 struct g8_rsfunctor__;
 struct g9_rsfunctor__;
 struct s_rsfunctor__;
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
-   const int& start, const int& end, std::ostream* pstream__) ;
-
-double
-f9(const std::vector<int>& y_slice, const int& start, const int& end,
-   std::ostream* pstream__) ;
-
-double
-f10(const std::vector<std::vector<int>>& y_slice, const int& start,
-    const int& end, std::ostream* pstream__) ;
-
-double
-f11(const std::vector<std::vector<std::vector<int>>>& y_slice,
-    const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
-    const int& start, const int& end, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const T3__& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const Eigen::Matrix<T3__, -1, 1>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const Eigen::Matrix<T3__, 1, -1>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const Eigen::Matrix<T3__, -1, -1>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const std::vector<T3__>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
-   const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
-    std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
-    std::ostream* pstream__) ;
-
-template <typename T0__, typename T3__>
-typename boost::math::tools::promote_args<T0__,
-T3__>::type
-g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
-    std::ostream* pstream__) ;
-
-template <typename T0__, typename T4__, typename T5__, typename T6__,
-typename T7__, typename T9__, typename T10__, typename T11__, typename T12__,
-typename T14__, typename T15__, typename T16__, typename T17__,
-typename T19__>
-typename boost::math::tools::promote_args<T0__, T4__, T5__, T6__,
-T7__, typename boost::math::tools::promote_args<T9__, T10__, T11__, T12__,
-T14__, typename boost::math::tools::promote_args<T15__, T16__, T17__,
-T19__>::type>::type>::type
-s(const std::vector<T0__>& y_slice, const int& start, const int& end,
-  const int& a, const T4__& b, const Eigen::Matrix<T5__, -1, 1>& c,
-  const Eigen::Matrix<T6__, 1, -1>& d, const Eigen::Matrix<T7__, -1, -1>& e,
-  const std::vector<int>& f, const std::vector<T9__>& g,
-  const std::vector<Eigen::Matrix<T10__, -1, 1>>& h,
-  const std::vector<Eigen::Matrix<T11__, 1, -1>>& i,
-  const std::vector<Eigen::Matrix<T12__, -1, -1>>& j,
-  const std::vector<std::vector<int>>& k,
-  const std::vector<std::vector<T14__>>& l,
-  const std::vector<std::vector<Eigen::Matrix<T15__, -1, 1>>>& m,
-  const std::vector<std::vector<Eigen::Matrix<T16__, 1, -1>>>& n,
-  const std::vector<std::vector<Eigen::Matrix<T17__, -1, -1>>>& o,
-  const std::vector<std::vector<std::vector<int>>>& p,
-  const std::vector<std::vector<std::vector<T19__>>>& q,
-  std::ostream* pstream__) ;
-
-double
-r(std::ostream* pstream__) ;
-
-
 
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
@@ -22906,6 +22715,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace tilde_block_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -23000,8 +22816,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'tilde-block.stan', line 9, column 34 to column 35)",
                                                       " (in 'tilde-block.stan', line 9, column 8 to column 38)",
                                                       " (in 'tilde-block.stan', line 2, column 4 to column 10)"};
-
-
 
 
 
@@ -23299,6 +23113,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace truncate_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -23406,8 +23227,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'truncate.stan', line 17, column 4 to column 28)",
                                                       " (in 'truncate.stan', line 2, column 4 to column 10)",
                                                       " (in 'truncate.stan', line 3, column 4 to column 11)"};
-
-
 
 
 
@@ -23787,6 +23606,13 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace user_constrain_model_namespace {
 
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
+
 template <typename T, typename S>
 std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
   dst.resize(src.size());
@@ -23878,12 +23704,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'user_constrain.stan', line 10, column 2 to column 19)",
                                                       " (in 'user_constrain.stan', line 3, column 4 to column 13)",
                                                       " (in 'user_constrain.stan', line 2, column 36 to line 4, column 3)"};
-
-
-template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__,
-T1__>::type
-lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) ;
 
 
 
