@@ -144,6 +144,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     if not (is_dist || is_lp) then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
+    text "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+    pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match pattern with
       | SList stmts -> {fdbody with pattern= Block stmts}
@@ -274,6 +276,8 @@ let pp_ctor ppf p =
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (prog_name, prog_name) ;
+        pf ppf "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@ " ;
+        pp_unused ppf "DUMMY_VAR__" ;
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
         cut ppf () ;
@@ -350,7 +354,9 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ; strf "%a" pp_unused "function__"
     ; "double lp__ = 0.0;"
     ; "(void) lp__;  // dummy to suppress unused var warning"
-    ; "stan::math::accumulator<double> lp_accum__;" ]
+    ; "stan::math::accumulator<double> lp_accum__;"
+    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
+    ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
   pp_method_b ppf "void" "write_array" params intro generate_quantities
 
@@ -478,7 +484,9 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     [ "typedef T__ local_scalar_t__;"; "T__ lp__(0.0);"
     ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
-    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
+    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
+    ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro
