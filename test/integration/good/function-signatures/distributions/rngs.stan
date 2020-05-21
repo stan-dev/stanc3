@@ -1766,5 +1766,4 @@ generated quantities {
   // DEPRECATE:  Sigma = lkj_cov_rng(Sigma, mu, alpha, 2.0);
 
   latent_states = hmm_latent_rng(log_omegas, Gamma, rho);
-  latent_states_prob = hmm_hidden_state_prob(log_omegas, Gamma, rho);
 }
