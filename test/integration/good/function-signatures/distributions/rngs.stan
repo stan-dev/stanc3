@@ -25,6 +25,7 @@ generated quantities {
   int ns[3];
   int N[3];
   int latent_states[3];
+  matrix[3, 3] latent_states_prob;
 
   n = bernoulli_logit_rng(0.0);
   N = bernoulli_logit_rng(alpha);
@@ -1765,4 +1766,5 @@ generated quantities {
   // DEPRECATE:  Sigma = lkj_cov_rng(Sigma, mu, alpha, 2.0);
 
   latent_states = hmm_latent_rng(log_omegas, Gamma, rho);
+  latent_states_prob = hmm_hidden_state_prob(log_omegas, Gamma, rho);
 }
