@@ -249,12 +249,11 @@ let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
 (* Name mangling helper functions for distributions *)
-let proportional_to_distribution_infix = "_propto"
 let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
 
 let remove_propto_infix suffix ~name =
   name
-  |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
+  |> String.chop_suffix ~suffix:(Utils.proportional_to_distribution_infix ^ suffix)
   |> Option.map ~f:(fun x -> x ^ suffix)
 
 (* -- Querying stan_math_signatures -- *)
@@ -292,7 +291,7 @@ let is_distribution_name ?(infix = "") s =
        distribution_suffices
 
 let is_propto_distribution s =
-  is_distribution_name ~infix:proportional_to_distribution_infix s
+  is_distribution_name ~infix:Utils.proportional_to_distribution_infix s
 
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"

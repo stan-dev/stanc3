@@ -28,10 +28,11 @@ let stdlib_distribution_name s =
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
 let%expect_test "propto name mangling" =
-  stdlib_distribution_name "normal_propto_lpdf" |> print_string ;
+  stdlib_distribution_name "bernoulli_logit_propto_lpmf" |> print_string ;
+  stdlib_distribution_name "normal_propto_lpdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string ;
-  [%expect {| normal_lpdf; normal_lpdf; normal |}]
+  [%expect {| bernoulli_logit_lpmf; normal_lpdf; normal_lpdf; normal |}]
 
 let all_but_last_n l n =
   List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->
