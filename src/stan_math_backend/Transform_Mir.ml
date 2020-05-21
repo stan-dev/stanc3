@@ -56,7 +56,7 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | false -> args
   in
   let trim_propto f =
-    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
+    Utils.stdlib_distribution_name f
   in
   match pattern with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
