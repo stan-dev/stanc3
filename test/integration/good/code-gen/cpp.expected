@@ -11512,19 +11512,20 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'ode_bdf_m1.stan', line 25, column 2 to column 23)",
                                                       " (in 'ode_bdf_m1.stan', line 26, column 2 to column 24)",
                                                       " (in 'ode_bdf_m1.stan', line 27, column 2 to column 24)",
-                                                      " (in 'ode_bdf_m1.stan', line 28, column 2 to column 28)",
+                                                      " (in 'ode_bdf_m1.stan', line 28, column 2 to column 30)",
                                                       " (in 'ode_bdf_m1.stan', line 29, column 2 to column 27)",
-                                                      " (in 'ode_bdf_m1.stan', line 32, column 2 to line 35, column 39)",
-                                                      " (in 'ode_bdf_m1.stan', line 38, column 2 to column 25)",
-                                                      " (in 'ode_bdf_m1.stan', line 39, column 2 to column 25)",
-                                                      " (in 'ode_bdf_m1.stan', line 40, column 2 to column 28)",
-                                                      " (in 'ode_bdf_m1.stan', line 41, column 2 to column 29)",
-                                                      " (in 'ode_bdf_m1.stan', line 42, column 2 to column 27)",
-                                                      " (in 'ode_bdf_m1.stan', line 43, column 2 to column 28)",
-                                                      " (in 'ode_bdf_m1.stan', line 45, column 4 to column 52)",
-                                                      " (in 'ode_bdf_m1.stan', line 46, column 4 to column 47)",
-                                                      " (in 'ode_bdf_m1.stan', line 44, column 17 to line 47, column 3)",
-                                                      " (in 'ode_bdf_m1.stan', line 44, column 2 to line 47, column 3)",
+                                                      " (in 'ode_bdf_m1.stan', line 32, column 2 to line 35, column 29)",
+                                                      " (in 'ode_bdf_m1.stan', line 38, column 2 to line 40, column 32)",
+                                                      " (in 'ode_bdf_m1.stan', line 45, column 2 to column 25)",
+                                                      " (in 'ode_bdf_m1.stan', line 46, column 2 to column 25)",
+                                                      " (in 'ode_bdf_m1.stan', line 47, column 2 to column 28)",
+                                                      " (in 'ode_bdf_m1.stan', line 48, column 2 to column 29)",
+                                                      " (in 'ode_bdf_m1.stan', line 49, column 2 to column 27)",
+                                                      " (in 'ode_bdf_m1.stan', line 50, column 2 to column 33)",
+                                                      " (in 'ode_bdf_m1.stan', line 52, column 4 to column 52)",
+                                                      " (in 'ode_bdf_m1.stan', line 53, column 4 to column 47)",
+                                                      " (in 'ode_bdf_m1.stan', line 51, column 17 to line 54, column 3)",
+                                                      " (in 'ode_bdf_m1.stan', line 51, column 2 to line 54, column 3)",
                                                       " (in 'ode_bdf_m1.stan', line 18, column 2 to column 19)",
                                                       " (in 'ode_bdf_m1.stan', line 19, column 2 to column 13)",
                                                       " (in 'ode_bdf_m1.stan', line 20, column 2 to column 17)",
@@ -11533,15 +11534,15 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'ode_bdf_m1.stan', line 9, column 4 to column 18)",
                                                       " (in 'ode_bdf_m1.stan', line 11, column 4 to column 40)",
                                                       " (in 'ode_bdf_m1.stan', line 12, column 4 to column 42)",
-                                                      " (in 'ode_bdf_m1.stan', line 14, column 4 to column 28)",
+                                                      " (in 'ode_bdf_m1.stan', line 14, column 4 to column 29)",
                                                       " (in 'ode_bdf_m1.stan', line 7, column 27 to line 15, column 3)"};
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type>
-dz_dt(const T0__& t, const std::vector<T1__>& z, const T2__& alpha,
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+dz_dt(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& alpha,
       const T3__& beta, const T4__& gamma, const T5__& delta,
       std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
@@ -11555,31 +11556,32 @@ dz_dt(const T0__& t, const std::vector<T1__>& z, const T2__& alpha,
   try {
     local_scalar_t__ u;
     
-    current_statement__ = 22;
+    current_statement__ = 23;
     u = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 22;
+    current_statement__ = 23;
     u = z[(1 - 1)];
     local_scalar_t__ v;
     
-    current_statement__ = 23;
+    current_statement__ = 24;
     v = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 23;
+    current_statement__ = 24;
     v = z[(2 - 1)];
     local_scalar_t__ du_dt;
     
-    current_statement__ = 24;
+    current_statement__ = 25;
     du_dt = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 24;
+    current_statement__ = 25;
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt;
     
-    current_statement__ = 25;
-    dv_dt = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 25;
-    dv_dt = ((-gamma + (delta * u)) * v);
     current_statement__ = 26;
-    return stan::math::array_builder<local_scalar_t__>().add(du_dt)
-        .add(dv_dt).array();
+    dv_dt = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 26;
+    dv_dt = ((-gamma + (delta * u)) * v);
+    current_statement__ = 27;
+    return transpose(stan::math::to_row_vector(
+             stan::math::array_builder<local_scalar_t__>().add(du_dt)
+             .add(dv_dt).array()));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -11591,11 +11593,11 @@ dz_dt(const T0__& t, const std::vector<T1__>& z, const T2__& alpha,
 struct dz_dt_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type>
-operator()(const T0__& t, const std::vector<T1__>& z, const T2__& alpha,
-           const T3__& beta, const T4__& gamma, const T5__& delta,
-           std::ostream* pstream__)  const 
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z,
+           const T2__& alpha, const T3__& beta, const T4__& gamma,
+           const T5__& delta, std::ostream* pstream__)  const 
 {
 return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
 }
@@ -11605,9 +11607,9 @@ return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
 struct dz_dt_odefunctor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type>
-operator()(const T0__& t, const std::vector<T1__>& z,
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z,
            std::ostream* pstream__, const T2__& alpha, const T3__& beta,
            const T4__& gamma, const T5__& delta)  const 
 {
@@ -11637,6 +11639,879 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "ode_bdf_m1_model_namespace::ode_bdf_m1_model";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      
+      pos__ = 1;
+      context__.validate_dims("data initialization","N","int",
+          context__.to_vec());
+      
+      current_statement__ = 19;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 20;
+      validate_non_negative_index("ts", "N", N);
+      context__.validate_dims("data initialization","ts","double",
+          context__.to_vec(N));
+      ts = std::vector<double>(N, 0);
+      
+      current_statement__ = 20;
+      assign(ts, nil_index_list(), context__.vals_r("ts"),
+        "assigning variable ts");
+      current_statement__ = 21;
+      validate_non_negative_index("y_init", "2", 2);
+      context__.validate_dims("data initialization","y_init","double",
+          context__.to_vec(2));
+      y_init = std::vector<double>(2, 0);
+      
+      current_statement__ = 21;
+      assign(y_init, nil_index_list(), context__.vals_r("y_init"),
+        "assigning variable y_init");
+      current_statement__ = 22;
+      validate_non_negative_index("y", "N", N);
+      current_statement__ = 22;
+      validate_non_negative_index("y", "2", 2);
+      context__.validate_dims("data initialization","y","double",
+          context__.to_vec(N, 2));
+      y = std::vector<std::vector<double>>(N, std::vector<double>(2, 0));
+      
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 22;
+        assign(y_flat__, nil_index_list(), context__.vals_r("y"),
+          "assigning variable y_flat__");
+        current_statement__ = 22;
+        pos__ = 1;
+        current_statement__ = 22;
+        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 22;
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 22;
+            assign(y,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              y_flat__[(pos__ - 1)], "assigning variable y");
+            current_statement__ = 22;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 19;
+      current_statement__ = 19;
+      check_greater_or_equal(function__, "N", N, 0);
+      current_statement__ = 22;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 22;
+        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 22;
+          current_statement__ = 22;
+          check_greater_or_equal(function__, "y[sym1__, sym2__]",
+                                 y[(sym1__ - 1)][(sym2__ - 1)], 0);}}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    
+    try {
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      current_statement__ = 5;
+      validate_non_negative_index("z_init", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 6;
+      validate_non_negative_index("sigma", "2", 2);
+      num_params_r__ += 2;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+  }
+  template <bool propto__, bool jacobian__, typename T__>
+  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+               std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    static const char* function__ = "ode_bdf_m1_model_namespace::log_prob";
+(void) function__;  // suppress unused var warning
+
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    
+    try {
+      local_scalar_t__ alpha;
+      
+      current_statement__ = 1;
+      alpha = in__.scalar();
+      current_statement__ = 1;
+      if (jacobian__) {
+        current_statement__ = 1;
+        alpha = stan::math::lb_constrain(alpha, 0, lp__);
+      } else {
+        current_statement__ = 1;
+        alpha = stan::math::lb_constrain(alpha, 0);
+      }
+      local_scalar_t__ beta;
+      
+      current_statement__ = 2;
+      beta = in__.scalar();
+      current_statement__ = 2;
+      if (jacobian__) {
+        current_statement__ = 2;
+        beta = stan::math::lb_constrain(beta, 0, lp__);
+      } else {
+        current_statement__ = 2;
+        beta = stan::math::lb_constrain(beta, 0);
+      }
+      local_scalar_t__ gamma;
+      
+      current_statement__ = 3;
+      gamma = in__.scalar();
+      current_statement__ = 3;
+      if (jacobian__) {
+        current_statement__ = 3;
+        gamma = stan::math::lb_constrain(gamma, 0, lp__);
+      } else {
+        current_statement__ = 3;
+        gamma = stan::math::lb_constrain(gamma, 0);
+      }
+      local_scalar_t__ delta;
+      
+      current_statement__ = 4;
+      delta = in__.scalar();
+      current_statement__ = 4;
+      if (jacobian__) {
+        current_statement__ = 4;
+        delta = stan::math::lb_constrain(delta, 0, lp__);
+      } else {
+        current_statement__ = 4;
+        delta = stan::math::lb_constrain(delta, 0);
+      }
+      current_statement__ = 5;
+      validate_non_negative_index("z_init", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> z_init;
+      z_init = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 5;
+      z_init = in__.vector(2);
+      current_statement__ = 5;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 5;
+        if (jacobian__) {
+          current_statement__ = 5;
+          assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(z_init[(sym1__ - 1)], 0, lp__),
+            "assigning variable z_init");
+        } else {
+          current_statement__ = 5;
+          assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
+            "assigning variable z_init");
+        }}
+      current_statement__ = 6;
+      validate_non_negative_index("sigma", "2", 2);
+      std::vector<local_scalar_t__> sigma;
+      sigma = std::vector<local_scalar_t__>(2, 0);
+      
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 6;
+        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable sigma");}
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 6;
+        if (jacobian__) {
+          current_statement__ = 6;
+          assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(sigma[(sym1__ - 1)], 0, lp__),
+            "assigning variable sigma");
+        } else {
+          current_statement__ = 6;
+          assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
+            "assigning variable sigma");
+        }}
+      current_statement__ = 7;
+      validate_non_negative_index("z", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("z", "2", 2);
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
+      z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
+      
+      current_statement__ = 7;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 7;
+        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 7;
+          assign(z,
+            cons_list(index_uni(sym1__),
+              cons_list(index_uni(sym2__), nil_index_list())),
+            std::numeric_limits<double>::quiet_NaN(), "assigning variable z");
+        }}
+      current_statement__ = 7;
+      assign(z, nil_index_list(),
+        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+      current_statement__ = 8;
+      assign(z, nil_index_list(),
+        ode_rk45_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+      {
+        current_statement__ = 9;
+        lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
+        current_statement__ = 10;
+        lp_accum__.add(normal_log<propto__>(gamma, 1, 0.5));
+        current_statement__ = 11;
+        lp_accum__.add(normal_log<propto__>(beta, 0.05, 0.05));
+        current_statement__ = 12;
+        lp_accum__.add(normal_log<propto__>(delta, 0.05, 0.05));
+        current_statement__ = 13;
+        lp_accum__.add(lognormal_log<propto__>(sigma, -1, 1));
+        current_statement__ = 14;
+        lp_accum__.add(
+          lognormal_log<propto__>(z_init, stan::math::log(10), 1));
+        current_statement__ = 18;
+        for (size_t k = 1; k <= 2; ++k) {
+          current_statement__ = 15;
+          lp_accum__.add(
+            lognormal_log<propto__>(y_init[(k - 1)],
+              stan::math::log(z_init[(k - 1)]), sigma[(k - 1)]));
+          current_statement__ = 16;
+          lp_accum__.add(
+            lognormal_log<propto__>(
+              rvalue(y,
+                cons_list(index_omni(),
+                  cons_list(index_uni(k), nil_index_list())), "y"),
+              stan::math::log(
+                rvalue(z,
+                  cons_list(index_omni(),
+                    cons_list(index_uni(k), nil_index_list())), "z")),
+              sigma[(k - 1)]));}
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  template <typename RNG>
+  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__, std::vector<double>& vars__,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
+                   std::ostream* pstream__ = 0) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "ode_bdf_m1_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
+    
+    try {
+      double alpha;
+      
+      current_statement__ = 1;
+      alpha = in__.scalar();
+      current_statement__ = 1;
+      alpha = stan::math::lb_constrain(alpha, 0);
+      double beta;
+      
+      current_statement__ = 2;
+      beta = in__.scalar();
+      current_statement__ = 2;
+      beta = stan::math::lb_constrain(beta, 0);
+      double gamma;
+      
+      current_statement__ = 3;
+      gamma = in__.scalar();
+      current_statement__ = 3;
+      gamma = stan::math::lb_constrain(gamma, 0);
+      double delta;
+      
+      current_statement__ = 4;
+      delta = in__.scalar();
+      current_statement__ = 4;
+      delta = stan::math::lb_constrain(delta, 0);
+      current_statement__ = 5;
+      validate_non_negative_index("z_init", "2", 2);
+      Eigen::Matrix<double, -1, 1> z_init;
+      z_init = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 5;
+      z_init = in__.vector(2);
+      current_statement__ = 5;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 5;
+        assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
+          "assigning variable z_init");}
+      current_statement__ = 6;
+      validate_non_negative_index("sigma", "2", 2);
+      std::vector<double> sigma;
+      sigma = std::vector<double>(2, 0);
+      
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 6;
+        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable sigma");}
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 6;
+        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
+          "assigning variable sigma");}
+      current_statement__ = 7;
+      validate_non_negative_index("z", "N", N);
+      current_statement__ = 7;
+      validate_non_negative_index("z", "2", 2);
+      std::vector<Eigen::Matrix<double, -1, 1>> z;
+      z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(2));
+      
+      current_statement__ = 7;
+      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 7;
+        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 7;
+          assign(z,
+            cons_list(index_uni(sym1__),
+              cons_list(index_uni(sym2__), nil_index_list())),
+            std::numeric_limits<double>::quiet_NaN(), "assigning variable z");
+        }}
+      vars__.push_back(alpha);
+      vars__.push_back(beta);
+      vars__.push_back(gamma);
+      vars__.push_back(delta);
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(z_init[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(sigma[(sym1__ - 1)]);}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      current_statement__ = 7;
+      assign(z, nil_index_list(),
+        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+      current_statement__ = 8;
+      assign(z, nil_index_list(),
+        ode_rk45_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
+          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& vars__, std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      
+      pos__ = 1;
+      double alpha;
+      
+      current_statement__ = 1;
+      alpha = context__.vals_r("alpha")[(1 - 1)];
+      current_statement__ = 1;
+      alpha = stan::math::lb_free(alpha, 0);
+      double beta;
+      
+      current_statement__ = 2;
+      beta = context__.vals_r("beta")[(1 - 1)];
+      current_statement__ = 2;
+      beta = stan::math::lb_free(beta, 0);
+      double gamma;
+      
+      current_statement__ = 3;
+      gamma = context__.vals_r("gamma")[(1 - 1)];
+      current_statement__ = 3;
+      gamma = stan::math::lb_free(gamma, 0);
+      double delta;
+      
+      current_statement__ = 4;
+      delta = context__.vals_r("delta")[(1 - 1)];
+      current_statement__ = 4;
+      delta = stan::math::lb_free(delta, 0);
+      current_statement__ = 5;
+      validate_non_negative_index("z_init", "2", 2);
+      Eigen::Matrix<double, -1, 1> z_init;
+      z_init = Eigen::Matrix<double, -1, 1>(2);
+      
+      {
+        std::vector<local_scalar_t__> z_init_flat__;
+        current_statement__ = 5;
+        assign(z_init_flat__, nil_index_list(), context__.vals_r("z_init"),
+          "assigning variable z_init_flat__");
+        current_statement__ = 5;
+        pos__ = 1;
+        current_statement__ = 5;
+        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 5;
+          assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
+            z_init_flat__[(pos__ - 1)], "assigning variable z_init");
+          current_statement__ = 5;
+          pos__ = (pos__ + 1);}
+      }
+      current_statement__ = 5;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 5;
+        assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_free(z_init[(sym1__ - 1)], 0),
+          "assigning variable z_init");}
+      current_statement__ = 6;
+      validate_non_negative_index("sigma", "2", 2);
+      std::vector<double> sigma;
+      sigma = std::vector<double>(2, 0);
+      
+      current_statement__ = 6;
+      assign(sigma, nil_index_list(), context__.vals_r("sigma"),
+        "assigning variable sigma");
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 6;
+        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_free(sigma[(sym1__ - 1)], 0),
+          "assigning variable sigma");}
+      vars__.push_back(alpha);
+      vars__.push_back(beta);
+      vars__.push_back(gamma);
+      vars__.push_back(delta);
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(z_init[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(sigma[(sym1__ - 1)]);}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("alpha");
+    names__.push_back("beta");
+    names__.push_back("gamma");
+    names__.push_back("delta");
+    names__.push_back("z_init");
+    names__.push_back("sigma");
+    names__.push_back("z");
+    } // get_param_names() 
+    
+  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
+    
+  void constrained_param_names(std::vector<std::string>& param_names__,
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
+    
+    param_names__.push_back(std::string() + "alpha");
+    param_names__.push_back(std::string() + "beta");
+    param_names__.push_back(std::string() + "gamma");
+    param_names__.push_back(std::string() + "delta");
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            {
+              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }}
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
+    
+    param_names__.push_back(std::string() + "alpha");
+    param_names__.push_back(std::string() + "beta");
+    param_names__.push_back(std::string() + "gamma");
+    param_names__.push_back(std::string() + "delta");
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            {
+              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }}
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  std::string get_constrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"transformed_parameters\"}]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  std::string get_unconstrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"transformed_parameters\"}]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+};
+}
+typedef ode_bdf_m1_model_namespace::ode_bdf_m1_model stan_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp ode_old.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace ode_old_model_namespace {
+
+template <typename T, typename S>
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, -1>
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+  dst.resize(src.rows(), src.cols());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, 1, -1>
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, 1>
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
+}
+
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using std::pow;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
+using namespace stan::math; 
+
+static int current_statement__ = 0;
+static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'ode_old.stan', line 27, column 2 to column 24)",
+                                                      " (in 'ode_old.stan', line 28, column 2 to column 23)",
+                                                      " (in 'ode_old.stan', line 29, column 2 to column 24)",
+                                                      " (in 'ode_old.stan', line 30, column 2 to column 24)",
+                                                      " (in 'ode_old.stan', line 31, column 2 to column 28)",
+                                                      " (in 'ode_old.stan', line 32, column 2 to column 27)",
+                                                      " (in 'ode_old.stan', line 35, column 2 to line 38, column 40)",
+                                                      " (in 'ode_old.stan', line 41, column 2 to column 25)",
+                                                      " (in 'ode_old.stan', line 42, column 2 to column 25)",
+                                                      " (in 'ode_old.stan', line 43, column 2 to column 28)",
+                                                      " (in 'ode_old.stan', line 44, column 2 to column 29)",
+                                                      " (in 'ode_old.stan', line 45, column 2 to column 27)",
+                                                      " (in 'ode_old.stan', line 46, column 2 to column 33)",
+                                                      " (in 'ode_old.stan', line 48, column 4 to column 52)",
+                                                      " (in 'ode_old.stan', line 49, column 4 to column 47)",
+                                                      " (in 'ode_old.stan', line 47, column 17 to line 50, column 3)",
+                                                      " (in 'ode_old.stan', line 47, column 2 to line 50, column 3)",
+                                                      " (in 'ode_old.stan', line 21, column 2 to column 19)",
+                                                      " (in 'ode_old.stan', line 22, column 2 to column 13)",
+                                                      " (in 'ode_old.stan', line 23, column 2 to column 17)",
+                                                      " (in 'ode_old.stan', line 24, column 2 to column 26)",
+                                                      " (in 'ode_old.stan', line 7, column 4 to column 18)",
+                                                      " (in 'ode_old.stan', line 8, column 4 to column 18)",
+                                                      " (in 'ode_old.stan', line 10, column 4 to column 26)",
+                                                      " (in 'ode_old.stan', line 11, column 4 to column 25)",
+                                                      " (in 'ode_old.stan', line 12, column 4 to column 26)",
+                                                      " (in 'ode_old.stan', line 13, column 4 to column 26)",
+                                                      " (in 'ode_old.stan', line 15, column 4 to column 40)",
+                                                      " (in 'ode_old.stan', line 16, column 4 to column 42)",
+                                                      " (in 'ode_old.stan', line 17, column 4 to column 28)",
+                                                      " (in 'ode_old.stan', line 6, column 26 to line 18, column 3)"};
+
+
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type>
+dz_dt(const T0__& t, const std::vector<T1__>& z,
+      const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+      const std::vector<int>& x_i, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__,
+          T3__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    local_scalar_t__ u;
+    
+    current_statement__ = 22;
+    u = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 22;
+    u = z[(1 - 1)];
+    local_scalar_t__ v;
+    
+    current_statement__ = 23;
+    v = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 23;
+    v = z[(2 - 1)];
+    local_scalar_t__ alpha;
+    
+    current_statement__ = 24;
+    alpha = theta[(1 - 1)];
+    local_scalar_t__ beta;
+    
+    current_statement__ = 25;
+    beta = theta[(2 - 1)];
+    local_scalar_t__ gamma;
+    
+    current_statement__ = 26;
+    gamma = theta[(3 - 1)];
+    local_scalar_t__ delta;
+    
+    current_statement__ = 27;
+    delta = theta[(4 - 1)];
+    local_scalar_t__ du_dt;
+    
+    current_statement__ = 28;
+    du_dt = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 28;
+    du_dt = ((alpha - (beta * v)) * u);
+    local_scalar_t__ dv_dt;
+    
+    current_statement__ = 29;
+    dv_dt = std::numeric_limits<double>::quiet_NaN();
+    current_statement__ = 29;
+    dv_dt = ((-gamma + (delta * u)) * v);
+    current_statement__ = 30;
+    return stan::math::array_builder<local_scalar_t__>().add(du_dt)
+        .add(dv_dt).array();
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct dz_dt_functor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type>
+operator()(const T0__& t, const std::vector<T1__>& z,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i, std::ostream* pstream__)  const 
+{
+return dz_dt(t, z, theta, x_r, x_i, pstream__);
+}
+};
+
+class ode_old_model : public model_base_crtp<ode_old_model> {
+
+ private:
+  int pos__;
+  int N;
+  std::vector<double> ts;
+  std::vector<double> y_init;
+  std::vector<std::vector<double>> y;
+ 
+ public:
+  ~ode_old_model() { }
+  
+  std::string model_name() const { return "ode_old_model"; }
+  
+  ode_old_model(stan::io::var_context& context__,
+                unsigned int random_seed__ = 0,
+                std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    typedef double local_scalar_t__;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static const char* function__ = "ode_old_model_namespace::ode_old_model";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -11733,7 +12608,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "ode_bdf_m1_model_namespace::log_prob";
+    static const char* function__ = "ode_old_model_namespace::log_prob";
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -11844,8 +12719,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0.0, ts, 1e-5, 1e-3, 500,
-          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+        integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+          stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
+          .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
+          pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
@@ -11858,7 +12735,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         current_statement__ = 12;
         lp_accum__.add(lognormal_log<propto__>(sigma, -1, 1));
         current_statement__ = 13;
-        lp_accum__.add(lognormal_log<propto__>(z_init, 10, 1));
+        lp_accum__.add(
+          lognormal_log<propto__>(z_init, stan::math::log(10), 1));
         current_statement__ = 17;
         for (size_t k = 1; k <= 2; ++k) {
           current_statement__ = 14;
@@ -11895,7 +12773,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     typedef double local_scalar_t__;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "ode_bdf_m1_model_namespace::write_array";
+    static const char* function__ = "ode_old_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
     (void) function__;  // suppress unused var warning
@@ -11982,8 +12860,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       } 
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0.0, ts, 1e-5, 1e-3, 500,
-          pstream__, alpha, beta, gamma, delta), "assigning variable z");
+        integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+          stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
+          .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
+          pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
@@ -12233,7 +13113,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
 
 };
 }
-typedef ode_bdf_m1_model_namespace::ode_bdf_m1_model stan_model;
+typedef ode_old_model_namespace::ode_old_model stan_model;
 
 #ifndef USING_R
 

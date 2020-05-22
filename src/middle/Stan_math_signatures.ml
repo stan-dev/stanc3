@@ -271,7 +271,7 @@ let stan_math_returntype name args =
   in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
-  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray (UArray UReal)))
+  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray (UVector)))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)

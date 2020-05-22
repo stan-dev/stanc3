@@ -365,32 +365,30 @@ let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( (_, UReal) (* time *)
-                
-                :: (_, UnsizedType.UArray UReal) (* initial_state *)
-                   
-                   :: fun_args
-              , ReturnType (UnsizedType.UArray UReal) ); _ }; _ }
+              ( (_, UReal) (* time *)                
+              :: (_, UnsizedType.UVector) (* initial_state *)
+              :: fun_args
+              , ReturnType (UnsizedType.UVector) ); _ }; _ }
     :: initial_state
-       :: initial_time
-          :: times
-             :: rel_tol
-                :: abs_tol
-                   :: { emeta= {type_= UInt; ad_level= UnsizedType.DataOnly; _}; _
-                      } (* max_num_steps *)
-                      
-                      :: args
-    when arg_match (AutoDiffable, UReal) initial_time
-         && arg_match (AutoDiffable, UArray UReal) initial_state
+    :: initial_time
+    :: times
+    :: rel_tol
+    :: abs_tol
+    :: { emeta= {type_= UInt; ad_level= UnsizedType.DataOnly; _}; _
+        } (* max_num_steps *)        
+    :: args
+     when arg_match (AutoDiffable, UReal) initial_time
+         && arg_match (AutoDiffable, UVector) initial_state
          && arg_match (AutoDiffable, UArray UReal) times
          && arg_match (DataOnly, UReal) rel_tol
          && arg_match (DataOnly, UReal) abs_tol
-         && List.length args >= 2 ->
+         && List.length args >= 2
+         ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
           ~ad_level:(lub_ad_e es)
-          ~type_:(UnsizedType.UArray (UnsizedType.UArray UReal)) ~loc
+          ~type_:(UnsizedType.UArray (UnsizedType.UVector)) ~loc
         |> Validate.ok
       else
         Semantic_error.illtyped_variadic_ode_tol loc id.name
@@ -415,25 +413,23 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( (_, UReal) (* time *)
-                
-                :: (_, UnsizedType.UArray UReal) (* initial_state *)
-                   
-                   :: fun_args
-              , ReturnType (UnsizedType.UArray UReal) ); _ }; _ }
+              ( (_, UReal) (* time *)                
+              :: (_, UnsizedType.UVector) (* initial_state *)
+              :: fun_args
+              , ReturnType (UnsizedType.UVector) ); _ }; _ }
     :: initial_state
        :: initial_time
           :: times   
             :: args
     when arg_match (AutoDiffable, UReal) initial_time
-         && arg_match (AutoDiffable, UArray UReal) initial_state
+         && arg_match (AutoDiffable, UVector) initial_state
          && arg_match (AutoDiffable, UArray UReal) times
          && List.length args >= 2 ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
           ~ad_level:(lub_ad_e es)
-          ~type_:(UnsizedType.UArray (UnsizedType.UArray UReal)) ~loc
+          ~type_:(UnsizedType.UArray (UnsizedType.UVector)) ~loc
         |> Validate.ok
       else
         Semantic_error.illtyped_variadic_ode loc id.name

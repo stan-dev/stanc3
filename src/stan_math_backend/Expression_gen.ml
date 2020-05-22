@@ -315,10 +315,15 @@ and gen_fun_app ppf fname es =
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-        when Stan_math_signatures.is_variadic_ode_fn x ->
+        when Stan_math_signatures.is_variadic_ode_fn x && String.is_suffix fname
+              ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
             :: tl )
+      | true, x, f :: y0 :: t0 :: ts :: tl
+        when Stan_math_signatures.is_variadic_ode_fn x ->
+          ( fname
+          , f :: y0 :: t0 :: ts :: msgs :: tl )
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])

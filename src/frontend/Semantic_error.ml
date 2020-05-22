@@ -152,10 +152,10 @@ module TypeError = struct
           List.concat
             [ [ UnsizedType.UFun
                   ( (AutoDiffable, UReal)
-                    :: (AutoDiffable, UArray UReal)
+                    :: (AutoDiffable, UVector)
                     :: args
-                  , ReturnType (UArray UReal) ) ]
-            ; [UArray UReal; UReal; UArray UReal;]
+                  , ReturnType (UVector) ) ]
+            ; [UVector; UReal; UArray UReal;]
             ; arg_types ]
         in
         Fmt.pf ppf
@@ -173,11 +173,11 @@ module TypeError = struct
             "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, T1, T2, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)
+            Pretty_printing.pp_unsizedtype (UVector)
             (* fun: state *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)
+            Pretty_printing.pp_unsizedtype (UVector)
             (* fun: return *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)
+            Pretty_printing.pp_unsizedtype (UVector)
             (* initial_state *)
             Pretty_printing.pp_unsizedtype UReal
             (* initial_time *)
@@ -193,14 +193,14 @@ module TypeError = struct
           arg_tys
     | IllTypedVariadicODETol (name, arg_tys, args) ->
         let arg_types = List.map ~f:(fun (_, t) -> t) args in
-        let generate_reduce_sum_sig =
+        let generate_ode_sig =
           List.concat
             [ [ UnsizedType.UFun
                   ( (AutoDiffable, UReal)
-                    :: (AutoDiffable, UArray UReal)
+                    :: (AutoDiffable, UVector)
                     :: args
-                  , ReturnType (UArray UReal) ) ]
-            ; [UArray UReal; UReal; UArray UReal; UReal; UReal; UInt]
+                  , ReturnType (UVector) ) ]
+            ; [UVector; UReal; UArray UReal; UReal; UReal; UInt]
             ; arg_types ]
         in
         Fmt.pf ppf
@@ -209,7 +209,7 @@ module TypeError = struct
            @[<h>Instead supplied arguments of incompatible type: %a@]"
           name
           Fmt.(list UnsizedType.pp ~sep:comma)
-          generate_reduce_sum_sig
+          generate_ode_sig
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedVariadicODEGenericTol (name, arg_tys) ->
@@ -218,9 +218,9 @@ module TypeError = struct
             "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, %a, %a, %a, T1, T2, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)
+            Pretty_printing.pp_unsizedtype (UVector)
             (* fun: state *)
-            Pretty_printing.pp_unsizedtype (UArray UReal)
+            Pretty_printing.pp_unsizedtype (UVector)
             (* fun: return *)
             Pretty_printing.pp_unsizedtype (UArray UReal)
             (* initial_state *)
