@@ -9,6 +9,7 @@ let%expect_test "udf" =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
   in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
+  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
@@ -18,7 +19,8 @@ let%expect_test "udf" =
            (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def |> print_endline ;
+  |> strf "@[<v>%a" pp_fun_def_w_rs
+  |> print_endline ;
   [%expect
     {|
     template <typename T1__>
@@ -28,6 +30,8 @@ let%expect_test "udf" =
       using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
       const static bool propto__ = true;
       (void) propto__;
+      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+      (void) DUMMY_VAR__;  // suppress unused var warning
 
       try {
         return add(x, 1);

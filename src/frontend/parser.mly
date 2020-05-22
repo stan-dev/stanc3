@@ -131,12 +131,40 @@ decl_identifier:
      that's distinct from the use of other non-identifiers, so we can assign
      it a different message in the .messages file.
    *)
-  | OFFSET UNREACHABLE
-  | MULTIPLIER UNREACHABLE
+  | FUNCTIONBLOCK UNREACHABLE
+  | DATABLOCK UNREACHABLE
+  | PARAMETERSBLOCK UNREACHABLE
+  | MODELBLOCK UNREACHABLE
+  | RETURN UNREACHABLE
+  | IF UNREACHABLE
+  | ELSE UNREACHABLE
+  | WHILE UNREACHABLE
+  | FOR UNREACHABLE
+  | IN UNREACHABLE
+  | BREAK UNREACHABLE
+  | CONTINUE UNREACHABLE
+  | VOID UNREACHABLE
+  | INT UNREACHABLE
+  | REAL UNREACHABLE
+  | VECTOR UNREACHABLE
+  | ROWVECTOR UNREACHABLE
+  | MATRIX UNREACHABLE
+  | ORDERED UNREACHABLE
+  | POSITIVEORDERED UNREACHABLE
+  | SIMPLEX UNREACHABLE
+  | UNITVECTOR UNREACHABLE
+  | CHOLESKYFACTORCORR UNREACHABLE
+  | CHOLESKYFACTORCOV UNREACHABLE
+  | CORRMATRIX UNREACHABLE
+  | COVMATRIX UNREACHABLE
   | LOWER UNREACHABLE
   | UPPER UNREACHABLE
-  | TARGET UNREACHABLE
+  | OFFSET UNREACHABLE
+  | MULTIPLIER UNREACHABLE
   | PRINT UNREACHABLE
+  | REJECT UNREACHABLE
+  | TARGET UNREACHABLE
+  | GETLP UNREACHABLE
     {
       raise (Failure "This should be unreachable; the UNREACHABLE token should \
                       never be produced")
@@ -299,6 +327,7 @@ range_constraint:
 
 range:
   | LOWER ASSIGN e1=constr_expression COMMA UPPER ASSIGN e2=constr_expression
+  | UPPER ASSIGN e2=constr_expression COMMA LOWER ASSIGN e1=constr_expression
     { grammar_logger "lower_upper_range" ; Program.LowerUpper (e1, e2) }
   | LOWER ASSIGN e=constr_expression
     {  grammar_logger "lower_range" ; Lower e }
@@ -307,6 +336,7 @@ range:
 
 offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
+  | MULTIPLIER ASSIGN e2=constr_expression COMMA OFFSET ASSIGN e1=constr_expression
     { grammar_logger "offset_mult" ; Program.OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
     { grammar_logger "offset" ; Offset e }
