@@ -4,6 +4,8 @@ open Common
 open Middle
 open Mir_utils
 
+let preserve_stability = false
+
 (**
    Apply the transformation to each function body and to the rest of the program as one
    block.
@@ -645,7 +647,7 @@ let cannot_duplicate_expr (e : Expr.Typed.t) =
       | FunApp (_, f, _) ->
         String.suffix f 4 = "_rng"
       | _ -> false
-    )
+    ) || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_)
   in expr_any pred e
 
 let cannot_remove_expr (e : Expr.Typed.t) =

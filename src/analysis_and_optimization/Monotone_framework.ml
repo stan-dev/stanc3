@@ -5,6 +5,8 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
+let preserve_stability = false
+
 (** Debugging tool to print out MFP sets **) 
 let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
   let print_set s =
@@ -298,9 +300,12 @@ let constant_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Assignment ((s, _, []), e) -> (
+            | Assignment ((s, t, []), e) -> (
               match Partial_evaluator.eval_expr (subst_expr m e) with
-              | {pattern= Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
+                | {pattern= Lit (_, _); _} as e'
+                  when not (preserve_stability &&
+                            UnsizedType.is_autodiffable t) ->
+                  Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
@@ -347,9 +352,12 @@ let expression_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Stmt.Fixed.Pattern.Assignment ((s, _, []), e) ->
+            | Middle.Stmt.Fixed.Pattern.Assignment ((s, t, []), e) ->
               let m' = kill_var m s in
-              if can_side_effect_expr e || Set.Poly.mem (free_vars_expr e) s then
+              if can_side_effect_expr e ||
+                 Set.Poly.mem (free_vars_expr e) s ||
+                 (preserve_stability && UnsizedType.is_autodiffable t)
+              then
                 m'
               else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
