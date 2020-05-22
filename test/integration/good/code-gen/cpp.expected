@@ -11100,30 +11100,28 @@ dz_dt(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& alpha,
           T4__, typename boost::math::tools::promote_args<T5__>::type>::type;
   const static bool propto__ = true;
   (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     local_scalar_t__ u;
+    u = DUMMY_VAR__;
     
     current_statement__ = 23;
-    u = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 23;
-    u = z[(1 - 1)];
+    u = rvalue(z, cons_list(index_uni(1), nil_index_list()), "z");
     local_scalar_t__ v;
+    v = DUMMY_VAR__;
     
     current_statement__ = 24;
-    v = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 24;
-    v = z[(2 - 1)];
+    v = rvalue(z, cons_list(index_uni(2), nil_index_list()), "z");
     local_scalar_t__ du_dt;
+    du_dt = DUMMY_VAR__;
     
-    current_statement__ = 25;
-    du_dt = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 25;
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt;
+    dv_dt = DUMMY_VAR__;
     
-    current_statement__ = 26;
-    dv_dt = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 26;
     dv_dt = ((-gamma + (delta * u)) * v);
     current_statement__ = 27;
@@ -11188,12 +11186,16 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "ode_bdf_m1_model_namespace::ode_bdf_m1_model";
     (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
+      N = std::numeric_limits<int>::min();
       
       current_statement__ = 19;
       N = context__.vals_i("N")[(1 - 1)];
@@ -11201,7 +11203,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("ts", "N", N);
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(N));
-      ts = std::vector<double>(N, 0);
+      ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 20;
       assign(ts, nil_index_list(), context__.vals_r("ts"),
@@ -11210,7 +11212,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("y_init", "2", 2);
       context__.validate_dims("data initialization","y_init","double",
           context__.to_vec(2));
-      y_init = std::vector<double>(2, 0);
+      y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 21;
       assign(y_init, nil_index_list(), context__.vals_r("y_init"),
@@ -11221,7 +11223,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("y", "2", 2);
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N, 2));
-      y = std::vector<std::vector<double>>(N, std::vector<double>(2, 0));
+      y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -11231,9 +11233,9 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         current_statement__ = 22;
         pos__ = 1;
         current_statement__ = 22;
-        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 22;
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 22;
             assign(y,
               cons_list(index_uni(sym2__),
@@ -11246,9 +11248,9 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       current_statement__ = 19;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 22;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 22;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           current_statement__ = 22;
           current_statement__ = 22;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
@@ -11287,9 +11289,13 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
       
       current_statement__ = 1;
       alpha = in__.scalar();
@@ -11302,6 +11308,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         alpha = stan::math::lb_constrain(alpha, 0);
       }
       local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
       
       current_statement__ = 2;
       beta = in__.scalar();
@@ -11314,6 +11321,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         beta = stan::math::lb_constrain(beta, 0);
       }
       local_scalar_t__ gamma;
+      gamma = DUMMY_VAR__;
       
       current_statement__ = 3;
       gamma = in__.scalar();
@@ -11326,6 +11334,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         gamma = stan::math::lb_constrain(gamma, 0);
       }
       local_scalar_t__ delta;
+      delta = DUMMY_VAR__;
       
       current_statement__ = 4;
       delta = in__.scalar();
@@ -11341,11 +11350,12 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("z_init", "2", 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> z_init;
       z_init = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(z_init, DUMMY_VAR__);
       
       current_statement__ = 5;
       z_init = in__.vector(2);
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         if (jacobian__) {
           current_statement__ = 5;
@@ -11361,15 +11371,15 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<local_scalar_t__> sigma;
-      sigma = std::vector<local_scalar_t__>(2, 0);
+      sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable sigma");}
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         if (jacobian__) {
           current_statement__ = 6;
@@ -11388,17 +11398,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("z", "2", 2);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
       z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
+      stan::math::fill(z, DUMMY_VAR__);
       
-      current_statement__ = 7;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          current_statement__ = 7;
-          assign(z,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            std::numeric_limits<double>::quiet_NaN(), "assigning variable z");
-        }}
       current_statement__ = 7;
       assign(z, nil_index_list(),
         ode_bdf_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
@@ -11422,11 +11423,17 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         lp_accum__.add(
           lognormal_log<propto__>(z_init, stan::math::log(10), 1));
         current_statement__ = 18;
-        for (size_t k = 1; k <= 2; ++k) {
+        for (int k = 1; k <= 2; ++k) {
           current_statement__ = 15;
           lp_accum__.add(
-            lognormal_log<propto__>(y_init[(k - 1)],
-              stan::math::log(z_init[(k - 1)]), sigma[(k - 1)]));
+            lognormal_log<propto__>(
+              rvalue(y_init, cons_list(index_uni(k), nil_index_list()),
+                "y_init"),
+              stan::math::log(
+                rvalue(z_init, cons_list(index_uni(k), nil_index_list()),
+                  "z_init")),
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));
           current_statement__ = 16;
           lp_accum__.add(
             lognormal_log<propto__>(
@@ -11437,7 +11444,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
                 rvalue(z,
                   cons_list(index_omni(),
                     cons_list(index_uni(k), nil_index_list())), "z")),
-              sigma[(k - 1)]));}
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));}
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11465,27 +11473,34 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       alpha = in__.scalar();
       current_statement__ = 1;
       alpha = stan::math::lb_constrain(alpha, 0);
       double beta;
+      beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       beta = in__.scalar();
       current_statement__ = 2;
       beta = stan::math::lb_constrain(beta, 0);
       double gamma;
+      gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       gamma = in__.scalar();
       current_statement__ = 3;
       gamma = stan::math::lb_constrain(gamma, 0);
       double delta;
+      delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       delta = in__.scalar();
@@ -11495,11 +11510,12 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("z_init", "2", 2);
       Eigen::Matrix<double, -1, 1> z_init;
       z_init = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(z_init, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       z_init = in__.vector(2);
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
@@ -11507,15 +11523,15 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
-      sigma = std::vector<double>(2, 0);
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable sigma");}
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
@@ -11526,24 +11542,15 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("z", "2", 2);
       std::vector<Eigen::Matrix<double, -1, 1>> z;
       z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(2));
+      stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 7;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          current_statement__ = 7;
-          assign(z,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            std::numeric_limits<double>::quiet_NaN(), "assigning variable z");
-        }}
       vars__.push_back(alpha);
       vars__.push_back(beta);
       vars__.push_back(gamma);
       vars__.push_back(delta);
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(z_init[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(sigma[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -11557,8 +11564,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       assign(z, nil_index_list(),
         ode_rk45_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
           pstream__, alpha, beta, gamma, delta), "assigning variable z");
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -11579,27 +11586,32 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       current_statement__ = 1;
       alpha = stan::math::lb_free(alpha, 0);
       double beta;
+      beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       beta = context__.vals_r("beta")[(1 - 1)];
       current_statement__ = 2;
       beta = stan::math::lb_free(beta, 0);
       double gamma;
+      gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       current_statement__ = 3;
       gamma = stan::math::lb_free(gamma, 0);
       double delta;
+      delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
@@ -11609,6 +11621,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("z_init", "2", 2);
       Eigen::Matrix<double, -1, 1> z_init;
       z_init = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(z_init, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> z_init_flat__;
@@ -11618,7 +11631,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         current_statement__ = 5;
         pos__ = 1;
         current_statement__ = 5;
-        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 5;
           assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
             z_init_flat__[(pos__ - 1)], "assigning variable z_init");
@@ -11626,7 +11639,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(z_init[(sym1__ - 1)], 0),
@@ -11634,13 +11647,13 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
-      sigma = std::vector<double>(2, 0);
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       assign(sigma, nil_index_list(), context__.vals_r("sigma"),
         "assigning variable sigma");
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(sigma[(sym1__ - 1)], 0),
@@ -11649,9 +11662,9 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       vars__.push_back(beta);
       vars__.push_back(gamma);
       vars__.push_back(delta);
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(z_init[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(sigma[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11705,18 +11718,18 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
     param_names__.push_back(std::string() + "delta");
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
               param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
@@ -11737,18 +11750,18 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
     param_names__.push_back(std::string() + "delta");
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
               param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
@@ -11973,46 +11986,48 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
           T3__>::type;
   const static bool propto__ = true;
   (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     local_scalar_t__ u;
+    u = DUMMY_VAR__;
     
     current_statement__ = 22;
-    u = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 22;
-    u = z[(1 - 1)];
+    u = rvalue(z, cons_list(index_uni(1), nil_index_list()), "z");
     local_scalar_t__ v;
+    v = DUMMY_VAR__;
     
     current_statement__ = 23;
-    v = std::numeric_limits<double>::quiet_NaN();
-    current_statement__ = 23;
-    v = z[(2 - 1)];
+    v = rvalue(z, cons_list(index_uni(2), nil_index_list()), "z");
     local_scalar_t__ alpha;
+    alpha = DUMMY_VAR__;
     
     current_statement__ = 24;
-    alpha = theta[(1 - 1)];
+    alpha = rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta");
     local_scalar_t__ beta;
+    beta = DUMMY_VAR__;
     
     current_statement__ = 25;
-    beta = theta[(2 - 1)];
+    beta = rvalue(theta, cons_list(index_uni(2), nil_index_list()), "theta");
     local_scalar_t__ gamma;
+    gamma = DUMMY_VAR__;
     
     current_statement__ = 26;
-    gamma = theta[(3 - 1)];
+    gamma = rvalue(theta, cons_list(index_uni(3), nil_index_list()), "theta");
     local_scalar_t__ delta;
+    delta = DUMMY_VAR__;
     
     current_statement__ = 27;
-    delta = theta[(4 - 1)];
+    delta = rvalue(theta, cons_list(index_uni(4), nil_index_list()), "theta");
     local_scalar_t__ du_dt;
+    du_dt = DUMMY_VAR__;
     
-    current_statement__ = 28;
-    du_dt = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 28;
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt;
+    dv_dt = DUMMY_VAR__;
     
-    current_statement__ = 29;
-    dv_dt = std::numeric_limits<double>::quiet_NaN();
     current_statement__ = 29;
     dv_dt = ((-gamma + (delta * u)) * v);
     current_statement__ = 30;
@@ -12061,12 +12076,16 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "ode_old_model_namespace::ode_old_model";
     (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
+      N = std::numeric_limits<int>::min();
       
       current_statement__ = 18;
       N = context__.vals_i("N")[(1 - 1)];
@@ -12074,7 +12093,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       validate_non_negative_index("ts", "N", N);
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(N));
-      ts = std::vector<double>(N, 0);
+      ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 19;
       assign(ts, nil_index_list(), context__.vals_r("ts"),
@@ -12083,7 +12102,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       validate_non_negative_index("y_init", "2", 2);
       context__.validate_dims("data initialization","y_init","double",
           context__.to_vec(2));
-      y_init = std::vector<double>(2, 0);
+      y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 20;
       assign(y_init, nil_index_list(), context__.vals_r("y_init"),
@@ -12094,7 +12113,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       validate_non_negative_index("y", "2", 2);
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N, 2));
-      y = std::vector<std::vector<double>>(N, std::vector<double>(2, 0));
+      y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -12104,9 +12123,9 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         current_statement__ = 21;
         pos__ = 1;
         current_statement__ = 21;
-        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 21;
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 21;
             assign(y,
               cons_list(index_uni(sym2__),
@@ -12119,9 +12138,9 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 18;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 21;
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 21;
-        for (size_t sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           current_statement__ = 21;
           current_statement__ = 21;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
@@ -12160,9 +12179,13 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
       
       current_statement__ = 1;
       alpha = in__.scalar();
@@ -12175,6 +12198,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         alpha = stan::math::lb_constrain(alpha, 0);
       }
       local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
       
       current_statement__ = 2;
       beta = in__.scalar();
@@ -12187,6 +12211,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         beta = stan::math::lb_constrain(beta, 0);
       }
       local_scalar_t__ gamma;
+      gamma = DUMMY_VAR__;
       
       current_statement__ = 3;
       gamma = in__.scalar();
@@ -12199,6 +12224,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         gamma = stan::math::lb_constrain(gamma, 0);
       }
       local_scalar_t__ delta;
+      delta = DUMMY_VAR__;
       
       current_statement__ = 4;
       delta = in__.scalar();
@@ -12213,15 +12239,15 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 5;
       validate_non_negative_index("z_init", "2", 2);
       std::vector<local_scalar_t__> z_init;
-      z_init = std::vector<local_scalar_t__>(2, 0);
+      z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable z_init");}
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         if (jacobian__) {
           current_statement__ = 5;
@@ -12237,15 +12263,15 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<local_scalar_t__> sigma;
-      sigma = std::vector<local_scalar_t__>(2, 0);
+      sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable sigma");}
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         if (jacobian__) {
           current_statement__ = 6;
@@ -12263,7 +12289,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 7;
       validate_non_negative_index("z", "2", 2);
       std::vector<std::vector<local_scalar_t__>> z;
-      z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, 0));
+      z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       
       current_statement__ = 7;
       assign(z, nil_index_list(),
@@ -12286,11 +12312,17 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         lp_accum__.add(
           lognormal_log<propto__>(z_init, stan::math::log(10), 1));
         current_statement__ = 17;
-        for (size_t k = 1; k <= 2; ++k) {
+        for (int k = 1; k <= 2; ++k) {
           current_statement__ = 14;
           lp_accum__.add(
-            lognormal_log<propto__>(y_init[(k - 1)],
-              stan::math::log(z_init[(k - 1)]), sigma[(k - 1)]));
+            lognormal_log<propto__>(
+              rvalue(y_init, cons_list(index_uni(k), nil_index_list()),
+                "y_init"),
+              stan::math::log(
+                rvalue(z_init, cons_list(index_uni(k), nil_index_list()),
+                  "z_init")),
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));
           current_statement__ = 15;
           lp_accum__.add(
             lognormal_log<propto__>(
@@ -12301,7 +12333,8 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
                 rvalue(z,
                   cons_list(index_omni(),
                     cons_list(index_uni(k), nil_index_list())), "z")),
-              sigma[(k - 1)]));}
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));}
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12329,27 +12362,34 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     
     try {
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       alpha = in__.scalar();
       current_statement__ = 1;
       alpha = stan::math::lb_constrain(alpha, 0);
       double beta;
+      beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       beta = in__.scalar();
       current_statement__ = 2;
       beta = stan::math::lb_constrain(beta, 0);
       double gamma;
+      gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       gamma = in__.scalar();
       current_statement__ = 3;
       gamma = stan::math::lb_constrain(gamma, 0);
       double delta;
+      delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       delta = in__.scalar();
@@ -12358,15 +12398,15 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 5;
       validate_non_negative_index("z_init", "2", 2);
       std::vector<double> z_init;
-      z_init = std::vector<double>(2, 0);
+      z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable z_init");}
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
@@ -12374,15 +12414,15 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
-      sigma = std::vector<double>(2, 0);
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable sigma");}
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
@@ -12392,15 +12432,15 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 7;
       validate_non_negative_index("z", "2", 2);
       std::vector<std::vector<double>> z;
-      z = std::vector<std::vector<double>>(N, std::vector<double>(2, 0));
+      z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       vars__.push_back(alpha);
       vars__.push_back(beta);
       vars__.push_back(gamma);
       vars__.push_back(delta);
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(z_init[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(sigma[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -12412,8 +12452,8 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
           stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
           .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -12434,27 +12474,32 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     
     try {
       int pos__;
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       current_statement__ = 1;
       alpha = stan::math::lb_free(alpha, 0);
       double beta;
+      beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       beta = context__.vals_r("beta")[(1 - 1)];
       current_statement__ = 2;
       beta = stan::math::lb_free(beta, 0);
       double gamma;
+      gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       current_statement__ = 3;
       gamma = stan::math::lb_free(gamma, 0);
       double delta;
+      delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
@@ -12463,13 +12508,13 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 5;
       validate_non_negative_index("z_init", "2", 2);
       std::vector<double> z_init;
-      z_init = std::vector<double>(2, 0);
+      z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       assign(z_init, nil_index_list(), context__.vals_r("z_init"),
         "assigning variable z_init");
       current_statement__ = 5;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 5;
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(z_init[(sym1__ - 1)], 0),
@@ -12477,13 +12522,13 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       current_statement__ = 6;
       validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
-      sigma = std::vector<double>(2, 0);
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       assign(sigma, nil_index_list(), context__.vals_r("sigma"),
         "assigning variable sigma");
       current_statement__ = 6;
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 6;
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(sigma[(sym1__ - 1)], 0),
@@ -12492,9 +12537,9 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       vars__.push_back(beta);
       vars__.push_back(gamma);
       vars__.push_back(delta);
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(z_init[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.push_back(sigma[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12548,18 +12593,18 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
     param_names__.push_back(std::string() + "delta");
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
               param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
@@ -12580,18 +12625,18 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
     param_names__.push_back(std::string() + "delta");
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
         param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
               param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
