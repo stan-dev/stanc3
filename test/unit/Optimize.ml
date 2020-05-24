@@ -2192,10 +2192,8 @@ model {
     {|
       Info: Found int division at 'string', line 27, column 14 to column 15:
         i / j
-      Positive values rounded down, negative values rounded up or down in platform-dependent way.
-      Info: Found int division at 'string', line 99, column 25 to column 26:
-        1 / 2.
-      Positive values rounded down, negative values rounded up or down in platform-dependent way.
+      Values will be rounded towards zero.
+
 
 
       log_prob {
@@ -2355,7 +2353,8 @@ model {
         data vector[2] x_vector;
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
-        x_cov = FnUnconstrain__(x_cov, "cov_matrix");
+        data vector[3] x_cov_free__;
+        x_cov_free__ = FnUnconstrain__(x_cov, "cov_matrix");
         data real theta_u;
         data real phi_u;
       }

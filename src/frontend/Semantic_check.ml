@@ -139,6 +139,7 @@ let check_fresh_variable_basic id is_nullary_function =
       Stan_math_signatures.is_stan_math_function_name id.name
       && ( is_nullary_function
          || Stan_math_signatures.stan_math_returntype id.name [] = None )
+      || Stan_math_signatures.is_reduce_sum_fn id.name
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -314,6 +315,43 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
+let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
+  let arg_match (x_ad, x_t) y =
+    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
+    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
+  in
+  let args_match a b =
+    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
+  in
+  match es with
+  | { emeta=
+        { type_=
+            UnsizedType.UFun
+              ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
+                :: (_, UInt) :: (_, UInt) :: fun_args
+              , ReturnType UReal ); _ }; _ }
+    :: sliced :: {emeta= {type_= UInt; _}; _} :: args
+    when arg_match sliced_arg_fun sliced
+         && List.mem Stan_math_signatures.reduce_sum_slice_types
+              sliced.emeta.type_ ~equal:( = )
+         && List.mem Stan_math_signatures.reduce_sum_slice_types
+              sliced_arg_fun_type ~equal:( = ) ->
+      if args_match fun_args args then
+        mk_typed_expression
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+          ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
+        |> Validate.ok
+      else
+        Semantic_error.illtyped_reduce_sum loc id.name
+          (List.map ~f:type_of_expr_typed es)
+          (sliced_arg_fun :: fun_args)
+        |> Validate.error
+  | _ ->
+      es
+      |> List.map ~f:type_of_expr_typed
+      |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+      |> Validate.error
+
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
      function because, technically, user defined functions can shadow
@@ -332,6 +370,8 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
+  | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
+      semantic_check_reduce_sum ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
   | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
@@ -594,13 +634,12 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and re = semantic_check_expression cf e2
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
-        | UInt, UReal, Divide | UInt, UInt, Divide ->
+        | UInt, UInt, Divide ->
             Fmt.pr
-              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a@]@,%s@,@]"
+              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a\n@]%s@.@]"
               (Location_span.to_string x.emeta.loc)
               Pretty_printing.pp_expression {expr; emeta}
-              "Positive values rounded down, negative values rounded up or \
-               down in platform-dependent way." ;
+              "Values will be rounded towards zero." ;
             (x, y)
         | _ -> (x, y)
       in

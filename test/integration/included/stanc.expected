@@ -170,6 +170,8 @@ Syntax error in 'incl_stanc_helper_semantic_error.stan', line 1, column 2 to col
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
+  $ ../../../../install/default/bin/stanc --include_paths="../included"  included-brackets.stan
+
   $ ../../../../install/default/bin/stanc --include_paths="../included"  included-quote.stan
 
   $ ../../../../install/default/bin/stanc --include_paths="../included"  lex-err.stan

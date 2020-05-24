@@ -958,7 +958,7 @@ model {
 
 Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -989,7 +989,7 @@ model {
 
 Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 functions {
   int foo(int a) {
@@ -3581,7 +3581,7 @@ model {
 
 Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
   a[1] / b[2]
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -4143,7 +4143,7 @@ model {
 
 Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4175,7 +4175,7 @@ model {
 
 Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -4221,7 +4221,7 @@ model {
 
 Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4253,7 +4253,7 @@ model {
 
 Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -4419,7 +4419,7 @@ model {
 
 Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4450,7 +4450,7 @@ model {
 
 Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
   j / M
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   int N;
@@ -5111,15 +5111,9 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_division_good.stan', line 6, column 6 to column 7:
-  2 / 3.1
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 Info: Found int division at 'validate_division_good.stan', line 19, column 7 to column 8:
   2 / 3
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'validate_division_good.stan', line 21, column 7 to column 8:
-  2 / 3.1
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -5138,7 +5132,7 @@ model {
 
 Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
   j / k
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
+Values will be rounded towards zero.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
@@ -5410,12 +5404,6 @@ model {
   (-y) ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_jacobian_warning_good.stan', line 57, column 7 to column 8:
-  1 / z
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: Found int division at 'validate_jacobian_warning_good.stan', line 57, column 2 to column 3:
-  1 / (1 / z)
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
 parameters {
   vector[1] y;
@@ -5537,6 +5525,7 @@ transformed data {
   real<offset=2> a = 3;
 }
 parameters {
+  matrix<offset=-412, multiplier=3>[3, 1] theta_[2];
   matrix<offset=-412, multiplier=3>[3, 1] theta[2];
   real<offset=1, multiplier=5> x;
   real<offset=42> w;
@@ -5562,6 +5551,7 @@ data {
   real<lower=1, upper=1.2> d;
   real<lower=1.1, upper=1.2> e;
   real<lower=1, upper=2> f;
+  real<lower=1, upper=2> g;
 }
 parameters {
   real y;

@@ -381,6 +381,10 @@ transformed data {
     for (v in blocked_tdata_vs) {
       z = 0;
     }
+    int indices[4] = {1,2,3,4};
+    for (i in indices[1:3]) {
+      z = i;
+    }
   }
   // some indexing tests for multi indices and slices
   td_1dk = td_1d[td_1dk];
@@ -396,6 +400,8 @@ transformed data {
 parameters {
   real p_real;
   real<offset=1, multiplier=2> offset_multiplier[5];
+  real<multiplier=2> no_offset_multiplier[5];
+  real<offset=3> offset_no_multiplier[5];
   real<lower=0> p_real_1d_ar[N];
   real<lower=0> p_real_3d_ar[N,M,K];
   vector<lower=0>[N] p_vec;
@@ -471,6 +477,9 @@ model {
   real r2 = foo_bar1(J);
   p_real ~ normal(0,1);
   offset_multiplier ~ normal(0, 1);
+
+  no_offset_multiplier ~ normal(0, 1);
+  offset_no_multiplier ~ normal(0, 1);
 
   to_vector(p_real_1d_ar) ~ normal(0, 1);
   for (n in 1:N) {

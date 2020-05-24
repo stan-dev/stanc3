@@ -55,7 +55,9 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
-  let trim_propto f = String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f in
+  let trim_propto f =
+    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
+  in
   match pattern with
   | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
       let trigger = Map.find_exn opencl_triggers (trim_propto f) in
@@ -495,48 +497,6 @@ and validate_dims_stmt stmt =
   in
   {stmt with pattern}
 
-let make_fill vident st loc =
-  let rhs =
-    Expr.(
-      Helpers.internal_funapp FnNaN []
-      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
-  in
-  let ut = SizedType.to_unsized st in
-  let var =
-    Expr.(
-      let meta = {Typed.Meta.empty with type_= ut; loc} in
-      Fixed.{meta; pattern= Var vident})
-  in
-  let bodyfn var =
-    Stmt.Fixed.
-      { pattern=
-          Assignment ((vident, ut, Expr.Helpers.collect_indices var), rhs)
-      ; meta= loc }
-  in
-  Stmt.Helpers.for_scalar st bodyfn var loc
-
-let rec contains_eigen = function
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | _ -> false
-
-let type_needs_fill decl_id ut =
-  Utils.is_user_ident decl_id
-  && (contains_eigen ut || match ut with UReal -> true | _ -> false)
-
-let rec add_fill no_fill_required = function
-  | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-    decl
-    when (not (Set.mem no_fill_required decl_id))
-         && type_needs_fill decl_id (SizedType.to_unsized st) ->
-      (* I *think* we only need to initialize eigen types and scalars because we already construct
-       std::vectors with 0s.
-    *)
-      Stmt.Fixed.{pattern= SList [decl; make_fill decl_id st meta]; meta}
-  | {pattern; meta} ->
-      Stmt.Fixed.
-        {pattern= Pattern.map Fn.id (add_fill no_fill_required) pattern; meta}
-
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -558,7 +518,20 @@ let trans_prog (p : Program.Typed.t) =
         Some (name, out_constrained_st)
     | _ -> None
   in
+  let get_pname_ust = function
+    | ( name
+      , { Program.out_block= Parameters
+        ; out_constrained_st
+        ; out_unconstrained_st; _ } )
+      when SizedType.to_unsized out_constrained_st
+           = SizedType.to_unsized out_unconstrained_st ->
+        Some (name, out_unconstrained_st)
+    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
+        Some (name ^ "_free__", out_unconstrained_st)
+    | _ -> None
+  in
   let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars
       ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
@@ -568,9 +541,6 @@ let trans_prog (p : Program.Typed.t) =
            | Parameters -> `Fst x
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x )
-  in
-  let data_and_params =
-    List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
   let tparam_start stmt =
     Stmt.Fixed.(
@@ -678,11 +648,10 @@ let trans_prog (p : Program.Typed.t) =
         init_pos
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write constrained_params
+        @ List.map ~f:gen_write free_params
     ; generate_quantities }
   in
   Program.(
     p
     |> map Fn.id ensure_body_in_block
-    |> map Fn.id (add_fill (String.Set.of_list data_and_params))
     |> map_prog_stmt_lists flatten_slists_list)

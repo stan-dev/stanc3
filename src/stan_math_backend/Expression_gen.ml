@@ -56,6 +56,11 @@ let minus_one e =
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
+let dont_need_range_check = function
+  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
+      not (Utils.is_user_ident id)
+  | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -143,6 +148,11 @@ let fn_renames =
 *)
 let map_rect_counter = ref 0
 let functor_suffix = "_functor__"
+let reduce_sum_functor_suffix = "_rsfunctor__"
+
+let functor_suffix_select hof =
+  if Stan_math_signatures.is_reduce_sum_fn hof then reduce_sum_functor_suffix
+  else functor_suffix
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -269,7 +279,9 @@ and gen_fun_app ppf fname es =
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
-          {e with pattern= FunApp (StanLib, name ^ functor_suffix, [])}
+          { e with
+            pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
+          }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -300,6 +312,9 @@ and gen_fun_app ppf fname es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
+      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+        when Stan_math_signatures.is_reduce_sum_fn x ->
+          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           incr map_rect_counter ;
           (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
@@ -416,7 +431,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
-      when List.for_all ~f:is_single_index idx
+      when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
