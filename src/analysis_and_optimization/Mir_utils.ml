@@ -2,6 +2,16 @@ open Core_kernel
 open Middle
 open Dataflow_types
 
+let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
+  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+  | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
+  | IfElse (_, s1, Some s2) ->
+    Set.Poly.union (var_declarations s1) (var_declarations s2)
+  | Block slist | SList slist ->
+    Set.Poly.union_list (List.map ~f:var_declarations slist)
+  | _ -> Set.Poly.empty
+
 let rec map_rec_expr f e =
   let recurse = map_rec_expr f in
   Expr.Fixed.{e with pattern= f (Pattern.map recurse e.pattern)}
@@ -189,33 +199,51 @@ let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
 let stmt_of_block b =
   Stmt.Fixed.{pattern= SList b; meta= Stmt.Located.Meta.empty}
 
-let rec subst_expr m (Expr.Fixed.({pattern; _}) as e) =
-  match pattern with
-  | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | _ -> Expr.Fixed.{e with pattern= Pattern.map (subst_expr m) pattern}
+let rec fn_subst_expr m e =
+  match m e with
+  | Some e' ->
+    (* let print_expr (e:Expr.Typed.t) = *)
+      (* [%sexp (e.pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string *)
+    (* in *)
+    (* let _ = print_endline ("Replaced expr: " ^ print_expr e ^ " -> " ^ print_expr e') in *)
+    e'
+  | _ -> Expr.Fixed.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
 
-let subst_idx m = Index.map (subst_expr m)
+let fn_subst_idx m = Index.map (fn_subst_expr m)
 
-let subst_stmt_base_helper g h b =
+let fn_subst_stmt_base_helper g h b =
   Stmt.Fixed.Pattern.(
     match b with
     | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
     | x -> map g (fun y -> y) x)
 
-let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
+let fn_subst_stmt_base m = fn_subst_stmt_base_helper (fn_subst_expr m) (fn_subst_idx m)
+let fn_subst_stmt m = map_rec_stmt_loc (fn_subst_stmt_base m)
+
+let name_map m (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var s ->
+    (match Map.Poly.find m s with
+     | Some s' -> Some {e with pattern = Var s'}
+     | None -> None)
+  | _ -> None
+
+let name_subst_stmt m = fn_subst_stmt (name_map m)
+
+let var_map m (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var s -> Map.find m s
+  | _ -> None
+let subst_expr m e = fn_subst_expr (var_map m) e
+let subst_idx m = Index.map (subst_expr m)
+let subst_stmt_base m = fn_subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = map_rec_stmt_loc (subst_stmt_base m)
 
-let rec expr_subst_expr m e =
-  match Map.find m e with
-  | Some e' -> e'
-  | None ->
-      Expr.Fixed.{e with pattern= Pattern.map (expr_subst_expr m) e.pattern}
-
+let expr_map m (e : Expr.Typed.t) = Map.find m e
+let expr_subst_expr m e = fn_subst_expr (expr_map m) e
 let expr_subst_idx m = Index.map (expr_subst_expr m)
-
 let expr_subst_stmt_base m =
-  subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
-
+  fn_subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
 let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 
 let rec expr_depth Expr.Fixed.({pattern; _}) =
@@ -278,12 +306,12 @@ let rec update_expr_ad_levels autodiffable_variables
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
       { pattern= EOr (e1, e2)
       ; meta= {e.meta with adlevel= ad_level_sup [e1; e2]} }
-  | Indexed (e, i_list) ->
-      let e = update_expr_ad_levels autodiffable_variables e in
+  | Indexed (ixed, i_list) ->
+      let ixed = update_expr_ad_levels autodiffable_variables ixed in
       let i_list =
         List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list
       in
-      { pattern= Indexed (e, i_list)
+      { pattern= Indexed (ixed, i_list)
       ; meta=
           { e.meta with
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)

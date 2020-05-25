@@ -99,8 +99,8 @@ let options =
          \"$model_filename_model\")" )
     ; ( "--O"
       , Arg.Set optimize
-      , " Allow the compiler to apply all optimizations to the Stan \
-         code.WARNING: This is currently an experimental feature!" )
+      , "Allow the compiler to apply all optimizations to the Stan \
+         code." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -121,22 +121,6 @@ let options =
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." ) ]
-
-(* Whether or not to run each optimization. Currently it's all or nothing
-   depending on the --O flag.*)
-let optimization_settings () : Optimize.optimization_settings =
-  { function_inlining= !optimize
-  ; static_loop_unrolling= !optimize
-  ; one_step_loop_unrolling= !optimize
-  ; list_collapsing= !optimize
-  ; block_fixing= !optimize
-  ; constant_propagation= !optimize
-  ; expression_propagation= !optimize
-  ; copy_propagation= !optimize
-  ; dead_code_elimination= !optimize
-  ; partial_evaluation= !optimize
-  ; lazy_code_motion= !optimize
-  ; optimize_ad_levels= true }
 
 let print_warn_uninitialized
     (uninit_vars : (Location_span.t * string) Set.Poly.t) =
@@ -214,7 +198,7 @@ let use_file filename =
     let opt_mir =
       if !optimize then (
         let opt =
-          Optimize.optimization_suite (optimization_settings ()) tx_mir
+          Optimize.optimization_suite tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter

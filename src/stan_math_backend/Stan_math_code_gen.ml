@@ -327,15 +327,20 @@ let pp_ctor ppf p =
             , List.filter_map ~f:get_param_st output_vars ) ) )
     , p )
 
+let rec top_level_decls Stmt.Fixed.({pattern; _}) =
+  match pattern with
+  | Decl d ->
+    [Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
+  | SList stmts ->
+    List.concat_map ~f:top_level_decls stmts
+  | _ -> [None]
+
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
-  let decl Stmt.Fixed.({pattern; _}) =
-    match pattern with
-    | Decl d ->
-        Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)
-    | _ -> None
+  let data_decls =
+    List.concat_map ~f:top_level_decls prepare_data
+    |> List.filter_map ~f:ident
   in
-  let data_decls = List.filter_map ~f:decl prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 (** Print the signature and blocks of the model class methods.

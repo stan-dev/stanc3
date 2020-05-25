@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 open Dataflow_types
+val var_declarations :
+  ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
 
 val map_rec_expr :
      (Expr.Typed.t Expr.Fixed.Pattern.t -> Expr.Typed.t Expr.Fixed.Pattern.t)
@@ -143,6 +145,11 @@ val subst_stmt_base :
 val subst_stmt :
   (string, Expr.Typed.t) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
 (** Substitute variables occurring anywhere in a statement according to the provided Map. *)
+
+val name_subst_stmt :
+  (string, string) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
+(** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
+
 
 val expr_subst_expr :
   Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t
