@@ -124,15 +124,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 simple_SIR(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -193,8 +190,8 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
 
 struct simple_SIR_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__)  const 
@@ -321,8 +318,9 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -574,12 +572,13 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "ad_level_failing_model_namespace::write_array";
@@ -729,9 +728,10 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -780,7 +780,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("beta");
@@ -790,7 +790,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     names__.push_back("y");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -809,9 +809,10 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
@@ -833,9 +834,10 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta");
     param_names__.push_back(std::string() + "gamma");
@@ -857,13 +859,13 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -1184,14 +1186,13 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions,
                 const Eigen::Matrix<T2__, -1, -1>& p,
                 const Eigen::Matrix<T3__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1375,8 +1376,8 @@ prob_uncaptured(const int& nind, const int& n_occasions,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 operator()(const int& nind, const int& n_occasions,
            const Eigen::Matrix<T2__, -1, -1>& p,
            const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
@@ -1987,8 +1988,9 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2486,12 +2488,13 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "copy_fail_model_namespace::write_array";
@@ -2924,9 +2927,10 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -3005,7 +3009,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_p");
@@ -3015,7 +3019,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     names__.push_back("chi");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -3041,9 +3045,10 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_p");
     for (int sym172__ = 1; sym172__ <= max_age; ++sym172__) {
@@ -3080,9 +3085,10 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_p");
     for (int sym172__ = 1; sym172__ <= max_age; ++sym172__) {
@@ -3119,13 +3125,13 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -3791,8 +3797,9 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -4184,12 +4191,13 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "dce_fail_model_namespace::write_array";
@@ -4411,9 +4419,10 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -4764,7 +4773,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("sigma");
@@ -4785,7 +4794,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     names__.push_back("b_hat");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -4830,9 +4839,10 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "sigma");
     param_names__.push_back(std::string() + "sigma_age");
@@ -4878,9 +4888,10 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "sigma");
     param_names__.push_back(std::string() + "sigma_age");
@@ -4926,13 +4937,13 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -5177,8 +5188,9 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5202,12 +5214,13 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_experiment_model_namespace::write_array";
@@ -5239,9 +5252,10 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -5258,13 +5272,13 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -5272,9 +5286,10 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -5287,9 +5302,10 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -5302,13 +5318,13 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
@@ -5552,8 +5568,9 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5577,12 +5594,13 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_experiment2_model_namespace::write_array";
@@ -5614,9 +5632,10 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -5633,13 +5652,13 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -5647,9 +5666,10 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -5662,9 +5682,10 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -5677,13 +5698,13 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
@@ -5955,8 +5976,9 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6102,12 +6124,13 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail_model_namespace::write_array";
@@ -6207,9 +6230,10 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -6311,7 +6335,7 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mu");
@@ -6319,7 +6343,7 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     names__.push_back("theta");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(2);
@@ -6333,9 +6357,10 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (int sym32__ = 1; sym32__ <= 2; ++sym32__) {
       {
@@ -6356,9 +6381,10 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (int sym32__ = 1; sym32__ <= 2; ++sym32__) {
       {
@@ -6379,13 +6405,13 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -6653,8 +6679,9 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6719,12 +6746,13 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail2_model_namespace::write_array";
@@ -6794,9 +6822,10 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -6844,7 +6873,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mu");
@@ -6852,7 +6881,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     names__.push_back("tau");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -6865,9 +6894,10 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     for (int sym15__ = 1; sym15__ <= J; ++sym15__) {
@@ -6885,9 +6915,10 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     for (int sym15__ = 1; sym15__ <= J; ++sym15__) {
@@ -6905,13 +6936,13 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -7611,8 +7642,9 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -7892,12 +7924,13 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail3_model_namespace::write_array";
@@ -8213,9 +8246,10 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -8547,7 +8581,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("a");
@@ -8564,7 +8598,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     names__.push_back("y_hat");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(n_age);
@@ -8601,9 +8635,10 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (int sym85__ = 1; sym85__ <= n_age; ++sym85__) {
       {
@@ -8647,9 +8682,10 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (int sym85__ = 1; sym85__ <= n_age; ++sym85__) {
       {
@@ -8693,13 +8729,13 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -9100,8 +9136,9 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -9188,12 +9225,13 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail4_model_namespace::write_array";
@@ -9426,9 +9464,10 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -9500,7 +9539,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("tau_phi");
@@ -9517,7 +9556,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     names__.push_back("y");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -9553,9 +9592,10 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "tau_phi");
     for (int sym50__ = 1; sym50__ <= (N - 1); ++sym50__) {
@@ -9595,9 +9635,10 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "tau_phi");
     for (int sym50__ = 1; sym50__ <= (N - 1); ++sym50__) {
@@ -9637,13 +9678,13 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -9968,14 +10009,13 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions,
                 const Eigen::Matrix<T2__, -1, -1>& p,
                 const Eigen::Matrix<T3__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -10159,8 +10199,8 @@ prob_uncaptured(const int& nind, const int& n_occasions,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 operator()(const int& nind, const int& n_occasions,
            const Eigen::Matrix<T2__, -1, -1>& p,
            const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
@@ -10617,8 +10657,9 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -11100,12 +11141,13 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail5_model_namespace::write_array";
@@ -11541,9 +11583,10 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -11626,7 +11669,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_phi");
@@ -11640,7 +11683,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     names__.push_back("sigma2");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -11674,9 +11717,10 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -11716,9 +11760,10 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -11758,13 +11803,13 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -12151,13 +12196,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
 prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
                 const Eigen::Matrix<T1__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12352,8 +12396,8 @@ prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& p,
            const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
 {
@@ -12371,11 +12415,11 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             const Eigen::Matrix<T6__, -1, 1>& nu,
             const Eigen::Matrix<T7__, -1, -1>& chi, T_lp__& lp__,
             T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
+  using local_scalar_t__ = stan::promote_args_t<T3__,
           T4__,
           T5__,
           T6__,
-          T7__>::type;
+          T7__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -13429,8 +13473,9 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -14435,12 +14480,13 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail6_model_namespace::write_array";
@@ -15392,9 +15438,10 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -15538,7 +15585,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_phi");
@@ -15559,7 +15606,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     names__.push_back("z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -15615,9 +15662,10 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -15685,9 +15733,10 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -15755,13 +15804,13 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -16305,8 +16354,9 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -16656,12 +16706,13 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail7_model_namespace::write_array";
@@ -17031,9 +17082,10 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -17341,7 +17393,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("pi");
@@ -17349,7 +17401,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     names__.push_back("log_Pr_z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(K);
@@ -17370,9 +17422,10 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (int sym93__ = 1; sym93__ <= K; ++sym93__) {
       {
@@ -17404,9 +17457,10 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (int sym93__ = 1; sym93__ <= (K - 1); ++sym93__) {
       {
@@ -17438,13 +17492,13 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << K << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -17849,8 +17903,9 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -17956,12 +18011,13 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail8_model_namespace::write_array";
@@ -18086,9 +18142,10 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -18221,7 +18278,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("beta0");
@@ -18234,7 +18291,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     names__.push_back("phi");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -18259,9 +18316,10 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta0");
     param_names__.push_back(std::string() + "beta1");
@@ -18289,9 +18347,10 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta0");
     param_names__.push_back(std::string() + "beta1");
@@ -18319,13 +18378,13 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -18646,14 +18705,13 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions,
                 const Eigen::Matrix<T2__, -1, -1>& p,
                 const Eigen::Matrix<T3__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -18837,8 +18895,8 @@ prob_uncaptured(const int& nind, const int& n_occasions,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 operator()(const int& nind, const int& n_occasions,
            const Eigen::Matrix<T2__, -1, -1>& p,
            const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
@@ -19449,8 +19507,9 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -19948,12 +20007,13 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "fails_test_model_namespace::write_array";
@@ -20386,9 +20446,10 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -20467,7 +20528,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_p");
@@ -20477,7 +20538,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     names__.push_back("chi");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -20503,9 +20564,10 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_p");
     for (int sym172__ = 1; sym172__ <= max_age; ++sym172__) {
@@ -20542,9 +20604,10 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_p");
     for (int sym172__ = 1; sym172__ <= max_age; ++sym172__) {
@@ -20581,13 +20644,13 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -20971,13 +21034,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
 prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
                 const Eigen::Matrix<T1__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21172,8 +21234,8 @@ prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
-T1__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& p,
            const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
 {
@@ -21191,10 +21253,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                const Eigen::Matrix<T5__, -1, 1>& gamma,
                const Eigen::Matrix<T6__, -1, -1>& chi, T_lp__& lp__,
                T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T3__,
-          T4__,
-          T5__,
-          T6__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T3__, T4__, T5__, T6__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -21799,9 +21858,9 @@ return jolly_seber_lp(y, first, last, p, phi, gamma, chi, lp__, lp_accum__,
 };
 
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21870,7 +21929,7 @@ seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) {
 
 struct seq_cprob_functor__ {
 template <typename T0__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__)  const 
 {
 return seq_cprob(gamma, pstream__);
@@ -22322,8 +22381,9 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -23261,12 +23321,13 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "inlining_fail2_model_namespace::write_array";
@@ -24126,9 +24187,10 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -24266,7 +24328,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_phi");
@@ -24286,7 +24348,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     names__.push_back("z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -24339,9 +24401,10 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -24405,9 +24468,10 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -24471,13 +24535,13 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << (n_occasions - 1) << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << (n_occasions - 1) << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -24717,8 +24781,9 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -24742,12 +24807,13 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_experiment_model_namespace::write_array";
@@ -24779,9 +24845,10 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -24798,13 +24865,13 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -24812,9 +24879,10 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -24827,9 +24895,10 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     
     if (emit_transformed_parameters__) {
@@ -24842,13 +24911,13 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[]";
     return s__.str();
@@ -25061,8 +25130,9 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -25109,12 +25179,13 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_experiment2_model_namespace::write_array";
@@ -25152,9 +25223,10 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -25177,13 +25249,13 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("x");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -25191,9 +25263,10 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -25206,9 +25279,10 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "x");
     if (emit_transformed_parameters__) {
@@ -25221,13 +25295,13 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
@@ -25459,8 +25533,9 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -25504,12 +25579,13 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_fails_model_namespace::write_array";
@@ -25565,9 +25641,10 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -25601,13 +25678,13 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("theta");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(J);
@@ -25616,9 +25693,10 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (int sym11__ = 1; sym11__ <= J; ++sym11__) {
       {
@@ -25634,9 +25712,10 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (int sym11__ = 1; sym11__ <= J; ++sym11__) {
       {
@@ -25652,13 +25731,13 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
@@ -25977,14 +26056,13 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions,
                 const Eigen::Matrix<T2__, -1, -1>& p,
                 const Eigen::Matrix<T3__, -1, -1>& phi,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26168,8 +26246,8 @@ prob_uncaptured(const int& nind, const int& n_occasions,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T2__,
-T3__>::type, -1, -1>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
 operator()(const int& nind, const int& n_occasions,
            const Eigen::Matrix<T2__, -1, -1>& p,
            const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
@@ -26622,8 +26700,9 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -27065,12 +27144,13 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_fails2_model_namespace::write_array";
@@ -27453,9 +27533,10 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -27488,7 +27569,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("mean_phi");
@@ -27498,7 +27579,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     names__.push_back("chi");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -27523,9 +27604,10 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -27559,9 +27641,10 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mean_phi");
     param_names__.push_back(std::string() + "mean_p");
@@ -27595,13 +27678,13 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -28139,8 +28222,9 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -28285,12 +28369,13 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "off_dce_model_namespace::write_array";
@@ -28557,9 +28642,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -28600,7 +28686,7 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha_occ");
@@ -28614,7 +28700,7 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     names__.push_back("z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -28644,9 +28730,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha_occ");
     param_names__.push_back(std::string() + "beta_occ");
@@ -28680,9 +28767,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha_occ");
     param_names__.push_back(std::string() + "beta_occ");
@@ -28716,13 +28804,13 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
     return s__.str();
@@ -29137,8 +29225,9 @@ class off_small_model : public model_base_crtp<off_small_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -29328,12 +29417,13 @@ class off_small_model : public model_base_crtp<off_small_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "off_small_model_namespace::write_array";
@@ -29544,9 +29634,10 @@ class off_small_model : public model_base_crtp<off_small_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -29685,7 +29776,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("beta");
@@ -29701,7 +29792,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
     names__.push_back("y_hat");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -29734,9 +29825,10 @@ class off_small_model : public model_base_crtp<off_small_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta");
     for (int sym50__ = 1; sym50__ <= J; ++sym50__) {
@@ -29773,9 +29865,10 @@ class off_small_model : public model_base_crtp<off_small_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "beta");
     for (int sym50__ = 1; sym50__ <= J; ++sym50__) {
@@ -29812,13 +29905,13 @@ class off_small_model : public model_base_crtp<off_small_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -30079,7 +30172,7 @@ typename T_lp_accum__>
 void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -30237,8 +30330,9 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -30823,12 +30917,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "optimizations_model_namespace::write_array";
@@ -30996,9 +31091,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -31280,7 +31376,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("theta");
@@ -31290,7 +31386,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     names__.push_back("x_cov");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -31313,9 +31409,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
@@ -31347,9 +31444,10 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "theta");
     param_names__.push_back(std::string() + "phi");
@@ -31378,13 +31476,13 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]";
     return s__.str();
@@ -31796,8 +31894,9 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -31927,12 +32026,13 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "partial_eval_model_namespace::write_array";
@@ -32075,9 +32175,10 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -32198,7 +32299,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("a");
@@ -32209,7 +32310,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     names__.push_back("y_hat");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(n_pair);
@@ -32230,9 +32331,10 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     for (int sym40__ = 1; sym40__ <= n_pair; ++sym40__) {
       {
@@ -32258,9 +32360,10 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     for (int sym40__ = 1; sym40__ <= n_pair; ++sym40__) {
       {
@@ -32286,13 +32389,13 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -32688,8 +32791,9 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -32839,12 +32943,13 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "stalled1_failure_model_namespace::write_array";
@@ -33042,9 +33147,10 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -33383,7 +33489,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha0");
@@ -33395,7 +33501,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     names__.push_back("sigma");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -33418,9 +33524,10 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha0");
     param_names__.push_back(std::string() + "alpha1");
@@ -33444,9 +33551,10 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha0");
     param_names__.push_back(std::string() + "alpha1");
@@ -33470,13 +33578,13 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
