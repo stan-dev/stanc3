@@ -11082,16 +11082,16 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__, stan::promote_args_t<T5__>>, -1, 1>
 dz_dt(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& alpha,
       const T3__& beta, const T4__& gamma, const T5__& delta,
       std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+  using local_scalar_t__ = stan::promote_args_t<T0__,
           T1__,
           T2__,
           T3__,
-          T4__, typename boost::math::tools::promote_args<T5__>::type>::type;
+          T4__, stan::promote_args_t<T5__>>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -11133,8 +11133,8 @@ dz_dt(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& alpha,
 struct dz_dt_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__, stan::promote_args_t<T5__>>, -1, 1>
 operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z,
            const T2__& alpha, const T3__& beta, const T4__& gamma,
            const T5__& delta, std::ostream* pstream__)  const 
@@ -11147,8 +11147,8 @@ return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
 struct dz_dt_odefunctor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__>::type>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__, T3__,
+T4__, stan::promote_args_t<T5__>>, -1, 1>
 operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z,
            std::ostream* pstream__, const T2__& alpha, const T3__& beta,
            const T4__& gamma, const T5__& delta)  const 
@@ -11274,8 +11274,9 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -11451,12 +11452,13 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "ode_bdf_m1_model_namespace::write_array";
@@ -11571,9 +11573,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -11667,7 +11670,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha");
@@ -11679,7 +11682,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     names__.push_back("z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -11704,9 +11707,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "beta");
@@ -11736,9 +11740,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "beta");
@@ -11768,13 +11773,13 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
@@ -11969,15 +11974,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 dz_dt(const T0__& t, const std::vector<T1__>& z,
       const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
       const std::vector<int>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12037,8 +12039,8 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
 
 struct dz_dt_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
 operator()(const T0__& t, const std::vector<T1__>& z,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__)  const 
@@ -12164,8 +12166,9 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     }
   }
   template <bool propto__, bool jacobian__, typename T__>
-  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) const {
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12340,12 +12343,13 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     } // log_prob() 
     
   template <typename RNG>
-  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                   std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool emit_transformed_parameters__ = true,
-                   bool emit_generated_quantities__ = true,
-                   std::ostream* pstream__ = 0) const {
-    typedef double local_scalar_t__;
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "ode_old_model_namespace::write_array";
@@ -12459,9 +12463,10 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     }
     } // write_array() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     vars__.reserve(num_params_r__);
@@ -12542,7 +12547,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     }
     } // transform_inits() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
+  inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.resize(0);
     names__.push_back("alpha");
@@ -12554,7 +12559,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     names__.push_back("z");
     } // get_param_names() 
     
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dimss__.push_back(dims__);
@@ -12579,9 +12584,10 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     
     } // get_dims() 
     
-  void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool emit_transformed_parameters__ = true,
-                               bool emit_generated_quantities__ = true) const {
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "beta");
@@ -12611,9 +12617,10 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     
     } // constrained_param_names() 
     
-  void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool emit_transformed_parameters__ = true,
-                                 bool emit_generated_quantities__ = true) const {
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "alpha");
     param_names__.push_back(std::string() + "beta");
@@ -12643,13 +12650,13 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     
     } // unconstrained_param_names() 
     
-  std::string get_constrained_sizedtypes() const {
+  inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
-  std::string get_unconstrained_sizedtypes() const {
+  inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();

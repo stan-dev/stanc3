@@ -140,7 +140,7 @@ let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
-let variadic_ode_functions = ["ode_bdf_tol"; "ode_rk45_tol";"ode_bdf"; "ode_rk45"]
+let variadic_ode_functions = ["ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"; "ode_adams"]
 let ode_tolerances_suffix = "_tol"
 
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
