@@ -170,16 +170,6 @@ let prog_rhs_variables
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
-  match pattern with
-  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
-  | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
-  | IfElse (_, s1, Some s2) ->
-      Set.Poly.union (var_declarations s1) (var_declarations s2)
-  | Block slist | SList slist ->
-      Set.Poly.union_list (List.map ~f:var_declarations slist)
-  | _ -> Set.Poly.empty
-
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
