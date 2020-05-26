@@ -9304,14 +9304,9 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
-<<<<<<< HEAD
     current_statement__ = 114;
-    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
-=======
-    current_statement__ = 113;
     assign(dydt, cons_list(index_uni(1), nil_index_list()),
       rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
->>>>>>> origin/master
       "assigning variable dydt");
     current_statement__ = 115;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
@@ -9415,17 +9410,17 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 goo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
     const Eigen::Matrix<T1__, -1, 1>& job_params,
     const std::vector<T2__>& data_r, const std::vector<int>& data_i,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
   const static bool propto__ = true;
   (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
     current_statement__ = 122;
@@ -9441,8 +9436,8 @@ goo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
 
 struct goo_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
-T2__>::type, -1, 1>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const Eigen::Matrix<T1__, -1, 1>& job_params,
            const std::vector<T2__>& data_r, const std::vector<int>& data_i,
@@ -9501,32 +9496,17 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-<<<<<<< HEAD
-    current_statement__ = 126;
-    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      current_statement__ = 126;
-      assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
-        std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
     current_statement__ = 127;
-    assign(f_x, cons_list(index_uni(1), nil_index_list()),
-      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
-    current_statement__ = 128;
-    assign(f_x, cons_list(index_uni(2), nil_index_list()),
-      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
-    current_statement__ = 129;
-=======
-    current_statement__ = 124;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 125;
+    current_statement__ = 128;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
       (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 126;
->>>>>>> origin/master
+    current_statement__ = 129;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9677,15 +9657,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable shared_params_d_flat__");
         current_statement__ = 109;
         pos__ = 1;
-<<<<<<< HEAD
         current_statement__ = 109;
-        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 109;
-=======
-        current_statement__ = 108;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 108;
->>>>>>> origin/master
+          current_statement__ = 109;
           assign(shared_params_d,
             cons_list(index_uni(sym1__), nil_index_list()),
             shared_params_d_flat__[(pos__ - 1)],
@@ -9710,19 +9684,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable job_params_d_flat__");
         current_statement__ = 110;
         pos__ = 1;
-<<<<<<< HEAD
         current_statement__ = 110;
-        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 110;
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 110;
-=======
-        current_statement__ = 109;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 109;
+          current_statement__ = 110;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 109;
->>>>>>> origin/master
+            current_statement__ = 110;
             assign(job_params_d,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
@@ -9746,19 +9712,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable data_r_flat__");
         current_statement__ = 111;
         pos__ = 1;
-<<<<<<< HEAD
         current_statement__ = 111;
-        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 111;
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 111;
-=======
-        current_statement__ = 110;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 110;
+          current_statement__ = 111;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 110;
->>>>>>> origin/master
+            current_statement__ = 111;
             assign(data_r,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
@@ -9781,19 +9739,11 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           "assigning variable data_i_flat__");
         current_statement__ = 112;
         pos__ = 1;
-<<<<<<< HEAD
         current_statement__ = 112;
-        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 112;
-          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 112;
-=======
-        current_statement__ = 111;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 111;
+          current_statement__ = 112;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 111;
->>>>>>> origin/master
+            current_statement__ = 112;
             assign(data_i,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
@@ -10099,13 +10049,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         local_scalar_t__ y_1d;
         y_1d = DUMMY_VAR__;
         
-<<<<<<< HEAD
         current_statement__ = 77;
-        y_1d = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 77;
-=======
-        current_statement__ = 76;
->>>>>>> origin/master
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 78;
@@ -10141,13 +10085,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         local_scalar_t__ z_1d;
         z_1d = DUMMY_VAR__;
         
-<<<<<<< HEAD
         current_statement__ = 88;
-        z_1d = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 88;
-=======
-        current_statement__ = 87;
->>>>>>> origin/master
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 89;
@@ -10183,13 +10121,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         local_scalar_t__ abc_m;
         abc_m = DUMMY_VAR__;
         
-<<<<<<< HEAD
         current_statement__ = 99;
-        abc_m = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 99;
-=======
-        current_statement__ = 98;
->>>>>>> origin/master
         abc_m = map_rectfake(abc1_p, pstream__);
       }
     } catch (const std::exception& e) {
@@ -10558,7 +10490,6 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 56;
       assign(y_hat_gq, nil_index_list(),
-<<<<<<< HEAD
         add(
           map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
             data_i, pstream__),
@@ -10568,25 +10499,14 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("yy_hat_gq", "3", 3);
       Eigen::Matrix<double, -1, 1> yy_hat_gq;
       yy_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(yy_hat_gq, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 57;
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 57;
-        assign(yy_hat_gq, cons_list(index_uni(sym1__), nil_index_list()),
-          std::numeric_limits<double>::quiet_NaN(),
-          "assigning variable yy_hat_gq");}
       current_statement__ = 57;
       assign(yy_hat_gq, nil_index_list(),
         map_rect<9, goo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable yy_hat_gq");
-      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= T; ++sym2__) {
-=======
-        map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
-          data_i, pstream__), "assigning variable y_hat_gq");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
->>>>>>> origin/master
           vars__.push_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
       vars__.push_back(y_1d);
       vars__.push_back(z_1d);
@@ -10594,7 +10514,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       vars__.push_back(abc2_gq);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(y_hat_gq[(sym1__ - 1)]);}
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(yy_hat_gq[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10926,7 +10846,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
         }}
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
           param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
         }}
@@ -11017,7 +10937,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
         }}
-      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         {
           param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
         }}
