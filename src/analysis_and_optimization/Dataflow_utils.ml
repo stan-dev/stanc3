@@ -43,7 +43,7 @@ let branching_traverse_statement stmt ~join ~init ~f =
     | IfElse (pred, then_s, else_s_opt) ->
         let s', c = f init then_s in
         Option.value_map else_s_opt
-          ~default:(s', IfElse (pred, c, None))
+          ~default:(join s' init, IfElse (pred, c, None))
           ~f:(fun else_s ->
             let s'', c' = f init else_s in
             (join s' s'', IfElse (pred, c, Some c')) )
@@ -128,7 +128,10 @@ let is_ctrl_flow pattern =
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
 *)
-let build_cf_graphs ?flatten_loops:(flatten_loops=false) statement_map =
+let build_cf_graphs
+    ?flatten_loops:(flatten_loops=false)
+    ?blocks_after_body:(blocks_after_body=true)
+    statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
       (label : label) : cf_state * (label, cf_edges) Map.Poly.t =
@@ -138,16 +141,24 @@ let build_cf_graphs ?flatten_loops:(flatten_loops=false) statement_map =
     let join (state1, map1) (state2, map2) =
       (join_cf_states state1 state2, union_maps_left map1 map2)
     in
+    (* This node is the parent of substatements, unless this is a Block, which
+       is visited after substatements *)
+    let substmt_preds =
+      match stmt with
+      | Block _ when blocks_after_body -> in_state.exits
+      | _ -> Set.Poly.singleton label
+    in
     (* The accumulated state after traversing substatements *)
     let substmt_state_unlooped, substmt_map =
       branching_fold_statement stmt ~join
-        ~init:({in_state with exits= Set.Poly.singleton label}, in_map)
+        ~init:({in_state with exits= substmt_preds}, in_map)
         ~f:(build_cf_graph_rec child_cf)
     in
     (* If the statement is a loop, we need to include the loop body exits as predecessors
          of the loop *)
     let substmt_state, predecessors =
-      let looped_state =
+      match stmt with
+      | For _ | While _ ->
         (* Loop statements are preceded by:
            1. The statements that come before the loop
            2. The natural exit points of the loop body
@@ -177,9 +188,13 @@ let build_cf_graphs ?flatten_loops:(flatten_loops=false) statement_map =
               ]
         in
         ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
-      in
-      match stmt with
-      | For _ | While _ -> looped_state
+      | Block _ when blocks_after_body ->
+        (* Block statements are preceded by the natural exit points of the block
+           body *)
+        let block_predecessors = substmt_state_unlooped.exits in
+        (* Block exits are just the block node *)
+        let block_exits = Set.Poly.singleton label in
+        ({substmt_state_unlooped with exits= block_exits}, block_predecessors)
       | _ -> (substmt_state_unlooped, in_state.exits)
     in
     (* Some statements interact with the break/return/continue states
@@ -245,6 +260,11 @@ let build_cf_graph statement_map =
   cf_graph
 
 (** See interface file *)
-let build_predecessor_graph ?flatten_loops:(flatten_loops=false) statement_map =
-  let exits, pred_graph, _ = build_cf_graphs ~flatten_loops statement_map in
+let build_predecessor_graph
+    ?flatten_loops:(flatten_loops=false)
+    ?blocks_after_body:(blocks_after_body=true)
+    statement_map =
+  let exits, pred_graph, _ =
+    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map
+  in
   (exits, pred_graph)

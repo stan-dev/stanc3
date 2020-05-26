@@ -27,7 +27,7 @@ let%expect_test "udf" =
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,
          const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-      using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
+      using local_scalar_t__ = stan::promote_args_t<T1__>;
       const static bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

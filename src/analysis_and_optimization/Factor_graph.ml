@@ -195,6 +195,8 @@ let string_of_factor (factor : factor) : string =
 
 let string_of_vexpr (vexpr : vexpr) : string = match vexpr with VVar s -> s
 
+(* Utility to print a factor graph to the Graphviz dot language for
+   visualization *)
 let factor_graph_to_dot (fg : factor_graph) : string =
   let factors = Map.Poly.to_alist ~key_order:`Decreasing fg.factor_map in
   let names =

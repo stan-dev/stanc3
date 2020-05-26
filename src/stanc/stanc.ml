@@ -30,7 +30,6 @@ let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
-let emit_factor_graph = ref None
 
 (** Some example command-line options here *)
 let options =
@@ -104,8 +103,8 @@ let options =
          \"$model_filename_model\")" )
     ; ( "--O"
       , Arg.Set optimize
-      , " Allow the compiler to apply all optimizations to the Stan \
-         code.WARNING: This is currently an experimental feature!" )
+      , "Allow the compiler to apply all optimizations to the Stan \
+         code." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -116,13 +115,6 @@ let options =
     ; ( "--allow_undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
-    ; ( "--emit-factor-graph"
-      , Arg.String
-          (fun str ->
-             emit_factor_graph := Some str
-          )
-      , " Specify an output file for a factor graph representation of the Stan model \
-        in DOT format." )
     ; ( "--include_paths"
       , Arg.String
           (fun str ->
@@ -133,22 +125,6 @@ let options =
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." ) ]
-
-(* Whether or not to run each optimization. Currently it's all or nothing
-   depending on the --O flag.*)
-let optimization_settings () : Optimize.optimization_settings =
-  { function_inlining= !optimize
-  ; static_loop_unrolling= !optimize
-  ; one_step_loop_unrolling= !optimize
-  ; list_collapsing= !optimize
-  ; block_fixing= !optimize
-  ; constant_propagation= !optimize
-  ; expression_propagation= !optimize
-  ; copy_propagation= !optimize
-  ; dead_code_elimination= !optimize
-  ; partial_evaluation= !optimize
-  ; lazy_code_motion= !optimize
-  ; optimize_ad_levels= true }
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
@@ -187,11 +163,6 @@ let use_file filename =
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     ( if !warn_pedantic then
         Pedantic_analysis.print_warn_pedantic mir ) ;
-    ( Option.iter !emit_factor_graph
-        ~f:(fun filepath ->
-           let dot =
-             Factor_graph.factor_graph_to_dot (Factor_graph.prog_factor_graph ~exclude_data_facs:true mir)
-           in Out_channel.write_all filepath ~data:dot)) ;
     ( if !warn_uninitialized then
       Pedantic_analysis.print_warn_uninitialized mir ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
@@ -202,9 +173,7 @@ let use_file filename =
     let opt_mir =
       if !optimize then (
         let opt =
-          Optimize.optimization_suite
-            ~optimization_settings:(optimization_settings ())
-            tx_mir
+          Optimize.optimization_suite tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter

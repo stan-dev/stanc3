@@ -6,8 +6,9 @@ val union_maps_left :
   ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
 (** Union maps, preserving the left element in a collision *)
 
-val build_cf_graphs :
-  ?flatten_loops:bool
+val build_cf_graphs
+  : ?flatten_loops:bool
+  -> ?blocks_after_body:bool
   -> (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
@@ -34,8 +35,9 @@ val build_cf_graph :
    and return statements shouldn't affect other branches of execution.
 *)
 
-val build_predecessor_graph :
-  ?flatten_loops:bool
+val build_predecessor_graph
+  : ?flatten_loops:bool
+  -> ?blocks_after_body:bool
   -> (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**

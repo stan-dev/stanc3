@@ -294,38 +294,6 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
        (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
     ~f:take_dist
 
-(* (\* Scrape all distributions from the program by searching for their function
- *    names and function type, and wrangle some useful data about them, like the
- *    nature of their first argument
- * *\)
- * let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
- *   let collect_distribution_expr s (expr : Expr.Typed.Meta.t Expr.Fixed.t) =
- *     match expr.pattern with
- *     | Expr.Fixed.Pattern.FunApp
- *         (StanLib, fname, arg_exprs) ->
- *       (match chop_dist_name fname with
- *        | Some dname ->
- *          let params = parameter_set mir in
- *          let data = data_set mir in
- *          let args =
- *            List.map ~f:(compiletime_value_of_expr params data) arg_exprs
- *          in
- *          Set.Poly.add s
- *            { name = dname
- *            ; loc = expr.meta.loc
- *            ; args = args
- *            }
- *        | _ -> s)
- *     | _ -> s
- *   in
- *   fold_stmts
- *     ~init:Set.Poly.empty
- *     ~take_stmt:(fun s _ -> s)
- *     ~take_expr:(fun s e -> collect_distribution_expr s e)
- *     (List.append
- *        mir.log_prob
- *        (List.map ~f:(fun f -> f.fdbody) mir.functions_block)) *)
-
 (* Our definition of 'unscaled' for constants used in distributions *)
 let is_unscaled_value (v : float) =
   let mag = Float.abs v in
@@ -506,7 +474,7 @@ let print_warn_uninitialized mir =
 
 (* Optimization settings for constant propagation and partial evaluation *)
 let settings_constant_prop =
-  { optimization_settings_none with
+  { no_optimizations with
     constant_propagation = true
   ; copy_propagation = true
   ; partial_evaluation = true
@@ -517,7 +485,7 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
     Optimize.optimization_suite
-      ~optimization_settings:settings_constant_prop
+      ~settings:settings_constant_prop
       mir_unopt
   in
   (* Try to avoid recomputation by pre-building structures *)
@@ -537,5 +505,3 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
     ]
   in
   print_warning_set warning_set;
-  (* Out_channel.flush Out_channel.stderr; *)
-  (* Fmt.pf Fmt.stderr "asdlkfja;slkdfj;asldkjf\n"; *)
