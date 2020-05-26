@@ -1504,14 +1504,13 @@ let () =
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt]) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt]) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt]) ;
-  for i = 0 to 8 - 1 do
+  for i = 0 to 7 do
     add_unqualified ("reverse", (ReturnType (bare_array_type (UVector, i))), [bare_array_type (UVector, i)]) ;
     add_unqualified ("reverse", (ReturnType (bare_array_type (URowVector, i))), [bare_array_type (URowVector, i)]) ;
   done ;
-  for i = 1 to 8 - 1 do
+  for i = 1 to 7 do
     add_unqualified ("reverse", (ReturnType (bare_array_type (UInt, i))), [bare_array_type (UInt, i)]) ;
     add_unqualified ("reverse", (ReturnType (bare_array_type (UReal, i))), [bare_array_type (UReal, i)]) ;
-    add_unqualified ("reverse", (ReturnType (bare_array_type (UMatrix, i))), [bare_array_type (UMatrix, i)])
   done ;    
   add_unqualified ("rising_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("rising_factorial", ReturnType UInt, [UInt; UInt]) ;
