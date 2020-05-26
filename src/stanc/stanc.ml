@@ -75,7 +75,7 @@ let options =
          transformed it." )
     ; ( "--dump-stan-math-signatures"
       , Arg.Set dump_stan_math_sigs
-      , "Dump out the list of supported type signatures for Stan Math backend."
+      , "\tDump out the list of supported type signatures for Stan Math backend."
       )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
@@ -99,21 +99,21 @@ let options =
          \"$model_filename_model\")" )
     ; ( "-O0"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O0)
-      , "Do not apply optimizations to the Stan code." )
+      , "\tDo not apply optimizations to the Stan code." )
     ; ( "-O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
-      , "Apply level 1 compiler optimizations (only basic optimizations)." )
+      , "\tApply level 1 compiler optimizations (only basic optimizations)." )
     ; ( "-O2"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O2)
-      , "Apply level 2 compiler optimizations (all optimizations which \
-         are not likely to have small numerical differences from the original\
+      , "\tApply level 2 compiler optimizations (all optimizations which \
+         are not likely to have small numerical differences from the original \
          program)." )
     ; ( "-O3"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
-      , "Apply level 3 compiler optimizations (all optimizations)." )
+      , "\tApply level 3 compiler optimizations (all optimizations)." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
-      , "Apply level 3 compiler optimizations (all optimizations)." )
+      , "\tApply level 3 compiler optimizations (all optimizations)." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
