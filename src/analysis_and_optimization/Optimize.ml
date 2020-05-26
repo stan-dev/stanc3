@@ -1032,7 +1032,8 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  }
 
 let const_optimizations b : optimization_settings =
   { function_inlining= b
@@ -1046,13 +1047,62 @@ let const_optimizations b : optimization_settings =
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b }
+  ; optimize_ad_levels= b
+  }
 
 let all_optimizations : optimization_settings =
   const_optimizations true
 
 let no_optimizations : optimization_settings =
   const_optimizations false
+
+type optimization_level = O0 | O1 | O2 | O3
+
+let level_optimizations (lvl : optimization_level) : optimization_settings =
+  match lvl with
+  | O0 -> no_optimizations
+  | O1 ->
+    { function_inlining= false
+    ; static_loop_unrolling= false
+    ; one_step_loop_unrolling= false
+    ; list_collapsing= false
+    ; block_fixing= false
+    ; constant_propagation= false
+    ; expression_propagation= false
+    ; copy_propagation= false
+    ; dead_code_elimination= true
+    ; partial_evaluation= false
+    ; lazy_code_motion= false
+    ; optimize_ad_levels= true
+    }
+  | O2 ->
+    { function_inlining= true
+    ; static_loop_unrolling= true
+    ; one_step_loop_unrolling= true
+    ; list_collapsing= true
+    ; block_fixing= true
+    ; constant_propagation= true
+    ; expression_propagation= true
+    ; copy_propagation= true
+    ; dead_code_elimination= true
+    ; partial_evaluation= true
+    ; lazy_code_motion= true
+    ; optimize_ad_levels= true
+    }
+  | O3 ->
+    { function_inlining= true
+    ; static_loop_unrolling= true
+    ; one_step_loop_unrolling= true
+    ; list_collapsing= true
+    ; block_fixing= true
+    ; constant_propagation= true
+    ; expression_propagation= true
+    ; copy_propagation= true
+    ; dead_code_elimination= true
+    ; partial_evaluation= true
+    ; lazy_code_motion= true
+    ; optimize_ad_levels= true
+    }
 
 let optimization_suite ?settings:(settings=all_optimizations) mir =
   let maybe_optimizations =

@@ -25,7 +25,7 @@ let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
 let dump_stan_math_sigs = ref false
-let optimize = ref false
+let opt_lvl = ref Optimize.O0
 let output_file = ref ""
 let generate_data = ref false
 let warn_uninitialized = ref false
@@ -97,10 +97,21 @@ let options =
       , Arg.Set_string Semantic_check.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
+    ; ( "-O0"
+      , Arg.Unit (fun () -> opt_lvl := Optimize.O0)
+      , "Do not apply optimizations to the Stan code." )
+    ; ( "-O1"
+      , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
+      , "Apply level 1 compiler optimizations (only basic optimizations)." )
+    ; ( "-O2"
+      , Arg.Unit (fun () -> opt_lvl := Optimize.O2)
+      , "Apply level 2 compiler optimizations (all numerically stable optimizations)." )
+    ; ( "-O3"
+      , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
+      , "Apply level 3 compiler optimizations (all optimizations)." )
     ; ( "--O"
-      , Arg.Set optimize
-      , "Allow the compiler to apply all optimizations to the Stan \
-         code." )
+      , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
+      , "Apply level 3 compiler optimizations (all optimizations)." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -196,9 +207,9 @@ let use_file filename =
         [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
-      if !optimize then (
+      if !opt_lvl <> Optimize.O0 then (
         let opt =
-          Optimize.optimization_suite tx_mir
+          Optimize.optimization_suite ~settings:(Optimize.level_optimizations !opt_lvl) tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter

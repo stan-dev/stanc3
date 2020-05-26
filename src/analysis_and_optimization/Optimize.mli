@@ -74,6 +74,10 @@ val all_optimizations : optimization_settings
 
 val no_optimizations : optimization_settings
 
+type optimization_level = O0 | O1 | O2 | O3
+
+val level_optimizations : optimization_level -> optimization_settings
+
 val optimization_suite :
   ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
 (** Perform all optimizations in this module on the MIR in an appropriate order. *)
