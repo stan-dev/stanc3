@@ -1034,7 +1034,7 @@ type optimization_settings =
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool }
 
-let const_optimizations b : optimization_settings =
+let settings_const b =
   { function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
@@ -1049,10 +1049,10 @@ let const_optimizations b : optimization_settings =
   ; optimize_ad_levels= b }
 
 let all_optimizations : optimization_settings =
-  const_optimizations true
+  settings_const true
 
 let no_optimizations : optimization_settings =
-  const_optimizations false
+  settings_const false
 
 let optimization_suite ?settings:(settings=all_optimizations) mir =
   let maybe_optimizations =
