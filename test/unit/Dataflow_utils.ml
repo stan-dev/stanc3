@@ -86,8 +86,8 @@ let%expect_test "Loop test" =
            ((filename string) (line_num 4) (col_num 10) (included_from ())))
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ())))))))
-      (3)
-      ((1 ()) (2 (1)) (3 (2 5)) (4 (3)) (5 (4)))
+      (1)
+      ((1 (2)) (2 (3)) (3 (4)) (4 (5)) (5 (3)))
     |}]
 
 let%expect_test "Loop passthrough" =
@@ -131,7 +131,7 @@ let%expect_test "Loop passthrough" =
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
-      (7 11 17 21)
+      (1)
     |}]
 
 let example1_program =
@@ -290,10 +290,11 @@ let%expect_test "Predecessor graph example" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((7 9 13)
-       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5))
-        (9 (8 16 19 22)) (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))
-        (16 (15)) (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
+      ((1)
+       ((1 (2)) (2 (6 8)) (3 ()) (4 (3)) (5 (4)) (6 (7)) (7 (5)) (8 (9 13))
+        (9 (5 10 16 19)) (10 (22)) (11 (9)) (12 (13)) (13 (11)) (14 (11 12))
+        (15 (16)) (16 (14)) (17 (14 15)) (18 (19)) (19 (17)) (20 (21)) (21 (17))
+        (22 (18 20))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -405,7 +406,7 @@ let%expect_test "Predecessor graph example 3" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
+      ((2) ((1 ()) (2 (3)) (3 (6)) (4 (1 5)) (5 (4)) (6 (4))))
     |}]
 
 let example4_program =
@@ -507,7 +508,7 @@ let%expect_test "Predecessor graph example 4" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((4) ((1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6))))
+      ((2) ((1 ()) (2 (3)) (3 (4)) (4 (1 5 6)) (5 (7)) (6 (4)) (7 (6))))
     |}]
 
 let example5_program =
@@ -614,5 +615,5 @@ let%expect_test "Predecessor graph example 5" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((8) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6)) (8 (4 6))))
+      ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]

@@ -56,6 +56,11 @@ let minus_one e =
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
+let dont_need_range_check = function
+  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
+      not (Utils.is_user_ident id)
+  | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -424,7 +429,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
-      when List.for_all ~f:is_single_index idx
+      when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
