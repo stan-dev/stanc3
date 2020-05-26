@@ -105,7 +105,9 @@ let options =
       , "Apply level 1 compiler optimizations (only basic optimizations)." )
     ; ( "-O2"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O2)
-      , "Apply level 2 compiler optimizations (all numerically stable optimizations)." )
+      , "Apply level 2 compiler optimizations (all optimizations which \
+         are not likely to have small numerical differences from the original\
+         program)." )
     ; ( "-O3"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
       , "Apply level 3 compiler optimizations (all optimizations)." )
