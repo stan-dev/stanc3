@@ -4,8 +4,6 @@ open Common
 open Middle
 open Mir_utils
 
-let preserve_stability = false
-
 (**
    Apply the transformation to each function body and to the rest of the program as one
    block.
@@ -613,8 +611,8 @@ let propagation
   in
   transform_program mir transform
 
-let constant_propagation =
-  propagation Monotone_framework.constant_propagation_transfer
+let constant_propagation ?(preserve_stability=false) =
+  propagation (Monotone_framework.constant_propagation_transfer ~preserve_stability)
 
 let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
@@ -641,7 +639,7 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
       || (t = CompilerInternal && f = Internal_fun.to_string FnUnconstrain)
   | _ -> false
 
-let cannot_duplicate_expr (e : Expr.Typed.t) =
+let cannot_duplicate_expr ?(preserve_stability=false) (e : Expr.Typed.t) =
   let pred e = can_side_effect_top_expr e || (
       match e.pattern with
       | FunApp (_, f, _) ->
@@ -653,9 +651,10 @@ let cannot_duplicate_expr (e : Expr.Typed.t) =
 let cannot_remove_expr (e : Expr.Typed.t) =
   expr_any can_side_effect_top_expr e
 
-let expression_propagation mir =
+let expression_propagation ?(preserve_stability=false) mir =
   propagation
-    (Monotone_framework.expression_propagation_transfer cannot_duplicate_expr)
+    (Monotone_framework.expression_propagation_transfer ~preserve_stability
+       (cannot_duplicate_expr ~preserve_stability))
     mir
 
 let copy_propagation mir =
@@ -755,7 +754,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
 
 let partial_evaluation = Partial_evaluator.eval_prog
 
-let lazy_code_motion (mir : Program.Typed.t) =
+let lazy_code_motion ?(preserve_stability=false) (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
      simultaneously *)
@@ -811,7 +810,7 @@ let lazy_code_motion (mir : Program.Typed.t) =
         match e.pattern with
         | Lit (_, _) -> accum
         | Var _ -> accum
-        | _ when cannot_duplicate_expr e ->
+        | _ when cannot_duplicate_expr ~preserve_stability e ->
           (* Immovable expressions might have movable subexpressions *)
           Expr.Fixed.Pattern.fold collect_expressions accum e.pattern
         | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
@@ -1033,6 +1032,7 @@ type optimization_settings =
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool
+  ; preserve_stability: bool
   }
 
 let const_optimizations b : optimization_settings =
@@ -1048,6 +1048,7 @@ let const_optimizations b : optimization_settings =
   ; partial_evaluation= b
   ; lazy_code_motion= b
   ; optimize_ad_levels= b
+  ; preserve_stability= not b
   }
 
 let all_optimizations : optimization_settings =
@@ -1074,6 +1075,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
     ; partial_evaluation= false
     ; lazy_code_motion= false
     ; optimize_ad_levels= true
+    ; preserve_stability= true
     }
   | O2 ->
     { function_inlining= true
@@ -1088,23 +1090,13 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
     ; partial_evaluation= true
     ; lazy_code_motion= true
     ; optimize_ad_levels= true
+    ; preserve_stability= true
     }
   | O3 ->
-    { function_inlining= true
-    ; static_loop_unrolling= true
-    ; one_step_loop_unrolling= true
-    ; list_collapsing= true
-    ; block_fixing= true
-    ; constant_propagation= true
-    ; expression_propagation= true
-    ; copy_propagation= true
-    ; dead_code_elimination= true
-    ; partial_evaluation= true
-    ; lazy_code_motion= true
-    ; optimize_ad_levels= true
-    }
+    all_optimizations
 
 let optimization_suite ?settings:(settings=all_optimizations) mir =
+  let preserve_stability = settings.preserve_stability in
   let maybe_optimizations =
     [ (* Phase order. See phase-ordering-nodes.org for details *)
       (* Book section A *)
@@ -1112,26 +1104,26 @@ let optimization_suite ?settings:(settings=all_optimizations) mir =
       (* Book: Procedure integration *)
       (function_inlining, settings.function_inlining)
       (* Book: Sparse conditional constant propagation *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book section C *)
       (* Book: Local and global copy propagation *)
     ; (copy_propagation, settings.copy_propagation)
       (* Book: Sparse conditional constant propagation *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
       (* Matthjis: expression_propagation < partial_evaluation *)
-    ; (expression_propagation, settings.expression_propagation)
+    ; (expression_propagation ~preserve_stability, settings.expression_propagation)
       (* Matthjis: partial_evaluation < lazy_code_motion *)
-    ; (partial_evaluation, settings.partial_evaluation)
+    ; (partial_evaluation ~preserve_stability, settings.partial_evaluation)
       (* Book: Loop-invariant code motion *)
-    ; (lazy_code_motion, settings.lazy_code_motion)
+    ; (lazy_code_motion ~preserve_stability, settings.lazy_code_motion)
       (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary *)
     ; (copy_propagation, settings.copy_propagation)
       (* Matthijs: Constant propagation before static loop unrolling *)
-    ; (constant_propagation, settings.constant_propagation)
+    ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
       (* Book: Dead-code elimination *)

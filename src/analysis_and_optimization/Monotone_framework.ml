@@ -5,8 +5,6 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
-let preserve_stability = false
-
 (** Debugging tool to print out MFP sets **) 
 let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
   let print_set s =
@@ -286,7 +284,8 @@ let autodiff_level_lattice autodiff_variables =
 
 (* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
+  ?(preserve_stability=false)
+  (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
@@ -301,7 +300,7 @@ let constant_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Assignment ((s, t, []), e) -> (
-              match Partial_evaluator.eval_expr (subst_expr m e) with
+              match Partial_evaluator.eval_expr ~preserve_stability (subst_expr m e) with
                 | {pattern= Lit (_, _); _} as e'
                   when not (preserve_stability &&
                             UnsizedType.is_autodiffable t) ->
@@ -332,6 +331,7 @@ let label_top_decls
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
+    ?(preserve_stability=false)
     (can_side_effect_expr : Middle.Expr.Typed.t -> bool)
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
     =

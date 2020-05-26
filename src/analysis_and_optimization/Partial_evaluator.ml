@@ -4,8 +4,6 @@ open Core_kernel
 open Mir_utils
 open Middle
 
-let preserve_stability = false
-
 let is_int i Expr.Fixed.({pattern; _}) =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
   match pattern with
@@ -78,13 +76,13 @@ let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
   | Single _ -> false
 
-let rec eval_expr (e : Expr.Typed.t) =
+let rec eval_expr ?(preserve_stability=false) (e : Expr.Typed.t) =
   { e with
     pattern=
       ( match e.pattern with
       | Var _ | Lit (_, _) -> e.pattern
       | FunApp (t, f, l) ->
-          let l = List.map ~f:eval_expr l in
+          let l = List.map ~f:(eval_expr ~preserve_stability) l in
           let get_fun_or_op_rt_opt name l' =
             let argument_types =
               List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
@@ -660,12 +658,12 @@ let rec eval_expr (e : Expr.Typed.t) =
               | _ -> FunApp (t, op, l) )
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
-        match (eval_expr e1, eval_expr e2, eval_expr e3) with
+        match (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2, eval_expr ~preserve_stability e3) with
         | x, _, e3' when is_int 0 x -> e3'.pattern
         | {pattern= Lit (Int, _); _}, e2', _ -> e2'.pattern
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | EAnd (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2) with
         | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
@@ -674,7 +672,7 @@ let rec eval_expr (e : Expr.Typed.t) =
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
         | e1', e2' -> EAnd (e1', e2') )
       | EOr (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2) with
         | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
@@ -685,7 +683,7 @@ let rec eval_expr (e : Expr.Typed.t) =
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
        Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l) ) }
+          Indexed (eval_expr ~preserve_stability e, List.map ~f:(Index.map (eval_expr ~preserve_stability)) l) ) }
 
 let rec simplify_index_expr pattern =
   Expr.Fixed.(
@@ -769,8 +767,9 @@ let rec simplify_indices_expr expr =
     in
     {expr with pattern})
 
-let eval_stmt_base =
-  Stmt.Fixed.Pattern.map (Fn.compose eval_expr simplify_indices_expr) Fn.id
+let eval_stmt_base ?(preserve_stability=false) =
+  Stmt.Fixed.Pattern.map (Fn.compose (eval_expr ~preserve_stability) simplify_indices_expr) Fn.id
 
-let eval_stmt = map_rec_stmt_loc eval_stmt_base
-let eval_prog = Program.map eval_expr eval_stmt
+let eval_stmt ?(preserve_stability=false) = map_rec_stmt_loc (eval_stmt_base ~preserve_stability)
+let eval_prog ?(preserve_stability=false) =
+  Program.map (eval_expr ~preserve_stability) (eval_stmt ~preserve_stability)
