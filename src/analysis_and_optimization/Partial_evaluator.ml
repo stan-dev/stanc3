@@ -4,6 +4,8 @@ open Core_kernel
 open Mir_utils
 open Middle
 
+let preserve_stability = false
+
 let is_int i Expr.Fixed.({pattern; _}) =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
   match pattern with
@@ -216,7 +218,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Minus__"
                         , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
                   } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
               , [ { pattern=
@@ -225,10 +227,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Minus__"
                         , [y; {pattern= FunApp (StanLib, "inv_logit", [x]); _}]
                         ); _ } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
             | "log", [{pattern= FunApp (StanLib, "Minus__", [y; x]); _}]
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m", [x])
             | ( "log"
               , [ { pattern=
@@ -237,10 +239,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
                   } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1p_exp", [x])
             | "log", [{pattern= FunApp (StanLib, "Plus__", [y; x]); _}]
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1p", [x])
             | ( "log"
               , [ { pattern=
@@ -552,11 +554,11 @@ let rec eval_expr (e : Expr.Typed.t) =
               when is_int 1 x ->
                 FunApp (StanLib, "erf", l)
             | "Minus__", [{pattern= FunApp (StanLib, "exp", l'); _}; x]
-              when is_int 1 x ->
+              when is_int 1 x && not preserve_stability ->
                 FunApp (StanLib, "expm1", l')
             | "Plus__", [{pattern= FunApp (StanLib, "Times__", [x; y]); _}; z]
              |"Plus__", [z; {pattern= FunApp (StanLib, "Times__", [x; y]); _}]
-              ->
+               when not preserve_stability ->
                 FunApp (StanLib, "fma", [x; y; z])
             | "Minus__", [x; {pattern= FunApp (StanLib, "gamma_p", l); _}]
               when is_int 1 x ->
@@ -590,7 +592,8 @@ let rec eval_expr (e : Expr.Typed.t) =
               ->
                 FunApp (StanLib, "matrix_exp_multiply", [a; b])
             | "Times__", [x; {pattern= FunApp (StanLib, "log", [y]); _}]
-             |"Times__", [{pattern= FunApp (StanLib, "log", [y]); _}; x] ->
+             |"Times__", [{pattern= FunApp (StanLib, "log", [y]); _}; x]
+               when not preserve_stability ->
                 FunApp (StanLib, "lmultiply", [x; y])
             | ( "Times__"
               , [ {pattern= FunApp (StanLib, "diag_matrix", [v]); _}
