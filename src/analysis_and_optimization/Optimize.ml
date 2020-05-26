@@ -1035,7 +1035,7 @@ type optimization_settings =
   ; preserve_stability: bool
   }
 
-let const_optimizations b : optimization_settings =
+let settings_const b =
   { function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
@@ -1052,10 +1052,10 @@ let const_optimizations b : optimization_settings =
   }
 
 let all_optimizations : optimization_settings =
-  const_optimizations true
+  settings_const true
 
 let no_optimizations : optimization_settings =
-  const_optimizations false
+  settings_const false
 
 type optimization_level = O0 | O1 | O2 | O3
 

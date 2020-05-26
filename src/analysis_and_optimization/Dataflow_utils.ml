@@ -15,6 +15,25 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
   Map.Poly.merge m1 m2 ~f
 
 (**
+   Merge two maps whose values are sets, and union the sets when there's a collision.
+*)
+let merge_set_maps m1 m2 =
+  let merge_map_elems ~key:_ es = match es with
+    | `Left e1 -> Some e1
+    | `Right e2 -> Some e2
+    | `Both (e1, e2) -> Some (Set.Poly.union e1 e2)
+  in Map.Poly.merge ~f:merge_map_elems m1 m2
+
+(**
+   Generate a Map by applying a function to each element of a key set.
+*)
+let generate_map s ~f =
+  Set.Poly.fold
+    s
+    ~init:Map.Poly.empty
+    ~f:(fun m e -> Map.Poly.add_exn m ~key:e ~data:(f e))
+
+(**
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
 *)
@@ -109,7 +128,10 @@ let is_ctrl_flow pattern =
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
 *)
-let build_cf_graphs ?blocks_after_body:(blocks_after_body=true) statement_map =
+let build_cf_graphs
+    ?flatten_loops:(flatten_loops=false)
+    ?blocks_after_body:(blocks_after_body=true)
+    statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
       (label : label) : cf_state * (label, cf_edges) Map.Poly.t =
@@ -157,10 +179,13 @@ let build_cf_graphs ?blocks_after_body:(blocks_after_body=true) statement_map =
               loop statement
         *)
         let loop_exits =
-          Set.Poly.union_list
-            [ (*1*) Set.Poly.singleton label
-            ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
-            ]
+          if flatten_loops then
+            substmt_state_unlooped.exits
+          else
+            Set.Poly.union_list
+              [ (*1*) Set.Poly.singleton label
+              ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+              ]
         in
         ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       | Block _ when blocks_after_body ->
@@ -235,6 +260,11 @@ let build_cf_graph statement_map =
   cf_graph
 
 (** See interface file *)
-let build_predecessor_graph ?blocks_after_body:(blocks_after_body=true) statement_map =
-    let exits, pred_graph, _ = build_cf_graphs ~blocks_after_body statement_map in
+let build_predecessor_graph
+    ?flatten_loops:(flatten_loops=false)
+    ?blocks_after_body:(blocks_after_body=true)
+    statement_map =
+  let exits, pred_graph, _ =
+    build_cf_graphs ~flatten_loops ~blocks_after_body statement_map
+  in
   (exits, pred_graph)
