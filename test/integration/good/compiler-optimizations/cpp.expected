@@ -14522,7 +14522,6 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
       double lcm_sym195__;
       double lcm_sym194__;
       double lcm_sym193__;
-      double lcm_sym158__;
       double lcm_sym192__;
       double lcm_sym191__;
       double lcm_sym190__;
@@ -16950,17 +16949,17 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       validate_non_negative_index("log_Pr_z", "I", I);
       current_statement__ = 3;
       validate_non_negative_index("log_Pr_z", "K", K);
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> log_Pr_z;
-      log_Pr_z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(K));
-      stan::math::fill(log_Pr_z, DUMMY_VAR__);
+      std::vector<Eigen::Matrix<double, -1, 1>> log_Pr_z;
+      log_Pr_z = std::vector<Eigen::Matrix<double, -1, 1>>(I, Eigen::Matrix<double, -1, 1>(K));
+      stan::math::fill(log_Pr_z, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym24__ = logical_gte(I, 1);
       if (lcm_sym24__) {
         current_statement__ = 4;
         validate_non_negative_index("log_q", "K", K);
-        Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
-        log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
-        stan::math::fill(log_q, DUMMY_VAR__);
+        Eigen::Matrix<double, -1, 1> log_q;
+        log_q = Eigen::Matrix<double, -1, 1>(K);
+        stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym34__, nil_index_list(), stan::math::log(pi),
           "assigning variable lcm_sym34__");
@@ -17006,9 +17005,9 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
         for (int i = 2; i <= I; ++i) {
           current_statement__ = 4;
           validate_non_negative_index("log_q", "K", K);
-          Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
-          log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
-          stan::math::fill(log_q, DUMMY_VAR__);
+          Eigen::Matrix<double, -1, 1> log_q;
+          log_q = Eigen::Matrix<double, -1, 1>(K);
+          stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
           
           current_statement__ = 4;
           assign(log_q, nil_index_list(), lcm_sym34__,
@@ -20852,8 +20851,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'inlining-fail2.stan', line 148, column 4 to column 24)",
                                                       " (in 'inlining-fail2.stan', line 149, column 4 to column 24)",
                                                       " (in 'inlining-fail2.stan', line 150, column 4 to column 31)",
-                                                      " (in 'inlining-fail2.stan', line 154, column 6 to column 64)",
                                                       " (in 'inlining-fail2.stan', line 153, column 6 to column 55)",
+                                                      " (in 'inlining-fail2.stan', line 154, column 6 to column 64)",
                                                       " (in 'inlining-fail2.stan', line 152, column 19 to line 155, column 5)",
                                                       " (in 'inlining-fail2.stan', line 147, column 33 to line 157, column 3)",
                                                       " (in 'inlining-fail2.stan', line 238, column 4 to column 63)",
@@ -21891,25 +21890,25 @@ seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) {
       
       current_statement__ = 115;
       if (logical_gte(lcm_sym128__, 1)) {
-        current_statement__ = 43;
+        current_statement__ = 42;
         assign(log_cprob, cons_list(index_uni(1), nil_index_list()),
           (stan::math::log(
              rvalue(gamma, cons_list(index_uni(1), nil_index_list()),
                "gamma")) + 0), "assigning variable log_cprob");
-        current_statement__ = 42;
+        current_statement__ = 43;
         log_residual_prob = (0 +
                               log1m(
                                 rvalue(gamma,
                                   cons_list(index_uni(1), nil_index_list()),
                                   "gamma")));
         for (int n = 2; n <= lcm_sym128__; ++n) {
-          current_statement__ = 43;
+          current_statement__ = 42;
           assign(log_cprob, cons_list(index_uni(n), nil_index_list()),
             (stan::math::log(
                rvalue(gamma, cons_list(index_uni(n), nil_index_list()),
                  "gamma")) + log_residual_prob),
             "assigning variable log_cprob");
-          current_statement__ = 42;
+          current_statement__ = 43;
           log_residual_prob = (log_residual_prob +
                                 log1m(
                                   rvalue(gamma,
@@ -23363,7 +23362,6 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       double lcm_sym211__;
       double lcm_sym210__;
       double lcm_sym209__;
-      local_scalar_t__ lcm_sym172__;
       double lcm_sym208__;
       double lcm_sym207__;
       double lcm_sym206__;
@@ -23389,10 +23387,10 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       std::vector<std::vector<int>> lcm_sym183__;
       local_scalar_t__ lcm_sym182__;
       local_scalar_t__ lcm_sym181__;
-      local_scalar_t__ lcm_sym180__;
-      local_scalar_t__ lcm_sym179__;
-      local_scalar_t__ lcm_sym178__;
-      local_scalar_t__ lcm_sym177__;
+      double lcm_sym180__;
+      double lcm_sym179__;
+      double lcm_sym178__;
+      double lcm_sym177__;
       double lcm_sym176__;
       double lcm_sym175__;
       Eigen::Matrix<double, -1, 1> lcm_sym174__;
@@ -23796,11 +23794,11 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
         double mu2;
         mu2 = std::numeric_limits<double>::quiet_NaN();
         
-        lcm_sym172__ = rvalue(gamma,
+        lcm_sym208__ = rvalue(gamma,
                          cons_list(index_uni(1), nil_index_list()), "gamma");
         assign(z,
           cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())),
-          bernoulli_rng(lcm_sym172__, base_rng__), "assigning variable z");
+          bernoulli_rng(lcm_sym208__, base_rng__), "assigning variable z");
         lcm_sym146__ = logical_gte(n_occasions, 2);
         if (lcm_sym146__) {
           lcm_sym220__ = rvalue(z,
@@ -23808,11 +23806,11 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                              cons_list(index_uni(1), nil_index_list())), "z");
           lcm_sym167__ = (1 * (1 - lcm_sym220__));
           q = lcm_sym167__;
-          lcm_sym179__ = stan::math::fma(
-                           rvalue(phi,
-                             cons_list(index_uni(1),
-                               cons_list(index_uni(1), nil_index_list())),
-                             "phi"), lcm_sym220__,
+          lcm_sym216__ = rvalue(phi,
+                           cons_list(index_uni(1),
+                             cons_list(index_uni(1), nil_index_list())),
+                           "phi");
+          lcm_sym179__ = stan::math::fma(lcm_sym216__, lcm_sym220__,
                            (rvalue(gamma,
                               cons_list(index_uni(2), nil_index_list()),
                               "gamma") * lcm_sym167__));
@@ -23859,7 +23857,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
           assign(z,
             cons_list(index_uni(i),
               cons_list(index_uni(1), nil_index_list())),
-            bernoulli_rng(lcm_sym172__, base_rng__), "assigning variable z");
+            bernoulli_rng(lcm_sym208__, base_rng__), "assigning variable z");
           current_statement__ = 35;
           if (lcm_sym146__) {
             lcm_sym166__ = (1 *
@@ -23941,22 +23939,25 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
           inline_sym14__ = DUMMY_VAR__;
           
           if (logical_gte(lcm_sym185__, 1)) {
-            lcm_sym172__ = rvalue(gamma,
-                             cons_list(index_uni(1), nil_index_list()),
-                             "gamma");
-            assign(inline_sym13__, cons_list(index_uni(1), nil_index_list()),
-              (stan::math::log(lcm_sym172__) + 0),
-              "assigning variable inline_sym13__");
             current_statement__ = 42;
-            inline_sym14__ = (0 + log1m(lcm_sym172__));
+            assign(inline_sym13__, cons_list(index_uni(1), nil_index_list()),
+              (stan::math::log(
+                 rvalue(gamma, cons_list(index_uni(1), nil_index_list()),
+                   "gamma")) + 0), "assigning variable inline_sym13__");
+            current_statement__ = 43;
+            inline_sym14__ = (0 +
+                               log1m(
+                                 rvalue(gamma,
+                                   cons_list(index_uni(1), nil_index_list()),
+                                   "gamma")));
             for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym185__;
                  ++inline_sym15__) {
-              current_statement__ = 43;
+              current_statement__ = 42;
               assign(inline_sym13__,
                 cons_list(index_uni(inline_sym15__), nil_index_list()),
                 (stan::math::log(gamma[(inline_sym15__ - 1)]) +
                   inline_sym14__), "assigning variable inline_sym13__");
-              current_statement__ = 42;
+              current_statement__ = 43;
               inline_sym14__ = (inline_sym14__ +
                                  log1m(gamma[(inline_sym15__ - 1)]));}
           } 
@@ -28406,10 +28407,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<double, -1, -1> lcm_sym18__;
       double lcm_sym17__;
       double lcm_sym16__;
-      local_scalar_t__ lcm_sym15__;
-      local_scalar_t__ lcm_sym14__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym11__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym10__;
+      double lcm_sym15__;
+      double lcm_sym14__;
+      Eigen::Matrix<double, -1, 1> lcm_sym11__;
+      Eigen::Matrix<double, -1, 1> lcm_sym10__;
       Eigen::Matrix<double, -1, 1> lcm_sym9__;
       int lcm_sym8__;
       int lcm_sym7__;
@@ -28515,8 +28516,8 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       
       current_statement__ = 8;
       validate_non_negative_index("psi_con", "R", R);
-      std::vector<local_scalar_t__> psi_con;
-      psi_con = std::vector<local_scalar_t__>(R, DUMMY_VAR__);
+      std::vector<double> psi_con;
+      psi_con = std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
       validate_non_negative_index("z", "R", R);
@@ -28532,10 +28533,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
           double psi;
           psi = std::numeric_limits<double>::quiet_NaN();
           
-          lcm_sym15__ = inv_logit(
-                          rvalue(lcm_sym9__,
-                            cons_list(index_uni(1), nil_index_list()),
-                            "lcm_sym9__"));
+          lcm_sym25__ = rvalue(lcm_sym9__,
+                          cons_list(index_uni(1), nil_index_list()),
+                          "lcm_sym9__");
+          lcm_sym15__ = inv_logit(lcm_sym25__);
           current_statement__ = 14;
           validate_non_negative_index("q", "T", T);
           Eigen::Matrix<double, -1, 1> q;
