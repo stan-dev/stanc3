@@ -723,6 +723,61 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const T& obj) {
+}
+
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const T& obj, size_t s) {
+  if (obj.size() != s) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name << "; dimension=" << depth+1
+        << "; dimension size=" << s << "; expression size=" << obj.size();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
+  if (obj.rows() != s1) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name
+        << "; rows=" << s1 << "; expression size=" << obj.rows();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+  if (obj.cols() != s2) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name
+        << "; columns=" << s2 << "; expression size=" << obj.cols();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+template <typename T, typename... M>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const std::vector<T>& obj, size_t s, M... dim) {
+  if (obj.size() != s) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name << "; dimension=" << depth+1
+        << "; dimension size=" << s << "; expression size=" << obj.size();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+  if (s != 0) {
+    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
+  }
+}
+
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
