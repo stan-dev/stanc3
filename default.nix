@@ -9,25 +9,16 @@ with (import (builtins.fetchTarball {
 ocamlPackages.buildDunePackage rec {
   pname = "stanc";
   version = "2.23.0";
+  
+  # Only depend on necessary files to minimize rebuilds
+  src = lib.sourceByRegex ./. [ "^src.*$" "^dune-project$" "^stanc\.opam$" ];
 
-  src =
-    let
-      filePrefixesToKeep = builtins.map toString
-        [ ./src ./dune-project ./stanc.opam ];
-    in
-      builtins.path {
-        name = "stanc";
-        path = ./.;
-	# Only depend on necessary files to minimize rebuilds
-        filter = (path: type:
-          builtins.any
-            (prefix:
-              lib.strings.hasPrefix prefix path)
-            filePrefixesToKeep
-        );
-      };
+  # Uncomment and add tree as a builtInput for a debugging mode that checks which files are included
+  #buildPhase = ''tree'';
 
+  # Set to true and add the src regex "^test.*$" to run tests on every build
   doCheck = false;
+
   useDune2 = true;
 
   buildInputs = with ocamlPackages; [
