@@ -1,6 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
-(** The "dimensionality" (bad name?) is supposed to help us represent the
+
+(* The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our

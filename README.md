@@ -47,6 +47,25 @@ Run `./_build/default/src/stanc/stanc.exe` on individual .stan file to compile i
 
 Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
 
+### Nix, an alternative way to build, test and run
+[Nix](https://nixos.org/nix/) is a declarative package manager with a focus on reproducible builds.
+You can use Nix to build, test and run Stanc3 without using Opam.
+
+After you install nix, you can build Stanc3 by running the following command in the `stanc3` directory:
+   nix-build
+The binary will be in `result/bin/stanc`. This may take a minute the first time you run it.
+Alternatively, the following is sometimes a faster way to build:
+   nix-shell --command "dune build"
+
+To drop into a sandboxed development shell with all of the dependencies of Stanc3 plus `dune`, run:
+   nix-shell
+
+To run the test suite, run:
+   nix-shell --command "dune build --profile release @runtest"
+
+To install Stanc3 to your system, run:
+   nix-env -i -f default.nix
+
 ### Development on Windows
 Having tried both native Windows development and development through [Ubuntu on WSL](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?activetab=pivot:overviewtab), the Ubuntu on WSL route seems vastly smoother and it is what we recommend as a default.
 It's only downside seems to be that it builds Ubuntu, rather than Windows binaries.
