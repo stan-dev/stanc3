@@ -9154,117 +9154,118 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'motherHOF.stan', line 48, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 49, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 50, column 2 to column 14)",
-                                                      " (in 'motherHOF.stan', line 51, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 52, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 53, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 54, column 2 to column 11)",
-                                                      " (in 'motherHOF.stan', line 57, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 58, column 2 to column 37)",
-                                                      " (in 'motherHOF.stan', line 59, column 2 to column 33)",
-                                                      " (in 'motherHOF.stan', line 60, column 2 to line 61, column 69)",
-                                                      " (in 'motherHOF.stan', line 62, column 2 to line 63, column 69)",
+                                                      " (in 'motherHOF.stan', line 52, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 53, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 54, column 2 to column 14)",
+                                                      " (in 'motherHOF.stan', line 55, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 56, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 57, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 58, column 2 to column 11)",
+                                                      " (in 'motherHOF.stan', line 61, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 62, column 2 to column 37)",
+                                                      " (in 'motherHOF.stan', line 63, column 2 to column 33)",
                                                       " (in 'motherHOF.stan', line 64, column 2 to line 65, column 69)",
-                                                      " (in 'motherHOF.stan', line 66, column 2 to column 23)",
-                                                      " (in 'motherHOF.stan', line 67, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 68, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 69, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 70, column 2 to column 70)",
-                                                      " (in 'motherHOF.stan', line 71, column 2 to column 86)",
-                                                      " (in 'motherHOF.stan', line 72, column 2 to column 86)",
-                                                      " (in 'motherHOF.stan', line 73, column 2 to column 72)",
-                                                      " (in 'motherHOF.stan', line 75, column 2 to column 88)",
-                                                      " (in 'motherHOF.stan', line 76, column 2 to column 72)",
-                                                      " (in 'motherHOF.stan', line 77, column 2 to column 88)",
-                                                      " (in 'motherHOF.stan', line 132, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 133, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 134, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 135, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 136, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 138, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 139, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 140, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 141, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 143, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 144, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 145, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 146, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 148, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 149, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 150, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 151, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 153, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 154, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 155, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 156, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 158, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 159, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 160, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 161, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 163, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 164, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 165, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 166, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 168, column 2 to column 34)",
-                                                      " (in 'motherHOF.stan', line 169, column 2 to column 38)",
-                                                      " (in 'motherHOF.stan', line 170, column 2 to line 171, column 69)",
-                                                      " (in 'motherHOF.stan', line 81, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 82, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 83, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 84, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 86, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 87, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 88, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 90, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 91, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 92, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 93, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 95, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 96, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 97, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 98, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 100, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 101, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 102, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 103, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 105, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 106, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 107, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 108, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 109, column 2 to column 56)",
+                                                      " (in 'motherHOF.stan', line 66, column 2 to line 67, column 69)",
+                                                      " (in 'motherHOF.stan', line 68, column 2 to line 69, column 69)",
+                                                      " (in 'motherHOF.stan', line 70, column 2 to column 23)",
+                                                      " (in 'motherHOF.stan', line 71, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 72, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 73, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 74, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 75, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 76, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 77, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 79, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 80, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 81, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 136, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 137, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 138, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 139, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 140, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 142, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 143, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 144, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 145, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 147, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 148, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 149, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 150, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 152, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 153, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 154, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 155, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 157, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 158, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 159, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 160, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 162, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 163, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 164, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 165, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 167, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 168, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 169, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 170, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 172, column 2 to column 34)",
+                                                      " (in 'motherHOF.stan', line 173, column 2 to column 38)",
+                                                      " (in 'motherHOF.stan', line 174, column 2 to line 176, column 71)",
+                                                      " (in 'motherHOF.stan', line 178, column 2 to line 179, column 69)",
+                                                      " (in 'motherHOF.stan', line 85, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 86, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 87, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 88, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 90, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 91, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 92, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 94, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 95, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 96, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 97, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 99, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 100, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 101, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 102, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 104, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 105, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 106, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 107, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 109, column 2 to column 61)",
                                                       " (in 'motherHOF.stan', line 110, column 2 to column 58)",
                                                       " (in 'motherHOF.stan', line 111, column 2 to column 58)",
                                                       " (in 'motherHOF.stan', line 112, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 113, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 114, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 115, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 117, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 118, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 113, column 2 to column 56)",
+                                                      " (in 'motherHOF.stan', line 114, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 115, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 116, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 117, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 118, column 2 to column 62)",
                                                       " (in 'motherHOF.stan', line 119, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 120, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 121, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 121, column 2 to column 67)",
                                                       " (in 'motherHOF.stan', line 122, column 2 to column 64)",
                                                       " (in 'motherHOF.stan', line 123, column 2 to column 64)",
                                                       " (in 'motherHOF.stan', line 124, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 125, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 126, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 127, column 2 to column 70)",
-                                                      " (in 'motherHOF.stan', line 129, column 2 to column 36)",
-                                                      " (in 'motherHOF.stan', line 33, column 2 to column 17)",
-                                                      " (in 'motherHOF.stan', line 34, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 35, column 2 to column 10)",
-                                                      " (in 'motherHOF.stan', line 36, column 2 to column 13)",
-                                                      " (in 'motherHOF.stan', line 37, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 38, column 2 to column 12)",
-                                                      " (in 'motherHOF.stan', line 39, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 40, column 2 to column 16)",
-                                                      " (in 'motherHOF.stan', line 41, column 2 to column 15)",
-                                                      " (in 'motherHOF.stan', line 42, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 43, column 2 to column 28)",
-                                                      " (in 'motherHOF.stan', line 44, column 2 to column 20)",
-                                                      " (in 'motherHOF.stan', line 45, column 2 to column 19)",
+                                                      " (in 'motherHOF.stan', line 125, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 126, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 127, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 128, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 129, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 130, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 131, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 133, column 2 to column 36)",
+                                                      " (in 'motherHOF.stan', line 37, column 2 to column 17)",
+                                                      " (in 'motherHOF.stan', line 38, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 39, column 2 to column 10)",
+                                                      " (in 'motherHOF.stan', line 40, column 2 to column 13)",
+                                                      " (in 'motherHOF.stan', line 41, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 42, column 2 to column 12)",
+                                                      " (in 'motherHOF.stan', line 43, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 44, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 45, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 46, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 47, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 48, column 2 to column 20)",
+                                                      " (in 'motherHOF.stan', line 49, column 2 to column 19)",
                                                       " (in 'motherHOF.stan', line 7, column 4 to column 17)",
                                                       " (in 'motherHOF.stan', line 8, column 4 to column 19)",
                                                       " (in 'motherHOF.stan', line 9, column 4 to column 38)",
@@ -9274,13 +9275,15 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 12, column 71 to line 14, column 3)",
                                                       " (in 'motherHOF.stan', line 17, column 4 to column 22)",
                                                       " (in 'motherHOF.stan', line 16, column 42 to line 18, column 3)",
-                                                      " (in 'motherHOF.stan', line 20, column 4 to column 17)",
-                                                      " (in 'motherHOF.stan', line 19, column 28 to line 21, column 3)",
-                                                      " (in 'motherHOF.stan', line 26, column 4 to column 18)",
-                                                      " (in 'motherHOF.stan', line 27, column 4 to column 25)",
-                                                      " (in 'motherHOF.stan', line 28, column 4 to column 25)",
-                                                      " (in 'motherHOF.stan', line 29, column 4 to column 15)",
-                                                      " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
+                                                      " (in 'motherHOF.stan', line 21, column 4 to column 22)",
+                                                      " (in 'motherHOF.stan', line 20, column 42 to line 22, column 3)",
+                                                      " (in 'motherHOF.stan', line 24, column 4 to column 17)",
+                                                      " (in 'motherHOF.stan', line 23, column 28 to line 25, column 3)",
+                                                      " (in 'motherHOF.stan', line 30, column 4 to column 18)",
+                                                      " (in 'motherHOF.stan', line 31, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 32, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 33, column 4 to column 15)",
+                                                      " (in 'motherHOF.stan', line 29, column 39 to line 34, column 3)"};
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
@@ -9296,22 +9299,22 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 112;
+    current_statement__ = 113;
     validate_non_negative_index("dydt", "2", 2);
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
-    current_statement__ = 113;
+    current_statement__ = 114;
     assign(dydt, cons_list(index_uni(1), nil_index_list()),
       rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
-    current_statement__ = 114;
+    current_statement__ = 115;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
       (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
         (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
           rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
-    current_statement__ = 115;
+    current_statement__ = 116;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9346,7 +9349,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 117;
+    current_statement__ = 118;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9382,7 +9385,7 @@ foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 119;
+    current_statement__ = 120;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
@@ -9406,6 +9409,44 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 }
 };
 
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
+goo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+    const Eigen::Matrix<T1__, -1, 1>& job_params,
+    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    current_statement__ = 122;
+    return transpose(stan::math::to_row_vector(
+             stan::math::array_builder<int>().add(4).add(5).add(6).array()));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct goo_functor__ {
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<stan::promote_args_t<T0__, T1__,
+T2__>, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+           const Eigen::Matrix<T1__, -1, 1>& job_params,
+           const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+           std::ostream* pstream__)  const 
+{
+return goo(shared_params, job_params, data_r, data_i, pstream__);
+}
+};
+
 template <typename T0__>
 stan::promote_args_t<T0__>
 map_rectfake(const T0__& x, std::ostream* pstream__) {
@@ -9416,7 +9457,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 121;
+    current_statement__ = 124;
     return (2 * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9449,23 +9490,23 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 123;
+    current_statement__ = 126;
     validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 124;
+    current_statement__ = 127;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 125;
+    current_statement__ = 128;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
       (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 126;
+    current_statement__ = 129;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9530,78 +9571,78 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec());
       T = std::numeric_limits<int>::min();
       
-      current_statement__ = 99;
-      T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 100;
+      T = context__.vals_i("T")[(1 - 1)];
+      current_statement__ = 101;
       validate_non_negative_index("y0_d", "2", 2);
       context__.validate_dims("data initialization","y0_d","double",
           context__.to_vec(2));
       y0_d = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 100;
+      current_statement__ = 101;
       assign(y0_d, nil_index_list(), context__.vals_r("y0_d"),
         "assigning variable y0_d");
       context__.validate_dims("data initialization","t0","double",
           context__.to_vec());
       t0 = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 101;
-      t0 = context__.vals_r("t0")[(1 - 1)];
       current_statement__ = 102;
+      t0 = context__.vals_r("t0")[(1 - 1)];
+      current_statement__ = 103;
       validate_non_negative_index("ts", "T", T);
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(T));
       ts = std::vector<double>(T, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 102;
+      current_statement__ = 103;
       assign(ts, nil_index_list(), context__.vals_r("ts"),
         "assigning variable ts");
-      current_statement__ = 103;
+      current_statement__ = 104;
       validate_non_negative_index("theta_d", "1", 1);
       context__.validate_dims("data initialization","theta_d","double",
           context__.to_vec(1));
       theta_d = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 103;
+      current_statement__ = 104;
       assign(theta_d, nil_index_list(), context__.vals_r("theta_d"),
         "assigning variable theta_d");
-      current_statement__ = 104;
+      current_statement__ = 105;
       validate_non_negative_index("x", "0", 0);
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(0));
       x = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 104;
+      current_statement__ = 105;
       assign(x, nil_index_list(), context__.vals_r("x"),
         "assigning variable x");
-      current_statement__ = 105;
+      current_statement__ = 106;
       validate_non_negative_index("x_int", "0", 0);
       context__.validate_dims("data initialization","x_int","int",
           context__.to_vec(0));
       x_int = std::vector<int>(0, std::numeric_limits<int>::min());
       
-      current_statement__ = 105;
+      current_statement__ = 106;
       assign(x_int, nil_index_list(), context__.vals_i("x_int"),
         "assigning variable x_int");
-      current_statement__ = 106;
+      current_statement__ = 107;
       validate_non_negative_index("x_d_r", "0", 0);
       context__.validate_dims("data initialization","x_d_r","double",
           context__.to_vec(0));
       x_d_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 106;
+      current_statement__ = 107;
       assign(x_d_r, nil_index_list(), context__.vals_r("x_d_r"),
         "assigning variable x_d_r");
-      current_statement__ = 107;
+      current_statement__ = 108;
       validate_non_negative_index("x_d_i", "0", 0);
       context__.validate_dims("data initialization","x_d_i","int",
           context__.to_vec(0));
       x_d_i = std::vector<int>(0, std::numeric_limits<int>::min());
       
-      current_statement__ = 107;
+      current_statement__ = 108;
       assign(x_d_i, nil_index_list(), context__.vals_i("x_d_i"),
         "assigning variable x_d_i");
-      current_statement__ = 108;
+      current_statement__ = 109;
       validate_non_negative_index("shared_params_d", "3", 3);
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
@@ -9610,25 +9651,25 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<local_scalar_t__> shared_params_d_flat__;
-        current_statement__ = 108;
+        current_statement__ = 109;
         assign(shared_params_d_flat__, nil_index_list(),
           context__.vals_r("shared_params_d"),
           "assigning variable shared_params_d_flat__");
-        current_statement__ = 108;
+        current_statement__ = 109;
         pos__ = 1;
-        current_statement__ = 108;
+        current_statement__ = 109;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 108;
+          current_statement__ = 109;
           assign(shared_params_d,
             cons_list(index_uni(sym1__), nil_index_list()),
             shared_params_d_flat__[(pos__ - 1)],
             "assigning variable shared_params_d");
-          current_statement__ = 108;
+          current_statement__ = 109;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 109;
+      current_statement__ = 110;
       validate_non_negative_index("job_params_d", "3", 3);
-      current_statement__ = 109;
+      current_statement__ = 110;
       validate_non_negative_index("job_params_d", "3", 3);
       context__.validate_dims("data initialization","job_params_d","double",
           context__.to_vec(3, 3));
@@ -9637,38 +9678,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<local_scalar_t__> job_params_d_flat__;
-        current_statement__ = 109;
+        current_statement__ = 110;
         assign(job_params_d_flat__, nil_index_list(),
           context__.vals_r("job_params_d"),
           "assigning variable job_params_d_flat__");
-        current_statement__ = 109;
-        pos__ = 1;
-        current_statement__ = 109;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 109;
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 109;
-            assign(job_params_d,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              job_params_d_flat__[(pos__ - 1)],
-              "assigning variable job_params_d");
-            current_statement__ = 109;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 110;
-      validate_non_negative_index("data_r", "3", 3);
-      current_statement__ = 110;
-      validate_non_negative_index("data_r", "3", 3);
-      context__.validate_dims("data initialization","data_r","double",
-          context__.to_vec(3, 3));
-      data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
-      
-      {
-        std::vector<local_scalar_t__> data_r_flat__;
-        current_statement__ = 110;
-        assign(data_r_flat__, nil_index_list(), context__.vals_r("data_r"),
-          "assigning variable data_r_flat__");
         current_statement__ = 110;
         pos__ = 1;
         current_statement__ = 110;
@@ -9676,26 +9689,27 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           current_statement__ = 110;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             current_statement__ = 110;
-            assign(data_r,
+            assign(job_params_d,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
-              data_r_flat__[(pos__ - 1)], "assigning variable data_r");
+              job_params_d_flat__[(pos__ - 1)],
+              "assigning variable job_params_d");
             current_statement__ = 110;
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 111;
-      validate_non_negative_index("data_i", "3", 3);
+      validate_non_negative_index("data_r", "3", 3);
       current_statement__ = 111;
-      validate_non_negative_index("data_i", "3", 3);
-      context__.validate_dims("data initialization","data_i","int",
+      validate_non_negative_index("data_r", "3", 3);
+      context__.validate_dims("data initialization","data_r","double",
           context__.to_vec(3, 3));
-      data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, std::numeric_limits<int>::min()));
+      data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
       
       {
-        std::vector<int> data_i_flat__;
+        std::vector<local_scalar_t__> data_r_flat__;
         current_statement__ = 111;
-        assign(data_i_flat__, nil_index_list(), context__.vals_i("data_i"),
-          "assigning variable data_i_flat__");
+        assign(data_r_flat__, nil_index_list(), context__.vals_r("data_r"),
+          "assigning variable data_r_flat__");
         current_statement__ = 111;
         pos__ = 1;
         current_statement__ = 111;
@@ -9703,15 +9717,42 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           current_statement__ = 111;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             current_statement__ = 111;
+            assign(data_r,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              data_r_flat__[(pos__ - 1)], "assigning variable data_r");
+            current_statement__ = 111;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 112;
+      validate_non_negative_index("data_i", "3", 3);
+      current_statement__ = 112;
+      validate_non_negative_index("data_i", "3", 3);
+      context__.validate_dims("data initialization","data_i","int",
+          context__.to_vec(3, 3));
+      data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, std::numeric_limits<int>::min()));
+      
+      {
+        std::vector<int> data_i_flat__;
+        current_statement__ = 112;
+        assign(data_i_flat__, nil_index_list(), context__.vals_i("data_i"),
+          "assigning variable data_i_flat__");
+        current_statement__ = 112;
+        pos__ = 1;
+        current_statement__ = 112;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 112;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 112;
             assign(data_i,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               data_i_flat__[(pos__ - 1)], "assigning variable data_i");
-            current_statement__ = 111;
+            current_statement__ = 112;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 99;
-      current_statement__ = 99;
+      current_statement__ = 100;
+      current_statement__ = 100;
       check_greater_or_equal(function__, "T", T, 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9926,161 +9967,161 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
           pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       {
-        current_statement__ = 57;
+        current_statement__ = 58;
         validate_non_negative_index("y_hat", "T", T);
-        current_statement__ = 57;
+        current_statement__ = 58;
         validate_non_negative_index("y_hat", "2", 2);
         std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
         
-        current_statement__ = 58;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 59;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 60;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 61;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 62;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 63;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 64;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 65;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
             pstream__), "assigning variable y_hat");
         current_statement__ = 66;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
             pstream__), "assigning variable y_hat");
         current_statement__ = 67;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
             pstream__), "assigning variable y_hat");
         current_statement__ = 68;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__), "assigning variable y_hat");
         current_statement__ = 69;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 70;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 71;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 72;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
-            x_int, pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 73;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
+          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 74;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 75;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 76;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
         y_1d = DUMMY_VAR__;
         
-        current_statement__ = 76;
-        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
-                 pstream__);
         current_statement__ = 77;
-        y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 78;
-        y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 79;
-        y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 80;
-        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 81;
-        y_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 82;
-        y_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 83;
-        y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+        y_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
                  pstream__);
         current_statement__ = 84;
+        y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 85;
         y_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
                  x_d_i, pstream__);
-        current_statement__ = 85;
+        current_statement__ = 86;
         y_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
-        current_statement__ = 86;
+        current_statement__ = 87;
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
         local_scalar_t__ z_1d;
         z_1d = DUMMY_VAR__;
         
-        current_statement__ = 87;
-        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
-                 pstream__, 1e-8);
         current_statement__ = 88;
-        z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 89;
-        z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 90;
-        z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 91;
-        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 92;
-        z_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 93;
-        z_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 94;
-        z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+        z_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
         current_statement__ = 95;
+        z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 96;
         z_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
-        current_statement__ = 96;
+        current_statement__ = 97;
         z_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
-        current_statement__ = 97;
+        current_statement__ = 98;
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
         local_scalar_t__ abc_m;
         abc_m = DUMMY_VAR__;
         
-        current_statement__ = 98;
+        current_statement__ = 99;
         abc_m = map_rectfake(abc1_p, pstream__);
       }
     } catch (const std::exception& e) {
@@ -10449,8 +10490,21 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 56;
       assign(y_hat_gq, nil_index_list(),
-        map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
-          data_i, pstream__), "assigning variable y_hat_gq");
+        add(
+          map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
+            data_i, pstream__),
+          map_rect<8, goo_functor__>(shared_params_d, job_params_d, data_r,
+            data_i, pstream__)), "assigning variable y_hat_gq");
+      current_statement__ = 57;
+      validate_non_negative_index("yy_hat_gq", "3", 3);
+      Eigen::Matrix<double, -1, 1> yy_hat_gq;
+      yy_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      stan::math::fill(yy_hat_gq, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 57;
+      assign(yy_hat_gq, nil_index_list(),
+        map_rect<9, goo_functor__>(shared_params_d, job_params_d, data_r,
+          data_i, pstream__), "assigning variable yy_hat_gq");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
           vars__.push_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
@@ -10460,6 +10514,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       vars__.push_back(abc2_gq);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(y_hat_gq[(sym1__ - 1)]);}
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(yy_hat_gq[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -10630,6 +10686,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.push_back("abc1_gq");
     names__.push_back("abc2_gq");
     names__.push_back("y_hat_gq");
+    names__.push_back("yy_hat_gq");
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
@@ -10695,6 +10752,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     dims__.resize(0);
     dimss__.push_back(dims__);
     dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
     dimss__.push_back(dims__);
     dims__.resize(0);
     dims__.push_back(3);
@@ -10786,6 +10846,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
         }}
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
+        }}
     }
     
     } // constrained_param_names() 
@@ -10873,19 +10937,23 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
         }}
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
+        }}
     }
     
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
@@ -10957,6 +11025,8 @@ STAN_REGISTER_MAP_RECT(4, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(5, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(6, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(7, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(8, motherHOF_model_namespace::goo_functor__)
+STAN_REGISTER_MAP_RECT(9, motherHOF_model_namespace::goo_functor__)
   $ ../../../../../install/default/bin/stanc --print-cpp optimize_glm.stan
 
 // Code generated by %%NAME%% %%VERSION%%
