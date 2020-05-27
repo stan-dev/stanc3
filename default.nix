@@ -1,4 +1,10 @@
-with (import <nixpkgs> {});
+with (import (builtins.fetchTarball {
+  name = "nixpkgs-20.03";
+  # Tarball of tagged release of Nixpkgs 20.03
+  url = "https://github.com/nixos/nixpkgs/archive/5272327b81ed355bbed5659b8d303cf2979b6953.tar.gz";
+  # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
+  sha256 = "0182ys095dfx02vl2a20j1hz92dx3mfgz2a6fhn31bqlp1wa8hlq";
+}) {});
 
 ocamlPackages.buildDunePackage rec {
   pname = "stanc";
@@ -12,6 +18,7 @@ ocamlPackages.buildDunePackage rec {
       builtins.path {
         name = "stanc";
         path = ./.;
+	# Only depend on necessary files to minimize rebuilds
         filter = (path: type:
           builtins.any
             (prefix:
@@ -20,9 +27,10 @@ ocamlPackages.buildDunePackage rec {
         );
       };
 
+  doCheck = false;
   useDune2 = true;
+
   buildInputs = with ocamlPackages; [
-    tree
     yojson
     menhir
     core_kernel
@@ -32,9 +40,6 @@ ocamlPackages.buildDunePackage rec {
     stdlib-shims
     fmt
     re
-  ] ++ [
-    gcc
-    gnum4
   ];
 
   meta = {
