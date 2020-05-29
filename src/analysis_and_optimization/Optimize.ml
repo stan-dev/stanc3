@@ -483,6 +483,8 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
+let unroll_static_limit = 25
+
 let unroll_static_loops_statement _ =
   let f stmt =
     match stmt with
@@ -492,28 +494,33 @@ let unroll_static_loops_statement _ =
         match
           (contains_top_break_or_continue body, lower.pattern, upper.pattern)
         with
-        | false, Lit (Int, low), Lit (Int, up) ->
-            let range =
-              List.map
-                ~f:(fun i ->
-                  Expr.Fixed.
-                    { pattern= Lit (Int, Int.to_string i)
-                    ; meta=
-                        Expr.Typed.Meta.
-                          { type_= UInt
-                          ; loc= Location_span.empty
-                          ; adlevel= DataOnly } } )
-                (List.range ~start:`inclusive ~stop:`inclusive
-                   (Int.of_string low) (Int.of_string up))
-            in
-            let stmts =
-              List.map
-                ~f:(fun i ->
-                  subst_args_stmt [loopvar] [i]
-                    {pattern= body.pattern; meta= Location_span.empty} )
-                range
-            in
-            Stmt.Fixed.Pattern.SList stmts
+        | false, Lit (Int, low_str), Lit (Int, up_str) ->
+            let low = Int.of_string low_str in
+            let up = Int.of_string up_str in
+            if up - low > unroll_static_limit then
+              stmt
+            else
+              let range =
+                List.map
+                  ~f:(fun i ->
+                      Expr.Fixed.
+                        { pattern= Lit (Int, Int.to_string i)
+                        ; meta=
+                            Expr.Typed.Meta.
+                              { type_= UInt
+                              ; loc= Location_span.empty
+                              ; adlevel= DataOnly } } )
+                  (List.range ~start:`inclusive ~stop:`inclusive
+                     low up)
+              in
+              let stmts =
+                List.map
+                  ~f:(fun i ->
+                      subst_args_stmt [loopvar] [i]
+                        {pattern= body.pattern; meta= Location_span.empty} )
+                  range
+              in
+              Stmt.Fixed.Pattern.SList stmts
         | _ -> stmt )
     | _ -> stmt
   in
