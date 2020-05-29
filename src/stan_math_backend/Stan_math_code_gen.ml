@@ -794,7 +794,7 @@ let fun_used_in_ode_bdf p =
     String.Set.union accum
       ( match pattern with
       | FunApp (StanLib, x, {pattern= Var f; _} :: _)
-        when Stan_math_signatures.is_variadic_ode_fn x ->
+        when Stan_math_signatures.is_ode_fn x ->
           String.Set.of_list [f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
   in

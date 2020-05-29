@@ -142,10 +142,13 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
 let variadic_ode_functions = ["ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"; "ode_adams"]
+let non_variadic_ode_functions = ["integrate_ode"; "integrate_ode_bdf"; "integrate_ode_adams"; "integrate_ode_rk45"]
 let ode_tolerances_suffix = "_tol"
 
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
 let is_variadic_ode_fn f = List.mem ~equal:String.equal variadic_ode_functions f
+let is_non_variadic_ode_fn f = List.mem ~equal:String.equal non_variadic_ode_functions f
+let is_ode_fn f = is_variadic_ode_fn f || is_non_variadic_ode_fn f
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])

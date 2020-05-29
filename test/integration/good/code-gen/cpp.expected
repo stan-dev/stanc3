@@ -9336,6 +9336,19 @@ return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
+
+struct sho_odefunctor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+operator()(const T0__& t, const std::vector<T1__>& y,
+           std::ostream* pstream__, const std::vector<T2__>& theta,
+           const std::vector<T3__>& x, const std::vector<int>& x_int)  const 
+{
+return sho(t, y, theta, x, x_int, pstream__);
+}
+};
+
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 stan::promote_args_t<T0__, T1__, T2__,
 T3__>
@@ -9976,75 +9989,75 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         
         current_statement__ = 59;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 60;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 61;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 62;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 63;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 64;
         assign(y_hat, nil_index_list(),
-          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+          integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 65;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 66;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 67;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 68;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 69;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 70;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 71;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 72;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 73;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
+          integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 74;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
+          integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 75;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
+          integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 76;
         assign(y_hat, nil_index_list(),
-          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
+          integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
         y_1d = DUMMY_VAR__;
@@ -10364,84 +10377,84 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 26;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 27;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 28;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 29;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 30;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 31;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 32;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 33;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 34;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 35;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 36;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 37;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 38;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 39;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 40;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 41;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 42;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 43;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 44;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 45;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
       double y_1d;
       y_1d = std::numeric_limits<double>::quiet_NaN();
       
@@ -12119,6 +12132,19 @@ return dz_dt(t, z, theta, x_r, x_i, pstream__);
 }
 };
 
+
+struct dz_dt_odefunctor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+operator()(const T0__& t, const std::vector<T1__>& z,
+           std::ostream* pstream__, const std::vector<T2__>& theta,
+           const std::vector<T3__>& x_r, const std::vector<int>& x_i)  const 
+{
+return dz_dt(t, z, theta, x_r, x_i, pstream__);
+}
+};
+
 class ode_old_model : public model_base_crtp<ode_old_model> {
 
  private:
@@ -12360,7 +12386,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+        integrate_ode_bdf(dz_dt_odefunctor__(), z_init, 0, ts,
           stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
           .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
@@ -12516,7 +12542,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       } 
       current_statement__ = 7;
       assign(z, nil_index_list(),
-        integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+        integrate_ode_bdf(dz_dt_odefunctor__(), z_init, 0, ts,
           stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
           .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
