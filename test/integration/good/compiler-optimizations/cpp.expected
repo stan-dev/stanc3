@@ -33913,11 +33913,18 @@ using namespace stan::math;
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'unroll-limit.stan', line 2, column 2 to column 8)",
-                                                      " (in 'unroll-limit.stan', line 4, column 4 to column 11)",
+                                                      " (in 'unroll-limit.stan', line 4, column 4 to column 15)",
                                                       " (in 'unroll-limit.stan', line 3, column 19 to line 5, column 3)",
                                                       " (in 'unroll-limit.stan', line 3, column 2 to line 5, column 3)",
-                                                      " (in 'unroll-limit.stan', line 7, column 4 to column 11)",
-                                                      " (in 'unroll-limit.stan', line 6, column 2 to line 8, column 3)"};
+                                                      " (in 'unroll-limit.stan', line 7, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 6, column 2 to line 8, column 3)",
+                                                      " (in 'unroll-limit.stan', line 10, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 9, column 2 to line 11, column 3)",
+                                                      " (in 'unroll-limit.stan', line 13, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 12, column 2 to line 14, column 3)",
+                                                      " (in 'unroll-limit.stan', line 16, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 15, column 20 to line 17, column 3)",
+                                                      " (in 'unroll-limit.stan', line 15, column 2 to line 17, column 3)"};
 
 
 
@@ -34011,6 +34018,14 @@ class unroll_limit_model : public model_base_crtp<unroll_limit_model> {
 
     
     try {
+      int lcm_sym12__;
+      int lcm_sym11__;
+      int lcm_sym10__;
+      int lcm_sym9__;
+      int lcm_sym8__;
+      int lcm_sym7__;
+      int lcm_sym6__;
+      int lcm_sym5__;
       int lcm_sym4__;
       int lcm_sym3__;
       int lcm_sym2__;
@@ -34027,90 +34042,265 @@ class unroll_limit_model : public model_base_crtp<unroll_limit_model> {
       
       {
         current_statement__ = 2;
-        x = (x + 1);
+        x = (x + 2);
         for (int i = 2; i <= 100; ++i) {
           current_statement__ = 2;
-          x = (x + 1);}
+          x = (x + (1 + i));}
       }
       {
         current_statement__ = 5;
-        x = (x - 1);
+        x = (x + 3);
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 2));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 3));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 4));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 5));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 6));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 7));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 8));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 9));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 10));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 11));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 12));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 13));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 14));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 15));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 16));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 17));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 18));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 19));
         }
         {
           current_statement__ = 5;
-          x = (x - 1);
+          x = (x + (2 + 20));
         }
+      }
+      {
+        current_statement__ = 7;
+        x = (x + 53);
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 51));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 52));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 53));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 54));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 55));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 56));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 57));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 58));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 59));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 60));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 61));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 62));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 63));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 64));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 65));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 66));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 67));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 68));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 69));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 70));
+        }
+      }
+      {
+        current_statement__ = 9;
+        x = (x + -6);
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -9));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -8));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -7));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -6));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -5));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -4));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -3));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -2));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -1));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 0));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 1));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 2));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 3));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 4));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 5));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 6));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 7));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 8));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 9));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 10));
+        }
+      }
+      {
+        current_statement__ = 11;
+        x = (x + -5);
+        for (int i = -9; i <= 40; ++i) {
+          current_statement__ = 11;
+          x = (x + (5 + i));}
       }
       vars__.push_back(x);
     } catch (const std::exception& e) {

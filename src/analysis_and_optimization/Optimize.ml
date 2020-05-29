@@ -483,7 +483,7 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-let unroll_static_limit = 25
+let unroll_static_limit = 32
 
 let unroll_static_loops_statement _ =
   let f stmt =
