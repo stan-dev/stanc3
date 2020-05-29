@@ -782,23 +782,12 @@ let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
 
 (** Find and register functiors used for map_rect. *)
 let pp_register_map_rect_functors ppf p =
-  let find_functors_expr accum Expr.Fixed.({pattern; _}) =
-    match pattern with
-    | FunApp (StanLib, "map_rect", {pattern= Var f; _} :: _) -> f :: accum
-    | _ -> accum
-  in
-  let rec find_functors_stmt accum stmt =
-    Stmt.Fixed.(
-      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
-  in
-  let functors = Program.fold find_functors_expr find_functors_stmt [] p in
   let pp_register_functor ppf (i, f) =
-    pf ppf "STAN_REGISTER_MAP_RECT(%d, %s::%s%s)" i (namespace p) f
-      functor_suffix
+    pf ppf "STAN_REGISTER_MAP_RECT(%d, %s::%s)" i (namespace p) f
   in
   pf ppf "@ %a"
     (list ~sep:cut pp_register_functor)
-    (List.mapi ~f:(fun i f -> (i + 1, f)) functors)
+    (List.sort ~compare (Hashtbl.to_alist map_rect_calls))
 
 let fun_used_in_ode_bdf p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =

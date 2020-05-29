@@ -2899,6 +2899,19 @@ model {
   y ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format genquant-data-only.stan
+functions {
+  real f(data real x) {
+    return x + 1;
+  }
+}
+parameters {
+  real x;
+}
+generated quantities {
+  real y = f(x);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
 parameters {
   real<lower=0> y;

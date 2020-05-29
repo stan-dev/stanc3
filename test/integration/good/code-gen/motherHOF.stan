@@ -16,6 +16,10 @@ functions {
              real[] data_r, int[] data_i) {
     return [1, 2, 3]';
   }
+  vector goo(vector shared_params, vector job_params,
+             real[] data_r, int[] data_i) {
+    return [4, 5, 6]';
+  }
   real map_rectfake(real x) {
     return 2 * x;
   }
@@ -168,5 +172,9 @@ generated quantities {
   real abc1_gq = map_rectfake(12);
   real abc2_gq = map_rectfake(abc1_p);
   vector[3] y_hat_gq
-      = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+      = map_rect(foo, shared_params_d, job_params_d, data_r, data_i)
+        + map_rect(goo, shared_params_d, job_params_d, data_r, data_i);
+
+  vector[3] yy_hat_gq
+      = map_rect(goo, shared_params_d, job_params_d, data_r, data_i);
 }
