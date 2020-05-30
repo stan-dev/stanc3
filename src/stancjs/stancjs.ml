@@ -5,6 +5,9 @@ open Analysis_and_optimization
 open Middle
 open Js_of_ocaml
 
+let contains_substring search target =
+    String.substr_index search target <> None
+
 let print_warn_uninitialized
     (uninit_vars : (Location_span.t * string) Set.Poly.t) =
   let show_var_info (span, var_name) =
@@ -18,7 +21,8 @@ let print_warn_uninitialized
   Set.iter filtered_uninit_vars ~f:(fun v_info ->
       Out_channel.output_string stderr (show_var_info v_info) )
 
-let stan2cpp model_name model_string =
+let stan2cpp model_name model_string flags=
+  Semantic_check.check_that_all_functions_have_definition := not (contains_substring flags "--allow_undefined");
   Semantic_check.model_name := model_name ;
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
@@ -55,10 +59,10 @@ let wrap_result = function
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
 
-let map2 f (x, y) = (f x, f y)
+let map3 f (x, y, z) = (f x, f y, f z)
 
-let wrap2 f s1 s2 =
-  let s1, s2 = map2 Js.to_string (s1, s2) in
-  f s1 s2 |> wrap_result
+let wrap2 f s1 s2 s3 =
+  let s1, s2, s3 = map3 Js.to_string (s1, s2, s3) in
+  f s1 s2 s3 |> wrap_result
 
 let _ = Js.export "stanc" (wrap2 stan2cpp)
