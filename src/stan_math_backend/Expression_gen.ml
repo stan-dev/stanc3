@@ -56,6 +56,11 @@ let minus_one e =
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
+let dont_need_range_check = function
+  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
+      not (Utils.is_user_ident id)
+  | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -138,10 +143,7 @@ let fn_renames =
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   |> String.Map.of_alist_exn
 
-(* code smell - not sure how to refactor this. I was thinking ideally there'd be a stringly typed
-   hash map of metadata available for each expression that we could put something like this in.
-*)
-let map_rect_counter = ref 0
+let map_rect_calls = Int.Table.create ()
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
 
@@ -311,8 +313,9 @@ and gen_fun_app ppf fname es =
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
-          incr map_rect_counter ;
-          (strf "%s<%d, %s>" fname !map_rect_counter f, tl @ [msgs])
+          let next_map_rect_id = (Hashtbl.length map_rect_calls + 1) in
+          Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f;
+          (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in
@@ -426,7 +429,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
-      when List.for_all ~f:is_single_index idx
+      when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
