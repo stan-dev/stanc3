@@ -1,6 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
-(** The "dimensionality" (bad name?) is supposed to help us represent the
+
+(* The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our
@@ -957,6 +958,7 @@ let () =
     ("hypergeometric_lpmf", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified ("hypergeometric_rng", ReturnType UInt, [UInt; UInt; UInt]) ;
   add_binary "hypot" ;
+  add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
   for j = 0 to 8 - 1 do
     add_unqualified
       ( "if_else"
@@ -1127,6 +1129,9 @@ let () =
   add_unqualified ("is_nan", ReturnType UInt, [UReal]) ;
   add_binary "lbeta" ;
   add_binary "lchoose" ;
+  add_unqualified ("linspaced_array", ReturnType (UArray UReal), [UInt; UReal; UReal]) ;
+  add_unqualified ("linspaced_row_vector", ReturnType (URowVector), [UInt; UReal; UReal]) ;
+  add_unqualified ("linspaced_vector", ReturnType (UVector), [UInt; UReal; UReal]) ;
   add_unqualified ("lkj_corr_cholesky_log", ReturnType UReal, [UMatrix; UReal]) ;
   add_unqualified ("lkj_corr_cholesky_lpdf", ReturnType UReal, [UMatrix; UReal]) ;
   add_unqualified ("lkj_corr_cholesky_rng", ReturnType UMatrix, [UInt; UReal]) ;
@@ -1368,6 +1373,14 @@ let () =
     add_unqualified
       ("num_elements", ReturnType UInt, [bare_array_type (UVector, i)])
   done ;
+  add_unqualified ( "one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt] ) ;
+  add_unqualified ( "one_hot_array", ReturnType (UArray UReal), [UInt; UInt] ) ;
+  add_unqualified ( "one_hot_row_vector", ReturnType (URowVector), [UInt; UInt] ) ;
+  add_unqualified ( "one_hot_vector", ReturnType (UVector), [UInt; UInt] ) ;
+  add_unqualified ( "ones_int_array", ReturnType (UArray UInt), [UInt] ) ;
+  add_unqualified ( "ones_array", ReturnType (UArray UReal), [UInt] ) ;
+  add_unqualified ( "ones_row_vector", ReturnType (URowVector), [UInt] ) ;
+  add_unqualified ( "ones_vector", ReturnType (UVector), [UInt] ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
@@ -1709,11 +1722,16 @@ let () =
   add_unqualified ("transpose", ReturnType URowVector, [UVector]) ;
   add_unqualified ("transpose", ReturnType UVector, [URowVector]) ;
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("uniform_simplex", ReturnType UVector, [UInt]) ;
   add_unqualified ("variance", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("variance", ReturnType UReal, [UVector]) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix]) ;
+  add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt]) ;
+  add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt]) ;
+  add_unqualified ("zeros_row_vector", ReturnType (URowVector), [UInt]) ;
+  add_unqualified ("zeros_vector", ReturnType (UVector), [UInt]) ;
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
