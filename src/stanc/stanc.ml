@@ -125,7 +125,7 @@ let options =
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." )
-    ; ( "--standalone_functions"
+    ; ( "--standalone-functions"
       , Arg.Set Stan_math_code_gen.standalone_functions
       , " If set, the generated C++ will be the standalone functions C++ code."
       ) ]
