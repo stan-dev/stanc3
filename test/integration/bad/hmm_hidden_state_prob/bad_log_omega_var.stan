@@ -5,7 +5,7 @@ data {
   matrix[K, N] log_omega;
   matrix[K, K] Gamma;
   vector[K] rho;
-
+}
 
 parameters {
   real y_p;
