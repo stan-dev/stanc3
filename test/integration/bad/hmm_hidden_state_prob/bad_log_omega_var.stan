@@ -5,7 +5,7 @@ data {
   matrix[K, N] log_omega;
   matrix[K, K] Gamma;
   vector[K] rho;
-}
+ 
 
 parameters {
   real y_p;
@@ -15,8 +15,7 @@ transformed parameters {
   matrix[K, N] log_omega_v;
   matrix[K, K] Gamma_v;
   vector[K] rho_v;
-nkdn
- prob = hmm_hidden_state_prob(log_omega_v, Gamma, rho);
+  prob = hmm_hidden_state_prob(log_omega_v, Gamma, rho);
 }
 
 model {

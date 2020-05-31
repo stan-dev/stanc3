@@ -15,8 +15,7 @@ transformed parameters {
   matrix[K, N] log_omega_v;
   matrix[K, K] Gamma_v;
   vector[K] rho_v;
-nkdn
- prob = hmm_hidden_state_prob(log_omega, Gamma, rho_v);
+  // prob = hmm_hidden_state_prob(log_omega, Gamma, rho_v);
 }
 
 model {
