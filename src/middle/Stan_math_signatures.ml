@@ -248,14 +248,6 @@ let all_declarative_sigs = distributions @ math_sigs
 let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
-(* Name mangling helper functions for distributions *)
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
-
-let remove_propto_infix suffix ~name =
-  name
-  |> String.chop_suffix ~suffix:(Utils.proportional_to_distribution_infix ^ suffix)
-  |> Option.map ~f:(fun x -> x ^ suffix)
-
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
   let name = Utils.stdlib_distribution_name name in
@@ -280,18 +272,6 @@ let stan_math_returntype name args =
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
-
-(* XXX Refactor this out into full Distribution node in MIR *)
-let is_distribution_name ?(infix = "") s =
-  (not
-     ( String.is_suffix ~suffix:"_cdf_log" s
-     || String.is_suffix ~suffix:"_ccdf_log" s ))
-  && List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-       distribution_suffices
-
-let is_propto_distribution s =
-  is_distribution_name ~infix:Utils.proportional_to_distribution_infix s
 
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"
