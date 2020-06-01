@@ -4,19 +4,22 @@ let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
 let proportional_to_distribution_infix = "_propto"
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
+let propto_suffices = ["_propto_lpdf"; "_propto_lpmf"; "_propto_log"]
+let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"; "_lupdf"; "_lupmf"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
-let is_distribution_name ?(infix = "") s =
+let is_distribution_name s =
   (not
      ( String.is_suffix s ~suffix:"_cdf_log"
      || String.is_suffix s ~suffix:"_ccdf_log" ))
   && List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
+       ~f:(fun suffix -> String.is_suffix s ~suffix)
        distribution_suffices
 
 let is_propto_distribution s =
-  is_distribution_name ~infix:proportional_to_distribution_infix s
+  List.exists
+       ~f:(fun suffix -> String.is_suffix s ~suffix)
+       propto_suffices
 
 let remove_propto_infix suffix ~name =
   name
