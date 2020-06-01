@@ -231,21 +231,10 @@ var_decl:
                   is_global= false};
        smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
     }
-  | sbt=sized_basic_type id=decl_identifier sizes=dims
-    ae=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "var_decl" ;
-      {stmt=
-         VarDecl {decl_type= Sized (reducearray (sbt, sizes));
-                  transformation= Identity;
-                  identifier= id;
-                  initial_value=Option.map ~f:snd ae;
-                  is_global= false};
-       smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
-    }
   | sbt=sized_basic_type sizes=dims id=decl_identifier
     ae=option(pair(ASSIGN, expression)) SEMICOLON
-  (* | sbt=sized_basic_type id=decl_identifier sizes=dims
-   *   ae=option(pair(ASSIGN, expression)) SEMICOLON *)
+  | sbt=sized_basic_type id=decl_identifier sizes=dims
+    ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
       {stmt=
          VarDecl {decl_type= Sized (reducearray (sbt, sizes));
