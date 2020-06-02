@@ -33,6 +33,8 @@ let reducearray (sbt, l) =
 %token PRINT REJECT
 %token TRUNCATE
 %token EOF
+
+(* Unreachable tokens are useful for differentiating states *)
 %token UNREACHABLE
 %token UNREACHABLE2
 %token UNREACHABLE3
@@ -220,56 +222,27 @@ unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
     { grammar_logger "unsized_dims" ; List.length(cs) }
 
-(* (\* declarations *\)
- * var_decl:
- *   | sbt=sized_basic_type id=decl_identifier
- *     ae=option(pair(ASSIGN, expression)) SEMICOLON
- *     { grammar_logger "var_decl" ;
- *       {stmt=
- *          VarDecl {decl_type= Sized sbt;
- *                   transformation= Identity;
- *                   identifier= id;
- *                   initial_value=Option.map ~f:snd ae;
- *                   is_global= false};
- *        smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
- *     }
- *   | sbt=sized_basic_type sizes=dims id=decl_identifier
- *     ae=option(pair(ASSIGN, expression)) SEMICOLON
- *   | sbt=sized_basic_type id=decl_identifier sizes=dims
- *     ae=option(pair(ASSIGN, expression)) SEMICOLON
- *     { grammar_logger "var_decl" ;
- *       {stmt=
- *          VarDecl {decl_type= Sized (reducearray (sbt, sizes));
- *                   transformation= Identity;
- *                   identifier= id;
- *                   initial_value=Option.map ~f:snd ae;
- *                   is_global= false};
- *        smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
- *     } *)
-
-
-var_decl:
-  | d_fn=decl(sized_basic_type, expression)
-  { grammar_logger "var_decl" ;
-    d_fn ~is_global:false
-  }
-
+(* Helper rule to match a single item but return a list type *)
 singleton_list(x):
-  | x
-    { [x] }
+  | x_val=x
+    { [x_val] }
 
+(* Consume nothing but return a list type *)
 empty_ids:
   | option(UNREACHABLE2)
     { [] }
 
+(* Consume nothing but return a list type *)
 empty_sizes:
   | option(UNREACHABLE3)
     { [] }
 
+(* Consume an x, but return the same type as option(x) *)
 some(x):
   | x_val=x
     { Some x_val }
 
+(* Never accept this rule, but return the same type as expression *)
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
@@ -279,20 +252,46 @@ no_assign:
       }
     }
 
+(* Consume nothing, but return the same type as option(x) *)
 none:
   | option(UNREACHABLE)
       { None }
 
+(*
+ * All rules for declaration statements.
+ * The first argument matches the type and should return a (type, constraint) pair.
+ * The second argument matches the RHS expression and should return an expression
+ *   (or use no_assign to never allow a RHS).
+ *
+ * The various rules match declarations with/without assignments, with/without
+ * array dimentions, single/multiple identifiers, and dimensions before/after
+ * the identifier.
+ * Some rules are missing information that other rules have (e.g. rhs), in those
+ * cases the variables are assigned to empty values (None or []). This technique
+ * dramatically reduces code replication.
+ *)
 decl(type_rule, assign):
-  | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids sizes=empty_sizes
-  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids
-  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids
-  | ty=type_rule id=decl_identifier sizes=dims SEMICOLON rhs=none ids=empty_ids
-  | ty=type_rule id=decl_identifier SEMICOLON ids=empty_ids rhs=none sizes=empty_sizes
-  | ty=type_rule id=decl_identifier COMMA ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON rhs=none sizes=empty_sizes
-  | ty=type_rule sizes=dims id=decl_identifier SEMICOLON rhs=none ids=empty_ids
-  | ty=type_rule sizes=dims id=decl_identifier COMMA ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON rhs=none
+  | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
+      ids=empty_ids sizes=empty_sizes
+  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
+      ids=empty_ids
+  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=some(assign) SEMICOLON
+      ids=empty_ids
+  | ty=type_rule id=decl_identifier sizes=dims SEMICOLON
+      rhs=none ids=empty_ids
+  | ty=type_rule id=decl_identifier SEMICOLON
+      ids=empty_ids rhs=none sizes=empty_sizes
+  | ty=type_rule id=decl_identifier COMMA
+      ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+      rhs=none sizes=empty_sizes
+  | ty=type_rule sizes=dims id=decl_identifier SEMICOLON
+      rhs=none ids=empty_ids
+  | ty=type_rule sizes=dims id=decl_identifier COMMA
+      ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+      rhs=none
     { (fun ~is_global ->
+      (* map over each id (often only one), assigning each one the same type *)
+      (* there will never be multiple ids when there is an assignment expr *)
       List.map (id::ids) ~f:(fun id ->
           { stmt=
               VarDecl {
@@ -308,26 +307,23 @@ decl(type_rule, assign):
           })
     )}
 
-(* decl_no_assign(type_rule):
- *   | ty=type_rule ids=separated_nonempty_list(COMMA, decl_identifier) sizes=empty_sizes SEMICOLON
- *   | ty=type_rule sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
- *   | ty=type_rule ids=singleton_list(decl_identifier) sizes=dims SEMICOLON
- *     { (fun is_global ->
- *       List.map ids ~f:(fun id ->
- *           {stmt=
- *              VarDecl {
- *                  decl_type= Sized (reducearray (fst ty, sizes))
- *                ; transformation= snd ty
- *                ; identifier= id
- *                ; initial_value= None
- *                ; is_global
- *                }
- *           ; smeta= {
- *               loc= Location_span.of_positions_exn $startpos $endpos
- *             }
- *           })
- *       )
- *     } *)
+var_decl:
+  | d_fn=decl(sized_basic_type, expression)
+    { grammar_logger "var_decl" ;
+      d_fn ~is_global:false
+    }
+
+top_var_decl:
+  | d_fn=decl(top_var_type, expression)
+    { grammar_logger "top_var_decl" ;
+      d_fn ~is_global:true
+    }
+
+top_var_decl_no_assign:
+  | d_fn=decl(top_var_type, no_assign)
+    { grammar_logger "top_var_decl_no_assign" ;
+      d_fn ~is_global:true
+    }
 
 sized_basic_type:
   | INT
@@ -340,75 +336,6 @@ sized_basic_type:
     { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
-
-top_var_decl_no_assign:
-  | d_fn=decl(top_var_type, no_assign)
-    { grammar_logger "top_var_decl_no_assign" ;
-      d_fn ~is_global:true
-    }
-
- (* top_var_decl_no_assign:
- *     | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
- *     {
- *       grammar_logger "top_var_decl_no_assign" ;
- *       List.map ids ~f:(fun id ->
- *           {stmt=
- *              VarDecl {decl_type= Sized (fst tvt);
- *                       transformation=  snd tvt;
- *                       identifier= id;
- *                       initial_value= None;
- *                       is_global= true};
- *            smeta={loc= Location_span.of_positions_exn $startpos $endpos}
- *           }
- *         )
- *     }
- *     | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) sizes=dims SEMICOLON
- *     | tvt=top_var_type sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
- *     {
- *       grammar_logger "top_var_decl_no_assign" ;
- *       List.map ids ~f:(fun id ->
- *           {stmt=
- *              VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
- *                       transformation=  snd tvt;
- *                       identifier= id;
- *                       initial_value= None;
- *                       is_global= true};
- *            smeta={loc= Location_span.of_positions_exn $startpos $endpos}
- *           }
- *         )
- *     } *)
-
-top_var_decl:
-  | d_fn=decl(top_var_type, expression)
-    { grammar_logger "top_var_decl" ;
-      d_fn ~is_global:true
-    }
-
-(* top_var_decl:
- *   | tvt=top_var_type id=decl_identifier
- *     ass=option(pair(ASSIGN, expression)) SEMICOLON
- *     { grammar_logger "top_var_decl" ;
- *       {stmt=
- *          VarDecl {decl_type= Sized (fst tvt);
- *                   transformation=  snd tvt;
- *                   identifier= id;
- *                   initial_value= Option.map ~f:snd ass;
- *                   is_global= true};
- *        smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
- *     }
- *   | tvt=top_var_type id=decl_identifier sizes=dims
- *     ass=option(pair(ASSIGN, expression)) SEMICOLON
- *   | tvt=top_var_type sizes=dims id=decl_identifier
- *     ass=option(pair(ASSIGN, expression)) SEMICOLON
- *     { grammar_logger "top_var_decl" ;
- *       {stmt=
- *          VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
- *                        transformation=  snd tvt;
- *                        identifier= id;
- *                        initial_value= Option.map ~f:snd ass;
- *                        is_global= true};
- *        smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
- *     } *)
 
 top_var_type:
   | INT r=range_constraint
