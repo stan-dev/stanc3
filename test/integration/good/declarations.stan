@@ -70,19 +70,19 @@ transformed data {
   real td_b1[4];
   real td_b2[5,6];
   real[4] td_b3;
-  real[5,6] td_b3;
+  real[5,6] td_b4;
   
   vector[7] td_c0;
   vector[7] td_c1[8];
   vector[7] td_c2[8,9];
   vector[7][8] td_c3;
-  vector[7][8,9] td_c3;
+  vector[7][8,9] td_c4;
 
   row_vector[7] td_d0;
   row_vector[7] td_d1[8];
   row_vector[7] td_d2[8,9];
   row_vector[7][8] td_d3;
-  row_vector[7][8,9] td_d3;
+  row_vector[7][8,9] td_d4;
 
   matrix[8,9] td_e;
   matrix[8,9] td_e1[11];

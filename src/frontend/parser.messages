@@ -14024,3 +14024,89 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA OFFSET
 ##
 
 Expected '>' after multiplier expression.
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE WHILE
+##
+## Ends in an error in state: 680.
+##
+## top_var_decl -> top_var_type dims decl_identifier . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type dims decl_identifier
+##
+
+Expected assignment or semicolon after identifier in declaration.
+
+program: TRANSFORMEDDATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK UNREACHABLE
+##
+## Ends in an error in state: 679.
+##
+## top_var_decl -> top_var_type dims . decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type dims
+##
+
+Invalid identifier.
+
+program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE WHILE
+##
+## Ends in an error in state: 664.
+##
+## top_var_decl_no_assign -> top_var_type dims decl_identifier . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type dims decl_identifier
+##
+
+Missing identifier.
+
+program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK UNREACHABLE
+##
+## Ends in an error in state: 663.
+##
+## top_var_decl_no_assign -> top_var_type dims . decl_identifier SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type dims
+##
+
+Invalid identifier.
+
+program: MODELBLOCK LBRACE REAL LBRACK TRUNCATE RBRACK TRUNCATE WHILE
+##
+## Ends in an error in state: 478.
+##
+## var_decl -> sized_basic_type dims decl_identifier . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type dims decl_identifier
+##
+
+Expected assignment or semicolon after identifier in declaration.
+
+program: MODELBLOCK LBRACE REAL LBRACK TRUNCATE RBRACK UNREACHABLE
+##
+## Ends in an error in state: 477.
+##
+## var_decl -> sized_basic_type dims . decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type dims
+##
+
+Invalid identifier.
+
+program: MODELBLOCK LBRACE REAL UNREACHABLE
+##
+## Ends in an error in state: 473.
+##
+## var_decl -> sized_basic_type . decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+## var_decl -> sized_basic_type . dims decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+## var_decl -> sized_basic_type . decl_identifier dims option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type
+##
+
+Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
