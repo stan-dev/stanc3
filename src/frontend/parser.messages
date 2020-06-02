@@ -1379,7 +1379,7 @@ Expected "[" expression "]" for size of positive_ordered.
 
 program: DATABLOCK LBRACE RBRACE WHILE
 ##
-## Ends in an error in state: 672.
+## Ends in an error in state: 677.
 ##
 ## program -> option(function_block) option(data_block) . option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -1391,27 +1391,25 @@ Expected "transformed data {" or "parameters {" or "transformed parameters {" or
 
 program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
-## Ends in an error in state: 664.
+## Ends in an error in state: 673.
 ##
-## top_var_decl_no_assign -> top_var_type decl_identifier SEMICOLON . [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-## top_var_decl_no_assign -> top_var_type decl_identifier SEMICOLON . dims [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## list(top_var_decl_no_assign) -> top_var_decl_no_assign . list(top_var_decl_no_assign) [ RBRACE ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type decl_identifier SEMICOLON
+## top_var_decl_no_assign
 ##
 
 Only top-level variable declarations allowed in data and parameters blocks.
 
 program: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
-## Ends in an error in state: 663.
+## Ends in an error in state: 670.
 ##
-## top_var_decl_no_assign -> top_var_type decl_identifier . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-## top_var_decl_no_assign -> top_var_type decl_identifier . SEMICOLON dims [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-## top_var_decl_no_assign -> top_var_type decl_identifier . dims SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## separated_nonempty_list(COMMA,decl_identifier) -> decl_identifier . [ SEMICOLON LBRACK ]
+## separated_nonempty_list(COMMA,decl_identifier) -> decl_identifier . COMMA separated_nonempty_list(COMMA,decl_identifier) [ SEMICOLON LBRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type decl_identifier
+## decl_identifier
 ##
 
 Only top-level variable declarations are allowed in data and parameter blocks.
@@ -2608,9 +2606,9 @@ program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Ends in an error in state: 662.
 ##
-## top_var_decl_no_assign -> top_var_type . decl_identifier SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-## top_var_decl_no_assign -> top_var_type . decl_identifier SEMICOLON dims [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-## top_var_decl_no_assign -> top_var_type . decl_identifier dims SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## top_var_decl_no_assign -> top_var_type . separated_nonempty_list(COMMA,decl_identifier) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## top_var_decl_no_assign -> top_var_type . separated_nonempty_list(COMMA,decl_identifier) dims SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## top_var_decl_no_assign -> top_var_type . dims separated_nonempty_list(COMMA,decl_identifier) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
 ##
 ## The known suffix of the stack is as follows:
 ## top_var_type
@@ -2961,7 +2959,7 @@ program: FUNCTIONBLOCK WHILE
 
 program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
-## Ends in an error in state: 715.
+## Ends in an error in state: 720.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) . EOF [ # ]
 ##
@@ -2973,7 +2971,7 @@ Expected end of file after end of generated quantities block.
 
 program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ##
-## Ends in an error in state: 712.
+## Ends in an error in state: 717.
 ##
 ## generated_quantities_block -> GENERATEDQUANTITIESBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ EOF ]
 ##
@@ -2985,7 +2983,7 @@ Variable declaration or statement or "}" expected in generated quantities block.
 
 program: GENERATEDQUANTITIESBLOCK WHILE
 ##
-## Ends in an error in state: 711.
+## Ends in an error in state: 716.
 ##
 ## generated_quantities_block -> GENERATEDQUANTITIESBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ EOF ]
 ##
@@ -3385,7 +3383,7 @@ program: MODELBLOCK LBRACE MATRIX WHILE
 
 program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
-## Ends in an error in state: 710.
+## Ends in an error in state: 715.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) . option(generated_quantities_block) EOF [ # ]
 ##
@@ -3522,7 +3520,7 @@ program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ##
 ## Ends in an error in state: 475.
 ##
-## dims -> LBRACK separated_nonempty_list(COMMA,expression) . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REAL RBRACE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ASSIGN ]
+## dims -> LBRACK separated_nonempty_list(COMMA,expression) . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REAL PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ASSIGN ]
 ##
 ## The known suffix of the stack is as follows:
 ## LBRACK separated_nonempty_list(COMMA,expression)
@@ -3541,7 +3539,7 @@ program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 474.
 ##
-## dims -> LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REAL RBRACE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ASSIGN ]
+## dims -> LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REAL PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER INT IN IF IDENTIFIER GETLP FUNCTIONBLOCK FOR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ASSIGN ]
 ##
 ## The known suffix of the stack is as follows:
 ## LBRACK
@@ -3848,7 +3846,7 @@ program: MODELBLOCK LBRACE VECTOR WHILE
 
 program: MODELBLOCK LBRACE VOID
 ##
-## Ends in an error in state: 707.
+## Ends in an error in state: 712.
 ##
 ## model_block -> MODELBLOCK LBRACE . list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -3860,7 +3858,7 @@ Variable declaration, statement or "}" expected.
 
 program: MODELBLOCK WHILE
 ##
-## Ends in an error in state: 706.
+## Ends in an error in state: 711.
 ##
 ## model_block -> MODELBLOCK . LBRACE list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -3872,7 +3870,7 @@ Expected "{" after "model".
 
 program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
-## Ends in an error in state: 699.
+## Ends in an error in state: 704.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) . option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -3884,7 +3882,7 @@ program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 program: PARAMETERSBLOCK LBRACE WHILE
 ##
-## Ends in an error in state: 695.
+## Ends in an error in state: 700.
 ##
 ## parameters_block -> PARAMETERSBLOCK LBRACE . list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -3896,7 +3894,7 @@ Expected top-level variable declaration or "}".
 
 program: PARAMETERSBLOCK WHILE
 ##
-## Ends in an error in state: 694.
+## Ends in an error in state: 699.
 ##
 ## parameters_block -> PARAMETERSBLOCK . LBRACE list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -5662,7 +5660,7 @@ Expected "(" followed by a comma-separated list of expressions or strings follow
 
 program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
-## Ends in an error in state: 693.
+## Ends in an error in state: 698.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) . option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -5674,7 +5672,7 @@ Expected "parameters {", "transformed parameters {", "model {", "generated quant
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
-## Ends in an error in state: 681.
+## Ends in an error in state: 686.
 ##
 ## top_var_decl -> top_var_type decl_identifier . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
 ## top_var_decl -> top_var_type decl_identifier . dims option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
@@ -9266,7 +9264,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 
 program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ##
-## Ends in an error in state: 675.
+## Ends in an error in state: 680.
 ##
 ## list(top_vardecl_or_statement) -> top_vardecl_or_statement . list(top_vardecl_or_statement) [ RBRACE ]
 ##
@@ -13171,7 +13169,7 @@ Ill-formed statement or expression. A statement or expression could be expected 
 
 program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
-## Ends in an error in state: 676.
+## Ends in an error in state: 681.
 ##
 ## top_var_decl -> top_var_type . decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
 ## top_var_decl -> top_var_type . decl_identifier dims option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
@@ -13185,7 +13183,7 @@ Ill-formed top-level variable declaration. Expect an identifier next.
 
 program: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
-## Ends in an error in state: 674.
+## Ends in an error in state: 679.
 ##
 ## transformed_data_block -> TRANSFORMEDDATABLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -13357,7 +13355,7 @@ After "while", we expect "(" expression ")" statement.
 
 program: TRANSFORMEDDATABLOCK WHILE
 ##
-## Ends in an error in state: 673.
+## Ends in an error in state: 678.
 ##
 ## transformed_data_block -> TRANSFORMEDDATABLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -13369,7 +13367,7 @@ We expect "{" after "transformed data".
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
-## Ends in an error in state: 705.
+## Ends in an error in state: 710.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) . option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -13381,7 +13379,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ##
-## Ends in an error in state: 701.
+## Ends in an error in state: 706.
 ##
 ## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -13393,7 +13391,7 @@ Expect a statement or top-level variable declaration.
 
 program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
-## Ends in an error in state: 700.
+## Ends in an error in state: 705.
 ##
 ## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -13417,19 +13415,19 @@ Expected  ";" or "=" expression ";".
 
 program: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 ##
-## Ends in an error in state: 666.
+## Ends in an error in state: 665.
 ##
-## top_var_decl_no_assign -> top_var_type decl_identifier dims . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## top_var_decl_no_assign -> top_var_type separated_nonempty_list(COMMA,decl_identifier) dims . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type decl_identifier dims
+## top_var_type separated_nonempty_list(COMMA,decl_identifier) dims
 ##
 
 Expected ";".
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
 ##
-## Ends in an error in state: 684.
+## Ends in an error in state: 689.
 ##
 ## top_var_decl -> top_var_type decl_identifier dims . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
 ##
@@ -14027,7 +14025,7 @@ Expected '>' after multiplier expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE WHILE
 ##
-## Ends in an error in state: 680.
+## Ends in an error in state: 683.
 ##
 ## top_var_decl -> top_var_type dims decl_identifier . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
 ##
@@ -14039,7 +14037,7 @@ Expected assignment or semicolon after identifier in declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK UNREACHABLE
 ##
-## Ends in an error in state: 679.
+## Ends in an error in state: 682.
 ##
 ## top_var_decl -> top_var_type dims . decl_identifier option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
 ##
@@ -14049,23 +14047,11 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK UNREACHABLE
 
 Invalid identifier.
 
-program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE WHILE
-##
-## Ends in an error in state: 664.
-##
-## top_var_decl_no_assign -> top_var_type dims decl_identifier . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type dims decl_identifier
-##
-
-Missing identifier.
-
 program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK UNREACHABLE
 ##
-## Ends in an error in state: 663.
+## Ends in an error in state: 667.
 ##
-## top_var_decl_no_assign -> top_var_type dims . decl_identifier SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+## top_var_decl_no_assign -> top_var_type dims . separated_nonempty_list(COMMA,decl_identifier) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
 ##
 ## The known suffix of the stack is as follows:
 ## top_var_type dims

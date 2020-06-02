@@ -1,0 +1,37 @@
+
+** Conflict (shift/reduce) in state 497.
+** Tokens involved: UNREACHABLE LBRACK
+** The following explanations concentrate on token LBRACK.
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type) 
+                                                                             (?)
+
+** In state 497, looking ahead at LBRACK, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier dims ASSIGN lhs SEMICOLON 
+                                 . LBRACK separated_nonempty_list(COMMA,expression) RBRACK 
+
+** In state 497, looking ahead at LBRACK, reducing production
+** singleton_list(decl_identifier) -> decl_identifier 
+** is permitted because of the following sub-derivation:
+
+decl_no_assign(sized_basic_type) 
+sized_basic_type singleton_list(decl_identifier) dims SEMICOLON // lookahead token appears because dims can begin with LBRACK
+                 decl_identifier . 

@@ -218,75 +218,138 @@ unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
     { grammar_logger "unsized_dims" ; List.length(cs) }
 
-(* declarations *)
+(* (\* declarations *\)
+ * var_decl:
+ *   | sbt=sized_basic_type id=decl_identifier
+ *     ae=option(pair(ASSIGN, expression)) SEMICOLON
+ *     { grammar_logger "var_decl" ;
+ *       {stmt=
+ *          VarDecl {decl_type= Sized sbt;
+ *                   transformation= Identity;
+ *                   identifier= id;
+ *                   initial_value=Option.map ~f:snd ae;
+ *                   is_global= false};
+ *        smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
+ *     }
+ *   | sbt=sized_basic_type sizes=dims id=decl_identifier
+ *     ae=option(pair(ASSIGN, expression)) SEMICOLON
+ *   | sbt=sized_basic_type id=decl_identifier sizes=dims
+ *     ae=option(pair(ASSIGN, expression)) SEMICOLON
+ *     { grammar_logger "var_decl" ;
+ *       {stmt=
+ *          VarDecl {decl_type= Sized (reducearray (sbt, sizes));
+ *                   transformation= Identity;
+ *                   identifier= id;
+ *                   initial_value=Option.map ~f:snd ae;
+ *                   is_global= false};
+ *        smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
+ *     } *)
+
+
 var_decl:
-  | sbt=sized_basic_type id=decl_identifier
-    ae=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "var_decl" ;
-      {stmt=
-         VarDecl {decl_type= Sized sbt;
-                  transformation= Identity;
-                  identifier= id;
-                  initial_value=Option.map ~f:snd ae;
-                  is_global= false};
-       smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
+  | d_fn=decl(sized_basic_type)
+  { grammar_logger "var_decl" ;
+    d_fn false
+  }
+
+decl(type_rule):
+  | ty=type_rule id=decl_identifier sizes=empty_list ASSIGN rhs=expression SEMICOLON
+  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=expression SEMICOLON
+  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=expression SEMICOLON
+    { (fun is_global ->
+      [{ stmt=
+           VarDecl {
+               decl_type= Sized (reducearray (fst ty, sizes))
+             ; transformation= snd ty
+             ; identifier= id
+             ; initial_value= Some rhs
+             ; is_global
+             }
+       ; smeta= {
+           loc= Location_span.of_positions_exn $startpos $endpos
+         }
+      }]
+    )}
+  | d=decl_no_assign(type_rule)
+    { d }
+
+decl_no_assign(type_rule):
+  | ty=type_rule ids=separated_nonempty_list(COMMA, decl_identifier) sizes=empty_list SEMICOLON
+  | ty=type_rule sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+  | ty=type_rule ids=singleton_list(decl_identifier) sizes=dims SEMICOLON
+    { (fun is_global ->
+      List.map ids ~f:(fun id ->
+          {stmt=
+             VarDecl {
+                 decl_type= Sized (reducearray (fst ty, sizes))
+               ; transformation= snd ty
+               ; identifier= id
+               ; initial_value= None
+               ; is_global
+               }
+          ; smeta= {
+              loc= Location_span.of_positions_exn $startpos $endpos
+            }
+          })
+      )
     }
-  | sbt=sized_basic_type sizes=dims id=decl_identifier
-    ae=option(pair(ASSIGN, expression)) SEMICOLON
-  | sbt=sized_basic_type id=decl_identifier sizes=dims
-    ae=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "var_decl" ;
-      {stmt=
-         VarDecl {decl_type= Sized (reducearray (sbt, sizes));
-                  transformation= Identity;
-                  identifier= id;
-                  initial_value=Option.map ~f:snd ae;
-                  is_global= false};
-       smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
-    }
+
+singleton_list(x):
+  | x
+    { [x] }
+
+empty_list:
+  | option(UNREACHABLE)
+    { [] }
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; SizedType.SInt }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
   | REAL
-    { grammar_logger "REAL_var_type" ; SizedType.SReal }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; SizedType.SVector e }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; SizedType.SRowVector e  }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; SizedType.SMatrix (e1, e2) }
-
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
 
 top_var_decl_no_assign:
-    | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-    {
-      grammar_logger "top_var_decl_no_assign" ;
-      List.map ids ~f:(fun id ->
-          {stmt=
-             VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
-                      transformation=  snd tvt;
-                      identifier= id;
-                      initial_value= None;
-                      is_global= true};
-           smeta={loc= Location_span.of_positions_exn $startpos $endpos}
-          }
+  | d_fn=decl_no_assign(top_var_type)
+    { grammar_logger "top_var_decl_no_assign" ;
+      d_fn true
     }
-    | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) sizes=dims SEMICOLON
-    | tvt=top_var_type sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-    {
-      grammar_logger "top_var_decl_no_assign" ;
-      List.map ids ~f:(fun id ->
-          {stmt=
-             VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
-                      transformation=  snd tvt;
-                      identifier= id;
-                      initial_value= None;
-                      is_global= true};
-           smeta={loc= Location_span.of_positions_exn $startpos $endpos}
-          }
-        )
-    }
+
+ (* top_var_decl_no_assign:
+ *     | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+ *     {
+ *       grammar_logger "top_var_decl_no_assign" ;
+ *       List.map ids ~f:(fun id ->
+ *           {stmt=
+ *              VarDecl {decl_type= Sized (fst tvt);
+ *                       transformation=  snd tvt;
+ *                       identifier= id;
+ *                       initial_value= None;
+ *                       is_global= true};
+ *            smeta={loc= Location_span.of_positions_exn $startpos $endpos}
+ *           }
+ *         )
+ *     }
+ *     | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) sizes=dims SEMICOLON
+ *     | tvt=top_var_type sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+ *     {
+ *       grammar_logger "top_var_decl_no_assign" ;
+ *       List.map ids ~f:(fun id ->
+ *           {stmt=
+ *              VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
+ *                       transformation=  snd tvt;
+ *                       identifier= id;
+ *                       initial_value= None;
+ *                       is_global= true};
+ *            smeta={loc= Location_span.of_positions_exn $startpos $endpos}
+ *           }
+ *         )
+ *     } *)
 
 top_var_decl:
   | tvt=top_var_type id=decl_identifier
