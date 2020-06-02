@@ -87,7 +87,7 @@ function_block:
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; tvd }
+    { grammar_logger "data_block" ; List.concat tvd }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
@@ -96,7 +96,7 @@ transformed_data_block:
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; tvd }
+    { grammar_logger "parameters_block" ; List.concat tvd }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
@@ -245,19 +245,23 @@ sized_basic_type:
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_var_type" ; SizedType.SMatrix (e1, e2) }
 
+
 top_var_decl_no_assign:
-  | tvt=top_var_type id=decl_identifier d=option(dims) SEMICOLON
+  | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier)
+    d=option(dims) SEMICOLON
     {
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
-      {stmt=
-         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
-                   transformation=  snd tvt;
-                   identifier= id;
-                   initial_value= None;
-                   is_global= true};
-       smeta={loc= Location_span.of_positions_exn $startpos $endpos}
-      }
+      List.map ids ~f:(fun id ->
+          {stmt=
+             VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
+                      transformation=  snd tvt;
+                      identifier= id;
+                      initial_value= None;
+                      is_global= true};
+           smeta={loc= Location_span.of_positions_exn $startpos $endpos}
+          }
+        )
     }
 
 top_var_decl:
