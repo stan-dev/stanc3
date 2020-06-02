@@ -945,6 +945,14 @@ let () =
       , [bare_array_type (bare_types i, 3); UInt] )
   done ;
   add_unqualified
+    ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
+  add_qualified
+    ("hmm_hidden_state_prob", ReturnType UMatrix,
+    [(DataOnly, UMatrix); (DataOnly, UMatrix); (DataOnly, UVector)]) ;
+  add_unqualified
+    ("hmm_latent_rng", ReturnType (bare_array_type (UInt, 1)),
+      [UMatrix; UMatrix; UVector] ) ;
+  add_unqualified
     ("hypergeometric_log", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified
     ("hypergeometric_lpmf", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
