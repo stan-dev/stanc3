@@ -46,8 +46,6 @@ let reducearray (sbt, l) =
 
 (* Unreachable tokens are useful for differentiating states *)
 %token UNREACHABLE
-%token UNREACHABLE2
-%token UNREACHABLE3
 
 %right COMMA
 %right QMARK COLON
@@ -232,26 +230,6 @@ unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
     { grammar_logger "unsized_dims" ; List.length(cs) }
 
-(* Helper rule to match a single item but return a list type *)
-singleton_list(x):
-  | x_val=x
-    { [x_val] }
-
-(* (\* Consume nothing but return a list type *\)
- * empty_ids:
- *   | option(UNREACHABLE2)
- *     { [] } *)
-
-(* (\* Consume nothing but return a list type *\)
- * empty_sizes:
- *   | option(UNREACHABLE3)
- *     { [] } *)
-
-(* (\* Consume an x, but return the same type as option(x) *\)
- * some(x):
- *   | x_val=x
- *     { Some x_val } *)
-
 (* Never accept this rule, but return the same type as expression *)
 no_assign:
   | UNREACHABLE
@@ -262,11 +240,6 @@ no_assign:
       }
     }
 
-(* (\* Consume nothing, but return the same type as option(x) *\)
- * none:
- *   | option(UNREACHABLE)
- *     { None } *)
-
 optional_assignment(rhs):
   | rhs_opt=option(pair(ASSIGN, rhs))
     { Option.map ~f:snd rhs_opt }
@@ -274,10 +247,6 @@ optional_assignment(rhs):
 id_and_optional_assignment(rhs):
   | id=decl_identifier rhs_opt=optional_assignment(rhs)
     { (id, rhs_opt) }
-
-(* id_sized_and_optional_assignment(rhs):
- *   | id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs)
- *     { (id, sizes, rhs_opt) } *)
 
 (*
  * All rules for declaration statements.
@@ -293,11 +262,9 @@ id_and_optional_assignment(rhs):
  * dramatically reduces code replication.
  *)
 decl(type_rule, rhs):
-  (* | ty=type_rule id=decl_identifier sizes=dims SEMICOLON
-   *     rhs=none ids=empty_ids *)
-
-  (* dims after id; no multi *)
-  | ty=type_rule id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs) SEMICOLON
+  (* When dims are after identifier, do not allow multiple identifiers *)
+  | ty=type_rule id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs)
+      SEMICOLON
     { (fun ~is_global ->
       [{ stmt=
           VarDecl {
@@ -312,28 +279,15 @@ decl(type_rule, rhs):
         }
     }])
     }
-
-  (* | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
-   *     ids=empty_ids sizes=empty_sizes
-   * | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
-   *     ids=empty_ids
-   * | ty=type_rule id=decl_identifier SEMICOLON
-   *     ids=empty_ids rhs=none sizes=empty_sizes
-   * | ty=type_rule id=decl_identifier COMMA
-   *     ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-   *     rhs=none sizes=empty_sizes
-   * | ty=type_rule sizes=dims id=decl_identifier SEMICOLON
-   *     rhs=none ids=empty_ids *)
-
-  (* | ty=type_rule sizes=empty_sizes v=id_and_optional_assignment(rhs) COMMA
-   *     vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON *)
-  | ty=type_rule dims_opt=ioption(dims) v=id_and_optional_assignment(rhs) COMMA
+  (* Array dimensions option must be inlined, else it will conflict with first
+     rule. *)
+  | ty=type_rule dims_opt=ioption(dims)
       vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
-      (* map over each id (often only one), assigning each one the same type *)
-      (* there will never be multiple ids when there is an assignment expr *)
+      (* map over each variable in v (often only one), assigning each the same
+         type. *)
       let dims = Option.value dims_opt ~default:[] in
-      List.map (v::vs) ~f:(fun (id, rhs_opt) ->
+      List.map vs ~f:(fun (id, rhs_opt) ->
           { stmt=
               VarDecl {
                   decl_type= Sized (reducearray (fst ty, dims))
