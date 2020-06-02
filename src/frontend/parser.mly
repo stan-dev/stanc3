@@ -5,6 +5,16 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
+(*
+
+     -Only top-level variable declarations are allowed in data and parameter blocks.
+                                                                   -
+                                                                   +(Parse error state 723)
+-Expected top-level variable declaration, statement or "}".
+-
++(Parse error state 775)
+
+ *)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
