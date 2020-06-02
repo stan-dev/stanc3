@@ -264,7 +264,7 @@ Invalid character found.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included"  stanc_helper_with_bad_include_parse_error.stan
 
-Syntax error in '../included/parse-err.stan', line 2, column 2, included from
+Syntax error in '../included/parse-err.stan', line 2, column 8, included from
 '../included/incl_stanc_helper_parse_error.stan', line 2, column 2, included from
 'stanc_helper_with_bad_include_parse_error.stan', line 2, column 0, parsing error:
    -------------------------------------------------

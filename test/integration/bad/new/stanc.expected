@@ -3384,7 +3384,7 @@ Ill formed expression. After "target", we expect "()".
 
   $ ../../../../../install/default/bin/stanc statement-in-data-block-bad.stan
 
-Syntax error in 'statement-in-data-block-bad.stan', line 1, column 7 to column 14, parsing error:
+Syntax error in 'statement-in-data-block-bad.stan', line 1, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data { real T; print(0);}
                        ^
