@@ -34,6 +34,8 @@ let reducearray (sbt, l) =
 %token TRUNCATE
 %token EOF
 %token UNREACHABLE
+%token UNREACHABLE2
+%token UNREACHABLE3
 
 %right COMMA
 %right QMARK COLON
@@ -91,7 +93,7 @@ data_block:
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ;  tvds }
+    {  grammar_logger "transformed_data_block" ;  List.concat tvds }
     (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
@@ -100,15 +102,15 @@ parameters_block:
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; tvds }
+    { grammar_logger "transformed_parameters_block" ; List.concat tvds }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; vds  }
+    { grammar_logger "model_block" ; List.concat vds  }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; tvds }
+    { grammar_logger "generated_quantities_block" ; List.concat tvds }
 
 (* function definitions *)
 identifier:
@@ -247,60 +249,85 @@ unsized_dims:
 
 
 var_decl:
-  | d_fn=decl(sized_basic_type)
+  | d_fn=decl(sized_basic_type, expression)
   { grammar_logger "var_decl" ;
-    d_fn false
+    d_fn ~is_global:false
   }
-
-decl(type_rule):
-  | ty=type_rule id=decl_identifier sizes=empty_list ASSIGN rhs=expression SEMICOLON
-  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=expression SEMICOLON
-  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=expression SEMICOLON
-    { (fun is_global ->
-      [{ stmt=
-           VarDecl {
-               decl_type= Sized (reducearray (fst ty, sizes))
-             ; transformation= snd ty
-             ; identifier= id
-             ; initial_value= Some rhs
-             ; is_global
-             }
-       ; smeta= {
-           loc= Location_span.of_positions_exn $startpos $endpos
-         }
-      }]
-    )}
-  | d=decl_no_assign(type_rule)
-    { d }
-
-decl_no_assign(type_rule):
-  | ty=type_rule ids=separated_nonempty_list(COMMA, decl_identifier) sizes=empty_list SEMICOLON
-  | ty=type_rule sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-  | ty=type_rule ids=singleton_list(decl_identifier) sizes=dims SEMICOLON
-    { (fun is_global ->
-      List.map ids ~f:(fun id ->
-          {stmt=
-             VarDecl {
-                 decl_type= Sized (reducearray (fst ty, sizes))
-               ; transformation= snd ty
-               ; identifier= id
-               ; initial_value= None
-               ; is_global
-               }
-          ; smeta= {
-              loc= Location_span.of_positions_exn $startpos $endpos
-            }
-          })
-      )
-    }
 
 singleton_list(x):
   | x
     { [x] }
 
-empty_list:
-  | option(UNREACHABLE)
+empty_ids:
+  | option(UNREACHABLE2)
     { [] }
+
+empty_sizes:
+  | option(UNREACHABLE3)
+    { [] }
+
+some(x):
+  | x_val=x
+    { Some x_val }
+
+no_assign:
+  | UNREACHABLE
+    { (* This code will never be reached *)
+      let loc = Location_span.of_positions_exn $startpos $endpos in
+      { expr= Variable {name= "UNREACHABLE"; id_loc= loc}
+      ; emeta= {loc}
+      }
+    }
+
+none:
+  | option(UNREACHABLE)
+      { None }
+
+decl(type_rule, assign):
+  | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids sizes=empty_sizes
+  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids
+  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=some(assign) SEMICOLON ids=empty_ids
+  | ty=type_rule id=decl_identifier sizes=dims SEMICOLON rhs=none ids=empty_ids
+  | ty=type_rule id=decl_identifier SEMICOLON ids=empty_ids rhs=none sizes=empty_sizes
+  | ty=type_rule id=decl_identifier COMMA ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON rhs=none sizes=empty_sizes
+  | ty=type_rule sizes=dims id=decl_identifier SEMICOLON rhs=none ids=empty_ids
+  | ty=type_rule sizes=dims id=decl_identifier COMMA ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON rhs=none
+    { (fun ~is_global ->
+      List.map (id::ids) ~f:(fun id ->
+          { stmt=
+              VarDecl {
+                  decl_type= Sized (reducearray (fst ty, sizes))
+                ; transformation= snd ty
+                ; identifier= id
+                ; initial_value= rhs
+                ; is_global
+                }
+          ; smeta= {
+              loc= Location_span.of_positions_exn $startpos $endpos
+            }
+          })
+    )}
+
+(* decl_no_assign(type_rule):
+ *   | ty=type_rule ids=separated_nonempty_list(COMMA, decl_identifier) sizes=empty_sizes SEMICOLON
+ *   | ty=type_rule sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+ *   | ty=type_rule ids=singleton_list(decl_identifier) sizes=dims SEMICOLON
+ *     { (fun is_global ->
+ *       List.map ids ~f:(fun id ->
+ *           {stmt=
+ *              VarDecl {
+ *                  decl_type= Sized (reducearray (fst ty, sizes))
+ *                ; transformation= snd ty
+ *                ; identifier= id
+ *                ; initial_value= None
+ *                ; is_global
+ *                }
+ *           ; smeta= {
+ *               loc= Location_span.of_positions_exn $startpos $endpos
+ *             }
+ *           })
+ *       )
+ *     } *)
 
 sized_basic_type:
   | INT
@@ -315,9 +342,9 @@ sized_basic_type:
     { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
 
 top_var_decl_no_assign:
-  | d_fn=decl_no_assign(top_var_type)
+  | d_fn=decl(top_var_type, no_assign)
     { grammar_logger "top_var_decl_no_assign" ;
-      d_fn true
+      d_fn ~is_global:true
     }
 
  (* top_var_decl_no_assign:
@@ -352,30 +379,36 @@ top_var_decl_no_assign:
  *     } *)
 
 top_var_decl:
-  | tvt=top_var_type id=decl_identifier
-    ass=option(pair(ASSIGN, expression)) SEMICOLON
+  | d_fn=decl(top_var_type, expression)
     { grammar_logger "top_var_decl" ;
-      {stmt=
-         VarDecl {decl_type= Sized (fst tvt);
-                  transformation=  snd tvt;
-                  identifier= id;
-                  initial_value= Option.map ~f:snd ass;
-                  is_global= true};
-       smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
+      d_fn ~is_global:true
     }
-  | tvt=top_var_type id=decl_identifier sizes=dims
-    ass=option(pair(ASSIGN, expression)) SEMICOLON
-  | tvt=top_var_type sizes=dims id=decl_identifier
-    ass=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "top_var_decl" ;
-      {stmt=
-         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
-                       transformation=  snd tvt;
-                       identifier= id;
-                       initial_value= Option.map ~f:snd ass;
-                       is_global= true};
-       smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
-    }
+
+(* top_var_decl:
+ *   | tvt=top_var_type id=decl_identifier
+ *     ass=option(pair(ASSIGN, expression)) SEMICOLON
+ *     { grammar_logger "top_var_decl" ;
+ *       {stmt=
+ *          VarDecl {decl_type= Sized (fst tvt);
+ *                   transformation=  snd tvt;
+ *                   identifier= id;
+ *                   initial_value= Option.map ~f:snd ass;
+ *                   is_global= true};
+ *        smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
+ *     }
+ *   | tvt=top_var_type id=decl_identifier sizes=dims
+ *     ass=option(pair(ASSIGN, expression)) SEMICOLON
+ *   | tvt=top_var_type sizes=dims id=decl_identifier
+ *     ass=option(pair(ASSIGN, expression)) SEMICOLON
+ *     { grammar_logger "top_var_decl" ;
+ *       {stmt=
+ *          VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
+ *                        transformation=  snd tvt;
+ *                        identifier= id;
+ *                        initial_value= Option.map ~f:snd ass;
+ *                        is_global= true};
+ *        smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
+ *     } *)
 
 top_var_type:
   | INT r=range_constraint
@@ -730,17 +763,17 @@ nested_statement:
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+    {  grammar_logger "block_statement" ; Block (List.concat l) } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
 (* statement or var decls *)
 vardecl_or_statement:
   | s=statement
-    { grammar_logger "vardecl_or_statement_statement" ; s }
+    { grammar_logger "vardecl_or_statement_statement" ; [s] }
   | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
   | s=statement
-    { grammar_logger "top_vardecl_or_statement_statement" ;  s }
+    { grammar_logger "top_vardecl_or_statement_statement" ; [s] }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }

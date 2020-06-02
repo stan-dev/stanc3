@@ -1,10 +1,201 @@
 
-** Conflict (shift/reduce) in state 497.
-** Tokens involved: UNREACHABLE LBRACK
-** The following explanations concentrate on token LBRACK.
+** Conflict (shift/reduce) in state 725.
+** Token involved: UNREACHABLE
 ** This state is reached from program after reading:
 
-option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier 
+option(function_block) DATABLOCK LBRACE top_var_type decl_identifier dims SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 725, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type decl_identifier dims SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                            option(UNREACHABLE) // lookahead token is inherited
+                                            . 
+
+** In state 725, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type decl_identifier dims SEMICOLON none empty_list 
+                                            option(UNREACHABLE) 
+                                            . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 721.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) DATABLOCK LBRACE top_var_type decl_identifier ASSIGN some(UNREACHABLE) SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 721, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type decl_identifier ASSIGN some(UNREACHABLE) SEMICOLON empty_list empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                                option(UNREACHABLE) // lookahead token is inherited
+                                                                . 
+
+** In state 721, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type decl_identifier ASSIGN some(UNREACHABLE) SEMICOLON empty_list empty_list 
+                                                                option(UNREACHABLE) 
+                                                                . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 716.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) DATABLOCK LBRACE top_var_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 716, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                                                            option(UNREACHABLE) // lookahead token is inherited
+                                                                                            . 
+
+** In state 716, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON none empty_list 
+                                                                                            option(UNREACHABLE) 
+                                                                                            . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 711.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) DATABLOCK LBRACE top_var_type decl_identifier SEMICOLON empty_list 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 711, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type decl_identifier SEMICOLON empty_list none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                  option(UNREACHABLE) // lookahead token is inherited
+                                                  . 
+
+** In state 711, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type decl_identifier SEMICOLON empty_list none empty_list 
+                                                  option(UNREACHABLE) 
+                                                  . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 710.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) DATABLOCK LBRACE top_var_type decl_identifier SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 710, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type decl_identifier SEMICOLON empty_list none empty_list // lookahead token appears because none can begin with UNREACHABLE
+                                       option(UNREACHABLE) // lookahead token is inherited
+                                       . 
+
+** In state 710, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type decl_identifier SEMICOLON empty_list none empty_list 
+                                       option(UNREACHABLE) 
+                                       . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 697.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) DATABLOCK LBRACE top_var_type dims decl_identifier SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                       data_block 
+                       DATABLOCK LBRACE list(top_var_decl_no_assign) RBRACE 
+                                        top_var_decl_no_assign list(top_var_decl_no_assign) 
+                                        decl(top_var_type,UNREACHABLE) 
+                                        (?)
+
+** In state 697, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+top_var_type dims decl_identifier SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                            option(UNREACHABLE) // lookahead token is inherited
+                                            . 
+
+** In state 697, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+top_var_type dims decl_identifier SEMICOLON none empty_list 
+                                            option(UNREACHABLE) 
+                                            . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 514.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier dims SEMICOLON 
 
 ** The derivations that appear below have the following common factor:
 ** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
@@ -19,19 +210,205 @@ option(function_block) option(data_block) option(transformed_data_block) option(
                                                                       LBRACE list(vardecl_or_statement) RBRACE 
                                                                              vardecl_or_statement list(vardecl_or_statement) 
                                                                              var_decl 
-                                                                             decl(sized_basic_type) 
+                                                                             decl(sized_basic_type,expression) 
                                                                              (?)
 
-** In state 497, looking ahead at LBRACK, shifting is permitted
-** because of the following sub-derivation:
-
-sized_basic_type decl_identifier dims ASSIGN lhs SEMICOLON 
-                                 . LBRACK separated_nonempty_list(COMMA,expression) RBRACK 
-
-** In state 497, looking ahead at LBRACK, reducing production
-** singleton_list(decl_identifier) -> decl_identifier 
+** In state 514, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
 ** is permitted because of the following sub-derivation:
 
-decl_no_assign(sized_basic_type) 
-sized_basic_type singleton_list(decl_identifier) dims SEMICOLON // lookahead token appears because dims can begin with LBRACK
-                 decl_identifier . 
+sized_basic_type decl_identifier dims SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                option(UNREACHABLE) // lookahead token is inherited
+                                                . 
+
+** In state 514, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier dims SEMICOLON none empty_list 
+                                                option(UNREACHABLE) 
+                                                . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 510.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier ASSIGN some(expression) SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type,expression) 
+                                                                             (?)
+
+** In state 510, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+sized_basic_type decl_identifier ASSIGN some(expression) SEMICOLON empty_list empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                                   option(UNREACHABLE) // lookahead token is inherited
+                                                                   . 
+
+** In state 510, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier ASSIGN some(expression) SEMICOLON empty_list empty_list 
+                                                                   option(UNREACHABLE) 
+                                                                   . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 505.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type,expression) 
+                                                                             (?)
+
+** In state 505, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+sized_basic_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                                                                option(UNREACHABLE) // lookahead token is inherited
+                                                                                                . 
+
+** In state 505, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier COMMA separated_nonempty_list(COMMA,decl_identifier) SEMICOLON none empty_list 
+                                                                                                option(UNREACHABLE) 
+                                                                                                . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 500.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier SEMICOLON empty_list 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type,expression) 
+                                                                             (?)
+
+** In state 500, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+sized_basic_type decl_identifier SEMICOLON empty_list none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                      option(UNREACHABLE) // lookahead token is inherited
+                                                      . 
+
+** In state 500, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier SEMICOLON empty_list none empty_list 
+                                                      option(UNREACHABLE) 
+                                                      . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 499.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type decl_identifier SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type,expression) 
+                                                                             (?)
+
+** In state 499, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+sized_basic_type decl_identifier SEMICOLON empty_list none empty_list // lookahead token appears because none can begin with UNREACHABLE
+                                           option(UNREACHABLE) // lookahead token is inherited
+                                           . 
+
+** In state 499, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type decl_identifier SEMICOLON empty_list none empty_list 
+                                           option(UNREACHABLE) 
+                                           . UNREACHABLE 
+
+** Conflict (shift/reduce) in state 479.
+** Token involved: UNREACHABLE
+** This state is reached from program after reading:
+
+option(function_block) option(data_block) TRANSFORMEDDATABLOCK LBRACE LBRACE sized_basic_type dims decl_identifier SEMICOLON 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF 
+                                          transformed_data_block 
+                                          TRANSFORMEDDATABLOCK LBRACE list(top_vardecl_or_statement) RBRACE 
+                                                                      top_vardecl_or_statement list(top_vardecl_or_statement) 
+                                                                      statement 
+                                                                      nested_statement 
+                                                                      LBRACE list(vardecl_or_statement) RBRACE 
+                                                                             vardecl_or_statement list(vardecl_or_statement) 
+                                                                             var_decl 
+                                                                             decl(sized_basic_type,expression) 
+                                                                             (?)
+
+** In state 479, looking ahead at UNREACHABLE, reducing production
+** option(UNREACHABLE) -> 
+** is permitted because of the following sub-derivation:
+
+sized_basic_type dims decl_identifier SEMICOLON none empty_list // lookahead token appears because empty_list can begin with UNREACHABLE
+                                                option(UNREACHABLE) // lookahead token is inherited
+                                                . 
+
+** In state 479, looking ahead at UNREACHABLE, shifting is permitted
+** because of the following sub-derivation:
+
+sized_basic_type dims decl_identifier SEMICOLON none empty_list 
+                                                option(UNREACHABLE) 
+                                                . UNREACHABLE 
