@@ -220,10 +220,22 @@ unsized_dims:
 
 (* declarations *)
 var_decl:
-  | sbt=sized_basic_type id=decl_identifier d=option(dims)
+  | sbt=sized_basic_type id=decl_identifier
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
-      let sizes = match d with None -> [] | Some l -> l in
+      {stmt=
+         VarDecl {decl_type= Sized sbt;
+                  transformation= Identity;
+                  identifier= id;
+                  initial_value=Option.map ~f:snd ae;
+                  is_global= false};
+       smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
+    }
+  | sbt=sized_basic_type sizes=dims id=decl_identifier
+    ae=option(pair(ASSIGN, expression)) SEMICOLON
+  | sbt=sized_basic_type id=decl_identifier sizes=dims
+    ae=option(pair(ASSIGN, expression)) SEMICOLON
+    { grammar_logger "var_decl" ;
       {stmt=
          VarDecl {decl_type= Sized (reducearray (sbt, sizes));
                   transformation= Identity;
@@ -247,11 +259,23 @@ sized_basic_type:
 
 
 top_var_decl_no_assign:
-  | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier)
-    d=option(dims) SEMICOLON
+    | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
     {
       grammar_logger "top_var_decl_no_assign" ;
-      let sizes = match d with None -> [] | Some l -> l in
+      List.map ids ~f:(fun id ->
+          {stmt=
+             VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
+                      transformation=  snd tvt;
+                      identifier= id;
+                      initial_value= None;
+                      is_global= true};
+           smeta={loc= Location_span.of_positions_exn $startpos $endpos}
+          }
+    }
+    | tvt=top_var_type ids=separated_nonempty_list(COMMA, decl_identifier) sizes=dims SEMICOLON
+    | tvt=top_var_type sizes=dims ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+    {
+      grammar_logger "top_var_decl_no_assign" ;
       List.map ids ~f:(fun id ->
           {stmt=
              VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
@@ -265,10 +289,22 @@ top_var_decl_no_assign:
     }
 
 top_var_decl:
-  | tvt=top_var_type id=decl_identifier d=option(dims)
+  | tvt=top_var_type id=decl_identifier
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
-      let sizes = match d with None -> [] | Some l -> l in
+      {stmt=
+         VarDecl {decl_type= Sized (fst tvt);
+                  transformation=  snd tvt;
+                  identifier= id;
+                  initial_value= Option.map ~f:snd ass;
+                  is_global= true};
+       smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
+    }
+  | tvt=top_var_type id=decl_identifier sizes=dims
+    ass=option(pair(ASSIGN, expression)) SEMICOLON
+  | tvt=top_var_type sizes=dims id=decl_identifier
+    ass=option(pair(ASSIGN, expression)) SEMICOLON
+    { grammar_logger "top_var_decl" ;
       {stmt=
          VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
                        transformation=  snd tvt;
