@@ -237,20 +237,20 @@ singleton_list(x):
   | x_val=x
     { [x_val] }
 
-(* Consume nothing but return a list type *)
-empty_ids:
-  | option(UNREACHABLE2)
-    { [] }
+(* (\* Consume nothing but return a list type *\)
+ * empty_ids:
+ *   | option(UNREACHABLE2)
+ *     { [] } *)
 
-(* Consume nothing but return a list type *)
-empty_sizes:
-  | option(UNREACHABLE3)
-    { [] }
+(* (\* Consume nothing but return a list type *\)
+ * empty_sizes:
+ *   | option(UNREACHABLE3)
+ *     { [] } *)
 
-(* Consume an x, but return the same type as option(x) *)
-some(x):
-  | x_val=x
-    { Some x_val }
+(* (\* Consume an x, but return the same type as option(x) *\)
+ * some(x):
+ *   | x_val=x
+ *     { Some x_val } *)
 
 (* Never accept this rule, but return the same type as expression *)
 no_assign:
@@ -262,10 +262,22 @@ no_assign:
       }
     }
 
-(* Consume nothing, but return the same type as option(x) *)
-none:
-  | option(UNREACHABLE)
-      { None }
+(* (\* Consume nothing, but return the same type as option(x) *\)
+ * none:
+ *   | option(UNREACHABLE)
+ *     { None } *)
+
+optional_assignment(rhs):
+  | rhs_opt=option(pair(ASSIGN, rhs))
+    { Option.map ~f:snd rhs_opt }
+
+id_and_optional_assignment(rhs):
+  | id=decl_identifier rhs_opt=optional_assignment(rhs)
+    { (id, rhs_opt) }
+
+(* id_sized_and_optional_assignment(rhs):
+ *   | id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs)
+ *     { (id, sizes, rhs_opt) } *)
 
 (*
  * All rules for declaration statements.
@@ -280,35 +292,54 @@ none:
  * cases the variables are assigned to empty values (None or []). This technique
  * dramatically reduces code replication.
  *)
-decl(type_rule, assign):
-  | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
-      ids=empty_ids sizes=empty_sizes
-  | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
-      ids=empty_ids
-  | ty=type_rule id=decl_identifier sizes=dims ASSIGN rhs=some(assign) SEMICOLON
-      ids=empty_ids
-  | ty=type_rule id=decl_identifier sizes=dims SEMICOLON
-      rhs=none ids=empty_ids
-  | ty=type_rule id=decl_identifier SEMICOLON
-      ids=empty_ids rhs=none sizes=empty_sizes
-  | ty=type_rule id=decl_identifier COMMA
-      ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-      rhs=none sizes=empty_sizes
-  | ty=type_rule sizes=dims id=decl_identifier SEMICOLON
-      rhs=none ids=empty_ids
-  | ty=type_rule sizes=dims id=decl_identifier COMMA
-      ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
-      rhs=none
+decl(type_rule, rhs):
+  (* | ty=type_rule id=decl_identifier sizes=dims SEMICOLON
+   *     rhs=none ids=empty_ids *)
+
+  (* dims after id; no multi *)
+  | ty=type_rule id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs) SEMICOLON
+    { (fun ~is_global ->
+      [{ stmt=
+          VarDecl {
+              decl_type= Sized (reducearray (fst ty, sizes))
+            ; transformation= snd ty
+            ; identifier= id
+            ; initial_value= rhs_opt
+            ; is_global
+            }
+      ; smeta= {
+          loc= Location_span.of_positions_exn $startpos $endpos
+        }
+    }])
+    }
+
+  (* | ty=type_rule id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
+   *     ids=empty_ids sizes=empty_sizes
+   * | ty=type_rule sizes=dims id=decl_identifier ASSIGN rhs=some(assign) SEMICOLON
+   *     ids=empty_ids
+   * | ty=type_rule id=decl_identifier SEMICOLON
+   *     ids=empty_ids rhs=none sizes=empty_sizes
+   * | ty=type_rule id=decl_identifier COMMA
+   *     ids=separated_nonempty_list(COMMA, decl_identifier) SEMICOLON
+   *     rhs=none sizes=empty_sizes
+   * | ty=type_rule sizes=dims id=decl_identifier SEMICOLON
+   *     rhs=none ids=empty_ids *)
+
+  (* | ty=type_rule sizes=empty_sizes v=id_and_optional_assignment(rhs) COMMA
+   *     vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON *)
+  | ty=type_rule dims_opt=ioption(dims) v=id_and_optional_assignment(rhs) COMMA
+      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
       (* map over each id (often only one), assigning each one the same type *)
       (* there will never be multiple ids when there is an assignment expr *)
-      List.map (id::ids) ~f:(fun id ->
+      let dims = Option.value dims_opt ~default:[] in
+      List.map (v::vs) ~f:(fun (id, rhs_opt) ->
           { stmt=
               VarDecl {
-                  decl_type= Sized (reducearray (fst ty, sizes))
+                  decl_type= Sized (reducearray (fst ty, dims))
                 ; transformation= snd ty
                 ; identifier= id
-                ; initial_value= rhs
+                ; initial_value= rhs_opt
                 ; is_global
                 }
           ; smeta= {
