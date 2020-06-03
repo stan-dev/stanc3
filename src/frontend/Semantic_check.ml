@@ -237,7 +237,7 @@ let semantic_check_fn_map_rect ~loc id es =
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
     if
-      List.exists ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"] ~f:(fun x ->
+      List.exists Utils.conditioning_suffices ~f:(fun x ->
           String.is_suffix id.name ~suffix:x )
     then Semantic_error.conditioning_required loc |> error
     else ok ())
@@ -476,7 +476,7 @@ let semantic_check_conddist_name ~loc id =
     if
       List.exists
         ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-        ["_lpdf"; "_lupdf"; "_lpmf"; "_lupmf"; "_lcdf"; "_lccdf"]
+        Utils.conditioning_suffices
     then ok ()
     else Semantic_error.conditional_notation_not_allowed loc |> error)
 
@@ -1028,7 +1028,8 @@ let semantic_check_sampling_pdf_pmf id =
   Validate.(
     if
       String.(
-        is_suffix id.name ~suffix:"_lpdf" || is_suffix id.name ~suffix:"_lpmf")
+        is_suffix id.name ~suffix:"_lpdf" || is_suffix id.name ~suffix:"_lpmf" ||
+        is_suffix id.name ~suffix:"_lupdf" || is_suffix id.name ~suffix:"_lupmf")
     then error @@ Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc
     else ok ())
 

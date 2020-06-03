@@ -6,6 +6,7 @@ let option_or_else ~if_none x = Option.first_some x if_none
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 (* _log is listed last so that it only gets picked up if no other implementation exists *)
 let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
+let conditioning_suffices = ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_lcdf"; "_lccdf"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 let unnormalized_suffix = function 
     | "_lpdf" -> "_lupdf"
