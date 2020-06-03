@@ -4,7 +4,7 @@ let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
 let proportional_to_distribution_infix = "_propto"
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
+let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
 let is_distribution_name ?(infix = "") s =
