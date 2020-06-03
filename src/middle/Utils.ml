@@ -4,9 +4,15 @@ let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
 let proportional_to_distribution_infix = "_propto"
-let propto_suffices = ["_propto_lpdf"; "_propto_lpmf"; "_propto_log"]
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"; "_lupdf"; "_lupmf"]
+let propto_suffices = ["_lupdf"; "_lupmf"]
+(* _log is listed last so that it only gets picked up if no other implementation exists *)
+let distribution_suffices = ["_lpmf"; "_lpdf"] @ propto_suffices @ ["_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
+let replace_propto_suffix = function
+  | "_lupdf" -> "_lpdf"
+  | "_lupmf" -> "_lpmf"
+  | "_ulog" -> "_log"
+  | x -> x
 
 let is_distribution_name s =
   (not
