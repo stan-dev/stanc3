@@ -1068,12 +1068,16 @@ let semantic_check_sampling_distribution ~loc id arguments =
   Validate.(
     if
       is_reat_rt_for_suffix "_lpdf"
+      || is_reat_rt_for_suffix "_lupdf"
       || is_reat_rt_for_suffix "_lpmf"
+      || is_reat_rt_for_suffix "_lupmf"
       || is_reat_rt_for_suffix "_log"
          && name <> "binomial_coefficient"
          && name <> "multiply"
       || valid_arg_types_for_suffix "_lpdf"
+      || valid_arg_types_for_suffix "_lupdf"
       || valid_arg_types_for_suffix "_lpmf"
+      || valid_arg_types_for_suffix "_lupmf"
       || valid_arg_types_for_suffix "_log"
     then ok ()
     else error @@ Semantic_error.invalid_sampling_no_such_dist loc name)
@@ -1521,7 +1525,7 @@ and semantic_check_fundef_dist_rt ~loc id return_ty =
     let is_dist =
       List.exists
         ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-        ["_log"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
+        Utils.conditioning_suffices_w_log
     in
     if is_dist then
       match return_ty with
@@ -1541,7 +1545,7 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
           true
       | _ -> false
     in
-    if String.is_suffix id.name ~suffix:"_lpdf" then
+    if String.is_suffix id.name ~suffix:"_lpdf" || String.is_suffix id.name ~suffix:"_lupdf" then
       List.hd arg_tys
       |> Option.value_map
            ~default:
@@ -1560,7 +1564,7 @@ and semantic_check_pmf_fundef_first_arg_ty ~loc id arg_tys =
       | UnsizedType.UInt | UArray UInt -> true
       | _ -> false
     in
-    if String.is_suffix id.name ~suffix:"_lpmf" then
+    if String.is_suffix id.name ~suffix:"_lpmf" || String.is_suffix id.name ~suffix:"_lupmf" then
       List.hd arg_tys
       |> Option.value_map
            ~default:(error @@ Semantic_error.prob_mass_non_int_variate loc None)
