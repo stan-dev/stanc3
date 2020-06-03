@@ -476,7 +476,7 @@ let semantic_check_conddist_name ~loc id =
     if
       List.exists
         ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-        ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
+        ["_lpdf"; "_lupdf"; "_lpmf"; "_lupmf"; "_lcdf"; "_lccdf"]
     then ok ()
     else Semantic_error.conditional_notation_not_allowed loc |> error)
 

@@ -260,7 +260,7 @@ module ExpressionError = struct
            names ending in _rng."
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
-          "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
+          "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, _lccdf \
            can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf

@@ -3,16 +3,14 @@ open Core_kernel
 let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
-let proportional_to_distribution_infix = "_propto"
-let propto_suffices = ["_lupdf"; "_lupmf"]
+let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 (* _log is listed last so that it only gets picked up if no other implementation exists *)
-let distribution_suffices = ["_lpmf"; "_lpdf"] @ propto_suffices @ ["_log"]
+let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
-let replace_propto_suffix = function
-  | "_lupdf" -> "_lpdf"
-  | "_lupmf" -> "_lpmf"
-  | "_ulog" -> "_log"
-  | x -> x
+let unnormalized_suffix = function 
+    | "_lpdf" -> "_lupdf"
+    | "_lpmf" -> "_lupmf"
+    | x -> x
 
 let is_distribution_name s =
   (not
@@ -20,25 +18,25 @@ let is_distribution_name s =
      || String.is_suffix s ~suffix:"_ccdf_log" ))
   && List.exists
        ~f:(fun suffix -> String.is_suffix s ~suffix)
-       distribution_suffices
+       (distribution_suffices @ unnormalized_suffices)
 
-let is_propto_distribution s =
+let is_unnormalized_distribution s =
   List.exists
        ~f:(fun suffix -> String.is_suffix s ~suffix)
-       propto_suffices
+       unnormalized_suffices
 
-let remove_propto_infix suffix ~name =
+let remove_unnormalized_suffix suffix ~name =
   name
-  |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
+  |> String.chop_suffix ~suffix:(unnormalized_suffix suffix)
   |> Option.map ~f:(fun x -> x ^ suffix)
 
 let stdlib_distribution_name s =
-  List.map ~f:(remove_propto_infix ~name:s) distribution_suffices
+  List.map ~f:(remove_unnormalized_suffix ~name:s) distribution_suffices
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
-let%expect_test "propto name mangling" =
-  stdlib_distribution_name "bernoulli_logit_propto_lpmf" |> print_string ;
-  stdlib_distribution_name "normal_propto_lpdf" |> ( ^ ) "; " |> print_string ;
+let%expect_test "unnormalized name mangling" =
+  stdlib_distribution_name "bernoulli_logit_lupmf" |> print_string ;
+  stdlib_distribution_name "normal_lupdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string ;
   [%expect {| bernoulli_logit_lpmf; normal_lpdf; normal_lpdf; normal |}]

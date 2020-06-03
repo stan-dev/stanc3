@@ -4623,7 +4623,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
 model {
-  target += normal_propto_lpdf(1| 0, 1);
+  target += normal_lupdf(1| 0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
