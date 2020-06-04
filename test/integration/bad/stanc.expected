@@ -376,7 +376,7 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10
      8:  model {
    -------------------------------------------------
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+Assignments are not allowed in this block.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
@@ -419,7 +419,7 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 
      5:  parameters {
    -------------------------------------------------
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+Assignments are not allowed in this block.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
@@ -434,7 +434,7 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 
      8:  model {
    -------------------------------------------------
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+Assignments are not allowed in this block.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan

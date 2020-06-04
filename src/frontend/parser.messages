@@ -14096,7 +14096,7 @@ program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE ASSIGN WHILE
 ## ASSIGN
 ##
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+Assignments are not allowed in this block.
 
 program: DATABLOCK LBRACE REAL LBRACK IDENTIFIER RBRACK TRUNCATE COMMA TRUNCATE SEMICOLON WHILE
 ##

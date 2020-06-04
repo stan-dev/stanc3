@@ -254,21 +254,22 @@ id_and_optional_assignment(rhs):
  * The second argument matches the RHS expression and should return an expression
  *   (or use no_assign to never allow a RHS).
  *
- * The various rules match declarations with/without assignments, with/without
- * array dimentions, single/multiple identifiers, and dimensions before/after
- * the identifier.
- * Some rules are missing information that other rules have (e.g. rhs), in those
- * cases the variables are assigned to empty values (None or []). This technique
- * dramatically reduces code replication.
+ * The value returned is a function from a bool (is_global, which controls
+ * whether the declarations should be global variables) to a list of statements
+ * (which will always be declarations).
+ *
+ * The rules match declarations with/without assignments, with/without array
+ * dimensions, single/multiple identifiers, and dimensions before/after the
+ * identifier.
  *)
 decl(type_rule, rhs):
   (* When dims are after identifier, do not allow multiple identifiers *)
-  | ty=type_rule id=decl_identifier sizes=dims rhs_opt=optional_assignment(rhs)
+  | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
     { (fun ~is_global ->
       [{ stmt=
           VarDecl {
-              decl_type= Sized (reducearray (fst ty, sizes))
+              decl_type= Sized (reducearray (fst ty, dims))
             ; transformation= snd ty
             ; identifier= id
             ; initial_value= rhs_opt
