@@ -15,6 +15,7 @@ module Fixed = struct
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
+      | TupleIndexed of 'a * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -33,10 +34,12 @@ module Fixed = struct
           Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
             pp_e texpr pp_builtin_syntax ":" pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf {|@[%a%a@]|} pp_e expr
-            ( if List.is_empty indices then fun _ _ -> ()
+        Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+          ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
-            indices
+          indices
+      | TupleIndexed (expr, ix) ->
+        Fmt.pf ppf {|@[(%a).%d@]|} pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
@@ -143,6 +146,8 @@ module Labelled = struct
         associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
     | Indexed (e, idxs) ->
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
+    | TupleIndexed (e, _) ->
+      associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -209,8 +214,21 @@ module Helpers = struct
       match e.pattern with
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
+      (* rybern: why do we error here? we can also index container literals *)
       | _ -> raise_s [%message "These should go away with Ryan's LHS"]
     in
+    Fixed.{meta; pattern}
+
+  (** [add_index expression index] returns an expression that (additionally)
+      indexes into the input [expression] by [index].*)
+  let add_tuple_index e i =
+    let mtype = match Typed.(type_of e) with
+        | UTuple ts -> List.nth_exn ts i
+        | _ -> raise_s [%message "Internal error: Attempted to apply \
+                                  tuple index to a non-tuple type."]
+    in
+    let meta = Typed.Meta.{e.meta with type_= mtype} in
+    let pattern = Fixed.Pattern.TupleIndexed (e, i) in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

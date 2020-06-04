@@ -13,6 +13,7 @@ module Fixed : sig
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
+      | TupleIndexed of 'a * int
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
@@ -88,5 +89,6 @@ module Helpers : sig
   val contains_fn : Internal_fun.t -> ?init:bool -> 'a Fixed.t -> bool
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
+  val add_tuple_index : Typed.t -> int -> Typed.t
   val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
 end

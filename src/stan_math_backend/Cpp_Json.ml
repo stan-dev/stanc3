@@ -22,6 +22,8 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
         [ ("name", `String "array")
         ; ("length", `String (emit_cpp_expr d))
         ; ("element_type", sizedtype_to_json st) ]
+  | STuple _ ->
+    raise_s [%message "Writing tuples to JSON is not implemented."]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc

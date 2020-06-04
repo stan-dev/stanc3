@@ -270,6 +270,15 @@ module Helpers = struct
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
 
+  let for_each_tuple bodyfn iteratee ts meta =
+    let stmt =
+      Fixed.Pattern.SList
+        (List.mapi ts ~f:(fun tuple_ix t ->
+             let e = Expr.Helpers.add_tuple_index iteratee tuple_ix in
+             bodyfn t e))
+    in
+    Fixed.{meta; pattern= stmt}
+
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
@@ -288,7 +297,7 @@ module Helpers = struct
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
-    | UTuple _ -> bodyfn iteratee
+    | UTuple ts -> for_each_tuple (const bodyfn) iteratee ts smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
@@ -319,6 +328,8 @@ module Helpers = struct
     | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+    | STuple ts ->
+      for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -336,6 +347,8 @@ module Helpers = struct
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+    | STuple ts ->
+      for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)

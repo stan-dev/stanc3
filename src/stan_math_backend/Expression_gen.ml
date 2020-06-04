@@ -450,6 +450,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+  | TupleIndexed _ -> Expr.Fixed.Pattern.pp pp_expr ppf pattern
 
 (* these functions are just for testing *)
 let dummy_locate pattern =
