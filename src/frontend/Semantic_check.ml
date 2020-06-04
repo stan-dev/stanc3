@@ -128,28 +128,26 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-let check_fresh_variable_basic id is_nullary_function =
+let check_fresh_variable_basic id is_udf =
   Validate.(
     (* No shadowing! *)
     (* For some strange reason, Stan allows user declared identifiers that are
        not of nullary function types to clash with nullary library functions.
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
-    if
-      Stan_math_signatures.is_stan_math_function_name id.name
-      && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None )
-      || Stan_math_signatures.is_reduce_sum_fn id.name
+    if is_udf && 
+      (Stan_math_signatures.is_stan_math_function_name id.name
+      || Stan_math_signatures.is_reduce_sum_fn id.name) (* variadic functions are currently on in math sigs *)
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
       | Some _ -> Semantic_error.ident_in_use id.id_loc id.name |> error
       | None -> ok ())
 
-let check_fresh_variable id is_nullary_function =
+let check_fresh_variable id is_udf =
   List.fold ~init:(Validate.ok ())
     ~f:(fun v0 name ->
-      check_fresh_variable_basic name is_nullary_function
+      check_fresh_variable_basic name is_udf
       |> Validate.apply_const v0 )
     (probability_distribution_name_variants id)
 
@@ -1499,7 +1497,7 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
           |> Option.map ~f:snd
           |> Semantic_error.mismatched_fn_def_decl loc id.name
           |> error
-    else check_fresh_variable id (List.length arg_tys = 0))
+    else check_fresh_variable id true)
 
 (** WARNING: side effecting *)
 and semantic_check_fundef_decl ~loc id body =
