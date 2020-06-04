@@ -55,6 +55,7 @@ type context_flags_record =
   ; in_returning_fun_def: bool
   ; in_rng_fun_def: bool
   ; in_lp_fun_def: bool
+  ; in_udf_dist_def: bool
   ; loop_depth: int }
 
 (* Some helper functions *)
@@ -1073,8 +1074,8 @@ let semantic_check_sampling_distribution ~loc id arguments =
     List.exists ~f:is_name_w_suffix_udf_sampling_dist (Utils.distribution_suffices @ Utils.unnormalized_suffices)
   in
   Validate.(
-    if is_sampling_dist_in_math || is_udf_sampling_dist
-    then ok ()
+    if is_sampling_dist_in_math || is_udf_sampling_dist then
+    ok ()
     else error @@ Semantic_error.invalid_sampling_no_such_dist loc name
   )
 
@@ -1640,10 +1641,15 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
              | AutoDiffable, ut -> (Param, ut))
            uarg_types)
     and context =
+      let is_udf_dist name = 
+        List.exists ~f:(fun suffix -> String.is_suffix name ~suffix) 
+          (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+      in
       { cf with
         in_fun_def= true
       ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
       ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
+      ; in_udf_dist_def= is_udf_dist id.name
       ; in_returning_fun_def= urt <> Void }
     in
     let body' = semantic_check_statement context body in
@@ -1755,6 +1761,7 @@ let semantic_check_program
     ; in_returning_fun_def= false
     ; in_rng_fun_def= false
     ; in_lp_fun_def= false
+    ; in_udf_dist_def= false
     ; loop_depth= 0 }
   in
   let ufb =
