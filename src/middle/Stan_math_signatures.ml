@@ -1054,6 +1054,39 @@ let () =
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
+    , ReturnType (UArray (UArray UReal))
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal)
+            , Function ) )
+      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+  add_qualified
+    ( "integrate_ode_bdf"
+    , ReturnType (UArray (UArray UReal))
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal)
+            , Function ) )
+      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal)
+      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
+      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+  add_qualified
+    ( "integrate_ode_bdf"
     , ReturnType (UArray UVector)
     , [ ( AutoDiffable
         , UFun

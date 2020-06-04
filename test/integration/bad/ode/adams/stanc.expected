@@ -287,6 +287,8 @@ Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatur
 ((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
 ((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
 ((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
+((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
+((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../../install/default/bin/stanc bad_y_type.stan

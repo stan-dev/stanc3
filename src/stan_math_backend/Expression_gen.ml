@@ -306,6 +306,13 @@ and gen_fun_app ppf fname es =
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
       | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
           (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
+      | ( _
+        , "integrate_ode_bdf"
+        , f
+          :: ({meta= {type_= UArray UReal; _}; _} as y0)
+             :: t0 :: ts :: theta :: x_r :: x_i :: tl ) ->
+          ( "integrate_ode_bdf"
+          , f :: y0 :: t0 :: ts :: theta :: x_r :: x_i :: msgs :: tl )
       | _, "integrate_ode_bdf", f :: y0 :: t0 :: ts :: tl ->
           let args, tols = List.split_n tl (List.length tl - 3) in
           ("ode_bdf_tol", (f :: y0 :: t0 :: ts :: tols) @ (msgs :: args))
@@ -344,6 +351,13 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
 and pp_user_defined_fun ppf (f, es) =
   let extra_args = suffix_args f @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
+  let convert_hof_vars = function
+    | { Expr.Fixed.pattern= Var name
+      ; meta= {Expr.Typed.Meta.type_= UFun (_, _, Function); _} } as e ->
+        {e with pattern= FunApp (StanLib, name ^ functor_suffix_select "", [])}
+    | e -> e
+  in
+  let es = List.map ~f:convert_hof_vars es in
   pf ppf "@[<hov 2>%s(@,%a%s)@]"
     (demangle_propto_name true f)
     (list ~sep:comma pp_expr) es

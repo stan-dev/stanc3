@@ -225,7 +225,7 @@ unsized_type:
        let t = reparray size bt in
        match fa with
        | None -> t
-       | Some args -> UnsizedType.UFun (args, UnsizedType.ReturnType t, Template)  }
+       | Some args -> UnsizedType.UFun (args, UnsizedType.ReturnType t, Closure)  }
 
 basic_type:
   | INT

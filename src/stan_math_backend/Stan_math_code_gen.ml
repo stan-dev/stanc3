@@ -206,26 +206,26 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _}) is_closure
   | _ ->
       pp_block ppf (pp_body, fdbody) ;
       if not is_closure then (
-        let pp_zeros ppf () = pf ppf "void set_zero_adjoints() const { }" in
-        let pp_adjoints ppf () =
-          pf ppf "void accumulate_adjoints(double*) const { }"
+        let pp_admethods ppf () =
+          pf ppf
+            "void set_zero_adjoints() const { }@ void \
+             accumulate_adjoints(double*) const { }@ void save_varis(vari**) \
+             const { }"
         in
-        let pp_varis ppf () = pf ppf "void save_varis(vari**) const { }" in
-        let pp_valueof ppf () =
-          pf ppf "using ValueOf__ = %s%s;" fdname functor_suffix
-        in
-        let pp_deepcopy ppf () =
-          pf ppf "using DeepCopy__ = %s%s;" fdname functor_suffix
+        let pp_subclass ppf () =
+          pf ppf
+            "using ValueOf__ = %s%s;@ using DeepCopy__ = ValueOf__;@ using \
+             captured_scalar_t__ = double;"
+            fdname functor_suffix
         in
         let pp_ode ppf () =
           if not (is_dist || is_lp || is_rng || List.length args < 3) then
-            pf ppf "%a const @,{@,return %a;@,}@,%a@,%a@,%a@,%a@,%a@,%s"
-              pp_ode_sig "operator()" pp_call_str
+            pf ppf "%a const @,{@,return %a;@,}@,%a@,%a" pp_ode_sig
+              "operator()" pp_call_str
               ( fdname
               , List.map ~f:(fun (_, name, _) -> name) fdargs
                 @ extra @ ["pstream__"] )
-              pp_zeros () pp_varis () pp_adjoints () pp_valueof () pp_deepcopy
-              () "using captured_scalar_t__ = double;"
+              pp_admethods () pp_subclass ()
         in
         pf ppf "@,@,struct %s%s {@,%s@,%a const @,{@,return %a;@,}@,%a};@,"
           fdname functor_suffix "const static int num_vars__ = 0;" pp_sig
@@ -485,6 +485,13 @@ let pp_closure_defs ppf closures =
       ((rt, true), id, captures, args)
       pp_accumulateadjoints captures pp_valueof (rt, id, captures, args)
   in
+  let pp_admethods ppf captures =
+    pp_zeroadjoints ppf captures ;
+    cut ppf () ;
+    pp_accumulateadjoints ppf captures ;
+    cut ppf () ;
+    pp_savevaris ppf captures
+  in
   let f ~key ~data:Program.({cdrt; cdargs; cdcaptures; cdbody}) =
     cut ppf () ;
     pp_fun_def ppf
@@ -497,8 +504,7 @@ let pp_closure_defs ppf closures =
       true String.Set.empty ;
     pf ppf
       "@,%a@[<v 2>class %s__ {@,%a@ public:@ %s@ const int num_vars__;@ %a@ \
-       %a@ %a@ %a@ %a@ %a@]@,};@,%a auto make_%s__(%a) {@,return \
-       %s__<%a>(%a);@,}"
+       %a@ %a@ %a@]@,};@,%a auto make_%s__(%a) {@,return %s__<%a>(%a);@,}"
       pp_template_decorator
       ( "typename captured_t__"
       :: List.filter_mapi cdcaptures ~f:(fun i (_, _, ut) ->
@@ -510,8 +516,7 @@ let pp_closure_defs ppf closures =
       ((cdrt, true), key, cdcaptures, cdargs)
       pp_deepcopy
       (cdrt, key, cdcaptures, cdargs)
-      pp_zeroadjoints cdcaptures pp_accumulateadjoints cdcaptures pp_savevaris
-      cdcaptures pp_template_decorator
+      pp_admethods cdcaptures pp_template_decorator
       ( "typename captured_t__"
       :: List.filter_mapi cdcaptures ~f:(fun i (_, _, ut) ->
              if UnsizedType.is_fun_type ut then Some (strf "typename F%d__" i)
@@ -926,7 +931,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>

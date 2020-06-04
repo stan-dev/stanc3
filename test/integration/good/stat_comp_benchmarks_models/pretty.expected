@@ -326,24 +326,6 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-
-Semantic error in 'one_comp_mm_elim_abs.stan', line 55, column 8 to column 79:
-   -------------------------------------------------
-    53:    {
-    54:      real theta[3] = {k_a, K_m, V_m};
-    55:      C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
-                 ^
-    56:    }
-    57:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
-
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
   real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
@@ -391,24 +373,6 @@ generated quantities {
   for (n in 1 : N_t) 
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
-
-
-Semantic error in 'sim_one_comp_mm_elim_abs.stan', line 58, column 6 to column 77:
-   -------------------------------------------------
-    56:      ts[n] = times[n];
-    57:  
-    58:    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
-               ^
-    59:  
-    60:    for (n in 1:N_t)
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 functions {

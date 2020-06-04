@@ -636,7 +636,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
     ->
       let type_ =
         UnsizedType.UFun
-          (List.map arguments ~f:(fun (a, t, _) -> (a, t)), returntype, Closure clname)
+          (List.map arguments ~f:(fun (a, t, _) -> (a, t)), returntype, Closure)
       in
       ( match
           Map.add !closures ~key:clname

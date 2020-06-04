@@ -1627,7 +1627,7 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
       ( cf.current_block
-      , UFun (uarg_types, urt, if is_closure then Closure clname else Function)
+      , UFun (uarg_types, urt, if is_closure then Closure else Function)
       ) ;
     Symbol_table.set_read_only vm id.name ;
     semantic_check_fundef_suffix ~loc:id.id_loc is_closure id

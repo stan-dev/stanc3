@@ -3702,24 +3702,6 @@ generated quantities {
                             1e-10, 1e8);
 }
 
-
-Semantic error in 'integrate_ode_bdf.stan', line 28, column 10 to column 65:
-   -------------------------------------------------
-    26:  model {
-    27:    real y_hat[T,2];
-    28:    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
-                   ^
-    29:    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
-    30:    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
-
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -4391,24 +4373,6 @@ model {
   for (t in 1 : 10) 
     y[t] ~ normal(y_hat[t], sigma);
 }
-
-
-Semantic error in 'ode_good.stan', line 41, column 10 to line 47, column 35:
-   -------------------------------------------------
-    39:                                x,             // data
-    40:                                x_int);        // integer data
-    41:    y_hat = integrate_ode_bdf(harm_osc_ode,  // system
-                   ^
-    42:                               y0,            // initial state
-    43:                               t0,            // initial time
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {

@@ -8,7 +8,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -862,7 +862,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -1822,7 +1822,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -2596,7 +2596,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -3126,7 +3126,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -3775,10 +3775,10 @@ operator()(const T0__& t, const std::vector<T1__>& y,
 return sho(t, y, theta, x, x_int, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = sho_functor__;
-using DeepCopy__ = sho_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 double
@@ -4498,10 +4498,10 @@ operator()(const T0__& x, const T1__& y, std::ostream* pstream__,
 return relative_diff(x, y, max_, min_, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = relative_diff_functor__;
-using DeepCopy__ = relative_diff_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T0__, typename T1__>
@@ -4551,10 +4551,10 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
 return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = foo_5_functor__;
-using DeepCopy__ = foo_5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -4603,10 +4603,10 @@ operator()(const T0__& x1, const T1__& x2, std::ostream* pstream__,
 return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = foo_five_args_functor__;
-using DeepCopy__ = foo_five_args_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <bool propto__, typename T0__, typename T1__, typename T2__,
@@ -4783,10 +4783,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f0_functor__;
-using DeepCopy__ = f0_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -4860,10 +4860,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f1_functor__;
-using DeepCopy__ = f1_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -4937,10 +4937,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f2_functor__;
-using DeepCopy__ = f2_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5014,10 +5014,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f3_functor__;
-using DeepCopy__ = f3_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5097,10 +5097,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f4_functor__;
-using DeepCopy__ = f4_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5180,10 +5180,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f5_functor__;
-using DeepCopy__ = f5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5263,10 +5263,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f6_functor__;
-using DeepCopy__ = f6_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5346,10 +5346,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f7_functor__;
-using DeepCopy__ = f7_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5429,10 +5429,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f8_functor__;
-using DeepCopy__ = f8_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5512,10 +5512,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f9_functor__;
-using DeepCopy__ = f9_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5595,10 +5595,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f10_functor__;
-using DeepCopy__ = f10_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5678,10 +5678,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f11_functor__;
-using DeepCopy__ = f11_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T3__, typename T4__, typename T5__, typename T6__,
@@ -5761,10 +5761,10 @@ operator()(const int& a1, const std::vector<int>& a2,
 return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f12_functor__;
-using DeepCopy__ = f12_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 void
@@ -6048,10 +6048,10 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& x,
 return algebra_system(x, y, dat, dat_int, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = algebra_system_functor__;
-using DeepCopy__ = algebra_system_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 template <typename T0__, typename T1__>
@@ -6113,10 +6113,10 @@ operator()(const Eigen::Matrix<T0__, -1, 1>& phi,
 return binomialf(phi, theta, x_r, x_i, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = binomialf_functor__;
-using DeepCopy__ = binomialf_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -12488,23 +12488,2025 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
   $ ../../../../../install/default/bin/stanc --print-cpp motherHOF.stan
 
-Semantic error in 'motherHOF.stan', line 90, column 10 to column 65:
-   -------------------------------------------------
-    88:    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
-    89:  
-    90:    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
-                   ^
-    91:    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
-    92:    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
-   -------------------------------------------------
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace motherHOF_model_namespace {
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+void FnZeroAdjoint__(double) { }
+void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
+double FnGetAdjoint__(double) { return 0.0; }
+double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
+stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
+template <typename T, typename S>
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, -1>
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+  dst.resize(src.rows(), src.cols());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, 1, -1>
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, 1>
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
+}
+
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using std::pow;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
+using namespace stan::math; 
+
+static int current_statement__ = 0;
+static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'motherHOF.stan', line 48, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 49, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 50, column 2 to column 14)",
+                                                      " (in 'motherHOF.stan', line 51, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 52, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 53, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 54, column 2 to column 11)",
+                                                      " (in 'motherHOF.stan', line 57, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 58, column 2 to column 37)",
+                                                      " (in 'motherHOF.stan', line 59, column 2 to column 33)",
+                                                      " (in 'motherHOF.stan', line 60, column 2 to line 61, column 69)",
+                                                      " (in 'motherHOF.stan', line 62, column 2 to line 63, column 69)",
+                                                      " (in 'motherHOF.stan', line 64, column 2 to line 65, column 69)",
+                                                      " (in 'motherHOF.stan', line 66, column 2 to column 23)",
+                                                      " (in 'motherHOF.stan', line 67, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 68, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 69, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 70, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 71, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 72, column 2 to column 86)",
+                                                      " (in 'motherHOF.stan', line 73, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 75, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 76, column 2 to column 72)",
+                                                      " (in 'motherHOF.stan', line 77, column 2 to column 88)",
+                                                      " (in 'motherHOF.stan', line 132, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 133, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 134, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 135, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 136, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 138, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 139, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 140, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 141, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 143, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 144, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 145, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 146, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 148, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 149, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 150, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 151, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 153, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 154, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 155, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 156, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 158, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 159, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 160, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 161, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 163, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 164, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 165, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 166, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 168, column 2 to column 34)",
+                                                      " (in 'motherHOF.stan', line 169, column 2 to column 38)",
+                                                      " (in 'motherHOF.stan', line 170, column 2 to line 171, column 69)",
+                                                      " (in 'motherHOF.stan', line 81, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 82, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 83, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 84, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 86, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 87, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 88, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 90, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 91, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 92, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 93, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 95, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 96, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 97, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 98, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 100, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 101, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 102, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 103, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 105, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 106, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 107, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 108, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 109, column 2 to column 56)",
+                                                      " (in 'motherHOF.stan', line 110, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 111, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 112, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 113, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 114, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 115, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 117, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 118, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 119, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 120, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 121, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 122, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 123, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 124, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 125, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 126, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 127, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 129, column 2 to column 36)",
+                                                      " (in 'motherHOF.stan', line 33, column 2 to column 17)",
+                                                      " (in 'motherHOF.stan', line 34, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 35, column 2 to column 10)",
+                                                      " (in 'motherHOF.stan', line 36, column 2 to column 13)",
+                                                      " (in 'motherHOF.stan', line 37, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 38, column 2 to column 12)",
+                                                      " (in 'motherHOF.stan', line 39, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 40, column 2 to column 16)",
+                                                      " (in 'motherHOF.stan', line 41, column 2 to column 15)",
+                                                      " (in 'motherHOF.stan', line 42, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 43, column 2 to column 28)",
+                                                      " (in 'motherHOF.stan', line 44, column 2 to column 20)",
+                                                      " (in 'motherHOF.stan', line 45, column 2 to column 19)",
+                                                      " (in 'motherHOF.stan', line 7, column 4 to column 17)",
+                                                      " (in 'motherHOF.stan', line 8, column 4 to column 19)",
+                                                      " (in 'motherHOF.stan', line 9, column 4 to column 38)",
+                                                      " (in 'motherHOF.stan', line 10, column 4 to column 16)",
+                                                      " (in 'motherHOF.stan', line 6, column 26 to line 11, column 3)",
+                                                      " (in 'motherHOF.stan', line 13, column 4 to column 15)",
+                                                      " (in 'motherHOF.stan', line 12, column 71 to line 14, column 3)",
+                                                      " (in 'motherHOF.stan', line 17, column 4 to column 22)",
+                                                      " (in 'motherHOF.stan', line 16, column 42 to line 18, column 3)",
+                                                      " (in 'motherHOF.stan', line 20, column 4 to column 17)",
+                                                      " (in 'motherHOF.stan', line 19, column 28 to line 21, column 3)",
+                                                      " (in 'motherHOF.stan', line 26, column 4 to column 18)",
+                                                      " (in 'motherHOF.stan', line 27, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 28, column 4 to column 25)",
+                                                      " (in 'motherHOF.stan', line 29, column 4 to column 15)",
+                                                      " (in 'motherHOF.stan', line 25, column 39 to line 30, column 3)"};
+
+
+
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type>
+sho(const T0__& t, const std::vector<T1__>& y,
+    const std::vector<T2__>& theta, const std::vector<T3__>& x,
+    const std::vector<int>& x_int, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__,
+          T3__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 112;
+    validate_non_negative_index("dydt", "2", 2);
+    std::vector<local_scalar_t__> dydt;
+    dydt = std::vector<local_scalar_t__>(2, 0);
+    
+    current_statement__ = 113;
+    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
+      "assigning variable dydt");
+    current_statement__ = 114;
+    assign(dydt, cons_list(index_uni(2), nil_index_list()),
+      (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
+      "assigning variable dydt");
+    current_statement__ = 115;
+    return dydt;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct sho_functor__ {
+const static int num_vars__ = 0;
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type>
+operator()(const T0__& t, const std::vector<T1__>& y,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x,
+           const std::vector<int>& x_int, std::ostream* pstream__)  const 
+{
+return sho(t, y, theta, x, x_int, pstream__);
+}
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type>
+operator()(const T0__& t, const std::vector<T1__>& y,
+           std::ostream* pstream__, const std::vector<T2__>& theta,
+           const std::vector<T3__>& x, const std::vector<int>& x_int)  const 
+{
+return sho(t, y, theta, x, x_int, pstream__);
+}
+void set_zero_adjoints() const { }
+void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
+using ValueOf__ = sho_functor__;
+using DeepCopy__ = ValueOf__;
+using captured_scalar_t__ = double;};
+
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
+integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
+          const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__,
+          T3__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 117;
+    return 0.0;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct integrand_functor__ {
+const static int num_vars__ = 0;
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
+operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
+           const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+           std::ostream* pstream__)  const 
+{
+return integrand(x, xc, theta, x_r, x_i, pstream__);
+}
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
+operator()(const T0__& x, const T1__& xc, std::ostream* pstream__,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i)  const 
+{
+return integrand(x, xc, theta, x_r, x_i, pstream__);
+}
+void set_zero_adjoints() const { }
+void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
+using ValueOf__ = integrand_functor__;
+using DeepCopy__ = ValueOf__;
+using captured_scalar_t__ = double;};
+
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+    const Eigen::Matrix<T1__, -1, 1>& job_params,
+    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 119;
+    return transpose(stan::math::to_row_vector(
+             stan::math::array_builder<int>().add(1).add(2).add(3).array()));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct foo_functor__ {
+const static int num_vars__ = 0;
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+           const Eigen::Matrix<T1__, -1, 1>& job_params,
+           const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+           std::ostream* pstream__)  const 
+{
+return foo(shared_params, job_params, data_r, data_i, pstream__);
+}
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
+           const Eigen::Matrix<T1__, -1, 1>& job_params,
+           std::ostream* pstream__, const std::vector<T2__>& data_r,
+           const std::vector<int>& data_i)  const 
+{
+return foo(shared_params, job_params, data_r, data_i, pstream__);
+}
+void set_zero_adjoints() const { }
+void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
+using ValueOf__ = foo_functor__;
+using DeepCopy__ = ValueOf__;
+using captured_scalar_t__ = double;};
+
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+map_rectfake(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 121;
+    return (2 * x);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct map_rectfake_functor__ {
+const static int num_vars__ = 0;
+template <typename T0__>
+typename boost::math::tools::promote_args<T0__>::type
+operator()(const T0__& x, std::ostream* pstream__)  const 
+{
+return map_rectfake(x, pstream__);
+}
+};
+
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
+               const Eigen::Matrix<T1__, -1, 1>& y,
+               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
+               std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
+  const static bool propto__ = true;
+  (void) propto__;
+  
+  try {
+    current_statement__ = 123;
+    validate_non_negative_index("f_x", "2", 2);
+    Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
+    f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+    
+    current_statement__ = 123;
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      current_statement__ = 123;
+      assign(f_x, cons_list(index_uni(sym1__), nil_index_list()),
+        std::numeric_limits<double>::quiet_NaN(), "assigning variable f_x");}
+    current_statement__ = 124;
+    assign(f_x, cons_list(index_uni(1), nil_index_list()),
+      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+    current_statement__ = 125;
+    assign(f_x, cons_list(index_uni(2), nil_index_list()),
+      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+    current_statement__ = 126;
+    return f_x;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct algebra_system_functor__ {
+const static int num_vars__ = 0;
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& x,
+           const Eigen::Matrix<T1__, -1, 1>& y, const std::vector<T2__>& dat,
+           const std::vector<int>& dat_int, std::ostream* pstream__)  const 
+{
+return algebra_system(x, y, dat, dat_int, pstream__);
+}
+template <typename T0__, typename T1__, typename T2__>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& x,
+           const Eigen::Matrix<T1__, -1, 1>& y, std::ostream* pstream__,
+           const std::vector<T2__>& dat, const std::vector<int>& dat_int)  const 
+{
+return algebra_system(x, y, dat, dat_int, pstream__);
+}
+void set_zero_adjoints() const { }
+void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
+using ValueOf__ = algebra_system_functor__;
+using DeepCopy__ = ValueOf__;
+using captured_scalar_t__ = double;};
+
+
+class motherHOF_model : public model_base_crtp<motherHOF_model> {
+
+ private:
+  int pos__;
+  int T;
+  std::vector<double> y0_d;
+  double t0;
+  std::vector<double> ts;
+  std::vector<double> theta_d;
+  std::vector<double> x;
+  std::vector<int> x_int;
+  std::vector<double> x_d_r;
+  std::vector<int> x_d_i;
+  Eigen::Matrix<double, -1, 1> shared_params_d;
+  std::vector<Eigen::Matrix<double, -1, 1>> job_params_d;
+  std::vector<std::vector<double>> data_r;
+  std::vector<std::vector<int>> data_i;
+ 
+ public:
+  ~motherHOF_model() { }
+  
+  std::string model_name() const { return "motherHOF_model"; }
+  
+  motherHOF_model(stan::io::var_context& context__,
+                  unsigned int random_seed__ = 0,
+                  std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    typedef double local_scalar_t__;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static const char* function__ = "motherHOF_model_namespace::motherHOF_model";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      
+      pos__ = 1;
+      context__.validate_dims("data initialization","T","int",
+          context__.to_vec());
+      
+      current_statement__ = 99;
+      T = context__.vals_i("T")[(1 - 1)];
+      current_statement__ = 100;
+      validate_non_negative_index("y0_d", "2", 2);
+      context__.validate_dims("data initialization","y0_d","double",
+          context__.to_vec(2));
+      y0_d = std::vector<double>(2, 0);
+      
+      current_statement__ = 100;
+      assign(y0_d, nil_index_list(), context__.vals_r("y0_d"),
+        "assigning variable y0_d");
+      context__.validate_dims("data initialization","t0","double",
+          context__.to_vec());
+      
+      current_statement__ = 101;
+      t0 = context__.vals_r("t0")[(1 - 1)];
+      current_statement__ = 102;
+      validate_non_negative_index("ts", "T", T);
+      context__.validate_dims("data initialization","ts","double",
+          context__.to_vec(T));
+      ts = std::vector<double>(T, 0);
+      
+      current_statement__ = 102;
+      assign(ts, nil_index_list(), context__.vals_r("ts"),
+        "assigning variable ts");
+      current_statement__ = 103;
+      validate_non_negative_index("theta_d", "1", 1);
+      context__.validate_dims("data initialization","theta_d","double",
+          context__.to_vec(1));
+      theta_d = std::vector<double>(1, 0);
+      
+      current_statement__ = 103;
+      assign(theta_d, nil_index_list(), context__.vals_r("theta_d"),
+        "assigning variable theta_d");
+      current_statement__ = 104;
+      validate_non_negative_index("x", "0", 0);
+      context__.validate_dims("data initialization","x","double",
+          context__.to_vec(0));
+      x = std::vector<double>(0, 0);
+      
+      current_statement__ = 104;
+      assign(x, nil_index_list(), context__.vals_r("x"),
+        "assigning variable x");
+      current_statement__ = 105;
+      validate_non_negative_index("x_int", "0", 0);
+      context__.validate_dims("data initialization","x_int","int",
+          context__.to_vec(0));
+      x_int = std::vector<int>(0, 0);
+      
+      current_statement__ = 105;
+      assign(x_int, nil_index_list(), context__.vals_i("x_int"),
+        "assigning variable x_int");
+      current_statement__ = 106;
+      validate_non_negative_index("x_d_r", "0", 0);
+      context__.validate_dims("data initialization","x_d_r","double",
+          context__.to_vec(0));
+      x_d_r = std::vector<double>(0, 0);
+      
+      current_statement__ = 106;
+      assign(x_d_r, nil_index_list(), context__.vals_r("x_d_r"),
+        "assigning variable x_d_r");
+      current_statement__ = 107;
+      validate_non_negative_index("x_d_i", "0", 0);
+      context__.validate_dims("data initialization","x_d_i","int",
+          context__.to_vec(0));
+      x_d_i = std::vector<int>(0, 0);
+      
+      current_statement__ = 107;
+      assign(x_d_i, nil_index_list(), context__.vals_i("x_d_i"),
+        "assigning variable x_d_i");
+      current_statement__ = 108;
+      validate_non_negative_index("shared_params_d", "3", 3);
+      context__.validate_dims("data initialization","shared_params_d",
+          "double",context__.to_vec(3));
+      shared_params_d = Eigen::Matrix<double, -1, 1>(3);
+      
+      {
+        std::vector<local_scalar_t__> shared_params_d_flat__;
+        current_statement__ = 108;
+        assign(shared_params_d_flat__, nil_index_list(),
+          context__.vals_r("shared_params_d"),
+          "assigning variable shared_params_d_flat__");
+        current_statement__ = 108;
+        pos__ = 1;
+        current_statement__ = 108;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 108;
+          assign(shared_params_d,
+            cons_list(index_uni(sym1__), nil_index_list()),
+            shared_params_d_flat__[(pos__ - 1)],
+            "assigning variable shared_params_d");
+          current_statement__ = 108;
+          pos__ = (pos__ + 1);}
+      }
+      current_statement__ = 109;
+      validate_non_negative_index("job_params_d", "3", 3);
+      current_statement__ = 109;
+      validate_non_negative_index("job_params_d", "3", 3);
+      context__.validate_dims("data initialization","job_params_d","double",
+          context__.to_vec(3, 3));
+      job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      
+      {
+        std::vector<local_scalar_t__> job_params_d_flat__;
+        current_statement__ = 109;
+        assign(job_params_d_flat__, nil_index_list(),
+          context__.vals_r("job_params_d"),
+          "assigning variable job_params_d_flat__");
+        current_statement__ = 109;
+        pos__ = 1;
+        current_statement__ = 109;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 109;
+          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 109;
+            assign(job_params_d,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              job_params_d_flat__[(pos__ - 1)],
+              "assigning variable job_params_d");
+            current_statement__ = 109;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 110;
+      validate_non_negative_index("data_r", "3", 3);
+      current_statement__ = 110;
+      validate_non_negative_index("data_r", "3", 3);
+      context__.validate_dims("data initialization","data_r","double",
+          context__.to_vec(3, 3));
+      data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, 0));
+      
+      {
+        std::vector<local_scalar_t__> data_r_flat__;
+        current_statement__ = 110;
+        assign(data_r_flat__, nil_index_list(), context__.vals_r("data_r"),
+          "assigning variable data_r_flat__");
+        current_statement__ = 110;
+        pos__ = 1;
+        current_statement__ = 110;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 110;
+          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 110;
+            assign(data_r,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              data_r_flat__[(pos__ - 1)], "assigning variable data_r");
+            current_statement__ = 110;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 111;
+      validate_non_negative_index("data_i", "3", 3);
+      current_statement__ = 111;
+      validate_non_negative_index("data_i", "3", 3);
+      context__.validate_dims("data initialization","data_i","int",
+          context__.to_vec(3, 3));
+      data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
+      
+      {
+        std::vector<int> data_i_flat__;
+        current_statement__ = 111;
+        assign(data_i_flat__, nil_index_list(), context__.vals_i("data_i"),
+          "assigning variable data_i_flat__");
+        current_statement__ = 111;
+        pos__ = 1;
+        current_statement__ = 111;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 111;
+          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 111;
+            assign(data_i,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              data_i_flat__[(pos__ - 1)], "assigning variable data_i");
+            current_statement__ = 111;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 99;
+      current_statement__ = 99;
+      check_greater_or_equal(function__, "T", T, 1);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
+      num_params_r__ += 1;
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
+      num_params_r__ += 1;
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
+      num_params_r__ += 2;
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
+      num_params_r__ += 3;
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      num_params_r__ += 3 * 3;
+      num_params_r__ += 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+  }
+  template <bool propto__, bool jacobian__, typename T__>
+  T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
+               std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    static const char* function__ = "motherHOF_model_namespace::log_prob";
+(void) function__;  // suppress unused var warning
+
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
+      std::vector<local_scalar_t__> y0_p;
+      y0_p = std::vector<local_scalar_t__>(2, 0);
+      
+      current_statement__ = 1;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 1;
+        assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y0_p");}
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
+      std::vector<local_scalar_t__> theta_p;
+      theta_p = std::vector<local_scalar_t__>(1, 0);
+      
+      current_statement__ = 2;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        current_statement__ = 2;
+        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable theta_p");}
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
+      std::vector<local_scalar_t__> x_p;
+      x_p = std::vector<local_scalar_t__>(1, 0);
+      
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        current_statement__ = 3;
+        assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable x_p");}
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 4;
+      x_p_v = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
+      Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      
+      current_statement__ = 5;
+      shared_params_p = in__.vector(3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
+      
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 6;
+        assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.vector(3), "assigning variable job_params_p");}
+      local_scalar_t__ x_r;
+      
+      current_statement__ = 7;
+      x_r = in__.scalar();
+      local_scalar_t__ abc1_p;
+      
+      current_statement__ = 8;
+      abc1_p = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 8;
+      abc1_p = 3;
+      local_scalar_t__ abc2_p;
+      
+      current_statement__ = 9;
+      abc2_p = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 9;
+      abc2_p = map_rectfake(abc1_p, pstream__);
+      local_scalar_t__ abc3_p;
+      
+      current_statement__ = 10;
+      abc3_p = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 10;
+      abc3_p = map_rectfake(12, pstream__);
+      current_statement__ = 11;
+      validate_non_negative_index("y_hat_tp1", "3", 3);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
+      y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      
+      current_statement__ = 11;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 11;
+        assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp1");}
+      current_statement__ = 11;
+      assign(y_hat_tp1, nil_index_list(),
+        map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp1");
+      current_statement__ = 12;
+      validate_non_negative_index("y_hat_tp2", "3", 3);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
+      y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      
+      current_statement__ = 12;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 12;
+        assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp2");}
+      current_statement__ = 12;
+      assign(y_hat_tp2, nil_index_list(),
+        map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp2");
+      current_statement__ = 13;
+      validate_non_negative_index("y_hat_tp3", "3", 3);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
+      y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      
+      current_statement__ = 13;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 13;
+        assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp3");}
+      current_statement__ = 13;
+      assign(y_hat_tp3, nil_index_list(),
+        map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp3");
+      current_statement__ = 14;
+      validate_non_negative_index("theta_p_as", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_p_as;
+      theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 14;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 14;
+        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable theta_p_as");}
+      current_statement__ = 15;
+      validate_non_negative_index("x_v", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_v;
+      x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 15;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 15;
+        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
+      }
+      current_statement__ = 16;
+      validate_non_negative_index("y_v", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_v;
+      y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 16;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 16;
+        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
+      }
+      current_statement__ = 17;
+      validate_non_negative_index("y_p", "2", 2);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      
+      current_statement__ = 17;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 17;
+        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_p");
+      }
+      current_statement__ = 18;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 19;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 20;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 21;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 22;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 23;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 24;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      {
+        current_statement__ = 57;
+        validate_non_negative_index("y_hat", "T", T);
+        current_statement__ = 57;
+        validate_non_negative_index("y_hat", "2", 2);
+        std::vector<std::vector<local_scalar_t__>> y_hat;
+        y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, 0));
+        
+        current_statement__ = 58;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 59;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 60;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 61;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 62;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 63;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 64;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+        current_statement__ = 65;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+        current_statement__ = 66;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+        current_statement__ = 67;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+        current_statement__ = 68;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 69;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 70;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 71;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        current_statement__ = 72;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 73;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 74;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
+        current_statement__ = 75;
+        assign(y_hat, nil_index_list(),
+          integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
+        local_scalar_t__ y_1d;
+        
+        current_statement__ = 76;
+        y_1d = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 76;
+        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 77;
+        y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 78;
+        y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 79;
+        y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 80;
+        y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 81;
+        y_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 82;
+        y_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 83;
+        y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+                 pstream__);
+        current_statement__ = 84;
+        y_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
+                 x_d_i, pstream__);
+        current_statement__ = 85;
+        y_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
+                 x_d_i, pstream__);
+        current_statement__ = 86;
+        y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
+                 x_d_i, pstream__);
+        local_scalar_t__ z_1d;
+        
+        current_statement__ = 87;
+        z_1d = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 87;
+        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 88;
+        z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 89;
+        z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 90;
+        z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 91;
+        z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 92;
+        z_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 93;
+        z_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 94;
+        z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
+                 pstream__, 1e-8);
+        current_statement__ = 95;
+        z_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
+                 x_d_i, pstream__, 1e-8);
+        current_statement__ = 96;
+        z_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
+                 x_d_i, pstream__, 1e-8);
+        current_statement__ = 97;
+        z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
+                 x_d_i, pstream__, 1e-8);
+        local_scalar_t__ abc_m;
+        
+        current_statement__ = 98;
+        abc_m = std::numeric_limits<double>::quiet_NaN();
+        current_statement__ = 98;
+        abc_m = map_rectfake(abc1_p, pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  template <typename RNG>
+  void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__, std::vector<double>& vars__,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
+                   std::ostream* pstream__ = 0) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "motherHOF_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
+    
+    try {
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
+      std::vector<double> y0_p;
+      y0_p = std::vector<double>(2, 0);
+      
+      current_statement__ = 1;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 1;
+        assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable y0_p");}
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
+      std::vector<double> theta_p;
+      theta_p = std::vector<double>(1, 0);
+      
+      current_statement__ = 2;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        current_statement__ = 2;
+        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable theta_p");}
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
+      std::vector<double> x_p;
+      x_p = std::vector<double>(1, 0);
+      
+      current_statement__ = 3;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        current_statement__ = 3;
+        assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.scalar(), "assigning variable x_p");}
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
+      Eigen::Matrix<double, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 4;
+      x_p_v = in__.vector(2);
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
+      Eigen::Matrix<double, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      
+      current_statement__ = 5;
+      shared_params_p = in__.vector(3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      
+      current_statement__ = 6;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 6;
+        assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.vector(3), "assigning variable job_params_p");}
+      double x_r;
+      
+      current_statement__ = 7;
+      x_r = in__.scalar();
+      double abc1_p;
+      
+      current_statement__ = 8;
+      abc1_p = std::numeric_limits<double>::quiet_NaN();
+      double abc2_p;
+      
+      current_statement__ = 9;
+      abc2_p = std::numeric_limits<double>::quiet_NaN();
+      double abc3_p;
+      
+      current_statement__ = 10;
+      abc3_p = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 11;
+      validate_non_negative_index("y_hat_tp1", "3", 3);
+      Eigen::Matrix<double, -1, 1> y_hat_tp1;
+      y_hat_tp1 = Eigen::Matrix<double, -1, 1>(3);
+      
+      current_statement__ = 11;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 11;
+        assign(y_hat_tp1, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp1");}
+      current_statement__ = 12;
+      validate_non_negative_index("y_hat_tp2", "3", 3);
+      Eigen::Matrix<double, -1, 1> y_hat_tp2;
+      y_hat_tp2 = Eigen::Matrix<double, -1, 1>(3);
+      
+      current_statement__ = 12;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 12;
+        assign(y_hat_tp2, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp2");}
+      current_statement__ = 13;
+      validate_non_negative_index("y_hat_tp3", "3", 3);
+      Eigen::Matrix<double, -1, 1> y_hat_tp3;
+      y_hat_tp3 = Eigen::Matrix<double, -1, 1>(3);
+      
+      current_statement__ = 13;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 13;
+        assign(y_hat_tp3, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_tp3");}
+      current_statement__ = 14;
+      validate_non_negative_index("theta_p_as", "2", 2);
+      Eigen::Matrix<double, -1, 1> theta_p_as;
+      theta_p_as = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 14;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 14;
+        assign(theta_p_as, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable theta_p_as");}
+      current_statement__ = 15;
+      validate_non_negative_index("x_v", "2", 2);
+      Eigen::Matrix<double, -1, 1> x_v;
+      x_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 15;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 15;
+        assign(x_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable x_v");
+      }
+      current_statement__ = 16;
+      validate_non_negative_index("y_v", "2", 2);
+      Eigen::Matrix<double, -1, 1> y_v;
+      y_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 16;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 16;
+        assign(y_v, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_v");
+      }
+      current_statement__ = 17;
+      validate_non_negative_index("y_p", "2", 2);
+      Eigen::Matrix<double, -1, 1> y_p;
+      y_p = Eigen::Matrix<double, -1, 1>(2);
+      
+      current_statement__ = 17;
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 17;
+        assign(y_p, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(), "assigning variable y_p");
+      }
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y0_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        vars__.push_back(theta_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        vars__.push_back(x_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_p_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(shared_params_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          vars__.push_back(job_params_p[(sym2__ - 1)][(sym1__ - 1)]);}}
+      vars__.push_back(x_r);
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      current_statement__ = 8;
+      abc1_p = 3;
+      current_statement__ = 9;
+      abc2_p = map_rectfake(abc1_p, pstream__);
+      current_statement__ = 10;
+      abc3_p = map_rectfake(12, pstream__);
+      current_statement__ = 11;
+      assign(y_hat_tp1, nil_index_list(),
+        map_rect<4, foo_functor__>(shared_params_p, job_params_d, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp1");
+      current_statement__ = 12;
+      assign(y_hat_tp2, nil_index_list(),
+        map_rect<5, foo_functor__>(shared_params_d, job_params_p, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp2");
+      current_statement__ = 13;
+      assign(y_hat_tp3, nil_index_list(),
+        map_rect<6, foo_functor__>(shared_params_p, job_params_d, data_r,
+          data_i, pstream__), "assigning variable y_hat_tp3");
+      current_statement__ = 18;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 19;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 20;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 21;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 22;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 23;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_p_as");
+      current_statement__ = 24;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      vars__.push_back(abc1_p);
+      vars__.push_back(abc2_p);
+      vars__.push_back(abc3_p);
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(y_hat_tp1[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(y_hat_tp2[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(y_hat_tp3[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(theta_p_as[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y_p[(sym1__ - 1)]);}
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+      current_statement__ = 25;
+      validate_non_negative_index("y_hat", "T", T);
+      current_statement__ = 25;
+      validate_non_negative_index("y_hat", "2", 2);
+      std::vector<std::vector<double>> y_hat;
+      y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, 0));
+      
+      current_statement__ = 26;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 27;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 28;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 29;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 30;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 31;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 32;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 33;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 34;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+      current_statement__ = 35;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+      current_statement__ = 36;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+      current_statement__ = 37;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 100000000.), "assigning variable y_hat");
+      current_statement__ = 38;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 39;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 40;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 41;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 42;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 43;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 44;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 45;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      double y_1d;
+      
+      current_statement__ = 46;
+      y_1d = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 46;
+      y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+               pstream__);
+      current_statement__ = 47;
+      y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+               pstream__);
+      current_statement__ = 48;
+      y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+               pstream__);
+      current_statement__ = 49;
+      y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+               pstream__);
+      double z_1d;
+      
+      current_statement__ = 50;
+      z_1d = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 50;
+      z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
+               pstream__, 1e-8);
+      current_statement__ = 51;
+      z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
+               pstream__, 1e-8);
+      current_statement__ = 52;
+      z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
+               pstream__, 1e-8);
+      current_statement__ = 53;
+      z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
+               pstream__, 1e-8);
+      double abc1_gq;
+      
+      current_statement__ = 54;
+      abc1_gq = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 54;
+      abc1_gq = map_rectfake(12, pstream__);
+      double abc2_gq;
+      
+      current_statement__ = 55;
+      abc2_gq = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 55;
+      abc2_gq = map_rectfake(abc1_p, pstream__);
+      current_statement__ = 56;
+      validate_non_negative_index("y_hat_gq", "3", 3);
+      Eigen::Matrix<double, -1, 1> y_hat_gq;
+      y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
+      
+      current_statement__ = 56;
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        current_statement__ = 56;
+        assign(y_hat_gq, cons_list(index_uni(sym1__), nil_index_list()),
+          std::numeric_limits<double>::quiet_NaN(),
+          "assigning variable y_hat_gq");}
+      current_statement__ = 56;
+      assign(y_hat_gq, nil_index_list(),
+        map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
+          data_i, pstream__), "assigning variable y_hat_gq");
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= T; ++sym2__) {
+          vars__.push_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
+      vars__.push_back(y_1d);
+      vars__.push_back(z_1d);
+      vars__.push_back(abc1_gq);
+      vars__.push_back(abc2_gq);
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(y_hat_gq[(sym1__ - 1)]);}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& vars__, std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      
+      pos__ = 1;
+      current_statement__ = 1;
+      validate_non_negative_index("y0_p", "2", 2);
+      std::vector<double> y0_p;
+      y0_p = std::vector<double>(2, 0);
+      
+      current_statement__ = 1;
+      assign(y0_p, nil_index_list(), context__.vals_r("y0_p"),
+        "assigning variable y0_p");
+      current_statement__ = 2;
+      validate_non_negative_index("theta_p", "1", 1);
+      std::vector<double> theta_p;
+      theta_p = std::vector<double>(1, 0);
+      
+      current_statement__ = 2;
+      assign(theta_p, nil_index_list(), context__.vals_r("theta_p"),
+        "assigning variable theta_p");
+      current_statement__ = 3;
+      validate_non_negative_index("x_p", "1", 1);
+      std::vector<double> x_p;
+      x_p = std::vector<double>(1, 0);
+      
+      current_statement__ = 3;
+      assign(x_p, nil_index_list(), context__.vals_r("x_p"),
+        "assigning variable x_p");
+      current_statement__ = 4;
+      validate_non_negative_index("x_p_v", "2", 2);
+      Eigen::Matrix<double, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<double, -1, 1>(2);
+      
+      {
+        std::vector<local_scalar_t__> x_p_v_flat__;
+        current_statement__ = 4;
+        assign(x_p_v_flat__, nil_index_list(), context__.vals_r("x_p_v"),
+          "assigning variable x_p_v_flat__");
+        current_statement__ = 4;
+        pos__ = 1;
+        current_statement__ = 4;
+        for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 4;
+          assign(x_p_v, cons_list(index_uni(sym1__), nil_index_list()),
+            x_p_v_flat__[(pos__ - 1)], "assigning variable x_p_v");
+          current_statement__ = 4;
+          pos__ = (pos__ + 1);}
+      }
+      current_statement__ = 5;
+      validate_non_negative_index("shared_params_p", "3", 3);
+      Eigen::Matrix<double, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
+      
+      {
+        std::vector<local_scalar_t__> shared_params_p_flat__;
+        current_statement__ = 5;
+        assign(shared_params_p_flat__, nil_index_list(),
+          context__.vals_r("shared_params_p"),
+          "assigning variable shared_params_p_flat__");
+        current_statement__ = 5;
+        pos__ = 1;
+        current_statement__ = 5;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 5;
+          assign(shared_params_p,
+            cons_list(index_uni(sym1__), nil_index_list()),
+            shared_params_p_flat__[(pos__ - 1)],
+            "assigning variable shared_params_p");
+          current_statement__ = 5;
+          pos__ = (pos__ + 1);}
+      }
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      current_statement__ = 6;
+      validate_non_negative_index("job_params_p", "3", 3);
+      std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
+      
+      {
+        std::vector<local_scalar_t__> job_params_p_flat__;
+        current_statement__ = 6;
+        assign(job_params_p_flat__, nil_index_list(),
+          context__.vals_r("job_params_p"),
+          "assigning variable job_params_p_flat__");
+        current_statement__ = 6;
+        pos__ = 1;
+        current_statement__ = 6;
+        for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 6;
+          for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 6;
+            assign(job_params_p,
+              cons_list(index_uni(sym2__),
+                cons_list(index_uni(sym1__), nil_index_list())),
+              job_params_p_flat__[(pos__ - 1)],
+              "assigning variable job_params_p");
+            current_statement__ = 6;
+            pos__ = (pos__ + 1);}}
+      }
+      double x_r;
+      
+      current_statement__ = 7;
+      x_r = context__.vals_r("x_r")[(1 - 1)];
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(y0_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        vars__.push_back(theta_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        vars__.push_back(x_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(x_p_v[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        vars__.push_back(shared_params_p[(sym1__ - 1)]);}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          vars__.push_back(job_params_p[(sym2__ - 1)][(sym1__ - 1)]);}}
+      vars__.push_back(x_r);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("y0_p");
+    names__.push_back("theta_p");
+    names__.push_back("x_p");
+    names__.push_back("x_p_v");
+    names__.push_back("shared_params_p");
+    names__.push_back("job_params_p");
+    names__.push_back("x_r");
+    names__.push_back("abc1_p");
+    names__.push_back("abc2_p");
+    names__.push_back("abc3_p");
+    names__.push_back("y_hat_tp1");
+    names__.push_back("y_hat_tp2");
+    names__.push_back("y_hat_tp3");
+    names__.push_back("theta_p_as");
+    names__.push_back("x_v");
+    names__.push_back("y_v");
+    names__.push_back("y_p");
+    names__.push_back("y_hat");
+    names__.push_back("y_1d");
+    names__.push_back("z_1d");
+    names__.push_back("abc1_gq");
+    names__.push_back("abc2_gq");
+    names__.push_back("y_hat_gq");
+    } // get_param_names() 
+    
+  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(1);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(1);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(T);
+    
+    dims__.push_back(2);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
+    
+  void constrained_param_names(std::vector<std::string>& param_names__,
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y0_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "theta_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "shared_params_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "job_params_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    param_names__.push_back(std::string() + "x_r");
+    if (emit_transformed_parameters__) {
+      param_names__.push_back(std::string() + "abc1_p");
+      param_names__.push_back(std::string() + "abc2_p");
+      param_names__.push_back(std::string() + "abc3_p");
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp1" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp2" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp3" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_p_as" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "x_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_p" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= T; ++sym2__) {
+            {
+              param_names__.push_back(std::string() + "y_hat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }}
+        }}
+      param_names__.push_back(std::string() + "y_1d");
+      param_names__.push_back(std::string() + "z_1d");
+      param_names__.push_back(std::string() + "abc1_gq");
+      param_names__.push_back(std::string() + "abc2_gq");
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    } // constrained_param_names() 
+    
+  void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "y0_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "theta_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "x_p_v" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "shared_params_p" + '.' + std::to_string(sym1__));
+      }}
+    for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          {
+            param_names__.push_back(std::string() + "job_params_p" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    param_names__.push_back(std::string() + "x_r");
+    if (emit_transformed_parameters__) {
+      param_names__.push_back(std::string() + "abc1_p");
+      param_names__.push_back(std::string() + "abc2_p");
+      param_names__.push_back(std::string() + "abc3_p");
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp1" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp2" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_tp3" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_p_as" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "x_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_v" + '.' + std::to_string(sym1__));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_p" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      for (size_t sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= T; ++sym2__) {
+            {
+              param_names__.push_back(std::string() + "y_hat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }}
+        }}
+      param_names__.push_back(std::string() + "y_1d");
+      param_names__.push_back(std::string() + "z_1d");
+      param_names__.push_back(std::string() + "abc1_gq");
+      param_names__.push_back(std::string() + "abc2_gq");
+      for (size_t sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "y_hat_gq" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    } // unconstrained_param_names() 
+    
+  std::string get_constrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  std::string get_unconstrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+};
+}
+typedef motherHOF_model_namespace::motherHOF_model stan_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+#endif
+
+
+STAN_REGISTER_MAP_RECT(1, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(2, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(3, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(4, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(5, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(6, motherHOF_model_namespace::foo_functor__)
+STAN_REGISTER_MAP_RECT(7, motherHOF_model_namespace::foo_functor__)
   $ ../../../../../install/default/bin/stanc --print-cpp optimize_glm.stan
 
 // Code generated by %%NAME%% %%VERSION%%
@@ -12515,7 +14517,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -14198,7 +16200,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -14356,10 +16358,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g_functor__;
-using DeepCopy__ = g_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -14423,10 +16425,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return h(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h_functor__;
-using DeepCopy__ = h_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -14867,7 +16869,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -15149,10 +17151,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g1(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g1_functor__;
-using DeepCopy__ = g1_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15212,10 +17214,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
 return g2(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g2_functor__;
-using DeepCopy__ = g2_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15275,10 +17277,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
 return g3(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g3_functor__;
-using DeepCopy__ = g3_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15339,10 +17341,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
 return g4(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g4_functor__;
-using DeepCopy__ = g4_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15405,10 +17407,10 @@ operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
 return g5(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g5_functor__;
-using DeepCopy__ = g5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15472,10 +17474,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
 return g6(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g6_functor__;
-using DeepCopy__ = g6_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15539,10 +17541,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
 return g7(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g7_functor__;
-using DeepCopy__ = g7_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15606,10 +17608,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
 return g8(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g8_functor__;
-using DeepCopy__ = g8_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15667,10 +17669,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h1(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h1_functor__;
-using DeepCopy__ = h1_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15737,10 +17739,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h2(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h2_functor__;
-using DeepCopy__ = h2_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15808,10 +17810,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h3(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h3_functor__;
-using DeepCopy__ = h3_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15880,10 +17882,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h4(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h4_functor__;
-using DeepCopy__ = h4_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -15953,10 +17955,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h5(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h5_functor__;
-using DeepCopy__ = h5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -16028,10 +18030,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h6(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h6_functor__;
-using DeepCopy__ = h6_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -16104,10 +18106,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h7(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h7_functor__;
-using DeepCopy__ = h7_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -16180,10 +18182,10 @@ operator()(const std::vector<T0__>& y, const int& start,
 return h8(y, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = h8_functor__;
-using DeepCopy__ = h8_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18029,7 +20031,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -18404,10 +20406,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return f1(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f1_functor__;
-using DeepCopy__ = f1_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18457,10 +20459,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return f1a(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f1a_functor__;
-using DeepCopy__ = f1a_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18510,10 +20512,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice,
 return f2(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f2_functor__;
-using DeepCopy__ = f2_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18563,10 +20565,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice,
 return f3(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f3_functor__;
-using DeepCopy__ = f3_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18616,10 +20618,10 @@ operator()(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice,
 return f4(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f4_functor__;
-using DeepCopy__ = f4_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18669,10 +20671,10 @@ operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
 return f5(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f5_functor__;
-using DeepCopy__ = f5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18722,10 +20724,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
 return f6(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f6_functor__;
-using DeepCopy__ = f6_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18775,10 +20777,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
 return f7(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f7_functor__;
-using DeepCopy__ = f7_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18828,10 +20830,10 @@ operator()(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
 return f8(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f8_functor__;
-using DeepCopy__ = f8_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18878,10 +20880,10 @@ operator()(const std::vector<int>& y_slice, const int& start,
 return f9(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f9_functor__;
-using DeepCopy__ = f9_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18927,10 +20929,10 @@ operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
 return f10(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f10_functor__;
-using DeepCopy__ = f10_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -18976,10 +20978,10 @@ operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
 return f11(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f11_functor__;
-using DeepCopy__ = f11_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19028,10 +21030,10 @@ operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
 return f12(y_slice, start, end, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = f12_functor__;
-using DeepCopy__ = f12_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19085,10 +21087,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g1(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g1_functor__;
-using DeepCopy__ = g1_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19145,10 +21147,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g2(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g2_functor__;
-using DeepCopy__ = g2_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19206,10 +21208,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g3(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g3_functor__;
-using DeepCopy__ = g3_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19267,10 +21269,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g4(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g4_functor__;
-using DeepCopy__ = g4_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19328,10 +21330,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g5(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g5_functor__;
-using DeepCopy__ = g5_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19389,10 +21391,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g6(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g6_functor__;
-using DeepCopy__ = g6_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19450,10 +21452,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g7(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g7_functor__;
-using DeepCopy__ = g7_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19511,10 +21513,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g8(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g8_functor__;
-using DeepCopy__ = g8_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19572,10 +21574,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g9(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g9_functor__;
-using DeepCopy__ = g9_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19635,10 +21637,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g10(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g10_functor__;
-using DeepCopy__ = g10_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19698,10 +21700,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g11(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g11_functor__;
-using DeepCopy__ = g11_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19761,10 +21763,10 @@ operator()(const std::vector<T0__>& y_slice, const int& start,
 return g12(y_slice, start, end, a, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = g12_functor__;
-using DeepCopy__ = g12_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -19890,10 +21892,10 @@ return s(y_slice, start, end, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
          q, pstream__);
 }
 void set_zero_adjoints() const { }
-void save_varis(vari**) const { }
 void accumulate_adjoints(double*) const { }
+void save_varis(vari**) const { }
 using ValueOf__ = s_functor__;
-using DeepCopy__ = s_functor__;
+using DeepCopy__ = ValueOf__;
 using captured_scalar_t__ = double;};
 
 
@@ -22719,7 +24721,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -23117,7 +25119,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
@@ -23610,7 +25612,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>

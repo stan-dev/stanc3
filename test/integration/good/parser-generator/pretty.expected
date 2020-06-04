@@ -367,24 +367,6 @@ generated quantities {
   }
 }
 
-
-Semantic error in 'ode_control.stan', line 30, column 10 to line 31, column 47:
-   -------------------------------------------------
-    28:    y_hat = integrate_ode_rk45(sho, y0, t0, ts, theta, x, x_int,
-    29:                                1e-10, 1e-10, 1e6);
-    30:    y_hat = integrate_ode_bdf(sho, y0, t0, ts, theta, x, x_int,
-                   ^
-    31:                               1e-10, 1e-10, 1e6);
-    32:    y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int,
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
-((real, vector) => vector, vector, real, real[]) => vector[]
-((real, vector) => vector, vector, real, real[], data real, data real, data real) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[]) => vector[]
-((real, vector, real[], data real[], data int[]) => vector, vector, real, real[], real[], data real[], data int[], data real, data real, data real) => vector[]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, real.
-
   $ ../../../../../install/default/bin/stanc --auto-format prim_var_data_block.stan
 data {
   int<lower=0, upper=1> p1;

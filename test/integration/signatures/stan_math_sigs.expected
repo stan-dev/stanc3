@@ -7733,6 +7733,11 @@ vector[] integrate_ode_bdf((real, vector, real[], data real[], data int[]) => ve
 vector[] integrate_ode_bdf((real, vector, real[], data real[], data int[]) => vector,
                              vector, real, real[], real[], real[], int[],
                              real, real, real)
+real[,] integrate_ode_bdf((real, real[], real[], data real[], data int[]) => real[],
+                            real[], real, real[], real[], real[], int[])
+real[,] integrate_ode_bdf((real, real[], real[], data real[], data int[]) => real[],
+                            real[], real, real[], real[], real[], int[],
+                            real, real, real)
 real[,] integrate_ode_rk45((real, real[], real[], data real[], data int[]) => real[],
                              real[], real, real[], real[], real[], int[])
 real[,] integrate_ode_rk45((real, real[], real[], data real[], data int[]) => real[],

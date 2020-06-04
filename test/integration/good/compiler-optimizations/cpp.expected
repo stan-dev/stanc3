@@ -8,7 +8,7 @@ void FnZeroAdjoint__(double) { }
 void FnZeroAdjoint__(stan::math::var x) { x->set_zero_adjoint(); }
 double FnGetAdjoint__(double) { return 0.0; }
 double FnGetAdjoint__(stan::math::var x) { return x.adj(); }
-stan::math::vari* FnGetVariPtr__(double) { return nullptr; }
+stan::math::vari* FnGetVariPtr__(double) { throw new std::runtime_error("value is not autodiffable"); }
 stan::math::vari* FnGetVariPtr__(stan::math::var x) { return x.vi_; }
 
 template <typename T, typename S>
