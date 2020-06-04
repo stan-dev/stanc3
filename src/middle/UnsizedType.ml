@@ -8,6 +8,7 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
+  | UTuple of t list
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
 
@@ -36,6 +37,8 @@ let rec pp ppf = function
       let ty, depth = unsized_array_depth ut in
       let commas = String.make depth ',' in
       Fmt.pf ppf "%a[%s]" pp ty commas
+  | UTuple ts ->
+    Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp) ts
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

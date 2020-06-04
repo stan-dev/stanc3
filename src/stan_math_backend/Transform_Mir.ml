@@ -99,6 +99,8 @@ let data_read smeta (decl_id, st) =
         |> swrap ]
   | UArray UInt | UArray UReal ->
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+  | UTuple _ ->
+    raise_s [%message "Reading from tuples not implemented."]
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->

@@ -7,6 +7,7 @@ let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let rec contains_eigen = function
+  | UnsizedType.UTuple ts -> List.exists ~f:contains_eigen ts
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false

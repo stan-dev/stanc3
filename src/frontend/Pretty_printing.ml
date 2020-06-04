@@ -66,6 +66,9 @@ and pp_unsizedtype ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp_unsizedtype ut2
+  (* note from rybern: why not always delegate to UnsizedType.pp like this?
+     isn't this doing the same thing? *)
+  | UTuple ts -> Middle.UnsizedType.pp ppf (UTuple ts)
   | UFun (argtypes, rt) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
         Fmt.(list ~sep:comma_no_break pp_argtype)
