@@ -272,7 +272,8 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
 (* Regular function application *)
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
-    match Symbol_table.look vm id.name with
+
+    match Symbol_table.look vm (Utils.normalized_name id.name) with
     | Some (_, UnsizedType.UFun (_, Void)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error

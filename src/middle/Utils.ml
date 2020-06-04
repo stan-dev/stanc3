@@ -36,6 +36,11 @@ let stdlib_distribution_name s =
   List.map ~f:(replace_unnormalized_suffix ~name:s) distribution_suffices
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
+let normalized_name name = 
+  match name with
+  | x when is_distribution_name x -> (stdlib_distribution_name x)
+  | x -> x
+
 let%expect_test "unnormalized name mangling" =
   stdlib_distribution_name "bernoulli_logit_lupmf" |> print_string ;
   stdlib_distribution_name "normal_lupdf" |> ( ^ ) "; " |> print_string ;
