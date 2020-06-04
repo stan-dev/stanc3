@@ -84,9 +84,7 @@ let chop_dist_name (fname : string) : string Option.t =
   (* Slightly inefficient, would be better to short-circuit *)
   List.fold ~init:None ~f:Option.first_some
     (List.map ~f:(fun suffix -> String.chop_suffix ~suffix fname)
-       [ "_lupdf"
-       ; "_lupmf"
-       ])
+       Middle.Utils.unnormalized_suffices)
 
 let is_dist (fname : string) : bool =
   Option.is_some (chop_dist_name fname)

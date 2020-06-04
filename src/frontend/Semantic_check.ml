@@ -236,9 +236,9 @@ let semantic_check_fn_map_rect ~loc id es =
 
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
-    if
-      List.exists Utils.conditioning_suffices ~f:(fun x ->
-          String.is_suffix id.name ~suffix:x )
+    if List.exists 
+       ~f:(fun suffix -> String.is_suffix id.name ~suffix)
+       Utils.conditioning_suffices
     then Semantic_error.conditioning_required loc |> error
     else ok ())
 
@@ -1055,32 +1055,28 @@ let semantic_check_sampling_distribution ~loc id arguments =
     | UnsizedType.ReturnType UReal -> true
     | _ -> false
   in
-  let is_reat_rt_for_suffix suffix =
+  let is_name_w_suffix_sampling_dist suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
-    |> Option.value_map ~default:false ~f:is_real_rt
-  and valid_arg_types_for_suffix suffix =
+    |> Option.value_map ~default:false ~f:is_real_rt in
+  let is_sampling_dist_in_math =
+    List.exists ~f:is_name_w_suffix_sampling_dist (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+    && name <> "binomial_coefficient" && name <> "multiply"
+  in
+  let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
     | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
   in
+  let is_udf_sampling_dist =
+    List.exists ~f:is_name_w_suffix_udf_sampling_dist (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+  in
   Validate.(
-    if
-      is_reat_rt_for_suffix "_lpdf"
-      || is_reat_rt_for_suffix "_lupdf"
-      || is_reat_rt_for_suffix "_lpmf"
-      || is_reat_rt_for_suffix "_lupmf"
-      || is_reat_rt_for_suffix "_log"
-         && name <> "binomial_coefficient"
-         && name <> "multiply"
-      || valid_arg_types_for_suffix "_lpdf"
-      || valid_arg_types_for_suffix "_lupdf"
-      || valid_arg_types_for_suffix "_lpmf"
-      || valid_arg_types_for_suffix "_lupmf"
-      || valid_arg_types_for_suffix "_log"
+    if is_sampling_dist_in_math || is_udf_sampling_dist
     then ok ()
-    else error @@ Semantic_error.invalid_sampling_no_such_dist loc name)
+    else error @@ Semantic_error.invalid_sampling_no_such_dist loc name
+  )
 
 let cumulative_density_is_defined id arguments =
   let name = id.name
@@ -1089,7 +1085,7 @@ let cumulative_density_is_defined id arguments =
     | UnsizedType.ReturnType UReal -> true
     | _ -> false
   in
-  let is_reat_rt_for_suffix suffix =
+  let is_real_rt_for_suffix suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
@@ -1099,13 +1095,13 @@ let cumulative_density_is_defined id arguments =
           argumenttypes
     | _ -> false
   in
-  ( is_reat_rt_for_suffix "_lcdf"
+  ( is_real_rt_for_suffix "_lcdf"
   || valid_arg_types_for_suffix "_lcdf"
-  || is_reat_rt_for_suffix "_cdf_log"
+  || is_real_rt_for_suffix "_cdf_log"
   || valid_arg_types_for_suffix "_cdf_log" )
-  && ( is_reat_rt_for_suffix "_lccdf"
+  && ( is_real_rt_for_suffix "_lccdf"
      || valid_arg_types_for_suffix "_lccdf"
-     || is_reat_rt_for_suffix "_ccdf_log"
+     || is_real_rt_for_suffix "_ccdf_log"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
 let can_truncate_distribution ~loc (arg : typed_expression) = function
@@ -1545,7 +1541,7 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
           true
       | _ -> false
     in
-    if String.is_suffix id.name ~suffix:"_lpdf" || String.is_suffix id.name ~suffix:"_lupdf" then
+    if String.is_suffix id.name ~suffix:"_lpdf" then
       List.hd arg_tys
       |> Option.value_map
            ~default:
@@ -1564,7 +1560,7 @@ and semantic_check_pmf_fundef_first_arg_ty ~loc id arg_tys =
       | UnsizedType.UInt | UArray UInt -> true
       | _ -> false
     in
-    if String.is_suffix id.name ~suffix:"_lpmf" || String.is_suffix id.name ~suffix:"_lupmf" then
+    if String.is_suffix id.name ~suffix:"_lpmf" then
       List.hd arg_tys
       |> Option.value_map
            ~default:(error @@ Semantic_error.prob_mass_non_int_variate loc None)

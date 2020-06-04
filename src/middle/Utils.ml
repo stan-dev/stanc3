@@ -27,13 +27,13 @@ let is_unnormalized_distribution s =
        ~f:(fun suffix -> String.is_suffix s ~suffix)
        unnormalized_suffices
 
-let remove_unnormalized_suffix suffix ~name =
+let replace_unnormalized_suffix suffix ~name =
   name
   |> String.chop_suffix ~suffix:(unnormalized_suffix suffix)
   |> Option.map ~f:(fun x -> x ^ suffix)
 
 let stdlib_distribution_name s =
-  List.map ~f:(remove_unnormalized_suffix ~name:s) distribution_suffices
+  List.map ~f:(replace_unnormalized_suffix ~name:s) distribution_suffices
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
 let%expect_test "unnormalized name mangling" =
