@@ -85,10 +85,10 @@ let rec lub_ad_type = function
       let y = lub_ad_type xs in
       if UnsizedType.compare_autodifftype x y < 0 then y else x
 
-let calculate_autodifftype at ut =
+let calculate_autodifftype cf at ut =
   match at with
-  | (Param | TParam | Model | Functions) when not (unsizedtype_contains_int ut)
-    ->
+  | (Param | TParam | Model | Functions)
+    when not (unsizedtype_contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
@@ -453,7 +453,7 @@ let semantic_check_postfixop loc op e =
          | Void -> error err ))
 
 (* -- Variables ------------------------------------------------------------- *)
-let semantic_check_variable loc id =
+let semantic_check_variable cf loc id =
   Validate.(
     match Symbol_table.look vm id.name with
     | None when not (Stan_math_signatures.is_stan_math_function_name id.name)
@@ -461,12 +461,13 @@ let semantic_check_variable loc id =
         Semantic_error.ident_not_in_scope loc id.name |> error
     | None ->
         mk_typed_expression ~expr:(Variable id)
-          ~ad_level:(calculate_autodifftype MathLibrary UMathLibraryFunction)
+          ~ad_level:
+            (calculate_autodifftype cf MathLibrary UMathLibraryFunction)
           ~type_:UMathLibraryFunction ~loc
         |> ok
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
-          ~ad_level:(calculate_autodifftype originblock type_)
+          ~ad_level:(calculate_autodifftype cf originblock type_)
           ~type_ ~loc
         |> ok)
 
@@ -660,7 +661,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         |> apply_const (semantic_check_operator op)
         >>= semantic_check_postfixop emeta.loc op)
   | Variable id ->
-      semantic_check_variable emeta.loc id
+      semantic_check_variable cf emeta.loc id
       |> Validate.apply_const (semantic_check_identifier id)
   | IntNumeral s ->
       mk_typed_expression ~expr:(IntNumeral s) ~ad_level:DataOnly ~type_:UInt
@@ -685,7 +686,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         |> Validate.error
       else
         mk_typed_expression ~expr:GetLP
-          ~ad_level:(calculate_autodifftype cf.current_block UReal)
+          ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
           ~type_:UReal ~loc:emeta.loc
         |> Validate.ok
   | GetTarget ->
@@ -699,7 +700,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         |> Validate.error
       else
         mk_typed_expression ~expr:GetTarget
-          ~ad_level:(calculate_autodifftype cf.current_block UReal)
+          ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
           ~type_:UReal ~loc:emeta.loc
         |> Validate.ok
   | ArrayExpr es ->
@@ -1677,7 +1678,7 @@ and semantic_check_fundef ~loc ~cf return_ty id is_closure args body =
         | None | Some (Functions, UFun (_, _, Function)) -> None
         | Some (block, type_) ->
             Symbol_table.set_read_only vm name ;
-            Some (ok (calculate_autodifftype block type_, type_, name)) )
+            Some (ok (calculate_autodifftype cf block type_, type_, name)) )
     |> sequence
     |> map ~f:(fun captures ->
            let stmt =

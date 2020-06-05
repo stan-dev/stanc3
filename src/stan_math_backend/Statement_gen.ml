@@ -6,21 +6,32 @@ open Expression_gen
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
+let rec contains_eigen = function
+  | UnsizedType.UArray t -> contains_eigen t
+  | UMatrix | URowVector | UVector -> true
+  | UInt |UReal | UMathLibraryFunction | UFun _ -> false
+
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
+  let real_nan =
+    match adtype with
+    | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
+    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+  in
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
       pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
     match st with
-    | SizedType.SInt | SReal -> pf ppf "0"
+    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+    | SReal -> pf ppf "%s" real_nan
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
-  match st with
-  | SizedType.SInt | SReal -> ()
-  | st -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st
+  pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
+  if contains_eigen (SizedType.to_unsized st) then
+    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
 
 let%expect_test "set size mat array" =
   let int i =
@@ -31,12 +42,14 @@ let%expect_test "set size mat array" =
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
   [%expect
-    {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
+    {|
+      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s <= %a;@ ++%s@])" loopvar
+  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 

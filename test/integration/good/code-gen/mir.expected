@@ -252,7 +252,7 @@
          ((pattern
            (TargetPE
             ((pattern
-              (FunApp StanLib uniform_propto_log
+              (FunApp StanLib uniform_propto_lpdf
                (((pattern (Var u))
                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                 ((pattern
@@ -5905,7 +5905,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var p_real))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Lit Int 0))
@@ -5917,7 +5917,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -5931,7 +5931,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var no_offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -5945,7 +5945,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var offset_no_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -5959,7 +5959,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_real_1d_ar))
@@ -5987,7 +5987,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6019,7 +6019,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6051,7 +6051,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6107,7 +6107,7 @@
                               (((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6178,7 +6178,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6251,7 +6251,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6322,7 +6322,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -6414,7 +6414,7 @@
                       (((pattern
                          (TargetPE
                           ((pattern
-                            (FunApp StanLib normal_propto_log
+                            (FunApp StanLib normal_propto_lpdf
                              (((pattern
                                 (FunApp StanLib to_vector
                                  (((pattern
@@ -6470,7 +6470,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6504,7 +6504,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_vec))
@@ -6520,7 +6520,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_row_vec))
@@ -6537,7 +6537,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_simplex))
@@ -6553,7 +6553,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_cfcov_54))
@@ -6569,7 +6569,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_cfcov_33))
@@ -8078,8 +8078,8 @@
       ((pattern
         (FunApp UserDefined foo_bar1
          (((pattern (Var p_real))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_r2) (decl_type (Sized SReal))))
@@ -8409,59 +8409,55 @@
       ((pattern
         (Indexed
          ((pattern (Var p_1d_simplex))
-          (meta
-           ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))
+          (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))
          (All
           (Single
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_real_3d_ar (UArray (UArray (UArray UReal))) ())
       ((pattern (Var p_real_3d_ar))
        (meta
         ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+         (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_1d_vec (UArray UVector) ())
       ((pattern (Var p_1d_vec))
-       (meta
-        ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_3d_vec (UArray (UArray (UArray UVector))) ())
       ((pattern (Var p_3d_vec))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+         (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_row_vec URowVector ())
       ((pattern (Var p_row_vec))
-       (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_1d_row_vec (UArray URowVector) ())
       ((pattern (Var p_1d_row_vec))
-       (meta
-        ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_3d_row_vec (UArray (UArray (UArray URowVector))) ())
       ((pattern (Var p_3d_row_vec))
        (meta
         ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+         (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_simplex UVector ())
       ((pattern
         (Indexed
          ((pattern (Var p_1d_simplex))
-          (meta
-           ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))
+          (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))
          ((Single
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -8470,36 +8466,34 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Var N))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_1d_simplex (UArray UVector) ())
       ((pattern (Var p_1d_simplex))
-       (meta
-        ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_3d_simplex (UArray (UArray (UArray UVector))) ())
       ((pattern (Var p_3d_simplex))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
-         (adlevel AutoDiffable))))))
+         (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_cfcov_54 UMatrix ())
       ((pattern (Var p_cfcov_54))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_cfcov_33 UMatrix ())
       ((pattern (Var p_cfcov_33))
-       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_cfcov_33_ar (UArray UMatrix) ())
       ((pattern (Var p_cfcov_33_ar))
-       (meta
-        ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))))
+       (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (For (loopvar i)
@@ -8616,15 +8610,13 @@
                     (Indexed
                      ((pattern (Var p_vec))
                       (meta
-                       ((type_ UVector) (loc <opaque>)
-                        (adlevel AutoDiffable))))
+                       ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                      ((Single
                        ((pattern (Var i))
                         (meta
                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                   (meta
-                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))

@@ -16,7 +16,7 @@ parameters {
   vector[3] job_params_p[3];
   real data_r_p[3, 3];
 }
-generated quantities {
+transformed parameters {
   vector[3] y_hat_gq
       = map_rect(foo, shared_params_d, job_params_d, data_r,
                  { { 1,  a > 2 ? 1 : 2 } });
