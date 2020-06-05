@@ -76,3 +76,29 @@ Semantic error in 'lupmf_in_trans_params.stan', line 6, column 13 to column 33:
 
 Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
 
+  $ ../../../../../install/default/bin/stanc udf_lupdf.stan
+
+Semantic error in 'udf_lupdf.stan', line 2, column 9 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:      real foo_lupdf(real y) {
+                  ^
+     3:          return 1.0;
+     4:      }
+   -------------------------------------------------
+
+foo_lupdf is an invalid user-defined function name. User-defined probability mass and density functions must be defined as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf).
+
+  $ ../../../../../install/default/bin/stanc udf_lupmf.stan
+
+Semantic error in 'udf_lupmf.stan', line 2, column 9 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:      real foo_lupmf(real y) {
+                  ^
+     3:          return 1.0;
+     4:      }
+   -------------------------------------------------
+
+foo_lupmf is an invalid user-defined function name. User-defined probability mass and density functions must be defined as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf).
+

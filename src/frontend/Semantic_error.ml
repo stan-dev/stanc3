@@ -243,6 +243,7 @@ module ExpressionError = struct
     | InvalidMapRectFn of string
     | InvalidRngFunction
     | InvalidUnnormalizedFunction
+    | InvalidUnnormalizedUDF of string
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
@@ -264,6 +265,12 @@ module ExpressionError = struct
           "Functions with names ending in _lupdf and _lupmf can only be used \
           in the model block or user-defined functions with names ending in \
           _lpdf, _lpmf or _lp."
+    | InvalidUnnormalizedUDF fname -> 
+        Fmt.pf ppf
+          "%s is an invalid user-defined function name. User-defined probability mass \
+          and density functions must be defined \
+          as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf)."
+          fname
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, _lccdf \
@@ -518,6 +525,9 @@ let invalid_rng_fn loc =
 
 let invalid_unnormalized_fn loc =
   ExpressionError (loc, ExpressionError.InvalidUnnormalizedFunction)
+
+let udf_is_unnormalized_fn loc name =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedUDF name)
 
 let conditional_notation_not_allowed loc =
   ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)
