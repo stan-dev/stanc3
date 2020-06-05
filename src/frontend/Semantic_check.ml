@@ -266,6 +266,17 @@ let semantic_check_fn_rng cf ~loc id =
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
+(** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
+    or the model block
+*)
+let semantic_check_unnormalized cf ~loc id =
+  Validate.(
+    if
+      Utils.is_unnormalized_distribution id.name
+      && not ((cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def)) || (cf.current_block = Model))
+    then Semantic_error.invalid_unnormalized_fn loc |> error
+    else ok ())
+
 let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
 
@@ -739,7 +750,8 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
+    |> apply_const (semantic_check_unnormalized cf ~loc:emeta.loc id))
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
@@ -1644,7 +1656,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     and context =
       let is_udf_dist name = 
         List.exists ~f:(fun suffix -> String.is_suffix name ~suffix) 
-          (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+          Utils.distribution_suffices
       in
       { cf with
         in_fun_def= true

@@ -242,6 +242,7 @@ module ExpressionError = struct
   type t =
     | InvalidMapRectFn of string
     | InvalidRngFunction
+    | InvalidUnnormalizedFunction
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
@@ -258,6 +259,11 @@ module ExpressionError = struct
           "Random number generators are only allowed in transformed data \
            block, generated quantities block or user-defined functions with \
            names ending in _rng."
+    | InvalidUnnormalizedFunction ->
+        Fmt.pf ppf
+          "Functions with names ending in _lupdf and _lupmf can only be used \
+          in the model block or user-defined functions with names ending in \
+          _lpdf, _lpmf or _lp."
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, _lccdf \
@@ -509,6 +515,9 @@ let invalid_map_rect_fn loc name =
 
 let invalid_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidRngFunction)
+
+let invalid_unnormalized_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedFunction)
 
 let conditional_notation_not_allowed loc =
   ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)

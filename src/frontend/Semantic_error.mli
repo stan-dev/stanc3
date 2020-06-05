@@ -74,6 +74,7 @@ val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> t
 val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_rng_fn : Location_span.t -> t
+val invalid_unnormalized_fn : Location_span.t -> t
 val conditional_notation_not_allowed : Location_span.t -> t
 val conditioning_required : Location_span.t -> t
 val not_printable : Location_span.t -> t
