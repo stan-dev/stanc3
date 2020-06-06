@@ -37,6 +37,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | EAnd (e1, e2) | EOr (e1, e2) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
+  | TupleIndexed (e, _) -> free_vars_expr e
 
 (** Calculate the free (non-bound) variables in an index*)
 and free_vars_idx (i : Expr.Typed.t Index.t) =
@@ -554,6 +555,8 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
           ( used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
+    | TupleIndexed (e, _) ->
+      used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
         Expr.Typed.Set.union_list
           [used_subexpressions_expr e1; used_subexpressions_expr e2] )

@@ -197,6 +197,7 @@ and pp_sizedtype ppf = function
   | SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | STuple ts -> Middle.SizedType.pp pp_expression ppf (STuple ts)
 
 and pp_transformation ppf = function
   | Middle.Program.Identity -> Fmt.pf ppf ""
@@ -240,7 +241,7 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
-    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
+    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal | Sized (STuple _)
       ->
         Fmt.nop
   in

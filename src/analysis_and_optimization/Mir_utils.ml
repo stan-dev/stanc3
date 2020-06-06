@@ -256,6 +256,7 @@ let rec expr_var_set Expr.Fixed.({pattern; meta}) =
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
+  | TupleIndexed (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 and index_var_set ix =
@@ -373,6 +374,8 @@ let rec expr_depth Expr.Fixed.({pattern; _}) =
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
+  | TupleIndexed (e, _) ->
+    1 + expr_depth e
 
 and idx_depth i =
   match i with
@@ -422,6 +425,14 @@ let rec update_expr_ad_levels autodiffable_variables
           { e.meta with
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
           } }
+  | TupleIndexed (e, ix) ->
+    (* TODO Tuples should be treated as n Vars *)
+    let e' = update_expr_ad_levels autodiffable_variables e in
+    { pattern= TupleIndexed (e', ix)
+    ; meta=
+        { e.meta with
+          adlevel= e'.meta.adlevel
+        } }
 
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)

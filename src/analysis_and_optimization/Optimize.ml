@@ -281,6 +281,9 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
       in
       let i_list = List.map ~f:(function _, _, x -> x) dsi_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
+  | TupleIndexed (e', ix) ->
+    let dl, sl, e' = inline_function_expression adt fim e' in
+    (dl, sl, {e with pattern= TupleIndexed (e', ix)})
   | EAnd (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression adt fim e2 in
