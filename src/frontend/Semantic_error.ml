@@ -57,7 +57,7 @@ module TypeError = struct
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
           name UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal), ut) ->
-        Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
+        Fmt.pf ppf "%s must be a scalar. Instead found type %a."
           name UnsizedType.pp ut
     | TypeExpected (name, et, ut) ->
         Fmt.pf ppf "%s must be a scalar or of type %a. Instead found type %a."
