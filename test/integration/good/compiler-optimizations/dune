@@ -13,6 +13,7 @@
    expr-prop-fail4.stan
    lcm-fails2.stan
    lcm-fails.stan
+   unroll-limit.stan
    expr-prop-fail3.stan
    expr-prop-fail2.stan
    inlining-fail2.stan

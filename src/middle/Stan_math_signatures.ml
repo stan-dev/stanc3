@@ -1,6 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
-(** The "dimensionality" (bad name?) is supposed to help us represent the
+
+(* The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
     a function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our
@@ -216,6 +217,8 @@ let math_sigs =
   ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized])
   ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized])
   ; ([UnaryVectorized], "inv_square", [DDeepVectorized])
+  ; ([UnaryVectorized], "lambert_w0", [DDeepVectorized])
+  ; ([UnaryVectorized], "lambert_wm1", [DDeepVectorized])
   ; ([UnaryVectorized], "lgamma", [DDeepVectorized])
   ; ([UnaryVectorized], "log", [DDeepVectorized])
   ; ([UnaryVectorized], "log10", [DDeepVectorized])
@@ -247,15 +250,6 @@ let all_declarative_sigs = distributions @ math_sigs
 let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
-(* Name mangling helper functions for distributions *)
-let proportional_to_distribution_infix = "_propto"
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
-
-let remove_propto_infix suffix ~name =
-  name
-  |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
-  |> Option.map ~f:(fun x -> x ^ suffix)
-
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
   let name = Utils.stdlib_distribution_name name in
@@ -280,18 +274,6 @@ let stan_math_returntype name args =
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
-
-(* XXX Refactor this out into full Distribution node in MIR *)
-let is_distribution_name ?(infix = "") s =
-  (not
-     ( String.is_suffix ~suffix:"_cdf_log" s
-     || String.is_suffix ~suffix:"_ccdf_log" s ))
-  && List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-       distribution_suffices
-
-let is_propto_distribution s =
-  is_distribution_name ~infix:proportional_to_distribution_infix s
 
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"
@@ -944,6 +926,14 @@ let () =
       , [bare_array_type (bare_types i, 3); UInt] )
   done ;
   add_unqualified
+    ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
+  add_qualified
+    ("hmm_hidden_state_prob", ReturnType UMatrix,
+    [(DataOnly, UMatrix); (DataOnly, UMatrix); (DataOnly, UVector)]) ;
+  add_unqualified
+    ("hmm_latent_rng", ReturnType (bare_array_type (UInt, 1)),
+      [UMatrix; UMatrix; UVector] ) ;
+  add_unqualified
     ("hypergeometric_log", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified
     ("hypergeometric_lpmf", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
@@ -1516,6 +1506,15 @@ let () =
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt]) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt]) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt]) ;
+  for i = 0 to 7 do
+    add_unqualified ("reverse", (ReturnType (bare_array_type (UVector, i))), [bare_array_type (UVector, i)]) ;
+    add_unqualified ("reverse", (ReturnType (bare_array_type (URowVector, i))), [bare_array_type (URowVector, i)]) ;
+  done ;
+  for i = 1 to 7 do
+    add_unqualified ("reverse", (ReturnType (bare_array_type (UInt, i))), [bare_array_type (UInt, i)]) ;
+    add_unqualified ("reverse", (ReturnType (bare_array_type (UReal, i))), [bare_array_type (UReal, i)]) ;
+    add_unqualified ("reverse", (ReturnType (bare_array_type (UMatrix, i))), [bare_array_type (UMatrix, i)])
+  done ;    
   add_unqualified ("rising_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("rising_factorial", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt]) ;

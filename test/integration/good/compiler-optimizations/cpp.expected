@@ -571,16 +571,16 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
       }
       {
         current_statement__ = 8;
-        lp_accum__.add(cauchy_log<propto__>(beta, 0, 2.5));
+        lp_accum__.add(cauchy_lpdf<propto__>(beta, 0, 2.5));
         current_statement__ = 9;
-        lp_accum__.add(cauchy_log<propto__>(gamma, 0, 1));
+        lp_accum__.add(cauchy_lpdf<propto__>(gamma, 0, 1));
         current_statement__ = 10;
-        lp_accum__.add(cauchy_log<propto__>(xi, 0, 25));
+        lp_accum__.add(cauchy_lpdf<propto__>(xi, 0, 25));
         current_statement__ = 11;
-        lp_accum__.add(cauchy_log<propto__>(delta, 0, 1));
+        lp_accum__.add(cauchy_lpdf<propto__>(delta, 0, 1));
         current_statement__ = 12;
         lp_accum__.add(
-          poisson_log<propto__>(
+          poisson_lpmf<propto__>(
             rvalue(stoi_hat, cons_list(index_uni(1), nil_index_list()),
               "stoi_hat"),
             (rvalue(y0, cons_list(index_uni(1), nil_index_list()), "y0") -
@@ -589,7 +589,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
         if (logical_gte(N_t, 2)) {
           current_statement__ = 13;
           lp_accum__.add(
-            poisson_log<propto__>(
+            poisson_lpmf<propto__>(
               rvalue(stoi_hat, cons_list(index_uni(2), nil_index_list()),
                 "stoi_hat"),
               (lcm_sym29__ -
@@ -600,7 +600,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
           for (int n = 3; n <= N_t; ++n) {
             current_statement__ = 13;
             lp_accum__.add(
-              poisson_log<propto__>(
+              poisson_lpmf<propto__>(
                 rvalue(stoi_hat, cons_list(index_uni(n), nil_index_list()),
                   "stoi_hat"),
                 (rvalue(lcm_sym20__,
@@ -614,7 +614,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
         } 
         current_statement__ = 15;
         lp_accum__.add(
-          lognormal_log<propto__>(B_hat,
+          lognormal_lpdf<propto__>(B_hat,
             stan::math::log(col(to_matrix(lcm_sym20__), 4)), 0.15));
       }
     } catch (const std::exception& e) {
@@ -2729,14 +2729,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
             if (logical_gte(lcm_sym145__, lcm_sym117__)) {
               current_statement__ = 22;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((lcm_sym117__ - 1)),
                         nil_index_list())), "phi")));
               lcm_sym115__ = (lcm_sym117__ + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym117__), nil_index_list())),
@@ -2748,14 +2748,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
               for (int t = lcm_sym115__; t <= lcm_sym145__; ++t) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(1),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 23;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -2766,7 +2766,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
             } 
             current_statement__ = 25;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(inline_sym9__,
                   cons_list(index_uni(1),
                     cons_list(index_uni(lcm_sym145__), nil_index_list())),
@@ -2784,14 +2784,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
               if (logical_gte(lcm_sym144__, lcm_sym116__)) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((lcm_sym116__ - 1)),
                           nil_index_list())), "phi")));
                 lcm_sym114__ = (lcm_sym116__ + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(lcm_sym116__), nil_index_list())),
@@ -2803,14 +2803,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
                 for (int t = lcm_sym114__; t <= lcm_sym144__; ++t) {
                   current_statement__ = 22;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(i),
                           cons_list(index_uni((t - 1)), nil_index_list())),
                         "phi")));
                   current_statement__ = 23;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(i),
                           cons_list(index_uni(t), nil_index_list())), "y"),
@@ -2821,7 +2821,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
               } 
               current_statement__ = 25;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym9__,
                     cons_list(index_uni(i),
                       cons_list(index_uni(lcm_sym144__), nil_index_list())),
@@ -4399,26 +4399,26 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         stan::math::fill(b_state_hat, DUMMY_VAR__);
         
         current_statement__ = 19;
-        lp_accum__.add(normal_log<propto__>(b_0, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(b_0, 0, 100));
         current_statement__ = 20;
-        lp_accum__.add(normal_log<propto__>(b_female, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(b_female, 0, 100));
         current_statement__ = 21;
-        lp_accum__.add(normal_log<propto__>(b_black, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(b_black, 0, 100));
         current_statement__ = 22;
-        lp_accum__.add(normal_log<propto__>(b_female_black, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(b_female_black, 0, 100));
         current_statement__ = 23;
-        lp_accum__.add(normal_log<propto__>(b_age, 0, sigma_age));
+        lp_accum__.add(normal_lpdf<propto__>(b_age, 0, sigma_age));
         current_statement__ = 24;
-        lp_accum__.add(normal_log<propto__>(b_edu, 0, sigma_edu));
+        lp_accum__.add(normal_lpdf<propto__>(b_edu, 0, sigma_edu));
         current_statement__ = 25;
-        lp_accum__.add(normal_log<propto__>(b_region, 0, sigma_region));
+        lp_accum__.add(normal_lpdf<propto__>(b_region, 0, sigma_region));
         current_statement__ = 29;
         if (logical_gte(n_age, 1)) {
           lcm_sym48__ = logical_gte(n_edu, 1);
           if (lcm_sym48__) {
             current_statement__ = 26;
             lp_accum__.add(
-              normal_log<propto__>(
+              normal_lpdf<propto__>(
                 rvalue(b_age_edu,
                   cons_list(index_uni(1),
                     cons_list(index_uni(1), nil_index_list())), "b_age_edu"),
@@ -4426,7 +4426,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
             for (int i = 2; i <= n_edu; ++i) {
               current_statement__ = 26;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   rvalue(b_age_edu,
                     cons_list(index_uni(1),
                       cons_list(index_uni(i), nil_index_list())),
@@ -4437,7 +4437,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
             if (lcm_sym48__) {
               current_statement__ = 26;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   rvalue(b_age_edu,
                     cons_list(index_uni(j),
                       cons_list(index_uni(1), nil_index_list())),
@@ -4445,7 +4445,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
               for (int i = 2; i <= n_edu; ++i) {
                 current_statement__ = 26;
                 lp_accum__.add(
-                  normal_log<propto__>(
+                  normal_lpdf<propto__>(
                     rvalue(b_age_edu,
                       cons_list(index_uni(j),
                         cons_list(index_uni(i), nil_index_list())),
@@ -4453,7 +4453,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
             } }
         } 
         current_statement__ = 30;
-        lp_accum__.add(normal_log<propto__>(b_v_prev, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(b_v_prev, 0, 100));
         current_statement__ = 32;
         if (logical_gte(n_state, 1)) {
           current_statement__ = 31;
@@ -4481,7 +4481,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
               "assigning variable b_state_hat");}
         } 
         current_statement__ = 33;
-        lp_accum__.add(normal_log<propto__>(b_hat, b_state_hat, sigma_state));
+        lp_accum__.add(normal_lpdf<propto__>(b_hat, b_state_hat, sigma_state));
         current_statement__ = 35;
         if (logical_gte(N, 1)) {
           current_statement__ = 34;
@@ -4585,7 +4585,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
               "assigning variable p");}
         } 
         current_statement__ = 36;
-        lp_accum__.add(bernoulli_log<propto__>(y, p));
+        lp_accum__.add(bernoulli_lpmf<propto__>(y, p));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6650,11 +6650,11 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
       }
       {
         current_statement__ = 4;
-        lp_accum__.add(normal_log<propto__>(sigma, 0, 2));
+        lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 2));
         current_statement__ = 5;
-        lp_accum__.add(normal_log<propto__>(mu, 0, 2));
+        lp_accum__.add(normal_lpdf<propto__>(mu, 0, 2));
         current_statement__ = 6;
-        lp_accum__.add(beta_log<propto__>(theta, 5, 5));
+        lp_accum__.add(beta_lpdf<propto__>(theta, 5, 5));
         current_statement__ = 8;
         if (logical_gte(N, 1)) {
           lcm_sym27__ = rvalue(sigma,
@@ -7358,9 +7358,9 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
       }
       {
         current_statement__ = 4;
-        lp_accum__.add(normal_log<propto__>(theta, mu, tau));
+        lp_accum__.add(normal_lpdf<propto__>(theta, mu, tau));
         current_statement__ = 5;
-        lp_accum__.add(normal_log<propto__>(y, theta, sigma));
+        lp_accum__.add(normal_lpdf<propto__>(y, theta, sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8633,19 +8633,19 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       } 
       {
         current_statement__ = 15;
-        lp_accum__.add(normal_log<propto__>(a, 0, sigma_a));
+        lp_accum__.add(normal_lpdf<propto__>(a, 0, sigma_a));
         current_statement__ = 16;
-        lp_accum__.add(normal_log<propto__>(b, 0, sigma_b));
+        lp_accum__.add(normal_lpdf<propto__>(b, 0, sigma_b));
         current_statement__ = 17;
-        lp_accum__.add(normal_log<propto__>(c, 0, sigma_c));
+        lp_accum__.add(normal_lpdf<propto__>(c, 0, sigma_c));
         current_statement__ = 18;
-        lp_accum__.add(normal_log<propto__>(d, 0, sigma_d));
+        lp_accum__.add(normal_lpdf<propto__>(d, 0, sigma_d));
         current_statement__ = 19;
-        lp_accum__.add(normal_log<propto__>(e, 0, sigma_e));
+        lp_accum__.add(normal_lpdf<propto__>(e, 0, sigma_e));
         current_statement__ = 20;
-        lp_accum__.add(normal_log<propto__>(beta, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(beta, 0, 100));
         current_statement__ = 21;
-        lp_accum__.add(bernoulli_logit_log<propto__>(y, y_hat));
+        lp_accum__.add(bernoulli_logit_lpmf<propto__>(y, y_hat));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10016,7 +10016,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
                 rvalue(phi, cons_list(index_multi(node2), nil_index_list()),
                   "phi")))));
         current_statement__ = 27;
-        lp_accum__.add(gamma_log<propto__>(tau_phi, 1, 1));
+        lp_accum__.add(gamma_lpdf<propto__>(tau_phi, 1, 1));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12116,7 +12116,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
       } 
       {
         current_statement__ = 27;
-        lp_accum__.add(normal_log<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
         current_statement__ = 34;
         if (lcm_sym92__) {
           lcm_sym129__ = rvalue(first,
@@ -12130,14 +12130,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
             if (logical_gte(lcm_sym135__, lcm_sym111__)) {
               current_statement__ = 28;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((lcm_sym111__ - 1)),
                         nil_index_list())), "phi")));
               lcm_sym109__ = (lcm_sym111__ + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym111__), nil_index_list())),
@@ -12149,14 +12149,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
               for (int t = lcm_sym109__; t <= lcm_sym135__; ++t) {
                 current_statement__ = 28;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(1),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 29;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -12167,7 +12167,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
             } 
             current_statement__ = 31;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(inline_sym9__,
                   cons_list(index_uni(1),
                     cons_list(index_uni(lcm_sym135__), nil_index_list())),
@@ -12185,14 +12185,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
               if (logical_gte(lcm_sym134__, lcm_sym110__)) {
                 current_statement__ = 28;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((lcm_sym110__ - 1)),
                           nil_index_list())), "phi")));
                 lcm_sym108__ = (lcm_sym110__ + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(lcm_sym110__), nil_index_list())),
@@ -12204,14 +12204,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
                 for (int t = lcm_sym108__; t <= lcm_sym134__; ++t) {
                   current_statement__ = 28;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(i),
                           cons_list(index_uni((t - 1)), nil_index_list())),
                         "phi")));
                   current_statement__ = 29;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(i),
                           cons_list(index_uni(t), nil_index_list())), "y"),
@@ -12222,7 +12222,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
               } 
               current_statement__ = 31;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym9__,
                     cons_list(index_uni(i),
                       cons_list(index_uni(lcm_sym134__), nil_index_list())),
@@ -13666,12 +13666,12 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                          cons_list(index_uni(1), nil_index_list()), "first");
         if (lcm_sym111__) {
           current_statement__ = 81;
-          lp_accum__.add(bernoulli_log<propto__>(1, psi));
+          lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
           current_statement__ = 88;
           if (logical_eq(lcm_sym111__, 1)) {
             current_statement__ = 95;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 (rvalue(nu, cons_list(index_uni(1), nil_index_list()), "nu")
                   *
                   rvalue(p,
@@ -13786,14 +13786,14 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           if (logical_gte(lcm_sym113__, (lcm_sym111__ + 1))) {
             current_statement__ = 89;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(phi,
                   cons_list(index_uni(1),
                     cons_list(index_uni(((lcm_sym111__ + 1) - 1)),
                       nil_index_list())), "phi")));
             lcm_sym93__ = ((lcm_sym111__ + 1) + 1);
             lp_accum__.add(
-              bernoulli_log<propto__>(
+              bernoulli_lpmf<propto__>(
                 rvalue(y,
                   cons_list(index_uni(1),
                     cons_list(index_uni((lcm_sym111__ + 1)),
@@ -13805,14 +13805,14 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             for (int t = lcm_sym93__; t <= lcm_sym113__; ++t) {
               current_statement__ = 89;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((t - 1)), nil_index_list())),
                     "phi")));
               current_statement__ = 90;
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(t), nil_index_list())), "y"),
@@ -13822,7 +13822,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           } 
           current_statement__ = 92;
           lp_accum__.add(
-            bernoulli_log<propto__>(1,
+            bernoulli_lpmf<propto__>(1,
               rvalue(chi,
                 cons_list(index_uni(1),
                   cons_list(index_uni(lcm_sym113__), nil_index_list())),
@@ -13916,12 +13916,12 @@ js_super_lp(const std::vector<std::vector<int>>& y,
                            "first");
           if (lcm_sym110__) {
             current_statement__ = 81;
-            lp_accum__.add(bernoulli_log<propto__>(1, psi));
+            lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
             current_statement__ = 88;
             if (logical_eq(lcm_sym110__, 1)) {
               current_statement__ = 95;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   (rvalue(nu, cons_list(index_uni(1), nil_index_list()),
                      "nu") *
                     rvalue(p,
@@ -14040,14 +14040,14 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             if (logical_gte(lcm_sym112__, (lcm_sym110__ + 1))) {
               current_statement__ = 89;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(i),
                       cons_list(index_uni(((lcm_sym110__ + 1) - 1)),
                         nil_index_list())), "phi")));
               lcm_sym92__ = ((lcm_sym110__ + 1) + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(i),
                       cons_list(index_uni((lcm_sym110__ + 1)),
@@ -14059,14 +14059,14 @@ js_super_lp(const std::vector<std::vector<int>>& y,
               for (int t = lcm_sym92__; t <= lcm_sym112__; ++t) {
                 current_statement__ = 89;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 90;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -14076,7 +14076,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             } 
             current_statement__ = 92;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(chi,
                   cons_list(index_uni(i),
                     cons_list(index_uni(lcm_sym112__), nil_index_list())),
@@ -15318,9 +15318,9 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
       } 
       {
         current_statement__ = 70;
-        lp_accum__.add(normal_log<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
         current_statement__ = 71;
-        lp_accum__.add(gamma_log<propto__>(beta, 1, 1));
+        lp_accum__.add(gamma_lpdf<propto__>(beta, 1, 1));
         int inline_sym32__;
         inline_sym32__ = std::numeric_limits<int>::min();
         
@@ -15363,14 +15363,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
                              "first");
             if (lcm_sym286__) {
               current_statement__ = 81;
-              lp_accum__.add(bernoulli_log<propto__>(1, psi));
+              lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
               current_statement__ = 88;
               if (logical_eq(lcm_sym286__, 1)) {
                 lcm_sym294__ = rvalue(nu,
                                  cons_list(index_uni(1), nil_index_list()),
                                  "nu");
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     (lcm_sym294__ *
                       rvalue(p,
                         cons_list(index_uni(1),
@@ -15495,14 +15495,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
               if (logical_gte(lcm_sym292__, (lcm_sym286__ + 1))) {
                 current_statement__ = 89;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(lcm_sym279__,
                       cons_list(index_uni(1),
                         cons_list(index_uni(((lcm_sym286__ + 1) - 1)),
                           nil_index_list())), "lcm_sym279__")));
                 lcm_sym255__ = ((lcm_sym286__ + 1) + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni((lcm_sym286__ + 1)),
@@ -15515,14 +15515,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
                      inline_sym30__ <= lcm_sym292__; ++inline_sym30__) {
                   current_statement__ = 89;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(lcm_sym279__,
                         cons_list(index_uni(1),
                           cons_list(index_uni((inline_sym30__ - 1)),
                             nil_index_list())), "lcm_sym279__")));
                   current_statement__ = 90;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(1),
                           cons_list(index_uni(inline_sym30__),
@@ -15534,7 +15534,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
               } 
               current_statement__ = 92;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym15__,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym292__), nil_index_list())),
@@ -15638,12 +15638,12 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
               lcm_sym285__ = first[(inline_sym31__ - 1)];
               if (lcm_sym285__) {
                 current_statement__ = 81;
-                lp_accum__.add(bernoulli_log<propto__>(1, psi));
+                lp_accum__.add(bernoulli_lpmf<propto__>(1, psi));
                 current_statement__ = 88;
                 if (logical_eq(lcm_sym285__, 1)) {
                   current_statement__ = 95;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       (lcm_sym294__ *
                         rvalue(p,
                           cons_list(index_uni(inline_sym31__),
@@ -15764,14 +15764,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
                 if (logical_gte(lcm_sym291__, (lcm_sym285__ + 1))) {
                   current_statement__ = 89;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(lcm_sym279__,
                         cons_list(index_uni(inline_sym31__),
                           cons_list(index_uni(((lcm_sym285__ + 1) - 1)),
                             nil_index_list())), "lcm_sym279__")));
                   lcm_sym254__ = ((lcm_sym285__ + 1) + 1);
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(inline_sym31__),
                           cons_list(index_uni((lcm_sym285__ + 1)),
@@ -15784,14 +15784,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
                        inline_sym30__ <= lcm_sym291__; ++inline_sym30__) {
                     current_statement__ = 89;
                     lp_accum__.add(
-                      bernoulli_log<propto__>(1,
+                      bernoulli_lpmf<propto__>(1,
                         rvalue(lcm_sym279__,
                           cons_list(index_uni(inline_sym31__),
                             cons_list(index_uni((inline_sym30__ - 1)),
                               nil_index_list())), "lcm_sym279__")));
                     current_statement__ = 90;
                     lp_accum__.add(
-                      bernoulli_log<propto__>(
+                      bernoulli_lpmf<propto__>(
                         y[(inline_sym31__ - 1)][(inline_sym30__ - 1)],
                         rvalue(p,
                           cons_list(index_uni(inline_sym31__),
@@ -15800,7 +15800,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
                 } 
                 current_statement__ = 92;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(inline_sym15__,
                       cons_list(index_uni(inline_sym31__),
                         cons_list(index_uni(lcm_sym291__), nil_index_list())),
@@ -18072,14 +18072,14 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       } 
       {
         current_statement__ = 9;
-        lp_accum__.add(dirichlet_log<propto__>(pi, alpha));
+        lp_accum__.add(dirichlet_lpdf<propto__>(pi, alpha));
         current_statement__ = 12;
         if (lcm_sym55__) {
           lcm_sym56__ = logical_gte(K, 1);
           if (lcm_sym56__) {
             current_statement__ = 10;
             lp_accum__.add(
-              dirichlet_log<propto__>(
+              dirichlet_lpdf<propto__>(
                 rvalue(theta,
                   cons_list(index_uni(1),
                     cons_list(index_uni(1), nil_index_list())), "theta"),
@@ -18088,7 +18088,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
             for (int k = 2; k <= K; ++k) {
               current_statement__ = 10;
               lp_accum__.add(
-                dirichlet_log<propto__>(
+                dirichlet_lpdf<propto__>(
                   rvalue(theta,
                     cons_list(index_uni(1),
                       cons_list(index_uni(k), nil_index_list())), "theta"),
@@ -18100,7 +18100,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
             if (lcm_sym56__) {
               current_statement__ = 10;
               lp_accum__.add(
-                dirichlet_log<propto__>(
+                dirichlet_lpdf<propto__>(
                   rvalue(theta,
                     cons_list(index_uni(j),
                       cons_list(index_uni(1), nil_index_list())), "theta"),
@@ -18109,7 +18109,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
               for (int k = 2; k <= K; ++k) {
                 current_statement__ = 10;
                 lp_accum__.add(
-                  dirichlet_log<propto__>(
+                  dirichlet_lpdf<propto__>(
                     rvalue(theta,
                       cons_list(index_uni(j),
                         cons_list(index_uni(k), nil_index_list())), "theta"),
@@ -21765,14 +21765,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
             if (logical_gte(lcm_sym145__, lcm_sym117__)) {
               current_statement__ = 22;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((lcm_sym117__ - 1)),
                         nil_index_list())), "phi")));
               lcm_sym115__ = (lcm_sym117__ + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym117__), nil_index_list())),
@@ -21784,14 +21784,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
               for (int t = lcm_sym115__; t <= lcm_sym145__; ++t) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(1),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 23;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -21802,7 +21802,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
             } 
             current_statement__ = 25;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(inline_sym9__,
                   cons_list(index_uni(1),
                     cons_list(index_uni(lcm_sym145__), nil_index_list())),
@@ -21820,14 +21820,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
               if (logical_gte(lcm_sym144__, lcm_sym116__)) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((lcm_sym116__ - 1)),
                           nil_index_list())), "phi")));
                 lcm_sym114__ = (lcm_sym116__ + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(lcm_sym116__), nil_index_list())),
@@ -21839,14 +21839,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
                 for (int t = lcm_sym114__; t <= lcm_sym144__; ++t) {
                   current_statement__ = 22;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(i),
                           cons_list(index_uni((t - 1)), nil_index_list())),
                         "phi")));
                   current_statement__ = 23;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(i),
                           cons_list(index_uni(t), nil_index_list())), "y"),
@@ -21857,7 +21857,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
               } 
               current_statement__ = 25;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym9__,
                     cons_list(index_uni(i),
                       cons_list(index_uni(lcm_sym144__), nil_index_list())),
@@ -23271,7 +23271,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           if (logical_eq(lcm_sym117__, 1)) {
             current_statement__ = 90;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 (rvalue(gamma, cons_list(index_uni(1), nil_index_list()),
                    "gamma") *
                   rvalue(p,
@@ -23387,14 +23387,14 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           if (logical_gte(lcm_sym119__, (lcm_sym117__ + 1))) {
             current_statement__ = 84;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(phi,
                   cons_list(index_uni(1),
                     cons_list(index_uni(((lcm_sym117__ + 1) - 1)),
                       nil_index_list())), "phi")));
             lcm_sym100__ = ((lcm_sym117__ + 1) + 1);
             lp_accum__.add(
-              bernoulli_log<propto__>(
+              bernoulli_lpmf<propto__>(
                 rvalue(y,
                   cons_list(index_uni(1),
                     cons_list(index_uni((lcm_sym117__ + 1)),
@@ -23406,14 +23406,14 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             for (int t = lcm_sym100__; t <= lcm_sym119__; ++t) {
               current_statement__ = 84;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((t - 1)), nil_index_list())),
                     "phi")));
               current_statement__ = 85;
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(t), nil_index_list())), "y"),
@@ -23423,7 +23423,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           } 
           current_statement__ = 87;
           lp_accum__.add(
-            bernoulli_log<propto__>(1,
+            bernoulli_lpmf<propto__>(1,
               rvalue(chi,
                 cons_list(index_uni(1),
                   cons_list(index_uni(lcm_sym119__), nil_index_list())),
@@ -23519,7 +23519,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             if (logical_eq(lcm_sym116__, 1)) {
               current_statement__ = 90;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   (rvalue(gamma, cons_list(index_uni(1), nil_index_list()),
                      "gamma") *
                     rvalue(p,
@@ -23638,14 +23638,14 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             if (logical_gte(lcm_sym118__, (lcm_sym116__ + 1))) {
               current_statement__ = 84;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(i),
                       cons_list(index_uni(((lcm_sym116__ + 1) - 1)),
                         nil_index_list())), "phi")));
               lcm_sym99__ = ((lcm_sym116__ + 1) + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(i),
                       cons_list(index_uni((lcm_sym116__ + 1)),
@@ -23657,14 +23657,14 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
               for (int t = lcm_sym99__; t <= lcm_sym118__; ++t) {
                 current_statement__ = 84;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 85;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -23674,7 +23674,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             } 
             current_statement__ = 87;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(chi,
                   cons_list(index_uni(i),
                     cons_list(index_uni(lcm_sym118__), nil_index_list())),
@@ -24916,7 +24916,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       } 
       {
         current_statement__ = 67;
-        lp_accum__.add(normal_log<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
         int inline_sym39__;
         inline_sym39__ = std::numeric_limits<int>::min();
         
@@ -24965,7 +24965,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                                  cons_list(index_uni(1), nil_index_list()),
                                  "gamma");
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     (lcm_sym293__ *
                       rvalue(lcm_sym288__,
                         cons_list(index_uni(1),
@@ -25091,14 +25091,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
               if (logical_gte(lcm_sym302__, (lcm_sym296__ + 1))) {
                 current_statement__ = 84;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(1),
                         cons_list(index_uni(((lcm_sym296__ + 1) - 1)),
                           nil_index_list())), "phi")));
                 lcm_sym266__ = ((lcm_sym296__ + 1) + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni((lcm_sym296__ + 1)),
@@ -25111,14 +25111,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                      inline_sym37__ <= lcm_sym302__; ++inline_sym37__) {
                   current_statement__ = 84;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(1),
                           cons_list(index_uni((inline_sym37__ - 1)),
                             nil_index_list())), "phi")));
                   current_statement__ = 85;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(1),
                           cons_list(index_uni(inline_sym37__),
@@ -25130,7 +25130,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
               } 
               current_statement__ = 87;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym22__,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym302__), nil_index_list())),
@@ -25237,7 +25237,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                 if (logical_eq(lcm_sym295__, 1)) {
                   current_statement__ = 90;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       (lcm_sym293__ *
                         rvalue(lcm_sym288__,
                           cons_list(index_uni(inline_sym38__),
@@ -25359,14 +25359,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                 if (logical_gte(lcm_sym301__, (lcm_sym295__ + 1))) {
                   current_statement__ = 84;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(inline_sym38__),
                           cons_list(index_uni(((lcm_sym295__ + 1) - 1)),
                             nil_index_list())), "phi")));
                   lcm_sym265__ = ((lcm_sym295__ + 1) + 1);
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(inline_sym38__),
                           cons_list(index_uni((lcm_sym295__ + 1)),
@@ -25379,14 +25379,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                        inline_sym37__ <= lcm_sym301__; ++inline_sym37__) {
                     current_statement__ = 84;
                     lp_accum__.add(
-                      bernoulli_log<propto__>(1,
+                      bernoulli_lpmf<propto__>(1,
                         rvalue(phi,
                           cons_list(index_uni(inline_sym38__),
                             cons_list(index_uni((inline_sym37__ - 1)),
                               nil_index_list())), "phi")));
                     current_statement__ = 85;
                     lp_accum__.add(
-                      bernoulli_log<propto__>(
+                      bernoulli_lpmf<propto__>(
                         y[(inline_sym38__ - 1)][(inline_sym37__ - 1)],
                         rvalue(lcm_sym288__,
                           cons_list(index_uni(inline_sym38__),
@@ -25395,7 +25395,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
                 } 
                 current_statement__ = 87;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(inline_sym22__,
                       cons_list(index_uni(inline_sym38__),
                         cons_list(index_uni(lcm_sym301__), nil_index_list())),
@@ -27906,7 +27906,7 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
       } 
       {
         current_statement__ = 2;
-        lp_accum__.add(normal_log<propto__>(y, theta, 1));
+        lp_accum__.add(normal_lpdf<propto__>(y, theta, 1));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29669,14 +29669,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
             if (logical_gte(lcm_sym119__, lcm_sym99__)) {
               current_statement__ = 22;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(phi,
                     cons_list(index_uni(1),
                       cons_list(index_uni((lcm_sym99__ - 1)),
                         nil_index_list())), "phi")));
               lcm_sym97__ = (lcm_sym99__ + 1);
               lp_accum__.add(
-                bernoulli_log<propto__>(
+                bernoulli_lpmf<propto__>(
                   rvalue(y,
                     cons_list(index_uni(1),
                       cons_list(index_uni(lcm_sym99__), nil_index_list())),
@@ -29688,14 +29688,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
               for (int t = lcm_sym97__; t <= lcm_sym119__; ++t) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(1),
                         cons_list(index_uni((t - 1)), nil_index_list())),
                       "phi")));
                 current_statement__ = 23;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(1),
                         cons_list(index_uni(t), nil_index_list())), "y"),
@@ -29706,7 +29706,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
             } 
             current_statement__ = 25;
             lp_accum__.add(
-              bernoulli_log<propto__>(1,
+              bernoulli_lpmf<propto__>(1,
                 rvalue(inline_sym9__,
                   cons_list(index_uni(1),
                     cons_list(index_uni(lcm_sym119__), nil_index_list())),
@@ -29724,14 +29724,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
               if (logical_gte(lcm_sym118__, lcm_sym98__)) {
                 current_statement__ = 22;
                 lp_accum__.add(
-                  bernoulli_log<propto__>(1,
+                  bernoulli_lpmf<propto__>(1,
                     rvalue(phi,
                       cons_list(index_uni(i),
                         cons_list(index_uni((lcm_sym98__ - 1)),
                           nil_index_list())), "phi")));
                 lcm_sym96__ = (lcm_sym98__ + 1);
                 lp_accum__.add(
-                  bernoulli_log<propto__>(
+                  bernoulli_lpmf<propto__>(
                     rvalue(y,
                       cons_list(index_uni(i),
                         cons_list(index_uni(lcm_sym98__), nil_index_list())),
@@ -29743,14 +29743,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
                 for (int t = lcm_sym96__; t <= lcm_sym118__; ++t) {
                   current_statement__ = 22;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(1,
+                    bernoulli_lpmf<propto__>(1,
                       rvalue(phi,
                         cons_list(index_uni(i),
                           cons_list(index_uni((t - 1)), nil_index_list())),
                         "phi")));
                   current_statement__ = 23;
                   lp_accum__.add(
-                    bernoulli_log<propto__>(
+                    bernoulli_lpmf<propto__>(
                       rvalue(y,
                         cons_list(index_uni(i),
                           cons_list(index_uni(t), nil_index_list())), "y"),
@@ -29761,7 +29761,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
               } 
               current_statement__ = 25;
               lp_accum__.add(
-                bernoulli_log<propto__>(1,
+                bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym9__,
                     cons_list(index_uni(i),
                       cons_list(index_uni(lcm_sym118__), nil_index_list())),
@@ -30990,12 +30990,12 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
                 "sum_y")) {
             current_statement__ = 24;
             lp_accum__.add(
-              bernoulli_logit_log<propto__>(1,
+              bernoulli_logit_lpmf<propto__>(1,
                 rvalue(lcm_sym31__,
                   cons_list(index_uni(1), nil_index_list()), "lcm_sym31__")));
             current_statement__ = 25;
             lp_accum__.add(
-              bernoulli_logit_log<propto__>(
+              bernoulli_logit_lpmf<propto__>(
                 rvalue(y, cons_list(index_uni(1), nil_index_list()), "y"),
                 rvalue(lcm_sym38__,
                   cons_list(index_uni(1), nil_index_list()), "lcm_sym38__")));
@@ -31021,12 +31021,12 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
                   "sum_y")) {
               current_statement__ = 24;
               lp_accum__.add(
-                bernoulli_logit_log<propto__>(1,
+                bernoulli_logit_lpmf<propto__>(1,
                   rvalue(lcm_sym31__,
                     cons_list(index_uni(i), nil_index_list()), "lcm_sym31__")));
               current_statement__ = 25;
               lp_accum__.add(
-                bernoulli_logit_log<propto__>(
+                bernoulli_logit_lpmf<propto__>(
                   rvalue(y, cons_list(index_uni(i), nil_index_list()), "y"),
                   rvalue(lcm_sym38__,
                     cons_list(index_uni(i), nil_index_list()), "lcm_sym38__")));
@@ -32140,17 +32140,17 @@ class off_small_model : public model_base_crtp<off_small_model> {
       } 
       {
         current_statement__ = 14;
-        lp_accum__.add(normal_log<propto__>(mu_a1, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(mu_a1, 0, 1));
         current_statement__ = 15;
-        lp_accum__.add(normal_log<propto__>(eta1, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(eta1, 0, 1));
         current_statement__ = 16;
-        lp_accum__.add(normal_log<propto__>(mu_a2, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(mu_a2, 0, 1));
         current_statement__ = 17;
-        lp_accum__.add(normal_log<propto__>(eta2, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(eta2, 0, 1));
         current_statement__ = 18;
-        lp_accum__.add(normal_log<propto__>(beta, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(beta, 0, 1));
         current_statement__ = 19;
-        lp_accum__.add(normal_log<propto__>(y, y_hat, sigma_y));
+        lp_accum__.add(normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -34889,13 +34889,13 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
       } 
       {
         current_statement__ = 9;
-        lp_accum__.add(normal_log<propto__>(mu_a, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(mu_a, 0, 1));
         current_statement__ = 10;
-        lp_accum__.add(normal_log<propto__>(a, (100 * mu_a), sigma_a));
+        lp_accum__.add(normal_lpdf<propto__>(a, (100 * mu_a), sigma_a));
         current_statement__ = 11;
-        lp_accum__.add(normal_log<propto__>(beta, 0, 100));
+        lp_accum__.add(normal_lpdf<propto__>(beta, 0, 100));
         current_statement__ = 12;
-        lp_accum__.add(normal_log<propto__>(y, y_hat, sigma_y));
+        lp_accum__.add(normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -35811,25 +35811,25 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
       sigma = lcm_sym17__;
       {
         current_statement__ = 8;
-        lp_accum__.add(normal_log<propto__>(alpha0, 0.0, 1.0E3));
+        lp_accum__.add(normal_lpdf<propto__>(alpha0, 0.0, 1.0E3));
         current_statement__ = 9;
-        lp_accum__.add(normal_log<propto__>(alpha1, 0.0, 1.0E3));
+        lp_accum__.add(normal_lpdf<propto__>(alpha1, 0.0, 1.0E3));
         current_statement__ = 10;
-        lp_accum__.add(normal_log<propto__>(alpha2, 0.0, 1.0E3));
+        lp_accum__.add(normal_lpdf<propto__>(alpha2, 0.0, 1.0E3));
         current_statement__ = 11;
-        lp_accum__.add(normal_log<propto__>(alpha12, 0.0, 1.0E3));
+        lp_accum__.add(normal_lpdf<propto__>(alpha12, 0.0, 1.0E3));
         current_statement__ = 12;
-        lp_accum__.add(gamma_log<propto__>(tau, 1.0E-3, 1.0E-3));
+        lp_accum__.add(gamma_lpdf<propto__>(tau, 1.0E-3, 1.0E-3));
         current_statement__ = 16;
         if (lcm_sym18__) {
           current_statement__ = 13;
           lp_accum__.add(
-            normal_log<propto__>(
+            normal_lpdf<propto__>(
               rvalue(b, cons_list(index_uni(1), nil_index_list()), "b"), 0.0,
               lcm_sym17__));
           current_statement__ = 14;
           lp_accum__.add(
-            binomial_logit_log<propto__>(
+            binomial_logit_lpmf<propto__>(
               rvalue(n, cons_list(index_uni(1), nil_index_list()), "n"),
               rvalue(N, cons_list(index_uni(1), nil_index_list()), "N"),
               add(
@@ -35846,12 +35846,12 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
           for (int i = 2; i <= I; ++i) {
             current_statement__ = 13;
             lp_accum__.add(
-              normal_log<propto__>(
+              normal_lpdf<propto__>(
                 rvalue(b, cons_list(index_uni(i), nil_index_list()), "b"),
                 0.0, lcm_sym17__));
             current_statement__ = 14;
             lp_accum__.add(
-              binomial_logit_log<propto__>(
+              binomial_logit_lpmf<propto__>(
                 rvalue(n, cons_list(index_uni(i), nil_index_list()), "n"),
                 rvalue(N, cons_list(index_uni(i), nil_index_list()), "N"),
                 add(
@@ -36753,4 +36753,690 @@ Warning: deprecated language construct used in 'stalled1-failure.stan', line 40,
    -------------------------------------------------
 
 assignment operator <- is deprecated in the Stan language; use = instead.
+
+  $ ../../../../../install/default/bin/stanc --O --print-cpp unroll-limit.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace unroll_limit_model_namespace {
+
+template <typename T, typename S>
+std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, -1>
+resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
+  dst.resize(src.rows(), src.cols());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, 1, -1>
+resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+
+template <typename T>
+Eigen::Matrix<T, -1, 1>
+resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
+  dst.resize(src.size());
+  return dst;
+}
+std::vector<double> to_doubles__(std::initializer_list<double> x) {
+  return x;
+}
+
+std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
+  return x;
+}
+
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const T& obj) {
+}
+
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const T& obj, size_t s) {
+  if (obj.size() != s) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name << "; dimension=" << depth+1
+        << "; dimension size=" << s << "; expression size=" << obj.size();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+template <typename T>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
+  if (obj.rows() != s1) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name
+        << "; rows=" << s1 << "; expression size=" << obj.rows();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+  if (obj.cols() != s2) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name
+        << "; columns=" << s2 << "; expression size=" << obj.cols();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+template <typename T, typename... M>
+void FnCheckShape__(const char* var_name, size_t depth,
+                    const std::vector<T>& obj, size_t s, M... dim) {
+  if (obj.size() != s) {
+    std::stringstream msg;
+    msg << "Declaration size does not match"
+        << "; variable=" << var_name << "; dimension=" << depth+1
+        << "; dimension size=" << s << "; expression size=" << obj.size();
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+  if (s != 0) {
+    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
+  }
+}
+
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using std::pow;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
+using namespace stan::math; 
+
+static int current_statement__ = 0;
+static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'unroll-limit.stan', line 2, column 2 to column 8)",
+                                                      " (in 'unroll-limit.stan', line 4, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 3, column 19 to line 5, column 3)",
+                                                      " (in 'unroll-limit.stan', line 3, column 2 to line 5, column 3)",
+                                                      " (in 'unroll-limit.stan', line 7, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 6, column 2 to line 8, column 3)",
+                                                      " (in 'unroll-limit.stan', line 10, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 9, column 2 to line 11, column 3)",
+                                                      " (in 'unroll-limit.stan', line 13, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 12, column 2 to line 14, column 3)",
+                                                      " (in 'unroll-limit.stan', line 16, column 4 to column 15)",
+                                                      " (in 'unroll-limit.stan', line 15, column 20 to line 17, column 3)",
+                                                      " (in 'unroll-limit.stan', line 15, column 2 to line 17, column 3)"};
+
+
+
+class unroll_limit_model : public model_base_crtp<unroll_limit_model> {
+
+ private:
+  int pos__;
+ 
+ public:
+  ~unroll_limit_model() { }
+  
+  std::string model_name() const { return "unroll_limit_model"; }
+  
+  unroll_limit_model(stan::io::var_context& context__,
+                     unsigned int random_seed__ = 0,
+                     std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    typedef double local_scalar_t__;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static const char* function__ = "unroll_limit_model_namespace::unroll_limit_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    
+    try {
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    
+    try {
+      
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+  }
+  template <bool propto__, bool jacobian__, typename T__>
+  inline T__ log_prob(std::vector<T__>& params_r__,
+                      std::vector<int>& params_i__,
+                      std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    static const char* function__ = "unroll_limit_model_namespace::log_prob";
+(void) function__;  // suppress unused var warning
+
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
+    
+    try {
+      
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  template <typename RNG>
+  inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
+                          std::vector<int>& params_i__,
+                          std::vector<double>& vars__,
+                          bool emit_transformed_parameters__ = true,
+                          bool emit_generated_quantities__ = true,
+                          std::ostream* pstream__ = 0) const {
+    using local_scalar_t__ = double;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "unroll_limit_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
+    
+    try {
+      int lcm_sym12__;
+      int lcm_sym11__;
+      int lcm_sym10__;
+      int lcm_sym9__;
+      int lcm_sym8__;
+      int lcm_sym7__;
+      int lcm_sym6__;
+      int lcm_sym5__;
+      int lcm_sym4__;
+      int lcm_sym3__;
+      int lcm_sym2__;
+      int lcm_sym1__;
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+      int x;
+      x = std::numeric_limits<int>::min();
+      
+      {
+        current_statement__ = 2;
+        x = (x + 2);
+        for (int i = 2; i <= 100; ++i) {
+          current_statement__ = 2;
+          x = (x + (1 + i));}
+      }
+      {
+        current_statement__ = 5;
+        x = (x + 3);
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 2));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 3));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 4));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 5));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 6));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 7));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 8));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 9));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 10));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 11));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 12));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 13));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 14));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 15));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 16));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 17));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 18));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 19));
+        }
+        {
+          current_statement__ = 5;
+          x = (x + (2 + 20));
+        }
+      }
+      {
+        current_statement__ = 7;
+        x = (x + 53);
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 51));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 52));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 53));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 54));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 55));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 56));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 57));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 58));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 59));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 60));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 61));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 62));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 63));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 64));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 65));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 66));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 67));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 68));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 69));
+        }
+        {
+          current_statement__ = 7;
+          x = (x + (3 + 70));
+        }
+      }
+      {
+        current_statement__ = 9;
+        x = (x + -6);
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -9));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -8));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -7));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -6));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -5));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -4));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -3));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -2));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + -1));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 0));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 1));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 2));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 3));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 4));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 5));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 6));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 7));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 8));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 9));
+        }
+        {
+          current_statement__ = 9;
+          x = (x + (4 + 10));
+        }
+      }
+      {
+        current_statement__ = 11;
+        x = (x + -5);
+        for (int i = -9; i <= 40; ++i) {
+          current_statement__ = 11;
+          x = (x + (5 + i));}
+      }
+      vars__.push_back(x);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array() 
+    
+  inline void transform_inits(const stan::io::var_context& context__,
+                              std::vector<int>& params_i__,
+                              std::vector<double>& vars__,
+                              std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("x");
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      param_names__.push_back(std::string() + "x");
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      param_names__.push_back(std::string() + "x");
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+};
+}
+typedef unroll_limit_model_namespace::unroll_limit_model stan_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+#endif
+
+
 

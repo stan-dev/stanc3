@@ -251,7 +251,7 @@
          ((pattern
            (TargetPE
             ((pattern
-              (FunApp StanLib uniform_propto_log
+              (FunApp StanLib uniform_propto_lpdf
                (((pattern (Var u))
                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                 ((pattern
@@ -6222,7 +6222,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var p_real))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Lit Int 0))
@@ -6234,7 +6234,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -6248,7 +6248,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var no_offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -6262,7 +6262,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern (Var offset_no_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -6276,7 +6276,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_real_1d_ar))
@@ -6304,7 +6304,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6336,7 +6336,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6368,7 +6368,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6424,7 +6424,7 @@
                               (((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6495,7 +6495,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6568,7 +6568,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (FunApp StanLib to_vector
                                          (((pattern
@@ -6639,7 +6639,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp StanLib normal_propto_log
+                                    (FunApp StanLib normal_propto_lpdf
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -6731,7 +6731,7 @@
                       (((pattern
                          (TargetPE
                           ((pattern
-                            (FunApp StanLib normal_propto_log
+                            (FunApp StanLib normal_propto_lpdf
                              (((pattern
                                 (FunApp StanLib to_vector
                                  (((pattern
@@ -6787,7 +6787,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp StanLib normal_propto_log
+                    (FunApp StanLib normal_propto_lpdf
                      (((pattern
                         (FunApp StanLib to_vector
                          (((pattern
@@ -6821,7 +6821,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_vec))
@@ -6837,7 +6837,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_row_vec))
@@ -6854,7 +6854,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_simplex))
@@ -6870,7 +6870,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_cfcov_54))
@@ -6886,7 +6886,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp StanLib normal_propto_log
+            (FunApp StanLib normal_propto_lpdf
              (((pattern
                 (FunApp StanLib to_vector
                  (((pattern (Var p_cfcov_33))

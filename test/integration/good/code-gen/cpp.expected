@@ -294,13 +294,13 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
         "assigning variable theta");
       {
         current_statement__ = 5;
-        lp_accum__.add(normal_log<propto__>(mu, 0, 5));
+        lp_accum__.add(normal_lpdf<propto__>(mu, 0, 5));
         current_statement__ = 6;
-        lp_accum__.add(normal_log<propto__>(tau, 0, 5));
+        lp_accum__.add(normal_lpdf<propto__>(tau, 0, 5));
         current_statement__ = 7;
-        lp_accum__.add(normal_log<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(theta_tilde, 0, 1));
         current_statement__ = 8;
-        lp_accum__.add(normal_log<propto__>(y, theta, sigma));
+        lp_accum__.add(normal_lpdf<propto__>(y, theta, sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1508,7 +1508,7 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
     current_statement__ = 290;
     lp_accum__.add(normal_log<false>(u, 0, 1));
     current_statement__ = 291;
-    lp_accum__.add(uniform_log<propto__>(u, -100, 100));
+    lp_accum__.add(uniform_lpdf<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5315,33 +5315,33 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 148;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 149;
-        lp_accum__.add(normal_log<propto__>(p_real, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(p_real, 0, 1));
         current_statement__ = 150;
-        lp_accum__.add(normal_log<propto__>(offset_multiplier, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(offset_multiplier, 0, 1));
         current_statement__ = 151;
-        lp_accum__.add(normal_log<propto__>(no_offset_multiplier, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(no_offset_multiplier, 0, 1));
         current_statement__ = 152;
-        lp_accum__.add(normal_log<propto__>(offset_no_multiplier, 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(offset_no_multiplier, 0, 1));
         current_statement__ = 153;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_real_1d_ar), 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_real_1d_ar), 0, 1));
         current_statement__ = 166;
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 154;
           lp_accum__.add(
-            normal_log<propto__>(
+            normal_lpdf<propto__>(
               to_vector(
                 rvalue(p_1d_vec, cons_list(index_uni(n), nil_index_list()),
                   "p_1d_vec")), 0, 1));
           current_statement__ = 155;
           lp_accum__.add(
-            normal_log<propto__>(
+            normal_lpdf<propto__>(
               to_vector(
                 rvalue(p_1d_row_vec,
                   cons_list(index_uni(n), nil_index_list()), "p_1d_row_vec")),
               0, 1));
           current_statement__ = 156;
           lp_accum__.add(
-            normal_log<propto__>(
+            normal_lpdf<propto__>(
               to_vector(
                 rvalue(p_1d_simplex,
                   cons_list(index_uni(n), nil_index_list()), "p_1d_simplex")),
@@ -5352,7 +5352,7 @@ class mother_model : public model_base_crtp<mother_model> {
             for (int k = 1; k <= K; ++k) {
               current_statement__ = 157;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   to_vector(
                     rvalue(p_3d_vec,
                       cons_list(index_uni(n),
@@ -5366,7 +5366,7 @@ class mother_model : public model_base_crtp<mother_model> {
                     "d_3d_vec"), 1));
               current_statement__ = 158;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   to_vector(
                     rvalue(p_3d_row_vec,
                       cons_list(index_uni(n),
@@ -5380,7 +5380,7 @@ class mother_model : public model_base_crtp<mother_model> {
                     "d_3d_row_vec"), 1));
               current_statement__ = 159;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   to_vector(
                     rvalue(p_3d_simplex,
                       cons_list(index_uni(n),
@@ -5394,7 +5394,7 @@ class mother_model : public model_base_crtp<mother_model> {
                     "d_3d_simplex"), 1));
               current_statement__ = 160;
               lp_accum__.add(
-                normal_log<propto__>(
+                normal_lpdf<propto__>(
                   rvalue(p_real_3d_ar,
                     cons_list(index_uni(n),
                       cons_list(index_uni(m),
@@ -5411,7 +5411,7 @@ class mother_model : public model_base_crtp<mother_model> {
           for (int j = 1; j <= 5; ++j) {
             current_statement__ = 167;
             lp_accum__.add(
-              normal_log<propto__>(
+              normal_lpdf<propto__>(
                 to_vector(
                   rvalue(p_ar_mat,
                     cons_list(index_uni(i),
@@ -5421,21 +5421,21 @@ class mother_model : public model_base_crtp<mother_model> {
         for (int k = 1; k <= K; ++k) {
           current_statement__ = 172;
           lp_accum__.add(
-            normal_log<propto__>(
+            normal_lpdf<propto__>(
               to_vector(
                 rvalue(p_cfcov_33_ar,
                   cons_list(index_uni(k), nil_index_list()), "p_cfcov_33_ar")),
               0, 1));}
         current_statement__ = 175;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_vec), d_vec, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_vec), d_vec, 1));
         current_statement__ = 176;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_row_vec), 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_row_vec), 0, 1));
         current_statement__ = 177;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_simplex), 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_simplex), 0, 1));
         current_statement__ = 178;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_54), 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_cfcov_54), 0, 1));
         current_statement__ = 179;
-        lp_accum__.add(normal_log<propto__>(to_vector(p_cfcov_33), 0, 1));
+        lp_accum__.add(normal_lpdf<propto__>(to_vector(p_cfcov_33), 0, 1));
         current_statement__ = 180;
         lp_accum__.add(
           map_rect<1, binomialf_functor__>(tmp, tmp2, x_r, x_i, pstream__));
@@ -21493,7 +21493,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(-student_t_ccdf_log(0, 10, 0, 1));
           }
           current_statement__ = 6;
-          lp_accum__.add(student_t_log<propto__>(x, 10, 0, 1));
+          lp_accum__.add(student_t_lpdf<propto__>(x, 10, 0, 1));
         } else {
           current_statement__ = 2;
           if (logical_lt(x, 0)) {
@@ -21504,7 +21504,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(-normal_ccdf_log(0, 0, 1));
           }
           current_statement__ = 3;
-          lp_accum__.add(normal_log<propto__>(x, 0, 1));
+          lp_accum__.add(normal_lpdf<propto__>(x, 0, 1));
         }
       }
     } catch (const std::exception& e) {
@@ -25991,7 +25991,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
       }
       {
         current_statement__ = 3;
-        lp_accum__.add(normal_log<propto__>(x, m, 1));
+        lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
         current_statement__ = 4;
         if (logical_lt(x, 0.0)) {
           current_statement__ = 4;
@@ -26001,7 +26001,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
           lp_accum__.add(-normal_ccdf_log(0.0, m, 1));
         }
         current_statement__ = 5;
-        lp_accum__.add(normal_log<propto__>(x, m, 1));
+        lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
         current_statement__ = 6;
         if (logical_gt(x, 10.0)) {
           current_statement__ = 6;
@@ -26011,7 +26011,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
           lp_accum__.add(-normal_cdf_log(10.0, m, 1));
         }
         current_statement__ = 7;
-        lp_accum__.add(normal_log<propto__>(x, m, 1));
+        lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
         current_statement__ = 9;
         if (logical_lt(x, 0.0)) {
           current_statement__ = 9;
@@ -26029,9 +26029,9 @@ class truncate_model : public model_base_crtp<truncate_model> {
           }
         }
         current_statement__ = 10;
-        lp_accum__.add(normal_log<propto__>(x, m, 1));
+        lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
         current_statement__ = 11;
-        lp_accum__.add(poisson_log<propto__>(n, y));
+        lp_accum__.add(poisson_lpmf<propto__>(n, y));
         current_statement__ = 12;
         if (logical_lt(n, 10)) {
           current_statement__ = 12;
@@ -26041,7 +26041,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
           lp_accum__.add(-poisson_ccdf_log((10 - 1), y));
         }
         current_statement__ = 13;
-        lp_accum__.add(poisson_log<propto__>(n, y));
+        lp_accum__.add(poisson_lpmf<propto__>(n, y));
         current_statement__ = 14;
         if (logical_gt(n, 20)) {
           current_statement__ = 14;
@@ -26051,7 +26051,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
           lp_accum__.add(-poisson_cdf_log(20, y));
         }
         current_statement__ = 15;
-        lp_accum__.add(poisson_log<propto__>(n, y));
+        lp_accum__.add(poisson_lpmf<propto__>(n, y));
         current_statement__ = 17;
         if (logical_lt(n, 10)) {
           current_statement__ = 17;
@@ -26069,7 +26069,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
           }
         }
         current_statement__ = 18;
-        lp_accum__.add(poisson_log<propto__>(n, y));
+        lp_accum__.add(poisson_lpmf<propto__>(n, y));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -26547,7 +26547,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
       }
       {
         current_statement__ = 2;
-        lp_accum__.add(std_normal_log<propto__>(x));
+        lp_accum__.add(std_normal_lpdf<propto__>(x));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
