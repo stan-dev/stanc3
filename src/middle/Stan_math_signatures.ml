@@ -296,6 +296,7 @@ let operator_to_stan_math_fns = function
   | Times -> ["multiply"]
   | Divide -> ["mdivide_right"; "divide"]
   | Modulo -> ["modulus"]
+  | IntDivide -> []
   | LDivide -> ["mdivide_left"]
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
@@ -311,10 +312,18 @@ let operator_to_stan_math_fns = function
   | PNot -> ["logical_negation"]
   | Transpose -> ["transpose"]
 
+let int_divide_type =
+  UnsizedType.(ReturnType UInt, [(AutoDiffable, UInt); (AutoDiffable, UInt)])
+
 let operator_stan_math_return_type op arg_tys =
-  operator_to_stan_math_fns op
-  |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
-  |> List.hd
+  match (op, arg_tys) with
+  | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
+      Some UnsizedType.(ReturnType UInt)
+  | IntDivide, _ -> None
+  | _ ->
+      operator_to_stan_math_fns op
+      |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
+      |> List.hd
 
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
@@ -343,7 +352,9 @@ let pretty_print_all_math_sigs ppf () =
     (List.sort ~compare (Hashtbl.keys stan_math_signatures))
 
 let pretty_print_math_lib_operator_sigs op =
-  operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
+  if op = Operator.IntDivide then
+    [Fmt.strf "@[<v>@,%a@]" pp_math_sig int_divide_type]
+  else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 let pretty_print_math_lib_assignmentoperator_sigs op =
   assignmentoperator_to_stan_math_fn op |> Option.map ~f:pretty_print_math_sigs
