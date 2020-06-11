@@ -463,7 +463,7 @@ let dist_name_suffix udf_names name =
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;
-  [%expect {| _log |}]
+  [%expect {| _lpdf |}]
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in

@@ -1,0 +1,48 @@
+  $ ../../../../../install/default/bin/stanc bad_gamma_var.stan
+
+Semantic error in 'bad_gamma_var.stan', line 19, column 9 to column 55:
+   -------------------------------------------------
+    17:    vector[K] rho_v;
+    18:    matrix[K, N + 1] prob;
+    19:    prob = hmm_hidden_state_prob(log_omega, Gamma_v, rho);
+                  ^
+    20:  }
+    21:  
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+(data matrix, data matrix, data vector) => matrix
+Instead supplied arguments of incompatible type: matrix, matrix, vector.
+
+  $ ../../../../../install/default/bin/stanc bad_log_omega_var.stan
+
+Semantic error in 'bad_log_omega_var.stan', line 19, column 9 to column 55:
+   -------------------------------------------------
+    17:    vector[K] rho_v;
+    18:    matrix[K, N + 1] prob;
+    19:    prob = hmm_hidden_state_prob(log_omega_v, Gamma, rho);
+                  ^
+    20:  }
+    21:  
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+(data matrix, data matrix, data vector) => matrix
+Instead supplied arguments of incompatible type: matrix, matrix, vector.
+
+  $ ../../../../../install/default/bin/stanc bad_rho_var.stan
+
+Semantic error in 'bad_rho_var.stan', line 19, column 9 to column 55:
+   -------------------------------------------------
+    17:    vector[K] rho_v;
+    18:    matrix[K, N + 1] prob;
+    19:    prob = hmm_hidden_state_prob(log_omega, Gamma, rho_v);
+                  ^
+    20:  }
+    21:  
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+(data matrix, data matrix, data vector) => matrix
+Instead supplied arguments of incompatible type: matrix, matrix, vector.
+
