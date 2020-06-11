@@ -38,61 +38,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -627,61 +572,6 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
 }
 
 inline void validate_positive_index(const char* var_name, const char* expr,
@@ -9305,61 +9195,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -11326,61 +11161,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -13087,61 +12867,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -13792,61 +13517,6 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
 }
 
 inline void validate_positive_index(const char* var_name, const char* expr,
@@ -16915,61 +16585,6 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
 }
 
 inline void validate_positive_index(const char* var_name, const char* expr,
@@ -21286,61 +20901,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -21747,61 +21307,6 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
 }
 
 inline void validate_positive_index(const char* var_name, const char* expr,
@@ -22213,10 +21718,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_1");}
       current_statement__ = 1;
-      FnCheckShape__("p_1", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_1", p_1, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
@@ -22246,10 +21752,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_2");}
       current_statement__ = 2;
-      FnCheckShape__("p_2", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_2", p_2, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
@@ -22279,15 +21786,17 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_3");}
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
@@ -22323,10 +21832,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_4");}
       current_statement__ = 4;
-      FnCheckShape__("p_4", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_4", p_4, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
@@ -22356,10 +21866,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_5");}
       current_statement__ = 5;
-      FnCheckShape__("p_5", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_5", p_5, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 5;
@@ -22389,10 +21900,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_6");}
       current_statement__ = 6;
-      FnCheckShape__("p_6", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_6", p_6, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
@@ -22422,10 +21934,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_7");}
       current_statement__ = 7;
-      FnCheckShape__("p_7", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_7", p_7, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 7;
@@ -22455,15 +21968,17 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_8");}
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
@@ -22505,9 +22020,9 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
             "assigning variable p_9");}}
       current_statement__ = 9;
-      FnCheckShape__("p_9", 0,
-                     rvalue(ds, cons_list(index_uni(1), nil_index_list()),
-                       "ds"), m, k);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -22553,7 +22068,7 @@ class transform_model : public model_base_crtp<transform_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.scalar(), "assigning variable p_10");}}}
       current_statement__ = 10;
-      FnCheckShape__("p_10", 0, ds, n, m, k);
+      check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       current_statement__ = 10;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 10;
@@ -22591,15 +22106,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 11;
       pv_1 = in__.vector(k);
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "upper",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 11;
@@ -22638,9 +22155,9 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(k), "assigning variable pv_2");}
       current_statement__ = 12;
-      FnCheckShape__("pv_2", 0,
-                     rvalue(dv, cons_list(index_uni(1), nil_index_list()),
-                       "dv"), m, k);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 12;
@@ -22683,7 +22200,7 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             in__.vector(k), "assigning variable pv_3");}}
       current_statement__ = 13;
-      FnCheckShape__("pv_3", 0, dv, n, m, k);
+      check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
       current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 13;
@@ -22721,15 +22238,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 14;
       pr_1 = in__.row_vector(k);
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "upper",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 14;
@@ -22768,9 +22287,9 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(k), "assigning variable pr_2");}
       current_statement__ = 15;
-      FnCheckShape__("pr_2", 0,
-                     rvalue(dr, cons_list(index_uni(1), nil_index_list()),
-                       "dr"), m, k);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 15;
@@ -22813,7 +22332,7 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             in__.row_vector(k), "assigning variable pr_3");}}
       current_statement__ = 16;
-      FnCheckShape__("pr_3", 0, dr, n, m, k);
+      check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
       current_statement__ = 16;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 16;
@@ -22853,9 +22372,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       pm_1 = in__.matrix(m, k);
       current_statement__ = 17;
-      FnCheckShape__("pm_1", 0,
-                     rvalue(dm, cons_list(index_uni(1), nil_index_list()),
-                       "dm"), m, k);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 17;
@@ -22906,7 +22425,7 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pm_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.matrix(m, k), "assigning variable pm_2");}
       current_statement__ = 18;
-      FnCheckShape__("pm_2", 0, dm, n, m, k);
+      check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
       current_statement__ = 18;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 18;
@@ -22957,10 +22476,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 19;
       assign(tp_1, nil_index_list(), p_1, "assigning variable tp_1");
       current_statement__ = 19;
-      FnCheckShape__("tp_1", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_1", tp_1, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 20;
       validate_non_negative_index("tp_2", "k", k);
       std::vector<local_scalar_t__> tp_2;
@@ -22969,10 +22489,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 20;
       assign(tp_2, nil_index_list(), p_2, "assigning variable tp_2");
       current_statement__ = 20;
-      FnCheckShape__("tp_2", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_2", tp_2, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 21;
       validate_non_negative_index("tp_3", "k", k);
       std::vector<local_scalar_t__> tp_3;
@@ -22981,15 +22502,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 21;
       assign(tp_3, nil_index_list(), p_3, "assigning variable tp_3");
       current_statement__ = 21;
-      FnCheckShape__("tp_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_3", tp_3, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 21;
-      FnCheckShape__("tp_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_3", tp_3, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 22;
       validate_non_negative_index("tp_4", "k", k);
       std::vector<local_scalar_t__> tp_4;
@@ -22998,10 +22521,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 22;
       assign(tp_4, nil_index_list(), p_4, "assigning variable tp_4");
       current_statement__ = 22;
-      FnCheckShape__("tp_4", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_4", tp_4, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 23;
       validate_non_negative_index("tp_5", "k", k);
       std::vector<local_scalar_t__> tp_5;
@@ -23010,10 +22534,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 23;
       assign(tp_5, nil_index_list(), p_5, "assigning variable tp_5");
       current_statement__ = 23;
-      FnCheckShape__("tp_5", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_5", tp_5, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 24;
       validate_non_negative_index("tp_6", "k", k);
       std::vector<local_scalar_t__> tp_6;
@@ -23022,10 +22547,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 24;
       assign(tp_6, nil_index_list(), p_6, "assigning variable tp_6");
       current_statement__ = 24;
-      FnCheckShape__("tp_6", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_6", tp_6, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 25;
       validate_non_negative_index("tp_7", "k", k);
       std::vector<local_scalar_t__> tp_7;
@@ -23034,10 +22560,11 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 25;
       assign(tp_7, nil_index_list(), p_7, "assigning variable tp_7");
       current_statement__ = 25;
-      FnCheckShape__("tp_7", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_7", tp_7, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 26;
       validate_non_negative_index("tp_8", "k", k);
       std::vector<local_scalar_t__> tp_8;
@@ -23046,15 +22573,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 26;
       assign(tp_8, nil_index_list(), p_8, "assigning variable tp_8");
       current_statement__ = 26;
-      FnCheckShape__("tp_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_8", tp_8, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 26;
-      FnCheckShape__("tp_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "tp_8", tp_8, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 27;
       validate_non_negative_index("tp_9", "m", m);
       current_statement__ = 27;
@@ -23065,9 +22594,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 27;
       assign(tp_9, nil_index_list(), p_9, "assigning variable tp_9");
       current_statement__ = 27;
-      FnCheckShape__("tp_9", 0,
-                     rvalue(ds, cons_list(index_uni(1), nil_index_list()),
-                       "ds"), m, k);
+      check_matching_dims("constraint", "tp_9", tp_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 28;
       validate_non_negative_index("tp_10", "n", n);
       current_statement__ = 28;
@@ -23080,7 +22609,7 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 28;
       assign(tp_10, nil_index_list(), p_10, "assigning variable tp_10");
       current_statement__ = 28;
-      FnCheckShape__("tp_10", 0, ds, n, m, k);
+      check_matching_dims("constraint", "tp_10", tp_10, "upper", ds);
       current_statement__ = 29;
       validate_non_negative_index("tpv_1", "k", k);
       Eigen::Matrix<local_scalar_t__, -1, 1> tpv_1;
@@ -23090,15 +22619,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 29;
       assign(tpv_1, nil_index_list(), pv_1, "assigning variable tpv_1");
       current_statement__ = 29;
-      FnCheckShape__("tpv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "tpv_1", tpv_1, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 29;
-      FnCheckShape__("tpv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 30;
       validate_non_negative_index("tpv_2", "m", m);
       current_statement__ = 30;
@@ -23110,9 +22641,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 30;
       assign(tpv_2, nil_index_list(), pv_2, "assigning variable tpv_2");
       current_statement__ = 30;
-      FnCheckShape__("tpv_2", 0,
-                     rvalue(dv, cons_list(index_uni(1), nil_index_list()),
-                       "dv"), m, k);
+      check_matching_dims("constraint", "tpv_2", tpv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 31;
       validate_non_negative_index("tpv_3", "n", n);
       current_statement__ = 31;
@@ -23126,7 +22657,7 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 31;
       assign(tpv_3, nil_index_list(), pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
-      FnCheckShape__("tpv_3", 0, dv, n, m, k);
+      check_matching_dims("constraint", "tpv_3", tpv_3, "upper", dv);
       current_statement__ = 32;
       validate_non_negative_index("tpr_1", "k", k);
       Eigen::Matrix<local_scalar_t__, 1, -1> tpr_1;
@@ -23136,15 +22667,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 32;
       assign(tpr_1, nil_index_list(), pr_1, "assigning variable tpr_1");
       current_statement__ = 32;
-      FnCheckShape__("tpr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "tpr_1", tpr_1, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 32;
-      FnCheckShape__("tpr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 33;
       validate_non_negative_index("tpr_2", "m", m);
       current_statement__ = 33;
@@ -23156,9 +22689,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 33;
       assign(tpr_2, nil_index_list(), pr_2, "assigning variable tpr_2");
       current_statement__ = 33;
-      FnCheckShape__("tpr_2", 0,
-                     rvalue(dr, cons_list(index_uni(1), nil_index_list()),
-                       "dr"), m, k);
+      check_matching_dims("constraint", "tpr_2", tpr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 34;
       validate_non_negative_index("tpr_3", "n", n);
       current_statement__ = 34;
@@ -23172,7 +22705,7 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 34;
       assign(tpr_3, nil_index_list(), pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
-      FnCheckShape__("tpr_3", 0, dr, n, m, k);
+      check_matching_dims("constraint", "tpr_3", tpr_3, "upper", dr);
       current_statement__ = 35;
       validate_non_negative_index("tpm_1", "m", m);
       current_statement__ = 35;
@@ -23184,9 +22717,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 35;
       assign(tpm_1, nil_index_list(), pm_1, "assigning variable tpm_1");
       current_statement__ = 35;
-      FnCheckShape__("tpm_1", 0,
-                     rvalue(dm, cons_list(index_uni(1), nil_index_list()),
-                       "dm"), m, k);
+      check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 36;
       validate_non_negative_index("tpm_2", "n", n);
       current_statement__ = 36;
@@ -23200,7 +22733,7 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 36;
       assign(tpm_2, nil_index_list(), pm_2, "assigning variable tpm_2");
       current_statement__ = 36;
-      FnCheckShape__("tpm_2", 0, dm, n, m, k);
+      check_matching_dims("constraint", "tpm_2", tpm_2, "upper", dm);
       current_statement__ = 19;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 19;
@@ -23465,10 +22998,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_1");}
       current_statement__ = 1;
-      FnCheckShape__("p_1", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_1", p_1, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
@@ -23488,10 +23022,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_2");}
       current_statement__ = 2;
-      FnCheckShape__("p_2", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_2", p_2, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
@@ -23511,15 +23046,17 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_3");}
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
@@ -23542,10 +23079,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_4");}
       current_statement__ = 4;
-      FnCheckShape__("p_4", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_4", p_4, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
@@ -23565,10 +23103,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_5");}
       current_statement__ = 5;
-      FnCheckShape__("p_5", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_5", p_5, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 5;
@@ -23588,10 +23127,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_6");}
       current_statement__ = 6;
-      FnCheckShape__("p_6", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_6", p_6, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
@@ -23611,10 +23151,11 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_7");}
       current_statement__ = 7;
-      FnCheckShape__("p_7", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_7", p_7, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 7;
@@ -23634,15 +23175,17 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable p_8");}
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
@@ -23671,9 +23214,9 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
             "assigning variable p_9");}}
       current_statement__ = 9;
-      FnCheckShape__("p_9", 0,
-                     rvalue(ds, cons_list(index_uni(1), nil_index_list()),
-                       "ds"), m, k);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -23707,7 +23250,7 @@ class transform_model : public model_base_crtp<transform_model> {
                   cons_list(index_uni(sym3__), nil_index_list()))),
               in__.scalar(), "assigning variable p_10");}}}
       current_statement__ = 10;
-      FnCheckShape__("p_10", 0, ds, n, m, k);
+      check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       current_statement__ = 10;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 10;
@@ -23732,15 +23275,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 11;
       pv_1 = in__.vector(k);
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "upper",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 11;
@@ -23766,9 +23311,9 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(k), "assigning variable pv_2");}
       current_statement__ = 12;
-      FnCheckShape__("pv_2", 0,
-                     rvalue(dv, cons_list(index_uni(1), nil_index_list()),
-                       "dv"), m, k);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 12;
@@ -23800,7 +23345,7 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             in__.vector(k), "assigning variable pv_3");}}
       current_statement__ = 13;
-      FnCheckShape__("pv_3", 0, dv, n, m, k);
+      check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
       current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 13;
@@ -23825,15 +23370,17 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 14;
       pr_1 = in__.row_vector(k);
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "upper",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 14;
@@ -23859,9 +23406,9 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(k), "assigning variable pr_2");}
       current_statement__ = 15;
-      FnCheckShape__("pr_2", 0,
-                     rvalue(dr, cons_list(index_uni(1), nil_index_list()),
-                       "dr"), m, k);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 15;
@@ -23893,7 +23440,7 @@ class transform_model : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())),
             in__.row_vector(k), "assigning variable pr_3");}}
       current_statement__ = 16;
-      FnCheckShape__("pr_3", 0, dr, n, m, k);
+      check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
       current_statement__ = 16;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 16;
@@ -23920,9 +23467,9 @@ class transform_model : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       pm_1 = in__.matrix(m, k);
       current_statement__ = 17;
-      FnCheckShape__("pm_1", 0,
-                     rvalue(dm, cons_list(index_uni(1), nil_index_list()),
-                       "dm"), m, k);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 17;
@@ -23956,7 +23503,7 @@ class transform_model : public model_base_crtp<transform_model> {
         assign(pm_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.matrix(m, k), "assigning variable pm_2");}
       current_statement__ = 18;
-      FnCheckShape__("pm_2", 0, dm, n, m, k);
+      check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
       current_statement__ = 18;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 18;
@@ -24291,10 +23838,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_1, nil_index_list(), context__.vals_r("p_1"),
         "assigning variable p_1");
       current_statement__ = 1;
-      FnCheckShape__("p_1", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_1", p_1, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
@@ -24312,10 +23860,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_2, nil_index_list(), context__.vals_r("p_2"),
         "assigning variable p_2");
       current_statement__ = 2;
-      FnCheckShape__("p_2", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_2", p_2, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
@@ -24333,15 +23882,17 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_3, nil_index_list(), context__.vals_r("p_3"),
         "assigning variable p_3");
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
-      FnCheckShape__("p_3", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_3", p_3, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
@@ -24362,10 +23913,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_4, nil_index_list(), context__.vals_r("p_4"),
         "assigning variable p_4");
       current_statement__ = 4;
-      FnCheckShape__("p_4", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_4", p_4, "upper",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
@@ -24383,10 +23935,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_5, nil_index_list(), context__.vals_r("p_5"),
         "assigning variable p_5");
       current_statement__ = 5;
-      FnCheckShape__("p_5", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_5", p_5, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 5;
@@ -24404,10 +23957,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_6, nil_index_list(), context__.vals_r("p_6"),
         "assigning variable p_6");
       current_statement__ = 6;
-      FnCheckShape__("p_6", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_6", p_6, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
@@ -24425,10 +23979,11 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_7, nil_index_list(), context__.vals_r("p_7"),
         "assigning variable p_7");
       current_statement__ = 7;
-      FnCheckShape__("p_7", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_7", p_7, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 7;
@@ -24446,15 +24001,17 @@ class transform_model : public model_base_crtp<transform_model> {
       assign(p_8, nil_index_list(), context__.vals_r("p_8"),
         "assigning variable p_8");
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "offset",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
-      FnCheckShape__("p_8", 0,
-                     rvalue(ds,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "ds"), k);
+      check_matching_dims("constraint", "p_8", p_8, "multiplier",
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
@@ -24493,9 +24050,9 @@ class transform_model : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 9;
-      FnCheckShape__("p_9", 0,
-                     rvalue(ds, cons_list(index_uni(1), nil_index_list()),
-                       "ds"), m, k);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -24539,7 +24096,7 @@ class transform_model : public model_base_crtp<transform_model> {
               pos__ = (pos__ + 1);}}}
       }
       current_statement__ = 10;
-      FnCheckShape__("p_10", 0, ds, n, m, k);
+      check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       current_statement__ = 10;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 10;
@@ -24577,15 +24134,17 @@ class transform_model : public model_base_crtp<transform_model> {
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
-      FnCheckShape__("pv_1", 0,
-                     rvalue(dv,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dv"), k);
+      check_matching_dims("constraint", "pv_1", pv_1, "upper",
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 11;
@@ -24625,9 +24184,9 @@ class transform_model : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 12;
-      FnCheckShape__("pv_2", 0,
-                     rvalue(dv, cons_list(index_uni(1), nil_index_list()),
-                       "dv"), m, k);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 12;
@@ -24672,7 +24231,7 @@ class transform_model : public model_base_crtp<transform_model> {
               pos__ = (pos__ + 1);}}}
       }
       current_statement__ = 13;
-      FnCheckShape__("pv_3", 0, dv, n, m, k);
+      check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
       current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 13;
@@ -24710,15 +24269,17 @@ class transform_model : public model_base_crtp<transform_model> {
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(1), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
-      FnCheckShape__("pr_1", 0,
-                     rvalue(dr,
-                       cons_list(index_uni(1),
-                         cons_list(index_uni(2), nil_index_list())), "dr"), k);
+      check_matching_dims("constraint", "pr_1", pr_1, "upper",
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 14;
@@ -24758,9 +24319,9 @@ class transform_model : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 15;
-      FnCheckShape__("pr_2", 0,
-                     rvalue(dr, cons_list(index_uni(1), nil_index_list()),
-                       "dr"), m, k);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 15;
@@ -24805,7 +24366,7 @@ class transform_model : public model_base_crtp<transform_model> {
               pos__ = (pos__ + 1);}}}
       }
       current_statement__ = 16;
-      FnCheckShape__("pr_3", 0, dr, n, m, k);
+      check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
       current_statement__ = 16;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 16;
@@ -24849,9 +24410,9 @@ class transform_model : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 17;
-      FnCheckShape__("pm_1", 0,
-                     rvalue(dm, cons_list(index_uni(1), nil_index_list()),
-                       "dm"), m, k);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 17;
@@ -24902,7 +24463,7 @@ class transform_model : public model_base_crtp<transform_model> {
               pos__ = (pos__ + 1);}}}
       }
       current_statement__ = 18;
-      FnCheckShape__("pm_2", 0, dm, n, m, k);
+      check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
       current_statement__ = 18;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 18;
@@ -25768,61 +25329,6 @@ std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x)
   return x;
 }
 
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -26328,61 +25834,6 @@ std::vector<double> to_doubles__(std::initializer_list<double> x) {
 
 std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
   return x;
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj) {
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const T& obj, size_t s) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const Eigen::Matrix<T,-1,-1>& obj, size_t s1, size_t s2) {
-  if (obj.rows() != s1) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; rows=" << s1 << "; expression size=" << obj.rows();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (obj.cols() != s2) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name
-        << "; columns=" << s2 << "; expression size=" << obj.cols();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-template <typename T, typename... M>
-void FnCheckShape__(const char* var_name, size_t depth,
-                    const std::vector<T>& obj, size_t s, M... dim) {
-  if (obj.size() != s) {
-    std::stringstream msg;
-    msg << "Declaration size does not match"
-        << "; variable=" << var_name << "; dimension=" << depth+1
-        << "; dimension size=" << s << "; expression size=" << obj.size();
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-  if (s != 0) {
-    FnCheckShape__(var_name, depth + 1, obj[0], dim...);
-  }
 }
 
 inline void validate_positive_index(const char* var_name, const char* expr,

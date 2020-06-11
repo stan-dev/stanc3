@@ -9,7 +9,6 @@ type t =
   (* XXX move these to a backend specific file?*)
   | FnReadParam
   | FnWriteParam
-  | FnCheckShape
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

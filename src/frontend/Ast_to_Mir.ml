@@ -255,22 +255,29 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       Stmt.Helpers.for_eigen
 
-let same_shape decl_id meta var = function
-  | Type.Unsized _ -> []
-  | Sized st -> (
-    match SizedType.get_dims st with
-    | [] -> []
-    | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of var) -> []
-    | dims ->
-        [ Stmt.Helpers.internal_nrfunapp FnCheckShape
-            Expr.Helpers.(str decl_id :: int 0 :: var :: dims)
-            meta ] )
+let same_shape decl_id decl_var id var meta =
+  if UnsizedType.is_scalar_type (Expr.Typed.type_of var) then []
+  else
+    [ Stmt.
+        { Fixed.pattern=
+            NRFunApp
+              ( StanLib
+              , "check_matching_dims"
+              , Expr.Helpers.
+                  [str "constraint"; str decl_id; decl_var; str id; var] )
+        ; meta } ]
 
-let check_transform_shape decl_id meta st = function
-  | Program.Offset e | Multiplier e | Lower e | Upper e ->
-      same_shape decl_id meta e st
-  | OffsetMultiplier (e1, e2) | LowerUpper (e1, e2) ->
-      same_shape decl_id meta e1 st @ same_shape decl_id meta e2 st
+let check_transform_shape decl_id decl_var meta = function
+  | Program.Offset e -> same_shape decl_id decl_var "offset" e meta
+  | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
+  | Lower e -> same_shape decl_id decl_var "lower" e meta
+  | Upper e -> same_shape decl_id decl_var "upper" e meta
+  | OffsetMultiplier (e1, e2) ->
+      same_shape decl_id decl_var "offset" e1 meta
+      @ same_shape decl_id decl_var "multiplier" e2 meta
+  | LowerUpper (e1, e2) ->
+      same_shape decl_id decl_var "lower" e1 meta
+      @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
@@ -452,10 +459,10 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     let constrain_checks =
       match dconstrain with
       | Some Constrain | Some Unconstrain ->
-          check_transform_shape decl_id smeta dt transform
+          check_transform_shape decl_id decl_var smeta transform
           @ constrain_decl dt dconstrain transform decl_id decl_var smeta
       | Some Check ->
-          check_transform_shape decl_id smeta dt transform
+          check_transform_shape decl_id decl_var smeta transform
           @ check_decl decl_var dt decl_id transform smeta dadlevel
       | None -> []
     in
