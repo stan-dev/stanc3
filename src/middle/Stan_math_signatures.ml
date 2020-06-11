@@ -217,6 +217,8 @@ let math_sigs =
   ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized])
   ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized])
   ; ([UnaryVectorized], "inv_square", [DDeepVectorized])
+  ; ([UnaryVectorized], "lambert_w0", [DDeepVectorized])
+  ; ([UnaryVectorized], "lambert_wm1", [DDeepVectorized])
   ; ([UnaryVectorized], "lgamma", [DDeepVectorized])
   ; ([UnaryVectorized], "log", [DDeepVectorized])
   ; ([UnaryVectorized], "log10", [DDeepVectorized])
