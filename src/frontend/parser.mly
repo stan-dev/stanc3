@@ -465,7 +465,7 @@ common_expression:
   | DIVIDE
     {  grammar_logger "infix_divide" ; Operator.Divide }
   | IDIVIDE
-    {  grammar_logger "infix_divide" ; Operator.IntDivide }
+    {  grammar_logger "infix_intdivide" ; Operator.IntDivide }
   | MODULO
     {  grammar_logger "infix_modulo" ; Operator.Modulo }
   | LDIVIDE

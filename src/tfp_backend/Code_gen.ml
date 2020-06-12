@@ -8,7 +8,10 @@ let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-let pystring_of_operator = function x -> strf "%a" Operator.pp x
+
+let pystring_of_operator = function
+  | Operator.IntDivide -> "//"
+  | x -> strf "%a" Operator.pp x
 
 let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
