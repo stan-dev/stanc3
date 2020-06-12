@@ -25,8 +25,8 @@ let reducearray (sbt, l) =
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
-%token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO LDIVIDE
-       ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
+%token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO IDIVIDE
+       LDIVIDE ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
 %token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
    ELTDIVIDEASSIGN ELTTIMESASSIGN
 %token ARROWASSIGN INCREMENTLOGPROB GETLP (* all of these are deprecated *)
@@ -43,7 +43,7 @@ let reducearray (sbt, l) =
 %left LEQ LABRACK GEQ RABRACK
 %left PLUS MINUS
 %left TIMES DIVIDE MODULO ELTTIMES ELTDIVIDE
-%left LDIVIDE
+%left IDIVIDE LDIVIDE
 %nonassoc unary_over_binary
 %right HAT
 %left TRANSPOSE
@@ -464,6 +464,8 @@ common_expression:
     {  grammar_logger "infix_times" ; Operator.Times }
   | DIVIDE
     {  grammar_logger "infix_divide" ; Operator.Divide }
+  | IDIVIDE
+    {  grammar_logger "infix_intdivide" ; Operator.IntDivide }
   | MODULO
     {  grammar_logger "infix_modulo" ; Operator.Modulo }
   | LDIVIDE

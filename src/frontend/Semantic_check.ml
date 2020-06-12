@@ -636,11 +636,26 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and warn_int_division (x, y) =
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
+            let hint ppf () =
+              match (x.expr, y.expr) with
+              | IntNumeral x, _ ->
+                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_expression y
+              | _, Ast.IntNumeral y ->
+                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_expression x y
+              | _ ->
+                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_expression x
+                    Pretty_printing.pp_expression y
+            in
             Fmt.pr
-              "@[<hov>Info: Found int division at %s:@   @[<hov 2>%a\n@]%s@.@]"
+              "@[<v>@[<hov 0>Info: Found int division at %s:@]@   @[<hov \
+               2>%a@]@,@[<hov>%a@]@   @[<hov 2>%a@]@,@[<hov>%a@]@]"
               (Location_span.to_string x.emeta.loc)
-              Pretty_printing.pp_expression {expr; emeta}
-              "Values will be rounded towards zero." ;
+              Pretty_printing.pp_expression {expr; emeta} Fmt.text
+              "Values will be rounded towards zero. If rounding is not \
+               desired you can write the division as"
+              hint () Fmt.text
+              "If rounding is intended please use the integer division \
+               operator %/%." ;
             (x, y)
         | _ -> (x, y)
       in

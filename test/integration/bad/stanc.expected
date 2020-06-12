@@ -1807,6 +1807,69 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (matrix, matrix) => matrix
 Instead supplied arguments of incompatible type: int[], matrix.
 
+  $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
+
+Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
+   -------------------------------------------------
+     5:    int b[4];
+     6:    matrix[3,3] c;
+     7:    c = b %/% a;
+               ^
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: int[], matrix.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_1.stan
+
+Semantic error in 'op_intdivide_bad_1.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: real, real.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_2.stan
+
+Semantic error in 'op_intdivide_bad_2.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: int, real.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_3.stan
+
+Semantic error in 'op_intdivide_bad_3.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: real, int.
+
   $ ../../../../install/default/bin/stanc op_logical_negation_bad.stan
 
 Semantic error in 'op_logical_negation_bad.stan', line 7, column 6 to column 8:

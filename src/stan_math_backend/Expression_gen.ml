@@ -202,7 +202,7 @@ and gen_operator_app = function
       fun ppf es -> pp_scalar_binary ppf "(%a@ -@ %a)" "subtract(@,%a,@ %a)" es
   | Times ->
       fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "multiply(@,%a,@ %a)" es
-  | Divide ->
+  | Divide | IntDivide ->
       fun ppf es ->
         if
           is_matrix (second es)
@@ -313,8 +313,8 @@ and gen_fun_app ppf fname es =
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
-          let next_map_rect_id = (Hashtbl.length map_rect_calls + 1) in
-          Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f;
+          let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
+          Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)

@@ -130,6 +130,7 @@ rule token = parse
   | '*'                       { lexer_logger "*" ; Parser.TIMES }
   | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
   | '%'                       { lexer_logger "%" ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
   | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
   | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
   | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }
