@@ -55,6 +55,9 @@ functions {
   real foo_lccdf(int y, real lambda) {
     return 1.0;
   }
+  real foo_rng(real mu, real sigma) {
+    return normal_rng(mu, sigma);
+  }
 
   void unit_normal_lp(real u) {
     increment_log_prob(normal_log(u,0,1));
@@ -302,6 +305,12 @@ functions {
     f_x[2] = x[2] - y[2];
     return f_x;
   }
+
+  vector binomialf(vector phi, vector theta, data real[] x_r, data int[] x_i) {
+    vector[1] lpmf;
+    lpmf[1] = 0.0;
+    return lpmf;
+  }
 }
 data {
   int<lower=0> N;
@@ -343,6 +352,8 @@ transformed data {
   vector[2] y;
   real dat[0];
   int dat_int[0];
+  real x_r[0, 0];
+  int x_i[0, 0];
   td_int = 1 || 2;
   td_int = 1 && 2;
   for (i in 1:2) {
@@ -370,16 +381,27 @@ transformed data {
     for (v in blocked_tdata_vs) {
       z = 0;
     }
+    int indices[4] = {1,2,3,4};
+    for (i in indices[1:3]) {
+      z = i;
+    }
   }
   // some indexing tests for multi indices and slices
   td_1dk = td_1d[td_1dk];
   td_simplex = td_1d_simplex[1,:];
   td_simplex = td_1d_simplex[1,];
   td_simplex = td_1d_simplex[1,1:N];
+
+  int arr_mul_ind[2,2];
+  arr_mul_ind[1,1:2] = {1, 1};
+
+  real x_mul_ind[2] = {1,2};
 }
 parameters {
   real p_real;
   real<offset=1, multiplier=2> offset_multiplier[5];
+  real<multiplier=2> no_offset_multiplier[5];
+  real<offset=3> offset_no_multiplier[5];
   real<lower=0> p_real_1d_ar[N];
   real<lower=0> p_real_3d_ar[N,M,K];
   vector<lower=0>[N] p_vec;
@@ -449,10 +471,15 @@ transformed parameters {
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
 }
 model {
+  vector[0] tmp;
+  vector[0] tmp2[0];
   real r1 = foo_bar1(p_real);
   real r2 = foo_bar1(J);
   p_real ~ normal(0,1);
   offset_multiplier ~ normal(0, 1);
+
+  no_offset_multiplier ~ normal(0, 1);
+  offset_no_multiplier ~ normal(0, 1);
 
   to_vector(p_real_1d_ar) ~ normal(0, 1);
   for (n in 1:N) {
@@ -481,6 +508,8 @@ model {
   to_vector(p_simplex) ~ normal(0, 1);
   to_vector(p_cfcov_54) ~ normal(0, 1);
   to_vector(p_cfcov_33) ~ normal(0, 1);
+
+  target += map_rect(binomialf, tmp, tmp2, x_r, x_i);
 }
 generated quantities {
   real gq_r1 = foo_bar1(p_real);

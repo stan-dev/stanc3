@@ -7,18 +7,16 @@ data {
 parameters {
   real mu;
   real<lower=0> tau;
-  real theta_tilde[J];
+  vector[J] theta_tilde;
 }
 
 transformed parameters {
-  real theta[J];
-  for (j in 1:J)
-    theta[j] = mu + tau * theta_tilde[j];
+  vector[J] theta = mu + tau * theta_tilde;
 }
 
 model {
   mu ~ normal(0, 5);
-  tau ~ cauchy(0, 5);
+  tau ~ normal(0, 5);
   theta_tilde ~ normal(0, 1);
   y ~ normal(theta, sigma);
 }

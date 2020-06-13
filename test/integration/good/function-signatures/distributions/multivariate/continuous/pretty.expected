@@ -3,22 +3,101 @@ data {
   int d_int;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
+  vector[d_int] d_vector_arr[d_int];
+  row_vector[d_int] d_row_vector_arr[d_int];
 }
 transformed data {
   real transformed_data_real;
   transformed_data_real = dirichlet_log(d_vector, d_vector);
+  transformed_data_real = dirichlet_log(d_vector, d_row_vector);
+  transformed_data_real = dirichlet_log(d_row_vector, d_vector);
+  transformed_data_real = dirichlet_log(d_row_vector, d_row_vector);
+  transformed_data_real = dirichlet_log(d_vector, d_vector_arr);
+  transformed_data_real = dirichlet_log(d_vector, d_row_vector_arr);
+  transformed_data_real = dirichlet_log(d_row_vector, d_vector_arr);
+  transformed_data_real = dirichlet_log(d_row_vector, d_row_vector_arr);
+  transformed_data_real = dirichlet_log(d_vector_arr, d_vector);
+  transformed_data_real = dirichlet_log(d_vector_arr, d_row_vector);
+  transformed_data_real = dirichlet_log(d_row_vector_arr, d_vector);
+  transformed_data_real = dirichlet_log(d_row_vector_arr, d_row_vector);
+  transformed_data_real = dirichlet_log(d_vector_arr, d_vector_arr);
+  transformed_data_real = dirichlet_log(d_vector_arr, d_row_vector_arr);
+  transformed_data_real = dirichlet_log(d_row_vector_arr, d_vector_arr);
+  transformed_data_real = dirichlet_log(d_row_vector_arr, d_row_vector_arr);
 }
 parameters {
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
+  vector[d_int] p_vector_arr[d_int];
+  row_vector[d_int] p_row_vector_arr[d_int];
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
   transformed_param_real = dirichlet_log(d_vector, d_vector);
+  transformed_param_real = dirichlet_log(d_vector, d_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector_arr, d_vector);
+  transformed_param_real = dirichlet_log(d_vector_arr, d_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector, d_row_vector);
+  transformed_param_real = dirichlet_log(d_vector, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector_arr, d_row_vector);
+  transformed_param_real = dirichlet_log(d_vector_arr, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector, d_vector);
+  transformed_param_real = dirichlet_log(d_row_vector, d_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, d_vector);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, d_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector, d_row_vector);
+  transformed_param_real = dirichlet_log(d_row_vector, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, d_row_vector);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, d_row_vector_arr);
   transformed_param_real = dirichlet_log(d_vector, p_vector);
+  transformed_param_real = dirichlet_log(d_vector, p_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector_arr, p_vector);
+  transformed_param_real = dirichlet_log(d_vector_arr, p_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector, p_row_vector);
+  transformed_param_real = dirichlet_log(d_vector, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_vector_arr, p_row_vector);
+  transformed_param_real = dirichlet_log(d_vector_arr, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector, p_vector);
+  transformed_param_real = dirichlet_log(d_row_vector, p_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, p_vector);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, p_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector, p_row_vector);
+  transformed_param_real = dirichlet_log(d_row_vector, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, p_row_vector);
+  transformed_param_real = dirichlet_log(d_row_vector_arr, p_row_vector_arr);
   transformed_param_real = dirichlet_log(p_vector, d_vector);
+  transformed_param_real = dirichlet_log(p_vector, d_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector_arr, d_vector);
+  transformed_param_real = dirichlet_log(p_vector_arr, d_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector, d_row_vector);
+  transformed_param_real = dirichlet_log(p_vector, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector_arr, d_row_vector);
+  transformed_param_real = dirichlet_log(p_vector_arr, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector, d_vector);
+  transformed_param_real = dirichlet_log(p_row_vector, d_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, d_vector);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, d_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector, d_row_vector);
+  transformed_param_real = dirichlet_log(p_row_vector, d_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, d_row_vector);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, d_row_vector_arr);
   transformed_param_real = dirichlet_log(p_vector, p_vector);
+  transformed_param_real = dirichlet_log(p_vector, p_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector_arr, p_vector);
+  transformed_param_real = dirichlet_log(p_vector_arr, p_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector, p_row_vector);
+  transformed_param_real = dirichlet_log(p_vector, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_vector_arr, p_row_vector);
+  transformed_param_real = dirichlet_log(p_vector_arr, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector, p_vector);
+  transformed_param_real = dirichlet_log(p_row_vector, p_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, p_vector);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, p_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector, p_row_vector);
+  transformed_param_real = dirichlet_log(p_row_vector, p_row_vector_arr);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, p_row_vector);
+  transformed_param_real = dirichlet_log(p_row_vector_arr, p_row_vector_arr);
 }
 model {
   y_p ~ normal(0, 1);
@@ -433,6 +512,38 @@ transformed parameters {
   transformed_param_real = gaussian_dlm_obs_log(d_matrix, d_matrix, d_matrix,
                                                 d_vector, d_matrix, d_vector,
                                                 d_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hmm_marginal.stan
+data {
+  int N;
+  int K;
+  matrix[K, N] log_omega;
+  matrix[K, K] Gamma;
+  vector[K] rho;
+}
+transformed data {
+  real density = hmm_marginal(log_omega, Gamma, rho);
+}
+parameters {
+  real y_p;
+}
+transformed parameters {
+  matrix[K, N] log_omega_v;
+  matrix[K, K] Gamma_v;
+  vector[K] rho_v;
+  real density_v;
+  density_v = hmm_marginal(log_omega, Gamma, rho);
+  density_v = hmm_marginal(log_omega_v, Gamma, rho);
+  density_v = hmm_marginal(log_omega, Gamma_v, rho);
+  density_v = hmm_marginal(log_omega, Gamma, rho_v);
+  density_v = hmm_marginal(log_omega_v, Gamma_v, rho);
+  density_v = hmm_marginal(log_omega_v, Gamma, rho_v);
+  density_v = hmm_marginal(log_omega, Gamma_v, rho_v);
+  density_v = hmm_marginal(log_omega_v, Gamma_v, rho_v);
 }
 model {
   y_p ~ normal(0, 1);

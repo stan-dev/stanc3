@@ -13,8 +13,8 @@ let%expect_test "Operator-assign example" =
         }
       |}
   |> trans_prog ""
-  |> (fun {log_prob; _} -> log_prob)
-  |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Pretty.pp_stmt_loc)
+  |> (fun Program.({log_prob; _}) -> log_prob)
+  |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
   |> print_endline ;
   [%expect
     {|
@@ -39,72 +39,241 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : stmt_loc list)] ;
+  print_s [%sexp (op : Stmt.Located.t list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      ((Block
-        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt)))
-         (IfElse
-          (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
-          (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
+      (((pattern
+         (Block
+          (((pattern
+             (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (IfElse
+              ((pattern
+                (FunApp StanLib Less__
+                 (((pattern (Var i))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern
+                    (FunApp StanLib PMinus__
+                     (((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (NRFunApp CompilerInternal FnPrint__
+                 (((pattern (Lit Str Badger))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>))
+              ()))
+            (meta <opaque>)))))
+        (meta <opaque>))) |}]
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
-  print_s [%sexp (m.prepare_data : stmt_loc list)] ;
+  print_s [%sexp (m.prepare_data : Stmt.Located.t list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))) |}]
+    (((pattern
+       (Decl (decl_adtype DataOnly) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((pattern (Lit Int 10))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 20))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           ((pattern (Lit Int 5))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (meta <opaque>))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
-  print_s [%sexp (m.log_prob : stmt_loc list)] ;
+  print_s [%sexp (m.log_prob : Stmt.Located.t list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype AutoDiffable) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
-          (body
+    (((pattern
+       (Decl (decl_adtype AutoDiffable) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((pattern (Lit Int 10))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 20))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           ((pattern (Lit Int 5))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (meta <opaque>))
+     ((pattern
+       (For (loopvar sym1__)
+        (lower
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (upper
+         ((pattern (Lit Int 5))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (body
+         ((pattern
            (Block
-            ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
-              (body
-               (Block
-                ((Assignment
-                  (mat (UArray UMatrix)
-                   ((Single (Var sym1__)) (Single (Var sym2__))
-                    (Single (Var sym3__))))
-                  (FunApp CompilerInternal FnConstrain__
-                   ((Indexed (Var mat)
-                     ((Single (Var sym1__)) (Single (Var sym2__))
-                      (Single (Var sym3__))))
-                    (Lit Str lb) (Lit Int 0))))))))))))))))) |}]
+            (((pattern
+               (For (loopvar sym2__)
+                (lower
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (upper
+                 ((pattern (Lit Int 10))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (body
+                 ((pattern
+                   (Block
+                    (((pattern
+                       (For (loopvar sym3__)
+                        (lower
+                         ((pattern (Lit Int 1))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (upper
+                         ((pattern (Lit Int 20))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (body
+                         ((pattern
+                           (Block
+                            (((pattern
+                               (Assignment
+                                (mat (UArray UMatrix)
+                                 ((Single
+                                   ((pattern (Var sym1__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var sym2__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var sym3__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))))
+                                ((pattern
+                                  (FunApp CompilerInternal FnConstrain__
+                                   (((pattern
+                                      (Indexed
+                                       ((pattern (Var mat))
+                                        (meta
+                                         ((type_ (UArray UMatrix)) (loc <opaque>)
+                                          (adlevel AutoDiffable))))
+                                       ((Single
+                                         ((pattern (Var sym1__))
+                                          (meta
+                                           ((type_ UInt) (loc <opaque>)
+                                            (adlevel DataOnly)))))
+                                        (Single
+                                         ((pattern (Var sym2__))
+                                          (meta
+                                           ((type_ UInt) (loc <opaque>)
+                                            (adlevel DataOnly)))))
+                                        (Single
+                                         ((pattern (Var sym3__))
+                                          (meta
+                                           ((type_ UInt) (loc <opaque>)
+                                            (adlevel DataOnly))))))))
+                                     (meta
+                                      ((type_ UReal) (loc <opaque>)
+                                       (adlevel AutoDiffable))))
+                                    ((pattern (Lit Str lb))
+                                     (meta
+                                      ((type_ UReal) (loc <opaque>)
+                                       (adlevel DataOnly))))
+                                    ((pattern (Lit Int 0))
+                                     (meta
+                                      ((type_ UInt) (loc <opaque>)
+                                       (adlevel DataOnly)))))))
+                                 (meta
+                                  ((type_ UReal) (loc <opaque>)
+                                   (adlevel AutoDiffable))))))
+                              (meta <opaque>)))))
+                          (meta <opaque>)))))
+                      (meta <opaque>)))))
+                  (meta <opaque>)))))
+              (meta <opaque>)))))
+          (meta <opaque>)))))
+      (meta <opaque>))) |}]
 
 let%expect_test "gen quant" =
   let m =
     mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }"
   in
-  print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
+  print_s [%sexp (m.generate_quantities : Stmt.Located.t list)] ;
   [%expect
     {|
-    ((IfElse
-      (FunApp StanLib PNot__
-       ((EOr (Var emit_transformed_parameters__)
-         (Var emit_generated_quantities__))))
-      (Return ()) ())
-     (IfElse (FunApp StanLib PNot__ ((Var emit_generated_quantities__)))
-      (Return ()) ())
-     (Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((NRFunApp CompilerInternal FnCheck__
-          ((Lit Str greater_or_equal) (Lit Str mat[sym1__])
-           (Indexed (Var mat) ((Single (Var sym1__)))) (Lit Int 0)))))))) |}]
+    (((pattern
+       (IfElse
+        ((pattern
+          (FunApp StanLib PNot__
+           (((pattern
+              (EOr
+               ((pattern (Var emit_transformed_parameters__))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var emit_generated_quantities__))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+        ((pattern (Return ())) (meta <opaque>)) ()))
+      (meta <opaque>))
+     ((pattern
+       (IfElse
+        ((pattern
+          (FunApp StanLib PNot__
+           (((pattern (Var emit_generated_quantities__))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+        ((pattern (Return ())) (meta <opaque>)) ()))
+      (meta <opaque>))
+     ((pattern
+       (Decl (decl_adtype DataOnly) (decl_id mat)
+        (decl_type
+         (Sized
+          (SArray
+           (SMatrix
+            ((pattern (Lit Int 10))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 20))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           ((pattern (Lit Int 5))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (meta <opaque>))
+     ((pattern
+       (For (loopvar sym1__)
+        (lower
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (upper
+         ((pattern (Lit Int 5))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (body
+         ((pattern
+           (Block
+            (((pattern
+               (NRFunApp CompilerInternal FnCheck__
+                (((pattern (Lit Str greater_or_equal))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Str mat[sym1__]))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (Indexed
+                    ((pattern (Var mat))
+                     (meta
+                      ((type_ (UArray UMatrix)) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    ((Single
+                      ((pattern (Var sym1__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (meta <opaque>)))))
+          (meta <opaque>)))))
+      (meta <opaque>))) |}]

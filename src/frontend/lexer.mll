@@ -19,19 +19,20 @@
 let string_literal = '"' [^'"']* '"'
 let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
-let integer_constant =  ['0'-'9']+
+let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
 let exp_literal = ['e' 'E'] ['+' '-']? integer_constant
-let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal?
-let real_constant2 = '.' ['0'-'9']+ exp_literal?
+let real_constant1 = integer_constant '.' integer_constant? exp_literal?
+let real_constant2 = '.' integer_constant exp_literal?
 let real_constant3 = integer_constant exp_literal
 let real_constant = real_constant1 | real_constant2 | real_constant3
-let space = ' ' | '\t' | '\012' | '\r'
-let non_space_or_newline = [^' ' '\t' '\012' '\r' '\n']
+let space = ' ' | '\t' | '\012'
+let newline = '\r' | '\n' | '\r'*'\n'
+let non_space_or_newline =  [^ ' ' '\t' '\012' '\r' '\n' ]
 
 rule token = parse
 (* White space, line numers and comments *)
-    '\n'                      { lexer_logger "newline" ;
+  | newline                   { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
@@ -39,10 +40,11 @@ rule token = parse
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
-    ( ( space | '\n')+)
-    ( '"' [^ '"']* '"'
-    | non_space_or_newline*
-    as fname)                 { lexer_logger ("include " ^ fname) ;
+    ( ( space | newline)+)
+    ( '"' ([^ '"']* as fname) '"'
+    | '<' ([^ '>']* as fname) '>'
+    | (non_space_or_newline* as fname)
+    )                         { lexer_logger ("include " ^ fname) ;
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
@@ -58,14 +60,20 @@ rule token = parse
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
   | "data"                    { lexer_logger "data" ; Parser.DATABLOCK }
-  | "transformed data"        { lexer_logger "transformed data" ;
+  | "transformed"
+      ( space+ )
+      "data"                  { lexer_logger "transformed data" ;
                                 Parser.TRANSFORMEDDATABLOCK }
   | "parameters"              { lexer_logger "parameters" ;
                                 Parser.PARAMETERSBLOCK }
-  | "transformed parameters"  { lexer_logger "transformed parameters" ;
+  | "transformed"
+      ( space+ )
+      "parameters"            { lexer_logger "transformed parameters" ;
                                 Parser.TRANSFORMEDPARAMETERSBLOCK }
   | "model"                   { lexer_logger "model" ; Parser.MODELBLOCK }
-  | "generated quantities"    { lexer_logger "generated quantities" ;
+  | "generated"
+      ( space+ )
+      "quantities"    { lexer_logger "generated quantities" ;
                                 Parser.GENERATEDQUANTITIESBLOCK }
 (* Punctuation *)
   | '{'                       { lexer_logger "{" ; Parser.LBRACE }
@@ -122,6 +130,7 @@ rule token = parse
   | '*'                       { lexer_logger "*" ; Parser.TIMES }
   | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
   | '%'                       { lexer_logger "%" ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
   | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
   | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
   | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }
@@ -188,8 +197,8 @@ rule token = parse
                                       token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Lexing (lexeme (Stack.top_exn include_stack),
-                                        Errors.location_of_position
+                                (Errors.Lexing (lexeme (Stack.top_exn include_stack),
+                                        Middle.Location.of_position_exn
                                         (lexeme_start_p
                                           (Stack.top_exn include_stack))))) }
 
@@ -202,7 +211,7 @@ and multiline_comment = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment = parse
-  | '\n'   { incr_linenum lexbuf }
+  | newline   { incr_linenum lexbuf }
   | eof    { () }
   | _      { singleline_comment lexbuf }
 

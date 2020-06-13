@@ -14,7 +14,7 @@ parameters {
   vector[3] shared_params_p;
   vector[3] job_params_p[3];
 }
-generated quantities {
+transformed parameters {
   vector[3] y_hat_gq
       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
 }

@@ -956,6 +956,12 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
+Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -984,6 +990,12 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
+Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 functions {
   int foo(int a) {
@@ -2309,11 +2321,6 @@ functions {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ3.stan
-functions {
-  real foo() reject("");
-}
-
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ4.stan
 functions {
   real foo() {
@@ -2551,6 +2558,35 @@ functions {
   real foo2(real x, real y) {
     return 2.0;
   }
+  real foo0_lp() {
+    return 0.0;
+  }
+  real foo1_lp(real x) {
+    return 1.0;
+  }
+  real foo2_lp(real x, real y) {
+    return 2.0;
+  }
+  real foo0_rng() {
+    return 0.0;
+  }
+  real foo1_rng(real x) {
+    return 2.0 * x;
+  }
+  real foo2_rng(real x, real y) {
+    return x * y - 2.0;
+  }
+  real foo0_log(int y) {
+    return -5;
+  }
+  real foo1_log(real x) {
+    return -exp(x * x);
+  }
+  real foo2_log(real x, real y) {
+    real diff;
+    diff = x - y;
+    return -exp(diff * diff);
+  }
 }
 data {
   int<lower=0> N[6];
@@ -2560,6 +2596,130 @@ transformed data {
   real b;
   real c;
   a = foo0();
+  b = foo1(N[6]);
+  c = foo2(a, b);
+  c = foo2(a, 1);
+  c = foo2(2, b);
+  c = foo2(2, 3);
+  a = foo0_log(2);
+  b = foo1_log(N[6]);
+  c = foo2_log(a, b);
+  c = foo2_log(a, 1);
+  c = foo2_log(2, b);
+  c = foo2_log(2, 3);
+  a = foo0_rng();
+  b = foo1_rng(a);
+  b = foo1_rng(1);
+  c = foo2_rng(a, b);
+  c = foo2_rng(1, b);
+  c = foo2_rng(a, 2);
+  c = foo2_rng(1, 2);
+}
+parameters {
+  real<lower=0, upper=1> theta[10];
+}
+transformed parameters {
+  real phi1;
+  real phi2;
+  real phi3;
+  phi1 = foo0();
+  phi2 = foo1(1);
+  phi2 = foo1(2.0);
+  phi2 = foo1(phi1);
+  phi3 = foo2(1.0, 2.0);
+  phi3 = foo2(1.0, 2);
+  phi3 = foo2(1, 2.0);
+  phi3 = foo2(1, 2);
+  phi3 = foo2(phi1, 2.0);
+  phi3 = foo2(phi1, 2);
+  phi3 = foo2(1.0, phi2);
+  phi3 = foo2(1, phi2);
+  phi3 = foo2(phi1, phi2);
+  phi1 = foo0_log(3);
+  phi2 = foo1_log(1);
+  phi2 = foo1_log(2.0);
+  phi2 = foo1_log(phi1);
+  phi3 = foo2_log(1.0, 2.0);
+  phi3 = foo2_log(1.0, 2);
+  phi3 = foo2_log(1, 2.0);
+  phi3 = foo2_log(1, 2);
+  phi3 = foo2_log(phi1, 2.0);
+  phi3 = foo2_log(phi1, 2);
+  phi3 = foo2_log(1.0, phi2);
+  phi3 = foo2_log(1, phi2);
+  phi3 = foo2_log(phi1, phi2);
+}
+model {
+  real psi1;
+  real psi2;
+  real psi3;
+  psi1 = foo0();
+  psi2 = foo1(1);
+  psi2 = foo1(2.0);
+  psi2 = foo1(psi1);
+  psi3 = foo2(1.0, 2.0);
+  psi3 = foo2(1.0, 2);
+  psi3 = foo2(1, 2.0);
+  psi3 = foo2(1, 2);
+  psi3 = foo2(psi1, 2.0);
+  psi3 = foo2(psi1, 2);
+  psi3 = foo2(1.0, psi2);
+  psi3 = foo2(1, psi2);
+  psi3 = foo2(psi1, psi2);
+  psi1 = foo0_lp();
+  psi2 = foo1_lp(1);
+  psi2 = foo1_lp(2.0);
+  psi2 = foo1_lp(psi1);
+  psi3 = foo2_lp(1.0, 2.0);
+  psi3 = foo2_lp(1.0, 2);
+  psi3 = foo2_lp(1, 2.0);
+  psi3 = foo2_lp(1, 2);
+  psi3 = foo2_lp(psi1, 2.0);
+  psi3 = foo2_lp(psi1, 2);
+  psi3 = foo2_lp(1.0, psi2);
+  psi3 = foo2_lp(1, psi2);
+  psi3 = foo2_lp(psi1, psi2);
+  psi1 = foo0_log(3);
+  psi2 = foo1_log(1);
+  psi2 = foo1_log(2.0);
+  psi2 = foo1_log(psi1);
+  psi3 = foo2_log(1.0, 2.0);
+  psi3 = foo2_log(1.0, 2);
+  psi3 = foo2_log(1, 2.0);
+  psi3 = foo2_log(1, 2);
+  psi3 = foo2_log(psi1, 2.0);
+  psi3 = foo2_log(psi1, 2);
+  psi3 = foo2_log(1.0, psi2);
+  psi3 = foo2_log(1, psi2);
+  psi3 = foo2_log(psi1, psi2);
+  theta[1] ~ foo1();
+  theta[2] ~ foo2(theta[1]);
+}
+generated quantities {
+  real x;
+  real y;
+  real z;
+  x = foo0();
+  y = foo1(x);
+  y = foo1(1);
+  z = foo2(x, y);
+  z = foo2(1, y);
+  z = foo2(x, 2);
+  z = foo2(1, 2);
+  x = foo0_log(3);
+  y = foo1_log(x);
+  y = foo1_log(1);
+  z = foo2_log(x, y);
+  z = foo2_log(1, y);
+  z = foo2_log(x, 2);
+  z = foo2_log(1, 2);
+  x = foo0_rng();
+  y = foo1_rng(x);
+  y = foo1_rng(1);
+  z = foo2_rng(x, y);
+  z = foo2_rng(1, y);
+  z = foo2_rng(x, 2);
+  z = foo2_rng(1, 2);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
@@ -2743,6 +2903,19 @@ transformed parameters {
 }
 model {
   y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format genquant-data-only.stan
+functions {
+  real f(data real x) {
+    return x + 1;
+  }
+}
+parameters {
+  real x;
+}
+generated quantities {
+  real y = f(x);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
@@ -3425,6 +3598,12 @@ model {
 
 }
 
+Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
+  a[1] / b[2]
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  a[1] * 1.0 / b[2]
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -3984,6 +4163,12 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
+Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4013,6 +4198,12 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
+Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -4056,6 +4247,12 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
+Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4085,6 +4282,12 @@ model {
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
+Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -4105,6 +4308,17 @@ transformed parameters {
 }
 model {
 
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format numeric-literal.stan
+transformed data {
+  int a = 0;
+  int b = 10_000;
+  real c = .12;
+  real d = 1.;
+  real e = 1.002_345;
+  real f = .99_99_99e+1_25;
+  real g = 1_100_100.0_345;
 }
 
   $ ../../../../install/default/bin/stanc --auto-format ode-int-segments.stan
@@ -4237,6 +4451,12 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
+Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4265,6 +4485,12 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
+Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
+  j / M
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   int N;
@@ -4468,6 +4694,22 @@ model {
 generated quantities {
   real mean_y = mean(y);
   real sd_y = sd(y);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format single-arg-conddist.stan
+functions {
+  real foo_lpdf(real x) {
+    return -square(x);
+  }
+}
+parameters {
+  real x;
+}
+model {
+  target += std_normal_lpdf(x| );
+  target += std_normal_lpdf(x| );
+  target += foo_lpdf(x| );
+  target += foo_lpdf(x| );
 }
 
   $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
@@ -4925,6 +5167,12 @@ model {
   y ~ normal(0, 1);
 }
 
+Info: Found int division at 'validate_division_good.stan', line 19, column 7 to column 8:
+  2 / 3
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  2.0 / 3
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -4941,6 +5189,12 @@ model {
   y ~ normal(0, 1);
 }
 
+Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
+  j / k
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / k
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
@@ -5101,6 +5355,32 @@ generated quantities {
   real gq_d1 = my_fun(p_d1);
   real gq_d2 = my_fun(gq_d1);
   gq_d2 = my_fun3(gq_d1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_int_divide_good.stan
+data {
+  int i;
+  int j;
+}
+transformed data {
+  int k;
+  k = i %/% j;
+}
+parameters {
+  real y;
+}
+model {
+  int i2;
+  int j2;
+  int k2;
+  k2 = i2 %/% j2;
+  y ~ normal(0, 1);
+}
+generated quantities {
+  int i3;
+  int j3;
+  int k3;
+  k3 = i3 %/% j3;
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_int_expr2_good.stan
@@ -5333,6 +5613,7 @@ transformed data {
   real<offset=2> a = 3;
 }
 parameters {
+  matrix<offset=-412, multiplier=3>[3, 1] theta_[2];
   matrix<offset=-412, multiplier=3>[3, 1] theta[2];
   real<offset=1, multiplier=5> x;
   real<offset=42> w;
@@ -5358,6 +5639,7 @@ data {
   real<lower=1, upper=1.2> d;
   real<lower=1.1, upper=1.2> e;
   real<lower=1, upper=2> f;
+  real<lower=1, upper=2> g;
 }
 parameters {
   real y;

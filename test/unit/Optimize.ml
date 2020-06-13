@@ -2,7 +2,7 @@ open Core_kernel
 open Frontend
 open Analysis_and_optimization.Optimize
 open Middle
-open Middle.Pretty
+open Common
 open Analysis_and_optimization.Mir_utils
 
 let semantic_check_program ast =
@@ -12,7 +12,7 @@ let semantic_check_program ast =
           (Option.value_exn (Result.ok ast))))
 
 let%expect_test "map_rec_stmt_loc" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -30,12 +30,12 @@ let%expect_test "map_rec_stmt_loc" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f = function
-    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        NRFunApp (CompilerInternal, "FnPrint__", [s; s])
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
+        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
     | x -> x
   in
-  let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -49,13 +49,14 @@ let%expect_test "map_rec_stmt_loc" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -73,16 +74,17 @@ let%expect_test "map_rec_state_stmt_loc" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f i = function
-    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
+        Stmt.Fixed.Pattern.
+          (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      {stmt= SList mir.log_prob; smeta= Middle.no_span}
+      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty}
   in
   let mir = {mir with log_prob= [mir_stmt]} in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   print_endline (string_of_int num) ;
   [%expect
     {|
@@ -97,15 +99,18 @@ let%expect_test "map_rec_state_stmt_loc" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       }
 
+
+
       3 |}]
 
 let%expect_test "inline functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -127,7 +132,7 @@ let%expect_test "inline functions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -143,20 +148,29 @@ let%expect_test "inline functions" =
           }
         }
       }
+
+
+
       log_prob {
         {
-          for(sym1__ in 1:1) {
+          data int inline_sym1__;
+          inline_sym1__ = 0;
+          for(inline_sym2__ in 1:1) {
             FnPrint__(3);
             FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-          real sym4__;
-          for(sym3__ in 1:1) {
-            sym4__ = (53 ^ 2);
+          real inline_sym3__;
+          data int inline_sym4__;
+          inline_sym4__ = 0;
+          for(inline_sym5__ in 1:1) {
+            inline_sym4__ = 1;
+            inline_sym3__ = (53 ^ 2);
             break;
           }
-          FnReject__(sym4__);
+          FnReject__(inline_sym3__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -166,7 +180,7 @@ let%expect_test "inline functions" =
       } |}]
 
 let%expect_test "inline functions 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -185,7 +199,7 @@ let%expect_test "inline functions 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -200,21 +214,30 @@ let%expect_test "inline functions 2" =
           }
         }
       }
+
+
+
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        for(sym3__ in 1:1) {
-          for(sym1__ in 1:1) {
+        data int inline_sym7__;
+        inline_sym7__ = 0;
+        for(inline_sym8__ in 1:1) {
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
 
           }
+          if(inline_sym7__) break;
         }
       } |}]
 
 let%expect_test "list collapsing" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -237,172 +260,189 @@ let%expect_test "list collapsing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  print_s [%sexp (mir : Middle.Program.Typed.t)] ;
   [%expect
     {|
     ((functions_block
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
-         ((stmt
+         ((pattern
            (Block
-            (((stmt
+            (((pattern
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var x))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-              (smeta <opaque>))
-             ((stmt
+                (((pattern (Var x))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (meta <opaque>))
+             ((pattern
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var y))
-                  (emeta
-                   ((mtype UMatrix) (mloc <opaque>) (madlevel AutoDiffable)))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>)))
+                (((pattern (Var y))
+                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              (meta <opaque>)))))
+          (meta <opaque>)))
         (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
-         ((stmt
+         ((pattern
            (Block
-            (((stmt
+            (((pattern
                (Return
-                (((expr
+                (((pattern
                    (FunApp StanLib Pow__
-                    (((expr (Var z))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                     ((expr (Lit Int 2))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>)))
+                    (((pattern (Var z))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              (meta <opaque>)))))
+          (meta <opaque>)))
         (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
-      (((stmt
+      (((pattern
          (Block
-          (((stmt
-             (For (loopvar sym1__)
+          (((pattern
+             (Decl (decl_adtype DataOnly) (decl_id inline_sym1__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (inline_sym1__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar inline_sym2__)
               (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
-               ((stmt
+               ((pattern
                  (Block
-                  (((stmt
+                  (((pattern
                      (NRFunApp CompilerInternal FnPrint__
-                      (((expr (Lit Int 3))
-                        (emeta
-                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>))
-                   ((stmt
+                      (((pattern (Lit Int 3))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>))
+                   ((pattern
                      (NRFunApp CompilerInternal FnPrint__
-                      (((expr
+                      (((pattern
                          (FunApp CompilerInternal FnMakeRowVec__
-                          (((expr
+                          (((pattern
                              (FunApp CompilerInternal FnMakeRowVec__
-                              (((expr (Lit Int 3))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly))))
-                               ((expr (Lit Int 2))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly)))))))
-                            (emeta
-                             ((mtype URowVector) (mloc <opaque>)
-                              (madlevel DataOnly))))
-                           ((expr
+                              (((pattern (Lit Int 3))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 2))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly))))
+                           ((pattern
                              (FunApp CompilerInternal FnMakeRowVec__
-                              (((expr (Lit Int 4))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly))))
-                               ((expr (Lit Int 6))
-                                (emeta
-                                 ((mtype UInt) (mloc <opaque>)
-                                  (madlevel DataOnly)))))))
-                            (emeta
-                             ((mtype URowVector) (mloc <opaque>)
-                              (madlevel DataOnly)))))))
-                        (emeta
-                         ((mtype UMatrix) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
-           ((stmt
-             (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
+                              (((pattern (Lit Int 4))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 6))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly)))))))
+                        (meta
+                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_sym3__)
               (decl_type (Unsized UReal))))
-            (smeta <opaque>))
-           ((stmt
-             (For (loopvar sym3__)
+            (meta <opaque>))
+           ((pattern
+             (Decl (decl_adtype DataOnly) (decl_id inline_sym4__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (inline_sym4__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar inline_sym5__)
               (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (body
-               ((stmt
+               ((pattern
                  (Block
-                  (((stmt
-                     (Assignment (sym4__ UReal ())
-                      ((expr
+                  (((pattern
+                     (Assignment (inline_sym4__ UInt ())
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment (inline_sym3__ UReal ())
+                      ((pattern
                         (FunApp StanLib Pow__
-                         (((expr (Lit Int 53))
-                           (emeta
-                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                          ((expr (Lit Int 2))
-                           (emeta
-                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
-                    (smeta <opaque>))
-                   ((stmt Break) (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
-           ((stmt
+                         (((pattern (Lit Int 53))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 2))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern Break) (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
              (NRFunApp CompilerInternal FnReject__
-              (((expr (Var sym4__))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))))
+              (((pattern (Var inline_sym3__))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+            (meta <opaque>)))))
+        (meta <opaque>))))
      (generate_quantities
-      (((stmt
+      (((pattern
          (IfElse
-          ((expr (Var emit_transformed_parameters__))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt Skip) (smeta <opaque>)) (((stmt (Block ())) (smeta <opaque>)))))
-        (smeta <opaque>))
-       ((stmt
+          ((pattern (Var emit_transformed_parameters__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern Skip) (meta <opaque>))
+          (((pattern (Block ())) (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
          (IfElse
-          ((expr
+          ((pattern
             (FunApp StanLib PNot__
-             (((expr
+             (((pattern
                 (EOr
-                 ((expr (Var emit_transformed_parameters__))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                 ((expr (Var emit_generated_quantities__))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt (Return ())) (smeta <opaque>)) ()))
-        (smeta <opaque>))
-       ((stmt
+                 ((pattern (Var emit_transformed_parameters__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Var emit_generated_quantities__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Return ())) (meta <opaque>)) ()))
+        (meta <opaque>))
+       ((pattern
          (IfElse
-          ((expr
+          ((pattern
             (FunApp StanLib PNot__
-             (((expr (Var emit_generated_quantities__))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-          ((stmt (Return ())) (smeta <opaque>)) ()))
-        (smeta <opaque>))))
+             (((pattern (Var emit_generated_quantities__))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Return ())) (meta <opaque>)) ()))
+        (meta <opaque>))))
      (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
 
 let%expect_test "do not inline recursive functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -420,7 +460,7 @@ let%expect_test "do not inline recursive functions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -433,11 +473,15 @@ let%expect_test "do not inline recursive functions" =
           }
         }
       }
+
+
+
       log_prob {
         {
           FnReject__(g(53));
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -447,7 +491,7 @@ let%expect_test "do not inline recursive functions" =
       } |}]
 
 let%expect_test "inline function in for loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -469,7 +513,7 @@ let%expect_test "inline function in for loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -486,32 +530,45 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__("f");
-            sym3__ = 42;
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
             break;
           }
-          for(sym5__ in 1:1) {
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
             FnPrint__("g");
-            sym6__ = (3 + 24);
+            inline_sym5__ = 1;
+            inline_sym4__ = (3 + 24);
             break;
           }
-          for(i in sym3__:sym6__) {
+          for(i in inline_sym1__:inline_sym4__) {
             {
               FnPrint__("body");
             }
-            for(sym5__ in 1:1) {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
               FnPrint__("g");
-              sym6__ = (3 + 24);
+              inline_sym5__ = 1;
+              inline_sym4__ = (3 + 24);
               break;
             }
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -523,7 +580,7 @@ let%expect_test "inline function in for loop" =
 (* TODO: check test results from here *)
 
 let%expect_test "inline function in for loop 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -545,7 +602,7 @@ let%expect_test "inline function in for loop 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -562,44 +619,65 @@ let%expect_test "inline function in for loop 2" =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym9__;
-          int sym12__;
-          for(sym8__ in 1:1) {
+          int inline_sym7__;
+          int inline_sym10__;
+          data int inline_sym8__;
+          inline_sym8__ = 0;
+          for(inline_sym9__ in 1:1) {
             FnPrint__("f");
-            sym9__ = 42;
+            inline_sym8__ = 1;
+            inline_sym7__ = 42;
             break;
           }
-          for(sym11__ in 1:1) {
+          data int inline_sym14__;
+          inline_sym14__ = 0;
+          for(inline_sym15__ in 1:1) {
             FnPrint__("g");
-            int sym13__;
-            for(sym5__ in 1:1) {
+            int inline_sym11__;
+            data int inline_sym12__;
+            inline_sym12__ = 0;
+            for(inline_sym13__ in 1:1) {
               FnPrint__("f");
-              sym13__ = 42;
+              inline_sym12__ = 1;
+              inline_sym11__ = 42;
               break;
             }
-            sym12__ = (sym13__ + 24);
+            if(inline_sym14__) break;
+            inline_sym14__ = 1;
+            inline_sym10__ = (inline_sym11__ + 24);
             break;
           }
-          for(i in sym9__:sym12__) {
+          for(i in inline_sym7__:inline_sym10__) {
             {
               FnPrint__("body");
             }
-            for(sym11__ in 1:1) {
+            data int inline_sym14__;
+            inline_sym14__ = 0;
+            for(inline_sym15__ in 1:1) {
               FnPrint__("g");
-              int sym13__;
-              for(sym5__ in 1:1) {
+              int inline_sym11__;
+              data int inline_sym12__;
+              inline_sym12__ = 0;
+              for(inline_sym13__ in 1:1) {
                 FnPrint__("f");
-                sym13__ = 42;
+                inline_sym12__ = 1;
+                inline_sym11__ = 42;
                 break;
               }
-              sym12__ = (sym13__ + 24);
+              if(inline_sym14__) break;
+              inline_sym14__ = 1;
+              inline_sym10__ = (inline_sym11__ + 24);
               break;
             }
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -609,7 +687,7 @@ let%expect_test "inline function in for loop 2" =
       } |}]
 
 let%expect_test "inline function in while loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -631,7 +709,7 @@ let%expect_test "inline function in while loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -648,24 +726,34 @@ let%expect_test "inline function in while loop" =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__("g");
-            sym3__ = (3 + 24);
+            inline_sym2__ = 1;
+            inline_sym1__ = (3 + 24);
             break;
           }
-          while(sym3__) {
+          while(inline_sym1__) {
             FnPrint__("body");
-            for(sym2__ in 1:1) {
+            data int inline_sym2__;
+            inline_sym2__ = 0;
+            for(inline_sym3__ in 1:1) {
               FnPrint__("g");
-              sym3__ = (3 + 24);
+              inline_sym2__ = 1;
+              inline_sym1__ = (3 + 24);
               break;
             }
           }
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -675,7 +763,7 @@ let%expect_test "inline function in while loop" =
       } |}]
 
 let%expect_test "inline function in if then else" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -697,7 +785,7 @@ let%expect_test "inline function in if then else" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -714,17 +802,24 @@ let%expect_test "inline function in if then else" =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__("g");
-            sym3__ = (3 + 24);
+            inline_sym2__ = 1;
+            inline_sym1__ = (3 + 24);
             break;
           }
-          if(sym3__) FnPrint__("body");
+          if(inline_sym1__) FnPrint__("body");
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -736,7 +831,7 @@ let%expect_test "inline function in if then else" =
     |}]
 
 let%expect_test "inline function in ternary if " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -762,7 +857,7 @@ let%expect_test "inline function in ternary if " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -785,32 +880,45 @@ let%expect_test "inline function in ternary if " =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          int sym9__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          int inline_sym4__;
+          int inline_sym7__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__("f");
-            sym3__ = 42;
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
             break;
           }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
+          if(inline_sym1__) {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
               FnPrint__("g");
-              sym6__ = (3 + 24);
+              inline_sym5__ = 1;
+              inline_sym4__ = (3 + 24);
               break;
             }
           } else {
-            for(sym8__ in 1:1) {
+            data int inline_sym8__;
+            inline_sym8__ = 0;
+            for(inline_sym9__ in 1:1) {
               FnPrint__("h");
-              sym9__ = (4 + 4);
+              inline_sym8__ = 1;
+              inline_sym7__ = (4 + 4);
               break;
             }
           }
-          FnPrint__(sym3__ ?sym6__: sym9__);
+          FnPrint__(inline_sym1__ ?inline_sym4__: inline_sym7__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -820,7 +928,7 @@ let%expect_test "inline function in ternary if " =
       } |}]
 
 let%expect_test "inline function multiple returns " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -841,7 +949,7 @@ let%expect_test "inline function multiple returns " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -855,21 +963,29 @@ let%expect_test "inline function multiple returns " =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
-              sym3__ = 42;
+              inline_sym2__ = 1;
+              inline_sym1__ = 42;
               break;
             }
-            sym3__ = 6;
+            inline_sym2__ = 1;
+            inline_sym1__ = 6;
             break;
           }
-          FnPrint__(sym3__);
+          FnPrint__(inline_sym1__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -879,7 +995,7 @@ let%expect_test "inline function multiple returns " =
       } |}]
 
 let%expect_test "inline function indices " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -898,7 +1014,7 @@ let%expect_test "inline function indices " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -909,24 +1025,34 @@ let%expect_test "inline function indices " =
           }
         }
       }
+
+
+
       log_prob {
         {
           array[array[int, 2], 2] a;
-          int sym6__;
-          int sym3__;
-          for(sym5__ in 1:1) {
+          int inline_sym4__;
+          int inline_sym1__;
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
             FnPrint__(2);
-            sym6__ = 42;
+            inline_sym5__ = 1;
+            inline_sym4__ = 42;
             break;
           }
-          for(sym2__ in 1:1) {
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
             break;
           }
-          FnPrint__(a[sym3__, sym6__]);
+          FnPrint__(a[inline_sym1__, inline_sym4__]);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -936,7 +1062,7 @@ let%expect_test "inline function indices " =
       } |}]
 
 let%expect_test "inline function and " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -955,7 +1081,7 @@ let%expect_test "inline function and " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -966,25 +1092,35 @@ let%expect_test "inline function and " =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
             break;
           }
-          if(sym3__) {
-            for(sym5__ in 1:1) {
+          if(inline_sym1__) {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
               FnPrint__(2);
-              sym6__ = 42;
+              inline_sym5__ = 1;
+              inline_sym4__ = 42;
               break;
             }
           }
-          FnPrint__(sym3__ && sym6__);
+          FnPrint__(inline_sym1__ && inline_sym4__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -994,7 +1130,7 @@ let%expect_test "inline function and " =
       } |}]
 
 let%expect_test "inline function or " =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1012,7 +1148,7 @@ let%expect_test "inline function or " =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -1023,25 +1159,35 @@ let%expect_test "inline function or " =
           }
         }
       }
+
+
+
       log_prob {
         {
-          int sym3__;
-          int sym6__;
-          for(sym2__ in 1:1) {
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
             FnPrint__(1);
-            sym3__ = 42;
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
             break;
           }
-          if(sym3__) ; else {
-            for(sym5__ in 1:1) {
+          if(inline_sym1__) ; else {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
               FnPrint__(2);
-              sym6__ = 42;
+              inline_sym5__ = 1;
+              inline_sym4__ = 42;
               break;
             }
           }
-          FnPrint__(sym3__ || sym6__);
+          FnPrint__(inline_sym1__ || inline_sym4__);
         }
       }
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -1051,7 +1197,7 @@ let%expect_test "inline function or " =
       } |}]
 
 let%expect_test "unroll nested loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1064,7 +1210,7 @@ let%expect_test "unroll nested loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1087,13 +1233,14 @@ let%expect_test "unroll nested loop" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop 2" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1107,7 +1254,7 @@ let%expect_test "unroll nested loop 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1285,13 +1432,14 @@ let%expect_test "unroll nested loop 2" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop 3" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1305,7 +1453,7 @@ let%expect_test "unroll nested loop 3" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1381,13 +1529,14 @@ let%expect_test "unroll nested loop 3" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "unroll nested loop with break" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1402,7 +1551,7 @@ let%expect_test "unroll nested loop with break" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = static_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1421,13 +1570,14 @@ let%expect_test "unroll nested loop with break" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "constant propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1447,7 +1597,7 @@ let%expect_test "constant propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     prepare_data {
@@ -1456,6 +1606,7 @@ let%expect_test "constant propagation" =
       data int j;
       j = (2 + 42);
     }
+
     log_prob {
       {
         for(x in 1:42) {
@@ -1463,13 +1614,14 @@ let%expect_test "constant propagation" =
         }
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "constant propagation, local scope" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1492,7 +1644,7 @@ let%expect_test "constant propagation, local scope" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     prepare_data {
@@ -1503,6 +1655,7 @@ let%expect_test "constant propagation, local scope" =
         j = 2;
       }
     }
+
     log_prob {
       {
         int j;
@@ -1511,13 +1664,14 @@ let%expect_test "constant propagation, local scope" =
         }
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1539,7 +1693,7 @@ let%expect_test "constant propagation, model block local scope" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     log_prob {
@@ -1550,6 +1704,7 @@ let%expect_test "constant propagation, model block local scope" =
         j = 2;
       }
     }
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
@@ -1559,13 +1714,15 @@ let%expect_test "constant propagation, model block local scope" =
         FnPrint__((i + j));
       }
     }
+
+
     output_vars {
       generated_quantities int i; //int
       generated_quantities int j; //int
     } |}]
 
 let%expect_test "expression propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1584,7 +1741,7 @@ let%expect_test "expression propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
@@ -1592,6 +1749,7 @@ let%expect_test "expression propagation" =
         data int j;
         j = (2 + i);
       }
+
       log_prob {
         {
           for(x in 1:i) {
@@ -1599,24 +1757,23 @@ let%expect_test "expression propagation" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "copy propagation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed data {
+      model {
         int i;
         int j;
         j = i;
         int k;
         k = 2 * j;
-      }
-      model {
         for (x in 1:i) {
           print(i + j + k);
         }
@@ -1626,30 +1783,29 @@ let%expect_test "copy propagation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = copy_propagation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      prepare_data {
-        data int i;
-        data int j;
-        j = i;
-        data int k;
-        k = (2 * i);
-      }
       log_prob {
         {
+          int i;
+          int j;
+          j = i;
+          int k;
+          k = (2 * i);
           for(x in 1:i) {
             FnPrint__(((i + i) + k));
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1670,29 +1826,32 @@ let%expect_test "dead code elimination" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
         data array[int, 2] i;
+        i[1] = 2;
         i = FnMakeArray__(3, 2);
         data array[int, 2] j;
         j = FnMakeArray__(3, 2);
         j[1] = 2;
       }
+
       log_prob {
         {
           FnPrint__(i);
           FnPrint__(j);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination decl" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1711,7 +1870,7 @@ let%expect_test "dead code elimination decl" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1719,6 +1878,7 @@ let%expect_test "dead code elimination decl" =
           int i;
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1729,7 +1889,7 @@ let%expect_test "dead code elimination decl" =
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1743,7 +1903,7 @@ let%expect_test "dead code elimination, for loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1752,13 +1912,14 @@ let%expect_test "dead code elimination, for loop" =
           FnPrint__(i);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1776,7 +1937,7 @@ let%expect_test "dead code elimination, while loop" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1786,13 +1947,14 @@ let%expect_test "dead code elimination, while loop" =
           while(1) ;
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, if then" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1820,7 +1982,7 @@ let%expect_test "dead code elimination, if then" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1835,13 +1997,14 @@ let%expect_test "dead code elimination, if then" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "dead code elimination, nested" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1857,7 +2020,7 @@ let%expect_test "dead code elimination, nested" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1866,13 +2029,14 @@ let%expect_test "dead code elimination, nested" =
           FnPrint__(i);
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partial evaluation" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1889,7 +2053,7 @@ let%expect_test "partial evaluation" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1902,13 +2066,14 @@ let%expect_test "partial evaluation" =
           }
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "try partially evaluate" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1925,7 +2090,7 @@ let%expect_test "try partially evaluate" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1938,13 +2103,14 @@ let%expect_test "try partially evaluate" =
           FnPrint__(log((exp(a) - exp(b))));
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1959,7 +2125,7 @@ let%expect_test "partially evaluate with equality check" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -1970,13 +2136,14 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_product(x, y));
         }
       }
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "partially evaluate functions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2005,7 +2172,7 @@ model {
     target += i+j;
     target += i-j;
     target += i*j;
-    target += i/j;
+    target += i%/%j;
     target += i==j;
     target += i!=j;
     target += i<j;
@@ -2115,7 +2282,7 @@ model {
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
   let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -2253,6 +2420,7 @@ model {
           target += x_vector;
         }
       }
+
       generate_quantities {
         data matrix[3, 2] x_matrix;
         data matrix[2, 4] y_matrix;
@@ -2266,6 +2434,7 @@ model {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data matrix[3, 2] x_matrix;
         data matrix[2, 4] y_matrix;
@@ -2273,10 +2442,12 @@ model {
         data vector[2] x_vector;
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
-        x_cov = FnUnconstrain__(x_cov, "cov_matrix");
+        data vector[3] x_cov_free__;
+        x_cov_free__ = FnUnconstrain__(x_cov, "cov_matrix");
         data real theta_u;
         data real phi_u;
       }
+
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
         parameters matrix[2, 4] y_matrix; //matrix[2, 4]
@@ -2289,7 +2460,7 @@ model {
       } |}]
 
 let%expect_test "lazy code motion" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2304,33 +2475,28 @@ let%expect_test "lazy code motion" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
     log_prob {
-      data real[] sym3__;
+      data real[] lcm_sym3__;
       {
-        sym3__ = FnMakeArray__(3.0);
-        FnPrint__(sym3__);
-        FnPrint__(sym3__);
-        FnPrint__(sym3__);
+        lcm_sym3__ = FnMakeArray__(3.0);
+        FnPrint__(lcm_sym3__);
+        FnPrint__(lcm_sym3__);
+        FnPrint__(lcm_sym3__);
       }
     }
+
     generate_quantities {
-      data int sym2__;
-      data int sym1__;
-      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-        return;
-        ;
-      } else ;
-      if(PNot__(emit_generated_quantities__)) {
-        return;
-        ;
-      } else ;
+      data int lcm_sym2__;
+      data int lcm_sym1__;
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "lazy code motion, 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2344,36 +2510,27 @@ let%expect_test "lazy code motion, 2" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           for(i in 1:2) {
-            {
-              FnPrint__((3 + 4));
-            }
-            ;
+            FnPrint__((3 + 4));
           }
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 3" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2388,34 +2545,29 @@ let%expect_test "lazy code motion, 3" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           FnPrint__(3);
-          sym3__ = (3 + 5);
-          FnPrint__(sym3__);
-          FnPrint__((sym3__ + 7));
+          lcm_sym3__ = (3 + 5);
+          FnPrint__(lcm_sym3__);
+          FnPrint__((lcm_sym3__ + 7));
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 4" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2443,11 +2595,11 @@ let%expect_test "lazy code motion, 4" =
   let mir = list_collapsing mir in
   (* TODO: make sure that these
      temporaries do not get assigned level DataOnly unless appropriate *)
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int b;
           int c;
@@ -2460,34 +2612,29 @@ let%expect_test "lazy code motion, 4" =
               ;
               ;
             }
-            sym3__ = (b + c);
+            lcm_sym3__ = (b + c);
             ;
           } else {
             {
-              sym3__ = (b + c);
-              x = sym3__;
+              lcm_sym3__ = (b + c);
+              x = lcm_sym3__;
               ;
             }
             ;
           }
-          y = sym3__;
+          y = lcm_sym3__;
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 5" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2513,11 +2660,11 @@ let%expect_test "lazy code motion, 5" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int b;
           int c;
@@ -2530,38 +2677,33 @@ let%expect_test "lazy code motion, 5" =
               ;
               ;
             }
-            sym3__ = (b + c);
+            lcm_sym3__ = (b + c);
             ;
           } else {
             {
               if(2) {
-                sym3__ = (b + c);
-                x = sym3__;
+                lcm_sym3__ = (b + c);
+                x = lcm_sym3__;
                 ;
-              } else sym3__ = (b + c);
+              } else lcm_sym3__ = (b + c);
                      ;
               ;
             }
             ;
           }
-          y = sym3__;
+          y = lcm_sym3__;
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 6" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2578,37 +2720,29 @@ let%expect_test "lazy code motion, 6" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           int x;
           int y;
-          if(2) {
-            x = (1 + 2);
-            ;
-          } else ;
+          if(2) x = (1 + 2);
           y = (4 + 3);
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 7" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2643,12 +2777,11 @@ let%expect_test "lazy code motion, 7" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int a;
           int b;
@@ -2657,65 +2790,36 @@ let%expect_test "lazy code motion, 7" =
           int y;
           int z;
           if(1) {
-            {
-              a = c;
-              x = (a + b);
-            }
-            ;
-          } else {
-            ;
-            ;
-          }
+            a = c;
+            x = (a + b);
+          } else ;
           if(2) {
-            {
-              if(3) {
-                {
-                  sym4__ = (a + b);
-                  ;
-                  while(4) {
-                    y = sym4__;
-                    ;
-                  }
-                  ;
-                }
-                ;
-              } else {
-                {
-                  ;
-                  while(5) {
-                    ;
-                    ;
-                  }
-                  sym4__ = (a + b);
-                  y = sym4__;
-                }
-                ;
-              }
-              z = sym4__;
+            if(3) {
+              lcm_sym3__ = (a + b);
+              ;
+              while(4) y = lcm_sym3__;
+              ;
+            } else {
+              ;
+              while(5) ;
+              lcm_sym3__ = (a + b);
+              y = lcm_sym3__;
             }
-            ;
-          } else {
-            ;
-            ;
-          }
+            z = lcm_sym3__;
+          } else ;
           ;
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2735,7 +2839,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       functions {
@@ -2751,31 +2855,29 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
           }
         }
       }
+
+
+
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           FnPrint__(foo(foo_lp(1)));
           FnPrint__(foo(foo_lp(1)));
-          sym3__ = foo(foo(1));
-          FnPrint__(sym3__);
-          FnPrint__(sym3__);
+          lcm_sym3__ = foo(foo(1));
+          FnPrint__(lcm_sym3__);
+          FnPrint__(lcm_sym3__);
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 9" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2789,34 +2891,26 @@ let%expect_test "lazy code motion, 9" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
-          while((x * 2)) {
-            FnPrint__("hello");
-            ;
-          }
+          while((x * 2)) FnPrint__("hello");
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 10" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2833,11 +2927,11 @@ let%expect_test "lazy code motion, 10" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
           x = 3;
@@ -2846,21 +2940,16 @@ let%expect_test "lazy code motion, 10" =
           FnPrint__((x * 2));
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 11" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2880,11 +2969,11 @@ let%expect_test "lazy code motion, 11" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           {
             int x;
@@ -2896,21 +2985,16 @@ let%expect_test "lazy code motion, 11" =
           }
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 12" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2927,38 +3011,29 @@ let%expect_test "lazy code motion, 12" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
           for(i in 1:6) {
-            {
-              FnPrint__((x + 42));
-              x = 3;
-            }
-            ;
+            FnPrint__((x + 42));
+            x = 3;
           }
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 13" =
-  let _ = gensym_reset_danger_use_cautiously () in
+  let _ = Gensym.reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2983,70 +3058,53 @@ let%expect_test "lazy code motion, 13" =
   let mir = one_step_loop_unrolling mir in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        data int sym10__;
-        data int sym9__;
-        data int sym8__;
-        data int sym7__;
-        data int sym6__;
-        real sym5__;
-        real sym4__;
-        data int sym3__;
+        data int lcm_sym7__;
+        data int lcm_sym6__;
+        data int lcm_sym5__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           real temp;
           if((2 > 3)) {
-            sym9__ = (2 * 2);
-            temp = sym9__;
+            lcm_sym6__ = (2 * 2);
+            temp = lcm_sym6__;
             ;
           } else {
             FnPrint__("hello");
-            sym9__ = (2 * 2);
+            lcm_sym6__ = (2 * 2);
             ;
           }
-          temp = sym9__;
+          temp = lcm_sym6__;
           real temp2;
-          if((2 <= 3)) {
-            {
-              {
-                sym10__ = (2 * 3);
-                temp2 = sym10__;
-                sym4__ = temp;
-                target += sym4__;
-                sym8__ = (2 + 1);
-                target += temp2;
-              }
-              for(i in sym8__:3) {
-                {
-                  temp2 = sym10__;
-                  target += sym4__;
-                  target += temp2;
-                }
-                ;
-              }
+          if((3 >= 2)) {
+            lcm_sym7__ = (2 * 3);
+            temp2 = lcm_sym7__;
+            target += temp;
+            lcm_sym5__ = (2 + 1);
+            target += temp2;
+            for(i in lcm_sym5__:3) {
+              temp2 = lcm_sym7__;
+              target += temp;
+              target += temp2;
             }
-            ;
-          } else ;
+          }
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3069,48 +3127,38 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
-        real sym7__;
-        real sym6__;
-        data int sym5__;
-        data int sym4__;
-        data int sym3__;
+        real lcm_sym6__;
+        real lcm_sym5__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           real x;
           int y;
           real theta;
-          if((1 <= 100000)) {
-            {
-              {
-                sym5__ = (1 + 1);
-                sym6__ = bernoulli_logit_lpmf(y, x);
-                target += sym6__;
-              }
-              for(i in sym5__:100000) {
-                {
-                  target += sym6__;
-                }
-              }
+          if((100000 >= 1)) {
+            lcm_sym4__ = (1 + 1);
+            lcm_sym5__ = bernoulli_logit_lpmf(y, x);
+            target += lcm_sym5__;
+            for(i in lcm_sym4__:100000) {
+              target += lcm_sym5__;
             }
-          } else ;
+          }
         }
       }
+
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "block fixing" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3122,61 +3170,65 @@ let%expect_test "block fixing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir =
     { mir with
-      Middle.log_prob=
-        [ { stmt=
-              IfElse
-                ( zero
-                , { stmt= While (zero, {stmt= SList []; smeta= no_span})
-                  ; smeta= no_span }
-                , None )
-          ; smeta= no_span } ] }
+      Middle.Program.log_prob=
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.Helpers.zero
+                  , { pattern=
+                        While
+                          ( Expr.Helpers.zero
+                          , {pattern= SList []; meta= Location_span.empty} )
+                    ; meta= Location_span.empty }
+                  , None )
+            ; meta= Location_span.empty } ] }
   in
   let mir = block_fixing mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  print_s [%sexp (mir : Program.Typed.t)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
-        (((stmt
+        (((pattern
            (IfElse
-            ((expr (Lit Int 0))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((stmt
+            ((pattern (Lit Int 0))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern
               (While
-               ((expr (Lit Int 0))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-               ((stmt (Block ())) (smeta <opaque>))))
-             (smeta <opaque>))
+               ((pattern (Lit Int 0))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Block ())) (meta <opaque>))))
+             (meta <opaque>))
             ()))
-          (smeta <opaque>))))
+          (meta <opaque>))))
        (generate_quantities
-        (((stmt
+        (((pattern
            (IfElse
-            ((expr
+            ((pattern
               (FunApp StanLib PNot__
-               (((expr
+               (((pattern
                   (EOr
-                   ((expr (Var emit_transformed_parameters__))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                   ((expr (Var emit_generated_quantities__))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((stmt (Return ())) (smeta <opaque>)) ()))
-          (smeta <opaque>))
-         ((stmt
+                   ((pattern (Var emit_transformed_parameters__))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Var emit_generated_quantities__))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Return ())) (meta <opaque>)) ()))
+          (meta <opaque>))
+         ((pattern
            (IfElse
-            ((expr
+            ((pattern
               (FunApp StanLib PNot__
-               (((expr (Var emit_generated_quantities__))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-            ((stmt (Return ())) (smeta <opaque>)) ()))
-          (smeta <opaque>))))
+               (((pattern (Var emit_generated_quantities__))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Return ())) (meta <opaque>)) ()))
+          (meta <opaque>))))
        (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3191,15 +3243,13 @@ let%expect_test "one-step loop unrolling" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = one_step_loop_unrolling mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       prepare_data {
         data int x;
-        if((x <= 6)) {
-          {
-            FnPrint__("hello");
-          }
+        if((6 >= x)) {
+          FnPrint__("hello");
           for(i in (x + 1):6) {
             FnPrint__("hello");
           }
@@ -3208,22 +3258,16 @@ let%expect_test "one-step loop unrolling" =
           FnPrint__("goodbye");
           while((1 < 2)) FnPrint__("goodbye");
         }
-        if((1 <= 1)) {
-          {
-            if((2 <= 2)) {
-              {
-                FnPrint__("nested");
-              }
-              for(j in (2 + 1):2) {
-                FnPrint__("nested");
-              }
+        if((1 >= 1)) {
+          if((2 >= 2)) {
+            FnPrint__("nested");
+            for(j in (2 + 1):2) {
+              FnPrint__("nested");
             }
           }
           for(i in (1 + 1):1) {
-            if((2 <= 2)) {
-              {
-                FnPrint__("nested");
-              }
+            if((2 >= 2)) {
+              FnPrint__("nested");
               for(j in (2 + 1):2) {
                 FnPrint__("nested");
               }
@@ -3231,13 +3275,15 @@ let%expect_test "one-step loop unrolling" =
           }
         }
       }
+
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "adlevel_optimization" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3267,7 +3313,7 @@ let%expect_test "adlevel_optimization" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -3284,6 +3330,7 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
+
       generate_quantities {
         data real w;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -3300,15 +3347,17 @@ let%expect_test "adlevel_optimization" =
         }
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data real w;
       }
+
       output_vars {
         parameters real w; //real
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3338,114 +3387,105 @@ let%expect_test "adlevel_optimization expressions" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  print_s
-    [%sexp
-      ( mir.log_prob
-        : ( mtype_loc_ad
-          , (location_span sexp_opaque[@compare.ignore]) )
-          stmt_with
-          list )] ;
+  print_s [%sexp (mir.log_prob : Stmt.Located.t list)] ;
   [%expect
     {|
-      (((stmt
+      (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
-        (smeta <opaque>))
-       ((stmt
+        (meta <opaque>))
+       ((pattern
          (Block
-          (((stmt
+          (((pattern
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id y)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id z)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
               (decl_type (Sized SReal))))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                  ((expr (Lit Int 2))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-              ((stmt
+                 (((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 2))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
                 (Assignment (y UReal ())
-                 ((expr
+                 ((pattern
                    (FunApp StanLib Plus__
-                    (((expr (Var y))
-                      (emeta
-                       ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
-                     ((expr (Var x))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-               (smeta <opaque>))
-              (((stmt
+                    (((pattern (Var y))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                     ((pattern (Var x))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+               (meta <opaque>))
+              (((pattern
                  (Assignment (y UReal ())
-                  ((expr
+                  ((pattern
                     (FunApp StanLib Plus__
-                     (((expr (Var y))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
-                      ((expr (Var w))
-                       (emeta
-                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>))
-           ((stmt
+                     (((pattern (Var y))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Var w))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 2))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                  ((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-              ((stmt
+                 (((pattern (Lit Int 2))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
                 (Assignment (z UReal ())
-                 ((expr (Var y))
-                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
-               (smeta <opaque>))
+                 ((pattern (Var y))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+               (meta <opaque>))
               ()))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (IfElse
-              ((expr
+              ((pattern
                 (FunApp StanLib Greater__
-                 (((expr (Lit Int 3))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                  ((expr (Lit Int 1))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-              ((stmt
+                 (((pattern (Lit Int 3))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
                 (Assignment (z_data UReal ())
-                 ((expr (Var x))
-                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-               (smeta <opaque>))
+                 ((pattern (Var x))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta <opaque>))
               ()))
-            (smeta <opaque>))
-           ((stmt
+            (meta <opaque>))
+           ((pattern
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var z))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-            (smeta <opaque>))
-           ((stmt
+              (((pattern (Var z))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+            (meta <opaque>))
+           ((pattern
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var z_data))
-                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))) |}]
+              (((pattern (Var z_data))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta <opaque>)))))
+        (meta <opaque>))) |}]
 
 let%expect_test "adlevel_optimization 2" =
-  gensym_reset_danger_use_cautiously () ;
+  Gensym.reset_danger_use_cautiously () ;
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3476,7 +3516,7 @@ let%expect_test "adlevel_optimization 2" =
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = optimize_ad_levels mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
       log_prob {
@@ -3495,6 +3535,7 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z_data);
         }
       }
+
       generate_quantities {
         data real w;
         data real w_trans;
@@ -3502,8 +3543,8 @@ let%expect_test "adlevel_optimization 2" =
         w_trans = 1;
         {
           data int x;
-          data array[real, 2] y;
-          data real z;
+          array[real, 2] y;
+          real z;
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
@@ -3513,9 +3554,11 @@ let%expect_test "adlevel_optimization 2" =
         }
         if(PNot__(emit_generated_quantities__)) return;
       }
+
       transform_inits {
         data real w;
       }
+
       output_vars {
         parameters real w; //real
         transformed_parameters real w_trans; //real

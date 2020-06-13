@@ -22,10 +22,12 @@ transformed data {
   real td_d2 = 2;
   row_vector[2] td_rv2;
   matrix[3, 2] td_mat32;
+  matrix[2, 0] td_mat20;
   td_rv2 = [10, 100];
   td_mat32 = [[1, 2], [3, 4], [5, 6]];
   td_mat32 = [td_rv2, td_rv2, td_rv2];
   td_mat32 = foo();
+  td_mat20 = [[], []];
 }
 parameters {
   real p_z;
@@ -35,6 +37,7 @@ transformed parameters {
   real tp_y;
   row_vector[2] tp_rv2;
   matrix[3, 2] tp_mat32;
+  matrix[2, 0] tp_mat20;
   tp_mat32 = [td_rv2, td_rv2];
   tp_rv2 = [td_d1, td_d2];
   tp_mat32 = [tp_rv2, tp_rv2];
@@ -42,6 +45,7 @@ transformed parameters {
   tp_mat32 = [tp_rv2, tp_rv2];
   tp_rv2 = [td_d1, tp_y];
   tp_mat32 = [tp_rv2, tp_rv2];
+  tp_mat20 = [[], []];
 }
 model {
   p_z ~ normal(0, 1);
@@ -49,6 +53,7 @@ model {
 generated quantities {
   row_vector[2] gq_rv2;
   matrix[3, 2] gq_mat32;
+  matrix[2, 0] gq_mat20;
   gq_mat32 = [td_rv2, td_rv2];
   gq_rv2 = [td_d1, td_d2];
   gq_mat32 = [gq_rv2, gq_rv2];
@@ -56,6 +61,7 @@ generated quantities {
   gq_mat32 = [gq_rv2, gq_rv2];
   gq_rv2 = [td_d1, tp_y];
   gq_mat32 = [gq_rv2, gq_rv2];
+  gq_mat20 = [[], []];
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format row_vector_expr_terms.stan
@@ -75,6 +81,7 @@ data {
 }
 transformed data {
   vector[3] td_v1 = [21, 22, 23]';
+  row_vector[0] td_v0 = [];
   row_vector[2] td_rv1 = [1, 2];
   td_rv1 = [x, y];
   td_rv1 = [x + y, x - y];
@@ -87,6 +94,7 @@ parameters {
 }
 transformed parameters {
   vector[3] tp_v1 = [41, 42, 43]';
+  row_vector[0] tp_v0 = [];
   row_vector[2] tp_rv1 = [1, x];
   tp_v1 = foo(1);
   tp_v1 = [51, y, z]';
@@ -98,6 +106,7 @@ model {
 }
 generated quantities {
   vector[3] gq_v1 = [1, x, y]';
+  row_vector[0] gq_rv0 = [];
   row_vector[3] gq_rv1 = [1, x, y];
   row_vector[3] gq_rv2 = [1, x, z];
   gq_v1 = foo(1);

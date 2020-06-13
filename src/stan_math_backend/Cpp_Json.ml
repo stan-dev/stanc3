@@ -2,9 +2,11 @@ open Core_kernel
 open Middle
 module Str = Re.Str
 
-let rec sizedtype_to_json (st : mtype_loc_ad with_expr sizedtype) :
-    Yojson.Basic.t =
-  let emit_cpp_expr e = Fmt.strf "<< %a >>" Expression_gen.pp_expr e in
+let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
+  let emit_cpp_expr e =
+    Fmt.strf "<< %a >>" Expression_gen.pp_expr e
+    |> Str.global_replace (Str.regexp "[\n\r\t ]+") " "
+  in
   match st with
   | SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
@@ -25,10 +27,10 @@ let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
     [ ("name", `String name)
     ; ("type", sizedtype_to_json st)
-    ; ("block", `String (Fmt.strf "%a" Pretty.pp_io_block block)) ]
+    ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
 
 let%expect_test "outvar to json pretty" =
-  let var x = {expr= Var x; emeta= internal_meta} in
+  let var x = {Expr.Fixed.pattern= Var x; meta= Expr.Typed.Meta.empty} in
   (* the following is equivalent to:
      parameters {
        vector[N] var_one[K];
@@ -50,9 +52,9 @@ let%expect_test "outvar to json pretty" =
 
 let replace_cpp_expr s =
   s
-  |> Str.global_replace (Str.regexp "\"") "\\\""
-  |> Str.global_replace (Str.regexp "\\\\\"<<") "\" <<"
-  |> Str.global_replace (Str.regexp ">>\\\\\"") "<< \""
+  |> Str.global_replace (Str.regexp {|"|}) {|\"|}
+  |> Str.global_replace (Str.regexp {|\\"<<|}) {|" <<|}
+  |> Str.global_replace (Str.regexp {|>>\\"|}) {|<< "|}
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
@@ -61,8 +63,10 @@ let out_var_interpolated_json_str vars =
   |> Yojson.Basic.to_string |> replace_cpp_expr |> wrap_in_quotes
 
 let%expect_test "outvar to json" =
-  let var x = {expr= Var x; emeta= internal_meta} in
-  [("var_one", SArray (SVector (var "N"), var "K"), Parameters)]
+  let var x = {Expr.Fixed.pattern= Var x; meta= Expr.Typed.Meta.empty} in
+  [ ( "var_one"
+    , SizedType.SArray (SVector (var "N"), var "K")
+    , Program.Parameters ) ]
   |> out_var_interpolated_json_str |> print_endline ;
   [%expect
     {|

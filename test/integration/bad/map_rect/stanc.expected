@@ -2,7 +2,7 @@
 
 Semantic error in 'bad_data_i_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
-    17:  generated quantities {
+    17:  transformed parameters {
     18:    vector[3] y_hat_gq
     19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^
@@ -17,7 +17,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
 Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, column 43:
    -------------------------------------------------
-    19:  generated quantities {
+    19:  transformed parameters {
     20:    vector[3] y_hat_gq
     21:        = map_rect(foo, shared_params_d, job_params_d, data_r,
                  ^
@@ -33,7 +33,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
 Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
-    17:  generated quantities {
+    17:  transformed parameters {
     18:    vector[3] y_hat_gq
     19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^
@@ -48,7 +48,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
 Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
    -------------------------------------------------
-    18:  generated quantities {
+    18:  transformed parameters {
     19:    vector[3] y_hat_gq
     20:        = map_rect(foo, shared_params_d, job_params_d, data_r_p, data_i);
                  ^
@@ -63,7 +63,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
 Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
-    17:  generated quantities {
+    17:  transformed parameters {
     18:    vector[3] y_hat_gq
     19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^
@@ -78,7 +78,7 @@ Instead supplied arguments of incompatible type: (vector, vector[], real[], int[
 
 Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
-    17:  generated quantities {
+    17:  transformed parameters {
     18:    vector[3] y_hat_gq
     19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^
@@ -119,7 +119,7 @@ Mapped function cannot be an _rng or _lp function, found function name: lr_rng
 
 Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
-    17:  generated quantities {
+    17:  transformed parameters {
     18:    vector[3] y_hat_gq
     19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
                  ^

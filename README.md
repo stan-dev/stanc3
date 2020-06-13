@@ -1,6 +1,6 @@
-# A New Stan-to-C++ Compiler
-This repo contains work in progress on a new compiler for Stan, written in OCaml. To read more about why we're building this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
-We're currently able to successfully compile, link, and run [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results), but not much else.
+# A New Stan-to-C++ Compiler, stanc3
+This repo contains a new compiler for Stan, stanc3, written in OCaml. To read more about why we built this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
+We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results) on every pull request and think we are currently up to par and mostly backwards compatible with the previous Stan compiler (see [this wiki](https://github.com/stan-dev/stanc3/wiki/changes-from-stanc2) for a list of minor differences).
 
 [![Build Status](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/badge/icon)](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/)
 
@@ -27,7 +27,7 @@ The AST intends to keep very close to Stan-level semantics and syntax in every w
 
 ## Getting development on stanc3 up and running locally
 
-### To build, test, and run
+### Using Opam+Make+Dune to build, test, and run
 To be able to build the project, make sure you have GNU make installed.
 
 To install OCaml and the dependencies we need to build and do development, run `scripts/setup_dev_env.sh`.
@@ -46,6 +46,31 @@ To accept the changes proposed by ocamlformat, run `dune promote`.
 Run `./_build/default/src/stanc/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options.
 
 Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
+
+### Using Nix to build, test and run
+[Nix](https://nixos.org/nix/) is a declarative package manager with a focus on reproducible builds.
+You can use Nix to build, test and run Stanc3 without relying on Opam to manage the dependencies.
+
+After you install nix, you can build Stanc3 by running the following command in the `stanc3` directory:
+
+    nix-build
+
+The binary will be in `result/bin/stanc`. It may take a minute the first time you run it.
+Alternatively, the following is sometimes a faster way to build:
+
+    nix-shell --command "dune build"
+
+To drop into a sandboxed development shell with all of the dependencies of Stanc3 plus `dune`, run:
+
+    nix-shell
+
+To run the test suite, run:
+
+    nix-shell --command "dune build --profile release @runtest"
+
+To install Stanc3 to your system, run:
+
+    nix-env -i -f default.nix
 
 ### Development on Windows
 Having tried both native Windows development and development through [Ubuntu on WSL](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?activetab=pivot:overviewtab), the Ubuntu on WSL route seems vastly smoother and it is what we recommend as a default.

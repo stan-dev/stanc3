@@ -25,19 +25,20 @@ let%expect_test "Loop test" =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
-    build_statement_map
-      (fun s -> s.stmt)
-      (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span}
+    Stmt.Fixed.(
+      build_statement_map
+        (fun {pattern; _} -> pattern)
+        (fun {meta; _} -> meta)
+        {meta= Location_span.empty; pattern= block})
   in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
       ( statement_map
         : ( label
-          , (mtype_loc_ad with_expr, label) statement * location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   print_s [%sexp (exits : label Set.Poly.t)] ;
   print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)] ;
@@ -56,11 +57,11 @@ let%expect_test "Loop test" =
        (3
         ((For (loopvar i)
           (lower
-           ((expr (Lit Int 1))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (upper
-           ((expr (Lit Int 2))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 4))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -74,19 +75,19 @@ let%expect_test "Loop test" =
            ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (5
         ((NRFunApp CompilerInternal FnPrint__
-          (((expr
+          (((pattern
              (FunApp StanLib Plus__
-              (((expr (Lit Int 3))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-               ((expr (Lit Int 4))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+              (((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 4))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 10) (included_from ())))
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ())))))))
-      (3)
-      ((1 ()) (2 (1)) (3 (2 5)) (4 (3)) (5 (4)))
+      (1)
+      ((1 (2)) (2 (3)) (3 (4)) (4 (5)) (5 (3)))
     |}]
 
 let%expect_test "Loop passthrough" =
@@ -119,17 +120,18 @@ let%expect_test "Loop passthrough" =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
-    build_statement_map
-      (fun s -> s.stmt)
-      (fun s -> s.smeta)
-      {stmt= block; smeta= Middle.no_span}
+    Stmt.Fixed.(
+      build_statement_map
+        (fun {pattern; _} -> pattern)
+        (fun {meta; _} -> meta)
+        {meta= Location_span.empty; pattern= block})
   in
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
-      (7 11 17 21)
+      (1)
     |}]
 
 let example1_program =
@@ -169,41 +171,116 @@ let example1_program =
       |}
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
-  let block = Middle.Block mir.log_prob in
-  {stmt= block; smeta= Middle.no_span}
+  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
 
 let example1_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example1_program
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example1_program)
 
 let%expect_test "Statement label map example" =
   print_s
     [%sexp
       ( Map.Poly.map example1_statement_map ~f:fst
-        : (label, (expr_typed_located, label) statement) Map.Poly.t )] ;
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t )] ;
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
        (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
-       (4 (Assignment (i UInt ()) (Lit Int 0)))
-       (5 (IfElse (FunApp StanLib Less__ ((Var i) (Lit Int 0))) 6 (8)))
-       (6 (Block (7))) (7 (NRFunApp CompilerInternal FnPrint__ ((Var i))))
+       (4
+        (Assignment (i UInt ())
+         ((pattern (Lit Int 0))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+       (5
+        (IfElse
+         ((pattern
+           (FunApp StanLib Less__
+            (((pattern (Var i))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         6 (8)))
+       (6 (Block (7)))
+       (7
+        (NRFunApp CompilerInternal FnPrint__
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (8 (Block (9)))
-       (9 (For (loopvar j) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 10)))
+       (9
+        (For (loopvar j)
+         (lower
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         (upper
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         (body 10)))
        (10 (Block (11 14 17 22)))
-       (11 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 9))) 12 ()))
+       (11
+        (IfElse
+         ((pattern
+           (FunApp StanLib Greater__
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 9))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         12 ()))
        (12 (Block (13))) (13 Break)
        (14
         (IfElse
-         (EAnd (FunApp StanLib Greater__ ((Var j) (Lit Int 8)))
-          (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1))))))
+         ((pattern
+           (EAnd
+            ((pattern
+              (FunApp StanLib Greater__
+               (((pattern (Var j))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 8))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern
+              (FunApp StanLib Less__
+               (((pattern (Var i))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
+                  (FunApp StanLib PMinus__
+                   (((pattern (Lit Int 1))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          15 ()))
        (15 (Block (16))) (16 Continue)
-       (17 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 5))) 18 (20)))
+       (17
+        (IfElse
+         ((pattern
+           (FunApp StanLib Greater__
+            (((pattern (Var j))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 5))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
         (NRFunApp CompilerInternal FnPrint__
-         ((Lit Str Badger) (FunApp StanLib Plus__ ((Var i) (Var j))))))
-       (22 (NRFunApp CompilerInternal FnPrint__ ((Lit Str Fin)))))
+         (((pattern (Lit Str Badger))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (FunApp StanLib Plus__
+             (((pattern (Var i))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var j))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (22
+        (NRFunApp CompilerInternal FnPrint__
+         (((pattern (Lit Str Fin))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
 
 let%expect_test "Predecessor graph example" =
@@ -213,10 +290,11 @@ let%expect_test "Predecessor graph example" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((7 9 13)
-       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5))
-        (9 (8 16 19 22)) (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))
-        (16 (15)) (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
+      ((1)
+       ((1 (2)) (2 (6 8)) (3 ()) (4 (3)) (5 (4)) (6 (7)) (7 (5)) (8 (9 13))
+        (9 (5 10 16 19)) (10 (22)) (11 (9)) (12 (13)) (13 (11)) (14 (11 12))
+        (15 (16)) (16 (14)) (17 (14 15)) (18 (19)) (19 (17)) (20 (21)) (21 (17))
+        (22 (18 20))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -233,7 +311,7 @@ let%expect_test "Controlflow graph example" =
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun stmt meta -> {stmt; smeta= meta})
+      (fun pattern meta -> Stmt.Fixed.{pattern; meta})
       example1_statement_map 1
   in
   stmt = example1_program
@@ -250,19 +328,24 @@ let example3_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example3_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example3_program
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example3_program)
 
 let%expect_test "Statement label map example 3" =
   print_s
     [%sexp
       ( example3_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|
@@ -281,7 +364,10 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (4
-        ((While (Lit Int 42) 5)
+        ((While
+          ((pattern (Lit Int 42))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          5)
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc
@@ -293,7 +379,9 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (6
-        ((NRFunApp CompilerInternal FnPrint__ ((Lit Str exit)))
+        ((NRFunApp CompilerInternal FnPrint__
+          (((pattern (Lit Str exit))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 8) (included_from ())))
           (end_loc
@@ -318,7 +406,7 @@ let%expect_test "Predecessor graph example 3" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
+      ((2) ((1 ()) (2 (3)) (3 (6)) (4 (1 5)) (5 (4)) (6 (4))))
     |}]
 
 let example4_program =
@@ -335,19 +423,24 @@ let example4_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example4_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example4_program
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example4_program)
 
 let%expect_test "Statement label map example 4" =
   print_s
     [%sexp
       ( example4_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|
@@ -365,7 +458,14 @@ let%expect_test "Statement label map example 4" =
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
        (4
-        ((For (loopvar i) (lower (Lit Int 1)) (upper (Lit Int 6)) (body 5))
+        ((For (loopvar i)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 6))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
@@ -408,7 +508,7 @@ let%expect_test "Predecessor graph example 4" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((4) ((1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6))))
+      ((2) ((1 ()) (2 (3)) (3 (4)) (4 (1 5 6)) (5 (7)) (6 (4)) (7 (6))))
     |}]
 
 let example5_program =
@@ -426,19 +526,24 @@ let example5_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
-    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+    Stmt.Fixed.(
+      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  {stmt= blocks; smeta= Middle.no_span}
+  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
 
 let example5_statement_map =
-  build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) example5_program
+  Stmt.Fixed.(
+    build_statement_map
+      (fun {pattern; _} -> pattern)
+      (fun {meta; _} -> meta)
+      example5_program)
 
 let%expect_test "Statement label map example 5" =
   print_s
     [%sexp
       ( example5_statement_map
         : ( label
-          , (expr_typed_located, label) statement * Middle.location_span )
+          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
           Map.Poly.t )] ;
   [%expect
     {|
@@ -456,7 +561,14 @@ let%expect_test "Statement label map example 5" =
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
        (4
-        ((For (loopvar i) (lower (Lit Int 1)) (upper (Lit Int 6)) (body 5))
+        ((For (loopvar i)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 6))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
@@ -503,5 +615,5 @@ let%expect_test "Predecessor graph example 5" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((8) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6)) (8 (4 6))))
+      ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]

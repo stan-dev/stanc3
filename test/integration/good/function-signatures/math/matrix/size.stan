@@ -26,6 +26,12 @@ data {
 transformed data {
   int val;
 
+  val = size(x1x);
+  val = size(x2x);
+  val = size(x3x);
+  val = size(x4x);
+  val = size(x5x);
+
   val = size(x1y);
   val = size(x2y);
   val = size(x3y);
@@ -74,6 +80,12 @@ parameters {
 transformed parameters {
   real p_val;
 
+  p_val = size(x1x);
+  p_val = size(x2x);
+  p_val = size(x3x);
+  p_val = size(x4x);
+  p_val = size(x5x);
+
   p_val = size(x1y);
   p_val = size(x2y);
   p_val = size(x3y);
@@ -91,6 +103,12 @@ transformed parameters {
   p_val = size(x3w);
   p_val = size(x4w);
   p_val = size(x5w);
+
+  p_val = size(p_x1x);
+  p_val = size(p_x2x);
+  p_val = size(p_x3x);
+  p_val = size(p_x4x);
+  p_val = size(p_x5x);
 
   p_val = size(p_x1y);
   p_val = size(p_x2y);

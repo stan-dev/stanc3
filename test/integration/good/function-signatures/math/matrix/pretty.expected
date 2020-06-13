@@ -438,6 +438,46 @@ model {
   y_p ~ normal(0, 1);
 }
 
+  $ ../../../../../../../install/default/bin/stanc --auto-format add_diag.stan
+functions {
+
+}
+data {
+  int<lower=1> N;
+  matrix[N, N] K;
+  row_vector[N] row_vec;
+  vector[N] vec;
+  int scalar;
+}
+transformed data {
+  matrix[N, N] K1;
+  matrix[N, N] K2;
+  matrix[N, N] K3;
+  K1 = add_diag(K, row_vec);
+  K2 = add_diag(K, vec);
+  K3 = add_diag(K, scalar);
+}
+parameters {
+  matrix[N, N] Kp;
+  row_vector[N] row_vec_p;
+  vector[N] vec_p;
+  real scalar_p;
+}
+model {
+  matrix[N, N] K4 = add_diag(Kp, row_vec_p);
+  matrix[N, N] K5 = add_diag(Kp, vec_p);
+  matrix[N, N] K6 = add_diag(Kp, scalar_p);
+  matrix[N, N] K7 = add_diag(K, row_vec_p);
+  matrix[N, N] K8 = add_diag(K, vec_p);
+  matrix[N, N] K9 = add_diag(K, scalar_p);
+  matrix[N, N] K10 = add_diag(Kp, row_vec);
+  matrix[N, N] K11 = add_diag(Kp, vec);
+  matrix[N, N] K12 = add_diag(Kp, scalar);
+}
+generated quantities {
+
+}
+
   $ ../../../../../../../install/default/bin/stanc --auto-format append_array.stan
 data {
   int d_int;
@@ -1840,6 +1880,81 @@ transformed parameters {
   transformed_param_row_vector = columns_dot_self(p_vector);
   transformed_param_row_vector = columns_dot_self(p_row_vector);
   transformed_param_row_vector = columns_dot_self(p_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format container_construction_utilities.stan
+data {
+  int d_int;
+  real d_real;
+  int d_int_array[d_int];
+  real d_real_array[d_int];
+  matrix[d_int, d_int] d_matrix;
+  vector[d_int] d_vector;
+  row_vector[d_int] d_row_vector;
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  int transformed_int_array[d_int];
+  real transformed_data_real_array[d_int];
+  row_vector[d_int] transformed_data_row_vector;
+  vector[d_int] transformed_data_vector;
+  transformed_data_matrix = identity_matrix(d_int);
+  transformed_data_real_array = linspaced_array(d_int, d_real, d_real);
+  transformed_data_row_vector = linspaced_row_vector(d_int, d_real, d_real);
+  transformed_data_vector = linspaced_vector(d_int, d_real, d_real);
+  transformed_int_array = one_hot_int_array(d_int, d_int);
+  transformed_data_real_array = one_hot_array(d_int, d_int);
+  transformed_data_row_vector = one_hot_row_vector(d_int, d_int);
+  transformed_data_vector = one_hot_vector(d_int, d_int);
+  transformed_int_array = ones_int_array(d_int);
+  transformed_data_real_array = ones_array(d_int);
+  transformed_data_row_vector = ones_row_vector(d_int);
+  transformed_data_vector = ones_vector(d_int);
+  transformed_data_vector = uniform_simplex(d_int);
+  transformed_int_array = zeros_int_array(d_int);
+  transformed_data_real_array = zeros_array(d_int);
+  transformed_data_row_vector = zeros_row_vector(d_int);
+  transformed_data_vector = zeros_vector(d_int);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_parameters_matrix;
+  real transformed_parameters_real_array[d_int];
+  row_vector[d_int] transformed_parameters_row_vector;
+  vector[d_int] transformed_parameters_vector;
+  transformed_parameters_matrix = identity_matrix(d_int);
+  transformed_parameters_real_array = linspaced_array(d_int, d_real, d_real);
+  transformed_parameters_real_array = linspaced_array(d_int, p_real, d_real);
+  transformed_parameters_real_array = linspaced_array(d_int, d_real, p_real);
+  transformed_parameters_real_array = linspaced_array(d_int, p_real, p_real);
+  transformed_parameters_row_vector = linspaced_row_vector(d_int, d_real,
+                                                           d_real);
+  transformed_parameters_row_vector = linspaced_row_vector(d_int, p_real,
+                                                           d_real);
+  transformed_parameters_row_vector = linspaced_row_vector(d_int, d_real,
+                                                           p_real);
+  transformed_parameters_row_vector = linspaced_row_vector(d_int, p_real,
+                                                           p_real);
+  transformed_parameters_vector = linspaced_vector(d_int, d_real, d_real);
+  transformed_parameters_vector = linspaced_vector(d_int, p_real, d_real);
+  transformed_parameters_vector = linspaced_vector(d_int, d_real, p_real);
+  transformed_parameters_vector = linspaced_vector(d_int, p_real, p_real);
+  transformed_parameters_real_array = one_hot_array(d_int, d_int);
+  transformed_parameters_row_vector = one_hot_row_vector(d_int, d_int);
+  transformed_parameters_vector = one_hot_vector(d_int, d_int);
+  transformed_parameters_real_array = ones_array(d_int);
+  transformed_parameters_row_vector = ones_row_vector(d_int);
+  transformed_parameters_vector = ones_vector(d_int);
+  transformed_parameters_vector = uniform_simplex(d_int);
+  transformed_parameters_real_array = zeros_array(d_int);
+  transformed_parameters_row_vector = zeros_row_vector(d_int);
+  transformed_parameters_vector = zeros_vector(d_int);
 }
 model {
   y_p ~ normal(0, 1);
@@ -3742,6 +3857,75 @@ model {
   y_p ~ normal(0, 1);
 }
 
+  $ ../../../../../../../install/default/bin/stanc --auto-format gp_regression.stan
+functions {
+
+}
+data {
+  int<lower=1> D;
+  int<lower=1> N;
+  vector[D] x1[N];
+  vector[N] y;
+  real x[N];
+  int<lower=1> N_pred;
+  vector[D] x1_pred[N_pred];
+}
+transformed data {
+  vector[N] mu;
+  mu = rep_vector(0, N);
+}
+parameters {
+  real<lower=0> magnitude;
+  real<lower=0> length_scale;
+  real<lower=0> length_scale_ard[D];
+  real<lower=0> sig;
+  real<lower=0> sigma;
+}
+transformed parameters {
+  matrix[N, N] L_K;
+  {
+    matrix[N, N] K = gp_dot_prod_cov(x, sig);
+    matrix[N, N] K2 = gp_dot_prod_cov(x1, sig);
+    matrix[N, N] K3 = gp_dot_prod_cov(x, x, sig);
+    matrix[N, N] K4 = gp_dot_prod_cov(x1, x1, sig);
+    matrix[N, N] K5 = gp_exp_quad_cov(x, magnitude, length_scale);
+    matrix[N, N] K6 = gp_exp_quad_cov(x1, magnitude, length_scale);
+    matrix[N, N] K7 = gp_exp_quad_cov(x, x, magnitude, length_scale);
+    matrix[N, N] K8 = gp_exp_quad_cov(x1, x1, magnitude, length_scale);
+    matrix[N, N] K17 = gp_exp_quad_cov(x1, magnitude, length_scale_ard);
+    matrix[N, N] K18 = gp_exp_quad_cov(x1, x1, magnitude, length_scale_ard);
+    matrix[N, N] K9 = gp_matern32_cov(x, magnitude, length_scale);
+    matrix[N, N] K10 = gp_matern32_cov(x1, magnitude, length_scale);
+    matrix[N, N] K11 = gp_matern32_cov(x, x, magnitude, length_scale);
+    matrix[N, N] K12 = gp_matern32_cov(x1, x1, magnitude, length_scale);
+    matrix[N, N] K19 = gp_matern32_cov(x1, magnitude, length_scale_ard);
+    matrix[N, N] K20 = gp_matern32_cov(x1, x1, magnitude, length_scale_ard);
+    matrix[N, N] K13 = gp_matern52_cov(x, magnitude, length_scale);
+    matrix[N, N] K14 = gp_matern52_cov(x1, magnitude, length_scale);
+    matrix[N, N] K15 = gp_matern52_cov(x, x, magnitude, length_scale);
+    matrix[N, N] K16 = gp_matern52_cov(x1, x1, magnitude, length_scale);
+    matrix[N, N] K21 = gp_matern52_cov(x1, magnitude, length_scale_ard);
+    matrix[N, N] K22 = gp_matern52_cov(x1, x1, magnitude, length_scale_ard);
+    matrix[N, N] K23 = gp_exponential_cov(x, magnitude, length_scale);
+    matrix[N, N] K24 = gp_exponential_cov(x1, magnitude, length_scale);
+    matrix[N, N] K55 = gp_exponential_cov(x, x, magnitude, length_scale);
+    matrix[N, N] K26 = gp_exponential_cov(x1, x1, magnitude, length_scale);
+    matrix[N, N] K27 = gp_exponential_cov(x1, magnitude, length_scale_ard);
+    matrix[N, N] K28 = gp_exponential_cov(x1, x1, magnitude,
+                                          length_scale_ard);
+    matrix[N, N] K29 = gp_periodic_cov(x, magnitude, length_scale, 1234);
+    matrix[N, N] K30 = gp_periodic_cov(x, x, magnitude, length_scale, 1234);
+    matrix[N, N] K31 = gp_periodic_cov(x1, magnitude, length_scale, 121);
+    matrix[N, N] K32 = gp_periodic_cov(x1, x1, magnitude, length_scale, 121);
+  }
+}
+model {
+
+}
+generated quantities {
+
+}
+
   $ ../../../../../../../install/default/bin/stanc --auto-format head.stan
 data {
   int d_int;
@@ -4682,6 +4866,149 @@ transformed parameters {
   matrix[d_int, d_int] transformed_param_matrix;
   transformed_param_matrix = inverse_spd(d_matrix);
   transformed_param_matrix = inverse_spd(p_matrix);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
+data {
+  int d_int;
+  int d_int_array[d_int];
+  real d_real_array[d_int];
+  matrix[d_int, d_int] d_matrix;
+  vector[d_int] d_vector;
+  row_vector[d_int] d_row_vector;
+  vector[2] x3y[3];
+  row_vector[2] x4y[3];
+  matrix[2, 3] x5y[3];
+  int x1z[3, 4];
+  real x2z[3, 4];
+  vector[2] x3z[3, 4];
+  row_vector[2] x4z[3, 4];
+  matrix[2, 3] x5z[3, 4];
+  int x1w[3, 4, 5];
+  real x2w[3, 4, 5];
+  vector[2] x3w[3, 4, 5];
+  row_vector[2] x4w[3, 4, 5];
+  matrix[2, 3] x5w[3, 4, 5];
+}
+transformed data {
+  matrix[d_int, d_int] transformed_data_matrix;
+  vector[d_int] transformed_data_vector;
+  row_vector[d_int] transformed_data_row_vector;
+  vector[2] trans_x3y[3];
+  row_vector[2] trans_x4y[3];
+  matrix[2, 3] trans_x5y[3];
+  real trans_x2z[3, 4];
+  vector[2] trans_x3z[3, 4];
+  row_vector[2] trans_x4z[3, 4];
+  matrix[2, 3] trans_x5z[3, 4];
+  real trans_x2w[3, 4, 5];
+  vector[2] trans_x3w[3, 4, 5];
+  row_vector[2] trans_x4w[3, 4, 5];
+  matrix[2, 3] trans_x5w[3, 4, 5];
+  transformed_data_matrix = lambert_w0(d_matrix);
+  transformed_data_vector = lambert_w0(d_vector);
+  transformed_data_row_vector = lambert_w0(d_row_vector);
+  trans_x3y = lambert_w0(x3y);
+  trans_x4y = lambert_w0(x4y);
+  trans_x5y = lambert_w0(x5y);
+  trans_x2z = lambert_w0(x1z);
+  trans_x2z = lambert_w0(x2z);
+  trans_x3z = lambert_w0(x3z);
+  trans_x4z = lambert_w0(x4z);
+  trans_x5z = lambert_w0(x5z);
+  trans_x2w = lambert_w0(x1w);
+  trans_x2w = lambert_w0(x2w);
+  trans_x3w = lambert_w0(x3w);
+  trans_x4w = lambert_w0(x4w);
+  trans_x5w = lambert_w0(x5w);
+  transformed_data_matrix = lambert_wm1(d_matrix);
+  transformed_data_vector = lambert_wm1(d_vector);
+  transformed_data_row_vector = lambert_wm1(d_row_vector);
+  trans_x3y = lambert_wm1(x3y);
+  trans_x4y = lambert_wm1(x4y);
+  trans_x5y = lambert_wm1(x5y);
+  trans_x2z = lambert_wm1(x1z);
+  trans_x2z = lambert_wm1(x2z);
+  trans_x3z = lambert_wm1(x3z);
+  trans_x4z = lambert_wm1(x4z);
+  trans_x5z = lambert_wm1(x5z);
+  trans_x2w = lambert_wm1(x1w);
+  trans_x2w = lambert_wm1(x2w);
+  trans_x3w = lambert_wm1(x3w);
+  trans_x4w = lambert_wm1(x4w);
+  trans_x5w = lambert_wm1(x5w);
+}
+parameters {
+  real p_real;
+  real y_p;
+  real p_real_array[d_int];
+  matrix[d_int, d_int] p_matrix;
+  vector[d_int] p_vector;
+  row_vector[d_int] p_row_vector;
+  vector[2] p_x3y[3];
+  row_vector[2] p_x4y[3];
+  matrix[2, 3] p_x5y[3];
+  real p_x2z[3, 4];
+  vector[2] p_x3z[3, 4];
+  row_vector[2] p_x4z[3, 4];
+  matrix[2, 3] p_x5z[3, 4];
+  real p_x2w[3, 4, 5];
+  vector[2] p_x3w[3, 4, 5];
+  row_vector[2] p_x4w[3, 4, 5];
+  matrix[2, 3] p_x5w[3, 4, 5];
+}
+transformed parameters {
+  matrix[d_int, d_int] transformed_param_matrix;
+  vector[d_int] transformed_param_vector;
+  row_vector[d_int] transformed_param_row_vector;
+  vector[2] trans_p_x3y[3];
+  row_vector[2] trans_p_x4y[3];
+  matrix[2, 3] trans_p_x5y[3];
+  real trans_p_x2z[3, 4];
+  vector[2] trans_p_x3z[3, 4];
+  row_vector[2] trans_p_x4z[3, 4];
+  matrix[2, 3] trans_p_x5z[3, 4];
+  real trans_p_x2w[3, 4, 5];
+  vector[2] trans_p_x3w[3, 4, 5];
+  row_vector[2] trans_p_x4w[3, 4, 5];
+  matrix[2, 3] trans_p_x5w[3, 4, 5];
+  transformed_param_matrix = lambert_w0(d_matrix);
+  transformed_param_vector = lambert_w0(d_vector);
+  transformed_param_row_vector = lambert_w0(d_row_vector);
+  transformed_param_matrix = lambert_w0(p_matrix);
+  transformed_param_vector = lambert_w0(p_vector);
+  transformed_param_row_vector = lambert_w0(p_row_vector);
+  trans_p_x3y = lambert_w0(p_x3y);
+  trans_p_x4y = lambert_w0(p_x4y);
+  trans_p_x5y = lambert_w0(p_x5y);
+  trans_p_x2z = lambert_w0(p_x2z);
+  trans_p_x3z = lambert_w0(p_x3z);
+  trans_p_x4z = lambert_w0(p_x4z);
+  trans_p_x5z = lambert_w0(p_x5z);
+  trans_p_x2w = lambert_w0(p_x2w);
+  trans_p_x3w = lambert_w0(p_x3w);
+  trans_p_x4w = lambert_w0(p_x4w);
+  trans_p_x5w = lambert_w0(p_x5w);
+  transformed_param_matrix = lambert_wm1(d_matrix);
+  transformed_param_vector = lambert_wm1(d_vector);
+  transformed_param_row_vector = lambert_wm1(d_row_vector);
+  transformed_param_matrix = lambert_wm1(p_matrix);
+  transformed_param_vector = lambert_wm1(p_vector);
+  transformed_param_row_vector = lambert_wm1(p_row_vector);
+  trans_p_x3y = lambert_wm1(p_x3y);
+  trans_p_x4y = lambert_wm1(p_x4y);
+  trans_p_x5y = lambert_wm1(p_x5y);
+  trans_p_x2z = lambert_wm1(p_x2z);
+  trans_p_x3z = lambert_wm1(p_x3z);
+  trans_p_x4z = lambert_wm1(p_x4z);
+  trans_p_x5z = lambert_wm1(p_x5z);
+  trans_p_x2w = lambert_wm1(p_x2w);
+  trans_p_x3w = lambert_wm1(p_x3w);
+  trans_p_x4w = lambert_wm1(p_x4w);
+  trans_p_x5w = lambert_wm1(p_x5w);
 }
 model {
   y_p ~ normal(0, 1);
@@ -6957,6 +7284,109 @@ model {
   y_p ~ normal(0, 1);
 }
 
+  $ ../../../../../../../install/default/bin/stanc --auto-format reverse.stan
+data {
+  int d_int;
+  int d_int_array[d_int];
+  real d_real_array[d_int];
+  vector[d_int] d_vector;
+  row_vector[d_int] d_row_vector;
+  vector[2] x3y[3];
+  row_vector[2] x4y[3];
+  matrix[2, 3] x5y[3];
+  int x1z[3, 4];
+  real x2z[3, 4];
+  vector[2] x3z[3, 4];
+  row_vector[2] x4z[3, 4];
+  matrix[2, 3] x5z[3, 4];
+  int x1w[3, 4, 5];
+  real x2w[3, 4, 5];
+  vector[2] x3w[3, 4, 5];
+  row_vector[2] x4w[3, 4, 5];
+  matrix[2, 3] x5w[3, 4, 5];
+}
+transformed data {
+  vector[d_int] transformed_data_vector;
+  row_vector[d_int] transformed_data_row_vector;
+  vector[2] trans_x3y[3];
+  row_vector[2] trans_x4y[3];
+  matrix[2, 3] trans_x5y[3];
+  real trans_x2z[3, 4];
+  vector[2] trans_x3z[3, 4];
+  row_vector[2] trans_x4z[3, 4];
+  matrix[2, 3] trans_x5z[3, 4];
+  real trans_x2w[3, 4, 5];
+  vector[2] trans_x3w[3, 4, 5];
+  row_vector[2] trans_x4w[3, 4, 5];
+  matrix[2, 3] trans_x5w[3, 4, 5];
+  transformed_data_vector = reverse(d_vector);
+  transformed_data_row_vector = reverse(d_row_vector);
+  trans_x3y = reverse(x3y);
+  trans_x4y = reverse(x4y);
+  trans_x5y = reverse(x5y);
+  trans_x2z = reverse(x1z);
+  trans_x2z = reverse(x2z);
+  trans_x3z = reverse(x3z);
+  trans_x4z = reverse(x4z);
+  trans_x5z = reverse(x5z);
+  trans_x2w = reverse(x1w);
+  trans_x2w = reverse(x2w);
+  trans_x3w = reverse(x3w);
+  trans_x4w = reverse(x4w);
+  trans_x5w = reverse(x5w);
+}
+parameters {
+  real p_real;
+  real y_p;
+  real p_real_array[d_int];
+  vector[d_int] p_vector;
+  row_vector[d_int] p_row_vector;
+  vector[2] p_x3y[3];
+  row_vector[2] p_x4y[3];
+  matrix[2, 3] p_x5y[3];
+  real p_x2z[3, 4];
+  vector[2] p_x3z[3, 4];
+  row_vector[2] p_x4z[3, 4];
+  matrix[2, 3] p_x5z[3, 4];
+  real p_x2w[3, 4, 5];
+  vector[2] p_x3w[3, 4, 5];
+  row_vector[2] p_x4w[3, 4, 5];
+  matrix[2, 3] p_x5w[3, 4, 5];
+}
+transformed parameters {
+  vector[d_int] transformed_param_vector;
+  row_vector[d_int] transformed_param_row_vector;
+  vector[2] trans_p_x3y[3];
+  row_vector[2] trans_p_x4y[3];
+  matrix[2, 3] trans_p_x5y[3];
+  real trans_p_x2z[3, 4];
+  vector[2] trans_p_x3z[3, 4];
+  row_vector[2] trans_p_x4z[3, 4];
+  matrix[2, 3] trans_p_x5z[3, 4];
+  real trans_p_x2w[3, 4, 5];
+  vector[2] trans_p_x3w[3, 4, 5];
+  row_vector[2] trans_p_x4w[3, 4, 5];
+  matrix[2, 3] trans_p_x5w[3, 4, 5];
+  transformed_param_vector = reverse(d_vector);
+  transformed_param_row_vector = reverse(d_row_vector);
+  transformed_param_vector = reverse(p_vector);
+  transformed_param_row_vector = reverse(p_row_vector);
+  trans_p_x3y = reverse(p_x3y);
+  trans_p_x4y = reverse(p_x4y);
+  trans_p_x5y = reverse(p_x5y);
+  trans_p_x2z = reverse(p_x2z);
+  trans_p_x3z = reverse(p_x3z);
+  trans_p_x4z = reverse(p_x4z);
+  trans_p_x5z = reverse(p_x5z);
+  trans_p_x2w = reverse(p_x2w);
+  trans_p_x3w = reverse(p_x3w);
+  trans_p_x4w = reverse(p_x4w);
+  trans_p_x5w = reverse(p_x5w);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
   $ ../../../../../../../install/default/bin/stanc --auto-format round.stan
 data {
   int d_int;
@@ -7664,6 +8094,11 @@ data {
 }
 transformed data {
   int val;
+  val = size(x1x);
+  val = size(x2x);
+  val = size(x3x);
+  val = size(x4x);
+  val = size(x5x);
   val = size(x1y);
   val = size(x2y);
   val = size(x3y);
@@ -7705,6 +8140,11 @@ parameters {
 }
 transformed parameters {
   real p_val;
+  p_val = size(x1x);
+  p_val = size(x2x);
+  p_val = size(x3x);
+  p_val = size(x4x);
+  p_val = size(x5x);
   p_val = size(x1y);
   p_val = size(x2y);
   p_val = size(x3y);
@@ -7720,6 +8160,11 @@ transformed parameters {
   p_val = size(x3w);
   p_val = size(x4w);
   p_val = size(x5w);
+  p_val = size(p_x1x);
+  p_val = size(p_x2x);
+  p_val = size(p_x3x);
+  p_val = size(p_x4x);
+  p_val = size(p_x5x);
   p_val = size(p_x1y);
   p_val = size(p_x2y);
   p_val = size(p_x3y);
