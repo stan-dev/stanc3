@@ -4696,6 +4696,22 @@ generated quantities {
   real sd_y = sd(y);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format single-arg-conddist.stan
+functions {
+  real foo_lpdf(real x) {
+    return -square(x);
+  }
+}
+parameters {
+  real x;
+}
+model {
+  target += std_normal_lpdf(x| );
+  target += std_normal_lpdf(x| );
+  target += foo_lpdf(x| );
+  target += foo_lpdf(x| );
+}
+
   $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
 parameters {
   real y;
