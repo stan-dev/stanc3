@@ -458,6 +458,27 @@ let () =
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+  add_qualified
+    ( "algebra_solver_newton"
+    , ReturnType UVector
+    , [ ( AutoDiffable
+        , UFun
+            ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
+              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+            , ReturnType UVector ) )
+        ; (AutoDiffable, UVector); (AutoDiffable, UVector)
+        ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+  add_qualified
+    ( "algebra_solver_newton"
+    , ReturnType UVector
+    , [ ( AutoDiffable
+        , UFun
+          ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
+            ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
+        , ReturnType UVector ) )
+        ; (AutoDiffable, UVector); (AutoDiffable, UVector)
+        ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
+        ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
   for i = 1 to 8 - 1 do
     add_unqualified
       ( "append_array"
@@ -1525,7 +1546,7 @@ let () =
     add_unqualified ("reverse", (ReturnType (bare_array_type (UInt, i))), [bare_array_type (UInt, i)]) ;
     add_unqualified ("reverse", (ReturnType (bare_array_type (UReal, i))), [bare_array_type (UReal, i)]) ;
     add_unqualified ("reverse", (ReturnType (bare_array_type (UMatrix, i))), [bare_array_type (UMatrix, i)])
-  done ;    
+  done ;
   add_unqualified ("rising_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("rising_factorial", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt]) ;
