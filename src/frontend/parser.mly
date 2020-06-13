@@ -426,7 +426,13 @@ common_expression:
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ; FunApp ((), id, args) }
+    {  grammar_logger "fun_app" ;
+       if
+         List.length args = 1
+         && ( String.is_suffix ~suffix:"_lpdf" id.name
+            || String.is_suffix ~suffix:"_lpmf" id.name )
+       then CondDistApp ((), id, args)
+       else FunApp ((), id, args) }
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
