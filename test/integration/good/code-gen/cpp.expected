@@ -9178,81 +9178,103 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'motherHOF.stan', line 79, column 2 to column 88)",
                                                       " (in 'motherHOF.stan', line 80, column 2 to column 72)",
                                                       " (in 'motherHOF.stan', line 81, column 2 to column 88)",
-                                                      " (in 'motherHOF.stan', line 136, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 137, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 83, column 2 to column 77)",
+                                                      " (in 'motherHOF.stan', line 84, column 2 to column 93)",
+                                                      " (in 'motherHOF.stan', line 85, column 2 to column 93)",
+                                                      " (in 'motherHOF.stan', line 86, column 2 to column 79)",
+                                                      " (in 'motherHOF.stan', line 88, column 2 to column 95)",
+                                                      " (in 'motherHOF.stan', line 89, column 2 to column 79)",
+                                                      " (in 'motherHOF.stan', line 90, column 2 to column 95)",
+                                                      " (in 'motherHOF.stan', line 145, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 146, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 147, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 148, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 149, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 151, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 152, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 153, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 154, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 156, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 157, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 158, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 159, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 161, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 162, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 163, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 164, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 166, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 167, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 168, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 169, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 171, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 172, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 173, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 174, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 176, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 177, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 178, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 179, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 181, column 2 to column 34)",
+                                                      " (in 'motherHOF.stan', line 182, column 2 to column 38)",
+                                                      " (in 'motherHOF.stan', line 183, column 2 to line 185, column 71)",
+                                                      " (in 'motherHOF.stan', line 187, column 2 to line 188, column 69)",
+                                                      " (in 'motherHOF.stan', line 190, column 2 to column 22)",
+                                                      " (in 'motherHOF.stan', line 191, column 2 to column 69)",
+                                                      " (in 'motherHOF.stan', line 192, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 193, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 194, column 2 to column 71)",
+                                                      " (in 'motherHOF.stan', line 196, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 197, column 2 to column 71)",
+                                                      " (in 'motherHOF.stan', line 198, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 200, column 2 to column 76)",
+                                                      " (in 'motherHOF.stan', line 201, column 2 to column 92)",
+                                                      " (in 'motherHOF.stan', line 202, column 2 to column 92)",
+                                                      " (in 'motherHOF.stan', line 203, column 2 to column 78)",
+                                                      " (in 'motherHOF.stan', line 205, column 2 to column 94)",
+                                                      " (in 'motherHOF.stan', line 206, column 2 to column 78)",
+                                                      " (in 'motherHOF.stan', line 207, column 2 to column 94)",
+                                                      " (in 'motherHOF.stan', line 94, column 2 to column 18)",
+                                                      " (in 'motherHOF.stan', line 95, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 96, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 97, column 2 to column 68)",
+                                                      " (in 'motherHOF.stan', line 99, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 100, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 101, column 2 to column 87)",
+                                                      " (in 'motherHOF.stan', line 103, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 104, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 105, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 106, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 108, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 109, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 110, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 111, column 2 to column 85)",
+                                                      " (in 'motherHOF.stan', line 113, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 114, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 115, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 116, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 118, column 2 to column 61)",
+                                                      " (in 'motherHOF.stan', line 119, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 120, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 121, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 122, column 2 to column 56)",
+                                                      " (in 'motherHOF.stan', line 123, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 124, column 2 to column 58)",
+                                                      " (in 'motherHOF.stan', line 125, column 2 to column 60)",
+                                                      " (in 'motherHOF.stan', line 126, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 127, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 128, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 130, column 2 to column 67)",
+                                                      " (in 'motherHOF.stan', line 131, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 132, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 133, column 2 to column 66)",
+                                                      " (in 'motherHOF.stan', line 134, column 2 to column 62)",
+                                                      " (in 'motherHOF.stan', line 135, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 136, column 2 to column 64)",
+                                                      " (in 'motherHOF.stan', line 137, column 2 to column 66)",
                                                       " (in 'motherHOF.stan', line 138, column 2 to column 68)",
                                                       " (in 'motherHOF.stan', line 139, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 140, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 142, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 143, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 144, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 145, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 147, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 148, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 149, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 150, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 152, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 153, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 154, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 155, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 157, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 158, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 159, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 160, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 162, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 163, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 164, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 165, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 167, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 168, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 169, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 170, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 172, column 2 to column 34)",
-                                                      " (in 'motherHOF.stan', line 173, column 2 to column 38)",
-                                                      " (in 'motherHOF.stan', line 174, column 2 to line 176, column 71)",
-                                                      " (in 'motherHOF.stan', line 178, column 2 to line 179, column 69)",
-                                                      " (in 'motherHOF.stan', line 85, column 2 to column 18)",
-                                                      " (in 'motherHOF.stan', line 86, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 87, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 88, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 90, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 91, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 92, column 2 to column 87)",
-                                                      " (in 'motherHOF.stan', line 94, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 95, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 96, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 97, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 99, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 100, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 101, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 102, column 2 to column 85)",
-                                                      " (in 'motherHOF.stan', line 104, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 105, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 106, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 107, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 109, column 2 to column 61)",
-                                                      " (in 'motherHOF.stan', line 110, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 111, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 112, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 113, column 2 to column 56)",
-                                                      " (in 'motherHOF.stan', line 114, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 115, column 2 to column 58)",
-                                                      " (in 'motherHOF.stan', line 116, column 2 to column 60)",
-                                                      " (in 'motherHOF.stan', line 117, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 118, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 119, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 121, column 2 to column 67)",
-                                                      " (in 'motherHOF.stan', line 122, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 123, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 124, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 125, column 2 to column 62)",
-                                                      " (in 'motherHOF.stan', line 126, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 127, column 2 to column 64)",
-                                                      " (in 'motherHOF.stan', line 128, column 2 to column 66)",
-                                                      " (in 'motherHOF.stan', line 129, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 130, column 2 to column 68)",
-                                                      " (in 'motherHOF.stan', line 131, column 2 to column 70)",
-                                                      " (in 'motherHOF.stan', line 133, column 2 to column 36)",
+                                                      " (in 'motherHOF.stan', line 140, column 2 to column 70)",
+                                                      " (in 'motherHOF.stan', line 142, column 2 to column 36)",
                                                       " (in 'motherHOF.stan', line 37, column 2 to column 17)",
                                                       " (in 'motherHOF.stan', line 38, column 2 to column 15)",
                                                       " (in 'motherHOF.stan', line 39, column 2 to column 10)",
@@ -9299,22 +9321,22 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 113;
+    current_statement__ = 135;
     validate_non_negative_index("dydt", "2", 2);
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
-    current_statement__ = 114;
+    current_statement__ = 136;
     assign(dydt, cons_list(index_uni(1), nil_index_list()),
       rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
-    current_statement__ = 115;
+    current_statement__ = 137;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
       (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
         (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
           rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
-    current_statement__ = 116;
+    current_statement__ = 138;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9349,7 +9371,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 118;
+    current_statement__ = 140;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9385,7 +9407,7 @@ foo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 120;
+    current_statement__ = 142;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
@@ -9423,7 +9445,7 @@ goo(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 122;
+    current_statement__ = 144;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(4).add(5).add(6).array()));
   } catch (const std::exception& e) {
@@ -9457,7 +9479,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 124;
+    current_statement__ = 146;
     return (2 * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9490,23 +9512,23 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 126;
+    current_statement__ = 148;
     validate_non_negative_index("f_x", "2", 2);
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 127;
+    current_statement__ = 149;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 128;
+    current_statement__ = 150;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
       (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
         rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
       "assigning variable f_x");
-    current_statement__ = 129;
+    current_statement__ = 151;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9571,78 +9593,78 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
           context__.to_vec());
       T = std::numeric_limits<int>::min();
       
-      current_statement__ = 100;
+      current_statement__ = 122;
       T = context__.vals_i("T")[(1 - 1)];
-      current_statement__ = 101;
+      current_statement__ = 123;
       validate_non_negative_index("y0_d", "2", 2);
       context__.validate_dims("data initialization","y0_d","double",
           context__.to_vec(2));
       y0_d = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 101;
+      current_statement__ = 123;
       assign(y0_d, nil_index_list(), context__.vals_r("y0_d"),
         "assigning variable y0_d");
       context__.validate_dims("data initialization","t0","double",
           context__.to_vec());
       t0 = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 102;
+      current_statement__ = 124;
       t0 = context__.vals_r("t0")[(1 - 1)];
-      current_statement__ = 103;
+      current_statement__ = 125;
       validate_non_negative_index("ts", "T", T);
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(T));
       ts = std::vector<double>(T, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 103;
+      current_statement__ = 125;
       assign(ts, nil_index_list(), context__.vals_r("ts"),
         "assigning variable ts");
-      current_statement__ = 104;
+      current_statement__ = 126;
       validate_non_negative_index("theta_d", "1", 1);
       context__.validate_dims("data initialization","theta_d","double",
           context__.to_vec(1));
       theta_d = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 104;
+      current_statement__ = 126;
       assign(theta_d, nil_index_list(), context__.vals_r("theta_d"),
         "assigning variable theta_d");
-      current_statement__ = 105;
+      current_statement__ = 127;
       validate_non_negative_index("x", "0", 0);
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(0));
       x = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 105;
+      current_statement__ = 127;
       assign(x, nil_index_list(), context__.vals_r("x"),
         "assigning variable x");
-      current_statement__ = 106;
+      current_statement__ = 128;
       validate_non_negative_index("x_int", "0", 0);
       context__.validate_dims("data initialization","x_int","int",
           context__.to_vec(0));
       x_int = std::vector<int>(0, std::numeric_limits<int>::min());
       
-      current_statement__ = 106;
+      current_statement__ = 128;
       assign(x_int, nil_index_list(), context__.vals_i("x_int"),
         "assigning variable x_int");
-      current_statement__ = 107;
+      current_statement__ = 129;
       validate_non_negative_index("x_d_r", "0", 0);
       context__.validate_dims("data initialization","x_d_r","double",
           context__.to_vec(0));
       x_d_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 107;
+      current_statement__ = 129;
       assign(x_d_r, nil_index_list(), context__.vals_r("x_d_r"),
         "assigning variable x_d_r");
-      current_statement__ = 108;
+      current_statement__ = 130;
       validate_non_negative_index("x_d_i", "0", 0);
       context__.validate_dims("data initialization","x_d_i","int",
           context__.to_vec(0));
       x_d_i = std::vector<int>(0, std::numeric_limits<int>::min());
       
-      current_statement__ = 108;
+      current_statement__ = 130;
       assign(x_d_i, nil_index_list(), context__.vals_i("x_d_i"),
         "assigning variable x_d_i");
-      current_statement__ = 109;
+      current_statement__ = 131;
       validate_non_negative_index("shared_params_d", "3", 3);
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
@@ -9651,25 +9673,25 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<local_scalar_t__> shared_params_d_flat__;
-        current_statement__ = 109;
+        current_statement__ = 131;
         assign(shared_params_d_flat__, nil_index_list(),
           context__.vals_r("shared_params_d"),
           "assigning variable shared_params_d_flat__");
-        current_statement__ = 109;
+        current_statement__ = 131;
         pos__ = 1;
-        current_statement__ = 109;
+        current_statement__ = 131;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 109;
+          current_statement__ = 131;
           assign(shared_params_d,
             cons_list(index_uni(sym1__), nil_index_list()),
             shared_params_d_flat__[(pos__ - 1)],
             "assigning variable shared_params_d");
-          current_statement__ = 109;
+          current_statement__ = 131;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 110;
+      current_statement__ = 132;
       validate_non_negative_index("job_params_d", "3", 3);
-      current_statement__ = 110;
+      current_statement__ = 132;
       validate_non_negative_index("job_params_d", "3", 3);
       context__.validate_dims("data initialization","job_params_d","double",
           context__.to_vec(3, 3));
@@ -9678,28 +9700,28 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<local_scalar_t__> job_params_d_flat__;
-        current_statement__ = 110;
+        current_statement__ = 132;
         assign(job_params_d_flat__, nil_index_list(),
           context__.vals_r("job_params_d"),
           "assigning variable job_params_d_flat__");
-        current_statement__ = 110;
+        current_statement__ = 132;
         pos__ = 1;
-        current_statement__ = 110;
+        current_statement__ = 132;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 110;
+          current_statement__ = 132;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 110;
+            current_statement__ = 132;
             assign(job_params_d,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               job_params_d_flat__[(pos__ - 1)],
               "assigning variable job_params_d");
-            current_statement__ = 110;
+            current_statement__ = 132;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 111;
+      current_statement__ = 133;
       validate_non_negative_index("data_r", "3", 3);
-      current_statement__ = 111;
+      current_statement__ = 133;
       validate_non_negative_index("data_r", "3", 3);
       context__.validate_dims("data initialization","data_r","double",
           context__.to_vec(3, 3));
@@ -9707,26 +9729,26 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<local_scalar_t__> data_r_flat__;
-        current_statement__ = 111;
+        current_statement__ = 133;
         assign(data_r_flat__, nil_index_list(), context__.vals_r("data_r"),
           "assigning variable data_r_flat__");
-        current_statement__ = 111;
+        current_statement__ = 133;
         pos__ = 1;
-        current_statement__ = 111;
+        current_statement__ = 133;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 111;
+          current_statement__ = 133;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 111;
+            current_statement__ = 133;
             assign(data_r,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               data_r_flat__[(pos__ - 1)], "assigning variable data_r");
-            current_statement__ = 111;
+            current_statement__ = 133;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 112;
+      current_statement__ = 134;
       validate_non_negative_index("data_i", "3", 3);
-      current_statement__ = 112;
+      current_statement__ = 134;
       validate_non_negative_index("data_i", "3", 3);
       context__.validate_dims("data initialization","data_i","int",
           context__.to_vec(3, 3));
@@ -9734,25 +9756,25 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       
       {
         std::vector<int> data_i_flat__;
-        current_statement__ = 112;
+        current_statement__ = 134;
         assign(data_i_flat__, nil_index_list(), context__.vals_i("data_i"),
           "assigning variable data_i_flat__");
-        current_statement__ = 112;
+        current_statement__ = 134;
         pos__ = 1;
-        current_statement__ = 112;
+        current_statement__ = 134;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 112;
+          current_statement__ = 134;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 112;
+            current_statement__ = 134;
             assign(data_i,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               data_i_flat__[(pos__ - 1)], "assigning variable data_i");
-            current_statement__ = 112;
+            current_statement__ = 134;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 100;
-      current_statement__ = 100;
+      current_statement__ = 122;
+      current_statement__ = 122;
       check_greater_or_equal(function__, "T", T, 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9966,162 +9988,190 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       assign(theta_p_as, nil_index_list(),
         algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
           pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 25;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 26;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 27;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 28;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 29;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 30;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 31;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       {
-        current_statement__ = 58;
+        current_statement__ = 80;
         validate_non_negative_index("y_hat", "T", T);
-        current_statement__ = 58;
+        current_statement__ = 80;
         validate_non_negative_index("y_hat", "2", 2);
         std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
         
-        current_statement__ = 59;
+        current_statement__ = 81;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 60;
+        current_statement__ = 82;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 61;
+        current_statement__ = 83;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 62;
+        current_statement__ = 84;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 63;
+        current_statement__ = 85;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 64;
+        current_statement__ = 86;
         assign(y_hat, nil_index_list(),
           integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 65;
+        current_statement__ = 87;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
             pstream__), "assigning variable y_hat");
-        current_statement__ = 66;
+        current_statement__ = 88;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
             pstream__), "assigning variable y_hat");
-        current_statement__ = 67;
+        current_statement__ = 89;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
             pstream__), "assigning variable y_hat");
-        current_statement__ = 68;
+        current_statement__ = 90;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
             pstream__), "assigning variable y_hat");
-        current_statement__ = 69;
+        current_statement__ = 91;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 70;
+        current_statement__ = 92;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 71;
+        current_statement__ = 93;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 72;
+        current_statement__ = 94;
         assign(y_hat, nil_index_list(),
           integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
             pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 73;
+        current_statement__ = 95;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 74;
+        current_statement__ = 96;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 75;
+        current_statement__ = 97;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 76;
+        current_statement__ = 98;
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
         y_1d = DUMMY_VAR__;
         
-        current_statement__ = 77;
+        current_statement__ = 99;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 78;
+        current_statement__ = 100;
         y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 79;
+        current_statement__ = 101;
         y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 80;
+        current_statement__ = 102;
         y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 81;
+        current_statement__ = 103;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 82;
+        current_statement__ = 104;
         y_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 83;
+        current_statement__ = 105;
         y_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 84;
+        current_statement__ = 106;
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
                  pstream__);
-        current_statement__ = 85;
+        current_statement__ = 107;
         y_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
                  x_d_i, pstream__);
-        current_statement__ = 86;
+        current_statement__ = 108;
         y_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
-        current_statement__ = 87;
+        current_statement__ = 109;
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
         local_scalar_t__ z_1d;
         z_1d = DUMMY_VAR__;
         
-        current_statement__ = 88;
+        current_statement__ = 110;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 89;
+        current_statement__ = 111;
         z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 90;
+        current_statement__ = 112;
         z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 91;
+        current_statement__ = 113;
         z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 92;
+        current_statement__ = 114;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 93;
+        current_statement__ = 115;
         z_1d = integrate_1d(integrand_functor__(), x_r, 1, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 94;
+        current_statement__ = 116;
         z_1d = integrate_1d(integrand_functor__(), 0, x_r, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 95;
+        current_statement__ = 117;
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x, x_d_r, x_d_i,
                  pstream__, 1e-8);
-        current_statement__ = 96;
+        current_statement__ = 118;
         z_1d = integrate_1d(integrand_functor__(), x_r, 1, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
-        current_statement__ = 97;
+        current_statement__ = 119;
         z_1d = integrate_1d(integrand_functor__(), 0, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
-        current_statement__ = 98;
+        current_statement__ = 120;
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
         local_scalar_t__ abc_m;
         abc_m = DUMMY_VAR__;
         
-        current_statement__ = 99;
+        current_statement__ = 121;
         abc_m = map_rectfake(abc1_p, pstream__);
       }
     } catch (const std::exception& e) {
@@ -10335,6 +10385,34 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       assign(theta_p_as, nil_index_list(),
         algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
           pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 25;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 26;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 27;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 28;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 29;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
+      current_statement__ = 30;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_p_as");
+      current_statement__ = 31;
+      assign(theta_p_as, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       vars__.push_back(abc1_p);
       vars__.push_back(abc2_p);
       vars__.push_back(abc3_p);
@@ -10355,156 +10433,218 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-      current_statement__ = 25;
+      current_statement__ = 32;
       validate_non_negative_index("y_hat", "T", T);
-      current_statement__ = 25;
+      current_statement__ = 32;
       validate_non_negative_index("y_hat", "2", 2);
       std::vector<std::vector<double>> y_hat;
       y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
-      current_statement__ = 26;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 27;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 28;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 29;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 30;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 31;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 32;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 33;
       assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
       current_statement__ = 34;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 35;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 36;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 37;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 38;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 39;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 40;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 41;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
       current_statement__ = 42;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 43;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 44;
       assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       current_statement__ = 45;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 46;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 47;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 48;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
+          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 49;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 50;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 51;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
+          pstream__), "assigning variable y_hat");
+      current_statement__ = 52;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       double y_1d;
       y_1d = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 46;
+      current_statement__ = 53;
       y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__);
-      current_statement__ = 47;
+      current_statement__ = 54;
       y_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                pstream__);
-      current_statement__ = 48;
+      current_statement__ = 55;
       y_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                pstream__);
-      current_statement__ = 49;
+      current_statement__ = 56;
       y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__);
       double z_1d;
       z_1d = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 50;
+      current_statement__ = 57;
       z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
                pstream__, 1e-8);
-      current_statement__ = 51;
+      current_statement__ = 58;
       z_1d = integrate_1d(integrand_functor__(), 0.0, 1, x, x_d_r, x_d_i,
                pstream__, 1e-8);
-      current_statement__ = 52;
+      current_statement__ = 59;
       z_1d = integrate_1d(integrand_functor__(), 0, 1.0, x, x_d_r, x_d_i,
                pstream__, 1e-8);
-      current_statement__ = 53;
+      current_statement__ = 60;
       z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__, 1e-8);
       double abc1_gq;
       abc1_gq = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 54;
+      current_statement__ = 61;
       abc1_gq = map_rectfake(12, pstream__);
       double abc2_gq;
       abc2_gq = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 55;
+      current_statement__ = 62;
       abc2_gq = map_rectfake(abc1_p, pstream__);
-      current_statement__ = 56;
+      current_statement__ = 63;
       validate_non_negative_index("y_hat_gq", "3", 3);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
       y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(y_hat_gq, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 56;
+      current_statement__ = 63;
       assign(y_hat_gq, nil_index_list(),
         add(
           map_rect<7, foo_functor__>(shared_params_d, job_params_d, data_r,
             data_i, pstream__),
           map_rect<8, goo_functor__>(shared_params_d, job_params_d, data_r,
             data_i, pstream__)), "assigning variable y_hat_gq");
-      current_statement__ = 57;
+      current_statement__ = 64;
       validate_non_negative_index("yy_hat_gq", "3", 3);
       Eigen::Matrix<double, -1, 1> yy_hat_gq;
       yy_hat_gq = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(yy_hat_gq, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 57;
+      current_statement__ = 64;
       assign(yy_hat_gq, nil_index_list(),
         map_rect<9, goo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable yy_hat_gq");
+      current_statement__ = 65;
+      validate_non_negative_index("theta_dbl", "2", 2);
+      Eigen::Matrix<double, -1, 1> theta_dbl;
+      theta_dbl = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(theta_dbl, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 66;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_dbl");
+      current_statement__ = 67;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 68;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 69;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_dbl");
+      current_statement__ = 70;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_v, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 71;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__), "assigning variable theta_dbl");
+      current_statement__ = 72;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver(algebra_system_functor__(), x_p_v, y_p, x_d_r, x_d_i,
+          pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 73;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_dbl");
+      current_statement__ = 74;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 75;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 76;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_dbl");
+      current_statement__ = 77;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_v, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
+      current_statement__ = 78;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__), "assigning variable theta_dbl");
+      current_statement__ = 79;
+      assign(theta_dbl, nil_index_list(),
+        algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
+          x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
           vars__.push_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
@@ -10516,6 +10656,8 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         vars__.push_back(y_hat_gq[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.push_back(yy_hat_gq[(sym1__ - 1)]);}
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        vars__.push_back(theta_dbl[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -10687,6 +10829,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     names__.push_back("abc2_gq");
     names__.push_back("y_hat_gq");
     names__.push_back("yy_hat_gq");
+    names__.push_back("theta_dbl");
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
@@ -10758,6 +10901,9 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
     dimss__.push_back(dims__);
     dims__.resize(0);
     dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(2);
     dimss__.push_back(dims__);
     dims__.resize(0);
     
@@ -10850,6 +10996,10 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
         }}
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_dbl" + '.' + std::to_string(sym1__));
+        }}
     }
     
     } // constrained_param_names() 
@@ -10941,19 +11091,23 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
         {
           param_names__.push_back(std::string() + "yy_hat_gq" + '.' + std::to_string(sym1__));
         }}
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta_dbl" + '.' + std::to_string(sym1__));
+        }}
     }
     
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_dbl\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_dbl\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
