@@ -295,8 +295,7 @@ and gen_fun_app ppf fname es =
     *)
     let fname, args =
       match (is_hof_call, fname, converted_es @ extra) with
-      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl ->
-          (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
+      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl
       | true, "algebra_solver_newton", f :: x :: y :: dat :: datint :: tl ->
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
       | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
