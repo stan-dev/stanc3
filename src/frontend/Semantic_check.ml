@@ -51,6 +51,7 @@ let vm = Symbol_table.initialize ()
    used for error reporting. *)
 type context_flags_record =
   { current_block: originblock
+  ; in_toplevel_decl: bool
   ; in_fun_def: bool
   ; in_returning_fun_def: bool
   ; in_rng_fun_def: bool
@@ -254,11 +255,13 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
     else ok ())
 
 (** Rng functions cannot be used in Tp or Model and only
-    in funciton defs with the right suffix
+    in function defs with the right suffix
 *)
 let semantic_check_fn_rng cf ~loc id =
   Validate.(
-    if
+    if String.is_suffix id.name ~suffix:"_rng" && cf.in_toplevel_decl then
+      Semantic_error.invalid_decl_rng_fn loc |> error
+    else if
       String.is_suffix id.name ~suffix:"_rng"
       && ( (cf.in_fun_def && not cf.in_rng_fun_def)
          || cf.current_block = TParam || cf.current_block = Model )
@@ -463,6 +466,8 @@ let semantic_check_variable cf loc id =
             (calculate_autodifftype cf MathLibrary UMathLibraryFunction)
           ~type_:UMathLibraryFunction ~loc
         |> ok
+    | Some ((Param | TParam | GQuant), _) when cf.in_toplevel_decl ->
+        Semantic_error.non_data_variable_size_decl loc |> error
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -1408,24 +1413,6 @@ and semantic_check_block ~loc ~cf stmts =
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
-and semantic_check_size_decl ~loc is_global sized_ty =
-  let not_ptq e =
-    match e.emeta.ad_level with AutoDiffable -> false | _ -> true
-  in
-  let rec check_sizes_data_only = function
-    | SizedType.SVector e -> not_ptq e
-    | SRowVector e -> not_ptq e
-    | SMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
-    | SArray (sized_ty, e) when not_ptq e -> check_sizes_data_only sized_ty
-    | SArray _ -> false
-    | _ -> true
-  in
-  (* Sizes must be of level at most data. *)
-  Validate.(
-    if is_global && not (check_sizes_data_only sized_ty) then
-      Semantic_error.non_data_variable_size_decl loc |> error
-    else ok ())
-
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
   let is_valid_transformation =
@@ -1471,10 +1458,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
 
 and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
   let checked_stmt =
-    Validate.(
-      semantic_check_sizedtype cf sized_ty
-      >>= fun ust ->
-      semantic_check_size_decl ~loc is_global ust |> map ~f:(fun _ -> ust))
+    semantic_check_sizedtype {cf with in_toplevel_decl= is_global} sized_ty
   in
   let checked_trans = semantic_check_transformation cf trans in
   Validate.(
@@ -1482,8 +1466,6 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     |> apply_const (semantic_check_identifier id)
     |> apply_const (check_fresh_variable id false)
     >>= fun (ust, utrans) ->
-    semantic_check_size_decl ~loc is_global ust
-    >>= fun _ ->
     let ut = unsizedtype_of_sizedtype ust in
     Symbol_table.enter vm id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
@@ -1765,6 +1747,7 @@ let semantic_check_program
   unsafe_clear_symbol_table vm ;
   let cf =
     { current_block= Functions
+    ; in_toplevel_decl= false
     ; in_fun_def= false
     ; in_returning_fun_def= false
     ; in_rng_fun_def= false

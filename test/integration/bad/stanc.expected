@@ -3207,15 +3207,29 @@ Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc var-decl-bad-1.stan
 
-Semantic error in 'var-decl-bad-1.stan', line 3, column 2 to column 18:
+Semantic error in 'var-decl-bad-1.stan', line 3, column 14 to column 15:
    -------------------------------------------------
      1:  parameters {
      2:    real x[3];
      3:    real y[size(x)];
-           ^
+                       ^
      4:  }
      5:  model {
    -------------------------------------------------
 
 Non-data variables are not allowed in top level size declarations.
+
+  $ ../../../../install/default/bin/stanc var-decl-bad-2.stan
+
+Semantic error in 'var-decl-bad-2.stan', line 3, column 9 to column 23:
+   -------------------------------------------------
+     1:  parameters {
+     2:    real x[3];
+     3:    real y[poisson_rng(3)];
+                  ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
+
+Random number generators are not allowed in top level size declarations.
 
