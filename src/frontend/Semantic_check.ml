@@ -71,14 +71,6 @@ let rec unsizedtype_contains_int ut =
   | UArray ut -> unsizedtype_contains_int ut
   | _ -> false
 
-let rec unsizedtype_of_sizedtype = function
-  | SizedType.SInt -> UnsizedType.UInt
-  | SReal -> UReal
-  | SVector _ -> UVector
-  | SRowVector _ -> URowVector
-  | SMatrix (_, _) -> UMatrix
-  | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
-
 let rec lub_ad_type = function
   | [] -> UnsizedType.DataOnly
   | x :: xs ->
@@ -770,6 +762,16 @@ and semantic_check_expression_of_int_or_real_type cf e name =
       Semantic_error.int_or_real_expected ue.emeta.loc name ue.emeta.type_
       |> error)
 
+let semantic_check_expression_of_scalar_or_type cf t e name =
+  Validate.(
+    semantic_check_expression cf e
+    >>= fun ue ->
+    if UnsizedType.is_scalar_type ue.emeta.type_ || ue.emeta.type_ = t then
+      ok ue
+    else
+      Semantic_error.scalar_or_type_expected ue.emeta.loc name t ue.emeta.type_
+      |> error)
+
 (* -- Sized Types ----------------------------------------------------------- *)
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
@@ -790,31 +792,31 @@ let rec semantic_check_sizedtype cf = function
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
 
 (* -- Transformations ------------------------------------------------------- *)
-let semantic_check_transformation cf = function
+let semantic_check_transformation cf ut = function
   | Program.Identity -> Validate.ok Program.Identity
   | Lower e ->
-      semantic_check_expression_of_int_or_real_type cf e "Lower bound"
+      semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
       |> Validate.map ~f:(fun ue -> Program.Lower ue)
   | Upper e ->
-      semantic_check_expression_of_int_or_real_type cf e "Upper bound"
+      semantic_check_expression_of_scalar_or_type cf ut e "Upper bound"
       |> Validate.map ~f:(fun ue -> Program.Upper ue)
   | LowerUpper (e1, e2) ->
       let ue1 =
-        semantic_check_expression_of_int_or_real_type cf e1 "Lower bound"
+        semantic_check_expression_of_scalar_or_type cf ut e1 "Lower bound"
       and ue2 =
-        semantic_check_expression_of_int_or_real_type cf e2 "Upper bound"
+        semantic_check_expression_of_scalar_or_type cf ut e2 "Upper bound"
       in
       Validate.liftA2 (fun ue1 ue2 -> Program.LowerUpper (ue1, ue2)) ue1 ue2
   | Offset e ->
-      semantic_check_expression_of_int_or_real_type cf e "Offset"
+      semantic_check_expression_of_scalar_or_type cf ut e "Offset"
       |> Validate.map ~f:(fun ue -> Program.Offset ue)
   | Multiplier e ->
-      semantic_check_expression_of_int_or_real_type cf e "Multiplier"
+      semantic_check_expression_of_scalar_or_type cf ut e "Multiplier"
       |> Validate.map ~f:(fun ue -> Program.Multiplier ue)
   | OffsetMultiplier (e1, e2) ->
-      let ue1 = semantic_check_expression_of_int_or_real_type cf e1 "Offset"
+      let ue1 = semantic_check_expression_of_scalar_or_type cf ut e1 "Offset"
       and ue2 =
-        semantic_check_expression_of_int_or_real_type cf e2 "Multiplier"
+        semantic_check_expression_of_scalar_or_type cf ut e2 "Multiplier"
       in
       Validate.liftA2
         (fun ue1 ue2 -> Program.OffsetMultiplier (ue1, ue2))
@@ -1476,15 +1478,19 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
       >>= fun ust ->
       semantic_check_size_decl ~loc is_global ust |> map ~f:(fun _ -> ust))
   in
-  let checked_trans = semantic_check_transformation cf trans in
   Validate.(
+    let checked_trans =
+      checked_stmt
+      >>= fun ust ->
+      semantic_check_transformation cf (SizedType.to_unsized ust) trans
+    in
     liftA2 tuple2 checked_stmt checked_trans
     |> apply_const (semantic_check_identifier id)
     |> apply_const (check_fresh_variable id false)
     >>= fun (ust, utrans) ->
     semantic_check_size_decl ~loc is_global ust
-    >>= fun _ ->
-    let ut = unsizedtype_of_sizedtype ust in
+    >>= fun () ->
+    let ut = SizedType.to_unsized ust in
     Symbol_table.enter vm id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
     |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
