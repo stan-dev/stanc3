@@ -1,5 +1,31 @@
   $ ../../../../install/default/bin/stanc 1_starts_with_number.stan
 Model name must not start with a number or symbol other than underscore.
+  $ ../../../../install/default/bin/stanc array_expr_bad1.stan
+
+Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real td_arr32[3,2] = { 1, 3 };
+           ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =: lhs has type real[,] and rhs has type int[]
+
+  $ ../../../../install/default/bin/stanc array_expr_bad2.stan
+
+Semantic error in 'array_expr_bad2.stan', line 2, column 34 to column 35:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real td_arr32[3,2] = {{ 1, 3 }, 1, 2 };
+                                           ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Array expression must have entries of consistent type. Expected int[] but found int.
+
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
@@ -1621,16 +1647,16 @@ Ill-typed arguments supplied to assignment operator =: lhs has type matrix and r
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad2.stan
 
-Semantic error in 'matrix_expr_bad2.stan', line 2, column 25 to column 37:
+Semantic error in 'matrix_expr_bad2.stan', line 2, column 34 to column 35:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ 1 ], 3 ];
-                                  ^
+                                           ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Row_vector expression must have all int and real entries or all row_vector entries.
+Matrix expression must have all row_vector entries. Found type int.
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
 
@@ -2408,17 +2434,17 @@ Ill-typed arguments supplied to assignment operator =: lhs has type row_vector a
 
   $ ../../../../install/default/bin/stanc row_vector_expr_bad2.stan
 
-Semantic error in 'row_vector_expr_bad2.stan', line 5, column 20 to column 28:
+Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
    -------------------------------------------------
      3:    row_vector[2] A;
      4:    row_vector[3] B;
      5:    row_vector[2] X = [ x, A ];
-                             ^
+                                  ^
      6:  }
      7:  model {
    -------------------------------------------------
 
-Row_vector expression must have all int and real entries or all row_vector entries.
+Row_vector expression must have all int or real entries. Found type row_vector.
 
   $ ../../../../install/default/bin/stanc signature_function_known.stan
 

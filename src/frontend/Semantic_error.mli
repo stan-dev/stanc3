@@ -8,8 +8,11 @@ val location : t -> Location_span.t
 val mismatched_return_types :
   Location_span.t -> UnsizedType.returntype -> UnsizedType.returntype -> t
 
-val mismatched_array_types : Location_span.t -> t
-val invalid_row_vector_types : Location_span.t -> t
+val mismatched_array_types :
+  Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
+
+val invalid_row_vector_types : Location_span.t -> UnsizedType.t -> t
+val invalid_matrix_types : Location_span.t -> UnsizedType.t -> t
 val int_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
