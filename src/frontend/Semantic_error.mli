@@ -15,6 +15,9 @@ val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
 val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
 
+val scalar_or_type_expected :
+  Location_span.t -> string -> UnsizedType.t -> UnsizedType.t -> t
+
 val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
 

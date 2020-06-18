@@ -9,6 +9,7 @@ module TypeError = struct
     | InvalidRowVectorTypes
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
+    | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
@@ -55,6 +56,12 @@ module TypeError = struct
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
           name UnsizedType.pp ut
+    | TypeExpected (name, (UInt | UReal), ut) ->
+        Fmt.pf ppf "%s must be a scalar. Instead found type %a."
+          name UnsizedType.pp ut
+    | TypeExpected (name, et, ut) ->
+        Fmt.pf ppf "%s must be a scalar or of type %a. Instead found type %a."
+          name UnsizedType.pp et UnsizedType.pp ut
     | IntOrRealContainerExpected ut ->
         Fmt.pf ppf
           "A (container of) real or int was expected. Instead found type %a."
@@ -435,6 +442,9 @@ let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 
 let int_or_real_expected loc name ut =
   TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+
+let scalar_or_type_expected loc name et ut =
+  TypeError (loc, TypeError.TypeExpected (name, et, ut))
 
 let int_intarray_or_range_expected loc ut =
   TypeError (loc, TypeError.IntIntArrayOrRangeExpected ut)
