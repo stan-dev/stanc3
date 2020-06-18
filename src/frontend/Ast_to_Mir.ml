@@ -554,7 +554,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name)
-            ("" :: Utils.distribution_suffices)
+            Utils.distribution_suffices
           |> String.Set.of_list
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
