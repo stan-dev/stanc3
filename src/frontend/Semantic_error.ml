@@ -248,6 +248,7 @@ end
 module ExpressionError = struct
   type t =
     | InvalidMapRectFn of string
+    | InvalidSizeDeclRng
     | InvalidRngFunction
     | ConditionalNotationNotAllowed
     | ConditioningRequired
@@ -260,6 +261,10 @@ module ExpressionError = struct
           "Mapped function cannot be an _rng or _lp function, found function \
            name: %s"
           fn_name
+    | InvalidSizeDeclRng ->
+        Fmt.pf ppf
+          "Random number generators are not allowed in top level size \
+           declarations."
     | InvalidRngFunction ->
         Fmt.pf ppf
           "Random number generators are only allowed in transformed data \
@@ -516,6 +521,9 @@ let ident_not_in_scope loc name =
 
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
+
+let invalid_decl_rng_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)
 
 let invalid_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidRngFunction)
