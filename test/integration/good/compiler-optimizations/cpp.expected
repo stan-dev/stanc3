@@ -13572,8 +13572,8 @@ operator()(const std::vector<std::vector<int>>& y,
            const Eigen::Matrix<T7__, -1, -1>& chi, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
-return js_super_lp(y, first, last, p, phi, psi, nu, chi, lp__, lp_accum__,
-         pstream__);
+return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
+         lp_accum__, pstream__);
 }
 };
 
@@ -22950,8 +22950,8 @@ operator()(const std::vector<std::vector<int>>& y,
            const Eigen::Matrix<T6__, -1, -1>& chi, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
-return jolly_seber_lp(y, first, last, p, phi, gamma, chi, lp__, lp_accum__,
-         pstream__);
+return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
+         lp_accum__, pstream__);
 }
 };
 
@@ -31792,7 +31792,7 @@ void
 operator()(const T0__& x, const int& y, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
-return nrfun_lp(x, y, lp__, lp_accum__, pstream__);
+return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -31860,7 +31860,7 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
-return rfun_lp(lp__, lp_accum__, pstream__);
+return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 }
 };
 

@@ -83,8 +83,8 @@ let pp_promoted_scalar ppf args =
         match args with
         | [] -> pf ppf "double"
         | hd :: tl ->
-            pf ppf "stan::promote_args_t<%a%a>"
-              (list ~sep:comma string) hd go tl
+            pf ppf "stan::promote_args_t<%a%a>" (list ~sep:comma string) hd go
+              tl
       in
       promote_args_chunked ppf
         List.(
@@ -177,7 +177,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     if not (is_dist || is_lp) then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
-    text "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+    text
+      "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match pattern with
@@ -220,7 +221,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
         functor_suffix pp_sig "operator()" pp_call_str
-        ( fdname
+        ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         ) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
@@ -315,7 +316,9 @@ let pp_ctor ppf p =
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (prog_name, prog_name) ;
-        pf ppf "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@ " ;
+        pf ppf
+          "local_scalar_t__ \
+           DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@ " ;
         pp_unused ppf "DUMMY_VAR__" ;
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
@@ -330,16 +333,14 @@ let pp_ctor ppf p =
 let rec top_level_decls Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Decl d ->
-    [Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
-  | SList stmts ->
-    List.concat_map ~f:top_level_decls stmts
+      [Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
+  | SList stmts -> List.concat_map ~f:top_level_decls stmts
   | _ -> [None]
 
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls =
-    List.concat_map ~f:top_level_decls prepare_data
-    |> List.filter_map ~f:ident
+    List.concat_map ~f:top_level_decls prepare_data |> List.filter_map ~f:ident
   in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
@@ -352,8 +353,8 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param ppbody (?A pretty printer of the method's body) 
  *)
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
-  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name (list ~sep:comma string)
-    params ;
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) const " rt name
+    (list ~sep:comma string) params ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;
