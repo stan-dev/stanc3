@@ -51,30 +51,30 @@ let map_functions fname args =
   | "poisson_log", [y; log_lambda] -> ("Poisson", [y; none; log_lambda])
   | "pareto", [y; y_min; alpha] -> ("Pareto", [y; alpha; y_min])
   | "neg_binomial", [y; a; b] ->
-    ( "NegativeBinomial"
-    , [y; a; none; Helpers.(binop (int 1) Divide (binop (int 1) Plus b))] )
+      ( "NegativeBinomial"
+      , [y; a; none; Helpers.(binop (int 1) Divide (binop (int 1) Plus b))] )
   | (("neg_binomial_2" | "neg_binomial_2_log") as l), _ ->
-    raise_s
-      [%message l " is not supported, consider using neg_binomial instead."]
+      raise_s
+        [%message l " is not supported, consider using neg_binomial instead."]
   | f, _ when Operator.of_string_opt f |> Option.is_some -> (fname, args)
   | _ ->
-    if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
-    else raise_s [%message "Not sure how to handle " fname " yet!"]
+      if Set.mem capitalize_fnames fname then (String.capitalize fname, args)
+      else raise_s [%message "Not sure how to handle " fname " yet!"]
 
 let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
     match pattern with
     | FunApp (StanLib, fname, args) ->
-      let prefix =
-        if Utils.is_distribution_name fname then dist_prefix else ""
-      in
-      let fname = remove_stan_dist_suffix fname in
-      let fname, args = map_functions fname args in
-      {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
+        let prefix =
+          if Utils.is_distribution_name fname then dist_prefix else ""
+        in
+        let fname = remove_stan_dist_suffix fname in
+        let fname, args = map_functions fname args in
+        {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
     | FunApp (UserDefined, fname, args) ->
-      { expr with
-        pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
+        { expr with
+          pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
     | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
     | _ -> expr
   in
@@ -105,12 +105,12 @@ let rec remove_unused_stmts s =
     match s.Stmt.Fixed.pattern with
     | Assignment (_, {Expr.Fixed.pattern= FunApp (CompilerInternal, f, _); _})
       when Internal_fun.to_string FnConstrain = f
-        || Internal_fun.to_string FnUnconstrain = f ->
-      Stmt.Fixed.Pattern.Skip
+           || Internal_fun.to_string FnUnconstrain = f ->
+        Stmt.Fixed.Pattern.Skip
     | Decl _ -> Stmt.Fixed.Pattern.Skip
     | NRFunApp (CompilerInternal, name, _)
       when Internal_fun.to_string FnCheck = name ->
-      Stmt.Fixed.Pattern.Skip
+        Stmt.Fixed.Pattern.Skip
     | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x
   in
   {s with pattern}
@@ -122,7 +122,7 @@ let rec change_kwrds_stmts s =
     | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
     | NRFunApp (t, s, e) -> NRFunApp (t, add_suffix_to_kwrds s, e)
     | Assignment ((s, t, e1), e2) ->
-      Assignment ((add_suffix_to_kwrds s, t, e1), e2)
+        Assignment ((add_suffix_to_kwrds s, t, e1), e2)
     | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}
     | x -> map Fn.id change_kwrds_stmts x
   in

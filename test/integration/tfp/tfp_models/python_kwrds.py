@@ -1,27 +1,9 @@
 Info: Found int division at 'stan_models/python_kwrds.stan', line 13, column 12 to column 18:
   lambda / 3
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier lambda is a reserved word in python, renamed to lambda__
-Identifier yield is a reserved word in python, renamed to yield__
-Identifier await is a reserved word in python, renamed to await__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier yield is a reserved word in python, renamed to yield__
-Identifier lambda is a reserved word in python, renamed to lambda__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier lambda is a reserved word in python, renamed to lambda__
-Identifier await is a reserved word in python, renamed to await__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier finally is a reserved word in python, renamed to finally__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier assert is a reserved word in python, renamed to assert__
-Identifier lambda is a reserved word in python, renamed to lambda__
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  lambda / 3.0
+If rounding is intended please use the integer division operator %/%.
 
 import numpy as np__
 import tensorflow as tf__
@@ -40,12 +22,22 @@ class python_kwrds_model(tfd__.Distribution):
 
   def __init__(self, lambda__):
     self.lambda__ = lambda__
+    self.d = lambda__ / tf__.cast(3, tf__.float64)
      
   
   def log_prob_one_chain(self, params):
     target = 0
+    
+    # Data
     lambda__ = self.lambda__
+    
+    # Transformed data
+    d = self.d
+    
+    # Parameters
     finally__ = tf__.cast(params[0], tf__.float64)
+    
+    # Target log probability computation
     assert__ = finally__ + tf__.cast(2, tf__.float64)
     target += tf__.reduce_sum(tfd__.Normal(yield__(assert__),
                                            tf__.cast(1, tf__.float64)).log_prob(d))
