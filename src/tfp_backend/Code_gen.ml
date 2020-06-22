@@ -20,24 +20,24 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
   | FunApp (StanLib, f, obs :: dist_params)
     when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
-      pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
-        (list ~sep:comma pp_expr) dist_params pp_expr obs
+    pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
+      (list ~sep:comma pp_expr) dist_params pp_expr obs
   | FunApp (StanLib, f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
-      pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
+    pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
   | FunApp (StanLib, f, args) when Operator.of_string_opt f |> Option.is_some
-  -> (
-    match
-      ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
-      , args )
-    with
-    | op, [lhs; rhs] -> pf ppf "%a %s %a" pp_paren lhs op pp_paren rhs
-    | op, [unary] -> pf ppf "%s%a" op pp_paren unary
-    | op, args ->
-        raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
+    -> (
+        match
+          ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
+          , args )
+        with
+        | op, [lhs; rhs] -> pf ppf "%a %s %a" pp_paren lhs op pp_paren rhs
+        | op, [unary] -> pf ppf "%s%a" op pp_paren unary
+        | op, args ->
+          raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
   | FunApp (_, fname, args) -> pp_call ppf (fname, pp_expr, args)
   | TernaryIf (cond, iftrue, iffalse) ->
-      pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren iffalse
+    pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren iffalse
   | EAnd (a, b) -> pf ppf "%a and %a" pp_paren a pp_paren b
   | EOr (a, b) -> pf ppf "%a or %a" pp_paren a pp_paren b
   | Indexed (_, indices) when List.exists ~f:is_multi_index indices ->
@@ -48,34 +48,34 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.gather_nd
        * tf.strided_slice
 *)
-      raise_s [%message "Multi-indices not supported yet"]
+    raise_s [%message "Multi-indices not supported yet"]
   | Indexed (obj, indices) ->
-      let pp_indexed ppf = function
-        | [] -> ()
-        | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
-      in
-      pf ppf "%a%a" pp_expr obj pp_indexed indices
+    let pp_indexed ppf = function
+      | [] -> ()
+      | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
+    in
+    pf ppf "%a%a" pp_expr obj pp_indexed indices
 
 and pp_paren ppf expr =
   match expr.Expr.Fixed.pattern with
   | TernaryIf _ | EAnd _ | EOr _ -> pf ppf "(%a)" pp_expr expr
   | FunApp (StanLib, f, _) when Operator.of_string_opt f |> Option.is_some ->
-      pf ppf "(%a)" pp_expr expr
+    pf ppf "(%a)" pp_expr expr
   | _ -> pp_expr ppf expr
 
 let rec pp_stmt ppf s =
   let fake_expr pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   match s.Stmt.Fixed.pattern with
   | Assignment ((lhs, _, indices), rhs) ->
-      let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
-      pf ppf "%a = %a" pp_expr indexed pp_expr rhs
+    let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
+    pf ppf "%a = %a" pp_expr indexed pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
-      pp_call ppf (f, pp_expr, args)
+    pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
   | Continue -> pf ppf "continue"
   | Return rhs ->
-      pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
+    pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
   | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
   | Skip -> ()
   (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
@@ -87,7 +87,7 @@ let rec pp_stmt ppf s =
   *)
   | IfElse (_, _, _) | While (_, _) | For _ | NRFunApp (CompilerInternal, _, _)
     ->
-      raise_s [%message "Not implemented" (s : Stmt.Located.t)]
+    raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
 let pp_method ppf name params intro ?(outro = []) ppbody =
   pf ppf "@[<v 2>def %a:@," pp_call_str (name, params) ;
@@ -111,11 +111,11 @@ let pp_init ppf p =
     match p.Program.input_vars with
     | [] -> pf ppf "pass"
     | _ ->
-        pf ppf "@[<v>%a@,%a@]"
-          (list ~sep:cut pp_save_data)
-          p.Program.input_vars
-          (list ~sep:cut pp_prep_data_stmt)
-          p.Program.prepare_data
+      pf ppf "@[<v>%a@,%a@]"
+        (list ~sep:cut pp_save_data)
+        p.Program.input_vars
+        (list ~sep:cut pp_prep_data_stmt)
+        p.Program.prepare_data
   in
   pp_method ppf "__init__" ("self" :: List.map ~f:fst p.input_vars) [] ppbody
 
@@ -209,27 +209,25 @@ let pp_bijector ppf trans =
     | Program.Identity -> []
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
-        [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
+      [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
     | LowerUpper (lb, ub) ->
-        [ ("Sigmoid", [])
-        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
-        ; ("Shift", [lb]) ]
+      [ ("Sigmoid", [lb; ub])]
     | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
     | CholeskyCorr -> [("CorrelationCholesky", [])]
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
-        raise_s
-          [%message
-            "Unsupported " (trans : Expr.Typed.t Program.transformation)]
+      raise_s
+        [%message
+          "Unsupported " (trans : Expr.Typed.t Program.transformation)]
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"
   | ls ->
-      pf ppf "tfb__.Chain([@[<hov>%a@]])"
-        (list ~sep:comma pp_call_expr)
-        List.(rev (map ls ~f:(fun (s, args) -> ("tfb__." ^ s, args))))
+    pf ppf "tfb__.Chain([@[<hov>%a@]])"
+      (list ~sep:comma pp_call_expr)
+      List.(rev (map ls ~f:(fun (s, args) -> ("tfb__." ^ s, args))))
 
 let pp_bijectors ppf p =
   let ppbody ppf =
