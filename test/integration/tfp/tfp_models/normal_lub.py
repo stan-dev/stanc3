@@ -13,16 +13,26 @@ class normal_lub_model(tfd__.Distribution):
     self.y_lub = tf__.cast(y_lub, tf__.float64)
     self.y_ub = tf__.cast(y_ub, tf__.float64)
     self.y_lb = tf__.cast(y_lb, tf__.float64)
+    
      
   
   def log_prob_one_chain(self, params):
     target = 0
+    
+    # Data
     y_lub = self.y_lub
     y_ub = self.y_ub
     y_lb = self.y_lb
+    
+    # Transformed data
+    
+    
+    # Parameters
     theta_lub = tf__.cast(params[0], tf__.float64)
     theta_ub = tf__.cast(params[1], tf__.float64)
     theta_lb = tf__.cast(params[2], tf__.float64)
+    
+    # Target log probability computation
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),
                                            tf__.cast(5, tf__.float64)).log_prob(theta_lub))
     target += tf__.reduce_sum(tfd__.Normal(tf__.cast(0, tf__.float64),

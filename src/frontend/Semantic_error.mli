@@ -8,12 +8,18 @@ val location : t -> Location_span.t
 val mismatched_return_types :
   Location_span.t -> UnsizedType.returntype -> UnsizedType.returntype -> t
 
-val mismatched_array_types : Location_span.t -> t
-val invalid_row_vector_types : Location_span.t -> t
+val mismatched_array_types :
+  Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
+
+val invalid_row_vector_types : Location_span.t -> UnsizedType.t -> t
+val invalid_matrix_types : Location_span.t -> UnsizedType.t -> t
 val int_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
 val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
+
+val scalar_or_type_expected :
+  Location_span.t -> string -> UnsizedType.t -> UnsizedType.t -> t
 
 val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
@@ -33,6 +39,16 @@ val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
 val returning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
+
+val illtyped_reduce_sum :
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> t
+
+val illtyped_reduce_sum_generic :
+  Location_span.t -> string -> UnsizedType.t list -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
@@ -63,6 +79,7 @@ val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> t
 val invalid_map_rect_fn : Location_span.t -> string -> t
+val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
 val conditional_notation_not_allowed : Location_span.t -> t
 val conditioning_required : Location_span.t -> t

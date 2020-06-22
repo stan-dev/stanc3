@@ -93,9 +93,6 @@ generated quantities {
   sigma_degrees = (180 / pi()) * sigma;
 }
 
-Info: Found int division at 'golf1.stan', line 21, column 19 to column 22:
-  180 / pi()
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
   $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
 data {
   int J;

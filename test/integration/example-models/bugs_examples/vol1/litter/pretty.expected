@@ -31,9 +31,6 @@ generated quantities {
     theta[g] <- 1 / (a[g] + b[g]);
 }
 
-Info: Found int division at 'litter.stan', line 30, column 16 to column 17:
-  1 / (a[g] + b[g])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'litter.stan', line 15, column 5:
    -------------------------------------------------
@@ -103,9 +100,6 @@ generated quantities {
     theta[g] <- 1 / (a[g] + b[g]);
 }
 
-Info: Found int division at 'litter_old_param.stan', line 28, column 16 to column 17:
-  1 / (a[g] + b[g])
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'litter_old_param.stan', line 26, column 11:
    -------------------------------------------------

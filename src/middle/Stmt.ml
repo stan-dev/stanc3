@@ -222,6 +222,28 @@ module Numbered = struct
 end
 
 module Helpers = struct
+  let ensure_var bodyfn (expr : Expr.Typed.t) meta =
+    match expr with
+    | {pattern= Var _; _} -> bodyfn expr meta
+    | _ ->
+        let symbol, reset = Gensym.enter () in
+        let body = bodyfn {expr with pattern= Var symbol} meta in
+        let decl =
+          { body with
+            Fixed.pattern=
+              Decl
+                { decl_adtype= Expr.Typed.adlevel_of expr
+                ; decl_id= symbol
+                ; decl_type= Unsized (Expr.Typed.type_of expr) } }
+        in
+        let assign =
+          { body with
+            Fixed.pattern=
+              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) }
+        in
+        reset () ;
+        {body with Fixed.pattern= Block [decl; assign; body]}
+
   let internal_nrfunapp fn args meta =
     { Fixed.pattern=
         NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)

@@ -41,9 +41,10 @@ rule token = parse
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
     ( ( space | newline)+)
-    ( '"' [^ '"']* '"'
-    | non_space_or_newline*
-    as fname)                 { lexer_logger ("include " ^ fname) ;
+    ( '"' ([^ '"']* as fname) '"'
+    | '<' ([^ '>']* as fname) '>'
+    | (non_space_or_newline* as fname)
+    )                         { lexer_logger ("include " ^ fname) ;
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
@@ -59,14 +60,20 @@ rule token = parse
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
   | "data"                    { lexer_logger "data" ; Parser.DATABLOCK }
-  | "transformed data"        { lexer_logger "transformed data" ;
+  | "transformed"
+      ( space+ )
+      "data"                  { lexer_logger "transformed data" ;
                                 Parser.TRANSFORMEDDATABLOCK }
   | "parameters"              { lexer_logger "parameters" ;
                                 Parser.PARAMETERSBLOCK }
-  | "transformed parameters"  { lexer_logger "transformed parameters" ;
+  | "transformed"
+      ( space+ )
+      "parameters"            { lexer_logger "transformed parameters" ;
                                 Parser.TRANSFORMEDPARAMETERSBLOCK }
   | "model"                   { lexer_logger "model" ; Parser.MODELBLOCK }
-  | "generated quantities"    { lexer_logger "generated quantities" ;
+  | "generated"
+      ( space+ )
+      "quantities"    { lexer_logger "generated quantities" ;
                                 Parser.GENERATEDQUANTITIESBLOCK }
 (* Punctuation *)
   | '{'                       { lexer_logger "{" ; Parser.LBRACE }
@@ -123,6 +130,7 @@ rule token = parse
   | '*'                       { lexer_logger "*" ; Parser.TIMES }
   | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
   | '%'                       { lexer_logger "%" ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
   | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
   | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
   | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }

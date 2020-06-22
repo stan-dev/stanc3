@@ -63,9 +63,6 @@ generated quantities {
     pop_hat[k] <- n_captured[k] / p[k];
 }
 
-Info: Found int division at 'cjs-K.stan', line 76, column 18 to column 31:
-  n_captured[k] / p[k]
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'cjs-K.stan', line 18, column 9:
    -------------------------------------------------
@@ -453,9 +450,6 @@ generated quantities {
   N <- M / theta;
 }
 
-Info: Found int division at 'mark-recapture-2.stan', line 19, column 7 to column 8:
-  M / theta
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'mark-recapture-2.stan', line 8, column 13:
    -------------------------------------------------
@@ -518,9 +512,6 @@ model {
   R ~ binomial(C, theta);
 }
 
-Info: Found int division at 'mark-recapture-3.stan', line 34, column 11 to column 12:
-  M / N
-Positive values rounded down, negative values rounded up or down in platform-dependent way.
 
 Warning: deprecated language construct used in 'mark-recapture-3.stan', line 26, column 13:
    -------------------------------------------------
@@ -586,6 +577,3 @@ model {
   R ~ binomial(C, M / N);
 }
 
-Info: Found int division at 'mark-recapture.stan', line 11, column 18 to column 19:
-  M / N
-Positive values rounded down, negative values rounded up or down in platform-dependent way.

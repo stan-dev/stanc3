@@ -108,6 +108,9 @@ let rec remove_unused_stmts s =
            || Internal_fun.to_string FnUnconstrain = f ->
         Stmt.Fixed.Pattern.Skip
     | Decl _ -> Stmt.Fixed.Pattern.Skip
+    | NRFunApp (CompilerInternal, name, _)
+      when Internal_fun.to_string FnCheck = name ->
+        Stmt.Fixed.Pattern.Skip
     | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x
   in
   {s with pattern}
