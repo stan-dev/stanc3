@@ -479,52 +479,57 @@ let semantic_check_conddist_name ~loc id =
 
 (* -- Array Expressions ----------------------------------------------------- *)
 
-(* Array expressions must be of uniform type. (Or mix of int and real) *)
-let semantic_check_array_expr_type ~loc es =
-  Validate.(
-    match es with
-    | next :: _ ->
-        let ty = next.emeta.type_ in
-        if
-          List.exists
-            ~f:(fun x ->
-              not
-                ( UnsizedType.check_of_same_type_mod_array_conv ""
-                    x.emeta.type_ ty
-                || UnsizedType.check_of_same_type_mod_array_conv "" ty
-                     x.emeta.type_ ) )
-            es
-        then Semantic_error.mismatched_array_types loc |> error
-        else ok ()
-    | _ -> Semantic_error.empty_array loc |> error)
+let check_consistent_types ad_level type_ es =
+  let f state e =
+    match state with
+    | Error e -> Error e
+    | Ok (ad, ty) -> (
+        let ad =
+          if UnsizedType.autodifftype_can_convert e.emeta.ad_level ad then
+            e.emeta.ad_level
+          else ad
+        in
+        match UnsizedType.common_type (ty, e.emeta.type_) with
+        | Some ty -> Ok (ad, ty)
+        | None -> Error (ty, e.emeta) )
+  in
+  List.fold ~init:(Ok (ad_level, type_)) ~f es
 
 let semantic_check_array_expr ~loc es =
   Validate.(
-    match List.map ~f:type_of_expr_typed es with
+    match es with
     | [] -> Semantic_error.empty_array loc |> error
-    | ty :: _ as elementtypes ->
-        let type_ =
-          if List.exists ~f:(fun x -> ty <> x) elementtypes then
-            UnsizedType.UArray UReal
-          else UArray ty
-        and ad_level = lub_ad_e es in
-        mk_typed_expression ~expr:(ArrayExpr es) ~ad_level ~type_ ~loc |> ok)
+    | {emeta= {ad_level; type_; _}; _} :: elements -> (
+      match check_consistent_types ad_level type_ elements with
+      | Error (ty, meta) ->
+          Semantic_error.mismatched_array_types meta.loc ty meta.type_ |> error
+      | Ok (ad_level, type_) ->
+          let type_ = UnsizedType.UArray type_ in
+          mk_typed_expression ~expr:(ArrayExpr es) ~ad_level ~type_ ~loc |> ok
+      ))
 
 (* -- Row Vector Expresssion ------------------------------------------------ *)
 
 let semantic_check_rowvector ~loc es =
   Validate.(
-    let elementtypes = List.map ~f:(fun y -> y.emeta.type_) es
-    and ad_level = lub_ad_e es in
-    if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
-      mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:URowVector
-        ~loc
-      |> ok
-    else if List.for_all ~f:(fun x -> x = URowVector) elementtypes then
-      mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:UMatrix
-        ~loc
-      |> ok
-    else Semantic_error.invalid_row_vector_types loc |> error)
+    match es with
+    | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: elements -> (
+      match check_consistent_types ad_level URowVector elements with
+      | Ok (ad_level, _) ->
+          mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:UMatrix
+            ~loc
+          |> ok
+      | Error (_, meta) ->
+          Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
+    | _ -> (
+      match check_consistent_types DataOnly UReal es with
+      | Ok (ad_level, _) ->
+          mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level
+            ~type_:URowVector ~loc
+          |> ok
+      | Error (_, meta) ->
+          Semantic_error.invalid_row_vector_types meta.loc meta.type_ |> error
+      ))
 
 (* -- Indexed Expressions --------------------------------------------------- *)
 let tuple2 a b = (a, b)
@@ -718,9 +723,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         es
         |> List.map ~f:(semantic_check_expression cf)
         |> sequence
-        >>= fun ues ->
-        semantic_check_array_expr ~loc:emeta.loc ues
-        |> apply_const (semantic_check_array_expr_type ~loc:emeta.loc ues))
+        >>= fun ues -> semantic_check_array_expr ~loc:emeta.loc ues)
   | RowVectorExpr es ->
       Validate.(
         es

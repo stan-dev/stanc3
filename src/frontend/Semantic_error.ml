@@ -5,8 +5,9 @@ open Middle
 module TypeError = struct
   type t =
     | MismatchedReturnTypes of UnsizedType.returntype * UnsizedType.returntype
-    | MismatchedArrayTypes
-    | InvalidRowVectorTypes
+    | MismatchedArrayTypes of UnsizedType.t * UnsizedType.t
+    | InvalidRowVectorTypes of UnsizedType.t
+    | InvalidMatrixTypes of UnsizedType.t
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
     | TypeExpected of string * UnsizedType.t * UnsizedType.t
@@ -44,12 +45,20 @@ module TypeError = struct
           "Branches of function definition need to have the same return type. \
            Instead, found return types %a and %a."
           UnsizedType.pp_returntype rt1 UnsizedType.pp_returntype rt2
-    | MismatchedArrayTypes ->
-        Fmt.pf ppf "Array expression must have entries of consistent type."
-    | InvalidRowVectorTypes ->
+    | MismatchedArrayTypes (t1, t2) ->
         Fmt.pf ppf
-          "Row_vector expression must have all int and real entries or all \
-           row_vector entries."
+          "Array expression must have entries of consistent type. Expected %a \
+           but found %a."
+          UnsizedType.pp t1 UnsizedType.pp t2
+    | InvalidRowVectorTypes ty ->
+        Fmt.pf ppf
+          "Row_vector expression must have all int or real entries. Found \
+           type %a."
+          UnsizedType.pp ty
+    | InvalidMatrixTypes ty ->
+        Fmt.pf ppf
+          "Matrix expression must have all row_vector entries. Found type %a."
+          UnsizedType.pp ty
     | IntExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int. Instead found type %a." name
           UnsizedType.pp ut
@@ -57,8 +66,8 @@ module TypeError = struct
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
           name UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal), ut) ->
-        Fmt.pf ppf "%s must be a scalar. Instead found type %a."
-          name UnsizedType.pp ut
+        Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
+          UnsizedType.pp ut
     | TypeExpected (name, et, ut) ->
         Fmt.pf ppf "%s must be a scalar or of type %a. Instead found type %a."
           name UnsizedType.pp et UnsizedType.pp ut
@@ -433,10 +442,14 @@ let location = function
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
 
-let mismatched_array_types loc = TypeError (loc, TypeError.MismatchedArrayTypes)
+let mismatched_array_types loc t1 t2 =
+  TypeError (loc, TypeError.MismatchedArrayTypes (t1, t2))
 
-let invalid_row_vector_types loc =
-  TypeError (loc, TypeError.InvalidRowVectorTypes)
+let invalid_row_vector_types loc ty =
+  TypeError (loc, TypeError.InvalidRowVectorTypes ty)
+
+let invalid_matrix_types loc ty =
+  TypeError (loc, TypeError.InvalidMatrixTypes ty)
 
 let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 
