@@ -63,7 +63,7 @@ pipeline {
             }
             steps {
                 sh 'printenv'
-                runShell("""
+                sh """
                     eval \$(opam env)
                     make format || error=true
                     if [ $error ]
@@ -72,9 +72,7 @@ pipeline {
                         echo "Also consider installing a pre-commit git hook for formatting with the above command."
                         exit 1;
                     fi
-                """)
-                sh 'echo $error'
-
+                """
             }
             post { always { runShell("rm -rf ./*") }}
         }        
