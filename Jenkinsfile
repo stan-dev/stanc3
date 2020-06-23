@@ -148,7 +148,7 @@ pipeline {
                         }
                     }
                     steps {
-                        sh "pip3 install tfp-nightly==0.9.0.dev20191216"
+                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
                         sh "python3 test/integration/tfp/tests.py"
                     }
                     post { always { runShell("rm -rf ./*") }}
