@@ -323,7 +323,9 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
         { type_=
             UnsizedType.UFun
               ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
-                :: (_, UInt) :: (_, UInt) :: fun_args
+                :: (_, UInt) 
+                :: (_, UInt) 
+                :: fun_args
               , ReturnType UReal ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
