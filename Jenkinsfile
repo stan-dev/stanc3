@@ -34,6 +34,25 @@ pipeline {
             }
             steps { script { utils.killOldBuilds() } }
         }
+        stage("Build") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
         stage("Code formatting") {
             agent {
                 dockerfile {
@@ -54,29 +73,9 @@ pipeline {
                     echo "Please run 'make format' and commit the formatting changes."
                 fi
                 """
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*") }}
-        }
-         stage("Build") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh 'printenv'
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
-                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
+        }        
         stage("Test") {
             parallel {
                 stage("Dune tests") {
