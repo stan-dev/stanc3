@@ -40,9 +40,8 @@ class transformed_data_model(tfd__.Distribution):
      
   def parameter_bijectors(self):
     X = self.X
-    return [tfb__.Chain([tfb__.Shift(tf__.cast(0, tf__.float64)),
-                         tfb__.Scale(tf__.cast(1, tf__.float64) - tf__.cast(0, tf__.float64)),
-                         tfb__.Sigmoid()])]
+    return [tfb__.Chain([tfb__.Sigmoid(tf__.cast(0, tf__.float64),
+                                       tf__.cast(1, tf__.float64))])]
      
   def parameter_names(self):
     return ["p"]
