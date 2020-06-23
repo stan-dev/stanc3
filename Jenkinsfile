@@ -34,7 +34,31 @@ pipeline {
             }
             steps { script { utils.killOldBuilds() } }
         }
-        stage("Build") {
+        stage("Code formatting") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    make format
+                    dune promote
+                """)
+                sh """
+                if [[ `git diff` != "" ]]; then
+                    echo "Please run 'make format' and commit the formatting changes."
+                fi
+                """
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+         stage("Build") {
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
