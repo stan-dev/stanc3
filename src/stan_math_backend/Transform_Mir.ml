@@ -56,8 +56,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | false -> args
   in
   match pattern with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers (Utils.stdlib_distribution_name f) ->
-      let trigger = Map.find_exn opencl_triggers (Utils.stdlib_distribution_name f) in
+  | FunApp (StanLib, f, args)
+    when Map.mem opencl_triggers (Utils.stdlib_distribution_name f) ->
+      let trigger =
+        Map.find_exn opencl_triggers (Utils.stdlib_distribution_name f)
+      in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with

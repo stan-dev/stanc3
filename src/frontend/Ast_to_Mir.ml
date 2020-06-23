@@ -553,8 +553,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let suffix = dist_name_suffix ud_dists distribution.name in
       let kind =
         let possible_names =
-          List.map ~f:(( ^ ) distribution.name)
-            Utils.distribution_suffices
+          List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
           |> String.Set.of_list
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
