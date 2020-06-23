@@ -73,6 +73,8 @@ pipeline {
                         exit 1;
                     fi
                 """)
+                sh 'echo $error'
+
             }
             post { always { runShell("rm -rf ./*") }}
         }        
