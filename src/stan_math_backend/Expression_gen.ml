@@ -9,9 +9,7 @@ let functions_requiring_namespace =
   String.Set.of_list
     [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
     ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
-    ; "asinh"; 
-    "atan";
-     "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
+    ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
     ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
     ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
