@@ -66,13 +66,7 @@ pipeline {
                 runShell("""
                     eval \$(opam env)
                     make format
-                    dune promote
                 """)
-                sh """
-                if [[ `git diff` != "" ]]; then
-                    echo "Please run 'make format' and commit the formatting changes."
-                fi
-                """
             }
             post { always { runShell("rm -rf ./*") }}
         }        
