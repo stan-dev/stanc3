@@ -65,13 +65,7 @@ pipeline {
                 sh 'printenv'
                 sh """
                     eval \$(opam env)
-                    make format || error=true
-                    if [ $error ]
-                    then
-                        echo "The source code was not formatted. Please run 'make format | dune promote' and push the changes."
-                        echo "Also consider installing a pre-commit git hook for formatting with the above command."
-                        exit 1;
-                    fi
+                    make format
                 """
             }
             post { always { runShell("rm -rf ./*") }}
