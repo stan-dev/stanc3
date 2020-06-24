@@ -53,6 +53,29 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
+        stage("Code formatting") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                sh """
+                    eval \$(opam env)
+                    make format  || 
+                    (
+                        set +x &&
+                        echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+                        echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
+                        exit 1;
+                    )
+                """
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }        
         stage("Test") {
             parallel {
                 stage("Dune tests") {
