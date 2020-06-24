@@ -143,12 +143,12 @@ pipeline {
                 stage("TFP tests") {
                     agent {
                         docker {
-                            image 'tensorflow/tensorflow@sha256:4be8a8bf5e249fce61d8bedc5fd733445962c34bf6ad51a16f9009f125195ba9'
+                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
                             args '-u root'
                         }
                     }
                     steps {
-                        sh "pip3 install tfp-nightly==0.9.0.dev20191216"
+                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
                         sh "python3 test/integration/tfp/tests.py"
                     }
                     post { always { runShell("rm -rf ./*") }}
