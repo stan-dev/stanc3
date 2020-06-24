@@ -210,10 +210,7 @@ let pp_bijector ppf trans =
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
-    | LowerUpper (lb, ub) ->
-        [ ("Sigmoid", [])
-        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
-        ; ("Shift", [lb]) ]
+    | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
     | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
