@@ -193,8 +193,11 @@ let get_params p =
 
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
-      (SizedType.get_dims out_unconstrained_st)
+    let shapes_lst = SizedType.get_dims out_unconstrained_st in
+    if List.length shapes_lst > 0 then
+      pf ppf "(nchains__, tf__.cast(@[<hov>%a@], tf__.int32))"
+        (list ~sep:comma pp_expr) shapes_lst
+    else pf ppf "(nchains__, )"
   in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;
