@@ -2544,6 +2544,20 @@ Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
 
 Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the correct signature.
 
+  $ ../../../../install/default/bin/stanc string_literal_newline.stan
+
+Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    print(
+     3:    "print
+           ^
+     4:    lines");
+     5:  }
+   -------------------------------------------------
+
+Invalid character found.
+
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
 Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
