@@ -299,11 +299,12 @@ let pp_ctor ppf p =
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
-  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
+  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st ->
+          Locations.pp_smeta ppf meta ;
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
           pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
