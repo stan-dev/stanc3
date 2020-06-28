@@ -218,6 +218,14 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
   ~ad_level_failing_model() { }
   
   std::string model_name() const { return "ad_level_failing_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   ad_level_failing_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
@@ -235,6 +243,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 16;
       context__.validate_dims("data initialization","N_t","int",
           context__.to_vec());
       N_t = std::numeric_limits<int>::min();
@@ -243,6 +252,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
       N_t = context__.vals_i("N_t")[(1 - 1)];
       current_statement__ = 17;
       validate_non_negative_index("t", "N_t", N_t);
+      current_statement__ = 17;
       context__.validate_dims("data initialization","t","double",
           context__.to_vec(N_t));
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
@@ -252,6 +262,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
         "assigning variable t");
       current_statement__ = 18;
       validate_non_negative_index("y0", "4", 4);
+      current_statement__ = 18;
       context__.validate_dims("data initialization","y0","double",
           context__.to_vec(4));
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
@@ -261,6 +272,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
         "assigning variable y0");
       current_statement__ = 19;
       validate_non_negative_index("stoi_hat", "N_t", N_t);
+      current_statement__ = 19;
       context__.validate_dims("data initialization","stoi_hat","int",
           context__.to_vec(N_t));
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
@@ -270,6 +282,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
         "assigning variable stoi_hat");
       current_statement__ = 20;
       validate_non_negative_index("B_hat", "N_t", N_t);
+      current_statement__ = 20;
       context__.validate_dims("data initialization","B_hat","double",
           context__.to_vec(N_t));
       B_hat = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
@@ -277,20 +290,24 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
       current_statement__ = 20;
       assign(B_hat, nil_index_list(), context__.vals_r("B_hat"),
         "assigning variable B_hat");
+      current_statement__ = 21;
       t0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 21;
       t0 = 0;
+      current_statement__ = 22;
       kappa = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 22;
       kappa = 1000000;
       current_statement__ = 23;
       validate_non_negative_index("x_r", "0", 0);
+      current_statement__ = 23;
       x_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 24;
       validate_non_negative_index("x_i", "0", 0);
+      current_statement__ = 24;
       x_i = std::vector<int>(0, std::numeric_limits<int>::min());
       
       current_statement__ = 16;
@@ -1434,6 +1451,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
   ~copy_fail_model() { }
   
   std::string model_name() const { return "copy_fail_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   copy_fail_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -1482,12 +1507,14 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 29;
       context__.validate_dims("data initialization","nind","int",
           context__.to_vec());
       nind = std::numeric_limits<int>::min();
       
       current_statement__ = 29;
       nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 30;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -1498,6 +1525,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
       validate_non_negative_index("y", "nind", nind);
       current_statement__ = 31;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 31;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(nind, n_occasions));
       y = std::vector<std::vector<int>>(nind, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -1555,6 +1583,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
           lcm_sym155__ = logical_gte(nind, 1);
         }
       }
+      current_statement__ = 32;
       context__.validate_dims("data initialization","max_age","int",
           context__.to_vec());
       max_age = std::numeric_limits<int>::min();
@@ -1565,6 +1594,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
       validate_non_negative_index("x", "nind", nind);
       lcm_sym157__ = (n_occasions - 1);
       validate_non_negative_index("x", "(n_occasions - 1)", lcm_sym157__);
+      current_statement__ = 33;
       context__.validate_dims("data initialization","x","int",
           context__.to_vec(nind, lcm_sym157__));
       x = std::vector<std::vector<int>>(nind, std::vector<int>(lcm_sym157__, std::numeric_limits<int>::min()));
@@ -1618,16 +1648,19 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
             } }
         } 
       }
+      current_statement__ = 34;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
       current_statement__ = 34;
       n_occ_minus_1 = lcm_sym157__;
       current_statement__ = 35;
       validate_non_negative_index("first", "nind", nind);
+      current_statement__ = 35;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 36;
       validate_non_negative_index("last", "nind", nind);
+      current_statement__ = 36;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 41;
@@ -3626,6 +3659,14 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
   ~dce_fail_model() { }
   
   std::string model_name() const { return "dce_fail_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   dce_fail_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
@@ -3662,30 +3703,35 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 37;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 37;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 38;
       context__.validate_dims("data initialization","n_age","int",
           context__.to_vec());
       n_age = std::numeric_limits<int>::min();
       
       current_statement__ = 38;
       n_age = context__.vals_i("n_age")[(1 - 1)];
+      current_statement__ = 39;
       context__.validate_dims("data initialization","n_edu","int",
           context__.to_vec());
       n_edu = std::numeric_limits<int>::min();
       
       current_statement__ = 39;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      current_statement__ = 40;
       context__.validate_dims("data initialization","n_region","int",
           context__.to_vec());
       n_region = std::numeric_limits<int>::min();
       
       current_statement__ = 40;
       n_region = context__.vals_i("n_region")[(1 - 1)];
+      current_statement__ = 41;
       context__.validate_dims("data initialization","n_state","int",
           context__.to_vec());
       n_state = std::numeric_limits<int>::min();
@@ -3694,6 +3740,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
       n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 42;
       validate_non_negative_index("female", "N", N);
+      current_statement__ = 42;
       context__.validate_dims("data initialization","female","int",
           context__.to_vec(N));
       female = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3703,6 +3750,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable female");
       current_statement__ = 43;
       validate_non_negative_index("black", "N", N);
+      current_statement__ = 43;
       context__.validate_dims("data initialization","black","int",
           context__.to_vec(N));
       black = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3712,6 +3760,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable black");
       current_statement__ = 44;
       validate_non_negative_index("age", "N", N);
+      current_statement__ = 44;
       context__.validate_dims("data initialization","age","int",
           context__.to_vec(N));
       age = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3721,6 +3770,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable age");
       current_statement__ = 45;
       validate_non_negative_index("edu", "N", N);
+      current_statement__ = 45;
       context__.validate_dims("data initialization","edu","int",
           context__.to_vec(N));
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3730,6 +3780,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable edu");
       current_statement__ = 46;
       validate_non_negative_index("region", "n_state", n_state);
+      current_statement__ = 46;
       context__.validate_dims("data initialization","region","int",
           context__.to_vec(n_state));
       region = std::vector<int>(n_state, std::numeric_limits<int>::min());
@@ -3739,6 +3790,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable region");
       current_statement__ = 47;
       validate_non_negative_index("state", "N", N);
+      current_statement__ = 47;
       context__.validate_dims("data initialization","state","int",
           context__.to_vec(N));
       state = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3748,6 +3800,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable state");
       current_statement__ = 48;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 48;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(N));
       y = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -3757,6 +3810,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
         "assigning variable y");
       current_statement__ = 49;
       validate_non_negative_index("v_prev", "n_state", n_state);
+      current_statement__ = 49;
       context__.validate_dims("data initialization","v_prev","double",
           context__.to_vec(n_state));
       v_prev = Eigen::Matrix<double, -1, 1>(n_state);
@@ -5371,6 +5425,14 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
   ~expr_prop_experiment_model() { }
   
   std::string model_name() const { return "expr_prop_experiment_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_experiment_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
@@ -5389,18 +5451,23 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 1;
       context__.validate_dims("data initialization","j","int",
           context__.to_vec());
       j = std::numeric_limits<int>::min();
       
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
+      current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
+      current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
       
+      current_statement__ = 4;
       y = std::numeric_limits<double>::quiet_NaN();
       
+      current_statement__ = 5;
       i = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
@@ -5750,6 +5817,14 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
   ~expr_prop_experiment2_model() { }
   
   std::string model_name() const { return "expr_prop_experiment2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_experiment2_model(stan::io::var_context& context__,
                               unsigned int random_seed__ = 0,
@@ -5768,16 +5843,19 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 1;
       context__.validate_dims("data initialization","j","int",
           context__.to_vec());
       j = std::numeric_limits<int>::min();
       
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
+      current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       z = 1;
+      current_statement__ = 3;
       y = std::numeric_limits<double>::quiet_NaN();
       
       {
@@ -6135,6 +6213,14 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
   ~expr_prop_fail_model() { }
   
   std::string model_name() const { return "expr_prop_fail_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
@@ -6156,6 +6242,7 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 9;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
@@ -6164,6 +6251,7 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 10;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 10;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
       y = Eigen::Matrix<double, -1, 1>(N);
@@ -6839,6 +6927,14 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
   ~expr_prop_fail2_model() { }
   
   std::string model_name() const { return "expr_prop_fail2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -6859,6 +6955,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 6;
       context__.validate_dims("data initialization","J","int",
           context__.to_vec());
       J = std::numeric_limits<int>::min();
@@ -6867,6 +6964,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 7;
       validate_non_negative_index("y", "J", J);
+      current_statement__ = 7;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(J));
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
@@ -6876,6 +6974,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
         "assigning variable y");
       current_statement__ = 8;
       validate_non_negative_index("sigma", "J", J);
+      current_statement__ = 8;
       context__.validate_dims("data initialization","sigma","double",
           context__.to_vec(J));
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
@@ -7431,6 +7530,14 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
   ~expr_prop_fail3_model() { }
   
   std::string model_name() const { return "expr_prop_fail3_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail3_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -7472,36 +7579,42 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 22;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 22;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 23;
       context__.validate_dims("data initialization","n_age","int",
           context__.to_vec());
       n_age = std::numeric_limits<int>::min();
       
       current_statement__ = 23;
       n_age = context__.vals_i("n_age")[(1 - 1)];
+      current_statement__ = 24;
       context__.validate_dims("data initialization","n_age_edu","int",
           context__.to_vec());
       n_age_edu = std::numeric_limits<int>::min();
       
       current_statement__ = 24;
       n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
+      current_statement__ = 25;
       context__.validate_dims("data initialization","n_edu","int",
           context__.to_vec());
       n_edu = std::numeric_limits<int>::min();
       
       current_statement__ = 25;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      current_statement__ = 26;
       context__.validate_dims("data initialization","n_region_full","int",
           context__.to_vec());
       n_region_full = std::numeric_limits<int>::min();
       
       current_statement__ = 26;
       n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
+      current_statement__ = 27;
       context__.validate_dims("data initialization","n_state","int",
           context__.to_vec());
       n_state = std::numeric_limits<int>::min();
@@ -7510,6 +7623,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 28;
       validate_non_negative_index("age", "N", N);
+      current_statement__ = 28;
       context__.validate_dims("data initialization","age","int",
           context__.to_vec(N));
       age = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -7519,6 +7633,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
         "assigning variable age");
       current_statement__ = 29;
       validate_non_negative_index("age_edu", "N", N);
+      current_statement__ = 29;
       context__.validate_dims("data initialization","age_edu","int",
           context__.to_vec(N));
       age_edu = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -7528,6 +7643,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
         "assigning variable age_edu");
       current_statement__ = 30;
       validate_non_negative_index("black", "N", N);
+      current_statement__ = 30;
       context__.validate_dims("data initialization","black","double",
           context__.to_vec(N));
       black = Eigen::Matrix<double, -1, 1>(N);
@@ -7558,6 +7674,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       }
       current_statement__ = 31;
       validate_non_negative_index("edu", "N", N);
+      current_statement__ = 31;
       context__.validate_dims("data initialization","edu","int",
           context__.to_vec(N));
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -7567,6 +7684,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
         "assigning variable edu");
       current_statement__ = 32;
       validate_non_negative_index("female", "N", N);
+      current_statement__ = 32;
       context__.validate_dims("data initialization","female","double",
           context__.to_vec(N));
       female = Eigen::Matrix<double, -1, 1>(N);
@@ -7597,6 +7715,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       }
       current_statement__ = 33;
       validate_non_negative_index("region_full", "N", N);
+      current_statement__ = 33;
       context__.validate_dims("data initialization","region_full","int",
           context__.to_vec(N));
       region_full = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -7606,6 +7725,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
         "assigning variable region_full");
       current_statement__ = 34;
       validate_non_negative_index("state", "N", N);
+      current_statement__ = 34;
       context__.validate_dims("data initialization","state","int",
           context__.to_vec(N));
       state = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -7615,6 +7735,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
         "assigning variable state");
       current_statement__ = 35;
       validate_non_negative_index("v_prev_full", "N", N);
+      current_statement__ = 35;
       context__.validate_dims("data initialization","v_prev_full","double",
           context__.to_vec(N));
       v_prev_full = Eigen::Matrix<double, -1, 1>(N);
@@ -7649,6 +7770,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
       }
       current_statement__ = 36;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 36;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(N));
       y = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -9252,6 +9374,14 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
   ~expr_prop_fail4_model() { }
   
   std::string model_name() const { return "expr_prop_fail4_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail4_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -9281,12 +9411,14 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 28;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 28;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 29;
       context__.validate_dims("data initialization","N_edges","int",
           context__.to_vec());
       N_edges = std::numeric_limits<int>::min();
@@ -9295,6 +9427,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 30;
       validate_non_negative_index("node1", "N_edges", N_edges);
+      current_statement__ = 30;
       context__.validate_dims("data initialization","node1","int",
           context__.to_vec(N_edges));
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
@@ -9304,6 +9437,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
         "assigning variable node1");
       current_statement__ = 31;
       validate_non_negative_index("node2", "N_edges", N_edges);
+      current_statement__ = 31;
       context__.validate_dims("data initialization","node2","int",
           context__.to_vec(N_edges));
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
@@ -9313,6 +9447,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
         "assigning variable node2");
       current_statement__ = 32;
       validate_non_negative_index("E", "N", N);
+      current_statement__ = 32;
       context__.validate_dims("data initialization","E","double",
           context__.to_vec(N));
       E = Eigen::Matrix<double, -1, 1>(N);
@@ -9343,6 +9478,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
       }
       current_statement__ = 33;
       validate_non_negative_index("log_E", "N", N);
+      current_statement__ = 33;
       log_E = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(log_E, std::numeric_limits<double>::quiet_NaN());
       
@@ -10556,6 +10692,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
   ~expr_prop_fail5_model() { }
   
   std::string model_name() const { return "expr_prop_fail5_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail5_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -10597,12 +10741,14 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 35;
       context__.validate_dims("data initialization","nind","int",
           context__.to_vec());
       nind = std::numeric_limits<int>::min();
       
       current_statement__ = 35;
       nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 36;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -10613,6 +10759,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
       validate_non_negative_index("y", "nind", nind);
       current_statement__ = 37;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 37;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(nind, n_occasions));
       y = std::vector<std::vector<int>>(nind, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -10670,16 +10817,19 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
           lcm_sym145__ = logical_gte(nind, 1);
         }
       }
+      current_statement__ = 38;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
       current_statement__ = 38;
       n_occ_minus_1 = (n_occasions - 1);
       current_statement__ = 39;
       validate_non_negative_index("first", "nind", nind);
+      current_statement__ = 39;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 40;
       validate_non_negative_index("last", "nind", nind);
+      current_statement__ = 40;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 45;
@@ -13614,6 +13764,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
   ~expr_prop_fail6_model() { }
   
   std::string model_name() const { return "expr_prop_fail6_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail6_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -13654,12 +13812,14 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 97;
       context__.validate_dims("data initialization","M","int",
           context__.to_vec());
       M = std::numeric_limits<int>::min();
       
       current_statement__ = 97;
       M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 98;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -13670,6 +13830,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
       validate_non_negative_index("y", "M", M);
       current_statement__ = 99;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 99;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(M, n_occasions));
       y = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -13729,10 +13890,12 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
       }
       current_statement__ = 100;
       validate_non_negative_index("first", "M", M);
+      current_statement__ = 100;
       first = std::vector<int>(M, std::numeric_limits<int>::min());
       
       current_statement__ = 101;
       validate_non_negative_index("last", "M", M);
+      current_statement__ = 101;
       last = std::vector<int>(M, std::numeric_limits<int>::min());
       
       current_statement__ = 103;
@@ -16848,6 +17011,14 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
   ~expr_prop_fail7_model() { }
   
   std::string model_name() const { return "expr_prop_fail7_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail7_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -16885,18 +17056,21 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 19;
       context__.validate_dims("data initialization","K","int",
           context__.to_vec());
       K = std::numeric_limits<int>::min();
       
       current_statement__ = 19;
       K = context__.vals_i("K")[(1 - 1)];
+      current_statement__ = 20;
       context__.validate_dims("data initialization","I","int",
           context__.to_vec());
       I = std::numeric_limits<int>::min();
       
       current_statement__ = 20;
       I = context__.vals_i("I")[(1 - 1)];
+      current_statement__ = 21;
       context__.validate_dims("data initialization","J","int",
           context__.to_vec());
       J = std::numeric_limits<int>::min();
@@ -16907,6 +17081,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       validate_non_negative_index("y", "I", I);
       current_statement__ = 22;
       validate_non_negative_index("y", "J", J);
+      current_statement__ = 22;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(I, J));
       y = std::vector<std::vector<int>>(I, std::vector<int>(J, std::numeric_limits<int>::min()));
@@ -16966,6 +17141,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       }
       current_statement__ = 23;
       validate_non_negative_index("alpha", "K", K);
+      current_statement__ = 23;
       context__.validate_dims("data initialization","alpha","double",
           context__.to_vec(K));
       alpha = Eigen::Matrix<double, -1, 1>(K);
@@ -16998,6 +17174,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
       validate_non_negative_index("beta", "K", K);
       current_statement__ = 24;
       validate_non_negative_index("beta", "K", K);
+      current_statement__ = 24;
       context__.validate_dims("data initialization","beta","double",
           context__.to_vec(K, K));
       beta = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(K));
@@ -18562,6 +18739,14 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
   ~expr_prop_fail8_model() { }
   
   std::string model_name() const { return "expr_prop_fail8_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   expr_prop_fail8_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -18590,12 +18775,14 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 12;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 13;
       context__.validate_dims("data initialization","N_edges","int",
           context__.to_vec());
       N_edges = std::numeric_limits<int>::min();
@@ -18604,6 +18791,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 14;
       validate_non_negative_index("node1", "N_edges", N_edges);
+      current_statement__ = 14;
       context__.validate_dims("data initialization","node1","int",
           context__.to_vec(N_edges));
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
@@ -18613,6 +18801,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
         "assigning variable node1");
       current_statement__ = 15;
       validate_non_negative_index("node2", "N_edges", N_edges);
+      current_statement__ = 15;
       context__.validate_dims("data initialization","node2","int",
           context__.to_vec(N_edges));
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
@@ -18622,6 +18811,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
         "assigning variable node2");
       current_statement__ = 16;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 16;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(N));
       y = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -18631,6 +18821,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
         "assigning variable y");
       current_statement__ = 17;
       validate_non_negative_index("x", "N", N);
+      current_statement__ = 17;
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(N));
       x = Eigen::Matrix<double, -1, 1>(N);
@@ -19810,6 +20001,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
   ~fails_test_model() { }
   
   std::string model_name() const { return "fails_test_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   fails_test_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
@@ -19858,12 +20057,14 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 29;
       context__.validate_dims("data initialization","nind","int",
           context__.to_vec());
       nind = std::numeric_limits<int>::min();
       
       current_statement__ = 29;
       nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 30;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -19874,6 +20075,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
       validate_non_negative_index("y", "nind", nind);
       current_statement__ = 31;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 31;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(nind, n_occasions));
       y = std::vector<std::vector<int>>(nind, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -19931,6 +20133,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
           lcm_sym155__ = logical_gte(nind, 1);
         }
       }
+      current_statement__ = 32;
       context__.validate_dims("data initialization","max_age","int",
           context__.to_vec());
       max_age = std::numeric_limits<int>::min();
@@ -19941,6 +20144,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
       validate_non_negative_index("x", "nind", nind);
       lcm_sym157__ = (n_occasions - 1);
       validate_non_negative_index("x", "(n_occasions - 1)", lcm_sym157__);
+      current_statement__ = 33;
       context__.validate_dims("data initialization","x","int",
           context__.to_vec(nind, lcm_sym157__));
       x = std::vector<std::vector<int>>(nind, std::vector<int>(lcm_sym157__, std::numeric_limits<int>::min()));
@@ -19994,16 +20198,19 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
             } }
         } 
       }
+      current_statement__ = 34;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
       current_statement__ = 34;
       n_occ_minus_1 = lcm_sym157__;
       current_statement__ = 35;
       validate_non_negative_index("first", "nind", nind);
+      current_statement__ = 35;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 36;
       validate_non_negative_index("last", "nind", nind);
+      current_statement__ = 36;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 41;
@@ -23071,6 +23278,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
   ~inlining_fail2_model() { }
   
   std::string model_name() const { return "inlining_fail2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   inlining_fail2_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
@@ -23111,12 +23326,14 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 92;
       context__.validate_dims("data initialization","M","int",
           context__.to_vec());
       M = std::numeric_limits<int>::min();
       
       current_statement__ = 92;
       M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 93;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -23127,6 +23344,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       validate_non_negative_index("y", "M", M);
       current_statement__ = 94;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 94;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(M, n_occasions));
       y = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -23186,10 +23404,12 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
       }
       current_statement__ = 95;
       validate_non_negative_index("first", "M", M);
+      current_statement__ = 95;
       first = std::vector<int>(M, std::numeric_limits<int>::min());
       
       current_statement__ = 96;
       validate_non_negative_index("last", "M", M);
+      current_statement__ = 96;
       last = std::vector<int>(M, std::numeric_limits<int>::min());
       
       current_statement__ = 98;
@@ -26074,6 +26294,14 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
   ~lcm_experiment_model() { }
   
   std::string model_name() const { return "lcm_experiment_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   lcm_experiment_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
@@ -26092,16 +26320,19 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 1;
       context__.validate_dims("data initialization","j","int",
           context__.to_vec());
       j = std::numeric_limits<int>::min();
       
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
+      current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       z = 1;
+      current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
       
       {
@@ -26110,6 +26341,7 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
         lcm_sym3__ = stan::math::fma(stan::math::sqrt(j), 2, 1);
         z = normal_rng(lcm_sym3__, 1, base_rng__);
       }
+      current_statement__ = 6;
       i = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
@@ -26446,6 +26678,14 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
   ~lcm_experiment2_model() { }
   
   std::string model_name() const { return "lcm_experiment2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   lcm_experiment2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -26829,6 +27069,14 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
   ~lcm_fails_model() { }
   
   std::string model_name() const { return "lcm_fails_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   lcm_fails_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -26846,6 +27094,7 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 3;
       context__.validate_dims("data initialization","J","int",
           context__.to_vec());
       J = std::numeric_limits<int>::min();
@@ -26854,6 +27103,7 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 4;
       validate_non_negative_index("y", "J", J);
+      current_statement__ = 4;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(J));
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
@@ -27644,6 +27894,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
   ~lcm_fails2_model() { }
   
   std::string model_name() const { return "lcm_fails2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   lcm_fails2_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
@@ -27685,12 +27943,14 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 29;
       context__.validate_dims("data initialization","nind","int",
           context__.to_vec());
       nind = std::numeric_limits<int>::min();
       
       current_statement__ = 29;
       nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 30;
       context__.validate_dims("data initialization","n_occasions","int",
           context__.to_vec());
       n_occasions = std::numeric_limits<int>::min();
@@ -27701,6 +27961,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
       validate_non_negative_index("y", "nind", nind);
       current_statement__ = 31;
       validate_non_negative_index("y", "n_occasions", n_occasions);
+      current_statement__ = 31;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(nind, n_occasions));
       y = std::vector<std::vector<int>>(nind, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
@@ -27758,16 +28019,19 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
           lcm_sym129__ = logical_gte(nind, 1);
         }
       }
+      current_statement__ = 32;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
       current_statement__ = 32;
       n_occ_minus_1 = (n_occasions - 1);
       current_statement__ = 33;
       validate_non_negative_index("first", "nind", nind);
+      current_statement__ = 33;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 34;
       validate_non_negative_index("last", "nind", nind);
+      current_statement__ = 34;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
       
       current_statement__ = 39;
@@ -29511,6 +29775,14 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
   ~off_dce_model() { }
   
   std::string model_name() const { return "off_dce_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   off_dce_model(stan::io::var_context& context__,
                 unsigned int random_seed__ = 0,
@@ -29545,12 +29817,14 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 30;
       context__.validate_dims("data initialization","R","int",
           context__.to_vec());
       R = std::numeric_limits<int>::min();
       
       current_statement__ = 30;
       R = context__.vals_i("R")[(1 - 1)];
+      current_statement__ = 31;
       context__.validate_dims("data initialization","T","int",
           context__.to_vec());
       T = std::numeric_limits<int>::min();
@@ -29561,6 +29835,7 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       validate_non_negative_index("y", "R", R);
       current_statement__ = 32;
       validate_non_negative_index("y", "T", T);
+      current_statement__ = 32;
       context__.validate_dims("data initialization","y","int",
           context__.to_vec(R, T));
       y = std::vector<std::vector<int>>(R, std::vector<int>(T, std::numeric_limits<int>::min()));
@@ -29620,6 +29895,7 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       }
       current_statement__ = 33;
       validate_non_negative_index("X", "R", R);
+      current_statement__ = 33;
       context__.validate_dims("data initialization","X","double",
           context__.to_vec(R));
       X = Eigen::Matrix<double, -1, 1>(R);
@@ -29650,8 +29926,10 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
       }
       current_statement__ = 34;
       validate_non_negative_index("sum_y", "R", R);
+      current_statement__ = 34;
       sum_y = std::vector<int>(R, std::numeric_limits<int>::min());
       
+      current_statement__ = 35;
       occ_obs = std::numeric_limits<int>::min();
       
       current_statement__ = 36;
@@ -30614,6 +30892,14 @@ class off_small_model : public model_base_crtp<off_small_model> {
   ~off_small_model() { }
   
   std::string model_name() const { return "off_small_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   off_small_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -30641,12 +30927,14 @@ class off_small_model : public model_base_crtp<off_small_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 20;
       context__.validate_dims("data initialization","J","int",
           context__.to_vec());
       J = std::numeric_limits<int>::min();
       
       current_statement__ = 20;
       J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
@@ -30655,6 +30943,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 22;
       validate_non_negative_index("person", "N", N);
+      current_statement__ = 22;
       context__.validate_dims("data initialization","person","int",
           context__.to_vec(N));
       person = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -30664,6 +30953,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
         "assigning variable person");
       current_statement__ = 23;
       validate_non_negative_index("time", "N", N);
+      current_statement__ = 23;
       context__.validate_dims("data initialization","time","double",
           context__.to_vec(N));
       time = Eigen::Matrix<double, -1, 1>(N);
@@ -30694,6 +30984,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
       }
       current_statement__ = 24;
       validate_non_negative_index("treatment", "N", N);
+      current_statement__ = 24;
       context__.validate_dims("data initialization","treatment","double",
           context__.to_vec(N));
       treatment = Eigen::Matrix<double, -1, 1>(N);
@@ -30726,6 +31017,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
       }
       current_statement__ = 25;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 25;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
       y = Eigen::Matrix<double, -1, 1>(N);
@@ -31873,6 +32165,14 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   ~optimizations_model() { }
   
   std::string model_name() const { return "optimizations_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
@@ -33281,6 +33581,14 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
   ~partial_eval_model() { }
   
   std::string model_name() const { return "partial_eval_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   partial_eval_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
@@ -33310,12 +33618,14 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 13;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 13;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 14;
       context__.validate_dims("data initialization","n_pair","int",
           context__.to_vec());
       n_pair = std::numeric_limits<int>::min();
@@ -33324,6 +33634,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
       n_pair = context__.vals_i("n_pair")[(1 - 1)];
       current_statement__ = 15;
       validate_non_negative_index("pair", "N", N);
+      current_statement__ = 15;
       context__.validate_dims("data initialization","pair","int",
           context__.to_vec(N));
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
@@ -33333,6 +33644,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
         "assigning variable pair");
       current_statement__ = 16;
       validate_non_negative_index("pre_test", "N", N);
+      current_statement__ = 16;
       context__.validate_dims("data initialization","pre_test","double",
           context__.to_vec(N));
       pre_test = Eigen::Matrix<double, -1, 1>(N);
@@ -33364,6 +33676,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
       }
       current_statement__ = 17;
       validate_non_negative_index("treatment", "N", N);
+      current_statement__ = 17;
       context__.validate_dims("data initialization","treatment","double",
           context__.to_vec(N));
       treatment = Eigen::Matrix<double, -1, 1>(N);
@@ -33396,6 +33709,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
       }
       current_statement__ = 18;
       validate_non_negative_index("y", "N", N);
+      current_statement__ = 18;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
       y = Eigen::Matrix<double, -1, 1>(N);
@@ -34227,6 +34541,14 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
   ~stalled1_failure_model() { }
   
   std::string model_name() const { return "stalled1_failure_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   stalled1_failure_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
@@ -34255,6 +34577,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 17;
       context__.validate_dims("data initialization","I","int",
           context__.to_vec());
       I = std::numeric_limits<int>::min();
@@ -34263,6 +34586,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
       I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 18;
       validate_non_negative_index("n", "I", I);
+      current_statement__ = 18;
       context__.validate_dims("data initialization","n","int",
           context__.to_vec(I));
       n = std::vector<int>(I, std::numeric_limits<int>::min());
@@ -34272,6 +34596,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
         "assigning variable n");
       current_statement__ = 19;
       validate_non_negative_index("N", "I", I);
+      current_statement__ = 19;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec(I));
       N = std::vector<int>(I, std::numeric_limits<int>::min());
@@ -34281,6 +34606,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
         "assigning variable N");
       current_statement__ = 20;
       validate_non_negative_index("x1", "I", I);
+      current_statement__ = 20;
       context__.validate_dims("data initialization","x1","double",
           context__.to_vec(I));
       x1 = Eigen::Matrix<double, -1, 1>(I);
@@ -34311,6 +34637,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
       }
       current_statement__ = 21;
       validate_non_negative_index("x2", "I", I);
+      current_statement__ = 21;
       context__.validate_dims("data initialization","x2","double",
           context__.to_vec(I));
       x2 = Eigen::Matrix<double, -1, 1>(I);
@@ -34339,10 +34666,12 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
             pos__ = (pos__ + 1);}
         } 
       }
+      current_statement__ = 22;
       K = std::numeric_limits<int>::min();
       
       current_statement__ = 23;
       validate_non_negative_index("x1x2", "I", I);
+      current_statement__ = 23;
       x1x2 = Eigen::Matrix<double, -1, 1>(I);
       stan::math::fill(x1x2, std::numeric_limits<double>::quiet_NaN());
       
@@ -35552,6 +35881,14 @@ class unroll_limit_model : public model_base_crtp<unroll_limit_model> {
   ~unroll_limit_model() { }
   
   std::string model_name() const { return "unroll_limit_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --O --print-cpp");
+    return stanc_info;
+  }
+  
   
   unroll_limit_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,

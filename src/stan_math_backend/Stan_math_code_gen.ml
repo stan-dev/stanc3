@@ -22,6 +22,15 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
+let stanc_args_to_print =
+  let sans_model_and_hpp_paths x =
+    not String.(is_suffix ~suffix:".stan" x || is_prefix ~prefix:"--o" x)
+  in
+  (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
+  Array.to_list Sys.argv |> List.tl_exn
+  |> List.filter ~f:sans_model_and_hpp_paths
+  |> String.concat ~sep:" "
+
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
 (** Print name of model function.
@@ -299,11 +308,12 @@ let pp_ctor ppf p =
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
-  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
+  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st ->
+          Locations.pp_smeta ppf meta ;
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
           pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
@@ -661,6 +671,17 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
   pf ppf "@ @ std::string model_name() const { return \"%s\"; }" prog_name ;
+  pf ppf
+    {|
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stancflags = %s");
+    return stanc_info;
+  }
+  |}
+    stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 (** The C++ aliases needed for the model class*)

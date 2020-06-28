@@ -263,6 +263,7 @@ module ExpressionError = struct
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | IntTooLarge
 
   let pp ppf = function
     | InvalidMapRectFn fn_name ->
@@ -290,6 +291,8 @@ module ExpressionError = struct
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | IntTooLarge ->
+        Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
 
 module StatementError = struct
@@ -549,6 +552,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)
