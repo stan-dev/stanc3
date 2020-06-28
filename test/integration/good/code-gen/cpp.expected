@@ -120,7 +120,7 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -3195,7 +3195,7 @@ class mother_model : public model_base_crtp<mother_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -9730,7 +9730,7 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -11674,7 +11674,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -13363,7 +13363,7 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -14961,7 +14961,7 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -18833,7 +18833,7 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -21481,7 +21481,7 @@ class single_argument_lpmf_model : public model_base_crtp<single_argument_lpmf_m
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -21838,7 +21838,7 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -22297,7 +22297,7 @@ class transform_model : public model_base_crtp<transform_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -26304,7 +26304,7 @@ class truncate_model : public model_base_crtp<truncate_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -26831,7 +26831,7 @@ class udf_tilde_stmt_conflict_model : public model_base_crtp<udf_tilde_stmt_conf
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }
@@ -27234,7 +27234,7 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
     stanc_info.push_back("stancflags = --print-cpp");
     return stanc_info;
   }

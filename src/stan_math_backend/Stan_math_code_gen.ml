@@ -27,8 +27,7 @@ let stanc_args_to_print =
     not String.(is_suffix ~suffix:".stan" x || is_prefix ~prefix:"--o" x)
   in
   (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-  Array.to_list Sys.argv
-  |> List.tl_exn
+  Array.to_list Sys.argv |> List.tl_exn
   |> List.filter ~f:sans_model_and_hpp_paths
   |> String.concat ~sep:" "
 
