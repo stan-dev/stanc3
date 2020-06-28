@@ -33,8 +33,6 @@ let stanc_args_to_print =
   in
   String.concat ~sep:" " stanc_flags_sans_model_and_hpp_paths
 
-(* stanc_flags_sans_model_and_hpp_paths *)
-
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
 (** Print name of model function.
