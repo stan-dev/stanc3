@@ -117,6 +117,14 @@ class eight_schools_ncp_model : public model_base_crtp<eight_schools_ncp_model> 
   ~eight_schools_ncp_model() { }
   
   std::string model_name() const { return "eight_schools_ncp_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   eight_schools_ncp_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
@@ -3184,6 +3192,14 @@ class mother_model : public model_base_crtp<mother_model> {
   ~mother_model() { }
   
   std::string model_name() const { return "mother_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   mother_model(stan::io::var_context& context__,
                unsigned int random_seed__ = 0,
@@ -9711,6 +9727,14 @@ class motherHOF_model : public model_base_crtp<motherHOF_model> {
   ~motherHOF_model() { }
   
   std::string model_name() const { return "motherHOF_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   motherHOF_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -11647,6 +11671,14 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   ~optimize_glm_model() { }
   
   std::string model_name() const { return "optimize_glm_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
@@ -13328,6 +13360,14 @@ class reduce_sum_m1_model : public model_base_crtp<reduce_sum_m1_model> {
   ~reduce_sum_m1_model() { }
   
   std::string model_name() const { return "reduce_sum_m1_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   reduce_sum_m1_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
@@ -14918,6 +14958,14 @@ class reduce_sum_m2_model : public model_base_crtp<reduce_sum_m2_model> {
   ~reduce_sum_m2_model() { }
   
   std::string model_name() const { return "reduce_sum_m2_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   reduce_sum_m2_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
@@ -18782,6 +18830,14 @@ class reduce_sum_m3_model : public model_base_crtp<reduce_sum_m3_model> {
   ~reduce_sum_m3_model() { }
   
   std::string model_name() const { return "reduce_sum_m3_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   reduce_sum_m3_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
@@ -21422,6 +21478,14 @@ class single_argument_lpmf_model : public model_base_crtp<single_argument_lpmf_m
   ~single_argument_lpmf_model() { }
   
   std::string model_name() const { return "single_argument_lpmf_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   single_argument_lpmf_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
@@ -21771,6 +21835,14 @@ class tilde_block_model : public model_base_crtp<tilde_block_model> {
   ~tilde_block_model() { }
   
   std::string model_name() const { return "tilde_block_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   tilde_block_model(stan::io::var_context& context__,
                     unsigned int random_seed__ = 0,
@@ -22222,6 +22294,14 @@ class transform_model : public model_base_crtp<transform_model> {
   ~transform_model() { }
   
   std::string model_name() const { return "transform_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   transform_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
@@ -26221,6 +26301,14 @@ class truncate_model : public model_base_crtp<truncate_model> {
   ~truncate_model() { }
   
   std::string model_name() const { return "truncate_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   truncate_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
@@ -26740,6 +26828,14 @@ class udf_tilde_stmt_conflict_model : public model_base_crtp<udf_tilde_stmt_conf
   ~udf_tilde_stmt_conflict_model() { }
   
   std::string model_name() const { return "udf_tilde_stmt_conflict_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   udf_tilde_stmt_conflict_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
@@ -27135,6 +27231,14 @@ class user_constrain_model : public model_base_crtp<user_constrain_model> {
   ~user_constrain_model() { }
   
   std::string model_name() const { return "user_constrain_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %NAME%3 %VERSION%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   user_constrain_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
