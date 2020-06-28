@@ -23,15 +23,17 @@ open Expression_gen
 open Statement_gen
 
 let stanc_args_to_print =
-    let sans_model_and_hpp_paths x =
-      not (String.is_suffix ~suffix:".stan" x || String.is_prefix ~prefix:"--o" x)
-    in
-    (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-    let stanc_flags_sans_model_and_hpp_paths = 
-      List.filter ~f:sans_model_and_hpp_paths (List.tl_exn (Array.to_list Sys.argv))
-    in
-    String.concat ~sep:" " stanc_flags_sans_model_and_hpp_paths
-    (* stanc_flags_sans_model_and_hpp_paths *)
+  let sans_model_and_hpp_paths x =
+    not (String.is_suffix ~suffix:".stan" x || String.is_prefix ~prefix:"--o" x)
+  in
+  (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
+  let stanc_flags_sans_model_and_hpp_paths =
+    List.filter ~f:sans_model_and_hpp_paths
+      (List.tl_exn (Array.to_list Sys.argv))
+  in
+  String.concat ~sep:" " stanc_flags_sans_model_and_hpp_paths
+
+(* stanc_flags_sans_model_and_hpp_paths *)
 
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
@@ -673,14 +675,16 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
   pf ppf "@ @ std::string model_name() const { return \"%s\"; }" prog_name ;
-  pf ppf {|
+  pf ppf
+    {|
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %s");
     stanc_info.push_back("stancflags = %s");
     return stanc_info;
   }
-  |} "%%NAME%%3 %%VERSION%%" stanc_args_to_print; 
+  |}
+    "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 (** The C++ aliases needed for the model class*)
