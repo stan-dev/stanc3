@@ -24,14 +24,13 @@ open Statement_gen
 
 let stanc_args_to_print =
   let sans_model_and_hpp_paths x =
-    not (String.is_suffix ~suffix:".stan" x || String.is_prefix ~prefix:"--o" x)
+    not String.(is_suffix ~suffix:".stan" x || is_prefix ~prefix:"--o" x)
   in
   (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-  let stanc_flags_sans_model_and_hpp_paths =
-    List.filter ~f:sans_model_and_hpp_paths
-      (List.tl_exn (Array.to_list Sys.argv))
-  in
-  String.concat ~sep:" " stanc_flags_sans_model_and_hpp_paths
+  Array.to_list Sys.argv
+  |> List.tl_exn
+  |> List.filter ~f:sans_model_and_hpp_paths
+  |> String.concat ~sep:" "
 
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
@@ -678,12 +677,12 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %s");
+    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
     stanc_info.push_back("stancflags = %s");
     return stanc_info;
   }
   |}
-    "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
+    stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 (** The C++ aliases needed for the model class*)
