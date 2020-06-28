@@ -218,6 +218,7 @@ class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
   ~ad_level_failing_model() { }
   
   std::string model_name() const { return "ad_level_failing_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -1450,6 +1451,7 @@ class copy_fail_model : public model_base_crtp<copy_fail_model> {
   ~copy_fail_model() { }
   
   std::string model_name() const { return "copy_fail_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -3657,6 +3659,7 @@ class dce_fail_model : public model_base_crtp<dce_fail_model> {
   ~dce_fail_model() { }
   
   std::string model_name() const { return "dce_fail_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -5422,6 +5425,7 @@ class expr_prop_experiment_model : public model_base_crtp<expr_prop_experiment_m
   ~expr_prop_experiment_model() { }
   
   std::string model_name() const { return "expr_prop_experiment_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -5813,6 +5817,7 @@ class expr_prop_experiment2_model : public model_base_crtp<expr_prop_experiment2
   ~expr_prop_experiment2_model() { }
   
   std::string model_name() const { return "expr_prop_experiment2_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -6208,6 +6213,7 @@ class expr_prop_fail_model : public model_base_crtp<expr_prop_fail_model> {
   ~expr_prop_fail_model() { }
   
   std::string model_name() const { return "expr_prop_fail_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -6921,6 +6927,7 @@ class expr_prop_fail2_model : public model_base_crtp<expr_prop_fail2_model> {
   ~expr_prop_fail2_model() { }
   
   std::string model_name() const { return "expr_prop_fail2_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -7523,6 +7530,7 @@ class expr_prop_fail3_model : public model_base_crtp<expr_prop_fail3_model> {
   ~expr_prop_fail3_model() { }
   
   std::string model_name() const { return "expr_prop_fail3_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -9366,6 +9374,7 @@ class expr_prop_fail4_model : public model_base_crtp<expr_prop_fail4_model> {
   ~expr_prop_fail4_model() { }
   
   std::string model_name() const { return "expr_prop_fail4_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -10683,6 +10692,7 @@ class expr_prop_fail5_model : public model_base_crtp<expr_prop_fail5_model> {
   ~expr_prop_fail5_model() { }
   
   std::string model_name() const { return "expr_prop_fail5_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -13754,6 +13764,7 @@ class expr_prop_fail6_model : public model_base_crtp<expr_prop_fail6_model> {
   ~expr_prop_fail6_model() { }
   
   std::string model_name() const { return "expr_prop_fail6_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -17000,6 +17011,7 @@ class expr_prop_fail7_model : public model_base_crtp<expr_prop_fail7_model> {
   ~expr_prop_fail7_model() { }
   
   std::string model_name() const { return "expr_prop_fail7_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -18727,6 +18739,7 @@ class expr_prop_fail8_model : public model_base_crtp<expr_prop_fail8_model> {
   ~expr_prop_fail8_model() { }
   
   std::string model_name() const { return "expr_prop_fail8_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -19988,6 +20001,7 @@ class fails_test_model : public model_base_crtp<fails_test_model> {
   ~fails_test_model() { }
   
   std::string model_name() const { return "fails_test_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -23264,6 +23278,7 @@ class inlining_fail2_model : public model_base_crtp<inlining_fail2_model> {
   ~inlining_fail2_model() { }
   
   std::string model_name() const { return "inlining_fail2_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -26279,6 +26294,7 @@ class lcm_experiment_model : public model_base_crtp<lcm_experiment_model> {
   ~lcm_experiment_model() { }
   
   std::string model_name() const { return "lcm_experiment_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -26662,6 +26678,7 @@ class lcm_experiment2_model : public model_base_crtp<lcm_experiment2_model> {
   ~lcm_experiment2_model() { }
   
   std::string model_name() const { return "lcm_experiment2_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -27052,6 +27069,7 @@ class lcm_fails_model : public model_base_crtp<lcm_fails_model> {
   ~lcm_fails_model() { }
   
   std::string model_name() const { return "lcm_fails_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -27876,6 +27894,7 @@ class lcm_fails2_model : public model_base_crtp<lcm_fails2_model> {
   ~lcm_fails2_model() { }
   
   std::string model_name() const { return "lcm_fails2_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -29756,6 +29775,7 @@ class off_dce_model : public model_base_crtp<off_dce_model> {
   ~off_dce_model() { }
   
   std::string model_name() const { return "off_dce_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -30872,6 +30892,7 @@ class off_small_model : public model_base_crtp<off_small_model> {
   ~off_small_model() { }
   
   std::string model_name() const { return "off_small_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -32144,6 +32165,7 @@ class optimizations_model : public model_base_crtp<optimizations_model> {
   ~optimizations_model() { }
   
   std::string model_name() const { return "optimizations_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -33559,6 +33581,7 @@ class partial_eval_model : public model_base_crtp<partial_eval_model> {
   ~partial_eval_model() { }
   
   std::string model_name() const { return "partial_eval_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -34518,6 +34541,7 @@ class stalled1_failure_model : public model_base_crtp<stalled1_failure_model> {
   ~stalled1_failure_model() { }
   
   std::string model_name() const { return "stalled1_failure_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
@@ -35857,6 +35881,7 @@ class unroll_limit_model : public model_base_crtp<unroll_limit_model> {
   ~unroll_limit_model() { }
   
   std::string model_name() const { return "unroll_limit_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");

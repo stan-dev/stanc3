@@ -322,6 +322,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   ~optimize_glm_model() { }
   
   std::string model_name() const { return "optimize_glm_model"; }
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");

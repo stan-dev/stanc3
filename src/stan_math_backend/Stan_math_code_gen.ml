@@ -677,6 +677,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "@ @ std::string model_name() const { return \"%s\"; }" prog_name ;
   pf ppf
     {|
+
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
     stanc_info.push_back("stanc_version = %s");
