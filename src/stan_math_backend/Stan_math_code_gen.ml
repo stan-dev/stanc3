@@ -676,12 +676,12 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stanc_version = %s");
     stanc_info.push_back("stancflags = %s");
     return stanc_info;
   }
   |}
-    stanc_args_to_print ;
+    "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
 (** The C++ aliases needed for the model class*)
