@@ -322,6 +322,14 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
   ~optimize_glm_model() { }
   
   std::string model_name() const { return "optimize_glm_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stancflags = --print-cpp --use-opencl");
+    return stanc_info;
+  }
+  
   
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
@@ -339,12 +347,14 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 174;
       context__.validate_dims("data initialization","k","int",
           context__.to_vec());
       k = std::numeric_limits<int>::min();
       
       current_statement__ = 174;
       k = context__.vals_i("k")[(1 - 1)];
+      current_statement__ = 175;
       context__.validate_dims("data initialization","n","int",
           context__.to_vec());
       n = std::numeric_limits<int>::min();
@@ -355,6 +365,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d", "n", n);
       current_statement__ = 176;
       validate_non_negative_index("X_d", "k", k);
+      current_statement__ = 176;
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
       X_d = Eigen::Matrix<double, -1, -1>(n, k);
@@ -381,6 +392,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       }
       current_statement__ = 177;
       validate_non_negative_index("y_v_d", "n", n);
+      current_statement__ = 177;
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
       y_v_d = Eigen::Matrix<double, -1, 1>(n);
@@ -403,6 +415,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       }
       current_statement__ = 178;
       validate_non_negative_index("X_rv_d", "n", n);
+      current_statement__ = 178;
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
       X_rv_d = Eigen::Matrix<double, 1, -1>(n);
@@ -425,6 +438,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       }
       current_statement__ = 179;
       validate_non_negative_index("y_vi_d", "n", n);
+      current_statement__ = 179;
       context__.validate_dims("data initialization","y_vi_d","int",
           context__.to_vec(n));
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
@@ -434,6 +448,7 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
         "assigning variable y_vi_d");
       current_statement__ = 180;
       validate_non_negative_index("y2_vi_d", "n", n);
+      current_statement__ = 180;
       context__.validate_dims("data initialization","y2_vi_d","int",
           context__.to_vec(n));
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
@@ -441,49 +456,60 @@ class optimize_glm_model : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 180;
       assign(y2_vi_d, nil_index_list(), context__.vals_i("y2_vi_d"),
         "assigning variable y2_vi_d");
+      current_statement__ = 181;
       context__.validate_dims("data initialization","y_s_d","int",
           context__.to_vec());
       y_s_d = std::numeric_limits<int>::min();
       
       current_statement__ = 181;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
+      current_statement__ = 182;
       context__.validate_dims("data initialization","y_r_d","double",
           context__.to_vec());
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 182;
       y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
+      current_statement__ = 183;
       k_td = std::numeric_limits<int>::min();
       
+      current_statement__ = 184;
       n_td = std::numeric_limits<int>::min();
       
       current_statement__ = 185;
       validate_non_negative_index("X_d_td", "n", n);
       current_statement__ = 185;
       validate_non_negative_index("X_d_td", "k", k);
+      current_statement__ = 185;
       X_d_td = Eigen::Matrix<double, -1, -1>(n, k);
       stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 186;
       validate_non_negative_index("y_v_d_td", "n", n);
+      current_statement__ = 186;
       y_v_d_td = Eigen::Matrix<double, -1, 1>(n);
       stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 187;
       validate_non_negative_index("X_rv_d_td", "n", n);
+      current_statement__ = 187;
       X_rv_d_td = Eigen::Matrix<double, 1, -1>(n);
       stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 188;
       validate_non_negative_index("y_vi_d_td", "n", n);
+      current_statement__ = 188;
       y_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 189;
       validate_non_negative_index("y2_vi_d_td", "n", n);
+      current_statement__ = 189;
       y2_vi_d_td = std::vector<int>(n, std::numeric_limits<int>::min());
       
+      current_statement__ = 190;
       y_s_d_td = std::numeric_limits<int>::min();
       
+      current_statement__ = 191;
       y_r_d_td = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 174;

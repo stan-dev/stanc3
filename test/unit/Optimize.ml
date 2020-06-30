@@ -2172,7 +2172,7 @@ model {
     target += i+j;
     target += i-j;
     target += i*j;
-    target += i/j;
+    target += i%/%j;
     target += i==j;
     target += i!=j;
     target += i<j;
@@ -2285,12 +2285,6 @@ model {
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      Info: Found int division at 'string', line 27, column 14 to column 15:
-        i / j
-      Values will be rounded towards zero.
-
-
-
       log_prob {
         matrix[3, 2] x_matrix;
         matrix[2, 4] y_matrix;

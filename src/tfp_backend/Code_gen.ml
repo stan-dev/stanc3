@@ -8,7 +8,10 @@ let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-let pystring_of_operator = function x -> strf "%a" Operator.pp x
+
+let pystring_of_operator = function
+  | Operator.IntDivide -> "//"
+  | x -> strf "%a" Operator.pp x
 
 let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
@@ -207,10 +210,7 @@ let pp_bijector ppf trans =
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
-    | LowerUpper (lb, ub) ->
-        [ ("Sigmoid", [])
-        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
-        ; ("Shift", [lb]) ]
+    | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
     | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
@@ -272,7 +272,7 @@ from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =
-  pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
+  pf ppf "@[<v>%s@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]@]" imports
     (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
   pf ppf "@ model = %s" p.prog_name
 

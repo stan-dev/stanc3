@@ -16,7 +16,7 @@
 }
 
 (* Some auxiliary definition for variables and constants *)
-let string_literal = '"' [^'"']* '"'
+let string_literal = '"' [^ '"' '\r' '\n']* '"'
 let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
@@ -41,8 +41,8 @@ rule token = parse
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
     ( ( space | newline)+)
-    ( '"' ([^ '"']* as fname) '"'
-    | '<' ([^ '>']* as fname) '>'
+    ( '"' ([^ '"' '\r' '\n']* as fname) '"'
+    | '<' ([^ '>' '\r' '\n']* as fname) '>'
     | (non_space_or_newline* as fname)
     )                         { lexer_logger ("include " ^ fname) ;
                                 let new_lexbuf =
@@ -130,6 +130,7 @@ rule token = parse
   | '*'                       { lexer_logger "*" ; Parser.TIMES }
   | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
   | '%'                       { lexer_logger "%" ; Parser.MODULO }
+  | "%/%"                     { lexer_logger "%/%" ; Parser.IDIVIDE }
   | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
   | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
   | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }

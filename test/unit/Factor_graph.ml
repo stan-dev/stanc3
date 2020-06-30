@@ -360,7 +360,8 @@ let complex_example =
 
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
-  print_s [%sexp (priors : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t)] ;
+  print_s
+    [%sexp (priors : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t)] ;
   [%expect
     {|
       (((VVar a)
