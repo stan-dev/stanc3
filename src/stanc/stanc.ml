@@ -111,19 +111,39 @@ let options =
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
-    ; ( "--allow_undefined"
+    ; ( "--allow-undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
-    ; ( "--include_paths"
+    ; ( "--allow_undefined"
+      , Arg.Clear Semantic_check.check_that_all_functions_have_definition
+      , " Deprecated. Same as --allow-undefined." )
+    ; ( "--include-paths"
       , Arg.String
           (fun str ->
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
+    ; ( "--include_paths"
+      , Arg.String
+          (fun str ->
+            Preprocessor.include_paths :=
+              !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str
+            )
+      , " Deprecated. Same as --include-paths." )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." ) ]
+
+let print_deprecated_arg_warning =
+  (* is_prefix is used to also cover the --include-paths=... *)
+  let arg_is_used arg =
+    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
+  in
+  if arg_is_used "--allow_undefined" then
+    eprintf "--allow_undefined is deprecated. Please use --allow-undefined.\n" ;
+  if arg_is_used "--include_paths" then
+    eprintf "--include_paths is deprecated. Please use --include-paths.\n"
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
@@ -188,6 +208,8 @@ let model_name_check_regex = Str.regexp "^[a-zA-Z_].*$"
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
+  print_deprecated_arg_warning ;
+  (* print_deprecated_arg_warning options; *)
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
