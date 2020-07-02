@@ -295,13 +295,13 @@ List of commas expected.
 
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 
-Syntax error in 'fundef-bad2.stan', line 1, column 12 to column 18, parsing error:
+Syntax error in 'fundef-bad2.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
      1:  functions { vector while }
-                           ^
+                                 ^
    -------------------------------------------------
 
-Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
+Expected identifier, but found reserved keyword 'while'
 
 
   $ ../../../../../install/default/bin/stanc fundef-bad3.stan
@@ -339,13 +339,13 @@ Either "{" statement "}" is expected for a function definition or ";" for a func
 
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
 
-Syntax error in 'fundef-bad6.stan', line 1, column 21 to column 30, parsing error:
+Syntax error in 'fundef-bad6.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
      1:  functions { void T ( vector [] while);}
-                                       ^
+                                             ^
    -------------------------------------------------
 
-An identifier is expected as a function argument name.
+Expected identifier, but found reserved keyword 'while'
 
 
   $ ../../../../../install/default/bin/stanc fundef-bad7.stan
@@ -361,13 +361,13 @@ Syntax error in 'fundef-bad7.stan', line 1, column 19 to column 20, parsing erro
 
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 
-Syntax error in 'fundef-bad8.stan', line 1, column 12 to column 16, parsing error:
+Syntax error in 'fundef-bad8.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  functions { void while();}
-                         ^
+                               ^
    -------------------------------------------------
 
-An identifier is expected as a function name.
+Expected identifier, but found reserved keyword 'while'
 
 
   $ ../../../../../install/default/bin/stanc fundef-bad9.stan
@@ -2042,13 +2042,13 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad9.stan
 
-Syntax error in 'location-scale-bad9.stan', line 1, column 27 to column 28, parsing error:
+Syntax error in 'location-scale-bad9.stan', line 1, column 28 to column 29, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier = y,> x;}
-                                     ^
+                                      ^
    -------------------------------------------------
 
-Expected ">" after "multiplier =" expression.
+Expected '>' or offset expression after multiplier expression.
 
 
   $ ../../../../../install/default/bin/stanc mystery1.stan
@@ -3740,13 +3740,13 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad13.stan
 
-Syntax error in 'transformations-bad13.stan', line 1, column 22 to column 23, parsing error:
+Syntax error in 'transformations-bad13.stan', line 1, column 23 to column 24, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = T,> x;}
-                                ^
+                                 ^
    -------------------------------------------------
 
-Expected expression (not containing binary logical operators) ">" after "upper =".
+'>' or lower expression expected after upper expression.
 
 
   $ ../../../../../install/default/bin/stanc transformations-bad14.stan

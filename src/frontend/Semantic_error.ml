@@ -5,10 +5,12 @@ open Middle
 module TypeError = struct
   type t =
     | MismatchedReturnTypes of UnsizedType.returntype * UnsizedType.returntype
-    | MismatchedArrayTypes
-    | InvalidRowVectorTypes
+    | MismatchedArrayTypes of UnsizedType.t * UnsizedType.t
+    | InvalidRowVectorTypes of UnsizedType.t
+    | InvalidMatrixTypes of UnsizedType.t
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
+    | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
@@ -43,18 +45,32 @@ module TypeError = struct
           "Branches of function definition need to have the same return type. \
            Instead, found return types %a and %a."
           UnsizedType.pp_returntype rt1 UnsizedType.pp_returntype rt2
-    | MismatchedArrayTypes ->
-        Fmt.pf ppf "Array expression must have entries of consistent type."
-    | InvalidRowVectorTypes ->
+    | MismatchedArrayTypes (t1, t2) ->
         Fmt.pf ppf
-          "Row_vector expression must have all int and real entries or all \
-           row_vector entries."
+          "Array expression must have entries of consistent type. Expected %a \
+           but found %a."
+          UnsizedType.pp t1 UnsizedType.pp t2
+    | InvalidRowVectorTypes ty ->
+        Fmt.pf ppf
+          "Row_vector expression must have all int or real entries. Found \
+           type %a."
+          UnsizedType.pp ty
+    | InvalidMatrixTypes ty ->
+        Fmt.pf ppf
+          "Matrix expression must have all row_vector entries. Found type %a."
+          UnsizedType.pp ty
     | IntExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int. Instead found type %a." name
           UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
           name UnsizedType.pp ut
+    | TypeExpected (name, (UInt | UReal), ut) ->
+        Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
+          UnsizedType.pp ut
+    | TypeExpected (name, et, ut) ->
+        Fmt.pf ppf "%s must be a scalar or of type %a. Instead found type %a."
+          name UnsizedType.pp et UnsizedType.pp ut
     | IntOrRealContainerExpected ut ->
         Fmt.pf ppf
           "A (container of) real or int was expected. Instead found type %a."
@@ -99,7 +115,8 @@ module TypeError = struct
         let generate_reduce_sum_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UInt) :: (AutoDiffable, UInt) :: args
+                  ( List.hd_exn args :: (AutoDiffable, UInt)
+                    :: (AutoDiffable, UInt) :: List.tl_exn args
                   , ReturnType UReal ) ]
             ; first; [UInt]; rest ]
         in
@@ -115,11 +132,12 @@ module TypeError = struct
     | IllTypedReduceSumGeneric (name, arg_tys) ->
         let rec n_commas n = if n = 0 then "" else "," ^ n_commas (n - 1) in
         let type_string (a, b, c, d) i =
-          Fmt.strf "(%a, %a, T[%s], ...) => %a, %a, T[%s], ...\n"
-            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+          Fmt.strf "(T[%s], %a, %a, ...) => %a, T[%s], %a, ...\n"
             (n_commas (i - 1))
-            Pretty_printing.pp_unsizedtype c Pretty_printing.pp_unsizedtype d
-            (n_commas i)
+            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
+            Pretty_printing.pp_unsizedtype c
+            (n_commas (i - 1))
+            Pretty_printing.pp_unsizedtype d
         in
         let lines =
           List.map
@@ -239,11 +257,13 @@ end
 module ExpressionError = struct
   type t =
     | InvalidMapRectFn of string
+    | InvalidSizeDeclRng
     | InvalidRngFunction
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | IntTooLarge
 
   let pp ppf = function
     | InvalidMapRectFn fn_name ->
@@ -251,6 +271,10 @@ module ExpressionError = struct
           "Mapped function cannot be an _rng or _lp function, found function \
            name: %s"
           fn_name
+    | InvalidSizeDeclRng ->
+        Fmt.pf ppf
+          "Random number generators are not allowed in top level size \
+           declarations."
     | InvalidRngFunction ->
         Fmt.pf ppf
           "Random number generators are only allowed in transformed data \
@@ -267,6 +291,8 @@ module ExpressionError = struct
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | IntTooLarge ->
+        Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
 
 module StatementError = struct
@@ -419,15 +445,22 @@ let location = function
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
 
-let mismatched_array_types loc = TypeError (loc, TypeError.MismatchedArrayTypes)
+let mismatched_array_types loc t1 t2 =
+  TypeError (loc, TypeError.MismatchedArrayTypes (t1, t2))
 
-let invalid_row_vector_types loc =
-  TypeError (loc, TypeError.InvalidRowVectorTypes)
+let invalid_row_vector_types loc ty =
+  TypeError (loc, TypeError.InvalidRowVectorTypes ty)
+
+let invalid_matrix_types loc ty =
+  TypeError (loc, TypeError.InvalidMatrixTypes ty)
 
 let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 
 let int_or_real_expected loc name ut =
   TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+
+let scalar_or_type_expected loc name et ut =
+  TypeError (loc, TypeError.TypeExpected (name, et, ut))
 
 let int_intarray_or_range_expected loc ut =
   TypeError (loc, TypeError.IntIntArrayOrRangeExpected ut)
@@ -505,6 +538,9 @@ let ident_not_in_scope loc name =
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
 
+let invalid_decl_rng_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)
+
 let invalid_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidRngFunction)
 
@@ -516,6 +552,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)

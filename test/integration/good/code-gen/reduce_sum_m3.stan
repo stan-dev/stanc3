@@ -1,80 +1,80 @@
 functions {
-  real f1(int start, int end, real[] y_slice) {
+  real f1(real[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f1a(int start, int end, real[] y_slice) {
+  real f1a(real[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f2(int start, int end, vector[] y_slice) {
+  real f2(vector[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f3(int start, int end, row_vector[] y_slice) {
+  real f3(row_vector[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f4(int start, int end, matrix[] y_slice) {
+  real f4(matrix[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f5(int start, int end, real[,] y_slice) {
+  real f5(real[,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f6(int start, int end, vector[,] y_slice) {
+  real f6(vector[,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f7(int start, int end, row_vector[,] y_slice) {
+  real f7(row_vector[,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f8(int start, int end, matrix[,] y_slice) {
+  real f8(matrix[,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f9(int start, int end, int[] y_slice) {
+  real f9(int[] y_slice, int start, int end) {
     return 0.0;
   }
-  real f10(int start, int end, int[,] y_slice) {
+  real f10(int[,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f11(int start, int end, int[,,] y_slice) {
+  real f11(int[,,] y_slice, int start, int end) {
     return 0.0;
   }
-  real f12(int start, int end, real[,,] y_slice) {
+  real f12(real[,,] y_slice, int start, int end) {
     return 0.0;
   }
-  real g1(int start, int end, real[] y_slice, real a) {
+  real g1(real[] y_slice, int start, int end, real a) {
     return 0.0;
   }
-  real g2(int start, int end, real[] y_slice, vector a) {
+  real g2(real[] y_slice, int start, int end, vector a) {
     return 0.0;
   }
-  real g3(int start, int end, real[] y_slice, row_vector a) {
+  real g3(real[] y_slice, int start, int end, row_vector a) {
     return 0.0;
   }
-  real g4(int start, int end, real[] y_slice, matrix a) {
+  real g4(real[] y_slice, int start, int end, matrix a) {
     return 0.0;
   }
-  real g5(int start, int end, real[] y_slice, real[] a) {
+  real g5(real[] y_slice, int start, int end, real[] a) {
     return 0.0;
   }
-  real g6(int start, int end, real[] y_slice, vector[] a) {
+  real g6(real[] y_slice, int start, int end, vector[] a) {
     return 0.0;
   }
-  real g7(int start, int end, real[] y_slice, row_vector[] a) {
+  real g7(real[] y_slice, int start, int end, row_vector[] a) {
     return 0.0;
   }
-  real g8(int start, int end, real[] y_slice, matrix[] a) {
+  real g8(real[] y_slice, int start, int end, matrix[] a) {
     return 0.0;
   }
-  real g9(int start, int end, real[] y_slice, real[,] a) {
+  real g9(real[] y_slice, int start, int end, real[,] a) {
     return 0.0;
   }
-  real g10(int start, int end, real[] y_slice, vector[,] a) {
+  real g10(real[] y_slice, int start, int end, vector[,] a) {
     return 0.0;
   }
-  real g11(int start, int end, real[] y_slice, row_vector[,] a) {
+  real g11(real[] y_slice, int start, int end, row_vector[,] a) {
     return 0.0;
   }
-  real g12(int start, int end, real[] y_slice, matrix[,] a) {
+  real g12(real[] y_slice, int start, int end, matrix[,] a) {
     return 0.0;
   }
-  real s(int start, int end, real[] y_slice,
+  real s(real[] y_slice, int start, int end,
          int a, real b, vector c, row_vector d, matrix e,
          int[] f, real[] g, vector[] h, row_vector[] i, matrix[] j,
          int[,] k, real[,] l, vector[,] m, row_vector[,] n, matrix[,] o,

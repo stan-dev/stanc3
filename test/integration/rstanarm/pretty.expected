@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined bernoulli.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -678,7 +678,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined binomial.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -1235,7 +1235,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined continuous.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -2373,7 +2373,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined count.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -2985,7 +2985,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined jm.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -5022,7 +5022,7 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined lm.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
 functions {
   real ll_mvn_ols_qr_lp(vector theta, vector b, real intercept, real ybar,
                         real SSR, real sigma, int N) {
@@ -5121,7 +5121,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined mvmer.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
 functions {
   vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
                       vector scale, vector zeta, vector rho, vector z_T) {
@@ -6336,7 +6336,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined polr.stan
+  $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
 functions {
   real CDF_polr(real x, int link) {
     if (link == 1) 

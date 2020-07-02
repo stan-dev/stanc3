@@ -14,7 +14,8 @@ type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
-  ; reaching_defn_exit: reaching_defn Set.Poly.t }
+  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; meta: Location_span.t }
 
 (**
    Find all of the reaching definitions of a variable in an RD set
@@ -27,11 +28,14 @@ let node_immediate_dependencies
     (statement_map :
       ( label
       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (label : label) : label Set.Poly.t =
+      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
+    (label : label) : label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
   let rhs_deps =
-    union_map rhs_set ~f:(reaching_defn_lookup info.reaching_defn_entry)
+    union_map
+      (Set.Poly.diff rhs_set blockers)
+      ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
   Set.Poly.union info.parents rhs_deps
 
@@ -43,12 +47,12 @@ let rec node_dependencies_rec
     (statement_map :
       ( label
       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (visited : label Set.Poly.t) (label : label) :
-    label Set.Poly.t =
+      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
+    (visited : label Set.Poly.t) (label : label) : label Set.Poly.t =
   if Set.Poly.mem visited label then visited
   else
     let visited' = Set.Poly.add visited label in
-    let deps = node_immediate_dependencies statement_map label in
+    let deps = node_immediate_dependencies statement_map ~blockers label in
     Set.Poly.fold deps ~init:visited' ~f:(node_dependencies_rec statement_map)
 
 let node_dependencies
@@ -62,16 +66,18 @@ let node_vars_dependencies
     (statement_map :
       ( label
       , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t
-    =
+      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
+    (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t =
   let _, info = Map.Poly.find_exn statement_map label in
   let var_deps =
-    union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry)
+    union_map
+      (Set.Poly.diff vars blockers)
+      ~f:(reaching_defn_lookup info.reaching_defn_entry)
   in
   Set.Poly.fold
     (Set.union info.parents var_deps)
     ~init:Set.Poly.empty
-    ~f:(node_dependencies_rec statement_map)
+    ~f:(node_dependencies_rec statement_map ~blockers)
 
 (*
    The strategy here is to write an update function on the whole dependency graph in terms
@@ -107,30 +113,6 @@ let all_node_dependencies
   in
   step_until_fixed immediate_map
 
-let reaching_defns
-    (statement_map :
-      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
-    (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
-  Map.Poly.mapi statement_map ~f:(fun ~key:_ ~data:_ ->
-      (* TODO: figure out how to call RDs *)
-      {entry= Set.Poly.empty; exit= Set.Poly.empty} )
-
-let build_dep_info_map
-    (statement_map :
-      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
-    ( label
-    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-    Map.Poly.t =
-  let _, preds, parents = build_cf_graphs statement_map in
-  let rd_map = reaching_defns statement_map in
-  Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, _) ->
-      let rds = Map.find_exn rd_map label in
-      ( stmt
-      , { predecessors= Map.find_exn preds label
-        ; parents= Map.find_exn parents label
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit } ) )
-
 let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     (label, reaching_defn Set.Poly.t entry_exit) Map.Poly.t =
   let flowgraph, flowgraph_to_mir =
@@ -142,7 +124,7 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   in
   let to_rd_set set =
     Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:0) )
+        (VVar s, Option.value label_opt ~default:1) )
   in
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
@@ -170,20 +152,10 @@ let prog_rhs_variables
   in
   union_map labels ~f:label_vars
 
-let rec var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
-  match pattern with
-  | Decl {decl_id; _} -> Set.Poly.singleton decl_id
-  | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
-  | IfElse (_, s1, Some s2) ->
-      Set.Poly.union (var_declarations s1) (var_declarations s2)
-  | Block slist | SList slist ->
-      Set.Poly.union_list (List.map ~f:var_declarations slist)
-  | _ -> Set.Poly.empty
-
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
   let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt stmt
+    Monotone_framework.forward_flowgraph_of_stmt ~flatten_loops:true stmt
   in
   let (module Flowgraph) = flowgraph in
   let labels = all_labels (module Flowgraph) in
@@ -210,12 +182,8 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
 let mir_uninitialized_variables (mir : Program.Typed.t) :
     (Location_span.t * string) Set.Poly.t =
   let flag_variables = List.map ~f:Flag_vars.to_string Flag_vars.enumerate in
-  let data_vars =
-    Set.Poly.of_list (List.map mir.input_vars ~f:(fun (v, _) -> v))
-  in
-  let prep_vars =
-    Set.Poly.union_list (List.map ~f:var_declarations mir.prepare_data)
-  in
+  let data_vars = data_set ~exclude_transformed:true mir in
+  let trans_data_vars = data_set ~exclude_transformed:false mir in
   let globals =
     Set.Poly.union
       (Set.Poly.of_list flag_variables)
@@ -230,7 +198,7 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   in
   let globals_data = Set.Poly.union globals data_vars in
   let globals_data_prep =
-    Set.Poly.union_list [globals_data; prep_vars; parameters]
+    Set.Poly.union_list [globals_data; trans_data_vars; parameters]
   in
   Set.Poly.union_list
     [ (* prepare_data scope: data *)
@@ -253,6 +221,28 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                (Set.Poly.union arg_vars globals)
                fdbody )) ]
 
+let build_dep_info_map (mir : Program.Typed.t)
+    (stmt : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
+    ( label
+    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
+    Map.Poly.t =
+  let statement_map =
+    build_statement_map
+      (fun Stmt.Fixed.({pattern; _}) -> pattern)
+      (fun Stmt.Fixed.({meta; _}) -> meta)
+      stmt
+  in
+  let _, preds, parents = build_cf_graphs statement_map in
+  let rd_map = mir_reaching_definitions mir stmt in
+  Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, meta) ->
+      let rds = Map.find_exn rd_map label in
+      ( stmt
+      , { predecessors= Map.find_exn preds label
+        ; parents= Map.find_exn parents label
+        ; reaching_defn_entry= rds.entry
+        ; reaching_defn_exit= rds.exit
+        ; meta } ) )
+
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :
     ( label
     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
@@ -260,28 +250,7 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
   let log_prob_stmt =
     Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob}
   in
-  let statement_map =
-    build_statement_map
-      (fun Stmt.Fixed.({pattern; _}) -> pattern)
-      (fun Stmt.Fixed.({meta; _}) -> meta)
-      log_prob_stmt
-  in
-  let _, preds, parents = build_cf_graphs statement_map in
-  let rd_map = mir_reaching_definitions mir log_prob_stmt in
-  Map.Poly.mapi statement_map ~f:(fun ~key:label ~data:(stmt, _) ->
-      let rds = Map.find_exn rd_map label in
-      ( stmt
-      , { predecessors= Map.find_exn preds label
-        ; parents= Map.find_exn parents label
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit } ) )
-
-let stmt_map_dependency_graph
-    (statement_map :
-      (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t) :
-    (label, label Set.Poly.t) Map.Poly.t =
-  let dep_info_map = build_dep_info_map statement_map in
-  all_node_dependencies dep_info_map
+  build_dep_info_map mir log_prob_stmt
 
 let log_prob_dependency_graph (mir : Program.Typed.t) :
     (label, label Set.Poly.t) Map.Poly.t =

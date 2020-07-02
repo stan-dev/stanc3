@@ -1,5 +1,5 @@
 functions {
-  int my_func_0(int start, int end, real[] y_slice) {
+  int my_func_0(real[] y_slice, int start, int end) {
     return 5;
   }
 }
