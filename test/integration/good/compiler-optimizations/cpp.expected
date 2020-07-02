@@ -325,7 +325,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -582,7 +582,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -884,7 +884,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -899,7 +899,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -910,7 +910,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -1999,7 +1999,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2743,7 +2743,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -3392,7 +3392,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -3407,7 +3407,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -3418,7 +3418,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -4055,7 +4055,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -4452,7 +4452,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -5209,7 +5209,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -5224,7 +5224,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -5235,7 +5235,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -5443,7 +5443,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5472,7 +5472,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -5592,7 +5592,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -5607,7 +5607,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -5618,7 +5618,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -5823,7 +5823,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5852,7 +5852,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -5972,7 +5972,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -5987,7 +5987,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -5998,7 +5998,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -6230,7 +6230,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6381,7 +6381,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -6677,7 +6677,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -6692,7 +6692,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -6703,7 +6703,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -6932,7 +6932,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -7002,7 +7002,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -7208,7 +7208,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -7223,7 +7223,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -7234,7 +7234,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -7959,7 +7959,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8244,7 +8244,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -9061,7 +9061,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -9076,7 +9076,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -9087,7 +9087,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -9467,7 +9467,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -9559,7 +9559,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -10023,7 +10023,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -10038,7 +10038,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -10049,7 +10049,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -10986,7 +10986,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -11714,7 +11714,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -12388,7 +12388,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -12403,7 +12403,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -12414,7 +12414,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -14041,7 +14041,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -15318,7 +15318,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -16645,7 +16645,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -16660,7 +16660,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -16671,7 +16671,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -17221,7 +17221,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -17576,7 +17576,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -18373,7 +18373,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -18388,7 +18388,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -18399,7 +18399,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -18768,7 +18768,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -18879,7 +18879,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -19260,7 +19260,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -19275,7 +19275,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -19286,7 +19286,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -20375,7 +20375,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21119,7 +21119,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -21768,7 +21768,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -21783,7 +21783,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -21794,7 +21794,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -23488,7 +23488,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -24680,7 +24680,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -25903,7 +25903,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -25918,7 +25918,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -25929,7 +25929,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -26131,7 +26131,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26160,7 +26160,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -26280,7 +26280,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -26295,7 +26295,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -26306,7 +26306,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -26477,7 +26477,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26529,7 +26529,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -26662,7 +26662,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -26677,7 +26677,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -26688,7 +26688,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -26880,7 +26880,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26929,7 +26929,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -27097,7 +27097,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -27112,7 +27112,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -27123,7 +27123,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -28050,7 +28050,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -28738,7 +28738,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -29285,7 +29285,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -29300,7 +29300,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -29311,7 +29311,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -29813,7 +29813,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -29963,7 +29963,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -30410,7 +30410,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -30425,7 +30425,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -30436,7 +30436,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -30815,7 +30815,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -31010,7 +31010,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -31510,7 +31510,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -31525,7 +31525,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -31536,7 +31536,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -31913,7 +31913,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -32503,7 +32503,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -33074,7 +33074,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -33089,7 +33089,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -33100,7 +33100,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -33502,7 +33502,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -33637,7 +33637,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -34014,7 +34014,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -34029,7 +34029,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -34040,7 +34040,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -34401,7 +34401,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -34556,7 +34556,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -35206,7 +35206,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -35221,7 +35221,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -35232,7 +35232,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -35575,7 +35575,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
+                      std::ostream* pstream__ = 0) final {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -35604,7 +35604,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -36001,7 +36001,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -36016,7 +36016,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -36027,7 +36027,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);

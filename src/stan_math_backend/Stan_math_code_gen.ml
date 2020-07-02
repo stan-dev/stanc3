@@ -416,7 +416,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     [ "RNG& base_rng__"; "std::vector<double>& params_r__"
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool emit_transformed_parameters__ = true"
-    ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = 0"
+    ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = nullptr"
     ]
   in
   let intro =
@@ -576,7 +576,8 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
-  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro 
+  let cv_attr = ["final"] in
+  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro ~cv_attr
 
 (** Print the body of the constrained and unconstrained sizedtype methods 
  in the model class
@@ -618,7 +619,7 @@ let pp_overloads ppf () =
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
+                     std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -633,7 +634,7 @@ let pp_overloads ppf () =
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
+               std::ostream* pstream = nullptr) const final {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -644,7 +645,7 @@ let pp_overloads ppf () =
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
