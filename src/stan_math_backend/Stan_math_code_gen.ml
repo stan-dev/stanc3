@@ -363,9 +363,10 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param cv_attr Optional parameter to add method attributes.
   @param ppbody (?A pretty printer of the method's body) 
  *)
-let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) ppbody =
-  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name (list ~sep:comma string)
-    params (list ~sep:cut string) cv_attr;
+let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
+    ppbody =
+  pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name
+    (list ~sep:comma string) params (list ~sep:cut string) cv_attr ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;
@@ -384,27 +385,33 @@ let pp_get_param_names ppf {Program.output_vars; _} =
 
 (** Print the `get_dims` method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
-  let pp_cast ppf cast_dims = pf ppf "static_cast<size_t>(%a)@," pp_expr cast_dims in
-  let pp_pack ppf inner_dims = pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" 
-    (list ~sep:comma pp_cast) inner_dims in
-  let pp_add_pack ppf dims = pf ppf "dimss__.emplace_back(%a);@," pp_pack dims in
+  let pp_cast ppf cast_dims =
+    pf ppf "static_cast<size_t>(%a)@," pp_expr cast_dims
+  in
+  let pp_pack ppf inner_dims =
+    pf ppf "std::vector<size_t>{@[<hov>@,%a@]}" (list ~sep:comma pp_cast)
+      inner_dims
+  in
+  let pp_add_pack ppf dims =
+    pf ppf "dimss__.emplace_back(%a);@," pp_pack dims
+  in
   let pp_output_var ppf =
     (list ~sep:cut pp_add_pack)
       ppf
       List.(
         map ~f:SizedType.get_dims
           (map
-              ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st)
-              output_vars))
+             ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st)
+             output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   let cv_attr = ["const"; "final"] in
-  pp_method ppf "void" "get_dims" params
-    ["dimss__.clear();"] (fun ppf ->
-      pp_output_var ppf ; ) ~cv_attr
+  pp_method ppf "void" "get_dims" params ["dimss__.clear();"]
+    (fun ppf -> pp_output_var ppf)
+    ~cv_attr
 
-
-let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) body =
+let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
+    body =
   pp_method ppf rt name params intro
     (fun ppf -> pp_located_error_b ppf body)
     ~outro ~cv_attr
@@ -416,8 +423,8 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     [ "RNG& base_rng__"; "std::vector<double>& params_r__"
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool emit_transformed_parameters__ = true"
-    ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = nullptr"
-    ]
+    ; "bool emit_generated_quantities__ = true"
+    ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
     [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
@@ -430,7 +437,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
     ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
-  pp_method_b ppf "void" "write_array" params intro generate_quantities 
+  pp_method_b ppf "void" "write_array" params intro generate_quantities
 
 (** Prints the for loop for `constrained_param_names` 
     and `unconstrained_param_names` 
@@ -486,12 +493,14 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
-  pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
+  pp_method ppf "void" "constrained_param_names" params []
+    (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) ) ~cv_attr
+        (list ~sep:cut pp_param_names, gqvars) )
+    ~cv_attr
 
 (* Print the `unconstrained_param_names` method of the model class. 
   This is just a copy of constrained, I need to figure out which one is wrong
@@ -539,12 +548,14 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
-  pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
+  pp_method ppf "void" "unconstrained_param_names" params []
+    (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
-        (list ~sep:cut pp_param_names, gqvars) ) ~cv_attr
+        (list ~sep:cut pp_param_names, gqvars) )
+    ~cv_attr
 
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
@@ -557,7 +568,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
     ; "vars__.reserve(num_params_r__);" ]
   in
   let cv_attr = ["const"; "final"] in
-  pp_method_b ppf "void" "transform_inits" params intro transform_inits ~cv_attr
+  pp_method_b ppf "void" "transform_inits" params intro transform_inits
+    ~cv_attr
 
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
@@ -567,8 +579,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "std::ostream* pstream__ = 0" ]
   in
   let intro =
-    [ "using local_scalar_t__ = T__;"
-    ; "T__ lp__(0.0);"
+    [ "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
     ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
@@ -677,7 +688,8 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
-  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }" prog_name ;
+  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
+    prog_name ;
   pf ppf
     {|
 
