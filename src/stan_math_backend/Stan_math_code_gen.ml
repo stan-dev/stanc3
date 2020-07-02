@@ -360,6 +360,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param name The method name.
   @param intro Anything that needs printed before the method body.
   @param outro Anything that needs printed after the method body.
+  @param cv_attr Optional parameter to add method attributes.
   @param ppbody (?A pretty printer of the method's body) 
  *)
 let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"]) ppbody =
