@@ -102,7 +102,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   std::vector<double> sigma;
  
  public:
-  ~eight_schools_ncp_model() { }
+  ~eight_schools_ncp_model() final { }
   
   std::string model_name() const final { return "eight_schools_ncp_model"; }
 
@@ -188,7 +188,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -478,7 +478,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -493,7 +493,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -504,7 +504,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -3165,7 +3165,7 @@ class mother_model final : public model_base_crtp<mother_model> {
   std::vector<double> x_mul_ind;
  
  public:
-  ~mother_model() { }
+  ~mother_model() final { }
   
   std::string model_name() const final { return "mother_model"; }
 
@@ -4312,7 +4312,7 @@ class mother_model final : public model_base_crtp<mother_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8974,7 +8974,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -8989,7 +8989,7 @@ class mother_model final : public model_base_crtp<mother_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -9000,7 +9000,7 @@ class mother_model final : public model_base_crtp<mother_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -9550,7 +9550,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   std::vector<std::vector<int>> data_i;
  
  public:
-  ~motherHOF_model() { }
+  ~motherHOF_model() final { }
   
   std::string model_name() const final { return "motherHOF_model"; }
 
@@ -9816,7 +9816,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -11104,7 +11104,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -11119,7 +11119,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -11130,7 +11130,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -11465,7 +11465,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   double y_r_d_td;
  
  public:
-  ~optimize_glm_model() { }
+  ~optimize_glm_model() final { }
   
   std::string model_name() const final { return "optimize_glm_model"; }
 
@@ -11712,7 +11712,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12826,7 +12826,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -12841,7 +12841,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -12852,7 +12852,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -13136,7 +13136,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   int N;
  
  public:
-  ~reduce_sum_m1_model() { }
+  ~reduce_sum_m1_model() final { }
   
   std::string model_name() const final { return "reduce_sum_m1_model"; }
 
@@ -13195,7 +13195,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13474,7 +13474,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -13489,7 +13489,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -13500,7 +13500,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -14721,7 +14721,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   std::vector<double> x;
  
  public:
-  ~reduce_sum_m2_model() { }
+  ~reduce_sum_m2_model() final { }
   
   std::string model_name() const final { return "reduce_sum_m2_model"; }
 
@@ -14872,7 +14872,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -16502,7 +16502,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -16517,7 +16517,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -16528,7 +16528,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -18543,7 +18543,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   double tsd;
  
  public:
-  ~reduce_sum_m3_model() { }
+  ~reduce_sum_m3_model() final { }
   
   std::string model_name() const final { return "reduce_sum_m3_model"; }
 
@@ -19225,7 +19225,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -20831,7 +20831,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -20846,7 +20846,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -20857,7 +20857,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -21154,7 +21154,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   int pos__;
  
  public:
-  ~single_argument_lpmf_model() { }
+  ~single_argument_lpmf_model() final { }
   
   std::string model_name() const final { return "single_argument_lpmf_model"; }
 
@@ -21200,7 +21200,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21347,7 +21347,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -21362,7 +21362,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -21373,7 +21373,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -21500,7 +21500,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   int t;
  
  public:
-  ~tilde_block_model() { }
+  ~tilde_block_model() final { }
   
   std::string model_name() const final { return "tilde_block_model"; }
 
@@ -21553,7 +21553,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21755,7 +21755,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -21770,7 +21770,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -21781,7 +21781,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -21949,7 +21949,7 @@ class transform_model final : public model_base_crtp<transform_model> {
   std::vector<Eigen::Matrix<double, -1, -1>> dm;
  
  public:
-  ~transform_model() { }
+  ~transform_model() final { }
   
   std::string model_name() const final { return "transform_model"; }
 
@@ -22237,7 +22237,7 @@ class transform_model final : public model_base_crtp<transform_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -25720,7 +25720,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -25735,7 +25735,7 @@ class transform_model final : public model_base_crtp<transform_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -25746,7 +25746,7 @@ class transform_model final : public model_base_crtp<transform_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -25886,7 +25886,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   double x;
  
  public:
-  ~truncate_model() { }
+  ~truncate_model() final { }
   
   std::string model_name() const final { return "truncate_model"; }
 
@@ -25947,7 +25947,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26227,7 +26227,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -26242,7 +26242,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -26253,7 +26253,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -26403,7 +26403,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   int pos__;
  
  public:
-  ~udf_tilde_stmt_conflict_model() { }
+  ~udf_tilde_stmt_conflict_model() final { }
   
   std::string model_name() const final { return "udf_tilde_stmt_conflict_model"; }
 
@@ -26449,7 +26449,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26617,7 +26617,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -26632,7 +26632,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -26643,7 +26643,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -26796,7 +26796,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   int pos__;
  
  public:
-  ~user_constrain_model() { }
+  ~user_constrain_model() final { }
   
   std::string model_name() const final { return "user_constrain_model"; }
 
@@ -26842,7 +26842,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -27022,7 +27022,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -27037,7 +27037,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -27048,7 +27048,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);

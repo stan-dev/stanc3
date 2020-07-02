@@ -307,7 +307,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   matrix_cl<double> y_vi_d_td_opencl__;
  
  public:
-  ~optimize_glm_model() { }
+  ~optimize_glm_model() final { }
   
   std::string model_name() const final { return "optimize_glm_model"; }
 
@@ -574,7 +574,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) final {
+                      std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1733,7 +1733,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -1748,7 +1748,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -1759,7 +1759,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);

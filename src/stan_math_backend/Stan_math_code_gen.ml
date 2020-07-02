@@ -576,7 +576,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
   let params =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
-    ; "std::ostream* pstream__ = 0" ]
+    ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
     [ "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
@@ -587,7 +587,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
-  let cv_attr = ["final"] in
+  let cv_attr = ["const"] in
   pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro ~cv_attr
 
 (** Print the body of the constrained and unconstrained sizedtype methods 
@@ -630,7 +630,7 @@ let pp_overloads ppf () =
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const final {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -645,7 +645,7 @@ let pp_overloads ppf () =
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const final {
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -656,7 +656,7 @@ let pp_overloads ppf () =
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -687,7 +687,7 @@ let pp_model_public ppf p =
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
+  pf ppf "@ public:@ @[<v 1> ~%s() final { }" p.prog_name ;
   pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
     prog_name ;
   pf ppf
