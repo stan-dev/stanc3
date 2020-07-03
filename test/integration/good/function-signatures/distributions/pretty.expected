@@ -225,6 +225,7 @@ generated quantities {
   x = von_mises_rng(3.5, u);
   z = von_mises_rng(3.5, 3);
   z = von_mises_rng(3.5, 3.5);
+  // n = binomial_logit_rng(15,-1.2);
   N = beta_binomial_rng(ns, alpha, alpha);
   N = beta_binomial_rng(ns, alpha, nu);
   N = beta_binomial_rng(ns, alpha, ns);
@@ -1719,10 +1720,12 @@ generated quantities {
   v = multi_student_t_rng(3.0, nu, Sigma);
   v_array = multi_student_t_rng(3.0, mu_array, Sigma);
   v_array = multi_student_t_rng(3.0, nu_array, Sigma);
+  // v = multi_normal_prec_rng(mu,Sigma);
   Sigma = wishart_rng(3.0, Sigma);
   Sigma = inv_wishart_rng(3.0, Sigma);
   Sigma = lkj_corr_rng(3, 2.5);
   L = lkj_corr_cholesky_rng(3, 3.0);
+  // DEPRECATE:  Sigma = lkj_cov_rng(Sigma, mu, alpha, 2.0);
   latent_states = hmm_latent_rng(log_omegas, Gamma, rho);
 }
 

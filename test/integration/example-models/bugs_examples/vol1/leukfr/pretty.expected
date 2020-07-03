@@ -1,4 +1,16 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format leukfr.stan
+/*
+* BUGS example vol 1: LeukFr 
+* http://mathstat.helsinki.fi/openbugs/Examples/Leukfr.html
+*  http://www.openbugs.net/Examples/Leukfr.html
+*
+* The result for sigma is a bit different from those in the 
+* webpage. 
+
+* But the result for beta on 
+* http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+* might not be correct. 
+*/
 data {
   int<lower=0> N;
   int<lower=0> NT;

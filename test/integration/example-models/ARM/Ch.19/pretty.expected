@@ -147,6 +147,7 @@ transformed parameters {
   sigma_age_edu = xi_age_edu * sigma_age_edu_raw;
   sigma_state = xi_state * sigma_state_raw;
   sigma_region = xi_state * sigma_region_raw;
+  // not "xi_region"
   for (i in 1 : N) 
     Xbeta[i] = beta[1] + beta[2] * female[i] + beta[3] * black[i]
                + beta[4] * female[i] * black[i] + b_age[age[i]]
@@ -468,6 +469,7 @@ transformed parameters {
 model {
   mu_theta ~ normal(0, 100);
   sigma_eta ~ inv_gamma(1, 1);
+  //prior distribution can be changed to uniform
   eta ~ normal(0, sigma_eta);
   xi ~ normal(0, 5);
   y ~ normal(theta, sigma_y);

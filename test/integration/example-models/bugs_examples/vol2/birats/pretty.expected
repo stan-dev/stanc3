@@ -1,4 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format birats.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
+// Page 23: Birats
+//# 
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -13,6 +16,12 @@ parameters {
   real<lower=0> sigmasq_y;
   cov_matrix[2] Sigma_beta;
 }
+//  transformed parameters {
+//    real rho; 
+//    real alpha0; 
+//    //rho <- Sigma_beta[1, 2] / sqrt(Sigma_beta[1, 1] * Sigma_beta[2, 2]);
+//    //alpha0 <- mu_beta[1] - mu_beta[2] * xbar; 
+//  }
 transformed parameters {
   real<lower=0> sigma_y;
   sigma_y <- sqrt(sigmasq_y);

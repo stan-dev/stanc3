@@ -11,6 +11,14 @@ parameters {
 model {
   theta ~ normal(3, 1);
   y ~ normal(theta[movie], sigma_y);
+  /* equivalently:
+  for (j in 1:2){
+    theta[j] ~ normal(3, 1);
+  }
+  for (n in 1:N){
+    y[n] ~ normal(theta[movie[n]], sigma_y);
+  }
+  */
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ratings_2.stan

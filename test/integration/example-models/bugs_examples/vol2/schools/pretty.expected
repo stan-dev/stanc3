@@ -1,4 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format schools-1.stan
+/**
+* Schools: ranking school examination resutls using 
+* http://www.openbugs.info/Examples/Schools.html
+*/
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -29,10 +33,13 @@ model {
               + beta[6] * School_denom[p, 1] + beta[7] * School_denom[p, 2]
               + beta[8] * School_denom[p, 3];
   Y ~ normal(Ymu, exp(-0.5 * (theta + phi * LRT)));
+  // Priors for fixed effects:
   beta ~ normal(0, 5);
   theta ~ normal(0, 5);
   phi ~ normal(0, 5);
+  // Priors for random coefficients:
   alpha ~ multi_normal_prec(gamma, Omega);
+  // Hyper-priors:
   gamma ~ normal(0, 5);
   Omega ~ wishart(3, R);
 }
@@ -90,6 +97,10 @@ Warning: deprecated language construct used in 'schools-1.stan', line 50, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format schools-2.stan
+/**
+* Schools: ranking school examination resutls using 
+* http://www.openbugs.info/Examples/Schools.html
+*/
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -121,11 +132,14 @@ model {
               + beta[6] * School_denom[p, 1] + beta[7] * School_denom[p, 2]
               + beta[8] * School_denom[p, 3];
   Y ~ normal(Ymu, exp(-0.5 * (theta + phi * LRT)));
+  // Priors for fixed effects:
   beta ~ normal(0, 2.5);
   theta ~ normal(0, 2.5);
   phi ~ normal(0, 0.1);
+  // Priors for random coefficients:
   alpha ~ multi_normal_cholesky(gamma,
                                 diag_pre_multiply(sigma_Sigma, L_Sigma));
+  // Hyper-priors:
   gamma ~ normal(0, 5);
   sigma_Sigma ~ cauchy(0, 2.5);
   L_Sigma ~ lkj_corr_cholesky(3);
@@ -184,6 +198,10 @@ Warning: deprecated language construct used in 'schools-2.stan', line 51, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format schools-3.stan
+/**
+* Schools: ranking school examination results
+* http://www.openbugs.info/Examples/Schools.html
+*/
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -213,11 +231,14 @@ model {
               + beta[6] * School_denom[p, 1] + beta[7] * School_denom[p, 2]
               + beta[8] * School_denom[p, 3];
   Y ~ normal(Ymu, exp(-0.5 * (theta + phi * LRT)));
+  // Priors for fixed effects:
   beta ~ normal(0, 5);
   theta ~ normal(0, 5);
   phi ~ normal(0, 5);
+  // Priors for random coefficients:
   increment_log_prob(-0.5 * (3 + M)
                      * log_determinant(crossprod(alpha) - gamma * gamma' + R));
+  // Hyper-priors:
   gamma ~ normal(0, 5);
 }
 
@@ -287,6 +308,10 @@ Warning: deprecated language construct used in 'schools-3.stan', line 49, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format schools-4.stan
+/**
+* Schools: ranking school examination results
+* http://www.openbugs.info/Examples/Schools.html
+*/
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -322,10 +347,14 @@ model {
               + beta[6] * School_denom[p, 1] + beta[7] * School_denom[p, 2]
               + beta[8] * School_denom[p, 3];
   Y ~ normal(Ymu, exp(-0.5 * (theta + phi * LRT)));
+  // Priors for fixed effects:
   beta ~ normal(0, 2.5);
   theta ~ normal(0, 2.5);
   phi ~ normal(0, 0.1);
+  // Priors for random coefficients:
   to_vector(z) ~ normal(0, 1);
+  // implies: alpha ~ multi_normal(gamma, CovarianceMatrix);
+  // Hyper-priors:
   gamma ~ normal(0, 5);
   sigma_Sigma ~ cauchy(0, 2.5);
   L_Sigma ~ lkj_corr_cholesky(3);
@@ -397,6 +426,9 @@ Warning: deprecated language construct used in 'schools-4.stan', line 55, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format schools.stan
+// Schools: ranking school examination resutls using 
+// multivariate hierarcical models 
+//  http://www.openbugs.net/Examples/Schools.html
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -442,16 +474,28 @@ model {
               + beta[8] * School_denom[p, 3];
   }
   Y ~ normal(Ymu, exp(-.5 * (theta + phi * LRT)));
+  //  for(p in 1:N) {
+  //     Y[p] ~ normal(,  exp(-.5 * (theta + phi * LRT[p]))); 
+  //  }
+  // min.var <- exp(-(theta + phi * (-34.6193))) # lowest LRT score = -34.6193
+  // max.var <- exp(-(theta + phi * (37.3807)))  # highest LRT score = 37.3807
+  // Priors for fixed effects:
   beta ~ normal(0, 100);
+  // for (k in 1:8)  beta[k] ~ normal(0.0, 100); 
   theta ~ normal(0.0, 100);
   phi ~ normal(0.0, 100);
+  // Priors for random coefficients:
   for (m in 1 : M) 
     alpha[m] ~ multi_normal(gamma, Sigma);
+  // Hyper-priors:
   gamma ~ multi_normal(gamma_mu, gamma_Sigma);
   Sigma ~ inv_wishart(3, invR);
 }
 generated quantities {
+  // real alpha1[M]; 
   real ranks[M];
+  // for (m in 1:M)  alpha1[m] <- alpha[m, 1]; 
+  //# compute ranks 
   for (j in 1 : M) {
     real greater_than[M];
     for (k in 1 : M) 

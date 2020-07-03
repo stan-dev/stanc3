@@ -1,4 +1,9 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format mvn_orange.stan
+// Orange Trees (Multi-variate normal) 
+// http://www.openbugs.net/Examples/OtreesMVN.html
+// and refer to ../orange 
+// FIXME: there are some discrepancy for parameters var 
+// and the s.e. for some parameters
 data {
   int<lower=0> K;
   int<lower=0> N;

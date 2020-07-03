@@ -1,8 +1,11 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format dyes.stan
+// Dyes: variance components model 
+//  http://www.openbugs.net/Examples/Dyes.html
 data {
   int BATCHES;
   int SAMPLES;
   real y[BATCHES, SAMPLES];
+  // vector[SAMPLES] y[BATCHES]; 
 }
 parameters {
   real<lower=0> tau_between;

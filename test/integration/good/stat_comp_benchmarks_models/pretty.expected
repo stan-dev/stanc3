@@ -23,24 +23,34 @@ model {
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format arma.stan
+// ARMA(1, 1)
 data {
   int<lower=1> T;
+  // number of observations
   real y[T];
+  // observed outputs
 }
 parameters {
   real mu;
+  // mean coefficient
   real phi;
+  // autoregression coefficient
   real theta;
+  // moving average coefficient
   real<lower=0> sigma;
+  // noise scale
 }
 model {
   vector[T] nu;
+  // prediction for time t
   vector[T] err;
+  // error for time t
   mu ~ normal(0, 10);
   phi ~ normal(0, 2);
   theta ~ normal(0, 2);
   sigma ~ cauchy(0, 2.5);
   nu[1] = mu + phi * mu;
+  // assume err[0] == 0
   err[1] = y[1] - nu[1];
   for (t in 2 : T) {
     nu[t] = mu + phi * y[t - 1] + theta * err[t - 1];
@@ -221,6 +231,10 @@ model {
   z ~ multi_normal(mu, Sigma);
 }
 generated quantities {
+  // The means of these quantities will give the difference between 
+  // estimated marginal variances and correlation and their true values.
+  // If everything is going correctly then these values should be with
+  // the respective MCMC-SE of zero.
   real delta_var1;
   real delta_var2;
   real delta_corr;
@@ -273,8 +287,11 @@ functions {
                               int[] x_i) {
     real dydt[1];
     real k_a = theta[1];
+    // Dosing rate in 1/day
     real K_m = theta[2];
+    // Michaelis-Menten constant in mg/L
     real V_m = theta[3];
+    // Maximum elimination rate in 1/day
     real D = x_r[1];
     real V = x_r[2];
     real dose = 0;
@@ -287,11 +304,17 @@ functions {
 }
 data {
   real t0;
+  // Initial time in days;
   real C0[1];
+  // Initial concentration at t0 in mg/L
   real D;
+  // Total dosage in mg
   real V;
+  // Compartment volume in L
   int<lower=1> N_t;
   real times[N_t];
+  // Measurement times in days
+  // Measured concentrations in effect compartment in mg/L
   real C_hat[N_t];
 }
 transformed data {
@@ -300,8 +323,11 @@ transformed data {
 }
 parameters {
   real<lower=0> k_a;
+  // Dosing rate in 1/day
   real<lower=0> K_m;
+  // Michaelis-Menten constant in mg/L
   real<lower=0> V_m;
+  // Maximum elimination rate in 1/day
   real<lower=0> sigma;
 }
 transformed parameters {
@@ -313,10 +339,12 @@ transformed parameters {
   }
 }
 model {
+  // Priors
   k_a ~ cauchy(0, 1);
   K_m ~ cauchy(0, 1);
   V_m ~ cauchy(0, 1);
   sigma ~ cauchy(0, 1);
+  // Likelihood
   for (n in 1 : N_t) 
     C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
 }
@@ -332,8 +360,11 @@ functions {
                               int[] x_i) {
     real dydt[1];
     real k_a = theta[1];
+    // Dosing rate in 1/day
     real K_m = theta[2];
+    // Michaelis-Menten constant in mg/L
     real V_m = theta[3];
+    // Maximum elimination rate in 1/day
     real D = x_r[1];
     real V = x_r[2];
     real dose = 0;
@@ -349,9 +380,13 @@ transformed data {
   real times[N_t];
   real t0 = 0;
   real C0[1] = {0.0};
+  // Dosing rate in 1/day
+  // Michaelis-Menten constant in mg/L
+  // Maximum elimination rate in 1/day
   real theta[3] = {0.75, 0.25, 1};
   real sigma = 0.1;
   real x_r[2] = {30.0, 2.0};
+  // Total dosage in mg, Comparment volume in L
   int x_i[0];
   for (n in 1 : N_t) 
     times[n] = 0.5 * n;
@@ -375,7 +410,14 @@ generated quantities {
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
+// Simple SIR model inspired by the presentation in
+// http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
 functions {
+  // theta[1] = beta, water contact rate
+  // theta[2] = kappa, C_{50}
+  // theta[3] = gamma, recovery rate
+  // theta[4] = xi, bacteria production rate
+  // theta[5] = delta, bacteria removal rate
   real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
     real dydt[4];
     dydt[1] = -theta[1] * y[4] / (y[4] + theta[2]) * y[1];

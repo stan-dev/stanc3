@@ -1,13 +1,26 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format cjs-K.stan
+/**
+* Cormack-Jolly-Seber Model
+* 
+* following section 1.2.1 of:
+* http://www.maths.otago.ac.nz/home/resources/theses/PhD_Matthew_Schofield.pdf
+*
+*/
 data {
   int<lower=2> K;
+  // capture events
   int<lower=0> I;
+  // number of individuals
   int<lower=0, upper=1> X[I, K];
+  // X[i,k]: individual i captured at k
 }
 transformed data {
   int<lower=0, upper=K + 1> first[I];
+  // first[i]: ind i first capture
   int<lower=0, upper=K + 1> last[I];
+  // last[i]:  ind i last capture
   int<lower=0, upper=I> n_captured[K];
+  // n_capt[k]: num aptured at k
   first <- rep_array(K + 1, I);
   last <- rep_array(0, I);
   for (i in 1 : I) {
@@ -27,10 +40,14 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[K - 1] phi;
+  // phi[k]: Pr[alive at k + 1 | alive at k]
   vector<lower=0, upper=1>[K] p;
+  // p[k]: Pr[capture at k]
+  // note:  p[1] not used in model and hence not identified
 }
 transformed parameters {
   vector<lower=0, upper=1>[K] chi;
+  // chi[k]: Pr[no capture >  k | alive at k]
   {
     int k;
     chi[K] <- 1.0;
@@ -46,18 +63,23 @@ model {
     if (last[i] > 0) {
       for (k in (first[i] + 1) : last[i]) {
         increment_log_prob(log(phi[k - 1]));
+        // i survived from k-1 to k
         if (X[i, k] == 1) 
-          increment_log_prob(log(p[k]));
+          increment_log_prob(log(p[k]));// i captured at k
         else 
           increment_log_prob(log1m(p[k]));
+        // i not captured at k
       }
       increment_log_prob(log(chi[last[i]]));
+      // i not seen after last[i]
     }
   }
 }
 generated quantities {
+  // phi[K-1] and p(K) not identified, but product is
   real beta;
   vector<lower=0>[K] pop_hat;
+  // population
   beta <- phi[K - 1] * p[K];
   for (k in 1 : K) 
     pop_hat[k] <- n_captured[k] / p[k];
@@ -271,14 +293,28 @@ Warning: deprecated language construct used in 'cjs-K.stan', line 76, column 16:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format cjs.stan
+/*
+* Cormack-Jolly-Server (CJS) model.
+*
+* Key is that log probability is conditioned on first observation for
+* an individual.  See Matt Schofield's Ph.D. thesis for a nice
+* overview of CJS and generalizations:
+*
+* Schofield, Matthew R.  2007.  Hierarchical Capture-Recapture
+* Models.  Dept. of Statistics, University of Otago, Dunedin.
+*
+*/
 data {
   int<lower=0> history[7];
 }
 parameters {
   real<lower=0, upper=1> phi[2];
+  // phi[t] survival from t to t+1
   real<lower=0, upper=1> p[3];
+  // p[t]   probability of capture at t+1
 }
 transformed parameters {
+  //  chi[t] probability a sighting at t is last sighting
   real<lower=0, upper=1> chi[3];
   chi[3] <- 1;
   chi[2] <- (1 - phi[2]) + phi[2] * (1 - p[3]);
@@ -293,6 +329,7 @@ model {
   increment_log_prob(history[4] * (log(chi[1])));
   increment_log_prob(history[3] * (log(phi[2]) + log(p[3])));
   increment_log_prob(history[2] * log(chi[2]));
+  // history[1] provides no information
 }
 generated quantities {
   real<lower=0, upper=1> beta3;
@@ -431,8 +468,11 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format mark-recapture-2.stan
 data {
   int<lower=0> M;
+  // marked
   int<lower=0> C;
+  // captured
   int<lower=0, upper=min(M, C)> R;
+  // recaptured
 }
 transformed data {
   real theta_max;
@@ -441,12 +481,14 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=theta_max> theta;
+  // proportion marked
 }
 model {
   R ~ binomial(C, theta);
 }
 generated quantities {
   real<lower=(C - R + M)> N;
+  // population
   N <- M / theta;
 }
 
@@ -490,6 +532,23 @@ Warning: deprecated language construct used in 'mark-recapture-2.stan', line 19,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format mark-recapture-3.stan
+/*
+* mark-recpapture-2 prior:
+*
+*   theta ~ uniform(0, M / (C - R + M))
+* 
+* reparameterized in temrs of N:
+*
+*   (M / N) ~ uniform(0, M / (C - R + M));
+* 
+* requires Jacobian adjustment:
+*
+*   function:      f(N) -> M / N
+*   derivative:    f'(N)  =  -M / N^2
+*   Jacobian adj:  abs(f'(N)) = M / N^2
+*   log Jac adj:   log(abs(f'(N)) = log(M) - 2 * log(N)
+*   drop const:    -2 * log(N)
+*/
 data {
   int<lower=0> M;
   int<lower=0> C;
@@ -567,13 +626,18 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
   $ ../../../../../../../install/default/bin/stanc --auto-format mark-recapture.stan
 data {
   int<lower=0> M;
+  // marked
   int<lower=0> C;
+  // captured
   int<lower=0, upper=min(M, C)> R;
+  // recaptured
 }
 parameters {
   real<lower=(C - R + M)> N;
+  // population
 }
 model {
+  // N has improper default prior
   R ~ binomial(C, M / N);
 }
 

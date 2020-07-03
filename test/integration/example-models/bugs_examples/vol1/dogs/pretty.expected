@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format dogs.stan
+// compared with JAGS version in 
+// the R package BUGSExamples (https://r-forge.r-project.org/R/?group_id=882) 
 data {
   int<lower=0> Ndogs;
   int<lower=0> Ntrials;

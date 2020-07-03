@@ -1,4 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format epil.stan
+// corresponding to JAGS example 
+// in R package BUGSExamples 
+// [install.packages("BUGSExamples", repos="http://R-Forge.R-project.org")]
+// 
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -66,6 +70,7 @@ model {
 }
 generated quantities {
   real alpha0;
+  // re-calculate intercept on original scale:
   alpha0 <- a0 - alpha_Base * log_Base4_bar - alpha_Trt * Trt_bar
             - alpha_BT * BT_bar - alpha_Age * log_Age_bar - alpha_V4 * V4_bar;
 }

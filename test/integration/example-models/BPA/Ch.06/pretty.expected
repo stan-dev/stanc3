@@ -1,12 +1,17 @@
   $ ../../../../../../install/default/bin/stanc --auto-format M0.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0, upper=1> y[M, T];
+  // Capture-history matrix
 }
 transformed data {
   int<lower=0> s[M];
+  // Totals in each row
   int<lower=0> C;
+  // Size of observed data set
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
@@ -16,17 +21,25 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   real<lower=0, upper=1> p;
+  // Detection probability
 }
 model {
+  // Priors are imlicitly defined;
+  //  omega ~ uniform(0, 1);
+  //  p ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : M) 
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega) + binomial_lpmf(s[i]| T, p);
     else 
       target += log_sum_exp(bernoulli_lpmf(1| omega) + binomial_lpmf(0| T, p),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
+  // prob present given never detected
   real omega_nd = (omega * (1 - p) ^ T) / (omega * (1 - p) ^ T + (1 - omega));
   int<lower=C, upper=M> N = C + binomial_rng(M - C, omega_nd);
 }
@@ -34,12 +47,17 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format Mb.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0, upper=1> y[M, T];
+  // Capture-history matrix
 }
 transformed data {
   int<lower=0> s[M];
+  // Totals in each row
   int<lower=0> C;
+  // Size of observed data set
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
@@ -49,18 +67,29 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   real<lower=0, upper=1> p;
+  // Capture probability
+  //(not captureed during the preceeding occasion)
   real<lower=0, upper=1> c;
+  // Capture probability
+  //(captureed during the preceeding occasion)
 }
 transformed parameters {
   vector<lower=0, upper=1>[T] p_eff[M];
   for (i in 1 : M) {
+    // First occasion
     p_eff[i, 1] = p;
+    // All subsequent occasions
     for (j in 2 : T) 
       p_eff[i, j] = (1 - y[i, j - 1]) * p + y[i, j - 1] * c;
   }
 }
 model {
+  // Priors are implicitly define;
+  //  omega ~ uniform(0, 1);
+  //  p ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : M) 
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega) + bernoulli_lpmf(y[i]| p_eff[i]);
@@ -68,8 +97,11 @@ model {
       target += log_sum_exp(bernoulli_lpmf(1| omega)
                             + bernoulli_lpmf(0| p_eff[i]),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
+  // prob present given never detected
+  // animals never detected have not been detected before, so p.eff == p
   real omega_nd = (omega * (1 - p) ^ T) / (omega * (1 - p) ^ T + (1 - omega));
   int<lower=C, upper=M> N = C + binomial_rng(M - C, omega_nd);
   real trap_response = c - p;
@@ -78,11 +110,15 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format Mh.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0, upper=T> y[M];
+  // Capture-history matrix
 }
 transformed data {
   int<lower=0> C;
+  // Size of observed data set
   C = 0;
   for (i in 1 : M) {
     if (y[i] > 0) 
@@ -91,15 +127,26 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   real<lower=0, upper=1> mean_p;
+  // Mean detection probability
   real<lower=0, upper=5> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
   vector[M] eps_raw;
 }
 transformed parameters {
   vector[M] eps = logit(mean_p) + sigma * eps_raw;
 }
 model {
+  // Priors are implicitly defined.
+  //  omega ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 5);
+  // In case a weakly informative is used
+  //  sigma ~ normal(2.5, 1.25);
   eps_raw ~ normal(0, 1);
+  // Likelihood
   for (i in 1 : M) 
     if (y[i] > 0) 
       target += bernoulli_lpmf(1| omega)
@@ -108,17 +155,21 @@ model {
       target += log_sum_exp(bernoulli_lpmf(1| omega)
                             + binomial_logit_lpmf(0| T, eps[i]),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
   int<lower=0, upper=1> z[M];
   int<lower=C> N;
   for (i in 1 : M) {
     if (y[i] > 0) {
+      // animal was detected at least once
       z[i] = 1;
     }
     else {
+      // animal was never detected
       real qT;
       qT = (inv_logit(-eps[i])) ^ T;
+      // q^T where q = 1 - p; prob never detected given present
       z[i] = bernoulli_rng(omega * qT / (omega * qT + (1 - omega)));
     }
   }
@@ -128,12 +179,17 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format Mt.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0, upper=1> y[M, T];
+  // Capture-history matrix
 }
 transformed data {
   int<lower=0> s[M];
+  // Totals in each row
   int<lower=0> C;
+  // Size of observed data set
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
@@ -143,18 +199,27 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   vector<lower=0, upper=1>[T] p;
+  // Detection probability
 }
 model {
+  // Priors are implicitly defined.
+  //  omega ~ uniform(0, 1);
+  //  p ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : M) 
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega) + bernoulli_lpmf(y[i]| p);
     else 
       target += log_sum_exp(bernoulli_lpmf(1| omega) + bernoulli_lpmf(0| p),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
+  // prob never captured given present
   real pr = prod(1 - p);
+  // prob present given never captured; same for all animals
   real omega_nd = (omega * pr) / (omega * pr + (1 - omega));
   int<lower=C> N = C + binomial_rng(M - C, omega_nd);
 }
@@ -162,24 +227,33 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format MtX.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0> C;
+  // Size of observed data set
   int<lower=0, upper=1> y[M, T];
+  // Capture-history matrix
   real<lower=-6, upper=6> bsize[C];
+  // Body size
   real<lower=0> prior_sd_upper;
 }
 transformed data {
   int<lower=0> s[M];
+  // Totals in each row
   for (i in 1 : M) 
     s[i] = sum(y[i]);
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   vector<lower=0, upper=1>[T] mean_p;
+  // Mean detection probability
   real beta;
   real mu_size;
   real<lower=0, upper=prior_sd_upper> sd_size;
   real<lower=-6, upper=6> bsize_mis[M - C];
+  // Missing data
 }
 transformed parameters {
   vector[T] alpha = logit(mean_p);
@@ -190,8 +264,13 @@ transformed parameters {
     logit_p[i] = alpha' + beta * bsize_mis[i - C];
 }
 model {
+  // Priors
+  //  omega ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
   beta ~ normal(0, 10);
   mu_size ~ normal(0, 10);
+  //  sd_size ~ uniform(0, prior_sd_upper);   // Provide upper bound as data
+  // Likelihood
   for (i in 1 : C) 
     bsize[i] ~ normal(mu_size, sd_size) T[-6, 6];
   for (i in (C + 1) : M) 
@@ -204,6 +283,7 @@ model {
       target += log_sum_exp(bernoulli_lpmf(1| omega)
                             + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
   matrix<lower=0, upper=1>[M, T] p = inv_logit(logit_p);
@@ -211,9 +291,12 @@ generated quantities {
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {
+      // species was detected at least once
       z[i] = 1;
     }
     else {
+      // species was never detected
+      // prob never detected given present
       real pr = prod(rep_vector(1, T) - p[i]');
       z[i] = bernoulli_rng(omega * pr / (omega * pr + (1 - omega)));
     }
@@ -224,12 +307,17 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format Mtbh.stan
 data {
   int<lower=0> M;
+  // Number of species
   int<lower=0> T;
+  // Number of grab occasions
   int<lower=0, upper=1> y[M, T];
+  // Grab counts
 }
 transformed data {
   int<lower=0> s[M];
+  // Detection times for each species
   int<lower=0> C;
+  // Number of observed species
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
@@ -239,23 +327,37 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   vector<lower=0, upper=1>[T] mean_p;
+  // Mean detection probability
   real gamma;
   real<lower=0, upper=3> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
   vector[M] eps_raw;
 }
 transformed parameters {
   vector[M] eps = sigma * eps_raw;
   vector[T] alpha = logit(mean_p);
   matrix[M, T] logit_p;
+  // First occasion: no term for recapture (gamma)
   logit_p[ : , 1] = alpha[1] + eps;
+  // All subsequent occasions: includes recapture term (gamma)
   for (i in 1 : M) 
     for (j in 2 : T) 
       logit_p[i, j] = alpha[j] + eps[i] + gamma * y[i, j - 1];
 }
 model {
+  // Priors
   gamma ~ normal(0, 10);
+  // Uniform priors are implicitly defined.
+  //  omega ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 3);
+  // In case a weakly informative prior is used
+  //  sigma ~ normal(1.5, 0.75);
   eps_raw ~ normal(0, 1);
+  // Likelihood
   for (i in 1 : M) 
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega)
@@ -264,6 +366,7 @@ model {
       target += log_sum_exp(bernoulli_lpmf(1| omega)
                             + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
+  // z[i] == 0
 }
 generated quantities {
   matrix<lower=0, upper=1>[M, T] p = inv_logit(logit_p);
@@ -271,9 +374,12 @@ generated quantities {
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {
+      // animal was detected at least once
       z[i] = 1;
     }
     else {
+      // animal never detected
+      // prob never detected given present
       real pr = prod(rep_vector(1, T) - p[i]');
       z[i] = bernoulli_rng(omega * pr / (omega * pr + (1 - omega)));
     }
@@ -284,12 +390,17 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format Mth.stan
 data {
   int<lower=0> M;
+  // Size of augumented data set
   int<lower=0> T;
+  // Number of sampling occasions
   int<lower=0, upper=1> y[M, T];
+  // Capture-history matrix
 }
 transformed data {
   int<lower=0, upper=T> s[M];
+  // Totals in each row
   int<lower=0, upper=M> C;
+  // Size of observed data set
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
@@ -299,19 +410,31 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Inclusion probability
   real<lower=0, upper=1> mean_p[T];
+  // Mean detection probability
   real<lower=0, upper=5> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
   vector[M] eps_raw;
 }
 transformed parameters {
   vector[M] eps = sigma * eps_raw;
+  // Random effects
   real mean_lp[T] = logit(mean_p);
   matrix[M, T] logit_p;
   for (j in 1 : T) 
     logit_p[ : , j] = mean_lp[j] + eps;
 }
 model {
+  // Priors are implicitly defined.
+  //  omega ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 5);
+  // In case a weakly informative prior is used
+  //  sigma ~ normal(2.5, 1.25);
   eps_raw ~ normal(0, 1);
+  // Likelihood
   for (i in 1 : M) {
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega)
@@ -320,6 +443,7 @@ model {
       target += log_sum_exp(bernoulli_lpmf(1| omega)
                             + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
+    // z[i] == 0
   }
 }
 generated quantities {
@@ -328,9 +452,12 @@ generated quantities {
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {
+      // animal was detected at least once
       z[i] = 1;
     }
     else {
+      // animal was never detected
+      // prob never detected given present
       real pr = prod(rep_vector(1, T) - p[i]');
       z[i] = bernoulli_rng(omega * pr / (omega * pr + (1 - omega)));
     }

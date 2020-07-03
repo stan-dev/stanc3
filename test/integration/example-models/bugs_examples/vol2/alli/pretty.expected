@@ -1,8 +1,14 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format alli2.stan
+// Alligators: multinomial - logistic regression 
+//  http://www.openbugs.net/Examples/Aligators.html
+//# specify the model using Poisson distribution 
 data {
   int I;
+  // 4 
   int J;
+  // 2 
   int K;
+  // 5 
   int X[I, J, K];
 }
 parameters {
@@ -41,6 +47,7 @@ model {
     for (j in 2 : J) 
       gamma[j, k] ~ normal(0, 320);
   }
+  // LIKELIHOOD  
   for (i in 1 : I) 
     for (j in 1 : J) {
       lambda[i, j] ~ normal(0, 320);

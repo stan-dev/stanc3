@@ -1,4 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format kidney.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Page 51: Kidney: Weibull regression with random efects
+// http://www.openbugs.net/Examples/Kidney.html
 data {
   int<lower=0> NP;
   int<lower=0> N_uc;
@@ -61,6 +64,9 @@ model {
                                    + b[patient_rc[i]])
                                  / r),
                            r)));
+    //TODO: try the weibull_cdf 
+    // 0 ~ bernoulli(weibull_cdf(t_rc[i], exp(-(alpha + beta_age * age_rc[i] + beta_sex * sex_rc[i] 
+    //                                      + yabeta_disease[disease_rc[i]] + b[patient_rc[i]]) / r), r));
   }
 }
 generated quantities {

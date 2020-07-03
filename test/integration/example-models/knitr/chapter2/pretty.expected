@@ -194,6 +194,14 @@ parameters {
 model {
   theta ~ normal(3, 1);
   y ~ normal(theta[movie], sigma_y);
+  /* equivalently:
+  for (j in 1:2){
+    theta[j] ~ normal(3, 1);
+  }
+  for (n in 1:N){
+    y[n] ~ normal(theta[movie[n]], sigma_y);
+  }
+  */
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ratings_2.stan
@@ -277,6 +285,7 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try.stan
+/* This program has a mistake in it, as will be explained later */
 data {
   int N_teams;
   int N_games;
@@ -311,6 +320,7 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try_noprior.stan
+/* This program has a mistake in it, as will be explained later */
 data {
   int N_teams;
   int N_games;
@@ -321,6 +331,7 @@ data {
   vector[N_games] score_2;
   real df;
   real b;
+  // To remove the prior score in the model, just set b=0 when running this program.
 }
 transformed data {
   vector[N_games] dif;
@@ -345,6 +356,7 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format worldcup_fixed.stan
+/* The error in the transformed data block has been fixed */
 data {
   int N_teams;
   int N_games;
@@ -387,6 +399,7 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format worldcup_no_sqrt.stan
+/* This program has a mistake in it, as will be explained later */
 data {
   int N_teams;
   int N_games;
@@ -423,6 +436,7 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format worldcup_with_replication.stan
+/* This program has a mistake in it, as will be explained later */
 data {
   int N_teams;
   int N_games;

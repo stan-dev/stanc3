@@ -1,13 +1,19 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format estdof.stan
+//# estimated the degree of freedom (dof) from 
+//# samples by sim.stan
+// http://www.openbugs.net/Examples/t-df.html
+//# estimate dof using continuous priors 
 data {
   int<lower=0> N;
   real y[N];
 }
 parameters {
+  // learning about the dof as a continuous quantity
   real<lower=2, upper=100> d;
 }
 model {
   y ~ student_t(d, 0, 1);
+  // d ~ uniform(2, 100); 
 }
 
 
@@ -62,6 +68,9 @@ Warning: deprecated language construct used in 'estdof.stan', line 6, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format simt4.stan
+//#  simulate samples from student t distribution 
+//# 
+// http://www.openbugs.net/Examples/t-df.html
 transformed data {
   int d;
   d <- 4;

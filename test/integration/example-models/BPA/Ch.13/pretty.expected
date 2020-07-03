@@ -1,12 +1,24 @@
   $ ../../../../../../install/default/bin/stanc --auto-format Dynocc.stan
+// Dynamic (multi-season) site-occupancy model
+// This model is implemented as a hidden Markov model.
+// States:
+// 1: occupied
+// 2: not occupied
+// Observations:
+// number of detection + 1
 data {
   int<lower=1> nsite;
+  // Number of sites
   int<lower=1> nrep;
+  // Number of replicate surveys
   int<lower=1> nyear;
+  // Number of years
   int<lower=0, upper=1> y[nsite, nrep, nyear];
+  // Detection history
 }
 transformed data {
   int<lower=1, upper=nrep + 1> sum_y[nsite, nyear];
+  // sum + 1
   int ny_minus_1 = nyear - 1;
   for (i in 1 : nsite) 
     for (k in 1 : nyear) 
@@ -16,9 +28,16 @@ parameters {
   real<lower=0, upper=1> psi1;
   vector<lower=0, upper=1>[nyear] p;
   simplex[2] ps[2, nyear - 1];
+  // Transition probability
+  // This is equivalent to the following.
+  //  ps[1, t, 1] = phi[t];
+  //  ps[1, t, 2] = 1.0 - phi[t];
+  //  ps[2, t, 1] = gamma[t];
+  //  ps[2, t, 2] = 1.0 - gamma[t];
 }
 transformed parameters {
   simplex[nrep + 1] po[2, nyear];
+  // Log emission probability
   for (t in 1 : nyear) {
     for (r in 1 : (nrep + 1)) {
       po[1, t, r] = exp(binomial_lpmf(r - 1| nrep, p[t]));
@@ -27,9 +46,15 @@ transformed parameters {
   }
 }
 model {
+  // Priors
+  // Flat priros Uniform(0, 1) are implicitly used on psi1, p and ps.
+  // Likelihood
+  // This implementation of the forward algorithm is derived from
+  // Stan Modeling Language User's Guide and Reference Manual.
   for (i in 1 : nsite) {
     real acc[2];
     vector[2] gam[nyear];
+    // First year
     gam[1, 1] = psi1 * po[1, 1, sum_y[i, 1]];
     gam[1, 2] = (1 - psi1) * po[2, 1, sum_y[i, 1]];
     for (t in 2 : nyear) {
@@ -43,13 +68,21 @@ model {
   }
 }
 generated quantities {
+  // Sample and population occupancy, growth rate and turnover
   vector<lower=0, upper=1>[nyear] psi;
+  // Occupancy probability
   vector<lower=0, upper=1>[ny_minus_1] phi;
+  // Survival probability
   vector<lower=0, upper=1>[ny_minus_1] gamma;
+  // Colonization probability
   int<lower=0, upper=1> z[nsite, nyear];
+  // Latent state of occurrence
   int<lower=0, upper=nsite> n_occ[nyear];
+  // Number of occupancy
   vector[nyear - 1] growthr;
+  // Population growth rate
   vector[nyear - 1] turnover;
+  // Turnover rate
   for (k in 1 : ny_minus_1) {
     phi[k] = ps[1, k, 1];
     gamma[k] = ps[2, k, 1];
@@ -68,10 +101,20 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format Dynocc2.stan
+// Dynamic (multi-season) site-occupancy model
+// This model is implemented as a hidden Markov model.
+// States:
+// 1: occupied
+// 2: not occupied
+// Observations:
+// number of detection + 1
 data {
   int<lower=1> nsite;
+  // Number of sites
   int<lower=1> nyear;
+  // Number of years
   int<lower=0, upper=2> y[nsite, nyear];
+  // Number of detections
 }
 transformed data {
   int ny_minus_1 = nyear - 1;
@@ -80,9 +123,16 @@ parameters {
   real<lower=0, upper=1> psi1;
   real<lower=0, upper=1> p;
   simplex[2] ps[2, nyear - 1];
+  // Transition probability
+  // This is euqivalent to the following.
+  //  ps[1, t, 1] = phi[t];
+  //  ps[1, t, 2] = 1.0 - phi[t];
+  //  ps[2, t, 1] = gamma[t];
+  //  ps[2, t, 2] = 1.0 - gamma[t];
 }
 transformed parameters {
   simplex[3] po[2, nyear];
+  // Emission probability
   for (t in 1 : nyear) {
     for (r in 1 : 3) {
       po[1, t, r] = exp(binomial_lpmf(r - 1| 2, p));
@@ -91,9 +141,15 @@ transformed parameters {
   }
 }
 model {
+  // Priors
+  // Flat priors Uniform(0, 1) are implicitly used on psi1, p and ps.
+  // Likelihood
+  // This implementation of the forward algorithm is derived from
+  // Stan Modeling Language User's Guide and Reference Manual.
   for (i in 1 : nsite) {
     real acc[2];
     vector[2] gam[nyear];
+    // First year
     gam[1, 1] = psi1 * po[1, 1, y[i, 1] + 1];
     gam[1, 2] = (1 - psi1) * po[2, 1, y[i, 1] + 1];
     for (t in 2 : nyear) {
@@ -107,13 +163,23 @@ model {
   }
 }
 generated quantities {
+  // Sample and population occupancy, growth rate and turnover
   vector<lower=0, upper=1>[nyear] psi;
+  // Occupancy probability
   vector<lower=0, upper=1>[ny_minus_1] phi;
+  // Survival probability
   vector<lower=0, upper=1>[ny_minus_1] gamma;
+  // Colonization probability
   int<lower=0, upper=1> z[nsite, nyear];
+  // Latent state of occurrence
   int<lower=0, upper=nsite> n_occ[nyear];
+  // Number of occupancy
   vector[nyear - 1] growthr;
+  // Population growth rate
   vector[nyear - 1] turnover;
+  // Turnover rate
+  // Latent state z[,] is estimated with a full simulation
+  // without using observed y[,].
   for (k in 1 : ny_minus_1) {
     phi[k] = ps[1, k, 1];
     gamma[k] = ps[2, k, 1];
@@ -132,6 +198,7 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bluebug.stan
+// Single-season occupancy model
 data {
   int<lower=1> R;
   int<lower=1> T;
@@ -144,6 +211,7 @@ data {
 transformed data {
   int<lower=0, upper=T> sum_y[R];
   int<lower=0, upper=R> occ_obs;
+  // Number of observed occupied sites
   matrix[R, T] DATES2;
   matrix[R, T] HOURS2;
   occ_obs = 0;
@@ -166,13 +234,16 @@ parameters {
 }
 transformed parameters {
   vector[R] logit_psi;
+  // Logit occupancy prob.
   matrix[R, T] logit_p;
+  // Logit detection prob.
   for (i in 1 : R) 
     logit_psi[i] = alpha_psi + beta_psi * edge[i];
   logit_p = alpha_p + beta1_p * DATES + beta2_p * DATES2 + beta3_p * HOURS
             + beta4_p * HOURS2;
 }
 model {
+  // Priors
   alpha_psi ~ normal(0, 10);
   beta_psi ~ normal(0, 10);
   alpha_p ~ normal(0, 10);
@@ -180,12 +251,16 @@ model {
   beta2_p ~ normal(0, 10);
   beta3_p ~ normal(0, 10);
   beta4_p ~ normal(0, 10);
+  // Likelihood
   for (i in 1 : R) {
     if (sum_y[i]) {
+      // Occupied and observed
       target += bernoulli_logit_lpmf(1| logit_psi[i])
                 + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
     }
     else {
+      // Never observed
+      // Occupied and not observed
       target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
                             + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]),
                             bernoulli_logit_lpmf(0| logit_psi[i]));
@@ -195,17 +270,23 @@ model {
 generated quantities {
   real<lower=0, upper=1> mean_p = inv_logit(alpha_p);
   int occ_fs;
+  // Number of occupied sites
   real psi_con[R];
+  // prob present | data
   int z[R];
+  // occupancy indicator, 0/1
   for (i in 1 : R) {
     if (sum_y[i] == 0) {
+      // species not detected
       real psi = inv_logit(logit_psi[i]);
       vector[last[i]] q = inv_logit(-logit_p[i, 1 : last[i]])';
+      // q = 1 - p
       real qT = prod(q[ : ]);
       psi_con[i] = (psi * qT) / (psi * qT + (1 - psi));
       z[i] = bernoulli_rng(psi_con[i]);
     }
     else {
+      // species detected at least once
       psi_con[i] = 1;
       z[i] = 1;
     }
@@ -214,25 +295,42 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format owls_ms1.stan
+// Multistate occupancy models
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of temporal replications
   int<lower=0, upper=3> y[R, T];
+  // Observed data (0:NA)
 }
 parameters {
   real<lower=0, upper=1> p2;
+  // Detection prob. at a site w/o repro.
   real<lower=0, upper=1> psi;
+  // Occupancy prob.
   real<lower=0, upper=1> r;
+  // Reproduction prob.
   vector<lower=0>[3] beta;
 }
 transformed parameters {
   simplex[3] p3;
+  // Detectin prob.
   simplex[3] phi[R];
+  // State vector
   simplex[3] p[3, T];
+  // Observation matrix
   p3 = beta / sum(beta);
+  // Induce Dirichlet prior
+  // Define state vector
   phi[ : , 1] = rep_array(1 - psi, R);
+  // Prob. of non-occupation
   phi[ : , 2] = rep_array(psi * (1 - r), R);
+  // Prob. of occupancy without repro
   phi[ : , 3] = rep_array(psi * r, R);
+  // Prob. of occupancy and repro
+  // Define observation matrix
+  // Order of indices: true state, time, observed state
   p[1,  : , 1] = rep_array(1, T);
   p[1,  : , 2] = rep_array(0, T);
   p[1,  : , 3] = rep_array(0, T);
@@ -244,7 +342,11 @@ transformed parameters {
   p[3,  : , 3] = rep_array(p3[3], T);
 }
 model {
+  // Priors
+  // Flat priros are implicitly used on psi, r and p2.
   beta ~ gamma(1, 1);
+  // Induce Dirichlet prior
+  // Likelihood
   for (s in 1 : R) {
     vector[3] lp;
     for (k in 1 : 3) {
@@ -259,8 +361,10 @@ model {
 }
 generated quantities {
   int<lower=1, upper=3> z[R];
+  // State
   int occ[3, R];
   real n_occ[3];
+  // Number of each state
   for (s in 1 : R) 
     z[s] = categorical_rng(phi[s]);
   for (i in 1 : 3) 
@@ -271,27 +375,43 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format owls_ms2.stan
+// Multistate occupancy models
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of temporal replications
   int<lower=0, upper=3> y[R, T];
+  // Observed data (0:NA)
 }
 parameters {
   vector<lower=0, upper=1>[T] p2;
+  // Detection prob. at a site w/o repro.
   real<lower=0, upper=1> psi;
+  // Occupancy prob.
   real<lower=0, upper=1> r;
+  // Reproduction prob.
   vector<lower=0>[T] beta[3];
 }
 transformed parameters {
   simplex[3] p3[T];
+  // Detectin prob.
   simplex[3] phi[R];
+  // State vector
   simplex[3] p[3, T];
+  // Observation matrix
   for (t in 1 : T) 
     for (i in 1 : 3) 
       p3[t, i] = beta[i, t] / sum(beta[ : , t]);
+  // Define state vector
   phi[ : , 1] = rep_array(1 - psi, R);
+  // Prob. of non-occupation
   phi[ : , 2] = rep_array(psi * (1 - r), R);
+  // Prob. of occupancy without repro
   phi[ : , 3] = rep_array(psi * r, R);
+  // Prob. of occupancy and repro
+  // Define observation matrix
+  // Order of indices: true state, time, observed state
   p[1,  : , 1] = rep_array(1, T);
   p[1,  : , 2] = rep_array(0, T);
   p[1,  : , 3] = rep_array(0, T);
@@ -307,8 +427,12 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[T];
+  // Priors
+  // Flat priros are implicitly used on psi, r and p2.
   for (t in 1 : T) 
     beta[1 : 3, t] ~ gamma(1, 1);
+  // Induce Dirichlet prior
+  // Likelihood
   for (s in 1 : R) {
     vector[3] lp;
     for (k in 1 : 3) {
@@ -323,8 +447,10 @@ model {
 }
 generated quantities {
   int<lower=1, upper=3> z[R];
+  // State
   int occ[3, R];
   real n_occ[3];
+  // Number of each state
   for (s in 1 : R) 
     z[s] = categorical_rng(phi[s]);
   for (i in 1 : 3) 
@@ -335,14 +461,20 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format site-occ.stan
+// The simplest possible site-occupancy model
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of temporal replications
   int<lower=0, upper=1> y[R, T];
+  // Observation
 }
 transformed data {
   int<lower=0, upper=T> sum_y[R];
+  // Number of detections for each site
   int<lower=0, upper=R> occ_obs;
+  // Number of observed occupied sites
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
@@ -352,15 +484,22 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> psi;
+  // Occupancy probability
   real<lower=0, upper=1> p;
+  // Detection probability
 }
 model {
+  // Priors
+  // Flat priors are implicitly used on psi and p.
+  // Likelihood
   for (i in 1 : R) {
     if (sum_y[i]) {
+      // Occurred and observed
       1 ~ bernoulli(psi);
       y[i] ~ bernoulli(p);
     }
     else {
+      // Occurred and not observed
       target += log_sum_exp(bernoulli_lpmf(1| psi) + bernoulli_lpmf(0| p) * T,
                             bernoulli_lpmf(0| psi));
     }
@@ -369,20 +508,28 @@ model {
 generated quantities {
   int<lower=occ_obs, upper=R> occ_fs;
   real psi_nd;
+  // prob occurred given not detected
   psi_nd = (psi * (1 - p) ^ T) / (psi * (1 - p) ^ T + (1 - psi));
   occ_fs = occ_obs + binomial_rng(R - occ_obs, psi_nd);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format site-occ_cov.stan
+// Site-occupancy models with covariates
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of temporal replications
   int<lower=0, upper=1> y[R, T];
+  // Observation
   vector[R] X;
+  // Covariate
 }
 transformed data {
   int<lower=0, upper=T> sum_y[R];
+  // Number of occupation for each site
   int<lower=0, upper=R> occ_obs;
+  // Number of observed occupied sites
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
@@ -398,17 +545,25 @@ parameters {
 }
 transformed parameters {
   vector[R] logit_psi;
+  // Logit occupancy probability
   matrix[R, T] logit_p;
+  // Logit detection probability
   logit_psi = alpha_occ + beta_occ * X;
   logit_p = rep_matrix(alpha_p + beta_p * X, T);
 }
 model {
+  // Priors
+  // Improper flat priors are implicitly used on
+  // alpha_occ, beta_occ, alpha_p and beta_p.
+  // Likelihood
   for (i in 1 : R) {
     if (sum_y[i]) {
+      // Occurred and observed
       1 ~ bernoulli_logit(logit_psi[i]);
       y[i] ~ bernoulli_logit(logit_p[i]);
     }
     else {
+      // Occurred and not observed
       target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
                             + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_logit_lpmf(0| logit_psi[i]));
@@ -417,17 +572,23 @@ model {
 }
 generated quantities {
   int occ_fs;
+  // Number of occupied sites
   real psi_con[R];
+  // prob occupied conditional on data
   int z[R];
+  // occupancy indicator, 0/1
   for (i in 1 : R) {
     if (sum_y[i] == 0) {
+      // species not detected
       real psi = inv_logit(logit_psi[i]);
       vector[T] q = inv_logit(-logit_p[i])';
+      // q = 1 - p
       real qT = prod(q[ : ]);
       psi_con[i] = (psi * qT) / (psi * qT + (1 - psi));
       z[i] = bernoulli_rng(psi_con[i]);
     }
     else {
+      // species detected at least once
       psi_con[i] = 1;
       z[i] = 1;
     }

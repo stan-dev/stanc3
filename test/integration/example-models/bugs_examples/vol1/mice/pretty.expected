@@ -1,4 +1,10 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format mice.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Page 48: Mice Weibull regression 
+// http://www.openbugs.net/Examples/Mice.html
+// note that Stan and JAGS have different parameterization for Weibull
+// distribution
+// Data is transformed using data_reorg.R 
 data {
   int<lower=0> N_uncensored;
   int<lower=0> N_censored;
@@ -12,6 +18,7 @@ parameters {
   real<lower=0> r;
   real beta[M];
   real<lower=1> t2_censored[N_censored];
+  // t_censored / censor_time 
 }
 model {
   r ~ exponential(0.001);

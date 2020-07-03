@@ -1,20 +1,33 @@
   $ ../../../../../../install/default/bin/stanc --auto-format irt-multilevel.stan
 data {
   int<lower=1> I;
+  // # items
   int<lower=1> J;
+  // # students
   int<lower=1> K;
+  // # schools
   int<lower=1> N;
+  // data items
   int<lower=1, upper=I> ii[N];
+  // item for n
   int<lower=1, upper=J> jj[N];
+  // student for n
   int<lower=1, upper=J> kk[N];
+  // school for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
 }
 parameters {
   vector[J] alpha;
+  // ability for student j
   vector[I] beta;
+  // difficulty for item i
   vector[K] gamma;
+  // ability for school k
   vector<lower=0>[I] delta;
+  // discriminativeness for item i
   real zeta;
+  // intercept
   real<lower=0> mu_delta;
   real<lower=0, upper=20> sigma_beta;
   real<lower=0, upper=20> sigma_gamma;
@@ -23,6 +36,7 @@ parameters {
 model {
   vector[N] log_odds;
   alpha ~ normal(0, 1);
+  // priors
   beta ~ normal(0, sigma_beta);
   gamma ~ normal(0, sigma_gamma);
   delta ~ lognormal(mu_delta, sigma_delta);
@@ -50,13 +64,19 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format irt.stan
 data {
   int<lower=1> I;
+  // # items
   int<lower=1> J;
+  // # students
   int<lower=0, upper=1> y[I, J];
+  // boolean correctness of student j on item i for n
 }
 parameters {
   vector[J] alpha;
+  // ability for student j
   vector[I] beta;
+  // difficulty for item i
   vector<lower=0>[I] delta;
+  // discriminativeness for item i
 }
 model {
   alpha ~ normal(0, 1);
@@ -67,6 +87,7 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl.stan
+//# ---- irt-1pl-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -95,6 +116,7 @@ Warning: deprecated language construct used in 'irt_1pl.stan', line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_adjust.stan
+//# ---- irt-1pl-adjust-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -170,6 +192,7 @@ Warning: deprecated language construct used in 'irt_1pl_adjust.stan', line 18, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_fit_predict.stan
+//# ---- irt-1pl-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -249,6 +272,7 @@ Warning: deprecated language construct used in 'irt_1pl_fit_predict.stan', line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_hier.stan
+//# ---- irt-1pl-hier-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -262,11 +286,14 @@ parameters {
   real<lower=0> sigma_theta;
 }
 model {
+  // hyperpriors
   mu_b ~ normal(0, 5);
   sigma_b ~ cauchy(0, 2);
   sigma_theta ~ cauchy(0, 2);
+  // priors
   b ~ normal(mu_b, sigma_b);
   theta ~ normal(0, sigma_theta);
+  // likelihood
   for (i in 1 : I) 
     y[i] ~ bernoulli_logit(theta - b[i]);
 }
@@ -298,6 +325,7 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_pin.stan
+//# ---- irt-1pl-pin-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -311,6 +339,7 @@ model {
   for (i in 1 : I) {
     head(y[i], J - 1) ~ bernoulli_logit(theta - b[i]);
     y[i, J] ~ bernoulli_logit(b[i]);
+    // theta[J] = 0
   }
 }
 
@@ -328,6 +357,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_power.stan
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_predict.stan
+//# ---- irt-1pl-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -407,6 +437,7 @@ Warning: deprecated language construct used in 'irt_1pl_predict.stan', line 25, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_unit.stan
+//# ---- irt-1pl-unitt-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -465,6 +496,7 @@ Warning: deprecated language construct used in 'irt_1pl_unit.stan', line 15, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_vague.stan
+//# ---- irt-1pl-vague-stan ----
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -497,6 +529,7 @@ Warning: deprecated language construct used in 'irt_1pl_vague.stan', line 1, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_2pl_power.stan
+//# ---- irt-2pl-power-stan ----
 data {
   int<lower=0> I;
   vector[I] a;

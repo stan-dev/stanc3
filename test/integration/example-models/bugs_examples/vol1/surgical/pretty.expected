@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format surgical.stan
+//# http://openbugs.net/Examples/Surgical.html
+//# random effects model 
 data {
   int<lower=0> N;
   int r[N];
@@ -89,6 +91,10 @@ Warning: deprecated language construct used in 'surgical.stan', line 28, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format surgical_stanified.stan
+// http://openbugs.net/Examples/Surgical.html
+// random effects model
+// Stanified: use sigma instead of squared, move p to generated quantitites
+// Narrower priors on mu and sigma
 data {
   int<lower=0> N;
   int r[N];
@@ -102,6 +108,7 @@ parameters {
 model {
   mu ~ normal(0.0, 20);
   sigma ~ cauchy(0, 1);
+  // remove sigma-squared
   b ~ normal(mu, sigma);
   r ~ binomial_logit(n, b);
 }

@@ -1,4 +1,14 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format ice.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
+// Page 29: Ice: non-parametric smoothing in an age-cohort model
+// The model is the same specified here as in JAGS example, 
+// but this example's JAGS version is different from that of 
+// WinBUGS because JAGS does not support some feature. 
+// TODO: 
+// Maybe we should check if we could specify 
+// the model the same as WinBUGS? 
+// status: the results are farely cose to those 
+// from JAGS 
 data {
   int<lower=0> N;
   int<lower=0> Nage;

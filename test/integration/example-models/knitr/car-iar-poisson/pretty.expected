@@ -3,41 +3,60 @@ data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
   int<lower=1> K;
+  // num covariates
   matrix[N, K] x;
+  // design matrix
   real<lower=0> scaling_factor;
+  // scales the variance of the spatial effects
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   vector[K] betas;
+  // covariates
   real<lower=0> sigma;
+  // overall standard deviation
   real<lower=0, upper=1> rho;
+  // proportion unstructured vs. spatially structured variance
   vector[N] theta;
+  // heterogeneous effects
   vector[N] phi;
+  // spatial effects
 }
 transformed parameters {
   vector[N] convolved_re;
+  // variance of each component should be approximately equal to 1
   convolved_re = sqrt(1 - rho) * theta + sqrt(rho / scaling_factor) * phi;
 }
 model {
   y ~ poisson_log(log_E + beta0 + x * betas + convolved_re * sigma);
+  // co-variates
+  // This is the prior for phi! (up to proportionality)
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
   beta0 ~ normal(0.0, 1.0);
   betas ~ normal(0.0, 1.0);
   theta ~ normal(0.0, 1.0);
   sigma ~ normal(0, 1.0);
   rho ~ beta(0.5, 0.5);
+  // soft sum-to-zero constraint on phi)
   sum(phi) ~ normal(0, 0.001 * N);
+  // equivalent to mean(phi) ~ normal(0,0.001)
 }
 generated quantities {
   real logit_rho = log(rho / (1.0 - rho));
   vector[N] eta = log_E + beta0 + x * betas + convolved_re * sigma;
+  // co-variates
   vector[N] mu = exp(eta);
 }
 
@@ -46,22 +65,32 @@ data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
+  //  int<lower=1> K;                 // num covariates
+  //  matrix[N, K] x;                 // design matrix
   int<lower=0, upper=N> N_singletons;
   int<lower=0, upper=N> N_components;
   int<lower=1, upper=N> nodes_per_component[N_components];
   vector[N_components] scales;
+  // per-component scaling factor
+  // makes the ICAR variances approx == 1
 }
 transformed data {
   vector[N] log_E = log(E);
   int N_connected = N - N_singletons;
   int N_con_comp = N_components - N_singletons;
   vector<lower=0>[N_connected] scaling_factor;
+  // per-node scaling factor
   int component_starts[N_components];
   int component_ends[N_components];
   int c_offset = 1;
+  // calculate component offsets, set up scaling factor
   for (i in 1 : N_components) {
     component_starts[i] = c_offset;
     c_offset = c_offset + nodes_per_component[i];
@@ -75,22 +104,33 @@ transformed data {
 }
 parameters {
   real beta0;
+  // intercept
+  //  vector[K] betas;       // covariates
   real<lower=0> sigma;
+  // random effects scale
   real<lower=0, upper=1> rho;
+  // proportion unstructured vs. spatially structured variance
   vector[N_connected] theta;
+  // heterogeneous effects
   vector[N_connected] phi;
+  // raw spatial effects
   vector[N_singletons] singletons_re;
+  // random effects for areas with no neighbours
 }
 transformed parameters {
   vector[N] re;
+  // Divide by sqrt of scaling factor to properly scale precision matrix phi.
   re[1 : N_connected] = sqrt(1 - rho) * theta
                         + sqrt(rho * inv(scaling_factor)) .* phi;
   re[(N_connected + 1) : N] = singletons_re;
 }
 model {
   y ~ poisson_log(log_E + beta0 + re * sigma);
+  //  y ~ poisson_log(log_E + beta0 + x * betas + convolved_re * sigma);  // co-variates
+  // This is the prior for phi! (up to proportionality)
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
   beta0 ~ normal(0.0, 2.5);
+  //  betas ~ normal(0.0, 2.5);
   theta ~ normal(0.0, 1.0);
   sigma ~ normal(0, 5);
   rho ~ beta(0.5, 0.5);
@@ -104,32 +144,45 @@ model {
 generated quantities {
   real log_precision = -2.0 * log(sigma);
   real logit_rho = logit(rho);
+  //  vector[N] eta = log_E + beta0 + x * betas + convolved_re * sigma; // co-variates
   vector[N] eta = log_E + beta0 + re * sigma;
   vector[N] mu = exp(eta);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bym2_offset_only.stan
+// use for case study NYC data subset
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
   real<lower=0> scaling_factor;
+  // scales the variance of the spatial effects
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   real<lower=0> sigma;
+  // overall standard deviation
   real<lower=0, upper=1> rho;
+  // proportion unstructured vs. spatially structured variance
   vector[N] theta;
+  // heterogeneous effects
   vector[N] phi;
+  // spatial effects
 }
 transformed parameters {
   vector[N] convolved_re;
+  // variance of each component should be approximately equal to 1
   convolved_re = sqrt(1 - rho) * theta + sqrt(rho / scaling_factor) * phi;
 }
 model {
@@ -139,7 +192,9 @@ model {
   theta ~ normal(0, 1);
   sigma ~ normal(0, 1);
   rho ~ beta(0.5, 0.5);
+  // soft sum-to-zero constraint on phi)
   sum(phi) ~ normal(0, 0.001 * N);
+  // equivalent to mean(phi) ~ normal(0,0.001)
 }
 generated quantities {
   real log_precision = -2.0 * log(sigma);
@@ -149,35 +204,52 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bym2_predictor_plus_offset.stan
+// use for Scotland dataset
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector[N] x;
+  // predictor
   vector<lower=0>[N] E;
+  // exposure
   real<lower=0> scaling_factor;
+  // scales the variance of the spatial effects
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   real beta1;
+  // slope
   real<lower=0> sigma;
+  // overall standard deviation
   real<lower=0, upper=1> rho;
+  // proportion unstructured vs. spatially structured variance
   vector[N] theta;
+  // heterogeneous effects
   vector[N] phi;
+  // spatial effects
 }
 transformed parameters {
   vector[N] convolved_re;
+  // variance of each component should be approximately equal to 1
   convolved_re = sqrt(1 - rho) * theta + sqrt(rho / scaling_factor) * phi;
 }
 model {
   y ~ poisson_log(log_E + beta0 + beta1 * x + convolved_re * sigma);
+  // This is the prior for phi! (up to proportionality)
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
+  // soft sum-to-zero constraint on phi)
   sum(phi) ~ normal(0, 0.001 * N);
+  // equivalent to mean(phi) ~ normal(0,0.001)
   beta0 ~ normal(0.0, 5.0);
   beta1 ~ normal(0.0, 5.0);
   theta ~ normal(0.0, 1.0);
@@ -192,40 +264,60 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bym_predictor_plus_offset.stan
+// use for Scotland dataset
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector[N] x;
+  // predictor
   vector<lower=0>[N] E;
+  // exposure
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   real beta1;
+  // slope
   real<lower=0> tau_theta;
+  // precision of heterogeneous effects
   real<lower=0> tau_phi;
+  // precision of spatial effects
   vector[N] theta;
+  // heterogeneous effects
   vector[N] phi;
+  // spatial effects
 }
 transformed parameters {
   real<lower=0> sigma_theta = inv(sqrt(tau_theta));
+  // convert precision to sigma
   real<lower=0> sigma_phi = inv(sqrt(tau_phi));
+  // convert precision to sigma
 }
 model {
   y ~ poisson_log(log_E + beta0 + beta1 * x + phi * sigma_phi
                   + theta * sigma_theta);
+  // NOTE:  no prior on phi_raw, it is used to construct phi
+  // the following computes the prior on phi on the unit scale with sd = 1
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
+  // soft sum-to-zero constraint on phi)
   sum(phi) ~ normal(0, 0.001 * N);
+  // equivalent to mean(phi) ~ normal(0,0.001)
   beta0 ~ normal(0, 5);
   beta1 ~ normal(0, 5);
   theta ~ normal(0, 1);
   tau_theta ~ gamma(3.2761, 1.81);
+  // Carlin WinBUGS priors
   tau_phi ~ gamma(1, 1);
+  // Carlin WinBUGS priors
 }
 generated quantities {
   vector[N] mu = exp(log_E + beta0 + beta1 * x + phi * sigma_phi
@@ -236,16 +328,20 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
 }
 model {
   y ~ poisson_log(log_E + beta0);
+  // intercept only, no covariates
   beta0 ~ normal(0.0, 2.5);
 }
 generated quantities {
@@ -258,24 +354,33 @@ data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   real<lower=0> sigma;
+  // overall standard deviation
   vector[N] phi;
+  // spatial effects
 }
 model {
   y ~ poisson_log(log_E + beta0 + phi * sigma);
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
   beta0 ~ normal(0.0, 2.5);
   sigma ~ normal(0.0, 5.0);
+  // soft sum-to-zero constraint on phi)
   sum(phi) ~ normal(0, 0.001 * N);
+  // equivalent to mean(phi) ~ normal(0,0.001)
 }
 generated quantities {
   vector[N] eta = log_E + beta0 + phi * sigma;
@@ -286,15 +391,20 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> y[N];
+  // count outcomes
   vector<lower=0>[N] E;
+  // exposure
 }
 transformed data {
   vector[N] log_E = log(E);
 }
 parameters {
   real beta0;
+  // intercept
   vector[N] theta;
+  // heterogeneous random effects
   real<lower=0> sigma;
+  // non-centered re variance 
 }
 model {
   y ~ poisson_log(log_E + beta0 + theta * sigma);
@@ -312,7 +422,9 @@ data {
   int<lower=0> N;
   int<lower=0> N_edges;
   int<lower=1, upper=N> node1[N_edges];
+  // node1[i] adjacent to node2[i]
   int<lower=1, upper=N> node2[N_edges];
+  // and node1[i] < node2[i]
 }
 parameters {
   vector[N] phi;
@@ -320,6 +432,8 @@ parameters {
 }
 model {
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
+  // soft sum-to-zero constraint on phi,
+  // equivalent to mean(phi) ~ normal(0,0.01)
   sum(phi) ~ normal(0, 0.01 * N);
 }
 

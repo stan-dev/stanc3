@@ -171,6 +171,8 @@ Warning: deprecated language construct used in 'normal_loc.stan', line 7, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
+// normal mixture, unknown proportion and means, known variance
+// p(y|mu,theta) = theta * Normal(y|mu[1],1) + (1-theta) * Normal(y|mu[2],1);
 data {
   int<lower=0> N;
   real y[N];
@@ -187,6 +189,7 @@ transformed parameters {
 }
 model {
   theta ~ uniform(0, 1);
+  // equivalently, ~ beta(1,1);
   for (k in 1 : 2) 
     mu[k] ~ normal(0, 10);
   for (n in 1 : N) 
@@ -299,9 +302,11 @@ transformed parameters {
   mu <- mu_loc + mu_scale * cumulative_sum(mu_prop);
 }
 model {
+  // prior
   mu_loc ~ cauchy(0, 5);
   mu_scale ~ cauchy(0, 5);
   sigma ~ cauchy(0, 5);
+  // likelihood
   {
     real ps[K];
     vector[K] log_theta;
@@ -370,7 +375,9 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
   $ ../../../../../install/default/bin/stanc --auto-format normal_multi.stan
 data {
   int<lower=0> N;
+  //response variable size
   int<lower=0> J;
+  //number of observations
   vector[N] y[J];
   vector[N] z[J];
   matrix[N, N] sigma;

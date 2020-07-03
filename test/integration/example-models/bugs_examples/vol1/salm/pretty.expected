@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format salm.stan
+//#  http://www.openbugs.net/Examples/Salm.html
+//#  this matches the jags implementation
 data {
   int<lower=0> Ndoses;
   int<lower=0> Nplates;
@@ -160,6 +162,8 @@ Warning: deprecated language construct used in 'salm.stan', line 38, column 11:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format salm2.stan
+//#  http://www.openbugs.net/Examples/Salm.html
+//# the version without centering x's 
 data {
   int<lower=0> Ndoses;
   int<lower=0> Nplates;

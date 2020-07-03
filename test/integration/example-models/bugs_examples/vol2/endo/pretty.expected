@@ -1,4 +1,9 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format endo1.stan
+// Endo: conditional inference in case-contrl studies 
+// http://www.openbugs.net/Examples/Endo.html
+// In this example, three methods of different 
+// model specifications are used for one equivalent
+// model. This is method 1. 
 data {
   int n10;
   int n01;
@@ -37,6 +42,7 @@ parameters {
   real beta;
 }
 model {
+  // METHOD 1: Logistic regression 
   beta ~ normal(0, 1000);
   Y[1] ~ binomial_logit(1, beta * est1m2);
 }
@@ -273,6 +279,16 @@ Warning: deprecated language construct used in 'endo1.stan', line 49, column 2:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format endo2.stan
+/*
+* Endo: conditional inference in case-contrl studies 
+* http://www.openbugs.net/Examples/Endo.html
+*
+* In this example, three methods of different 
+* model specifications are used for one equivalent
+* model. This is method 2. 
+
+* FIXME: using the multinomial specification  
+*/
 data {
   int n10;
   int n01;
@@ -309,12 +325,14 @@ parameters {
 }
 model {
   real p[I, 2];
+  // METHOD 2 - conditional likelihoods
   beta ~ normal(0, 1000);
   for (i in 1 : I) {
     p[i, 1] <- exp(beta * est[i, 1]);
     p[i, 2] <- exp(beta * est[i, 2]);
     p[i, 1] <- p[i, 1] / (p[i, 1] + p[i, 2]);
     p[i, 2] <- 1 - p[i, 1];
+    // using the multinomial log-pmf explicitly 
     increment_log_prob(log(p[i, 1]) * Y[i, 1]);
     increment_log_prob(log(p[i, 2]) * Y[i, 2]);
   }
@@ -542,6 +560,11 @@ Warning: deprecated language construct used in 'endo2.stan', line 59, column 21:
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format endo3.stan
+// Endo: conditional inference in case-contrl studies 
+// http://www.openbugs.net/Examples/Endo.html
+// In this example, three methods of different 
+// model specifications are used for one equivalent
+// model. This is method 3. 
 data {
   int n10;
   int n01;
@@ -579,6 +602,7 @@ parameters {
   vector[I] beta0;
 }
 model {
+  // METHOD 3 fit standard Poisson regressions relative to baseline
   beta ~ normal(0, 1000);
   beta0 ~ normal(0, 1000);
   for (j in 1 : J) 

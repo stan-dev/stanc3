@@ -1,17 +1,27 @@
   $ ../../../../../../install/default/bin/stanc --auto-format hierarchical_2pl.stan
 data {
   int<lower=1> I;
+  // # items
   int<lower=1> J;
+  // # persons
   int<lower=1> N;
+  // # observations
   int<lower=1, upper=I> ii[N];
+  // item for n
   int<lower=1, upper=J> jj[N];
+  // person for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
 }
 parameters {
   vector[J] theta;
+  // abilities
   vector[2] xi[I];
+  // alpha/beta pair vectors
   vector[2] mu;
+  // vector for alpha/beta means
   vector<lower=0>[2] tau;
+  // vector for alpha/beta residual sds
   cholesky_factor_corr[2] L_Omega;
 }
 transformed parameters {

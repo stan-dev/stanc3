@@ -228,11 +228,17 @@ model {
               + normal_log(alpha, 0, sqrt(1e6))
               + normal_log(beta, 0, sqrt(1e4))
               + gamma_log(tau[1], 0.0001, 0.0001);
+  // + normal_log(gamma,0,1/sqrt(400))
+  // + normal_log(delta,1,1/sqrt(400))
+  // + gamma_log(tau[2],46,4.5);
   log_p[2] <- log1m(lambda)
               + normal_log(y_std, gamma + delta * z_std, sigma[2])
               + normal_log(gamma, 0, sqrt(1e6))
               + normal_log(delta, 0, sqrt(1e4))
               + gamma_log(tau[2], 0.0001, 0.0001);
+  // + normal_log(alpha,0,1/sqrt(400))
+  // + normal_log(beta,1,1/sqrt(400))
+  // + gamma_log(tau[1],46,4.5);
   target += log_sum_exp(log_p);
 }
 
@@ -346,6 +352,7 @@ model {
   delta ~ normal(0, 5);
   mu[2] <- gamma + delta * z_std;
   sigma ~ cauchy(0, 5);
+  // estimate separately
   y_std ~ normal(mu[1], sigma[1]);
   y_std ~ normal(mu[2], sigma[2]);
 }
@@ -467,7 +474,19 @@ generated quantities {
   real pM2;
   pM2 <- bernoulli_rng(softmax(log_py)[2]);
 }
-
+/*
+* p(lambda) = 1
+*
+* p(y|lambda,zeta1,zeta2) 
+*   = lambda * p1(y|zeta1) + (1 - lambda) * p2(y|zeta2)
+*
+* log p(y|lambda,zeta1,zeta2) 
+*   = log_sum_exp(log(lambda) + log(p1(y|zeta1)),
+*                 log1m(lambda) + log(p2(y|zeta2));
+*
+* p(lambda|y,zeta1,zeta2) propto p(y|lambda,zeta1,zet2) p(lambda)
+*
+*/
 
 Warning: deprecated language construct used in 'pines.stan', line 12, column 9:
    -------------------------------------------------

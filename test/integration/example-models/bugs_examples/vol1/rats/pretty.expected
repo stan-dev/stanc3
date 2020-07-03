@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format rats.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Page 3: Rats
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -11,12 +13,14 @@ parameters {
   real beta[N];
   real mu_alpha;
   real mu_beta;
+  // beta.c in original bugs model
   real<lower=0> sigmasq_y;
   real<lower=0> sigmasq_alpha;
   real<lower=0> sigmasq_beta;
 }
 transformed parameters {
   real<lower=0> sigma_y;
+  // sigma in original bugs model
   real<lower=0> sigma_alpha;
   real<lower=0> sigma_beta;
   sigma_y <- sqrt(sigmasq_y);
@@ -30,7 +34,9 @@ model {
   sigmasq_alpha ~ inv_gamma(0.001, 0.001);
   sigmasq_beta ~ inv_gamma(0.001, 0.001);
   alpha ~ normal(mu_alpha, sigma_alpha);
+  // vectorized
   beta ~ normal(mu_beta, sigma_beta);
+  // vectorized
   for (n in 1 : N) 
     for (t in 1 : T) 
       y[n, t] ~ normal(alpha[n] + beta[n] * (x[t] - xbar), sigma_y);
@@ -115,10 +121,15 @@ Warning: deprecated language construct used in 'rats.stan', line 45, column 10:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format rats_stanified.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Model simplified
 data {
   int<lower=0> N;
+  // Number of rats
   int<lower=0> Npts;
+  // Number of data points
   int<lower=0> rat[Npts];
+  // Lookup index -> rat
   real x[Npts];
   real y[Npts];
   real xbar;
@@ -128,15 +139,20 @@ parameters {
   real beta[N];
   real mu_alpha;
   real mu_beta;
+  // beta.c in original bugs model
   real<lower=0> sigma_y;
+  // sigma in original bugs model
   real<lower=0> sigma_alpha;
   real<lower=0> sigma_beta;
 }
 model {
   mu_alpha ~ normal(0, 100);
   mu_beta ~ normal(0, 100);
+  // sigma_y, sigma_alpha, sigma_beta : flat
   alpha ~ normal(mu_alpha, sigma_alpha);
+  // vectorized
   beta ~ normal(mu_beta, sigma_beta);
+  // vectorized
   for (n in 1 : Npts) {
     int irat;
     irat <- rat[n];
@@ -249,6 +265,8 @@ Warning: deprecated language construct used in 'rats_stanified.stan', line 38, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format rats_vec.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Page 3: Rats
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -293,8 +311,11 @@ model {
   sigmasq_alpha ~ inv_gamma(0.001, 0.001);
   sigmasq_beta ~ inv_gamma(0.001, 0.001);
   alpha ~ normal(mu_alpha, sigma_alpha);
+  // vectorized
   beta ~ normal(mu_beta, sigma_beta);
+  // vectorized
   y_linear ~ normal(pred, sigma_y);
+  // vectorized
 }
 
 
@@ -399,6 +420,8 @@ Warning: deprecated language construct used in 'rats_vec.stan', line 46, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format rats_vec_unit.stan
+// http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
+// Page 3: Rats
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -417,6 +440,7 @@ parameters {
 }
 transformed parameters {
   real<lower=0> sigma_y;
+  // sigma in original bugs model
   real<lower=0> sigma_alpha;
   real<lower=0> sigma_beta;
   vector[N] alpha;

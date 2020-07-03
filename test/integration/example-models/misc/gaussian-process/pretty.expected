@@ -1,4 +1,6 @@
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-ARD.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// ARD-parameterized exponentiated quadratic kernel and a Gaussian likelihood
 functions {
   matrix L_cov_exp_quad_ARD(vector[] x, real alpha, vector rho, real delta) {
     int N = size(x);
@@ -45,6 +47,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-latent.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// exponentiated quadratic kernel and a Gaussian likelihood
 data {
   int<lower=1> N;
   real x[N];
@@ -64,6 +68,7 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -77,6 +82,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-logit.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// exponentiated quadratic kernel and a Bernoulli likelihood
 data {
   int<lower=1> N;
   real x[N];
@@ -96,6 +103,7 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -109,6 +117,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-multi-output.stan
+// Fit the hyperparameters of a multi-output Gaussian process 
+// with an exponentiated quadratic kernel and correlated outputs
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -130,6 +140,7 @@ model {
   {
     matrix[N, N] K = cov_exp_quad(x, 1.0, rho);
     matrix[N, N] L_K;
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -148,6 +159,8 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-pois.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// exponentiated quadratic kernel and a Poisson likelihood
 data {
   int<lower=1> N;
   real x[N];
@@ -167,6 +180,7 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -180,6 +194,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit.stan
+// Fit the hyperparameters of a Gaussian process with an 
+// exponentiated quadratic kernel
 data {
   int<lower=1> N;
   real x[N];
@@ -197,6 +213,7 @@ model {
   matrix[N, N] L_K;
   matrix[N, N] K = cov_exp_quad(x, alpha, rho);
   real sq_sigma = square(sigma);
+  // diagonal elements
   for (n in 1 : N) 
     K[n, n] = K[n, n] + sq_sigma;
   L_K = cholesky_decompose(K);
@@ -207,6 +224,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
+// Fit the hyperparameters of a Gaussian process with an exponentiated
+// quadratic kernel and analytically predict out-of-sample observations
 functions {
   vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
                      real sigma, real delta) {
@@ -258,6 +277,7 @@ model {
   {
     matrix[N1, N1] K = cov_exp_quad(x1, alpha, rho);
     real sq_sigma = square(sigma);
+    // diagonal elements
     for (n1 in 1 : N1) 
       K[n1, n1] = K[n1, n1] + sq_sigma;
     L_K = cholesky_decompose(K);
@@ -276,6 +296,9 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// exponentiated quadratic kernel and a Bernoulli likelihood and predict
+// out-of-sample observations
 data {
   int<lower=1> N1;
   real x1[N1];
@@ -303,6 +326,7 @@ transformed parameters {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -323,6 +347,9 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
+// Fit the hyperparameters of a latent-variable Gaussian process with an
+// exponentiated quadratic kernel and a Gaussian likelihood and predict
+// out-of-sample observations
 data {
   int<lower=1> N1;
   real x1[N1];
@@ -350,6 +377,7 @@ transformed parameters {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -370,6 +398,10 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
+// Sample from a Gaussian process using Stan's built in exponentiated quadratic
+// covariance function and the Cholesky parameterization of a latent-variable
+// Gaussian process.  
+// Fixed kernel hyperparameters: rho=1, alpha=1, sigma=sqrt(0.1)
 data {
   int<lower=1> N;
   real x[N];
@@ -396,6 +428,9 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi-output.stan
+// Sample from a multi-output Gaussian process using Stan's built in
+// exponentiated quadratic covariance function.
+// Fixed kernel hyperparameters: rho=1, alpha=1, sigma=sqrt(0.1)
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -417,6 +452,7 @@ model {
   {
     matrix[N, N] K = cov_exp_quad(x, 1.0, rho);
     matrix[N, N] L_K;
+    // diagonal elements
     for (n in 1 : N) 
       K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
@@ -432,6 +468,9 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi.stan
+// Sample from multidimensional Gaussian process using Stan's built-in
+// exponentiated quadratic covariance matrix function.  
+// Fixed kernel hyperparameters: rho=1, alpha=1, sigma=sqrt(0.1)
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -451,6 +490,9 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-naive.stan
+// Sample from Gaussian process with a manually-built covariance matrix K
+// parameterized with an exponentiated quadratic kernel.  
+// Fixed kernel hyperparameters: rho=1, alpha=1, sigma=sqrt(0.1)
 data {
   int<lower=1> N;
   real x[N];
@@ -475,6 +517,9 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim.stan
+// Sample from a Gaussian process using Stan's built in exponentiated quadratic
+// covariance function.
+// Fixed kernel hyperparameters: rho=1, alpha=1, sigma=sqrt(0.1)
 data {
   int<lower=1> N;
   real x[N];

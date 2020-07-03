@@ -20,6 +20,7 @@ data {
   vector[N] mom_iq;
 }
 transformed data {
+  // interaction
   vector[N] inter;
   inter = mom_hs .* mom_iq;
 }
@@ -40,6 +41,7 @@ data {
   vector[N] mom_iq;
 }
 transformed data {
+  // centered predictors
   vector[N] c_mom_hs;
   vector[N] c_mom_iq;
   vector[N] inter;
@@ -64,6 +66,7 @@ data {
   vector[N] mom_iq;
 }
 transformed data {
+  // centering on reference points
   vector[N] c2_mom_hs;
   vector[N] c2_mom_iq;
   vector[N] inter;
@@ -88,6 +91,7 @@ data {
   vector[N] mom_iq;
 }
 transformed data {
+  // standardizing
   vector[N] z_mom_hs;
   vector[N] z_mom_iq;
   vector[N] inter;
@@ -136,6 +140,7 @@ data {
   vector[N] height;
 }
 transformed data {
+  // log 10 transformation
   vector[N] log10_earn;
   for (i in 1 : N) {
     log10_earn[i] = log10(earn[i]);
@@ -156,6 +161,7 @@ data {
   vector[N] height;
 }
 transformed data {
+  // log transformation
   vector[N] log_earn;
   log_earn = log(earn);
 }
@@ -175,6 +181,7 @@ data {
   vector[N] male;
 }
 transformed data {
+  // log transformation
   vector[N] log_earn;
   log_earn = log(earn);
 }
@@ -195,7 +202,9 @@ data {
 }
 transformed data {
   vector[N] log_earn;
+  // log transformation
   vector[N] inter;
+  // interaction
   log_earn = log(earn);
   inter = height .* male;
 }
@@ -217,8 +226,11 @@ data {
 }
 transformed data {
   vector[N] log_earn;
+  // log transformation
   vector[N] z_height;
+  // standardization
   vector[N] inter;
+  // interaction
   log_earn = log(earn);
   z_height = (height - mean(height)) / sd(height);
   inter = z_height .* male;
@@ -241,6 +253,7 @@ data {
 }
 transformed data {
   vector[N] log_earn;
+  // log transformations
   vector[N] log_height;
   log_earn = log(earn);
   log_height = log(height);
@@ -250,6 +263,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
+  // vectorization
   log_earn ~ normal(beta[1] + beta[2] * log_height + beta[3] * male, sigma);
 }
 
@@ -286,6 +300,7 @@ data {
   vector[N] group;
 }
 transformed data {
+  // log transformations
   vector[N] log_weight;
   vector[N] log_diam1;
   vector[N] log_diam2;
@@ -441,6 +456,7 @@ data {
 }
 transformed data {
   vector[N] age30_44;
+  // age as factor
   vector[N] age45_64;
   vector[N] age65up;
   for (n in 1 : N) {
@@ -454,6 +470,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
+  // vectorization
   partyid7 ~ normal(beta[1] + beta[2] * real_ideo + beta[3] * race_adj
                     + beta[4] * age30_44 + beta[5] * age45_64
                     + beta[6] * age65up + beta[7] * educ1 + beta[8] * gender

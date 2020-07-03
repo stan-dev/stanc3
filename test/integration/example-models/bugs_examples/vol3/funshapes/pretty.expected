@@ -1,40 +1,63 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format circle.stan
+/*
+* BUGS volume 3, fun shapes, circle
+* http://www.openbugs.net/Examples/Funshapes.html
+*/
 parameters {
   real<lower=-1, upper=1> x;
   real<lower=-sqrt(1 - square(x)), upper=sqrt(1 - square(x))> y;
 }
 model {
-
+  /* uniform within constraints */
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format hsquare.stan
+/*
+* Hollow Square
+* http://www.openbugs.net/Examples/Funshapes.html
+*
+* Transform a uniform rectangle
+*    1234
+*    5678
+*    90AB
+* to a uniform hollow square
+*    1234
+*    5  6
+*    7  8
+*    90AB
+*/
 parameters {
   real<lower=0, upper=2> x_raw;
   real<lower=0, upper=1.5> y_raw;
 }
 model {
-
+  /* no-op; uniformity implied by parameter constraints */
 }
 generated quantities {
   real x;
   real y;
   if (y_raw > 1) {
+    // cases 1, 2, 3, 4
     x <- x_raw - 1;
     y <- y_raw - 0.5;
   }
   else if (y_raw < 0.5) {
+    // cases 9, 0, A, B
     x <- x_raw - 1;
     y <- y_raw - 1;
   }
   else if (x_raw < 0.5) {
+    // case 5
     x <- x_raw - 1;
     y <- y_raw - 0.5;
   }
   else if (x_raw < 1.0) {
+    // case 6
     x <- x_raw - 1.5;
     y <- y_raw - 1;
   }
   else if (x_raw < 1.5) {
+    // case 7
     x <- x_raw - 0.5;
     y <- y_raw - 0.5;
   }
@@ -201,6 +224,10 @@ Warning: deprecated language construct used in 'hsquare.stan', line 47, column 7
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format parallelogram.stan
+/*
+* BUGS Volume 3, funshapes, parallelogram
+* http://www.openbugs.net/Examples/Funshapes.html
+*/
 parameters {
   real<lower=0, upper=1> x;
   real<lower=0, upper=1> y_raw;
@@ -210,7 +237,7 @@ transformed parameters {
   y <- y_raw - x;
 }
 model {
-
+  /* uniform within constraints */
 }
 
 
@@ -227,11 +254,13 @@ Warning: deprecated language construct used in 'parallelogram.stan', line 11, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format ring.stan
+// the original version not using transformation is in ring.stan.0
 parameters {
   real<lower=0.5, upper=1> z;
   real<lower=0, upper=2 * pi()> phi;
 }
 model {
+  // p(z,phi) prop-to z
   increment_log_prob(log(z));
 }
 generated quantities {
@@ -292,6 +321,16 @@ Warning: deprecated language construct used in 'ring.stan', line 14, column 5:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format squaremc.stan
+/*
+* BUGS Volume 3, funshapes, square minus circle
+* http://www.openbugs.net/Examples/Funshapes.html
+*
+* first draw raw samples from diamond-like shape reflected per
+* quadrant, then reflect in transformed parameters
+*
+* unfortunate redundancy in 1-sqrt() term because we can't
+* get local variables into parameter declarations
+*/
 parameters {
   real<lower=-1, upper=1> x_raw;
   real<lower=-(1 - sqrt(1 - square(1 - fabs(x_raw)))), upper=(1

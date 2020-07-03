@@ -1,5 +1,26 @@
   $ ../../../../../../install/default/bin/stanc --auto-format agerecruitment.stan
+// -------------------------------------------------
+// States (S):
+// 1 juvenile
+// 2 not yet breeding at age 1 year
+// 3 not yet breeding at age 2 years
+// 4 breeder
+// 5 dead
+// Observations (O):
+// 1 seen as juvenile
+// 2 seen as not yet breeding
+// 3 seen breeding
+// 4 not seen
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 4) 
@@ -20,23 +41,38 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi1;
+  // Mean 1y survival
   real<lower=0, upper=1> mean_phi2;
+  // Mean 2y survival
   real<lower=0, upper=1> mean_phiad;
+  // Mean ad survival
   real<lower=0, upper=1> mean_alpha1;
+  // Mean 1y breeding prob.
   real<lower=0, upper=1> mean_alpha2;
+  // Mean 2y breeding prob.
   real<lower=0, upper=1> mean_pNB;
+  // Mean recapture non-breeders
   real<lower=0, upper=1> mean_pB;
+  // Mean recapture breeders
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi_1;
+  // First year survival prob.
   vector<lower=0, upper=1>[n_occ_minus_1] phi_2;
+  // Second year survival prob.
   vector<lower=0, upper=1>[n_occ_minus_1] phi_ad;
+  // Adult survival prob.
   vector<lower=0, upper=1>[n_occ_minus_1] alpha_1;
+  // Prob. to start breeding when 1 yr old
   vector<lower=0, upper=1>[n_occ_minus_1] alpha_2;
+  // Prob. to start breeding when 2 yr old
   vector<lower=0, upper=1>[n_occ_minus_1] p_NB;
+  // Recapture prob. of non-breeders
   vector<lower=0, upper=1>[n_occ_minus_1] p_B;
+  // Recapture prob. of breeders
   simplex[5] ps[5, nind, n_occ_minus_1];
   simplex[4] po[5, nind, n_occ_minus_1];
+  // Constraints
   for (t in 1 : n_occ_minus_1) {
     phi_1[t] = mean_phi1;
     phi_2[t] = mean_phi2;
@@ -46,7 +82,9 @@ transformed parameters {
     p_NB[t] = mean_pNB;
     p_B[t] = mean_pB;
   }
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : n_occ_minus_1) {
       ps[1, i, t, 1] = 0.0;
       ps[1, i, t, 2] = phi_1[t] * (1 - alpha_1[t]);
@@ -73,6 +111,7 @@ transformed parameters {
       ps[5, i, t, 3] = 0.0;
       ps[5, i, t, 4] = 0.0;
       ps[5, i, t, 5] = 1.0;
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = 0.0;
       po[1, i, t, 2] = 0.0;
       po[1, i, t, 3] = 0.0;
@@ -99,6 +138,18 @@ transformed parameters {
 model {
   real acc[5];
   vector[5] gamma[n_occasions];
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi1 ~ uniform(0, 1);
+  //  mean_phi2 ~ uniform(0, 1);
+  //  mean_phiad ~ uniform(0, 1);
+  //  mean_alpha1 ~ uniform(0, 1);
+  //  mean_alpha2 ~ uniform(0, 1);
+  //  mean_pNB ~ uniform(0, 1);
+  //  mean_pB ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 5) 
@@ -117,7 +168,26 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ladyslipper.stan
+// -------------------------------------------------
+// States (S):
+// 1 vegetative
+// 2 flowering
+// 3 dormant
+// 4 dead
+// Observations (O):
+// 1 seen vegetative
+// 2 seen flowering
+// 3 not seen
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 3) 
@@ -137,6 +207,7 @@ transformed data {
   for (i in 1 : nind) {
     first[i] = first_capture(y[i]);
     for (t in 1 : n_occ_minus_1) {
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = 1.0;
       po[1, i, t, 2] = 0.0;
       po[1, i, t, 3] = 0.0;
@@ -154,21 +225,28 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[n_occasions - 1] s;
+  // Survival probability
   vector<lower=0>[3] a;
   vector<lower=0>[3] b;
   vector<lower=0>[3] c;
 }
 transformed parameters {
   simplex[3] psiD;
+  // Transitions from dormant
   simplex[3] psiV;
+  // Transitions from vegetative
   simplex[3] psiF;
+  // Transitions from flowering
   simplex[4] ps[4, nind, n_occasions - 1];
+  // Constraints
   for (i in 1 : 3) {
     psiD[i] = a[i] / sum(a);
     psiV[i] = b[i] / sum(b);
     psiF[i] = c[i] / sum(c);
   }
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : n_occ_minus_1) {
       ps[1, i, t, 1] = s[t] * psiV[1];
       ps[1, i, t, 2] = s[t] * psiV[2];
@@ -192,9 +270,16 @@ transformed parameters {
 model {
   real acc[4];
   vector[4] gamma[n_occasions];
+  // Priors
+  // Survival: uniform
+  //  s ~ uniform(0, 1);
+  // Transitions: gamma priors
   a ~ gamma(1, 1);
   b ~ gamma(1, 1);
   c ~ gamma(1, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 4) 
@@ -213,7 +298,26 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format lifedead.stan
+// -------------------------------------------------
+// States (S):
+// 1 alive in study area
+// 2 alive outside study area
+// 3 recently dead and recovered
+// 4 recently dead, but not recovered, or dead (absorbing)
+// Observations (O):
+// 1 seen alive
+// 2 recovered dead
+// 3 neither seen nor recovered
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 3) 
@@ -234,24 +338,35 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_s;
+  // Mean survival
   real<lower=0, upper=1> mean_f;
+  // Mean fidelity
   real<lower=0, upper=1> mean_r;
+  // Mean recovery
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] s;
+  // True survival probability
   vector<lower=0, upper=1>[n_occ_minus_1] F;
+  // Fidelity probability
   vector<lower=0, upper=1>[n_occ_minus_1] r;
+  // Recovery probability
   vector<lower=0, upper=1>[n_occ_minus_1] p;
+  // Recapture/resighting probability
   simplex[4] ps[4, nind, n_occ_minus_1];
   simplex[3] po[4, nind, n_occ_minus_1];
+  // Constraints
   for (t in 1 : n_occ_minus_1) {
     s[t] = mean_s;
     F[t] = mean_f;
     r[t] = mean_r;
     p[t] = mean_p;
   }
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : n_occ_minus_1) {
       ps[1, i, t, 1] = s[t] * F[t];
       ps[1, i, t, 2] = s[t] * (1.0 - F[t]);
@@ -269,6 +384,7 @@ transformed parameters {
       ps[4, i, t, 2] = 0.0;
       ps[4, i, t, 3] = 0.0;
       ps[4, i, t, 4] = 1.0;
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = p[t];
       po[1, i, t, 2] = 0.0;
       po[1, i, t, 3] = 1.0 - p[t];
@@ -287,6 +403,14 @@ transformed parameters {
 model {
   real acc[4];
   vector[4] gamma[n_occasions];
+  // Uniform priors are implicitly defined.
+  //  mean_s ~ uniform(0, 1);
+  //  mean_f ~ uniform(0, 1);
+  //  mean_r ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 4) 
@@ -305,7 +429,25 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ms.stan
+// -------------------------------------------------
+// States (S):
+// 1 alive at A
+// 2 alive at B
+// 3 dead
+// Observations (O):
+// 1 seen at A
+// 2 seen at B
+// 3 not seen
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 3) 
@@ -326,18 +468,28 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi[2];
+  // Mean state-spec. survival
   real<lower=0, upper=1> mean_psi[2];
+  // Mean transitions
   real<lower=0, upper=1> mean_p[2];
+  // Mean state-spec. recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phiA;
+  // Survival prob. at site A
   vector<lower=0, upper=1>[n_occ_minus_1] phiB;
+  // Survival prob. at site B
   vector<lower=0, upper=1>[n_occ_minus_1] psiAB;
+  // Movement prob. from site A to site B
   vector<lower=0, upper=1>[n_occ_minus_1] psiBA;
+  // Movement prob. from site B to site A
   vector<lower=0, upper=1>[n_occ_minus_1] pA;
+  // Recapture prob. at site A
   vector<lower=0, upper=1>[n_occ_minus_1] pB;
+  // Recapture prob. at site B
   simplex[3] ps[3, nind, n_occ_minus_1];
   simplex[3] po[3, nind, n_occ_minus_1];
+  // Constraints
   for (t in 1 : n_occ_minus_1) {
     phiA[t] = mean_phi[1];
     phiB[t] = mean_phi[2];
@@ -346,7 +498,9 @@ transformed parameters {
     pA[t] = mean_p[1];
     pB[t] = mean_p[2];
   }
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : (n_occasions - 1)) {
       ps[1, i, t, 1] = phiA[t] * (1.0 - psiAB[t]);
       ps[1, i, t, 2] = phiA[t] * psiAB[t];
@@ -357,6 +511,7 @@ transformed parameters {
       ps[3, i, t, 1] = 0.0;
       ps[3, i, t, 2] = 0.0;
       ps[3, i, t, 3] = 1.0;
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = pA[t];
       po[1, i, t, 2] = 0.0;
       po[1, i, t, 3] = 1.0 - pA[t];
@@ -372,6 +527,14 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[n_occasions];
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_psi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 3) 
@@ -390,13 +553,42 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ms3_multinomlogit.stan
+// -------------------------------------------------
+// States (S):
+// 1 alive at A
+// 2 alive at B
+// 3 alive at C
+// 4 dead
+// Observations (O):
+// 1 seen at A
+// 2 seen at B
+// 3 seen at C
+// 4 not seen
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 4) 
         return k;
     return 0;
   }
+  /**
+  * Return a simplex such as follows (thanks to Bob Carpenter):
+  * p[1] <- exp(lp[1]) / (1.0 + exp(lp[1]) + exp(lp[2]));
+  * p[2] <- exp(lp[2]) / (1.0 + exp(lp[1]) + exp(lp[2]));
+  * p[3] <- 1.0 - p[1] - p[2];
+  *
+  * @param lp   N-dimension vector
+  * @return (N+1)-simplex of given vector and 0
+  */
   vector softmax_0(vector lp) {
     vector[num_elements(lp) + 1] lp_temp;
     lp_temp[1 : num_elements(lp)] = lp;
@@ -417,25 +609,40 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> phiA;
+  // Survival probability at site A
   real<lower=0, upper=1> phiB;
+  // Survival probability at site B
   real<lower=0, upper=1> phiC;
+  // Survival probability at site C
   real<lower=0, upper=1> pA;
+  // Recapture probability at site A
   real<lower=0, upper=1> pB;
+  // Recapture probability at site B
   real<lower=0, upper=1> pC;
+  // Recapture probability at site C
   vector[2] lpsiA;
+  // Logit of movement probability from site A
   vector[2] lpsiB;
+  // Logit of movement probability from site B
   vector[2] lpsiC;
+  // Logit of movement probability from site C
 }
 transformed parameters {
   simplex[3] psiA;
+  // Movement probability from site A
   simplex[3] psiB;
+  // Movement probability from site B
   simplex[3] psiC;
+  // Movement probability from site C
   simplex[4] ps[4, nind, n_occ_minus_1];
   simplex[4] po[4, nind, n_occ_minus_1];
+  // Constrain the transitions such that their sum is < 1
   psiA = softmax_0(lpsiA);
   psiB = softmax_0(lpsiB);
   psiC = softmax_0(lpsiC);
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : n_occ_minus_1) {
       ps[1, i, t, 1] = phiA * psiA[1];
       ps[1, i, t, 2] = phiA * psiA[2];
@@ -453,6 +660,7 @@ transformed parameters {
       ps[4, i, t, 2] = 0.0;
       ps[4, i, t, 3] = 0.0;
       ps[4, i, t, 4] = 1.0;
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = pA;
       po[1, i, t, 2] = 0.0;
       po[1, i, t, 3] = 0.0;
@@ -475,9 +683,22 @@ transformed parameters {
 model {
   real acc[4];
   vector[4] gamma[n_occasions];
+  // Priors
+  // Survival and recapture: uniform
+  // Uniform priors are implicitly defined.
+  //  phiA ~ uniform(0, 1);
+  //  phiB ~ uniform(0, 1);
+  //  phiC ~ uniform(0, 1);
+  //  pA ~ uniform(0, 1);
+  //  pB ~ uniform(0, 1);
+  //  pC ~ uniform(0, 1);
+  // Normal priors on logit of all but one transition probs
   lpsiA ~ normal(0, sqrt(1000));
   lpsiB ~ normal(0, sqrt(1000));
   lpsiC ~ normal(0, sqrt(1000));
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 4) 
@@ -496,7 +717,25 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ms_alternative1.stan
+// -------------------------------------------------
+// States (S):
+// 1 alive at A
+// 2 alive at B
+// 3 dead
+// Observations (O):
+// 1 seen at A
+// 2 seen at B
+// 3 not seen
+// -------------------------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 3) 
@@ -517,18 +756,28 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi[2];
+  // Mean state-spec. survival
   real<lower=0, upper=1> mean_psi[2];
+  // Mean transitions
   real<lower=0, upper=1> mean_p[2];
+  // Mean state-spec. recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phiA;
+  // Survival prob. at site A
   vector<lower=0, upper=1>[n_occ_minus_1] phiB;
+  // Survival prob. at site B
   vector<lower=0, upper=1>[n_occ_minus_1] psiAB;
+  // Movement prob. from site A to site B
   vector<lower=0, upper=1>[n_occ_minus_1] psiBA;
+  // Movement prob. from site B to site A
   vector<lower=0, upper=1>[n_occ_minus_1] pA;
+  // Recapture prob. at site A
   vector<lower=0, upper=1>[n_occ_minus_1] pB;
+  // Recapture prob. at site B
   simplex[3] ps[3, n_occ_minus_1];
   simplex[3] po[3, n_occ_minus_1];
+  // Constraints
   for (t in 1 : n_occ_minus_1) {
     phiA[t] = mean_phi[1];
     phiB[t] = mean_phi[2];
@@ -537,6 +786,8 @@ transformed parameters {
     pA[t] = mean_p[1];
     pB[t] = mean_p[2];
   }
+  // Define state-transition and observation matrices
+  // Define probabilities of state S(t+1) given S(t)
   for (t in 1 : n_occ_minus_1) {
     ps[1, t, 1] = phiA[t] * (1.0 - psiAB[t]);
     ps[1, t, 2] = phiA[t] * psiAB[t];
@@ -547,6 +798,7 @@ transformed parameters {
     ps[3, t, 1] = 0.0;
     ps[3, t, 2] = 0.0;
     ps[3, t, 3] = 1.0;
+    // Define probabilities of O(t) given S(t)
     po[1, t, 1] = pA[t];
     po[1, t, 2] = 0.0;
     po[1, t, 3] = 1.0 - pA[t];
@@ -561,6 +813,14 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[n_occasions];
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_psi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 3) 
@@ -580,6 +840,14 @@ model {
 
   $ ../../../../../../install/default/bin/stanc --auto-format ms_alternative2.stan
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] != 3) 
@@ -599,15 +867,23 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> phiA;
+  // Mean survival in A
   real<lower=0, upper=1> phiB;
+  // Mean survival in B
   real<lower=0, upper=1> psiAB;
+  // Mean movement from A to B
   real<lower=0, upper=1> psiBA;
+  // Mean movement from B to A
   real<lower=0, upper=1> pA;
+  // Mean recapture in A
   real<lower=0, upper=1> pB;
+  // Mean recapture in B
 }
 transformed parameters {
   simplex[3] ps[3];
   simplex[3] po[3];
+  // Define state-transition and observation matrices
+  // Define probabilities of state S(t+1) given S(t)
   ps[1, 1] = phiA * (1.0 - psiAB);
   ps[1, 2] = phiA * psiAB;
   ps[1, 3] = 1.0 - phiA;
@@ -617,6 +893,7 @@ transformed parameters {
   ps[3, 1] = 0.0;
   ps[3, 2] = 0.0;
   ps[3, 3] = 1.0;
+  // Define probabilities of O(t) given S(t)
   po[1, 1] = pA;
   po[1, 2] = 0.0;
   po[1, 3] = 1.0 - pA;
@@ -630,6 +907,17 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[n_occasions];
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  phiA ~ uniform(0, 1);
+  //  phiB ~ uniform(0, 1);
+  //  psiAB ~ uniform(0, 1);
+  //  psiBA ~ uniform(0, 1);
+  //  pA ~ uniform(0, 1);
+  //  pB ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 3) 
@@ -647,7 +935,24 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format tempemi.stan
+// ---------------------------------
+// States (S):
+// 1 alive and present
+// 2 alive and absent
+// 3 dead
+// Observations (O):
+// 1 seen
+// 2 not seen
+// ---------------------------------
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k] == 1) 
@@ -668,24 +973,35 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean state-spec. survival
   real<lower=0, upper=1> mean_psiIO;
+  // Mean temp. emigration
   real<lower=0, upper=1> mean_psiOI;
+  // Mean temp. immigration
   real<lower=0, upper=1> mean_p;
+  // Mean state-spec. recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi;
+  // Survival probability
   vector<lower=0, upper=1>[n_occ_minus_1] psiIO;
+  // Probability to emigrate
   vector<lower=0, upper=1>[n_occ_minus_1] psiOI;
+  // Probability to immigrate
   vector<lower=0, upper=1>[n_occ_minus_1] p;
+  // Recapture probability
   simplex[3] ps[3, nind, n_occ_minus_1];
   simplex[2] po[3, nind, n_occ_minus_1];
+  // Constraints
   for (t in 1 : n_occ_minus_1) {
     phi[t] = mean_phi;
     psiIO[t] = mean_psiIO;
     psiOI[t] = mean_psiOI;
     p[t] = mean_p;
   }
+  // Define state-transition and observation matrices
   for (i in 1 : nind) {
+    // Define probabilities of state S(t+1) given S(t)
     for (t in 1 : n_occ_minus_1) {
       ps[1, i, t, 1] = phi[t] * (1.0 - psiIO[t]);
       ps[1, i, t, 2] = phi[t] * psiIO[t];
@@ -696,6 +1012,7 @@ transformed parameters {
       ps[3, i, t, 1] = 0.0;
       ps[3, i, t, 2] = 0.0;
       ps[3, i, t, 3] = 1.0;
+      // Define probabilities of O(t) given S(t)
       po[1, i, t, 1] = p[t];
       po[1, i, t, 2] = 1.0 - p[t];
       po[2, i, t, 1] = 0.0;
@@ -708,6 +1025,15 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[n_occasions];
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_psiIO ~ uniform(0, 1);
+  //  mean_psiOI ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
+  // Forward algorithm derived from Stan Modeling Language
+  // User's Guide and Reference Manual.
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (k in 1 : 3) 

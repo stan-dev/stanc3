@@ -74,7 +74,6 @@ program:
     EOF
     {
       grammar_logger "program" ;
-      Ast.program_without_comments
       { comments0= c
       ; functionblock= Option.map ~f:fst ofb
       ; comments1= Option.value_map ~default:[] ~f:snd ofb 

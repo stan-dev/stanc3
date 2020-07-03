@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format jaws.stan
+// Jaws: repeated measures analysis of variance
+//  http://www.openbugs.net/Examples/Jaws.html
 data {
   int<lower=0> N;
   int<lower=0> M;
@@ -17,6 +19,7 @@ parameters {
 }
 transformed parameters {
   vector[M] mu;
+  // for (m in 1:M) mu[m] <- beta0 + beta1 * (age[m] - mean_age); 
   for (m in 1 : M) 
     mu[m] <- beta0 + beta1 * age[m];
 }

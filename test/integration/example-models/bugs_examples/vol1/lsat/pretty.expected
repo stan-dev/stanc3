@@ -1,8 +1,13 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format lsat.stan
+// LSAT: item response
+// http://www.openbugs.net/Examples/Lsat.html
 data {
   int<lower=0> N;
+  // 1000, number of students
   int<lower=0> R;
+  // 32, number of patterns of results: 2^T
   int<lower=0> T;
+  // 5, number of questions
   int<lower=0> culm[R];
   int<lower=0> response[R, T];
 }
