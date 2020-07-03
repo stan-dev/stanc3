@@ -149,24 +149,19 @@ let rec pp_value_json ppf e =
       Fmt.(pf ppf "[@[<hov 1>%a@]]" (list ~sep:comma pp_value_json) l)
   | _ -> failwith "This should never happen."
 
-let var_decl_id d =
-  match d.stmt with
-  | VarDecl {identifier; _} -> identifier.name
-  | _ -> failwith "This should never happen."
-
 let var_decl_gen_val m d =
   match d.stmt with
-  | VarDecl {decl_type= Sized sizedtype; transformation; _} ->
-      generate_value m sizedtype transformation
-  | _ -> failwith "This should never happen."
+  | VarDecl {identifier; decl_type= Sized sizedtype; transformation; _} ->
+      Some (identifier.name, generate_value m sizedtype transformation)
+  | _ -> None
 
 let print_data_prog s =
   let data = Option.value ~default:[] s.datablock in
   let l, _ =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
-        let value = var_decl_gen_val m decl in
-        ( l @ [(var_decl_id decl, value)]
-        , Map.set m ~key:(var_decl_id decl) ~data:value ) )
+        match var_decl_gen_val m decl with
+        | None -> (l, m)
+        | Some (key, data) -> (l @ [(key, data)], Map.set m ~key ~data) )
   in
   let pp ppf (id, value) =
     Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value

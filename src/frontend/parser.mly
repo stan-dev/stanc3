@@ -24,6 +24,8 @@ let reducearray (sbt, l) =
 %token <string> REALNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
+%token <string> LCOMMENT
+%token <string list> MCOMMENT
 %token TARGET
 %token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO IDIVIDE
        LDIVIDE ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
@@ -61,7 +63,8 @@ let reducearray (sbt, l) =
 
 (* program *)
 program:
-  | ofb=option(function_block)
+  | c=list(comment)
+    ofb=option(function_block)
     odb=option(data_block)
     otdb=option(transformed_data_block)
     opb=option(parameters_block)
@@ -71,44 +74,87 @@ program:
     EOF
     {
       grammar_logger "program" ;
-      { functionblock= ofb
-      ; datablock= odb
-      ; transformeddatablock= otdb
-      ; parametersblock= opb
-      ; transformedparametersblock= otpb
-      ; modelblock= omb
-      ; generatedquantitiesblock= ogb }
+      { comments0= c
+      ; functionblock= Option.map ~f:fst ofb
+      ; comments1= Option.value_map ~default:[] ~f:snd ofb 
+      ; datablock= Option.map ~f:fst odb
+      ; comments2= Option.value_map ~default:[] ~f:snd odb
+      ; transformeddatablock= Option.map ~f:fst otdb
+      ; comments3= Option.value_map ~default:[] ~f:snd otdb
+      ; parametersblock= Option.map ~f:fst opb
+      ; comments4= Option.value_map ~default:[] ~f:snd opb
+      ; transformedparametersblock= Option.map ~f:fst otpb
+      ; comments5= Option.value_map ~default:[] ~f:snd otpb
+      ; modelblock= Option.map ~f:fst omb
+      ; comments6= Option.value_map ~default:[] ~f:snd omb
+      ; generatedquantitiesblock= Option.map ~f:fst ogb
+      ; comments7= Option.value_map ~default:[] ~f:snd ogb }
     }
 
 (* blocks *)
 function_block:
-  | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
-    {  grammar_logger "function_block" ; fd}
+  | FUNCTIONBLOCK LBRACE c=list(comment_stmt) fd=list(function_def) RBRACE t=list(comment)
+    {  grammar_logger "function_block" ; (c @ fd, t)}
 
 data_block:
-  | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; tvd }
+  | DATABLOCK LBRACE c=list(comment_stmt)
+    tvd=list(with_comment(top_var_decl_no_assign)) RBRACE t=list(comment)
+    { grammar_logger "data_block" ; (c @ tvd, t) }
 
 transformed_data_block:
-  | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ;  tvds }
+  | TRANSFORMEDDATABLOCK LBRACE c=list(comment_stmt)
+    tvds=list(top_vardecl_or_statement) RBRACE t=list(comment)
+    {  grammar_logger "transformed_data_block" ;  (c @ tvds, t) }
     (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
-  | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; tvd }
+  | PARAMETERSBLOCK LBRACE c=list(comment_stmt)
+    tvd=list(with_comment(top_var_decl_no_assign)) RBRACE t=list(comment)
+    { grammar_logger "parameters_block" ; (c @ tvd, t) }
 
 transformed_parameters_block:
-  | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; tvds }
+  | TRANSFORMEDPARAMETERSBLOCK LBRACE c=list(comment_stmt)
+    tvds=list(top_vardecl_or_statement) RBRACE t=list(comment)
+    { grammar_logger "transformed_parameters_block" ; (c @ tvds, t) }
 
 model_block:
-  | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; vds  }
+  | MODELBLOCK LBRACE c=list(comment_stmt) vds=list(vardecl_or_statement) RBRACE t=list(comment)
+    { grammar_logger "model_block" ; (c @ vds, t)  }
 
 generated_quantities_block:
-  | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; tvds }
+  | GENERATEDQUANTITIESBLOCK LBRACE c=list(comment_stmt)
+    tvds=list(top_vardecl_or_statement) RBRACE t=list(comment)
+    { grammar_logger "generated_quantities_block" ; (c @ tvds, t) }
+
+(* comments *)
+comment:
+  | c=LCOMMENT { grammar_logger "single line comment"; LineComment c }
+  | c=MCOMMENT
+    { grammar_logger "multi line comment";
+      match c with
+      | [] | [_] -> MultiComment c
+      | fst :: l ->
+        let n = List.(map ~f:String.length l |> fold ~init:0 ~f:max) in
+        let leading_space n s =
+          match String.lfindi ~f:(fun _ c -> c <> ' ') s with
+          | None -> n | Some i -> min i n
+        in
+        let n = List.fold ~init:n ~f:leading_space l in
+        MultiComment (fst :: List.map ~f:(fun s -> String.drop_prefix s n) l)
+    }
+
+comment_stmt:
+  | c=comment
+    {
+      { stmt= Blank;
+        smeta= { loc= Location_span.of_positions_exn $startpos $endpos
+               ; comments= [c] }
+      }
+    }
+
+%inline with_comment(stmt):
+  | s=stmt c=list(comment)
+    { {s with smeta= {s.smeta with comments= c}} : untyped_statement }
 
 (* function definitions *)
 identifier:
@@ -175,10 +221,14 @@ function_def:
     RPAREN b=statement
     {
       grammar_logger "function_def" ;
-      {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
-       smeta={loc=Location_span.of_positions_exn $startpos $endpos}
-      }
+      {stmt=FunDef {returntype = rt;
+                    funname = name;
+                    arguments = args;
+                    body= {b with smeta= {b.smeta with comments= []}}};
+       smeta={ loc={ b.smeta.loc
+                     with begin_loc= Location.of_position_exn $startpos}
+             ; comments= b.smeta.comments}
+      } : untyped_statement
     }
 
 return_type:
@@ -230,7 +280,8 @@ var_decl:
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
                   is_global= false};
-       smeta= {loc = Location_span.of_positions_exn $startpos $endpos}}
+       smeta= { loc = Location_span.of_positions_exn $startpos $endpos
+              ; comments= []}}
     }
 
 sized_basic_type:
@@ -256,7 +307,8 @@ top_var_decl_no_assign:
                    identifier= id;
                    initial_value= None;
                    is_global= true};
-       smeta={loc= Location_span.of_positions_exn $startpos $endpos}
+       smeta={ loc= Location_span.of_positions_exn $startpos $endpos
+             ; comments= []}
       }
     }
 
@@ -271,7 +323,8 @@ top_var_decl:
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
                        is_global= true};
-       smeta= {loc=Location_span.of_positions_exn $startpos $endpos}}
+       smeta= { loc=Location_span.of_positions_exn $startpos $endpos
+              ; comments= []}}
     }
 
 top_var_type:
@@ -376,7 +429,8 @@ non_lhs:
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
-(* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
+(* TODO: why do we not simply disallow greater than in constraints?
+         No need to disallow all logical operations, right? *)
 constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression
     {
@@ -421,8 +475,8 @@ common_expression:
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
-  | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
-    {  grammar_logger "array_expression" ; ArrayExpr xs  }
+  | LBRACE list(comment_stmt) xs=separated_nonempty_list(COMMA, expression) RBRACE
+    {  grammar_logger "array_expression" ; ArrayExpr xs }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
@@ -540,15 +594,15 @@ lhs:
 
 (* statements *)
 statement:
+  | s=with_comment(statement_loc) { s }
+  | s=nested_statement { s }
+
+statement_loc:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $startpos $endpos} }
-    }
-  | s=nested_statement
-    {  grammar_logger "nested_statement" ;
-       {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $startpos $endpos} }
+        smeta= { loc=Location_span.of_positions_exn $startpos $endpos
+               ; comments= []} }
     }
 
 atomic_statement:
@@ -618,34 +672,70 @@ truncation:
 
 nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement
-    {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, Some s2) }
+    {
+      grammar_logger "ifelse_statement" ;
+      { stmt= IfThenElse (e, s1, Some {s2 with smeta= {s2.smeta with comments= []}})
+      ; smeta= { loc= { s2.smeta.loc
+                        with begin_loc= Location.of_position_exn $startpos }
+               ; comments= s2.smeta.comments } }
+    }
   | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE
-    {  grammar_logger "if_statement" ; IfThenElse (e, s, None) }
+    {
+      grammar_logger "if_statement" ;
+      { stmt= IfThenElse (e, {s with smeta= {s.smeta with comments= []}}, None)
+      ; smeta= { loc= { s.smeta.loc
+                        with begin_loc= Location.of_position_exn $startpos }
+               ; comments= s.smeta.comments } }
+    }
   | WHILE LPAREN e=expression RPAREN s=statement
-    {  grammar_logger "while_statement" ; While (e, s) }
+    {
+      grammar_logger "while_statement" ;
+      { stmt= While (e, {s with smeta= {s.smeta with comments= []}})
+      ; smeta= { loc= { s.smeta.loc
+                        with begin_loc= Location.of_position_exn $startpos }
+               ; comments= s.smeta.comments } }
+     }
   | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN
     s=statement
     {
       grammar_logger "for_statement" ;
-      For {loop_variable= id;
-           lower_bound= e1;
-           upper_bound= e2;
-           loop_body= s;}
+      { stmt= For {loop_variable= id;
+                   lower_bound= e1;
+                   upper_bound= e2;
+                   loop_body= {s with smeta= {s.smeta with comments= []}};}
+      ; smeta= { loc= { s.smeta.loc
+                        with begin_loc= Location.of_position_exn $startpos }
+               ; comments= s.smeta.comments } }
     }
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
-    {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
-  | LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+    {
+      grammar_logger "foreach_statement" ;
+      { stmt= ForEach (id, e, {s with smeta= {s.smeta with comments= []}})
+      ; smeta= { loc= { s.smeta.loc
+                        with begin_loc= Location.of_position_exn $startpos }
+                ; comments= s.smeta.comments } }
+    }
+  | s=with_comment(block_statement)
+     { s }
+
+block_statement:
+  | LBRACE c=list(comment_stmt) l=list(vardecl_or_statement) RBRACE
+    {
+      grammar_logger "block_statement" ;
+      { stmt= Block (c @ l)
+       ; smeta= { loc= Location_span.of_positions_exn $startpos $endpos
+                ; comments= [] } }
+    }
 
 (* statement or var decls *)
 vardecl_or_statement:
   | s=statement
     { grammar_logger "vardecl_or_statement_statement" ; s }
-  | v=var_decl
+  | v=with_comment(var_decl)
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
   | s=statement
     { grammar_logger "top_vardecl_or_statement_statement" ;  s }
-  | v=top_var_decl
+  | v=with_comment(top_var_decl)
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }

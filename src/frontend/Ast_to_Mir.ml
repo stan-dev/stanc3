@@ -654,6 +654,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Break -> Break |> swrap
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
+  | Ast.Blank -> []
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
@@ -669,6 +670,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
                 body
               |> unwrap_block_or_skip
           ; fdloc= ts.smeta.loc } ]
+  | Blank | Skip -> []
   | _ ->
       raise_s
         [%message "Found non-function definition statement in function block"]

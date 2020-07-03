@@ -50,6 +50,10 @@ let rec unwind_array_type = function
     match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
+let pp_comment ppf = function
+  | LineComment s -> Fmt.pf ppf "//%s" s
+  | MultiComment ls -> Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) ls
+
 (** XXX this should use the MIR pretty printers after AST pretty printers
     are updated to use `Fmt`. *)
 let rec pp_autodifftype ppf = function
@@ -295,8 +299,9 @@ and pp_recursive_ifthenelse ppf s =
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2
   | _ -> pp_indent_unless_block ppf s
 
-and pp_statement ppf ({stmt= s_content; _} as ss) =
-  match s_content with
+and pp_statement ppf
+    ({stmt= s_content; smeta= {comments; _}} as ss : untyped_statement) =
+  ( match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a %a %a;" pp_lvalue l pp_assignmentoperator assop
@@ -320,6 +325,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   | Print ps -> Fmt.pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps
   | Skip -> Fmt.pf ppf ";"
+  | Blank -> ()
   | IfThenElse (_, _, _) ->
       with_vbox ppf 0 (fun () -> pp_recursive_ifthenelse ppf ss)
   | While (e, s) -> Fmt.pf ppf "while (%a) %a" pp_expression e pp_statement s
@@ -361,7 +367,11 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
           Fmt.pf ppf "%a" (Fmt.list ~sep:Fmt.comma pp_args) args ) ;
       match b with
       | {stmt= Skip; _} -> Fmt.pf ppf ");"
-      | b -> Fmt.pf ppf ") %a" pp_statement b )
+      | b -> Fmt.pf ppf ") %a" pp_statement b ) ) ;
+  if not (List.is_empty comments) then (
+    Fmt.(
+      if s_content <> Blank then cut ppf () ;
+      (list pp_comment) ppf comments) )
 
 and pp_args ppf (at, ut, id) =
   Fmt.pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
@@ -385,21 +395,45 @@ let pp_opt_block ppf block_name opt_block =
   Fmt.option ~none:Fmt.nop (pp_block block_name) ppf opt_block
 
 let pp_program ppf
-    { functionblock= bf
-    ; datablock= bd
-    ; transformeddatablock= btd
-    ; parametersblock= bp
-    ; transformedparametersblock= btp
-    ; modelblock= bm
-    ; generatedquantitiesblock= bgq } =
+    ({ comments0
+     ; functionblock= bf
+     ; comments1
+     ; datablock= bd
+     ; comments2
+     ; transformeddatablock= btd
+     ; comments3
+     ; parametersblock= bp
+     ; comments4
+     ; transformedparametersblock= btp
+     ; comments5
+     ; modelblock= bm
+     ; comments6
+     ; generatedquantitiesblock= bgq
+     ; comments7 } :
+      untyped_program) =
   Format.pp_open_vbox ppf 0 ;
+  Fmt.list pp_comment ppf comments0 ;
+  if not (List.is_empty comments0) then Fmt.cut ppf () ;
   pp_opt_block ppf "functions" bf ;
+  Fmt.list pp_comment ppf comments1 ;
+  if not (List.is_empty comments1) then Fmt.cut ppf () ;
   pp_opt_block ppf "data" bd ;
+  Fmt.list pp_comment ppf comments2 ;
+  if not (List.is_empty comments2) then Fmt.cut ppf () ;
   pp_opt_block ppf "transformed data" btd ;
+  Fmt.list pp_comment ppf comments3 ;
+  if not (List.is_empty comments3) then Fmt.cut ppf () ;
   pp_opt_block ppf "parameters" bp ;
+  Fmt.list pp_comment ppf comments4 ;
+  if not (List.is_empty comments4) then Fmt.cut ppf () ;
   pp_opt_block ppf "transformed parameters" btp ;
+  Fmt.list pp_comment ppf comments5 ;
+  if not (List.is_empty comments5) then Fmt.cut ppf () ;
   pp_opt_block ppf "model" bm ;
+  Fmt.list pp_comment ppf comments6 ;
+  if not (List.is_empty comments6) then Fmt.cut ppf () ;
   pp_opt_block ppf "generated quantities" bgq ;
+  Fmt.list pp_comment ppf comments7 ;
   Format.pp_close_box ppf ()
 
 let check_correctness prog pretty =
@@ -412,11 +446,9 @@ let check_correctness prog pretty =
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
   then failwith "Pretty printing failed. Please file a bug."
 
-let pretty_print_program p =
+let pretty_print_program (p : untyped_program) =
   let result = wrap_fmt pp_program p in
   check_correctness p result ; result
 
-let pretty_print_typed_program p =
-  let result = wrap_fmt pp_program p in
-  check_correctness (untyped_program_of_typed_program p) result ;
-  result
+let pretty_print_typed_program (p : typed_program) =
+  pretty_print_program (untyped_program_of_typed_program p)
