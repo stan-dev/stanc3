@@ -268,6 +268,58 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
         stmt
   ; smeta= {loc= smeta.loc; comments= smeta.comments} }
 
+let rec stmt_without_comments : untyped_statement -> untyped_statement option =
+  function
+  | {stmt= Blank; _} -> None
+  | {stmt= Block s; smeta} ->
+      Some
+        { stmt= Block (List.filter_map ~f:stmt_without_comments s)
+        ; smeta= {smeta with comments= []} }
+  | {stmt; smeta} ->
+      Some
+        { stmt=
+            map_statement Fn.id
+              (fun x -> Option.value_exn (stmt_without_comments x))
+              Fn.id Fn.id stmt
+        ; smeta= {smeta with comments= []} }
+
+let program_without_comments
+    { functionblock
+    ; datablock
+    ; transformeddatablock
+    ; parametersblock
+    ; transformedparametersblock
+    ; modelblock
+    ; generatedquantitiesblock; _ } : untyped_program =
+  { comments0= []
+  ; functionblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) functionblock
+  ; comments1= []
+  ; datablock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) datablock
+  ; comments2= []
+  ; transformeddatablock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        transformeddatablock
+  ; comments3= []
+  ; parametersblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) parametersblock
+  ; comments4= []
+  ; transformedparametersblock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        transformedparametersblock
+  ; comments5= []
+  ; modelblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) modelblock
+  ; comments6= []
+  ; generatedquantitiesblock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        generatedquantitiesblock
+  ; comments7= [] }
+
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
