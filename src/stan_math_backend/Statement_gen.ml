@@ -172,7 +172,7 @@ let rec pp_statement (ppf : Format.formatter)
         ; meta= stmt.meta }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
-      pf ppf "@[<hov 2>vars__.push_back(@,%a);@]" pp_expr var
+      pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
