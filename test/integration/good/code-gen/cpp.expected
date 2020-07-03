@@ -5,27 +5,6 @@
 namespace eight_schools_ncp_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -539,27 +518,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace mother_model_namespace {
 
-
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -9061,27 +9019,6 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 namespace motherHOF_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -11173,27 +11110,6 @@ STAN_REGISTER_MAP_RECT(9, motherHOF_model_namespace::goo_functor__)
 namespace optimize_glm_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -12887,27 +12803,6 @@ stan::model::model_base& new_model(
 namespace reduce_sum_m1_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -13534,27 +13429,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m2_model_namespace {
 
-
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -16562,27 +16436,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m3_model_namespace {
 
-
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -20892,27 +20745,6 @@ stan::model::model_base& new_model(
 namespace single_argument_lpmf_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -21409,27 +21241,6 @@ stan::model::model_base& new_model(
 namespace tilde_block_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -21815,27 +21626,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace transform_model_namespace {
 
-
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -25781,27 +25571,6 @@ stan::model::model_base& new_model(
 namespace truncate_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -26288,27 +26057,6 @@ stan::model::model_base& new_model(
 namespace udf_tilde_stmt_conflict_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
@@ -26678,27 +26426,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace user_constrain_model_namespace {
 
-
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {

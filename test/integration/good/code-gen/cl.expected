@@ -5,27 +5,6 @@
 namespace optimize_glm_model_namespace {
 
 
-template <typename T, typename S, stan::require_all_vector_like_t<T, S>* = nullptr>
-inline decltype(auto) resize_to_match__(T&& dst, S&& src) {
-  dst.resize(src.size());
-  return std::forward<T>(dst);
-}
-
-template <typename T>
-inline Eigen::Matrix<T, -1, -1>&
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-inline std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-inline std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
-
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
   if (val < 1) {
