@@ -52,11 +52,11 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_mvmer.stan
 
-Syntax error in 'parameters_mvmer.stan', line 2, column 2 to column 6, parsing error:
+Syntax error in 'parameters_mvmer.stan', line 1, column 15 to line 2, column 0, parsing error:
    -------------------------------------------------
      1:    // intercepts
      2:    real<lower=lb(intercept_type[1]),upper=ub(intercept_type[1])>
-               ^
+         ^
      3:      yGamma1[intercept_type[1] > 0];
      4:    real<lower=lb(intercept_type[2]),upper=ub(intercept_type[2])>
    -------------------------------------------------
