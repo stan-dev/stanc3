@@ -178,6 +178,11 @@ vector algebra_solver((vector, vector, data real[], data int[]) => vector,
                         vector, vector, real[], int[])
 vector algebra_solver((vector, vector, data real[], data int[]) => vector,
                         vector, vector, real[], int[], real, real, real)
+vector algebra_solver_newton((vector, vector, data real[], data int[]) => vector,
+                               vector, vector, real[], int[])
+vector algebra_solver_newton((vector, vector, data real[], data int[]) => vector,
+                               vector, vector, real[], int[], real, real,
+                               real)
 int[] append_array(int[], int[])
 real[] append_array(real[], real[])
 vector[] append_array(vector[], vector[])

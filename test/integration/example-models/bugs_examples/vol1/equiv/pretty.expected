@@ -49,7 +49,10 @@ generated quantities {
 
 Info: Found int division at 'equiv.stan', line 16, column 16 to column 44:
   (group[n] * (2 * p - 3) + 3) / 2
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  (group[n] * (2 * p - 3) + 3) / 2.0
+If rounding is intended please use the integer division operator %/%.
 
 Warning: deprecated language construct used in 'equiv.stan', line 1, column 0:
    -------------------------------------------------

@@ -79,6 +79,15 @@ transformed parameters {
   theta_p_as = algebra_solver(algebra_system, x_p_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
   theta_p_as = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i);
   theta_p_as = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+
+  theta_p_as = algebra_solver_newton(algebra_system, x_v, y_v, x_d_r, x_d_i);
+  theta_p_as = algebra_solver_newton(algebra_system, x_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver_newton(algebra_system, x_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver_newton(algebra_system, x_p_v, y_v, x_d_r, x_d_i);
+
+  theta_p_as = algebra_solver_newton(algebra_system, x_p_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_p_as = algebra_solver_newton(algebra_system, x_p_v, y_p, x_d_r, x_d_i);
+  theta_p_as = algebra_solver_newton(algebra_system, x_p_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
 }
 
 model {
@@ -177,4 +186,23 @@ generated quantities {
 
   vector[3] yy_hat_gq
       = map_rect(goo, shared_params_d, job_params_d, data_r, data_i);
+
+  vector[2] theta_dbl;
+  theta_dbl = algebra_solver(algebra_system, x_v, y_v, x_d_r, x_d_i);
+  theta_dbl = algebra_solver(algebra_system, x_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver(algebra_system, x_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver(algebra_system, x_p_v, y_v, x_d_r, x_d_i);
+
+  theta_dbl = algebra_solver(algebra_system, x_p_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i);
+  theta_dbl = algebra_solver(algebra_system, x_p_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+
+  theta_dbl = algebra_solver_newton(algebra_system, x_v, y_v, x_d_r, x_d_i);
+  theta_dbl = algebra_solver_newton(algebra_system, x_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver_newton(algebra_system, x_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver_newton(algebra_system, x_p_v, y_v, x_d_r, x_d_i);
+
+  theta_dbl = algebra_solver_newton(algebra_system, x_p_v, y_v, x_d_r, x_d_i, 0.01, 0.01, 10);
+  theta_dbl = algebra_solver_newton(algebra_system, x_p_v, y_p, x_d_r, x_d_i);
+  theta_dbl = algebra_solver_newton(algebra_system, x_p_v, y_p, x_d_r, x_d_i, 0.01, 0.01, 10);
 }

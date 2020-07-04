@@ -255,11 +255,54 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       Stmt.Helpers.for_eigen
 
-let extract_transform_args = function
-  | Program.Lower a | Upper a -> [a]
-  | Offset a -> [a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
-  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; a]
-  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
+let same_shape decl_id decl_var id var meta =
+  if UnsizedType.is_scalar_type (Expr.Typed.type_of var) then []
+  else
+    [ Stmt.
+        { Fixed.pattern=
+            NRFunApp
+              ( StanLib
+              , "check_matching_dims"
+              , Expr.Helpers.
+                  [str "constraint"; str decl_id; decl_var; str id; var] )
+        ; meta } ]
+
+let check_transform_shape decl_id decl_var meta = function
+  | Program.Offset e -> same_shape decl_id decl_var "offset" e meta
+  | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
+  | Lower e -> same_shape decl_id decl_var "lower" e meta
+  | Upper e -> same_shape decl_id decl_var "upper" e meta
+  | OffsetMultiplier (e1, e2) ->
+      same_shape decl_id decl_var "offset" e1 meta
+      @ same_shape decl_id decl_var "multiplier" e2 meta
+  | LowerUpper (e1, e2) ->
+      same_shape decl_id decl_var "lower" e1 meta
+      @ same_shape decl_id decl_var "upper" e2 meta
+  | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
+   |PositiveOrdered | Simplex | UnitVector | Identity ->
+      []
+
+let copy_indices indexed (var : Expr.Typed.t) =
+  if UnsizedType.is_scalar_type var.meta.type_ then var
+  else
+    match Expr.Helpers.collect_indices indexed with
+    | [] -> var
+    | indices ->
+        Expr.Fixed.
+          { pattern= Indexed (var, indices)
+          ; meta=
+              { var.meta with
+                type_=
+                  Expr.Helpers.infer_type_of_indexed var.meta.type_ indices }
+          }
+
+let extract_transform_args var = function
+  | Program.Lower a | Upper a -> [copy_indices var a]
+  | Offset a ->
+      [copy_indices var a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
+  | Multiplier a -> [{a with pattern= Lit (Int, "0")}; copy_indices var a]
+  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
+      [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
@@ -341,7 +384,7 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
         | _ -> []
       in
       let args var =
-        (var :: mkstring constraint_str :: extract_transform_args t)
+        (var :: mkstring constraint_str :: extract_transform_args var t)
         @ extra_args
       in
       let constrainvar var =
@@ -368,37 +411,22 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
             (Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar)
             decl_var smeta ]
 
-let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
+let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
-  let chk fn args =
+  let chk fn var =
     let check_id id =
-      let id_str =
-        Expr.
-          { Fixed.pattern= Lit (Str, Fmt.strf "%a" Typed.pp id)
-          ; meta= Typed.Meta.empty }
-      in
-      let fname = Internal_fun.to_string FnCheck in
-      let pattern =
-        Stmt.Fixed.Pattern.NRFunApp
-          (CompilerInternal, fname, fn :: id_str :: id :: args)
-      in
-      Stmt.Fixed.{meta= smeta; pattern}
+      let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
+      let args = extract_transform_args id decl_trans in
+      Stmt.Helpers.internal_nrfunapp FnCheck (fn :: id_str :: id :: args) smeta
     in
-    let mtype = SizedType.to_unsized decl_type in
-    Stmt.Helpers.for_eigen decl_type check_id
-      Expr.
-        { Fixed.pattern= Var decl_id
-        ; meta= Typed.Meta.create ~type_:mtype ~loc:smeta ~adlevel () }
-      smeta
+    [(constraint_forl decl_trans) decl_type check_id var smeta]
   in
-  let args = extract_transform_args decl_trans in
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
-      check_decl decl_type' decl_id (Lower lb) smeta adlevel
-      @ check_decl decl_type' decl_id (Upper ub) smeta adlevel
-  | _ ->
-      [chk (mkstring smeta (check_constraint_to_string decl_trans Check)) args]
+      check_decl var decl_type' decl_id (Lower lb) smeta adlevel
+      @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
+  | _ -> chk (mkstring smeta (check_constraint_to_string decl_trans Check)) var
 
 let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     initial_value =
@@ -428,18 +456,17 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     |> Option.to_list
   in
   if Utils.is_user_ident decl_id then
-    let checks =
-      match dconstrain with
-      | Some Check -> check_decl dt decl_id transform smeta dadlevel
-      | _ -> []
-    in
-    let constrain_stmts =
+    let constrain_checks =
       match dconstrain with
       | Some Constrain | Some Unconstrain ->
-          constrain_decl dt dconstrain transform decl_id decl_var smeta
-      | _ -> []
+          check_transform_shape decl_id decl_var smeta transform
+          @ constrain_decl dt dconstrain transform decl_id decl_var smeta
+      | Some Check ->
+          check_transform_shape decl_id decl_var smeta transform
+          @ check_decl decl_var dt decl_id transform smeta dadlevel
+      | None -> []
     in
-    (decl :: rhs_assignment) @ constrain_stmts @ checks
+    (decl :: rhs_assignment) @ constrain_checks
   else decl :: rhs_assignment
 
 let unwrap_block_or_skip = function
@@ -526,8 +553,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let suffix = dist_name_suffix ud_dists distribution.name in
       let kind =
         let possible_names =
-          List.map ~f:(( ^ ) distribution.name)
-            ("" :: Utils.distribution_suffices)
+          List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
           |> String.Set.of_list
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists

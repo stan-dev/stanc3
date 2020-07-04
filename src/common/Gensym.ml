@@ -1,6 +1,6 @@
 let _counter = ref 0
 
-let generate ?prefix:(prefix : string = "") () =
+let generate ?(prefix : string = "") () =
   _counter := !_counter + 1 ;
   Format.sprintf "%ssym%d__" prefix !_counter
 

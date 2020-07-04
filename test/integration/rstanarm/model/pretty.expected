@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format assoc_evaluate.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format assoc_evaluate.stan
 
 Syntax error in 'assoc_evaluate.stan', line 5, column 4 to column 7, parsing error:
    -------------------------------------------------
@@ -13,7 +13,7 @@ Syntax error in 'assoc_evaluate.stan', line 5, column 4 to column 7, parsing err
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format eta_add_Zb.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format eta_add_Zb.stan
 
 Syntax error in 'eta_add_Zb.stan', line 1, column 4 to column 6, parsing error:
    -------------------------------------------------
@@ -25,7 +25,7 @@ Syntax error in 'eta_add_Zb.stan', line 1, column 4 to column 6, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format eta_no_intercept.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format eta_no_intercept.stan
 
 Syntax error in 'eta_no_intercept.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
@@ -37,7 +37,7 @@ Syntax error in 'eta_no_intercept.stan', line 2, column 2 to column 5, parsing e
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format eta_z_no_intercept.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format eta_z_no_intercept.stan
 
 Syntax error in 'eta_z_no_intercept.stan', line 1, column 2 to column 4, parsing error:
    -------------------------------------------------
@@ -50,7 +50,7 @@ Syntax error in 'eta_z_no_intercept.stan', line 1, column 2 to column 4, parsing
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format event_lp.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format event_lp.stan
 
 Syntax error in 'event_lp.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -63,7 +63,7 @@ Syntax error in 'event_lp.stan', line 1, column 2 to column 8, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format make_eta.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format make_eta.stan
 
 Syntax error in 'make_eta.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -76,7 +76,7 @@ Syntax error in 'make_eta.stan', line 1, column 2 to column 8, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format make_eta_bern.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format make_eta_bern.stan
 
 Syntax error in 'make_eta_bern.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -89,7 +89,7 @@ Syntax error in 'make_eta_bern.stan', line 1, column 2 to column 8, parsing erro
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format make_eta_tmp.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format make_eta_tmp.stan
 
 Syntax error in 'make_eta_tmp.stan', line 1, column 8 to column 14, parsing error:
    -------------------------------------------------
@@ -102,7 +102,7 @@ Syntax error in 'make_eta_tmp.stan', line 1, column 8 to column 14, parsing erro
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format make_eta_tmp2.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format make_eta_tmp2.stan
 
 Syntax error in 'make_eta_tmp2.stan', line 1, column 12 to column 18, parsing error:
    -------------------------------------------------
@@ -115,7 +115,7 @@ Syntax error in 'make_eta_tmp2.stan', line 1, column 12 to column 18, parsing er
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format make_eta_z.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format make_eta_z.stan
 
 Syntax error in 'make_eta_z.stan', line 1, column 1 to column 3, parsing error:
    -------------------------------------------------
@@ -128,7 +128,7 @@ Syntax error in 'make_eta_z.stan', line 1, column 1 to column 3, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format mvmer_lp.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format mvmer_lp.stan
 
 Syntax error in 'mvmer_lp.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -141,7 +141,7 @@ Syntax error in 'mvmer_lp.stan', line 1, column 2 to column 8, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format priors_betareg.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format priors_betareg.stan
 
 Syntax error in 'priors_betareg.stan', line 2, column 2 to column 4, parsing error:
    -------------------------------------------------
@@ -155,7 +155,7 @@ Syntax error in 'priors_betareg.stan', line 2, column 2 to column 4, parsing err
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format priors_glm.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format priors_glm.stan
 
 Syntax error in 'priors_glm.stan', line 2, column 7 to column 9, parsing error:
    -------------------------------------------------
@@ -169,7 +169,7 @@ Syntax error in 'priors_glm.stan', line 2, column 7 to column 9, parsing error:
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format priors_mvmer.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format priors_mvmer.stan
 
 Syntax error in 'priors_mvmer.stan', line 2, column 2 to column 4, parsing error:
    -------------------------------------------------

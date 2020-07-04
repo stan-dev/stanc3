@@ -1,5 +1,31 @@
   $ ../../../../install/default/bin/stanc 1_starts_with_number.stan
 Model name must not start with a number or symbol other than underscore.
+  $ ../../../../install/default/bin/stanc array_expr_bad1.stan
+
+Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real td_arr32[3,2] = { 1, 3 };
+           ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =: lhs has type real[,] and rhs has type int[]
+
+  $ ../../../../install/default/bin/stanc array_expr_bad2.stan
+
+Semantic error in 'array_expr_bad2.stan', line 2, column 34 to column 35:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real td_arr32[3,2] = {{ 1, 3 }, 1, 2 };
+                                           ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Array expression must have entries of consistent type. Expected int[] but found int.
+
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
@@ -1621,16 +1647,16 @@ Ill-typed arguments supplied to assignment operator =: lhs has type matrix and r
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad2.stan
 
-Semantic error in 'matrix_expr_bad2.stan', line 2, column 25 to column 37:
+Semantic error in 'matrix_expr_bad2.stan', line 2, column 34 to column 35:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ 1 ], 3 ];
-                                  ^
+                                           ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Row_vector expression must have all int and real entries or all row_vector entries.
+Matrix expression must have all row_vector entries. Found type int.
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
 
@@ -1806,6 +1832,69 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
 Instead supplied arguments of incompatible type: int[], matrix.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
+
+Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
+   -------------------------------------------------
+     5:    int b[4];
+     6:    matrix[3,3] c;
+     7:    c = b %/% a;
+               ^
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: int[], matrix.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_1.stan
+
+Semantic error in 'op_intdivide_bad_1.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: real, real.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_2.stan
+
+Semantic error in 'op_intdivide_bad_2.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: int, real.
+
+  $ ../../../../install/default/bin/stanc op_intdivide_bad_3.stan
+
+Semantic error in 'op_intdivide_bad_3.stan', line 6, column 11 to column 18:
+   -------------------------------------------------
+     4:  }
+     5:  transformed data {
+     6:    real c = a %/% b;
+                    ^
+     7:    real c = a %/% b;
+     8:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator %/%. Available signatures: 
+(int, int) => int
+Instead supplied arguments of incompatible type: real, int.
 
   $ ../../../../install/default/bin/stanc op_logical_negation_bad.stan
 
@@ -2345,17 +2434,17 @@ Ill-typed arguments supplied to assignment operator =: lhs has type row_vector a
 
   $ ../../../../install/default/bin/stanc row_vector_expr_bad2.stan
 
-Semantic error in 'row_vector_expr_bad2.stan', line 5, column 20 to column 28:
+Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
    -------------------------------------------------
      3:    row_vector[2] A;
      4:    row_vector[3] B;
      5:    row_vector[2] X = [ x, A ];
-                             ^
+                                  ^
      6:  }
      7:  model {
    -------------------------------------------------
 
-Row_vector expression must have all int and real entries or all row_vector entries.
+Row_vector expression must have all int or real entries. Found type row_vector.
 
   $ ../../../../install/default/bin/stanc signature_function_known.stan
 
@@ -2454,6 +2543,20 @@ Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No distribution 'ormal' was found with the correct signature.
+
+  $ ../../../../install/default/bin/stanc string_literal_newline.stan
+
+Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    print(
+     3:    "print
+           ^
+     4:    lines");
+     5:  }
+   -------------------------------------------------
+
+Invalid character found.
 
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
@@ -2807,7 +2910,7 @@ Semantic error in 'validate_set_double_offset_multiplier_bad1.stan', line 3, col
      5:  }
    -------------------------------------------------
 
-Offset must be of type int or real. Instead found type vector.
+Offset must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad2.stan
 
@@ -2821,7 +2924,7 @@ Semantic error in 'validate_set_double_offset_multiplier_bad2.stan', line 3, col
      5:  }
    -------------------------------------------------
 
-Multiplier must be of type int or real. Instead found type vector.
+Multiplier must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad3.stan
 
@@ -2849,7 +2952,7 @@ Semantic error in 'validate_set_double_range_lower_bad1.stan', line 3, column 13
      5:  parameters {
    -------------------------------------------------
 
-Lower bound must be of type int or real. Instead found type vector.
+Lower bound must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_lower_bad2.stan
 
@@ -2863,7 +2966,7 @@ Semantic error in 'validate_set_double_range_lower_bad2.stan', line 3, column 13
      5:  parameters {
    -------------------------------------------------
 
-Lower bound must be of type int or real. Instead found type vector.
+Lower bound must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad1.stan
 
@@ -2877,7 +2980,7 @@ Semantic error in 'validate_set_double_range_upper_bad1.stan', line 3, column 13
      5:  parameters {
    -------------------------------------------------
 
-Upper bound must be of type int or real. Instead found type vector.
+Upper bound must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad2.stan
 
@@ -2891,7 +2994,7 @@ Semantic error in 'validate_set_double_range_upper_bad2.stan', line 3, column 23
      5:  parameters {
    -------------------------------------------------
 
-Upper bound must be of type int or real. Instead found type vector.
+Upper bound must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad1.stan
 
@@ -3144,15 +3247,29 @@ Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc var-decl-bad-1.stan
 
-Semantic error in 'var-decl-bad-1.stan', line 3, column 2 to column 18:
+Semantic error in 'var-decl-bad-1.stan', line 3, column 14 to column 15:
    -------------------------------------------------
      1:  parameters {
      2:    real x[3];
      3:    real y[size(x)];
-           ^
+                       ^
      4:  }
      5:  model {
    -------------------------------------------------
 
 Non-data variables are not allowed in top level size declarations.
+
+  $ ../../../../install/default/bin/stanc var-decl-bad-2.stan
+
+Semantic error in 'var-decl-bad-2.stan', line 3, column 9 to column 23:
+   -------------------------------------------------
+     1:  parameters {
+     2:    real x[3];
+     3:    real y[poisson_rng(3)];
+                  ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
+
+Random number generators are not allowed in top level size declarations.
 

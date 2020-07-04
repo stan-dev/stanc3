@@ -106,10 +106,8 @@ let is_real_type = function
   | _ -> false
 
 let rec is_autodiffable = function
-  | UReal | UVector | URowVector | UMatrix ->
-    true
-  |UArray t ->
-    is_autodiffable t
+  | UReal | UVector | URowVector | UMatrix -> true
+  | UArray t -> is_autodiffable t
   | _ -> false
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
