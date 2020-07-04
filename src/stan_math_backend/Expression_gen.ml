@@ -320,7 +320,9 @@ and gen_fun_app ppf fname es =
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in
-    let fname = stan_namespace_qualify fname |> demangle_unnormalized_name false in
+    let fname =
+      stan_namespace_qualify fname |> demangle_unnormalized_name false
+    in
     pp_call ppf (fname, pp_expr, args)
   in
   let pp =

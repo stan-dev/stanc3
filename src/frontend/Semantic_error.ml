@@ -285,22 +285,24 @@ module ExpressionError = struct
     | InvalidUnnormalizedFunction ->
         Fmt.pf ppf
           "Functions with names ending in _lupdf and _lupmf can only be used \
-          in the model block or user-defined functions with names ending in \
-          _lpdf, _lpmf or _lp."
-    | InvalidUnnormalizedUDF fname -> 
+           in the model block or user-defined functions with names ending in \
+           _lpdf, _lpmf or _lp."
+    | InvalidUnnormalizedUDF fname ->
         Fmt.pf ppf
-          "%s is an invalid user-defined function name. User-defined probability mass \
-          and density functions must be defined \
-          as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf)."
+          "%s is an invalid user-defined function name. User-defined \
+           probability mass and density functions must be defined as \
+           normalized (function names should end with _lpdf/_lpmf not \
+           _lupdf/_lupmf)."
           fname
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
-          "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, _lccdf \
-           can make use of conditional notation."
+          "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
+           _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
           "Probabilty functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf and _lccdf, require a vertical bar (|) between the first two arguments."
+           _lcdf and _lccdf, require a vertical bar (|) between the first two \
+           arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."

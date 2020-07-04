@@ -129,23 +129,23 @@ let check_fresh_variable_basic id is_udf =
        not of nullary function types to clash with nullary library functions.
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
-    if is_udf && 
-      (Stan_math_signatures.is_stan_math_function_name id.name
-      || Stan_math_signatures.is_reduce_sum_fn id.name) (* variadic functions are currently on in math sigs *)
+    if
+      is_udf
+      && ( Stan_math_signatures.is_stan_math_function_name id.name
+         || Stan_math_signatures.is_reduce_sum_fn id.name )
+      (* variadic functions are currently on in math sigs *)
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
-    else if is_udf && 
-      Utils.is_unnormalized_distribution id.name
-    then
+    else if is_udf && Utils.is_unnormalized_distribution id.name then
       Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
-    else  match Symbol_table.look vm id.name with
+    else
+      match Symbol_table.look vm id.name with
       | Some _ -> Semantic_error.ident_in_use id.id_loc id.name |> error
       | None -> ok ())
 
 let check_fresh_variable id is_udf =
   List.fold ~init:(Validate.ok ())
     ~f:(fun v0 name ->
-      check_fresh_variable_basic name is_udf
-      |> Validate.apply_const v0 )
+      check_fresh_variable_basic name is_udf |> Validate.apply_const v0 )
     (probability_distribution_name_variants id)
 
 (** Least upper bound of expression autodiff types *)
@@ -231,9 +231,10 @@ let semantic_check_fn_map_rect ~loc id es =
 
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
-    if List.exists 
-       ~f:(fun suffix -> String.is_suffix id.name ~suffix)
-       Utils.conditioning_suffices
+    if
+      List.exists
+        ~f:(fun suffix -> String.is_suffix id.name ~suffix)
+        Utils.conditioning_suffices
     then Semantic_error.conditioning_required loc |> error
     else ok ())
 
@@ -269,7 +270,9 @@ let semantic_check_unnormalized cf ~loc id =
   Validate.(
     if
       Utils.is_unnormalized_distribution id.name
-      && not ((cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def)) || (cf.current_block = Model))
+      && not
+           ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+           || cf.current_block = Model )
     then Semantic_error.invalid_unnormalized_fn loc |> error
     else ok ())
 
@@ -279,7 +282,6 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
 (* Regular function application *)
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
-
     match Symbol_table.look vm (Utils.normalized_name id.name) with
     | Some (_, UnsizedType.UFun (_, Void)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
@@ -1071,8 +1073,10 @@ let semantic_check_sampling_pdf_pmf id =
   Validate.(
     if
       String.(
-        is_suffix id.name ~suffix:"_lpdf" || is_suffix id.name ~suffix:"_lpmf" ||
-        is_suffix id.name ~suffix:"_lupdf" || is_suffix id.name ~suffix:"_lupmf")
+        is_suffix id.name ~suffix:"_lpdf"
+        || is_suffix id.name ~suffix:"_lpmf"
+        || is_suffix id.name ~suffix:"_lupdf"
+        || is_suffix id.name ~suffix:"_lupmf")
     then error @@ Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc
     else ok ())
 
@@ -1100,10 +1104,13 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_sampling_dist suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
-    |> Option.value_map ~default:false ~f:is_real_rt in
+    |> Option.value_map ~default:false ~f:is_real_rt
+  in
   let is_sampling_dist_in_math =
-    List.exists ~f:is_name_w_suffix_sampling_dist (Utils.distribution_suffices @ Utils.unnormalized_suffices)
-    && name <> "binomial_coefficient" && name <> "multiply"
+    List.exists ~f:is_name_w_suffix_sampling_dist
+      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+    && name <> "binomial_coefficient"
+    && name <> "multiply"
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
@@ -1113,13 +1120,12 @@ let semantic_check_sampling_distribution ~loc id arguments =
     | _ -> false
   in
   let is_udf_sampling_dist =
-    List.exists ~f:is_name_w_suffix_udf_sampling_dist (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+    List.exists ~f:is_name_w_suffix_udf_sampling_dist
+      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
   in
   Validate.(
-    if is_sampling_dist_in_math || is_udf_sampling_dist then
-    ok ()
-    else error @@ Semantic_error.invalid_sampling_no_such_dist loc name
-  )
+    if is_sampling_dist_in_math || is_udf_sampling_dist then ok ()
+    else error @@ Semantic_error.invalid_sampling_no_such_dist loc name)
 
 let cumulative_density_is_defined id arguments =
   let name = id.name
@@ -1664,8 +1670,9 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
              | AutoDiffable, ut -> (Param, ut))
            uarg_types)
     and context =
-      let is_udf_dist name = 
-        List.exists ~f:(fun suffix -> String.is_suffix name ~suffix) 
+      let is_udf_dist name =
+        List.exists
+          ~f:(fun suffix -> String.is_suffix name ~suffix)
           Utils.distribution_suffices
       in
       { cf with

@@ -4,17 +4,20 @@ let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
+
 (* _log is listed last so that it only gets picked up if no other implementation exists *)
 let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 
-let conditioning_suffices = ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_lcdf"; "_lccdf"]
+let conditioning_suffices =
+  ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_lcdf"; "_lccdf"]
+
 let conditioning_suffices_w_log = conditioning_suffices @ ["_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
-let unnormalized_suffix = function 
-    | "_lpdf" -> "_lupdf"
-    | "_lpmf" -> "_lupmf"
-    | x -> x
+let unnormalized_suffix = function
+  | "_lpdf" -> "_lupdf"
+  | "_lpmf" -> "_lupmf"
+  | x -> x
 
 let is_distribution_name s =
   (not
@@ -26,8 +29,8 @@ let is_distribution_name s =
 
 let is_unnormalized_distribution s =
   List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix)
-       unnormalized_suffices
+    ~f:(fun suffix -> String.is_suffix s ~suffix)
+    unnormalized_suffices
 
 let replace_unnormalized_suffix suffix ~name =
   name
@@ -38,9 +41,9 @@ let stdlib_distribution_name s =
   List.map ~f:(replace_unnormalized_suffix ~name:s) distribution_suffices
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
-let normalized_name name = 
+let normalized_name name =
   match name with
-  | x when is_distribution_name x -> (stdlib_distribution_name x)
+  | x when is_distribution_name x -> stdlib_distribution_name x
   | x -> x
 
 let%expect_test "unnormalized name mangling" =
