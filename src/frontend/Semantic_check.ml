@@ -128,9 +128,11 @@ let check_fresh_variable_basic id is_udf =
        not of nullary function types to clash with nullary library functions.
        No other name clashes are tolerated. Here's the logic to
        achieve that. *)
-    if is_udf && 
-      (Stan_math_signatures.is_stan_math_function_name id.name
-      || Stan_math_signatures.is_reduce_sum_fn id.name) (* variadic functions are currently on in math sigs *)
+    if
+      is_udf
+      && ( Stan_math_signatures.is_stan_math_function_name id.name
+         || Stan_math_signatures.is_reduce_sum_fn id.name )
+      (* variadic functions are currently on in math sigs *)
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
@@ -140,8 +142,7 @@ let check_fresh_variable_basic id is_udf =
 let check_fresh_variable id is_udf =
   List.fold ~init:(Validate.ok ())
     ~f:(fun v0 name ->
-      check_fresh_variable_basic name is_udf
-      |> Validate.apply_const v0 )
+      check_fresh_variable_basic name is_udf |> Validate.apply_const v0 )
     (probability_distribution_name_variants id)
 
 (** Least upper bound of expression autodiff types *)
