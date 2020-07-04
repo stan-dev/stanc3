@@ -51,7 +51,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
     J = self.J
     y = self.y
     sigma = self.sigma
-    return [(nchains__, ), (nchains__, ), (nchains__, J)]
+    return [(nchains__, ), (nchains__, ),
+            (nchains__, tf__.cast(J, tf__.int32))]
      
   def parameter_bijectors(self):
     J = self.J

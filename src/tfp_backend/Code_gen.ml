@@ -193,7 +193,9 @@ let get_params p =
 
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
+    let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
+    pf ppf "(nchains__, @[<hov>%a@])"
+      (list ~sep:comma cast_expr)
       (SizedType.get_dims out_unconstrained_st)
   in
   let ppbody ppf =
