@@ -311,6 +311,16 @@ let gen_write (decl_id, sizedtype) =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
+
+let gen_write_unconstrained (decl_id, sizedtype) =
+  let bodyfn var =
+    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+  in
+  let meta =
+    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+  in
+  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   let writefn var =
     Stmt.Helpers.for_scalar_inv
       (SizedType.inner_type sizedtype)
@@ -667,7 +677,7 @@ let trans_prog (p : Program.Typed.t) =
         init_pos
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write free_params
+        @ List.map ~f:gen_write_unconstrained free_params
     ; generate_quantities }
   in
   Program.(
