@@ -17737,9 +17737,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       Eigen::Matrix<double, -1, 1> lcm_sym8__;
       double lcm_sym17__;
       double lcm_sym16__;
+      Eigen::Matrix<double, -1, 1> lcm_sym7__;
       double lcm_sym15__;
       double lcm_sym14__;
-      Eigen::Matrix<double, -1, 1> lcm_sym7__;
       Eigen::Matrix<double, -1, 1> lcm_sym6__;
       double lcm_sym13__;
       double lcm_sym12__;
@@ -17970,10 +17970,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
               vars__.emplace_back(
                 rvalue(theta,
-                  cons_list(index_uni(sym3__),
+                  cons_list(index_uni(1),
                     cons_list(index_uni(1),
-                      cons_list(index_uni(1), nil_index_list()))), "theta"));
-            }
+                      cons_list(index_uni(sym3__), nil_index_list()))),
+                  "theta"));}
           } 
           for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
             if (lcm_sym3__) {
@@ -17985,10 +17985,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                 vars__.emplace_back(
                   rvalue(theta,
-                    cons_list(index_uni(sym3__),
+                    cons_list(index_uni(1),
                       cons_list(index_uni(sym2__),
-                        cons_list(index_uni(1), nil_index_list()))), "theta"));
-              }
+                        cons_list(index_uni(sym3__), nil_index_list()))),
+                    "theta"));}
             } }
         } 
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
@@ -17996,29 +17996,27 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             if (lcm_sym3__) {
               vars__.emplace_back(
                 rvalue(theta,
-                  cons_list(index_uni(1),
+                  cons_list(index_uni(sym1__),
                     cons_list(index_uni(1),
-                      cons_list(index_uni(sym1__), nil_index_list()))),
-                  "theta"));
+                      cons_list(index_uni(1), nil_index_list()))), "theta"));
               for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                 vars__.emplace_back(
                   rvalue(theta,
-                    cons_list(index_uni(sym3__),
+                    cons_list(index_uni(sym1__),
                       cons_list(index_uni(1),
-                        cons_list(index_uni(sym1__), nil_index_list()))),
+                        cons_list(index_uni(sym3__), nil_index_list()))),
                     "theta"));}
             } 
             for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
               if (lcm_sym3__) {
                 vars__.emplace_back(
                   rvalue(theta,
-                    cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__),
                       cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym1__), nil_index_list()))),
-                    "theta"));
+                        cons_list(index_uni(1), nil_index_list()))), "theta"));
                 for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                   vars__.emplace_back(
-                    theta[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}
+                    theta[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}
               } }
           } }
       } 
@@ -34541,93 +34539,93 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(2),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(3),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(3), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(4),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(4), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(5),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(5), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(6),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(6), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(7),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(7), nil_index_list())), "b"));
           }
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(8),
-                  cons_list(index_uni(1), nil_index_list())), "b"));
+                cons_list(index_uni(1),
+                  cons_list(index_uni(8), nil_index_list())), "b"));
           }
         }
         for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
           {
             vars__.emplace_back(
               rvalue(b,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                cons_list(index_uni(sym1__),
+                  cons_list(index_uni(1), nil_index_list())), "b"));
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(2),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(2), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(3),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(3), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(4),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(4), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(5),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(5), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(6),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(6), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(7),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(7), nil_index_list())), "b"));
             }
             {
               vars__.emplace_back(
                 rvalue(b,
-                  cons_list(index_uni(8),
-                    cons_list(index_uni(sym1__), nil_index_list())), "b"));
+                  cons_list(index_uni(sym1__),
+                    cons_list(index_uni(8), nil_index_list())), "b"));
             }
           }}
       } 

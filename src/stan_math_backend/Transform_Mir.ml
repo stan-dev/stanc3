@@ -315,6 +315,12 @@ let gen_write (decl_id, sizedtype) =
 
 let gen_write_unconstrained (decl_id, sizedtype) =
   let bodyfn var =
+    let var =
+      match var.Expr.Fixed.pattern with
+      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
+          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
+      | _ -> var
+    in
     Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
   in
   let meta =
