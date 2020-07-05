@@ -311,7 +311,12 @@ let gen_write (decl_id, sizedtype) =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
+  let writefn var =
+    Stmt.Helpers.for_scalar_inv
+      (SizedType.inner_type sizedtype)
+      bodyfn var Location_span.empty
+  in
+  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum

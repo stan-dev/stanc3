@@ -5939,9 +5939,9 @@ class mother_model final : public model_base_crtp<mother_model> {
         vars__.emplace_back(offset_no_multiplier[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             vars__.emplace_back(
               p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -5950,8 +5950,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 p_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
@@ -5962,16 +5962,16 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 p_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                 (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
               vars__.emplace_back(
                 rvalue(p_ar_mat,
                   cons_list(index_uni(sym4__),
@@ -5985,8 +5985,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 p_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
@@ -6005,9 +6005,9 @@ class mother_model final : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               "p_cfcov_33"));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(p_cfcov_33_ar,
                 cons_list(index_uni(sym3__),
@@ -6116,9 +6116,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           vars__.emplace_back(tp_real_1d_ar[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
               vars__.emplace_back(
                 tp_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -6127,8 +6127,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             vars__.emplace_back(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
               for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
                 vars__.emplace_back(
                   tp_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
@@ -6139,16 +6139,16 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             vars__.emplace_back(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
               for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
                 vars__.emplace_back(
                   tp_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                   (sym1__ - 1)]);}}}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
                 vars__.emplace_back(
                   rvalue(tp_ar_mat,
                     cons_list(index_uni(sym4__),
@@ -6162,8 +6162,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             vars__.emplace_back(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
               for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
                 vars__.emplace_back(
                   tp_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
@@ -6182,9 +6182,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list())),
                 "tp_cfcov_33"));}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
               vars__.emplace_back(
                 rvalue(tp_cfcov_33_ar,
                   cons_list(index_uni(sym3__),
@@ -6755,9 +6755,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       vars__.emplace_back(gq_r2);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(gq_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             vars__.emplace_back(
               gq_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -6766,8 +6766,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(gq_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 gq_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
@@ -6778,16 +6778,16 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(gq_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 gq_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                 (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
               vars__.emplace_back(
                 rvalue(gq_ar_mat,
                   cons_list(index_uni(sym4__),
@@ -6801,8 +6801,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(gq_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 gq_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
@@ -6821,9 +6821,9 @@ class mother_model final : public model_base_crtp<mother_model> {
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               "gq_cfcov_33"));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(gq_cfcov_33_ar,
                 cons_list(index_uni(sym3__),
@@ -6832,17 +6832,17 @@ class mother_model final : public model_base_crtp<mother_model> {
                 "gq_cfcov_33_ar"));}}}
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.emplace_back(indices[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(indexing_mat,
                 cons_list(index_uni(sym3__),
                   cons_list(index_uni(sym2__),
                     cons_list(index_uni(sym1__), nil_index_list()))),
                 "indexing_mat"));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(idx_res1,
@@ -6850,9 +6850,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym2__),
                     cons_list(index_uni(sym1__), nil_index_list()))),
                 "idx_res1"));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(idx_res2,
                 cons_list(index_uni(sym3__),
@@ -6868,8 +6868,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym2__),
                     cons_list(index_uni(sym1__), nil_index_list()))),
                 "idx_res3"));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(idx_res11,
@@ -6877,9 +6877,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym2__),
                     cons_list(index_uni(sym1__), nil_index_list()))),
                 "idx_res11"));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
             vars__.emplace_back(
               rvalue(idx_res21,
                 cons_list(index_uni(sym3__),
@@ -6895,8 +6895,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                   cons_list(index_uni(sym2__),
                     cons_list(index_uni(sym1__), nil_index_list()))),
                 "idx_res31"));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
           vars__.emplace_back(idx_res4[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
@@ -7583,9 +7583,9 @@ class mother_model final : public model_base_crtp<mother_model> {
         vars__.emplace_back(offset_no_multiplier[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             vars__.emplace_back(
               p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -7594,8 +7594,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 p_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
@@ -7606,16 +7606,16 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
               vars__.emplace_back(
                 p_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                 (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
               vars__.emplace_back(
                 rvalue(p_ar_mat,
                   cons_list(index_uni(sym4__),
@@ -7625,13 +7625,13 @@ class mother_model final : public model_base_crtp<mother_model> {
                   "p_ar_mat"));}}}}
       for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
         vars__.emplace_back(p_simplex[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= (N - 1); ++sym2__) {
           vars__.emplace_back(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= (N - 1); ++sym4__) {
               vars__.emplace_back(
                 p_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
                 (sym1__ - 1)]);}}}}
@@ -7641,9 +7641,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       for (int sym1__ = 1;
            sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym1__) {
         vars__.emplace_back(p_cfcov_33_free__[(sym1__ - 1)]);}
-      for (int sym1__ = 1;
-           sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1;
+             sym2__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym2__) {
           vars__.emplace_back(
             p_cfcov_33_ar_free__[(sym2__ - 1)][(sym1__ - 1)]);}}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -10590,8 +10590,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(theta_dbl, nil_index_list(),
         algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
           x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= T; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           vars__.emplace_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
       vars__.emplace_back(y_1d);
       vars__.emplace_back(z_1d);
@@ -24003,32 +24003,32 @@ class transform_model final : public model_base_crtp<transform_model> {
         vars__.emplace_back(p_7[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_8[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(p_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               p_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pv_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pr_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -24037,9 +24037,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             rvalue(pm_1,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())), "pm_1"));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= m; ++sym3__) {
             vars__.emplace_back(
               rvalue(pm_2,
                 cons_list(index_uni(sym3__),
@@ -24103,32 +24103,32 @@ class transform_model final : public model_base_crtp<transform_model> {
           vars__.emplace_back(tp_7[(sym1__ - 1)]);}
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           vars__.emplace_back(tp_8[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+        for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
             vars__.emplace_back(tp_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
               vars__.emplace_back(
                 tp_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           vars__.emplace_back(tpv_1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+        for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
             vars__.emplace_back(tpv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
               vars__.emplace_back(
                 tpv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           vars__.emplace_back(tpr_1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+        for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
             vars__.emplace_back(tpr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+            for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
               vars__.emplace_back(
                 tpr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -24138,9 +24138,9 @@ class transform_model final : public model_base_crtp<transform_model> {
                 cons_list(index_uni(sym2__),
                   cons_list(index_uni(sym1__), nil_index_list())), "tpm_1"));
           }}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= m; ++sym3__) {
               vars__.emplace_back(
                 rvalue(tpm_2,
                   cons_list(index_uni(sym3__),
@@ -24845,32 +24845,32 @@ class transform_model final : public model_base_crtp<transform_model> {
         vars__.emplace_back(p_7[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_8[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(p_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               p_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pv_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pr_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -24879,9 +24879,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             rvalue(pm_1,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())), "pm_1"));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= m; ++sym3__) {
             vars__.emplace_back(
               rvalue(pm_2,
                 cons_list(index_uni(sym3__),
