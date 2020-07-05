@@ -583,6 +583,20 @@ let trans_prog (p : Program.Typed.t) =
       ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
       p.functions_block
   in
+  let tparam_writes_cond =
+    match tparam_writes with
+    | [] -> []
+    | _ ->
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.
+                      { Fixed.pattern= Var "emit_transformed_parameters__"
+                      ; meta= Typed.Meta.empty }
+                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  , None )
+            ; meta= Location_span.empty } ]
+  in
   let generate_quantities =
     ( p.generate_quantities
     |> add_validate_dims p.output_vars
@@ -590,7 +604,7 @@ let trans_prog (p : Program.Typed.t) =
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
-    |> insert_before gq_start tparam_writes )
+    |> insert_before gq_start tparam_writes_cond )
     @ gq_writes
   in
   let log_prob =

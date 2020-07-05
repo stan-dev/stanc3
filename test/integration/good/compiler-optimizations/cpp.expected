@@ -645,63 +645,65 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
             x_r, x_i, pstream__), "assigning variable lcm_sym8__");
         assign(y, nil_index_list(), lcm_sym8__, "assigning variable y");
       }
-      {
-        lcm_sym5__ = logical_gte(N_t, 1);
-        if (lcm_sym5__) {
-          vars__.emplace_back(
-            rvalue(lcm_sym8__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "lcm_sym8__"));
-          for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+      if (emit_transformed_parameters__) {
+        {
+          lcm_sym5__ = logical_gte(N_t, 1);
+          if (lcm_sym5__) {
             vars__.emplace_back(
               rvalue(lcm_sym8__,
-                cons_list(index_uni(sym2__),
+                cons_list(index_uni(1),
                   cons_list(index_uni(1), nil_index_list())), "lcm_sym8__"));
-          }
-        } 
-        {
-          if (lcm_sym5__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym8__,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(2), nil_index_list())), "lcm_sym8__"));
             for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
               vars__.emplace_back(
                 rvalue(lcm_sym8__,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "lcm_sym8__"));
+            }
+          } 
+          {
+            if (lcm_sym5__) {
+              vars__.emplace_back(
+                rvalue(lcm_sym8__,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(2), nil_index_list())), "lcm_sym8__"));
-            }
-          } 
-        }
-        {
-          if (lcm_sym5__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym8__,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(3), nil_index_list())), "lcm_sym8__"));
-            for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+              for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym8__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(2), nil_index_list())),
+                    "lcm_sym8__"));}
+            } 
+          }
+          {
+            if (lcm_sym5__) {
               vars__.emplace_back(
                 rvalue(lcm_sym8__,
-                  cons_list(index_uni(sym2__),
+                  cons_list(index_uni(1),
                     cons_list(index_uni(3), nil_index_list())), "lcm_sym8__"));
-            }
-          } 
-        }
-        {
-          if (lcm_sym5__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym8__,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(4), nil_index_list())), "lcm_sym8__"));
-            for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+              for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym8__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(3), nil_index_list())),
+                    "lcm_sym8__"));}
+            } 
+          }
+          {
+            if (lcm_sym5__) {
               vars__.emplace_back(
                 rvalue(lcm_sym8__,
-                  cons_list(index_uni(sym2__),
+                  cons_list(index_uni(1),
                     cons_list(index_uni(4), nil_index_list())), "lcm_sym8__"));
-            }
-          } 
+              for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym8__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(4), nil_index_list())),
+                    "lcm_sym8__"));}
+            } 
+          }
         }
-      }
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -2953,7 +2955,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int inline_sym7__;
       inline_sym7__ = std::numeric_limits<int>::min();
       
-      lcm_sym57__ = logical_gte(lcm_sym63__, 1);
       inline_sym7__ = 0;
       for (int inline_sym8__ = 1; inline_sym8__ <= 1; ++inline_sym8__) {
         current_statement__ = 14;
@@ -2970,7 +2971,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             cons_list(index_uni(inline_sym6__),
               cons_list(index_uni(n_occasions), nil_index_list())), 1.0,
             "assigning variable inline_sym2__");
-          if (lcm_sym57__) {
+          if (logical_gte(lcm_sym63__, 1)) {
             int inline_sym3__;
             inline_sym3__ = std::numeric_limits<int>::min();
             
@@ -3046,84 +3047,89 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (lcm_sym57__) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(phi,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "phi"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(phi,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "phi"));}
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        lcm_sym57__ = logical_gte(lcm_sym63__, 1);
+        if (lcm_sym57__) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(phi,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+                  cons_list(index_uni(1), nil_index_list())), "phi"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(phi,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "phi"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(phi,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(sym1__), nil_index_list())), "phi"));
-            }
-          } }
-      } 
-      if (lcm_sym57__) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(p,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "p"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(p,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "p"));}
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(phi,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+        if (lcm_sym57__) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(p,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "p"));
+                  cons_list(index_uni(1), nil_index_list())), "p"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(p,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())), "p"));}
-          } }
-      } 
-      if (logical_gte(n_occasions, 1)) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+                    cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(p,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(p,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (logical_gte(n_occasions, 1)) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -8377,11 +8383,13 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                               "region_full")), nil_index_list()), "e")),
             "assigning variable y_hat");}
       } 
-      if (lcm_sym31__) {
-        vars__.emplace_back(
-          rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
-        for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        if (lcm_sym31__) {
+          vars__.emplace_back(
+            rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -9459,14 +9467,20 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       assign(phi, nil_index_list(),
         multiply(stan::model::deep_copy(phi), lcm_sym16__),
         "assigning variable phi");
-      vars__.emplace_back(lcm_sym16__);
-      lcm_sym8__ = logical_gte(N, 1);
-      if (lcm_sym8__) {
-        vars__.emplace_back(
-          rvalue(phi, cons_list(index_uni(1), nil_index_list()), "phi"));
-        for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(phi[(sym1__ - 1)]);}
-      } 
+      if (emit_transformed_parameters__) {
+        {
+          vars__.emplace_back(lcm_sym16__);
+          lcm_sym8__ = logical_gte(N, 1);
+          if (lcm_sym8__) {
+            vars__.emplace_back(
+              rvalue(phi, cons_list(index_uni(1), nil_index_list()), "phi"));
+            for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+              vars__.emplace_back(phi[(sym1__ - 1)]);}
+          } 
+        }
+      } else {
+        lcm_sym8__ = logical_gte(N, 1);
+      }
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -11749,7 +11763,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int inline_sym7__;
       inline_sym7__ = std::numeric_limits<int>::min();
       
-      lcm_sym54__ = logical_gte(lcm_sym60__, 1);
       inline_sym7__ = 0;
       for (int inline_sym8__ = 1; inline_sym8__ <= 1; ++inline_sym8__) {
         current_statement__ = 18;
@@ -11766,7 +11779,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             cons_list(index_uni(inline_sym6__),
               cons_list(index_uni(n_occasions), nil_index_list())), 1.0,
             "assigning variable inline_sym2__");
-          if (lcm_sym54__) {
+          if (logical_gte(lcm_sym60__, 1)) {
             int inline_sym3__;
             inline_sym3__ = std::numeric_limits<int>::min();
             
@@ -11842,86 +11855,91 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (lcm_sym54__) {
-        if (lcm_sym53__) {
-          vars__.emplace_back(
-            rvalue(phi,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "phi"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(phi,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "phi"));}
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym60__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        lcm_sym54__ = logical_gte(lcm_sym60__, 1);
+        if (lcm_sym54__) {
           if (lcm_sym53__) {
             vars__.emplace_back(
               rvalue(phi,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+                  cons_list(index_uni(1), nil_index_list())), "phi"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(phi,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "phi"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym60__; ++sym1__) {
+            if (lcm_sym53__) {
+              vars__.emplace_back(
+                rvalue(phi,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(sym1__), nil_index_list())), "phi"));
-            }
-          } }
-      } 
-      if (lcm_sym54__) {
-        if (lcm_sym53__) {
-          vars__.emplace_back(
-            rvalue(p,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "p"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(p,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "p"));}
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(phi,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym60__; ++sym1__) {
+        if (lcm_sym54__) {
           if (lcm_sym53__) {
             vars__.emplace_back(
               rvalue(p,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "p"));
+                  cons_list(index_uni(1), nil_index_list())), "p"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(p,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())), "p"));}
-          } }
-      } 
-      if (logical_gte(n_occasions, 1)) {
-        if (lcm_sym53__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+                    cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym60__; ++sym1__) {
+            if (lcm_sym53__) {
+              vars__.emplace_back(
+                rvalue(p,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(p,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (logical_gte(n_occasions, 1)) {
           if (lcm_sym53__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym53__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
+        vars__.emplace_back(lcm_sym73__);
       } 
-      vars__.emplace_back(lcm_sym73__);
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -15467,99 +15485,103 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (logical_gte(lcm_sym141__, 1)) {
-        if (lcm_sym132__) {
-          vars__.emplace_back(
-            rvalue(lcm_sym165__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "lcm_sym165__"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym165__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "lcm_sym165__"));
-          }
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym141__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        if (logical_gte(lcm_sym141__, 1)) {
           if (lcm_sym132__) {
             vars__.emplace_back(
               rvalue(lcm_sym165__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
-                "lcm_sym165__"));
+                  cons_list(index_uni(1), nil_index_list())), "lcm_sym165__"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(lcm_sym165__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "lcm_sym165__"));}
-          } }
-      } 
-      if (lcm_sym133__) {
-        if (lcm_sym132__) {
-          vars__.emplace_back(
-            rvalue(p,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "p"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(p,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym141__; ++sym1__) {
+            if (lcm_sym132__) {
+              vars__.emplace_back(
+                rvalue(lcm_sym165__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "lcm_sym165__"));
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym165__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "lcm_sym165__"));}
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (lcm_sym133__) {
           if (lcm_sym132__) {
             vars__.emplace_back(
               rvalue(p,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "p"));
+                  cons_list(index_uni(1), nil_index_list())), "p"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(p,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())), "p"));}
-          } }
-      } 
-      if (lcm_sym133__) {
-        vars__.emplace_back(
-          rvalue(lcm_sym129__, cons_list(index_uni(1), nil_index_list()),
-            "lcm_sym129__"));
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
-          vars__.emplace_back(lcm_sym129__[(sym1__ - 1)]);}
-      } 
-      if (lcm_sym133__) {
-        vars__.emplace_back(
-          rvalue(nu, cons_list(index_uni(1), nil_index_list()), "nu"));
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
-          vars__.emplace_back(nu[(sym1__ - 1)]);}
-      } 
-      if (lcm_sym133__) {
-        if (lcm_sym132__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+                    cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym132__) {
+              vars__.emplace_back(
+                rvalue(p,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(p,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (lcm_sym133__) {
+          vars__.emplace_back(
+            rvalue(lcm_sym129__, cons_list(index_uni(1), nil_index_list()),
+              "lcm_sym129__"));
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            vars__.emplace_back(lcm_sym129__[(sym1__ - 1)]);}
+        } 
+        if (lcm_sym133__) {
+          vars__.emplace_back(
+            rvalue(nu, cons_list(index_uni(1), nil_index_list()), "nu"));
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            vars__.emplace_back(nu[(sym1__ - 1)]);}
+        } 
+        if (lcm_sym133__) {
           if (lcm_sym132__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym132__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -18715,12 +18737,14 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       assign(phi, nil_index_list(),
         multiply(stan::model::deep_copy(phi), lcm_sym15__),
         "assigning variable phi");
-      vars__.emplace_back(lcm_sym15__);
-      if (lcm_sym11__) {
-        vars__.emplace_back(
-          rvalue(phi, cons_list(index_uni(1), nil_index_list()), "phi"));
-        for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(phi[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        vars__.emplace_back(lcm_sym15__);
+        if (lcm_sym11__) {
+          vars__.emplace_back(
+            rvalue(phi, cons_list(index_uni(1), nil_index_list()), "phi"));
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            vars__.emplace_back(phi[(sym1__ - 1)]);}
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -21077,7 +21101,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int inline_sym7__;
       inline_sym7__ = std::numeric_limits<int>::min();
       
-      lcm_sym57__ = logical_gte(lcm_sym63__, 1);
       inline_sym7__ = 0;
       for (int inline_sym8__ = 1; inline_sym8__ <= 1; ++inline_sym8__) {
         current_statement__ = 14;
@@ -21094,7 +21117,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             cons_list(index_uni(inline_sym6__),
               cons_list(index_uni(n_occasions), nil_index_list())), 1.0,
             "assigning variable inline_sym2__");
-          if (lcm_sym57__) {
+          if (logical_gte(lcm_sym63__, 1)) {
             int inline_sym3__;
             inline_sym3__ = std::numeric_limits<int>::min();
             
@@ -21170,84 +21193,89 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (lcm_sym57__) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(phi,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "phi"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(phi,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "phi"));}
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        lcm_sym57__ = logical_gte(lcm_sym63__, 1);
+        if (lcm_sym57__) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(phi,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+                  cons_list(index_uni(1), nil_index_list())), "phi"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(phi,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "phi"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(phi,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(sym1__), nil_index_list())), "phi"));
-            }
-          } }
-      } 
-      if (lcm_sym57__) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(p,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "p"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(p,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "p"));}
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(phi,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+        if (lcm_sym57__) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(p,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "p"));
+                  cons_list(index_uni(1), nil_index_list())), "p"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(p,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())), "p"));}
-          } }
-      } 
-      if (logical_gte(n_occasions, 1)) {
-        if (lcm_sym56__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+                    cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym63__; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(p,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(p,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (logical_gte(n_occasions, 1)) {
           if (lcm_sym56__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym56__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -24709,87 +24737,90 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (lcm_sym147__) {
-        if (lcm_sym144__) {
-          vars__.emplace_back(
-            rvalue(phi,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "phi"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(phi,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "phi"));}
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym200__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        if (lcm_sym147__) {
           if (lcm_sym144__) {
             vars__.emplace_back(
               rvalue(phi,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+                  cons_list(index_uni(1), nil_index_list())), "phi"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(phi,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "phi"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym200__; ++sym1__) {
+            if (lcm_sym144__) {
+              vars__.emplace_back(
+                rvalue(phi,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(sym1__), nil_index_list())), "phi"));
-            }
-          } }
-      } 
-      if (lcm_sym145__) {
-        if (lcm_sym144__) {
-          vars__.emplace_back(
-            rvalue(lcm_sym184__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "lcm_sym184__"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym184__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "lcm_sym184__"));
-          }
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(phi,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (lcm_sym145__) {
           if (lcm_sym144__) {
             vars__.emplace_back(
               rvalue(lcm_sym184__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
-                "lcm_sym184__"));
+                  cons_list(index_uni(1), nil_index_list())), "lcm_sym184__"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(lcm_sym184__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "lcm_sym184__"));}
-          } }
-      } 
-      if (lcm_sym145__) {
-        if (lcm_sym144__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym144__) {
+              vars__.emplace_back(
+                rvalue(lcm_sym184__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "lcm_sym184__"));
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym184__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "lcm_sym184__"));}
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (lcm_sym145__) {
           if (lcm_sym144__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym144__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -28541,7 +28572,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int inline_sym7__;
       inline_sym7__ = std::numeric_limits<int>::min();
       
-      lcm_sym48__ = logical_gte(lcm_sym54__, 1);
       inline_sym7__ = 0;
       for (int inline_sym8__ = 1; inline_sym8__ <= 1; ++inline_sym8__) {
         current_statement__ = 14;
@@ -28558,7 +28588,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             cons_list(index_uni(inline_sym6__),
               cons_list(index_uni(n_occasions), nil_index_list())), 1.0,
             "assigning variable inline_sym2__");
-          if (lcm_sym48__) {
+          if (logical_gte(lcm_sym54__, 1)) {
             int inline_sym3__;
             inline_sym3__ = std::numeric_limits<int>::min();
             
@@ -28634,84 +28664,89 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
           "assigning variable inline_sym1__");
         break;}
       assign(chi, nil_index_list(), inline_sym1__, "assigning variable chi");
-      if (lcm_sym48__) {
-        if (lcm_sym47__) {
-          vars__.emplace_back(
-            rvalue(phi,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "phi"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(phi,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "phi"));}
-        } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym54__; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        lcm_sym48__ = logical_gte(lcm_sym54__, 1);
+        if (lcm_sym48__) {
           if (lcm_sym47__) {
             vars__.emplace_back(
               rvalue(phi,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+                  cons_list(index_uni(1), nil_index_list())), "phi"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(phi,
                   cons_list(index_uni(sym2__),
+                    cons_list(index_uni(1), nil_index_list())), "phi"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym54__; ++sym1__) {
+            if (lcm_sym47__) {
+              vars__.emplace_back(
+                rvalue(phi,
+                  cons_list(index_uni(1),
                     cons_list(index_uni(sym1__), nil_index_list())), "phi"));
-            }
-          } }
-      } 
-      if (lcm_sym48__) {
-        if (lcm_sym47__) {
-          vars__.emplace_back(
-            rvalue(p,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "p"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(p,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "p"));}
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(phi,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "phi"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= lcm_sym54__; ++sym1__) {
+        if (lcm_sym48__) {
           if (lcm_sym47__) {
             vars__.emplace_back(
               rvalue(p,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())), "p"));
+                  cons_list(index_uni(1), nil_index_list())), "p"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(p,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())), "p"));}
-          } }
-      } 
-      if (logical_gte(n_occasions, 1)) {
-        if (lcm_sym47__) {
-          vars__.emplace_back(
-            rvalue(inline_sym1__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "inline_sym1__"));
-          for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(inline_sym1__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())),
-                "inline_sym1__"));}
+                    cons_list(index_uni(1), nil_index_list())), "p"));}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym54__; ++sym1__) {
+            if (lcm_sym47__) {
+              vars__.emplace_back(
+                rvalue(p,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(p,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())), "p"));
+              }
+            } }
         } 
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        if (logical_gte(n_occasions, 1)) {
           if (lcm_sym47__) {
             vars__.emplace_back(
               rvalue(inline_sym1__,
                 cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
+                  cons_list(index_uni(1), nil_index_list())),
                 "inline_sym1__"));
             for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
               vars__.emplace_back(
                 rvalue(inline_sym1__,
                   cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
+                    cons_list(index_uni(1), nil_index_list())),
                   "inline_sym1__"));}
-          } }
+          } 
+          for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+            if (lcm_sym47__) {
+              vars__.emplace_back(
+                rvalue(inline_sym1__,
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(sym1__), nil_index_list())),
+                  "inline_sym1__"));
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(inline_sym1__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "inline_sym1__"));}
+            } }
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -29640,42 +29675,49 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         "assigning variable lcm_sym18__");
       assign(logit_p, nil_index_list(), lcm_sym18__,
         "assigning variable logit_p");
-      lcm_sym5__ = logical_gte(R, 1);
-      if (lcm_sym5__) {
-        vars__.emplace_back(
-          rvalue(lcm_sym9__, cons_list(index_uni(1), nil_index_list()),
-            "lcm_sym9__"));
-        for (int sym1__ = 2; sym1__ <= R; ++sym1__) {
-          vars__.emplace_back(lcm_sym9__[(sym1__ - 1)]);}
-      } 
-      if (logical_gte(T, 1)) {
-        if (lcm_sym5__) {
-          vars__.emplace_back(
-            rvalue(lcm_sym18__,
-              cons_list(index_uni(1),
-                cons_list(index_uni(1), nil_index_list())), "lcm_sym18__"));
-          for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(lcm_sym18__,
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(1), nil_index_list())), "lcm_sym18__"));
-          }
-        } 
-        for (int sym1__ = 2; sym1__ <= T; ++sym1__) {
+      if (emit_transformed_parameters__) {
+        {
+          lcm_sym5__ = logical_gte(R, 1);
           if (lcm_sym5__) {
             vars__.emplace_back(
-              rvalue(lcm_sym18__,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(sym1__), nil_index_list())),
-                "lcm_sym18__"));
-            for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
+              rvalue(lcm_sym9__, cons_list(index_uni(1), nil_index_list()),
+                "lcm_sym9__"));
+            for (int sym1__ = 2; sym1__ <= R; ++sym1__) {
+              vars__.emplace_back(lcm_sym9__[(sym1__ - 1)]);}
+          } 
+          if (logical_gte(T, 1)) {
+            if (lcm_sym5__) {
               vars__.emplace_back(
                 rvalue(lcm_sym18__,
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list())),
-                  "lcm_sym18__"));}
-          } }
-      } 
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(1), nil_index_list())),
+                  "lcm_sym18__"));
+              for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym18__,
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(1), nil_index_list())),
+                    "lcm_sym18__"));}
+            } 
+            for (int sym1__ = 2; sym1__ <= T; ++sym1__) {
+              if (lcm_sym5__) {
+                vars__.emplace_back(
+                  rvalue(lcm_sym18__,
+                    cons_list(index_uni(1),
+                      cons_list(index_uni(sym1__), nil_index_list())),
+                    "lcm_sym18__"));
+                for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
+                  vars__.emplace_back(
+                    rvalue(lcm_sym18__,
+                      cons_list(index_uni(sym2__),
+                        cons_list(index_uni(sym1__), nil_index_list())),
+                      "lcm_sym18__"));}
+              } }
+          } 
+        }
+      } else {
+        lcm_sym5__ = logical_gte(R, 1);
+      }
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -30751,25 +30793,27 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                                 "person")), nil_index_list()), "lcm_sym15__"))),
             "assigning variable y_hat");}
       } 
-      if (lcm_sym11__) {
-        vars__.emplace_back(
-          rvalue(lcm_sym15__, cons_list(index_uni(1), nil_index_list()),
-            "lcm_sym15__"));
-        for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
-          vars__.emplace_back(lcm_sym15__[(sym1__ - 1)]);}
-      } 
-      if (lcm_sym11__) {
-        vars__.emplace_back(
-          rvalue(lcm_sym16__, cons_list(index_uni(1), nil_index_list()),
-            "lcm_sym16__"));
-        for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
-          vars__.emplace_back(lcm_sym16__[(sym1__ - 1)]);}
-      } 
-      if (lcm_sym12__) {
-        vars__.emplace_back(
-          rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
-        for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        if (lcm_sym11__) {
+          vars__.emplace_back(
+            rvalue(lcm_sym15__, cons_list(index_uni(1), nil_index_list()),
+              "lcm_sym15__"));
+          for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
+            vars__.emplace_back(lcm_sym15__[(sym1__ - 1)]);}
+        } 
+        if (lcm_sym11__) {
+          vars__.emplace_back(
+            rvalue(lcm_sym16__, cons_list(index_uni(1), nil_index_list()),
+              "lcm_sym16__"));
+          for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
+            vars__.emplace_back(lcm_sym16__[(sym1__ - 1)]);}
+        } 
+        if (lcm_sym12__) {
+          vars__.emplace_back(
+            rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -33282,11 +33326,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                                 "pair")), nil_index_list()), "a"))),
             "assigning variable y_hat");}
       } 
-      if (lcm_sym11__) {
-        vars__.emplace_back(
-          rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
-        for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        if (lcm_sym11__) {
+          vars__.emplace_back(
+            rvalue(y_hat, cons_list(index_uni(1), nil_index_list()), "y_hat"));
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            vars__.emplace_back(y_hat[(sym1__ - 1)]);}
+        } 
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -34240,7 +34286,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       } 
       lcm_sym9__ = (1 / stan::math::sqrt(tau));
       sigma = lcm_sym9__;
-      vars__.emplace_back(lcm_sym9__);
+      if (emit_transformed_parameters__) {
+        vars__.emplace_back(lcm_sym9__);
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
