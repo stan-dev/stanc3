@@ -94,6 +94,7 @@ and pp_operator ppf = function
   | EltTimes -> Fmt.pf ppf ".*"
   | EltDivide -> Fmt.pf ppf "./"
   | Pow -> Fmt.pf ppf "^"
+  | EltPow -> Fmt.pf ppf ".^"
   | Or -> Fmt.pf ppf "||"
   | And -> Fmt.pf ppf "&&"
   | Equals -> Fmt.pf ppf "=="

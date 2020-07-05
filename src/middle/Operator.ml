@@ -13,6 +13,7 @@ type t =
   | EltTimes
   | EltDivide
   | Pow
+  | EltPow
   | Or
   | And
   | Equals
@@ -36,6 +37,7 @@ let pp ppf = function
   | EltTimes -> Fmt.pf ppf ".*"
   | EltDivide -> Fmt.pf ppf "./"
   | Pow -> Fmt.pf ppf "^"
+  | EltPow -> Fmt.pf ppf ".^"
   | Or -> Fmt.pf ppf "||"
   | And -> Fmt.pf ppf "&&"
   | Equals -> Fmt.pf ppf "=="
@@ -74,6 +76,7 @@ let stan_math_name = function
   | EltTimes -> "elt_multiply"
   | EltDivide -> "elt_divide"
   | Pow -> "pow"
+  | EltPow -> "pow"
   | Or -> "logical_or"
   | And -> "logical_and"
   | Equals -> "logical_eq"

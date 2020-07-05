@@ -25,7 +25,7 @@ let reducearray (sbt, l) =
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
-%token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO IDIVIDE
+%token QMARK COLON BANG MINUS PLUS HAT ELTPOW TRANSPOSE TIMES DIVIDE MODULO IDIVIDE
        LDIVIDE ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
 %token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
    ELTDIVIDEASSIGN ELTTIMESASSIGN
@@ -45,7 +45,7 @@ let reducearray (sbt, l) =
 %left TIMES DIVIDE MODULO ELTTIMES ELTDIVIDE
 %left IDIVIDE LDIVIDE
 %nonassoc unary_over_binary
-%right HAT
+%right HAT ELTPOW
 %left TRANSPOSE
 %left LBRACK
 %nonassoc below_ELSE
@@ -482,6 +482,8 @@ common_expression:
     {   grammar_logger "infix_eltdivide" ; Operator.EltDivide }
   | HAT
     {  grammar_logger "infix_hat" ; Operator.Pow }
+  | ELTPOW
+    {  grammar_logger "infix_eltpow" ; Operator.EltPow }
 
 %inline logicalBinOp:
   | OR

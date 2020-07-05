@@ -299,6 +299,7 @@ let operator_to_stan_math_fns = function
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
   | Pow -> ["pow"]
+  | EltPow -> ["pow"]
   | Or -> ["logical_or"]
   | And -> ["logical_and"]
   | Equals -> ["logical_eq"]
@@ -1222,6 +1223,8 @@ let () =
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
+  add_unqualified
+    ("matrix_power", ReturnType UMatrix, [UMatrix; UInt]) ;
   add_unqualified ("max", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("max", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("max", ReturnType UReal, [UVector]) ;
@@ -1484,7 +1487,22 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
   add_nullary "positive_infinity" ;
-  add_binary "pow" ;
+  for i = 0 to 1 do
+    for j = 0 to 1 do
+      add_unqualified
+        ("pow", ReturnType UReal, [ bare_types i; bare_types j]) ;
+      done ;
+  done ;
+  for i = 2 to bare_types_size - 1 do
+      add_unqualified
+        ("pow", ReturnType (bare_types i), [ bare_types i; bare_types i]) ;
+    for j = 0 to 1 do
+      add_unqualified
+        ("pow", ReturnType (bare_types i), [ bare_types j; bare_types i]) ;
+      add_unqualified
+        ("pow", ReturnType (bare_types i), [ bare_types i; bare_types j])
+    done ;
+  done ;
   add_unqualified ("prod", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("prod", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
