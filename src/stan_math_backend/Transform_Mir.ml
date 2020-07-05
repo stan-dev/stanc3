@@ -584,15 +584,18 @@ let trans_prog (p : Program.Typed.t) =
       p.functions_block
   in
   let tparam_writes_cond =
-    [ Stmt.Fixed.
-        { pattern=
-            IfElse
-              ( Expr.
-                  { Fixed.pattern= Var "emit_transformed_parameters__"
-                  ; meta= Typed.Meta.empty }
-              , {pattern= Block tparam_writes; meta= Location_span.empty}
-              , None )
-        ; meta= Location_span.empty } ]
+    match tparam_writes with
+    | [] -> []
+    | _ ->
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.
+                      { Fixed.pattern= Var "emit_transformed_parameters__"
+                      ; meta= Typed.Meta.empty }
+                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  , None )
+            ; meta= Location_span.empty } ]
   in
   let generate_quantities =
     ( p.generate_quantities

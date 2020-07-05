@@ -294,8 +294,10 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       current_statement__ = 4;
       assign(theta, nil_index_list(), add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        vars__.emplace_back(theta[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+          vars__.emplace_back(theta[(sym1__ - 1)]);}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -6111,85 +6113,87 @@ class mother_model final : public model_base_crtp<mother_model> {
       assign(theta_p, nil_index_list(),
         algebra_solver(algebra_system_functor__(), x_p, y_p, dat, dat_int,
           pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(tp_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          vars__.emplace_back(tp_real_1d_ar[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              vars__.emplace_back(
+                tp_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          vars__.emplace_back(tp_vec[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.emplace_back(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                vars__.emplace_back(
+                  tp_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
+                  (sym1__ - 1)]);}}}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          vars__.emplace_back(tp_row_vec[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.emplace_back(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                vars__.emplace_back(
+                  tp_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
+                  (sym1__ - 1)]);}}}}
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+                vars__.emplace_back(
+                  rvalue(tp_ar_mat,
+                    cons_list(index_uni(sym4__),
+                      cons_list(index_uni(sym3__),
+                        cons_list(index_uni(sym2__),
+                          cons_list(index_uni(sym1__), nil_index_list())))),
+                    "tp_ar_mat"));}}}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          vars__.emplace_back(tp_simplex[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.emplace_back(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                vars__.emplace_back(
+                  tp_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
+                  (sym1__ - 1)]);}}}}
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
             vars__.emplace_back(
-              tp_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(tp_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                tp_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-                                                                    1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(tp_row_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                tp_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(tp_ar_mat,
-                  cons_list(index_uni(sym4__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym1__), nil_index_list())))),
-                  "tp_ar_mat"));}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(tp_simplex[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                tp_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(tp_cfcov_54,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              "tp_cfcov_54"));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(tp_cfcov_33,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              "tp_cfcov_33"));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+              rvalue(tp_cfcov_54,
+                cons_list(index_uni(sym2__),
+                  cons_list(index_uni(sym1__), nil_index_list())),
+                "tp_cfcov_54"));}}
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             vars__.emplace_back(
-              rvalue(tp_cfcov_33_ar,
-                cons_list(index_uni(sym3__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list()))),
-                "tp_cfcov_33_ar"));}}}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(theta_p[(sym1__ - 1)]);}
+              rvalue(tp_cfcov_33,
+                cons_list(index_uni(sym2__),
+                  cons_list(index_uni(sym1__), nil_index_list())),
+                "tp_cfcov_33"));}}
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+              vars__.emplace_back(
+                rvalue(tp_cfcov_33_ar,
+                  cons_list(index_uni(sym3__),
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list()))),
+                  "tp_cfcov_33_ar"));}}}
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          vars__.emplace_back(theta_p[(sym1__ - 1)]);}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -10352,23 +10356,25 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(theta_p_as, nil_index_list(),
         algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
           x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
-      vars__.emplace_back(abc1_p);
-      vars__.emplace_back(abc2_p);
-      vars__.emplace_back(abc3_p);
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(y_hat_tp1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(y_hat_tp2[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(y_hat_tp3[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(theta_p_as[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(x_v[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(y_v[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(y_p[(sym1__ - 1)]);}
+      if (emit_transformed_parameters__) {
+        vars__.emplace_back(abc1_p);
+        vars__.emplace_back(abc2_p);
+        vars__.emplace_back(abc3_p);
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          vars__.emplace_back(y_hat_tp1[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          vars__.emplace_back(y_hat_tp2[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          vars__.emplace_back(y_hat_tp3[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          vars__.emplace_back(theta_p_as[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          vars__.emplace_back(x_v[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          vars__.emplace_back(y_v[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          vars__.emplace_back(y_p[(sym1__ - 1)]);}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -24080,65 +24086,68 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpm_1, nil_index_list(), pm_1, "assigning variable tpm_1");
       current_statement__ = 36;
       assign(tpm_2, nil_index_list(), pm_2, "assigning variable tpm_2");
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_2[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_3[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_4[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_5[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_6[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_7[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tp_8[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(tp_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_1[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_2[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_3[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_4[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_5[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_6[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_7[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tp_8[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            vars__.emplace_back(tp_9[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              vars__.emplace_back(
+                tp_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tpv_1[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            vars__.emplace_back(tpv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              vars__.emplace_back(
+                tpv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          vars__.emplace_back(tpr_1[(sym1__ - 1)]);}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            vars__.emplace_back(tpr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              vars__.emplace_back(
+                tpr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
             vars__.emplace_back(
-              tp_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tpv_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(tpv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              tpv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(tpr_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(tpr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              tpr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(tpm_1,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())), "tpm_1"));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(tpm_2,
-                cons_list(index_uni(sym3__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym1__), nil_index_list()))),
-                "tpm_2"));}}}
+              rvalue(tpm_1,
+                cons_list(index_uni(sym2__),
+                  cons_list(index_uni(sym1__), nil_index_list())), "tpm_1"));
+          }}
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              vars__.emplace_back(
+                rvalue(tpm_2,
+                  cons_list(index_uni(sym3__),
+                    cons_list(index_uni(sym2__),
+                      cons_list(index_uni(sym1__), nil_index_list()))),
+                  "tpm_2"));}}}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
