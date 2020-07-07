@@ -9,7 +9,7 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt |UReal | UMathLibraryFunction | UFun _ -> false
+  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
@@ -49,8 +49,8 @@ let%expect_test "set size mat array" =
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar
-    pp_expr lower loopvar pp_expr upper loopvar ;
+  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
+    lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
@@ -172,7 +172,7 @@ let rec pp_statement (ppf : Format.formatter)
         ; meta= stmt.meta }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
-      pf ppf "@[<hov 2>vars__.push_back(@,%a);@]" pp_expr var
+      pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)

@@ -7,18 +7,22 @@ open Middle
 
 let preserve_stability = false
 
-(** Debugging tool to print out MFP sets **) 
-let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t) (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
+(** Debugging tool to print out MFP sets **)
+let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
+    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit
+    =
   let print_set s =
-    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)] |> Sexp.to_string_hum
+    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)]
+    |> Sexp.to_string_hum
   in
   let print_stmt s =
     [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum
   in
   Map.iteri mfp ~f:(fun ~key ~data ->
-      print_endline (string_of_int key ^ ":\n "
-                     ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key) ^ ":\n "
-                     ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
+      print_endline
+        ( string_of_int key ^ ":\n "
+        ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
+        ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit ) )
 
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Expr.Typed.t) =
@@ -78,12 +82,9 @@ let top_free_vars_stmt
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Block _ | SList _ -> Set.Poly.empty
 
-
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
-let inverse_flowgraph_of_stmt
-    ?flatten_loops:(flatten_loops=false)
-    ?blocks_after_body:(blocks_after_body=true)
-    (stmt : Stmt.Located.t) :
+let inverse_flowgraph_of_stmt ?(flatten_loops = false)
+    ?(blocks_after_body = true) (stmt : Stmt.Located.t) :
     (module FLOWGRAPH with type labels = int)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
@@ -93,9 +94,7 @@ let inverse_flowgraph_of_stmt
       stmt
   in
   let initials, successors =
-    Dataflow_utils.build_predecessor_graph
-      ~flatten_loops
-      ~blocks_after_body
+    Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
       flowgraph_to_mir
   in
   ( ( module struct
@@ -138,10 +137,8 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     with type labels = l )
 
 (** Compute the forward flowgraph of a Stan statement (for forward analyses) *)
-let forward_flowgraph_of_stmt
-    ?flatten_loops:(flatten_loops=false)
-    ?blocks_after_body:(blocks_after_body=true)
-    stmt =
+let forward_flowgraph_of_stmt ?(flatten_loops = false)
+    ?(blocks_after_body = true) stmt =
   let inv_flowgraph =
     inverse_flowgraph_of_stmt ~flatten_loops ~blocks_after_body stmt
   in
@@ -309,9 +306,9 @@ let constant_propagation_transfer
              We could do the same for matrix and array expressions if we wanted. *)
             | Assignment ((s, t, []), e) -> (
               match Partial_evaluator.eval_expr (subst_expr m e) with
-                | {pattern= Lit (_, _); _} as e'
-                  when not (preserve_stability &&
-                            UnsizedType.is_autodiffable t) ->
+              | {pattern= Lit (_, _); _} as e'
+                when not (preserve_stability && UnsizedType.is_autodiffable t)
+                ->
                   Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
@@ -329,8 +326,8 @@ let constant_propagation_transfer
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
 let label_top_decls
-  (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
-  label : string Set.Poly.t =
+    (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
+    label : string Set.Poly.t =
   let stmt = Map.Poly.find_exn flowgraph_to_mir label in
   match stmt.pattern with
   | Decl {decl_id= s; _} -> Set.Poly.singleton s
@@ -353,27 +350,28 @@ let expression_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
           let kill_var m v =
             Map.filteri m ~f:(fun ~key ~data ->
-                not (key = v || Set.Poly.mem (free_vars_expr data) v))
+                not (key = v || Set.Poly.mem (free_vars_expr data) v) )
           in
           Some
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Stmt.Fixed.Pattern.Assignment ((s, t, []), e) ->
-              let m' = kill_var m s in
-              if can_side_effect_expr e ||
-                 Set.Poly.mem (free_vars_expr e) s ||
-                 (preserve_stability && UnsizedType.is_autodiffable t)
-              then
-                m'
-              else Map.set m ~key:s ~data:(subst_expr m e)
+                let m' = kill_var m s in
+                if
+                  can_side_effect_expr e
+                  || Set.Poly.mem (free_vars_expr e) s
+                  || (preserve_stability && UnsizedType.is_autodiffable t)
+                then m'
+                else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
-              kill_var m s
+                kill_var m s
             | Block b ->
-              let kills =
-                Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
-              in
-              Set.Poly.fold kills ~init:m ~f:kill_var
+                let kills =
+                  Set.Poly.union_list
+                    (List.map ~f:(label_top_decls flowgraph_to_mir) b)
+                in
+                Set.Poly.fold kills ~init:m ~f:kill_var
             | TargetPE _
              |NRFunApp (_, _, _)
              |Break | Continue | Return _ | Skip
@@ -387,8 +385,7 @@ let expression_propagation_transfer
      and type properties = (string, Expr.Typed.t) Map.Poly.t option )
 
 (** The transfer function for a copy propagation analysis *)
-let copy_propagation_transfer
-    (globals : string Set.Poly.t)
+let copy_propagation_transfer (globals : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -401,29 +398,27 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
           let kill_var m v =
             Map.filteri m ~f:(fun ~key ~(data : Expr.Typed.t) ->
-                not (key = v || data.pattern = Var v))
+                not (key = v || data.pattern = Var v) )
           in
           Some
             ( match mir_node with
-              | Assignment ((s, _, []), {pattern= Var t; meta}) ->
+            | Assignment ((s, _, []), {pattern= Var t; meta}) ->
                 let m' = kill_var m s in
-                if (Set.Poly.mem globals s) then
-                  m'
-                else
-                  Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
-              | Decl {decl_id= s; _} | Assignment ((s, _, _), _) ->
-                kill_var m s
-              | Block b ->
+                if Set.Poly.mem globals s then m'
+                else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
+            | Decl {decl_id= s; _} | Assignment ((s, _, _), _) -> kill_var m s
+            | Block b ->
                 let kills =
-                  Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) b)
+                  Set.Poly.union_list
+                    (List.map ~f:(label_top_decls flowgraph_to_mir) b)
                 in
                 Set.Poly.fold kills ~init:m ~f:kill_var
-              |TargetPE _
-              |NRFunApp (_, _, _)
-              |Break | Continue | Return _ | Skip
-              |IfElse (_, _, _)
-              |While (_, _)
-              |For _ | SList _ ->
+            | TargetPE _
+             |NRFunApp (_, _, _)
+             |Break | Continue | Return _ | Skip
+             |IfElse (_, _, _)
+             |While (_, _)
+             |For _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION
@@ -514,8 +509,7 @@ let initialized_vars_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for a live variables analysis *)
-let live_variables_transfer
-    (never_kill : string Set.Poly.t)
+let live_variables_transfer (never_kill : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -809,7 +803,9 @@ let autodiff_level_rev_transfer
         | Decl {decl_id; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
-      transfer_gen_kill_alt p gen kill (* gens and then kills *)
+      transfer_gen_kill_alt p gen kill
+
+    (* gens and then kills *)
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
@@ -1000,7 +996,7 @@ let initialized_vars_mfp (total : string Set.Poly.t)
 let globals (prog : Program.Typed.t) =
   Set.Poly.union_list
     [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
-    (* It is not strictly necessary to exclude data variables from DCE.
+      (* It is not strictly necessary to exclude data variables from DCE.
        However,
        1. We don't currently check for usage of data variables in
           corners of the MIR, such as in the sizes of parameters
@@ -1009,8 +1005,7 @@ let globals (prog : Program.Typed.t) =
     *)
     ; Set.Poly.of_list (List.map ~f:fst prog.input_vars)
     ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
-    ; Set.Poly.singleton "target"
-    ]
+    ; Set.Poly.singleton "target" ]
 
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
@@ -1031,7 +1026,9 @@ let live_variables_mfp (prog : Program.Typed.t)
       with type vals = string )
   in
   let (module Lattice) = powerset_lattice variables in
-  let (module Transfer) = live_variables_transfer never_kill flowgraph_to_mir in
+  let (module Transfer) =
+    live_variables_transfer never_kill flowgraph_to_mir
+  in
   let (module Mf) =
     monotone_framework (module Rev_Flowgraph) (module Lattice) (module Transfer)
   in

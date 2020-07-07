@@ -71,7 +71,6 @@ type optimization_settings =
   ; optimize_ad_levels: bool }
 
 val all_optimizations : optimization_settings
-
 val no_optimizations : optimization_settings
 
 val optimization_suite :

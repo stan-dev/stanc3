@@ -6,6 +6,7 @@ tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
 from tensorflow.python.ops.parallel_for import pfor as pfor__
 
+
 class nested_expr_model(tfd__.Distribution):
 
   def __init__(self, x, y):
@@ -29,7 +30,7 @@ class nested_expr_model(tfd__.Distribution):
     
     # Target log probability computation
     z = x if (y < x) else (y if (tf__.cast(1, tf__.float64) < y) else tf__.cast(1, tf__.float64))
-    v = z * (z + (x ^ tf__.cast(2, tf__.float64)))
+    v = z * (z + (x ** tf__.cast(2, tf__.float64)))
     u = ((y < tf__.cast(1, tf__.float64)) and (x < tf__.cast(1, tf__.float64))) * (-x)
     target += tf__.reduce_sum(tfd__.Normal(u, v).log_prob(s))
     return target

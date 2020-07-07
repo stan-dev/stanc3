@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_betareg.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tparameters_betareg.stan
 
 Syntax error in 'tparameters_betareg.stan', line 1, column 2 to column 4, parsing error:
    -------------------------------------------------
@@ -11,7 +11,7 @@ Syntax error in 'tparameters_betareg.stan', line 1, column 2 to column 4, parsin
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_glm.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tparameters_glm.stan
 
 Syntax error in 'tparameters_glm.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -24,7 +24,7 @@ Syntax error in 'tparameters_glm.stan', line 1, column 2 to column 8, parsing er
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 
-  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_mvmer.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tparameters_mvmer.stan
 
 Syntax error in 'tparameters_mvmer.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
