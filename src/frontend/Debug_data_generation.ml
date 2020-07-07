@@ -2,6 +2,41 @@ open Core_kernel
 open Middle
 open Ast
 
+let rec transpose = function
+  | [] :: _ -> []
+  | rows ->
+      let x = List.map ~f:List.hd_exn rows in
+      let y = List.map ~f:List.tl_exn rows in
+      x :: transpose y
+
+let dotproduct xs ys =
+  if List.length xs <> List.length ys then
+    failwith "Must be called on vectors of equal size"
+  else
+    let rec rec_dotprod xs ys =
+      match (xs, ys) with
+      | [], [] -> 0.
+      | x :: xs, y :: ys -> (x *. y) +. rec_dotprod xs ys
+      | _ -> failwith "This should never happen"
+    in
+    rec_dotprod xs ys
+
+let matprod x y =
+  let y_T = transpose y in
+  if List.length x <> List.length y_T then
+    failwith "Matrix multiplication dim. mismatch"
+  else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
+
+let rec vect_to_mat l m =
+  let rec drop n h =
+    match n with 0 -> h | _ -> drop (n - 1) (List.tl_exn h)
+  in
+  let len = List.length l in
+  if len % m <> 0 then
+    failwith "the length has to be a whole multiple of the partition size"
+  else if len = m then [l]
+  else List.take l m :: vect_to_mat (drop m l) m
+
 let unwrap_num_exn m e =
   let e = Ast_to_Mir.trans_expr e in
   let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
@@ -117,10 +152,18 @@ let gen_identity_matrix n m =
                   @ (if k <= m then [1.0] else [])
                   @ repeat (m - k) 0. )) )) }
 
+let gen_cov_matrix n m =
+  let l = repeat_th (n * m) (fun _ -> Random.float 2.) in
+  let l_mat = vect_to_mat l m in
+  let cov = matprod l_mat (transpose l_mat) in
+  let f x = List.map ~f:wrap_real x in
+  let cov2 = List.map ~f:wrap_row_vector (List.map ~f cov) in
+  {int_two with expr= RowVectorExpr cov2}
+
 let gen_matrix mm n m t =
   match t with
-  | Program.CholeskyCorr | CholeskyCov | Correlation | Covariance ->
-      gen_identity_matrix n m
+  | Program.Covariance -> gen_cov_matrix n m
+  | Program.CholeskyCorr | CholeskyCov | Correlation -> gen_identity_matrix n m
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
