@@ -150,14 +150,27 @@ let gen_diag_mat l =
       @ (if k <= n then [List.nth_exn l (k - 1)] else [])
       @ repeat (n - k) 0. )
 
+let fill_lower_triangular m =
+  let fill_row i l =
+    let _, tl = List.split_n l i in
+    List.init ~f:(fun _ -> Random.float 2.) i @ tl
+  in
+  List.mapi ~f:fill_row m
+
+let pad_mat mm m n =
+  let padding_mat =
+    List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> 0.))
+  in
+  wrap_real_mat (mm @ padding_mat)
+
+let gen_cov_cholesly m n =
+  let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
+  let filled_mat = fill_lower_triangular diag_mat in
+  if m <= n then wrap_real_mat filled_mat else pad_mat filled_mat m n
+
 let gen_identity_matrix m n =
   let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
-  if m <= n then wrap_real_mat id_mat
-  else
-    let padding_mat =
-      List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> 0.))
-    in
-    wrap_real_mat (id_mat @ padding_mat)
+  if m <= n then wrap_real_mat id_mat else pad_mat id_mat m n
 
 let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
@@ -172,14 +185,16 @@ let gen_corr_matrix n =
   let diag_mat = gen_diag_mat inv_diag in
   wrap_real_mat (matprod diag_mat (matprod cov diag_mat))
 
-let gen_matrix mm n m t =
+let gen_matrix mm m n t =
+  let open Program in
   match t with
-  | Program.Covariance -> gen_cov_matrix n
-  | Program.Correlation -> gen_corr_matrix n
-  | Program.CholeskyCorr | CholeskyCov -> gen_identity_matrix n m
+  | Covariance -> gen_cov_matrix m
+  | Correlation -> gen_corr_matrix m
+  | CholeskyCov -> gen_cov_cholesly m n
+  | CholeskyCorr -> gen_identity_matrix m n
   | _ ->
       { int_two with
-        expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+        expr= RowVectorExpr (repeat_th m (fun () -> gen_row_vector mm n t)) }
 
 (* TODO: do some proper random generation of these special matrices *)
 
