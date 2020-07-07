@@ -5,9 +5,9 @@ open Ast
 let rec transpose = function
   | [] :: _ -> []
   | rows ->
-      let x = List.map ~f:List.hd_exn rows in
-      let y = List.map ~f:List.tl_exn rows in
-      x :: transpose y
+      let hd = List.map ~f:List.hd_exn rows in
+      let tl = List.map ~f:List.tl_exn rows in
+      hd :: transpose tl
 
 let dotproduct xs ys =
   if List.length xs <> List.length ys then
@@ -156,9 +156,11 @@ let gen_cov_matrix n m =
   let l = repeat_th (n * m) (fun _ -> Random.float 2.) in
   let l_mat = vect_to_mat l m in
   let cov = matprod l_mat (transpose l_mat) in
-  let f x = List.map ~f:wrap_real x in
-  let cov2 = List.map ~f:wrap_row_vector (List.map ~f cov) in
-  {int_two with expr= RowVectorExpr cov2}
+  let cov_wrapped =
+    List.map ~f:wrap_row_vector
+      (List.map ~f:(fun x -> List.map ~f:wrap_real x) cov)
+  in
+  {int_two with expr= RowVectorExpr cov_wrapped}
 
 let gen_matrix mm n m t =
   match t with
