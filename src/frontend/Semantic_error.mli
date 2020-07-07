@@ -60,7 +60,6 @@ val illtyped_variadic_ode_tol :
 val illtyped_variadic_ode_generic_tol :
   Location_span.t -> string -> UnsizedType.t list -> t
 
-
 val illtyped_variadic_ode :
      Location_span.t
   -> string

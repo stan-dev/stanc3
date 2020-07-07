@@ -151,8 +151,7 @@ let variadic_ode_functor_suffix = "_odefunctor__"
 let functor_suffix_select hof =
   match hof with
   | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
-  | x when Stan_math_signatures.is_ode_fn x ->
-      variadic_ode_functor_suffix
+  | x when Stan_math_signatures.is_ode_fn x -> variadic_ode_functor_suffix
   | _ -> functor_suffix
 
 let rec pp_index ppf = function
@@ -318,15 +317,15 @@ and gen_fun_app ppf fname es =
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
-        when Stan_math_signatures.is_variadic_ode_fn x && String.is_suffix fname
-              ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+        when Stan_math_signatures.is_variadic_ode_fn x
+             && String.is_suffix fname
+                  ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
             :: tl )
       | true, x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
-          ( fname
-          , f :: y0 :: t0 :: ts :: msgs :: tl )
+          (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;

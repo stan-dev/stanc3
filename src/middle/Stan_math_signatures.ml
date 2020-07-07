@@ -140,13 +140,24 @@ let mk_declarative_sig (fnkinds, name, args) =
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
-let variadic_ode_functions = ["ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"; "ode_adams"]
-let non_variadic_ode_functions = ["integrate_ode"; "integrate_ode_bdf"; "integrate_ode_adams"; "integrate_ode_rk45"]
-let ode_tolerances_suffix = "_tol"
 
+let variadic_ode_functions =
+  [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
+  ; "ode_adams" ]
+
+let non_variadic_ode_functions =
+  [ "integrate_ode"; "integrate_ode_bdf"; "integrate_ode_adams"
+  ; "integrate_ode_rk45" ]
+
+let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
-let is_variadic_ode_fn f = List.mem ~equal:String.equal variadic_ode_functions f
-let is_non_variadic_ode_fn f = List.mem ~equal:String.equal non_variadic_ode_functions f
+
+let is_variadic_ode_fn f =
+  List.mem ~equal:String.equal variadic_ode_functions f
+
+let is_non_variadic_ode_fn f =
+  List.mem ~equal:String.equal non_variadic_ode_functions f
+
 let is_ode_fn f = is_variadic_ode_fn f || is_non_variadic_ode_fn f
 
 let distributions =
@@ -267,7 +278,8 @@ let stan_math_returntype name args =
   in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
-  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray (UVector)))
+  | x when is_variadic_ode_fn x ->
+      Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)

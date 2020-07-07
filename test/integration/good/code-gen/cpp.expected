@@ -10006,71 +10006,37 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
             x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 87;
         assign(y_hat, nil_index_list(),
-<<<<<<< HEAD
           integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 66;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 67;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 68;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
-            x_int, pstream__), "assigning variable y_hat");
-        current_statement__ = 69;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 70;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 71;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 72;
-        assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
-            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-        current_statement__ = 73;
-=======
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
         current_statement__ = 88;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 89;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 90;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__), "assigning variable y_hat");
         current_statement__ = 91;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 92;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 93;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 94;
         assign(y_hat, nil_index_list(),
-          integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-            pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+          integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+            x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
         current_statement__ = 95;
->>>>>>> master
         assign(y_hat, nil_index_list(),
           integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
             x_int, pstream__), "assigning variable y_hat");
@@ -10434,159 +10400,81 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 33;
       assign(y_hat, nil_index_list(),
-<<<<<<< HEAD
         integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
           x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 27;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
-          x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 28;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
-          x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 29;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
-          x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 30;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
-          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 31;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
-          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 32;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
-          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 33;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
-          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 34;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
           x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 35;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
           x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 36;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
           x_int, pstream__), "assigning variable y_hat");
       current_statement__ = 37;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
-          x_int, pstream__), "assigning variable y_hat");
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 38;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
           x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 39;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
           x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 40;
       assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+        integrate_ode_adams(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
           x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
       current_statement__ = 41;
       assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
+      current_statement__ = 42;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
+      current_statement__ = 43;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__), "assigning variable y_hat");
+      current_statement__ = 44;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
+          x_int, pstream__), "assigning variable y_hat");
+      current_statement__ = 45;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 46;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 47;
+      assign(y_hat, nil_index_list(),
+        integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
+          x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
+      current_statement__ = 48;
+      assign(y_hat, nil_index_list(),
         integrate_ode_bdf(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
           x_int, pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 42;
+      current_statement__ = 49;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_d, x,
           x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 43;
+      current_statement__ = 50;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_odefunctor__(), y0_d, t0, ts, theta_p, x,
           x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 44;
+      current_statement__ = 51;
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_d, x,
           x_int, pstream__), "assigning variable y_hat");
-      current_statement__ = 45;
-=======
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 34;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 35;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 36;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 37;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 38;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 39;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 40;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_adams(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 41;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 42;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 43;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 44;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 45;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 46;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 47;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 48;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_bdf(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
-          pstream__, 1e-10, 1e-10, 1e8), "assigning variable y_hat");
-      current_statement__ = 49;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 50;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_d, t0, ts, theta_p, x, x_int,
-          pstream__), "assigning variable y_hat");
-      current_statement__ = 51;
-      assign(y_hat, nil_index_list(),
-        integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_d, x, x_int,
-          pstream__), "assigning variable y_hat");
       current_statement__ = 52;
->>>>>>> master
       assign(y_hat, nil_index_list(),
         integrate_ode_rk45(sho_odefunctor__(), y0_p, t0, ts, theta_p, x,
           x_int, pstream__), "assigning variable y_hat");
@@ -11240,39 +11128,6 @@ STAN_REGISTER_MAP_RECT(9, motherHOF_model_namespace::goo_functor__)
 #include <stan/model/model_header.hpp>
 namespace ode_bdf_m1_model_namespace {
 
-template <typename T, typename S>
-std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, -1>
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, 1, -1>
-resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, 1>
-resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -11434,7 +11289,7 @@ return dz_dt(t, z, alpha, beta, gamma, delta, pstream__);
 }
 };
 
-class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
+class ode_bdf_m1_model final : public model_base_crtp<ode_bdf_m1_model> {
 
  private:
   int pos__;
@@ -11444,14 +11299,22 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
   std::vector<std::vector<double>> y;
  
  public:
-  ~ode_bdf_m1_model() { }
+  ~ode_bdf_m1_model() final { }
   
-  std::string model_name() const { return "ode_bdf_m1_model"; }
+  std::string model_name() const final { return "ode_bdf_m1_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   ode_bdf_m1_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
-    typedef double local_scalar_t__;
+    using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
@@ -11464,6 +11327,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 19;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
@@ -11472,6 +11336,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 20;
       validate_non_negative_index("ts", "N", N);
+      current_statement__ = 20;
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(N));
       ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
@@ -11481,6 +11346,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         "assigning variable ts");
       current_statement__ = 21;
       validate_non_negative_index("y_init", "2", 2);
+      current_statement__ = 21;
       context__.validate_dims("data initialization","y_init","double",
           context__.to_vec(2));
       y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
@@ -11492,6 +11358,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       validate_non_negative_index("y", "N", N);
       current_statement__ = 22;
       validate_non_negative_index("y", "2", 2);
+      current_statement__ = 22;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N, 2));
       y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
@@ -11553,8 +11420,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
-    typedef T__ local_scalar_t__;
+                      std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "ode_bdf_m1_model_namespace::log_prob";
@@ -11682,23 +11549,23 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
           pstream__, alpha, beta, gamma, delta), "assigning variable z");
       {
         current_statement__ = 9;
-        lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
+        lp_accum__.add(normal_lpdf<propto__>(alpha, 1, 0.5));
         current_statement__ = 10;
-        lp_accum__.add(normal_log<propto__>(gamma, 1, 0.5));
+        lp_accum__.add(normal_lpdf<propto__>(gamma, 1, 0.5));
         current_statement__ = 11;
-        lp_accum__.add(normal_log<propto__>(beta, 0.05, 0.05));
+        lp_accum__.add(normal_lpdf<propto__>(beta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(normal_log<propto__>(delta, 0.05, 0.05));
+        lp_accum__.add(normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 13;
-        lp_accum__.add(lognormal_log<propto__>(sigma, -1, 1));
+        lp_accum__.add(lognormal_lpdf<propto__>(sigma, -1, 1));
         current_statement__ = 14;
         lp_accum__.add(
-          lognormal_log<propto__>(z_init, stan::math::log(10), 1));
+          lognormal_lpdf<propto__>(z_init, stan::math::log(10), 1));
         current_statement__ = 18;
         for (int k = 1; k <= 2; ++k) {
           current_statement__ = 15;
           lp_accum__.add(
-            lognormal_log<propto__>(
+            lognormal_lpdf<propto__>(
               rvalue(y_init, cons_list(index_uni(k), nil_index_list()),
                 "y_init"),
               stan::math::log(
@@ -11708,7 +11575,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
                 "sigma")));
           current_statement__ = 16;
           lp_accum__.add(
-            lognormal_log<propto__>(
+            lognormal_lpdf<propto__>(
               rvalue(y,
                 cons_list(index_omni(),
                   cons_list(index_uni(k), nil_index_list())), "y"),
@@ -11734,7 +11601,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -11817,14 +11684,14 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(2));
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
-      vars__.push_back(alpha);
-      vars__.push_back(beta);
-      vars__.push_back(gamma);
-      vars__.push_back(delta);
+      vars__.emplace_back(alpha);
+      vars__.emplace_back(beta);
+      vars__.emplace_back(gamma);
+      vars__.emplace_back(delta);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(z_init[(sym1__ - 1)]);}
+        vars__.emplace_back(z_init[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(sigma[(sym1__ - 1)]);}
+        vars__.emplace_back(sigma[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -11837,9 +11704,11 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       assign(z, nil_index_list(),
         ode_rk45_tol(dz_dt_odefunctor__(), z_init, 0, ts, 1e-5, 1e-3, 500,
           pstream__, alpha, beta, gamma, delta), "assigning variable z");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.emplace_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -11853,9 +11722,10 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
+                              std::ostream* pstream__) const
+    final {
+    using local_scalar_t__ = double;
+    vars__.clear();
     vars__.reserve(num_params_r__);
     
     try {
@@ -11932,14 +11802,14 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(sigma[(sym1__ - 1)], 0),
           "assigning variable sigma");}
-      vars__.push_back(alpha);
-      vars__.push_back(beta);
-      vars__.push_back(gamma);
-      vars__.push_back(delta);
+      vars__.emplace_back(alpha);
+      vars__.emplace_back(beta);
+      vars__.emplace_back(gamma);
+      vars__.emplace_back(delta);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(z_init[(sym1__ - 1)]);}
+        vars__.emplace_back(z_init[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(sigma[(sym1__ - 1)]);}
+        vars__.emplace_back(sigma[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -11949,64 +11819,60 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.resize(0);
-    names__.push_back("alpha");
-    names__.push_back("beta");
-    names__.push_back("gamma");
-    names__.push_back("delta");
-    names__.push_back("z_init");
-    names__.push_back("sigma");
-    names__.push_back("z");
+    names__.clear();
+    names__.emplace_back("alpha");
+    names__.emplace_back("beta");
+    names__.emplace_back("gamma");
+    names__.emplace_back("delta");
+    names__.emplace_back("z_init");
+    names__.emplace_back("sigma");
+    names__.emplace_back("z");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.resize(0);
-    std::vector<size_t> dims__;
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
+    dimss__.clear();
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(2)});
     
     } // get_dims() 
     
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
-    param_names__.push_back(std::string() + "alpha");
-    param_names__.push_back(std::string() + "beta");
-    param_names__.push_back(std::string() + "gamma");
-    param_names__.push_back(std::string() + "delta");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "gamma");
+    param_names__.emplace_back(std::string() + "delta");
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
         }}
     }
@@ -12020,26 +11886,27 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
-    param_names__.push_back(std::string() + "alpha");
-    param_names__.push_back(std::string() + "beta");
-    param_names__.push_back(std::string() + "gamma");
-    param_names__.push_back(std::string() + "delta");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "gamma");
+    param_names__.emplace_back(std::string() + "delta");
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
         }}
     }
@@ -12065,12 +11932,12 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
   
     // Begin method overload boilerplate
     template <typename RNG>
-    void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = 0) const {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -12084,8 +11951,8 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
     }
 
     template <bool propto__, bool jacobian__, typename T_>
-    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = 0) const {
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -12094,9 +11961,9 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
       return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
-    void transform_inits(const stan::io::var_context& context,
+    inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__) const {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -12107,7 +11974,7 @@ class ode_bdf_m1_model : public model_base_crtp<ode_bdf_m1_model> {
 
 };
 }
-typedef ode_bdf_m1_model_namespace::ode_bdf_m1_model stan_model;
+using stan_model = ode_bdf_m1_model_namespace::ode_bdf_m1_model;
 
 #ifndef USING_R
 
@@ -12130,39 +11997,6 @@ stan::model::model_base& new_model(
 #include <stan/model/model_header.hpp>
 namespace ode_old_model_namespace {
 
-template <typename T, typename S>
-std::vector<T> resize_to_match__(std::vector<T>& dst, const std::vector<S>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, -1>
-resize_to_match__(Eigen::Matrix<T, -1, -1>& dst, const Eigen::Matrix<T, -1, -1>& src) {
-  dst.resize(src.rows(), src.cols());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, 1, -1>
-resize_to_match__(Eigen::Matrix<T, 1, -1>& dst, const Eigen::Matrix<T, 1, -1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-
-template <typename T>
-Eigen::Matrix<T, -1, 1>
-resize_to_match__(Eigen::Matrix<T, -1, 1>& dst, const Eigen::Matrix<T, -1, 1>& src) {
-  dst.resize(src.size());
-  return dst;
-}
-std::vector<double> to_doubles__(std::initializer_list<double> x) {
-  return x;
-}
-
-std::vector<stan::math::var> to_vars__(std::initializer_list<stan::math::var> x) {
-  return x;
-}
 
 inline void validate_positive_index(const char* var_name, const char* expr,
                                     int val) {
@@ -12339,7 +12173,7 @@ return dz_dt(t, z, theta, x_r, x_i, pstream__);
 }
 };
 
-class ode_old_model : public model_base_crtp<ode_old_model> {
+class ode_old_model final : public model_base_crtp<ode_old_model> {
 
  private:
   int pos__;
@@ -12349,14 +12183,22 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
   std::vector<std::vector<double>> y;
  
  public:
-  ~ode_old_model() { }
+  ~ode_old_model() final { }
   
-  std::string model_name() const { return "ode_old_model"; }
+  std::string model_name() const final { return "ode_old_model"; }
+
+  std::vector<std::string> model_compile_info() const {
+    std::vector<std::string> stanc_info;
+    stanc_info.push_back("stanc_version = %%NAME%%3 %%VERSION%%");
+    stanc_info.push_back("stancflags = --print-cpp");
+    return stanc_info;
+  }
+  
   
   ode_old_model(stan::io::var_context& context__,
                 unsigned int random_seed__ = 0,
                 std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
-    typedef double local_scalar_t__;
+    using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
@@ -12369,6 +12211,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      current_statement__ = 18;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
@@ -12377,6 +12220,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 19;
       validate_non_negative_index("ts", "N", N);
+      current_statement__ = 19;
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(N));
       ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
@@ -12386,6 +12230,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         "assigning variable ts");
       current_statement__ = 20;
       validate_non_negative_index("y_init", "2", 2);
+      current_statement__ = 20;
       context__.validate_dims("data initialization","y_init","double",
           context__.to_vec(2));
       y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
@@ -12397,6 +12242,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       validate_non_negative_index("y", "N", N);
       current_statement__ = 21;
       validate_non_negative_index("y", "2", 2);
+      current_statement__ = 21;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N, 2));
       y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
@@ -12458,8 +12304,8 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
   template <bool propto__, bool jacobian__, typename T__>
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
-                      std::ostream* pstream__ = 0) const {
-    typedef T__ local_scalar_t__;
+                      std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     static const char* function__ = "ode_old_model_namespace::log_prob";
@@ -12586,23 +12432,23 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       {
         current_statement__ = 8;
-        lp_accum__.add(normal_log<propto__>(alpha, 1, 0.5));
+        lp_accum__.add(normal_lpdf<propto__>(alpha, 1, 0.5));
         current_statement__ = 9;
-        lp_accum__.add(normal_log<propto__>(gamma, 1, 0.5));
+        lp_accum__.add(normal_lpdf<propto__>(gamma, 1, 0.5));
         current_statement__ = 10;
-        lp_accum__.add(normal_log<propto__>(beta, 0.05, 0.05));
+        lp_accum__.add(normal_lpdf<propto__>(beta, 0.05, 0.05));
         current_statement__ = 11;
-        lp_accum__.add(normal_log<propto__>(delta, 0.05, 0.05));
+        lp_accum__.add(normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(lognormal_log<propto__>(sigma, -1, 1));
+        lp_accum__.add(lognormal_lpdf<propto__>(sigma, -1, 1));
         current_statement__ = 13;
         lp_accum__.add(
-          lognormal_log<propto__>(z_init, stan::math::log(10), 1));
+          lognormal_lpdf<propto__>(z_init, stan::math::log(10), 1));
         current_statement__ = 17;
         for (int k = 1; k <= 2; ++k) {
           current_statement__ = 14;
           lp_accum__.add(
-            lognormal_log<propto__>(
+            lognormal_lpdf<propto__>(
               rvalue(y_init, cons_list(index_uni(k), nil_index_list()),
                 "y_init"),
               stan::math::log(
@@ -12612,7 +12458,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
                 "sigma")));
           current_statement__ = 15;
           lp_accum__.add(
-            lognormal_log<propto__>(
+            lognormal_lpdf<propto__>(
               rvalue(y,
                 cons_list(index_omni(),
                   cons_list(index_uni(k), nil_index_list())), "y"),
@@ -12638,7 +12484,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
                           std::vector<double>& vars__,
                           bool emit_transformed_parameters__ = true,
                           bool emit_generated_quantities__ = true,
-                          std::ostream* pstream__ = 0) const {
+                          std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -12722,14 +12568,14 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
-      vars__.push_back(alpha);
-      vars__.push_back(beta);
-      vars__.push_back(gamma);
-      vars__.push_back(delta);
+      vars__.emplace_back(alpha);
+      vars__.emplace_back(beta);
+      vars__.emplace_back(gamma);
+      vars__.emplace_back(delta);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(z_init[(sym1__ - 1)]);}
+        vars__.emplace_back(z_init[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(sigma[(sym1__ - 1)]);}
+        vars__.emplace_back(sigma[(sym1__ - 1)]);}
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -12740,9 +12586,11 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
           stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
           .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+      if (emit_transformed_parameters__) {
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.emplace_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+      } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
@@ -12756,9 +12604,10 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
   inline void transform_inits(const stan::io::var_context& context__,
                               std::vector<int>& params_i__,
                               std::vector<double>& vars__,
-                              std::ostream* pstream__) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
+                              std::ostream* pstream__) const
+    final {
+    using local_scalar_t__ = double;
+    vars__.clear();
     vars__.reserve(num_params_r__);
     
     try {
@@ -12822,14 +12671,14 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(sigma[(sym1__ - 1)], 0),
           "assigning variable sigma");}
-      vars__.push_back(alpha);
-      vars__.push_back(beta);
-      vars__.push_back(gamma);
-      vars__.push_back(delta);
+      vars__.emplace_back(alpha);
+      vars__.emplace_back(beta);
+      vars__.emplace_back(gamma);
+      vars__.emplace_back(delta);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(z_init[(sym1__ - 1)]);}
+        vars__.emplace_back(z_init[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.push_back(sigma[(sym1__ - 1)]);}
+        vars__.emplace_back(sigma[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12839,64 +12688,60 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.resize(0);
-    names__.push_back("alpha");
-    names__.push_back("beta");
-    names__.push_back("gamma");
-    names__.push_back("delta");
-    names__.push_back("z_init");
-    names__.push_back("sigma");
-    names__.push_back("z");
+    names__.clear();
+    names__.emplace_back("alpha");
+    names__.emplace_back("beta");
+    names__.emplace_back("gamma");
+    names__.emplace_back("delta");
+    names__.emplace_back("z_init");
+    names__.emplace_back("sigma");
+    names__.emplace_back("z");
     } // get_param_names() 
     
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.resize(0);
-    std::vector<size_t> dims__;
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const
+    final {
+    dimss__.clear();
+    dimss__.emplace_back(std::vector<size_t>{});
     
-    dims__.push_back(2);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N),
+                                             static_cast<size_t>(2)});
     
     } // get_dims() 
     
   inline void constrained_param_names(
                                       std::vector<std::string>& param_names__,
                                       bool emit_transformed_parameters__ = true,
-                                      bool emit_generated_quantities__ = true) const {
+                                      bool emit_generated_quantities__ = true) const
+    final {
     
-    param_names__.push_back(std::string() + "alpha");
-    param_names__.push_back(std::string() + "beta");
-    param_names__.push_back(std::string() + "gamma");
-    param_names__.push_back(std::string() + "delta");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "gamma");
+    param_names__.emplace_back(std::string() + "delta");
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
         }}
     }
@@ -12910,26 +12755,27 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
   inline void unconstrained_param_names(
                                         std::vector<std::string>& param_names__,
                                         bool emit_transformed_parameters__ = true,
-                                        bool emit_generated_quantities__ = true) const {
+                                        bool emit_generated_quantities__ = true) const
+    final {
     
-    param_names__.push_back(std::string() + "alpha");
-    param_names__.push_back(std::string() + "beta");
-    param_names__.push_back(std::string() + "gamma");
-    param_names__.push_back(std::string() + "delta");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "gamma");
+    param_names__.emplace_back(std::string() + "delta");
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "z_init" + '.' + std::to_string(sym1__));
       }}
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       {
-        param_names__.push_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "sigma" + '.' + std::to_string(sym1__));
       }}
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             {
-              param_names__.push_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
             }}
         }}
     }
@@ -12955,12 +12801,12 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
   
     // Begin method overload boilerplate
     template <typename RNG>
-    void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
                      bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = 0) const {
+                     std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
@@ -12974,8 +12820,8 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
     }
 
     template <bool propto__, bool jacobian__, typename T_>
-    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = 0) const {
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = nullptr) const {
       std::vector<T_> vec_params_r;
       vec_params_r.reserve(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
@@ -12984,9 +12830,9 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
       return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
-    void transform_inits(const stan::io::var_context& context,
+    inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__) const {
+                         std::ostream* pstream__ = nullptr) const {
       std::vector<double> params_r_vec;
       std::vector<int> params_i_vec;
       transform_inits(context, params_i_vec, params_r_vec, pstream__);
@@ -12997,7 +12843,7 @@ class ode_old_model : public model_base_crtp<ode_old_model> {
 
 };
 }
-typedef ode_old_model_namespace::ode_old_model stan_model;
+using stan_model = ode_old_model_namespace::ode_old_model;
 
 #ifndef USING_R
 

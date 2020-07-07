@@ -167,11 +167,9 @@ module TypeError = struct
         let generate_reduce_sum_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UReal)
-                    :: (AutoDiffable, UVector)
-                    :: args
-                  , ReturnType (UVector) ) ]
-            ; [UVector; UReal; UArray UReal;]
+                  ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
+                  , ReturnType UVector ) ]
+            ; [UVector; UReal; UArray UReal]
             ; arg_types ]
         in
         Fmt.pf ppf
@@ -185,20 +183,19 @@ module TypeError = struct
           arg_tys
     | IllTypedVariadicODEGeneric (name, arg_tys) ->
         let variadic_ode_generic_signature =
-          Fmt.strf
-            "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, T1, T2, ...\n"
+          Fmt.strf "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, T1, T2, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
-            Pretty_printing.pp_unsizedtype (UVector)
+            Pretty_printing.pp_unsizedtype UVector
             (* fun: state *)
-            Pretty_printing.pp_unsizedtype (UVector)
+            Pretty_printing.pp_unsizedtype UVector
             (* fun: return *)
-            Pretty_printing.pp_unsizedtype (UVector)
+            Pretty_printing.pp_unsizedtype UVector
             (* initial_state *)
             Pretty_printing.pp_unsizedtype UReal
             (* initial_time *)
             Pretty_printing.pp_unsizedtype (UArray UReal)
-            (* times *)
+          (* times *)
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
@@ -212,10 +209,8 @@ module TypeError = struct
         let generate_ode_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UReal)
-                    :: (AutoDiffable, UVector)
-                    :: args
-                  , ReturnType (UVector) ) ]
+                  ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
+                  , ReturnType UVector ) ]
             ; [UVector; UReal; UArray UReal; UReal; UReal; UInt]
             ; arg_types ]
         in
@@ -234,9 +229,9 @@ module TypeError = struct
             "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, %a, %a, %a, T1, T2, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
-            Pretty_printing.pp_unsizedtype (UVector)
+            Pretty_printing.pp_unsizedtype UVector
             (* fun: state *)
-            Pretty_printing.pp_unsizedtype (UVector)
+            Pretty_printing.pp_unsizedtype UVector
             (* fun: return *)
             Pretty_printing.pp_unsizedtype (UArray UReal)
             (* initial_state *)

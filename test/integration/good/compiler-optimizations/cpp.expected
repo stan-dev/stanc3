@@ -167,7 +167,6 @@ return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 }
 };
 
-<<<<<<< HEAD
 
 struct simple_SIR_odefunctor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
@@ -181,10 +180,7 @@ return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 }
 };
 
-class ad_level_failing_model : public model_base_crtp<ad_level_failing_model> {
-=======
 class ad_level_failing_model final : public model_base_crtp<ad_level_failing_model> {
->>>>>>> master
 
  private:
   int pos__;
