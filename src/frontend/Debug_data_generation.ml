@@ -168,9 +168,21 @@ let gen_cov_cholesly m n =
   let filled_mat = fill_lower_triangular diag_mat in
   if m <= n then wrap_real_mat filled_mat else pad_mat filled_mat m n
 
-let gen_identity_matrix m n =
-  let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
-  if m <= n then wrap_real_mat id_mat else pad_mat id_mat m n
+let gen_corr_cholesly m n =
+  let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
+  let filled_mat = fill_lower_triangular diag_mat in
+  let row_normalizer l =
+    let row_norm =
+      Float.sqrt (List.fold ~init:0. ~f:(fun accum x -> accum +. (x *. x)) l)
+    in
+    List.map ~f:(fun x -> x /. row_norm) l
+  in
+  let normed_mat = List.map ~f:row_normalizer filled_mat in
+  if m <= n then wrap_real_mat normed_mat else pad_mat normed_mat m n
+
+(* let gen_identity_matrix m n =
+   let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
+   if m <= n then wrap_real_mat id_mat else pad_mat id_mat m n *)
 
 let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
@@ -191,7 +203,7 @@ let gen_matrix mm m n t =
   | Covariance -> gen_cov_matrix m
   | Correlation -> gen_corr_matrix m
   | CholeskyCov -> gen_cov_cholesly m n
-  | CholeskyCorr -> gen_identity_matrix m n
+  | CholeskyCorr -> gen_corr_cholesly m n
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th m (fun () -> gen_row_vector mm n t)) }
