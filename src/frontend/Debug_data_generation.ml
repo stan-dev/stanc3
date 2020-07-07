@@ -129,33 +129,54 @@ let gen_vector m n t =
       wrap_vector (List.map ~f:wrap_real l)
   | _ -> {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
 
-let gen_identity_matrix n m =
-  { int_two with
-    expr=
-      RowVectorExpr
-        (List.map
-           (List.range 1 (n + 1))
-           ~f:(fun k ->
-             wrap_row_vector
-               (List.map ~f:wrap_real
-                  ( repeat (min (k - 1) m) 0.
-                  @ (if k <= m then [1.0] else [])
-                  @ repeat (m - k) 0. )) )) }
+let gen_cov_unwrapped n =
+  let l = repeat_th (n * n) (fun _ -> Random.float 2.) in
+  let l_mat = vect_to_mat l n in
+  matprod l_mat (transpose l_mat)
 
-let gen_cov_matrix n m =
-  let l = repeat_th (n * m) (fun _ -> Random.float 2.) in
-  let l_mat = vect_to_mat l m in
-  let cov = matprod l_mat (transpose l_mat) in
-  let cov_wrapped =
+let wrap_real_mat m =
+  let mat_wrapped =
     List.map ~f:wrap_row_vector
-      (List.map ~f:(fun x -> List.map ~f:wrap_real x) cov)
+      (List.map ~f:(fun x -> List.map ~f:wrap_real x) m)
   in
-  {int_two with expr= RowVectorExpr cov_wrapped}
+  {int_two with expr= RowVectorExpr mat_wrapped}
+
+let gen_diag_mat l =
+  let n = List.length l in
+  List.map
+    (List.range 1 (n + 1))
+    ~f:(fun k ->
+      repeat (min (k - 1) n) 0.
+      @ (if k <= n then [List.nth_exn l (k - 1)] else [])
+      @ repeat (n - k) 0. )
+
+let gen_identity_matrix m n =
+  let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
+  if m <= n then wrap_real_mat id_mat
+  else
+    let padding_mat =
+      List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> 0.))
+    in
+    wrap_real_mat (id_mat @ padding_mat)
+
+let gen_cov_matrix n =
+  let cov = gen_cov_unwrapped n in
+  wrap_real_mat cov
+
+let gen_corr_matrix n =
+  let cov = gen_cov_unwrapped n in
+  let extract_diag m = List.mapi ~f:(fun i l -> List.nth_exn l i) m in
+  let sqrt_inverse_vect l = List.map ~f:(fun x -> 1. /. Float.sqrt x) l in
+  let cov_diag = extract_diag cov in
+  let inv_diag = sqrt_inverse_vect cov_diag in
+  let diag_mat = gen_diag_mat inv_diag in
+  wrap_real_mat (matprod diag_mat (matprod cov diag_mat))
 
 let gen_matrix mm n m t =
   match t with
-  | Program.Covariance -> gen_cov_matrix n m
-  | Program.CholeskyCorr | CholeskyCov | Correlation -> gen_identity_matrix n m
+  | Program.Covariance -> gen_cov_matrix n
+  | Program.Correlation -> gen_corr_matrix n
+  | Program.CholeskyCorr | CholeskyCov -> gen_identity_matrix n m
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
