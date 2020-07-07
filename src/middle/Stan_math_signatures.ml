@@ -1307,6 +1307,18 @@ let () =
     ("multinomial_lpmf", ReturnType UReal, [bare_array_type (UInt, 1); UVector]) ;
   add_unqualified
     ("multinomial_rng", ReturnType (bare_array_type (UInt, 1)), [UVector; UInt]) ;
+  add_unqualified
+    ( "multinomial_logit_log"
+    , ReturnType UReal
+    , [UArray UInt; UVector] ) ;
+  add_unqualified
+    ( "multinomial_logit_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UVector] ) ;
+  add_unqualified
+    ( "multinomial_logit_rng"
+    , ReturnType (UArray UInt)
+    , [UVector; UInt] ) ;
   add_unqualified ("multiply", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("multiply", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("multiply", ReturnType UVector, [UVector; UReal]) ;
