@@ -168,7 +168,7 @@ let gen_cov_cholesky m n =
   let filled_mat = fill_lower_triangular diag_mat in
   if m <= n then wrap_real_mat filled_mat else pad_mat filled_mat m n
 
-let gen_corr_cholesky n =
+let gen_corr_cholesky_unwrapped n =
   let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
   let filled_mat = fill_lower_triangular diag_mat in
   let row_normalizer l =
@@ -177,8 +177,9 @@ let gen_corr_cholesky n =
     in
     List.map ~f:(fun x -> x /. row_norm) l
   in
-  let normed_mat = List.map ~f:row_normalizer filled_mat in
-  wrap_real_mat normed_mat
+  List.map ~f:row_normalizer filled_mat
+
+let gen_corr_cholesky n = wrap_real_mat (gen_corr_cholesky_unwrapped n)
 
 (* let gen_identity_matrix m n =
    let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
@@ -188,16 +189,9 @@ let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
   wrap_real_mat cov
 
-(* Alternatively, we could generate an unwrapped correlation
-   cholesky factor, multiply by its transpose, and wrap. *)
 let gen_corr_matrix n =
-  let cov = gen_cov_unwrapped n in
-  let extract_diag m = List.mapi ~f:(fun i l -> List.nth_exn l i) m in
-  let sqrt_inverse_vect l = List.map ~f:(fun x -> 1. /. Float.sqrt x) l in
-  let cov_diag = extract_diag cov in
-  let inv_diag = sqrt_inverse_vect cov_diag in
-  let diag_mat = gen_diag_mat inv_diag in
-  wrap_real_mat (matprod diag_mat (matprod cov diag_mat))
+  let corr_chol = gen_corr_cholesky_unwrapped n in
+  wrap_real_mat (matprod corr_chol (transpose corr_chol))
 
 let gen_matrix mm m n t =
   let open Program in
