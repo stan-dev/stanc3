@@ -159,16 +159,16 @@ let fill_lower_triangular m =
 
 let pad_mat mm m n =
   let padding_mat =
-    List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> 0.))
+    List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> Random.float 2.))
   in
   wrap_real_mat (mm @ padding_mat)
 
-let gen_cov_cholesly m n =
+let gen_cov_cholesky m n =
   let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
   let filled_mat = fill_lower_triangular diag_mat in
   if m <= n then wrap_real_mat filled_mat else pad_mat filled_mat m n
 
-let gen_corr_cholesly m n =
+let gen_corr_cholesky n =
   let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
   let filled_mat = fill_lower_triangular diag_mat in
   let row_normalizer l =
@@ -178,7 +178,7 @@ let gen_corr_cholesly m n =
     List.map ~f:(fun x -> x /. row_norm) l
   in
   let normed_mat = List.map ~f:row_normalizer filled_mat in
-  if m <= n then wrap_real_mat normed_mat else pad_mat normed_mat m n
+  wrap_real_mat normed_mat
 
 (* let gen_identity_matrix m n =
    let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
@@ -188,6 +188,8 @@ let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
   wrap_real_mat cov
 
+(* Alternatively, we could generate an unwrapped correlation
+   cholesky factor, multiply by its transpose, and wrap. *)
 let gen_corr_matrix n =
   let cov = gen_cov_unwrapped n in
   let extract_diag m = List.mapi ~f:(fun i l -> List.nth_exn l i) m in
@@ -202,8 +204,8 @@ let gen_matrix mm m n t =
   match t with
   | Covariance -> gen_cov_matrix m
   | Correlation -> gen_corr_matrix m
-  | CholeskyCov -> gen_cov_cholesly m n
-  | CholeskyCorr -> gen_corr_cholesly m n
+  | CholeskyCov -> gen_cov_cholesky m n
+  | CholeskyCorr -> gen_corr_cholesky m
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th m (fun () -> gen_row_vector mm n t)) }
