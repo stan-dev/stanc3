@@ -183,7 +183,7 @@ module TypeError = struct
           arg_tys
     | IllTypedVariadicODEGeneric (name, arg_tys) ->
         let variadic_ode_generic_signature =
-          Fmt.strf "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, T1, T2, ...\n"
+          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
             Pretty_printing.pp_unsizedtype UVector
@@ -226,7 +226,7 @@ module TypeError = struct
     | IllTypedVariadicODEGenericTol (name, arg_tys) ->
         let variadic_ode_generic_signature =
           Fmt.strf
-            "(%a, %a, T1, T2, ...) => %a, %a, %a, %a, %a, %a, %a, T1, T2, ...\n"
+            "(%a, %a, ...) => %a, %a, %a, %a, %a, %a, %a, ...\n"
             Pretty_printing.pp_unsizedtype UReal
             (* fun: time *)
             Pretty_printing.pp_unsizedtype UVector
