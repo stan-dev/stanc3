@@ -744,10 +744,10 @@ let rec simplify_index_expr pattern =
                          @ inner_tl )
                  ; meta }
                , outer_tl ))
-      | inner_singles, multis ->
+      | inner_singles, (([] | Single _ :: _) as multis) ->
           raise_s
             [%message
-              "impossible"
+              "Impossible! There must be a multi-index."
                 (inner_singles : Expr.Typed.t Index.t list)
                 (multis : Expr.Typed.t Index.t list)] )
     | e -> e)

@@ -66,22 +66,10 @@ let dup_exists l =
 
 let type_of_expr_typed ue = ue.emeta.type_
 
-let rec unsizedtype_contains_int ut =
-  match ut with
-  | UnsizedType.UInt -> true
-  | UArray ut -> unsizedtype_contains_int ut
-  | _ -> false
-
-let rec lub_ad_type = function
-  | [] -> UnsizedType.DataOnly
-  | x :: xs ->
-      let y = lub_ad_type xs in
-      if UnsizedType.compare_autodifftype x y < 0 then y else x
-
 let calculate_autodifftype cf at ut =
   match at with
   | (Param | TParam | Model | Functions)
-    when not (unsizedtype_contains_int ut || cf.current_block = GQuant) ->
+    when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
@@ -145,10 +133,6 @@ let check_fresh_variable id is_nullary_function =
       check_fresh_variable_basic name is_nullary_function
       |> Validate.apply_const v0 )
     (probability_distribution_name_variants id)
-
-(** Least upper bound of expression autodiff types *)
-let lub_ad_e exprs =
-  exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> lub_ad_type
 
 (* == SEMANTIC CHECK OF PROGRAM ELEMENTS ==================================== *)
 
@@ -282,7 +266,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
     | Some (_, UFun (_, ReturnType ut)) ->
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
-          ~ad_level:(lub_ad_e es) ~type_:ut ~loc
+          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
         |> ok
     | Some _ ->
         (* Check that Funaps are actually functions *)
@@ -302,7 +286,7 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
   | Some (UnsizedType.ReturnType ut) ->
       mk_typed_expression
         ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-        ~ad_level:(lub_ad_e es) ~type_:ut ~loc
+        ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       |> Validate.ok
   | _ ->
       es
@@ -334,7 +318,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-          ~ad_level:(lub_ad_e es) ~type_:UnsizedType.UReal ~loc
+          ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
         |> Validate.ok
       else
         Semantic_error.illtyped_reduce_sum loc id.name
@@ -383,7 +367,7 @@ let semantic_check_ternary_if loc (pe, te, fe) =
       | Some type_ ->
           mk_typed_expression
             ~expr:(TernaryIf (pe, te, fe))
-            ~ad_level:(lub_ad_e [pe; te; fe])
+            ~ad_level:(expr_ad_lub [pe; te; fe])
             ~type_ ~loc
           |> ok
       | None -> error err
@@ -402,7 +386,7 @@ let semantic_check_binop loc op (le, re) =
          | ReturnType type_ ->
              mk_typed_expression
                ~expr:(BinOp (le, op, re))
-               ~ad_level:(lub_ad_e [le; re])
+               ~ad_level:(expr_ad_lub [le; re])
                ~type_ ~loc
              |> ok
          | Void -> error err ))
@@ -425,7 +409,7 @@ let semantic_check_prefixop loc op e =
          | ReturnType type_ ->
              mk_typed_expression
                ~expr:(PrefixOp (op, e))
-               ~ad_level:(lub_ad_e [e])
+               ~ad_level:(expr_ad_lub [e])
                ~type_ ~loc
              |> ok
          | Void -> error err ))
@@ -440,7 +424,7 @@ let semantic_check_postfixop loc op e =
          | ReturnType type_ ->
              mk_typed_expression
                ~expr:(PostfixOp (e, op))
-               ~ad_level:(lub_ad_e [e])
+               ~ad_level:(expr_ad_lub [e])
                ~type_ ~loc
              |> ok
          | Void -> error err ))
@@ -574,15 +558,16 @@ let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
   inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
 
 let inferred_ad_type_of_indexed at uindices =
-  lub_ad_type
+  UnsizedType.lub_ad_type
     ( at
     :: List.map
          ~f:(function
            | All -> UnsizedType.DataOnly
            | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
-               lub_ad_type [at; ue1.emeta.ad_level]
+               UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
            | Between (ue1, ue2) ->
-               lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
+               UnsizedType.lub_ad_type
+                 [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
          uindices )
 
 let rec semantic_check_indexed ~loc ~cf e indices =
@@ -1440,7 +1425,7 @@ and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
     if
       is_global
       && (cf.current_block = Param || cf.current_block = TParam)
-      && unsizedtype_contains_int unsized_ty
+      && UnsizedType.contains_int unsized_ty
     then Semantic_error.transformed_params_int loc |> error
     else ok ())
 
