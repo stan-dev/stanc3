@@ -378,8 +378,7 @@ let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
          && arg_match (AutoDiffable, UVector) initial_state
          && arg_match (AutoDiffable, UArray UReal) times
          && arg_match (DataOnly, UReal) rel_tol
-         && arg_match (DataOnly, UReal) abs_tol
-         && List.length args >= 2 ->
+         && arg_match (DataOnly, UReal) abs_tol ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
@@ -417,8 +416,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     :: initial_state :: initial_time :: times :: args
     when arg_match (AutoDiffable, UReal) initial_time
          && arg_match (AutoDiffable, UVector) initial_state
-         && arg_match (AutoDiffable, UArray UReal) times
-         && List.length args >= 2 ->
+         && arg_match (AutoDiffable, UArray UReal) times ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
