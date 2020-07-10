@@ -16,12 +16,10 @@ let pp_set_size ppf (decl_id, st, adtype) =
   let real_nan =
     match adtype with
     | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
-    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
-  in
+    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()" in
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
-    in
+      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st) in
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" real_nan
@@ -61,8 +59,7 @@ let pp_decl ppf (vident, ut, adtype) =
       match ut with
       | UnsizedType.UInt | UArray UInt -> pf ppf "matrix_cl<int>"
       | _ -> pf ppf "matrix_cl<double>"
-    else pp_unsizedtype_local
-  in
+    else pp_unsizedtype_local in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype) =
@@ -93,7 +90,7 @@ let pp_bool_expr ppf expr =
   | _ -> pp_expr ppf expr
 
 let rec pp_statement (ppf : Format.formatter)
-    (Stmt.Fixed.({pattern; meta}) as stmt) =
+    (Stmt.Fixed.{pattern; meta} as stmt) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
@@ -101,7 +98,7 @@ let rec pp_statement (ppf : Format.formatter)
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
   | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
+      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
@@ -111,14 +108,13 @@ let rec pp_statement (ppf : Format.formatter)
         rhs
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
-       inside some function call - the function should get its own copy
-       (in all cases???) *)
+         inside some function call - the function should get its own copy
+         (in all cases???) *)
       let rec maybe_deep_copy e =
         let recurse (e : 'a Expr.Fixed.t) =
           { e with
-            Expr.Fixed.pattern=
-              Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
-        in
+            Expr.Fixed.pattern= Expr.Fixed.Pattern.map maybe_deep_copy e.pattern
+          } in
         match e.pattern with
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
         | FunApp (CompilerInternal, _, _) -> e
@@ -127,16 +123,14 @@ let rec pp_statement (ppf : Format.formatter)
             { e with
               Expr.Fixed.pattern=
                 FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        | _ -> recurse e
-      in
+        | _ -> recurse e in
       let rhs =
         match rhs.pattern with
         | FunApp (CompilerInternal, f, _)
           when f = Internal_fun.to_string FnConstrain
                || f = Internal_fun.to_string FnUnconstrain ->
             rhs
-        | _ -> maybe_deep_copy rhs
-      in
+        | _ -> maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %a,@ %S@]);" assignee pp_indexes idcs
         pp_expr rhs
         (strf "assigning variable %s"
@@ -160,8 +154,7 @@ let rec pp_statement (ppf : Format.formatter)
     when fname = Internal_fun.to_string FnCheck ->
       let args =
         {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-        :: args
-      in
+        :: args in
       pp_statement ppf
         { pattern= NRFunApp (CompilerInternal, "check_" ^ check_name, args)
         ; meta= stmt.meta }
@@ -189,8 +182,9 @@ let rec pp_statement (ppf : Format.formatter)
   | For
       { body=
           { pattern=
-              Assignment (_, {pattern= FunApp (CompilerInternal, f, _); _}); _
-          } as body; _ }
+              Assignment (_, {pattern= FunApp (CompilerInternal, f, _); _})
+          ; _ } as body
+      ; _ }
     when Internal_fun.of_string_opt f = Some FnReadParam ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)

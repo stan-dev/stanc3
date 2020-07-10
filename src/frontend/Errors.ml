@@ -10,16 +10,16 @@ type syntax_error =
   | Include of string * Location.t
   | Parsing of string * Location_span.t
 
-(** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
+(** Exception for Syntax Errors *)
 
+exception SemanticError of (string * Location_span.t)
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring in location [loc]. *)
-exception SemanticError of (string * Location_span.t)
 
+exception FatalError of string
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
-exception FatalError of string
 
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
@@ -67,8 +67,7 @@ let without_warnings function_name args =
 let warn_deprecated (pos, message) =
   let loc =
     Location.of_position_opt {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
-    |> Option.value ~default:Location.empty
-  in
+    |> Option.value ~default:Location.empty in
   if !print_warnings then
     Fmt.pf Fmt.stderr
       "@[<v>@,Warning: deprecated language construct used in %s:@,%a@]@."

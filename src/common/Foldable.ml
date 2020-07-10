@@ -30,8 +30,8 @@ end
 type variable.
 *)
 module type S = sig
-  (** A data structure which can be folded *)
   type 'a t
+  (** A data structure which can be folded *)
 
   val fold_left : f:('b -> 'a -> 'b) -> init:'b -> 'a t -> 'b
   (** Left associative fold of a data structure; this is the same as the 

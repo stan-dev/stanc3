@@ -95,7 +95,7 @@ let options =
       , Arg.Unit
           (fun _ ->
             print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 0 )
+            exit 0)
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.Set_string Semantic_check.model_name
@@ -120,16 +120,14 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str
-            )
+            Preprocessor.include_paths := String.split_on_chars ~on:[','] str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--include_paths"
       , Arg.String
           (fun str ->
             Preprocessor.include_paths :=
-              !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str
-            )
+              !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str)
       , " Deprecated. Same as --include-paths." )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
@@ -163,8 +161,7 @@ let use_file filename =
     if !canonicalize_program then
       Canonicalize.repair_syntax
         (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
-    else Frontend_utils.get_ast_or_exit filename
-  in
+    else Frontend_utils.get_ast_or_exit filename in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
@@ -185,8 +182,7 @@ let use_file filename =
     if !warn_uninitialized then Pedantic_analysis.print_warn_uninitialized mir ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
-      Sexp.pp_hum Format.std_formatter
-        [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+      Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       if !optimize then (
@@ -196,8 +192,7 @@ let use_file filename =
             [%sexp (opt : Middle.Program.Typed.t)] ;
         if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
-      else tx_mir
-    in
+      else tx_mir in
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )

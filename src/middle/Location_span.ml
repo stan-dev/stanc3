@@ -18,8 +18,7 @@ let to_string {begin_loc; end_loc} =
             ~print_file:(begin_loc.filename <> end_loc.filename)
             ~print_line:(begin_loc.line_num <> end_loc.line_num)
             end_loc
-    | Some _ -> ""
-  in
+    | Some _ -> "" in
   Location.to_string begin_loc ^ end_loc_str
 
 (** Take the Middle.location_span corresponding to a pair of Lexing.position's *)

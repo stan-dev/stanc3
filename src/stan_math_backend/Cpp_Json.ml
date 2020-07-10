@@ -5,8 +5,7 @@ module Str = Re.Str
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   let emit_cpp_expr e =
     Fmt.strf "<< %a >>" Expression_gen.pp_expr e
-    |> Str.global_replace (Str.regexp "[\n\r\t ]+") " "
-  in
+    |> Str.global_replace (Str.regexp "[\n\r\t ]+") " " in
   match st with
   | SInt -> `Assoc [("name", `String "int")]
   | SReal -> `Assoc [("name", `String "real")]
@@ -14,19 +13,16 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
       `Assoc [("name", `String "vector"); ("length", `String (emit_cpp_expr d))]
   | SMatrix (d1, d2) ->
       `Assoc
-        [ ("name", `String "matrix")
-        ; ("rows", `String (emit_cpp_expr d1))
+        [ ("name", `String "matrix"); ("rows", `String (emit_cpp_expr d1))
         ; ("cols", `String (emit_cpp_expr d2)) ]
   | SArray (st, d) ->
       `Assoc
-        [ ("name", `String "array")
-        ; ("length", `String (emit_cpp_expr d))
+        [ ("name", `String "array"); ("length", `String (emit_cpp_expr d))
         ; ("element_type", sizedtype_to_json st) ]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
-    [ ("name", `String name)
-    ; ("type", sizedtype_to_json st)
+    [ ("name", `String name); ("type", sizedtype_to_json st)
     ; ("block", `String (Fmt.strf "%a" Program.pp_io_block block)) ]
 
 let%expect_test "outvar to json pretty" =

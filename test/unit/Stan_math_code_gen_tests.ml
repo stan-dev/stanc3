@@ -6,8 +6,7 @@ open Stan_math_code_gen
 
 let%expect_test "udf" =
   let with_no_loc stmt =
-    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
-  in
+    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
   { fdrt= None
@@ -15,8 +14,7 @@ let%expect_test "udf" =
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
-        (Some
-           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        (Some (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
   ; fdloc= Location_span.empty }
   |> strf "@[<v>%a" pp_fun_def_w_rs

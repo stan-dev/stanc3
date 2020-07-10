@@ -1,6 +1,6 @@
+open Core_kernel
 (** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
     API *)
-open Core_kernel
 
 val parse_file :
      (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)

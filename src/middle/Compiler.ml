@@ -17,9 +17,7 @@ module type Frontend = sig
     -> (Program.Typed.t, frontend_error) result
 
   val mir_of_string :
-       opts:frontend_opts
-    -> str:string
-    -> (Program.Typed.t, frontend_error) result
+    opts:frontend_opts -> str:string -> (Program.Typed.t, frontend_error) result
 end
 
 module type Backend = sig
@@ -40,9 +38,7 @@ module type Optimization = sig
   type optimization_opts
 
   (* parse level from string, for use in e.g. command line argument parser *)
-  val optimization_opts_of_string :
-    string -> (optimization_opts, string) result
-
+  val optimization_opts_of_string : string -> (optimization_opts, string) result
   val default_optimization_opts : optimization_opts
   val optimize : opts:optimization_opts -> Program.Typed.t -> Program.Typed.t
 end
@@ -81,8 +77,7 @@ module Compiler = struct
       | Optimize_opts_error of string
       | Backend_opts_error of string
 
-    let compiler_opts_of_string str =
-      Error [Frontend_opts_error ("todo " ^ str)]
+    let compiler_opts_of_string str = Error [Frontend_opts_error ("todo " ^ str)]
 
     let compile_from_file ~opts ~file =
       F.mir_of_file ~opts:opts.frontend_opts ~file

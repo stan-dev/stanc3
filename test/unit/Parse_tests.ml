@@ -10,8 +10,7 @@ let%expect_test "parse conditional" =
     parse_string Parser.Incremental.program
       "model { if (1 < 2) { print(\"hi\");}}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -38,8 +37,7 @@ let%expect_test "parse dangling else problem" =
       "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \
        \"); else print(\"I'm afraid I can't do that.\");}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -71,8 +69,7 @@ let%expect_test "parse minus unary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x; x = -x;}"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -103,8 +100,7 @@ let%expect_test "parse unary over binary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x = x - - x - - x; }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -144,8 +140,7 @@ let%expect_test "parse indices, two different colons" =
     parse_string Parser.Incremental.program
       "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -189,8 +184,7 @@ let%expect_test "parse operator precedence" =
       "model {  \
        print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -367,8 +361,7 @@ let%expect_test "parse crazy truncation example" =
       \      }\n\
       \      "
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
@@ -432,8 +425,7 @@ let%expect_test "parse nested loop" =
       \            }\n\
       \            "
     |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
+    |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|

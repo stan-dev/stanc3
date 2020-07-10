@@ -45,8 +45,7 @@ let gen_num_int m t =
     | Program.Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
     | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
-    | _ -> (def_low, def_low + diff)
-  in
+    | _ -> (def_low, def_low + diff) in
   let low = if low = 0 && up <> 1 then low + 1 else low in
   Random.int (up - low + 1) + low
 
@@ -57,8 +56,7 @@ let gen_num_real m t =
     | Program.Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
     | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
-    | _ -> (def_low, def_low +. diff)
-  in
+    | _ -> (def_low, def_low +. diff) in
   Random.float_range low up
 
 let rec repeat n e =
@@ -97,10 +95,8 @@ let gen_vector m n t =
     let l = repeat_th n (fun _ -> Random.float 1.) in
     let l =
       List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
-          (Float.exp elt +. List.hd_exn accum) :: accum )
-    in
-    l
-  in
+          (Float.exp elt +. List.hd_exn accum) :: accum) in
+    l in
   match t with
   | Program.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -110,8 +106,7 @@ let gen_vector m n t =
   | Ordered ->
       let l = gen_ordered n in
       let halfmax =
-        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2.
-      in
+        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2. in
       let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
       wrap_vector (List.map ~f:wrap_real l)
   | PositiveOrdered ->
@@ -137,8 +132,7 @@ let gen_cov_unwrapped n =
 let wrap_real_mat m =
   let mat_wrapped =
     List.map ~f:wrap_row_vector
-      (List.map ~f:(fun x -> List.map ~f:wrap_real x) m)
-  in
+      (List.map ~f:(fun x -> List.map ~f:wrap_real x) m) in
   {int_two with expr= RowVectorExpr mat_wrapped}
 
 let gen_diag_mat l =
@@ -148,13 +142,12 @@ let gen_diag_mat l =
     ~f:(fun k ->
       repeat (min (k - 1) n) 0.
       @ (if k <= n then [List.nth_exn l (k - 1)] else [])
-      @ repeat (n - k) 0. )
+      @ repeat (n - k) 0.)
 
 let fill_lower_triangular m =
   let fill_row i l =
     let _, tl = List.split_n l i in
-    List.init ~f:(fun _ -> Random.float 2.) i @ tl
-  in
+    List.init ~f:(fun _ -> Random.float 2.) i @ tl in
   List.mapi ~f:fill_row m
 
 let pad_mat mm m n =
@@ -175,8 +168,7 @@ let gen_corr_cholesky_unwrapped n =
     let row_norm =
       Float.sqrt (List.fold ~init:0. ~f:(fun accum x -> accum +. (x *. x)) l)
     in
-    List.map ~f:(fun x -> x /. row_norm) l
-  in
+    List.map ~f:(fun x -> x /. row_norm) l in
   List.map ~f:row_normalizer filled_mat
 
 let gen_corr_cholesky n = wrap_real_mat (gen_corr_cholesky_unwrapped n)
@@ -245,9 +237,7 @@ let print_data_prog s =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in
         ( l @ [(var_decl_id decl, value)]
-        , Map.set m ~key:(var_decl_id decl) ~data:value ) )
-  in
+        , Map.set m ~key:(var_decl_id decl) ~data:value )) in
   let pp ppf (id, value) =
-    Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value
-  in
+    Fmt.pf ppf {|@[<hov 2>"%s":@ %a@]|} id pp_value_json value in
   Fmt.(strf "{@ @[<hov>%a@]@ }" (list ~sep:comma pp) l)

@@ -51,15 +51,12 @@ module Fixed = struct
       | IfElse (pred, s_true, _) ->
           Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "if" pp_e pred pp_s s_true
       | While (pred, stmt) ->
-          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s
-            stmt
+          Fmt.pf ppf {|%a(%a) %a|} pp_builtin_syntax "while" pp_e pred pp_s stmt
       | For {loopvar; lower; upper; body} ->
-          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar
-            pp_e lower pp_e upper pp_s body
+          Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar pp_e
+            lower pp_e upper pp_s body
       | Block stmts ->
-          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
-            Fmt.(list pp_s ~sep:Fmt.cut)
-            stmts
+          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type} ->
           Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
@@ -101,7 +98,7 @@ module Located = struct
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
 
-  let loc_of Fixed.({meta; _}) = meta
+  let loc_of Fixed.{meta; _} = meta
 
   (** This module acts as a temporary replace for the `stmt_loc_num` type that
   is currently used within `analysis_and_optimization`.
@@ -137,20 +134,19 @@ module Labelled = struct
 
   include Specialized.Make2 (Fixed) (Expr.Labelled) (Meta)
 
-  let label_of Fixed.({meta= Meta.({label; _}); _}) = label
-  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
+  let label_of Fixed.{meta= Meta.{label; _}; _} = label
+  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
 
   let label ?(init = Label.Int_label.init) (stmt : Located.t) : t =
     let lbl = ref init in
-    let f Expr.Typed.Meta.({adlevel; type_; loc}) =
+    let f Expr.Typed.Meta.{adlevel; type_; loc} =
       let cur_lbl = !lbl in
       lbl := Label.Int_label.next cur_lbl ;
       Expr.Labelled.Meta.create ~type_ ~loc ~adlevel ~label:cur_lbl ()
     and g loc =
       let cur_lbl = !lbl in
       lbl := Label.Int_label.next cur_lbl ;
-      Meta.create ~loc ~label:cur_lbl ()
-    in
+      Meta.create ~loc ~label:cur_lbl () in
     Fixed.map f g stmt
 
   type associations =
@@ -176,7 +172,7 @@ module Labelled = struct
         { assocs with
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
-                Expr.Labelled.associate ~init:accu x ) }
+                Expr.Labelled.associate ~init:accu x) }
     | Assignment ((_, _, idxs), rhs) ->
         let exprs =
           Expr.Labelled.(
@@ -195,8 +191,7 @@ module Labelled = struct
     | For {lower; upper; body; _} ->
         let exprs =
           Expr.Labelled.(
-            associate ~init:(associate ~init:assocs.exprs lower) upper)
-        in
+            associate ~init:(associate ~init:assocs.exprs lower) upper) in
         let assocs' = {assocs with exprs} in
         associate ~init:assocs' body
     | Block xs | SList xs ->
@@ -210,8 +205,7 @@ end
 
 module Numbered = struct
   module Meta = struct
-    type t = (int sexp_opaque[@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = (int sexp_opaque[@compare.ignore]) [@@deriving compare, sexp, hash]
 
     let empty = 0
     let from_int (i : int) : t = i
@@ -234,19 +228,16 @@ module Helpers = struct
               Decl
                 { decl_adtype= Expr.Typed.adlevel_of expr
                 ; decl_id= symbol
-                ; decl_type= Unsized (Expr.Typed.type_of expr) } }
-        in
+                ; decl_type= Unsized (Expr.Typed.type_of expr) } } in
         let assign =
           { body with
             Fixed.pattern=
-              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) }
-        in
+              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) } in
         reset () ;
         {body with Fixed.pattern= Block [decl; assign; body]}
 
   let internal_nrfunapp fn args meta =
-    { Fixed.pattern=
-        NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)
+    { Fixed.pattern= NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)
     ; meta }
 
   (** [mkfor] returns a MIR For statement that iterates over the given expression
@@ -254,17 +245,14 @@ module Helpers = struct
   let mkfor upper bodyfn iteratee meta =
     let idx s =
       let meta =
-        Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
-      in
+        Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly () in
       let expr = Expr.Fixed.{meta; pattern= Var s} in
-      Index.Single expr
-    in
+      Index.Single expr in
     let loopvar, reset = Gensym.enter () in
     let lower = Expr.Helpers.loop_bottom in
     let stmt =
       Fixed.Pattern.Block
-        [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))]
-    in
+        [bodyfn (Expr.Helpers.add_int_index iteratee (idx loopvar))] in
     reset () ;
     let body = Fixed.{meta; pattern= stmt} in
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
@@ -274,8 +262,7 @@ module Helpers = struct
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
       let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
-      Expr.Helpers.internal_funapp FnLength [e] emeta'
-    in
+      Expr.Helpers.internal_funapp FnLength [e] emeta' in
     match Expr.Typed.type_of iteratee with
     | UInt | UReal -> bodyfn iteratee
     | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
@@ -284,8 +271,7 @@ module Helpers = struct
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
           Expr.Fixed.
-            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
-        in
+            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])} in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
@@ -293,14 +279,13 @@ module Helpers = struct
 
   let contains_fn fn ?(init = false) stmt =
     let fstr = Internal_fun.to_string fn in
-    let rec aux accu Fixed.({pattern; _}) =
+    let rec aux accu Fixed.{pattern; _} =
       match pattern with
       | NRFunApp (_, fname, _) when fname = fstr -> true
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
             ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
-            ~g:aux
-    in
+            ~g:aux in
     aux init stmt
 
   (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -340,12 +325,11 @@ module Helpers = struct
   inverted order.*)
   let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
     let var = {var with pattern= Indexed (var, [])} in
-    let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
+    let invert_index_order (Expr.Fixed.{pattern; _} as e) =
       match pattern with
       | Indexed (obj, []) -> obj
       | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
-      | _ -> e
-    in
+      | _ -> e in
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
@@ -354,8 +338,7 @@ module Helpers = struct
       | SMatrix (d1, d2) ->
           let bodyfn' var = mkfor d1 bodyfn var smeta in
           go (SRowVector d2) bodyfn' var smeta
-      | _ -> for_scalar st bodyfn var smeta
-    in
+      | _ -> for_scalar st bodyfn var smeta in
     go st (Fn.compose bodyfn invert_index_order) var smeta
 
   let assign_indexed decl_type vident meta varfn var =

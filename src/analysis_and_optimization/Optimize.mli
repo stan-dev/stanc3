@@ -54,8 +54,6 @@ val optimize_ad_levels : Program.Typed.t -> Program.Typed.t
     variables only ever get treated as autodiff variables if they have some
     dependency on a parameter *)
 
-(** Interface for turning individual optimizations on/off. Useful for testing
-    and for top-level interface flags. *)
 type optimization_settings =
   { function_inlining: bool
   ; static_loop_unrolling: bool
@@ -69,6 +67,8 @@ type optimization_settings =
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool }
+(** Interface for turning individual optimizations on/off. Useful for testing
+    and for top-level interface flags. *)
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings

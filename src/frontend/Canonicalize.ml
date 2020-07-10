@@ -3,8 +3,7 @@ open Ast
 
 let deprecated_functions =
   String.Map.of_alist_exn
-    [ ("multiply_log", "lmultiply")
-    ; ("binomial_coefficient_log", "lchoose")
+    [ ("multiply_log", "lmultiply"); ("binomial_coefficient_log", "lchoose")
     ; ("integrate_ode", "integrate_ode_rk45") ]
 
 let deprecated_distributions =
@@ -16,7 +15,7 @@ let deprecated_distributions =
            | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
            | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
            | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-           | Rng | UnaryVectorized -> None ) ))
+           | Rng | UnaryVectorized -> None)))
 
 let deprecated_userdefined = String.Table.create ()
 
@@ -69,8 +68,7 @@ let rec repair_syntax_expr {expr; emeta} =
         CondDistApp (f, {name; id_loc}, List.map ~f:repair_syntax_expr e)
     | CondDistApp (f, {name; id_loc}, e) when not (distribution_suffix name) ->
         FunApp (f, {name; id_loc}, List.map ~f:repair_syntax_expr e)
-    | _ -> map_expression repair_syntax_expr ident expr
-  in
+    | _ -> map_expression repair_syntax_expr ident expr in
   {expr; emeta}
 
 let repair_syntax_lval = map_lval_with repair_syntax_expr ident
@@ -125,8 +123,7 @@ let rec replace_deprecated_expr {expr; emeta} =
           FunApp
             (UserDefined, {name; id_loc}, List.map ~f:replace_deprecated_expr e)
       )
-    | _ -> map_expression replace_deprecated_expr ident expr
-  in
+    | _ -> map_expression replace_deprecated_expr ident expr in
   {expr; emeta}
 
 let replace_deprecated_lval = map_lval_with replace_deprecated_expr ident
@@ -152,8 +149,7 @@ let rec replace_deprecated_stmt {stmt; smeta} =
           ; body= replace_deprecated_stmt body }
     | _ ->
         map_statement replace_deprecated_expr replace_deprecated_stmt
-          replace_deprecated_lval ident stmt
-  in
+          replace_deprecated_lval ident stmt in
   {stmt; smeta}
 
 let rec no_parens {expr; emeta} =
@@ -209,8 +205,7 @@ let rec parens_stmt {stmt; smeta} =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
-  in
+    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt in
   {stmt; smeta}
 
 let repair_syntax program : untyped_program =
@@ -235,9 +230,8 @@ let canonicalize_program program : typed_program =
                    String.drop_suffix name 9 ^ "_lccdf"
                  else if Middle.UnsizedType.is_real_type type_ then
                    String.drop_suffix name 4 ^ "_lpdf"
-                 else String.drop_suffix name 4 ^ "_lpmf"
-               in
+                 else String.drop_suffix name 4 ^ "_lpmf" in
                String.Table.add deprecated_userdefined ~key:name ~data:newname
                |> (ignore : [`Ok | `Duplicate] -> unit)
-           | _ -> () )) ;
+           | _ -> ())) ;
   program |> map_program replace_deprecated_stmt |> map_program parens_stmt

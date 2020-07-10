@@ -41,8 +41,8 @@ module NoMeta : sig
 
   include
     Specialized.S
-    with module Meta := Meta
-     and type t = (Expr.NoMeta.Meta.t, Meta.t) Fixed.t
+      with module Meta := Meta
+       and type t = (Expr.NoMeta.Meta.t, Meta.t) Fixed.t
 
   val remove_meta : ('a, 'b) Fixed.t -> t
 end
@@ -57,11 +57,9 @@ module Located : sig
 
   include
     Specialized.S
-    with module Meta := Meta
-     and type t =
-                ( Expr.Typed.Meta.t
-                , (Meta.t sexp_opaque[@compare.ignore]) )
-                Fixed.t
+      with module Meta := Meta
+       and type t =
+            (Expr.Typed.Meta.t, (Meta.t sexp_opaque[@compare.ignore])) Fixed.t
 
   val loc_of : t -> Location_span.t
 
@@ -85,8 +83,8 @@ module Labelled : sig
 
   include
     Specialized.S
-    with module Meta := Meta
-     and type t = (Expr.Labelled.Meta.t, Meta.t) Fixed.t
+      with module Meta := Meta
+       and type t = (Expr.Labelled.Meta.t, Meta.t) Fixed.t
 
   val loc_of : t -> Location_span.t
   val label_of : t -> Int_label.t
@@ -100,8 +98,7 @@ end
 
 module Numbered : sig
   module Meta : sig
-    type t = (int sexp_opaque[@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = (int sexp_opaque[@compare.ignore]) [@@deriving compare, sexp, hash]
 
     include Specialized.Meta with type t := t
 
@@ -110,8 +107,8 @@ module Numbered : sig
 
   include
     Specialized.S
-    with module Meta := Meta
-     and type t = (Expr.Typed.Meta.t, Meta.t) Fixed.t
+      with module Meta := Meta
+       and type t = (Expr.Typed.Meta.t, Meta.t) Fixed.t
 end
 
 module Helpers : sig

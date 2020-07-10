@@ -40,9 +40,10 @@ module Fixed = struct
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
-    include Foldable.Make (struct type nonrec 'a t = 'a t
+    include Foldable.Make (struct
+      type nonrec 'a t = 'a t
 
-                                  let fold = fold
+      let fold = fold
     end)
   end
 
@@ -81,9 +82,9 @@ module Typed = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let type_of Fixed.({meta= Meta.({type_; _}); _}) = type_
-  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
-  let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
+  let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
+  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
+  let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
 end
 
 (** Expressions with associated location, type and label *)
@@ -107,10 +108,10 @@ module Labelled = struct
 
   include Specialized.Make (Fixed) (Meta)
 
-  let type_of Fixed.({meta= Meta.({type_; _}); _}) = type_
-  let label_of Fixed.({meta= Meta.({label; _}); _}) = label
-  let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
-  let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
+  let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
+  let label_of Fixed.{meta= Meta.{label; _}; _} = label
+  let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
+  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
 
   (** Traverse a typed expression adding unique labels using locally mutable 
       state 
@@ -118,10 +119,10 @@ module Labelled = struct
   let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
     let lbl = ref init in
     Fixed.map
-      (fun Typed.Meta.({adlevel; type_; loc}) ->
+      (fun Typed.Meta.{adlevel; type_; loc} ->
         let cur_lbl = !lbl in
         lbl := Label.Int_label.next cur_lbl ;
-        Meta.create ~label:cur_lbl ~adlevel ~type_ ~loc () )
+        Meta.create ~label:cur_lbl ~adlevel ~type_ ~loc ())
       expr
 
   (** Build a map from expression labels to expressions *)
@@ -129,8 +130,7 @@ module Labelled = struct
       ({pattern; _} as expr : t) =
     let assocs_result : t Label.Int_label.Map.t Map_intf.Or_duplicate.t =
       Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
-        (associate_pattern assocs @@ pattern)
-    in
+        (associate_pattern assocs @@ pattern) in
     match assocs_result with `Ok x -> x | `Duplicate -> assocs
 
   and associate_pattern assocs = function
@@ -151,8 +151,7 @@ module Labelled = struct
 end
 
 module Helpers = struct
-  let int i =
-    {Fixed.meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
+  let int i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
 
   let float i =
     {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
@@ -173,13 +172,12 @@ module Helpers = struct
 
   let contains_fn fn ?(init = false) e =
     let fstr = Internal_fun.to_string fn in
-    let rec aux accu Fixed.({pattern; _}) =
+    let rec aux accu Fixed.{pattern; _} =
       accu
       ||
       match pattern with
       | FunApp (_, name, _) when name = fstr -> true
-      | x -> Fixed.Pattern.fold aux accu x
-    in
+      | x -> Fixed.Pattern.fold aux accu x in
     aux init e
 
   let%test "expr contains fn" =
@@ -209,12 +207,11 @@ module Helpers = struct
       match e.pattern with
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
-      | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-    in
+      | _ -> raise_s [%message "These should go away with Ryan's LHS"] in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)
-  let rec collect_indices Fixed.({pattern; _}) =
+  let rec collect_indices Fixed.{pattern; _} =
     match pattern with
     | Indexed (obj, indices) -> collect_indices obj @ indices
     | _ -> []

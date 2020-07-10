@@ -10,8 +10,8 @@ module type S = sig
 
   include
     Comparable.S
-    with type t := t
-     and type comparator_witness := comparator_witness
+      with type t := t
+       and type comparator_witness := comparator_witness
 
   val init : t
   val next : t -> t

@@ -67,8 +67,7 @@ let translate_funapps_and_kwrds e =
     match pattern with
     | FunApp (StanLib, fname, args) ->
         let prefix =
-          if Utils.is_distribution_name fname then dist_prefix else ""
-        in
+          if Utils.is_distribution_name fname then dist_prefix else "" in
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
         {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
@@ -76,8 +75,7 @@ let translate_funapps_and_kwrds e =
         { expr with
           pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
     | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
-    | _ -> expr
-  in
+    | _ -> expr in
   rewrite_bottom_up ~f e
 
 let%expect_test "nested dist prefixes translated" =
@@ -88,8 +86,7 @@ let%expect_test "nested dist prefixes translated" =
       ( Fun_kind.StanLib
       , "normal_lpdf"
       , [FunApp (Fun_kind.StanLib, "normal_lpdf", []) |> e] )
-    |> e |> translate_funapps_and_kwrds
-  in
+    |> e |> translate_funapps_and_kwrds in
   print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
     {|
@@ -111,8 +108,7 @@ let rec remove_unused_stmts s =
     | NRFunApp (CompilerInternal, name, _)
       when Internal_fun.to_string FnCheck = name ->
         Stmt.Fixed.Pattern.Skip
-    | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x
-  in
+    | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x in
   {s with pattern}
 
 let rec change_kwrds_stmts s =
@@ -124,23 +120,20 @@ let rec change_kwrds_stmts s =
     | Assignment ((s, t, e1), e2) ->
         Assignment ((add_suffix_to_kwrds s, t, e1), e2)
     | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}
-    | x -> map Fn.id change_kwrds_stmts x
-  in
+    | x -> map Fn.id change_kwrds_stmts x in
   {s with pattern}
 
 let trans_prog (p : Program.Typed.t) =
   let rec map_stmt {Stmt.Fixed.pattern; meta} =
     { Stmt.Fixed.pattern=
         Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
-    ; meta }
-  in
+    ; meta } in
   let rename_kwrds (s, e) = (add_suffix_to_kwrds s, e) in
   let rename_fdarg (e1, s, e2) = (e1, add_suffix_to_kwrds s, e2) in
   let rename_func (s : 'a Program.fun_def) =
     { s with
       fdname= add_suffix_to_kwrds s.fdname
-    ; fdargs= List.map ~f:rename_fdarg s.fdargs }
-  in
+    ; fdargs= List.map ~f:rename_fdarg s.fdargs } in
   Program.map translate_funapps_and_kwrds map_stmt
     { p with
       output_vars= List.map ~f:rename_kwrds p.output_vars
