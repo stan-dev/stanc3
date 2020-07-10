@@ -679,8 +679,8 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       semantic_check_variable cf emeta.loc id
       |> Validate.apply_const (semantic_check_identifier id)
   | IntNumeral s -> (
-    match int_of_string_opt s with
-    | Some i when i < 2_147_483_648 ->
+    match float_of_string_opt s with
+    | Some i when i < 2_147_483_648.0 ->
         mk_typed_expression ~expr:(IntNumeral s) ~ad_level:DataOnly ~type_:UInt
           ~loc:emeta.loc
         |> Validate.ok
