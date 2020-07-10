@@ -12,7 +12,7 @@ transformed data {
 |}
   |> typed_ast_of_string_exn
   |> Fmt.strf "@[<v>%a@]" Pretty_printing.pp_program
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
     transformed data {
@@ -20,3 +20,4 @@ transformed data {
       matrix[3, 4] mat[5];
       print(mat[indices,  : , indices][2, 1, 1]);
     } |}]
+;;

@@ -30,7 +30,10 @@ type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
 type source_loc =
   | MirNode of Location_span.t
   | StartOfBlock
-  | TargetTerm of {term: Expr.Typed.t; assignment_label: label}
+  | TargetTerm of
+      { term : Expr.Typed.t
+      ; assignment_label : label
+      }
 [@@deriving sexp]
 
 (**
@@ -49,11 +52,12 @@ type source_loc =
      there is none
 *)
 type 'rd_info node_info =
-  { rd_sets: 'rd_info
-  ; possible_previous: label Set.Poly.t
-  ; rhs_set: vexpr Set.Poly.t
-  ; controlflow: label Set.Poly.t
-  ; loc: source_loc }
+  { rd_sets : 'rd_info
+  ; possible_previous : label Set.Poly.t
+  ; rhs_set : vexpr Set.Poly.t
+  ; controlflow : label Set.Poly.t
+  ; loc : source_loc
+  }
 [@@deriving sexp]
 
 (**
@@ -61,8 +65,7 @@ type 'rd_info node_info =
    function that maps from the 'entry' set to the 'exit' set, where the entry set is
    what's true before executing this node and the exit set is true after.
 *)
-type node_info_update =
-  (reaching_defn Set.Poly.t -> reaching_defn Set.Poly.t) node_info
+type node_info_update = (reaching_defn Set.Poly.t -> reaching_defn Set.Poly.t) node_info
 
 (**
    A node_info where the reaching definition information is explicitly written as the
@@ -84,14 +87,15 @@ type node_info_fixedpoint =
    * returns: A set of the return nodes that have been encountered
 *)
 type traversal_state =
-  { label_ix: label
-  ; node_info_map: (int, node_info_update) Map.Poly.t
-  ; possible_previous: label Set.Poly.t
-  ; target_terms: label Set.Poly.t
-  ; continues: label Set.Poly.t
-  ; breaks: label Set.Poly.t
-  ; returns: label Set.Poly.t
-  ; rejects: label Set.Poly.t }
+  { label_ix : label
+  ; node_info_map : (int, node_info_update) Map.Poly.t
+  ; possible_previous : label Set.Poly.t
+  ; target_terms : label Set.Poly.t
+  ; continues : label Set.Poly.t
+  ; breaks : label Set.Poly.t
+  ; returns : label Set.Poly.t
+  ; rejects : label Set.Poly.t
+  }
 
 (** The most recently nested control flow (block start, if/then, or loop)
 
@@ -109,9 +113,10 @@ type cf_state = label
      excluded for non-statistical dependency analysis
 *)
 type dataflow_graph =
-  { node_info_map: (int, node_info_fixedpoint) Map.Poly.t
-  ; possible_exits: label Set.Poly.t
-  ; probabilistic_nodes: label Set.Poly.t }
+  { node_info_map : (int, node_info_fixedpoint) Map.Poly.t
+  ; possible_exits : label Set.Poly.t
+  ; probabilistic_nodes : label Set.Poly.t
+  }
 [@@deriving sexp]
 
 (**
@@ -120,5 +125,8 @@ type dataflow_graph =
    See Middle.prog for block descriptions.
 *)
 type prog_df_graphs =
-  {tdatab: dataflow_graph; modelb: dataflow_graph; gqb: dataflow_graph}
+  { tdatab : dataflow_graph
+  ; modelb : dataflow_graph
+  ; gqb : dataflow_graph
+  }
 [@@deriving sexp]

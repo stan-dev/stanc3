@@ -1,2 +1,5 @@
-type t = StanLib | CompilerInternal | UserDefined
+type t =
+  | StanLib
+  | CompilerInternal
+  | UserDefined
 [@@deriving compare, sexp, hash]

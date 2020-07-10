@@ -16,8 +16,8 @@ end
 module type S2 = sig
   type ('a, 'b) t
 
-  val pp :
-       (Format.formatter -> 'a -> unit)
+  val pp
+    :  (Format.formatter -> 'a -> unit)
     -> (Format.formatter -> 'b -> unit)
     -> Format.formatter
     -> ('a, 'b) t
