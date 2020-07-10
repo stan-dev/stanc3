@@ -153,8 +153,21 @@ let%expect_test "inline functions" =
 
       log_prob {
         {
-          f(3, FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
-          FnReject__(g(53));
+          data int inline_sym1__;
+          inline_sym1__ = 0;
+          for(inline_sym2__ in 1:1) {
+            FnPrint__(3);
+            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
+          }
+          real inline_sym3__;
+          data int inline_sym4__;
+          inline_sym4__ = 0;
+          for(inline_sym5__ in 1:1) {
+            inline_sym4__ = 1;
+            inline_sym3__ = (53 ^ 2);
+            break;
+          }
+          FnReject__(inline_sym3__);
         }
       }
 
@@ -211,7 +224,16 @@ let%expect_test "inline functions 2" =
         }
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
-        g();
+        data int inline_sym7__;
+        inline_sym7__ = 0;
+        for(inline_sym8__ in 1:1) {
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
+
+          }
+          if(inline_sym7__) break;
+        }
       } |}]
 
 let%expect_test "list collapsing" =
@@ -280,34 +302,109 @@ let%expect_test "list collapsing" =
       (((pattern
          (Block
           (((pattern
-             (NRFunApp UserDefined f
-              (((pattern (Lit Int 3))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (Decl (decl_adtype DataOnly) (decl_id inline_sym1__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (inline_sym1__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar inline_sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
                ((pattern
-                 (FunApp CompilerInternal FnMakeRowVec__
+                 (Block
                   (((pattern
-                     (FunApp CompilerInternal FnMakeRowVec__
+                     (NRFunApp CompilerInternal FnPrint__
                       (((pattern (Lit Int 3))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                       ((pattern (Lit Int 2))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                    (meta <opaque>))
                    ((pattern
-                     (FunApp CompilerInternal FnMakeRowVec__
-                      (((pattern (Lit Int 4))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                       ((pattern (Lit Int 6))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                     (NRFunApp CompilerInternal FnPrint__
+                      (((pattern
+                         (FunApp CompilerInternal FnMakeRowVec__
+                          (((pattern
+                             (FunApp CompilerInternal FnMakeRowVec__
+                              (((pattern (Lit Int 3))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 2))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly))))
+                           ((pattern
+                             (FunApp CompilerInternal FnMakeRowVec__
+                              (((pattern (Lit Int 4))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 6))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta
+                             ((type_ URowVector) (loc <opaque>)
+                              (adlevel DataOnly)))))))
+                        (meta
+                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_sym3__)
+              (decl_type (Unsized UReal))))
+            (meta <opaque>))
+           ((pattern
+             (Decl (decl_adtype DataOnly) (decl_id inline_sym4__)
+              (decl_type (Sized SInt))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment (inline_sym4__ UInt ())
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar inline_sym5__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment (inline_sym4__ UInt ())
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment (inline_sym3__ UReal ())
+                      ((pattern
+                        (FunApp StanLib Pow__
+                         (((pattern (Lit Int 53))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Int 2))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>))
+                   ((pattern Break) (meta <opaque>)))))
+                (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
              (NRFunApp CompilerInternal FnReject__
-              (((pattern
-                 (FunApp UserDefined g
-                  (((pattern (Lit Int 53))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+              (((pattern (Var inline_sym3__))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
      (generate_quantities
@@ -438,8 +535,36 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-          for(i in f(2):g(3)) {
-            FnPrint__("body");
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__("f");
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
+            break;
+          }
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
+            FnPrint__("g");
+            inline_sym5__ = 1;
+            inline_sym4__ = (3 + 24);
+            break;
+          }
+          for(i in inline_sym1__:inline_sym4__) {
+            {
+              FnPrint__("body");
+            }
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
+              FnPrint__("g");
+              inline_sym5__ = 1;
+              inline_sym4__ = (3 + 24);
+              break;
+            }
           }
         }
       }
@@ -499,8 +624,56 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-          for(i in f(2):g(3)) {
-            FnPrint__("body");
+          int inline_sym7__;
+          int inline_sym10__;
+          data int inline_sym8__;
+          inline_sym8__ = 0;
+          for(inline_sym9__ in 1:1) {
+            FnPrint__("f");
+            inline_sym8__ = 1;
+            inline_sym7__ = 42;
+            break;
+          }
+          data int inline_sym14__;
+          inline_sym14__ = 0;
+          for(inline_sym15__ in 1:1) {
+            FnPrint__("g");
+            int inline_sym11__;
+            data int inline_sym12__;
+            inline_sym12__ = 0;
+            for(inline_sym13__ in 1:1) {
+              FnPrint__("f");
+              inline_sym12__ = 1;
+              inline_sym11__ = 42;
+              break;
+            }
+            if(inline_sym14__) break;
+            inline_sym14__ = 1;
+            inline_sym10__ = (inline_sym11__ + 24);
+            break;
+          }
+          for(i in inline_sym7__:inline_sym10__) {
+            {
+              FnPrint__("body");
+            }
+            data int inline_sym14__;
+            inline_sym14__ = 0;
+            for(inline_sym15__ in 1:1) {
+              FnPrint__("g");
+              int inline_sym11__;
+              data int inline_sym12__;
+              inline_sym12__ = 0;
+              for(inline_sym13__ in 1:1) {
+                FnPrint__("f");
+                inline_sym12__ = 1;
+                inline_sym11__ = 42;
+                break;
+              }
+              if(inline_sym14__) break;
+              inline_sym14__ = 1;
+              inline_sym10__ = (inline_sym11__ + 24);
+              break;
+            }
           }
         }
       }
@@ -558,7 +731,26 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-          while(g(3)) FnPrint__("body");
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__("g");
+            inline_sym2__ = 1;
+            inline_sym1__ = (3 + 24);
+            break;
+          }
+          while(inline_sym1__) {
+            FnPrint__("body");
+            data int inline_sym2__;
+            inline_sym2__ = 0;
+            for(inline_sym3__ in 1:1) {
+              FnPrint__("g");
+              inline_sym2__ = 1;
+              inline_sym1__ = (3 + 24);
+              break;
+            }
+          }
         }
       }
 
@@ -615,7 +807,16 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-          if(g(3)) FnPrint__("body");
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__("g");
+            inline_sym2__ = 1;
+            inline_sym1__ = (3 + 24);
+            break;
+          }
+          if(inline_sym1__) FnPrint__("body");
         }
       }
 
@@ -684,12 +885,37 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-          if(f(2)) {
-
-          } else {
-
+          int inline_sym1__;
+          int inline_sym4__;
+          int inline_sym7__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__("f");
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
+            break;
           }
-          FnPrint__(f(2) ?g(3): h(4));
+          if(inline_sym1__) {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
+              FnPrint__("g");
+              inline_sym5__ = 1;
+              inline_sym4__ = (3 + 24);
+              break;
+            }
+          } else {
+            data int inline_sym8__;
+            inline_sym8__ = 0;
+            for(inline_sym9__ in 1:1) {
+              FnPrint__("h");
+              inline_sym8__ = 1;
+              inline_sym7__ = (4 + 4);
+              break;
+            }
+          }
+          FnPrint__(inline_sym1__ ?inline_sym4__: inline_sym7__);
         }
       }
 
@@ -742,7 +968,21 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-          FnPrint__(f(2));
+          int inline_sym1__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            if(2) {
+              FnPrint__("f");
+              inline_sym2__ = 1;
+              inline_sym1__ = 42;
+              break;
+            }
+            inline_sym2__ = 1;
+            inline_sym1__ = 6;
+            break;
+          }
+          FnPrint__(inline_sym1__);
         }
       }
 
@@ -791,7 +1031,25 @@ let%expect_test "inline function indices " =
       log_prob {
         {
           array[array[int, 2], 2] a;
-          FnPrint__(a[f(1), f(2)]);
+          int inline_sym4__;
+          int inline_sym1__;
+          data int inline_sym5__;
+          inline_sym5__ = 0;
+          for(inline_sym6__ in 1:1) {
+            FnPrint__(2);
+            inline_sym5__ = 1;
+            inline_sym4__ = 42;
+            break;
+          }
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__(1);
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
+            break;
+          }
+          FnPrint__(a[inline_sym1__, inline_sym4__]);
         }
       }
 
@@ -839,10 +1097,27 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-          if(f(1)) {
-
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__(1);
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
+            break;
           }
-          FnPrint__(f(1) && f(2));
+          if(inline_sym1__) {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
+              FnPrint__(2);
+              inline_sym5__ = 1;
+              inline_sym4__ = 42;
+              break;
+            }
+          }
+          FnPrint__(inline_sym1__ && inline_sym4__);
         }
       }
 
@@ -889,10 +1164,27 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-          if(f(1)) ; else {
-
+          int inline_sym1__;
+          int inline_sym4__;
+          data int inline_sym2__;
+          inline_sym2__ = 0;
+          for(inline_sym3__ in 1:1) {
+            FnPrint__(1);
+            inline_sym2__ = 1;
+            inline_sym1__ = 42;
+            break;
           }
-          FnPrint__(f(1) || f(2));
+          if(inline_sym1__) ; else {
+            data int inline_sym5__;
+            inline_sym5__ = 0;
+            for(inline_sym6__ in 1:1) {
+              FnPrint__(2);
+              inline_sym5__ = 1;
+              inline_sym4__ = 42;
+              break;
+            }
+          }
+          FnPrint__(inline_sym1__ || inline_sym4__);
         }
       }
 
@@ -1476,14 +1768,12 @@ let%expect_test "copy propagation" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed data {
+      model {
         int i;
         int j;
         j = i;
         int k;
         k = 2 * j;
-      }
-      model {
         for (x in 1:i) {
           print(i + j + k);
         }
@@ -1496,16 +1786,13 @@ let%expect_test "copy propagation" =
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      prepare_data {
-        data int i;
-        data int j;
-        j = i;
-        data int k;
-        k = (2 * i);
-      }
-
       log_prob {
         {
+          int i;
+          int j;
+          j = i;
+          int k;
+          k = (2 * i);
           for(x in 1:i) {
             FnPrint__(((i + i) + k));
           }
@@ -1544,6 +1831,7 @@ let%expect_test "dead code elimination" =
     {|
       prepare_data {
         data array[int, 2] i;
+        i[1] = 2;
         i = FnMakeArray__(3, 2);
         data array[int, 2] j;
         j = FnMakeArray__(3, 2);
@@ -1884,7 +2172,7 @@ model {
     target += i+j;
     target += i-j;
     target += i*j;
-    target += i/j;
+    target += i%/%j;
     target += i==j;
     target += i!=j;
     target += i<j;
@@ -1997,12 +2285,6 @@ model {
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
-      Info: Found int division at 'string', line 27, column 14 to column 15:
-        i / j
-      Values will be rounded towards zero.
-
-
-
       log_prob {
         matrix[3, 2] x_matrix;
         matrix[2, 4] y_matrix;
@@ -2197,26 +2479,20 @@ let%expect_test "lazy code motion" =
   [%expect
     {|
     log_prob {
-      data real[] sym3__;
+      data real[] lcm_sym3__;
       {
-        sym3__ = FnMakeArray__(3.0);
-        FnPrint__(sym3__);
-        FnPrint__(sym3__);
-        FnPrint__(sym3__);
+        lcm_sym3__ = FnMakeArray__(3.0);
+        FnPrint__(lcm_sym3__);
+        FnPrint__(lcm_sym3__);
+        FnPrint__(lcm_sym3__);
       }
     }
 
     generate_quantities {
-      data int sym2__;
-      data int sym1__;
-      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-        return;
-        ;
-      } else ;
-      if(PNot__(emit_generated_quantities__)) {
-        return;
-        ;
-      } else ;
+      data int lcm_sym2__;
+      data int lcm_sym1__;
+      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(PNot__(emit_generated_quantities__)) return;
     } |}]
 
 let%expect_test "lazy code motion, 2" =
@@ -2238,29 +2514,19 @@ let%expect_test "lazy code motion, 2" =
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           for(i in 1:2) {
-            {
-              FnPrint__((3 + 4));
-            }
-            ;
+            FnPrint__((3 + 4));
           }
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -2283,27 +2549,21 @@ let%expect_test "lazy code motion, 3" =
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           FnPrint__(3);
-          sym3__ = (3 + 5);
-          FnPrint__(sym3__);
-          FnPrint__((sym3__ + 7));
+          lcm_sym3__ = (3 + 5);
+          FnPrint__(lcm_sym3__);
+          FnPrint__((lcm_sym3__ + 7));
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 4" =
@@ -2339,7 +2599,7 @@ let%expect_test "lazy code motion, 4" =
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int b;
           int c;
@@ -2352,31 +2612,25 @@ let%expect_test "lazy code motion, 4" =
               ;
               ;
             }
-            sym3__ = (b + c);
+            lcm_sym3__ = (b + c);
             ;
           } else {
             {
-              sym3__ = (b + c);
-              x = sym3__;
+              lcm_sym3__ = (b + c);
+              x = lcm_sym3__;
               ;
             }
             ;
           }
-          y = sym3__;
+          y = lcm_sym3__;
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -2410,7 +2664,7 @@ let%expect_test "lazy code motion, 5" =
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int b;
           int c;
@@ -2423,35 +2677,29 @@ let%expect_test "lazy code motion, 5" =
               ;
               ;
             }
-            sym3__ = (b + c);
+            lcm_sym3__ = (b + c);
             ;
           } else {
             {
               if(2) {
-                sym3__ = (b + c);
-                x = sym3__;
+                lcm_sym3__ = (b + c);
+                x = lcm_sym3__;
                 ;
-              } else sym3__ = (b + c);
+              } else lcm_sym3__ = (b + c);
                      ;
               ;
             }
             ;
           }
-          y = sym3__;
+          y = lcm_sym3__;
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -2476,30 +2724,21 @@ let%expect_test "lazy code motion, 6" =
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           int x;
           int y;
-          if(2) {
-            x = (1 + 2);
-            ;
-          } else ;
+          if(2) x = (1 + 2);
           y = (4 + 3);
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 7" =
@@ -2542,8 +2781,7 @@ let%expect_test "lazy code motion, 7" =
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int a;
           int b;
@@ -2552,62 +2790,32 @@ let%expect_test "lazy code motion, 7" =
           int y;
           int z;
           if(1) {
-            {
-              a = c;
-              x = (a + b);
-            }
-            ;
-          } else {
-            ;
-            ;
-          }
+            a = c;
+            x = (a + b);
+          } else ;
           if(2) {
-            {
-              if(3) {
-                {
-                  sym4__ = (a + b);
-                  ;
-                  while(4) {
-                    y = sym4__;
-                    ;
-                  }
-                  ;
-                }
-                ;
-              } else {
-                {
-                  ;
-                  while(5) {
-                    ;
-                    ;
-                  }
-                  sym4__ = (a + b);
-                  y = sym4__;
-                }
-                ;
-              }
-              z = sym4__;
+            if(3) {
+              lcm_sym3__ = (a + b);
+              ;
+              while(4) y = lcm_sym3__;
+              ;
+            } else {
+              ;
+              while(5) ;
+              lcm_sym3__ = (a + b);
+              y = lcm_sym3__;
             }
-            ;
-          } else {
-            ;
-            ;
-          }
+            z = lcm_sym3__;
+          } else ;
           ;
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -2651,27 +2859,21 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
 
 
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           FnPrint__(foo(foo_lp(1)));
           FnPrint__(foo(foo_lp(1)));
-          sym3__ = foo(foo(1));
-          FnPrint__(sym3__);
-          FnPrint__(sym3__);
+          lcm_sym3__ = foo(foo(1));
+          FnPrint__(lcm_sym3__);
+          FnPrint__(lcm_sym3__);
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 9" =
@@ -2693,27 +2895,18 @@ let%expect_test "lazy code motion, 9" =
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
-          while((x * 2)) {
-            FnPrint__("hello");
-            ;
-          }
+          while((x * 2)) FnPrint__("hello");
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -2738,7 +2931,7 @@ let%expect_test "lazy code motion, 10" =
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
           x = 3;
@@ -2749,16 +2942,10 @@ let%expect_test "lazy code motion, 10" =
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 11" =
@@ -2786,7 +2973,7 @@ let%expect_test "lazy code motion, 11" =
   [%expect
     {|
       log_prob {
-        data int sym3__;
+        data int lcm_sym3__;
         {
           {
             int x;
@@ -2800,16 +2987,10 @@ let%expect_test "lazy code motion, 11" =
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 12" =
@@ -2834,31 +3015,21 @@ let%expect_test "lazy code motion, 12" =
   [%expect
     {|
       log_prob {
-        data int sym4__;
-        data int sym3__;
+        data int lcm_sym3__;
         {
           int x;
           for(i in 1:6) {
-            {
-              FnPrint__((x + 42));
-              x = 3;
-            }
-            ;
+            FnPrint__((x + 42));
+            x = 3;
           }
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "lazy code motion, 13" =
@@ -2891,62 +3062,44 @@ let%expect_test "lazy code motion, 13" =
   [%expect
     {|
       log_prob {
-        data int sym10__;
-        data int sym9__;
-        data int sym8__;
-        data int sym7__;
-        data int sym6__;
-        real sym5__;
-        real sym4__;
-        data int sym3__;
+        data int lcm_sym7__;
+        data int lcm_sym6__;
+        data int lcm_sym5__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           real temp;
           if((2 > 3)) {
-            sym9__ = (2 * 2);
-            temp = sym9__;
+            lcm_sym6__ = (2 * 2);
+            temp = lcm_sym6__;
             ;
           } else {
             FnPrint__("hello");
-            sym9__ = (2 * 2);
+            lcm_sym6__ = (2 * 2);
             ;
           }
-          temp = sym9__;
+          temp = lcm_sym6__;
           real temp2;
-          if((2 <= 3)) {
-            {
-              {
-                sym10__ = (2 * 3);
-                temp2 = sym10__;
-                sym4__ = temp;
-                target += sym4__;
-                sym8__ = (2 + 1);
-                target += temp2;
-              }
-              for(i in sym8__:3) {
-                {
-                  temp2 = sym10__;
-                  target += sym4__;
-                  target += temp2;
-                }
-                ;
-              }
+          if((3 >= 2)) {
+            lcm_sym7__ = (2 * 3);
+            temp2 = lcm_sym7__;
+            target += temp;
+            lcm_sym5__ = (2 + 1);
+            target += temp2;
+            for(i in lcm_sym5__:3) {
+              temp2 = lcm_sym7__;
+              target += temp;
+              target += temp2;
             }
-            ;
-          } else ;
+          }
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-          ;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -2978,41 +3131,30 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   [%expect
     {|
       log_prob {
-        real sym7__;
-        real sym6__;
-        data int sym5__;
-        data int sym4__;
-        data int sym3__;
+        real lcm_sym6__;
+        real lcm_sym5__;
+        data int lcm_sym4__;
+        data int lcm_sym3__;
         {
           real x;
           int y;
           real theta;
-          if((1 <= 100000)) {
-            {
-              {
-                sym5__ = (1 + 1);
-                sym6__ = bernoulli_logit_lpmf(y, x);
-                target += sym6__;
-              }
-              for(i in sym5__:100000) {
-                {
-                  target += sym6__;
-                }
-              }
+          if((100000 >= 1)) {
+            lcm_sym4__ = (1 + 1);
+            lcm_sym5__ = bernoulli_logit_lpmf(y, x);
+            target += lcm_sym5__;
+            for(i in lcm_sym4__:100000) {
+              target += lcm_sym5__;
             }
-          } else ;
+          }
         }
       }
 
       generate_quantities {
-        data int sym2__;
-        data int sym1__;
-        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
-          return;
-        } else ;
-        if(PNot__(emit_generated_quantities__)) {
-          return;
-        } else ;
+        data int lcm_sym2__;
+        data int lcm_sym1__;
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
 let%expect_test "block fixing" =
@@ -3106,10 +3248,8 @@ let%expect_test "one-step loop unrolling" =
     {|
       prepare_data {
         data int x;
-        if((x <= 6)) {
-          {
-            FnPrint__("hello");
-          }
+        if((6 >= x)) {
+          FnPrint__("hello");
           for(i in (x + 1):6) {
             FnPrint__("hello");
           }
@@ -3118,22 +3258,16 @@ let%expect_test "one-step loop unrolling" =
           FnPrint__("goodbye");
           while((1 < 2)) FnPrint__("goodbye");
         }
-        if((1 <= 1)) {
-          {
-            if((2 <= 2)) {
-              {
-                FnPrint__("nested");
-              }
-              for(j in (2 + 1):2) {
-                FnPrint__("nested");
-              }
+        if((1 >= 1)) {
+          if((2 >= 2)) {
+            FnPrint__("nested");
+            for(j in (2 + 1):2) {
+              FnPrint__("nested");
             }
           }
           for(i in (1 + 1):1) {
-            if((2 <= 2)) {
-              {
-                FnPrint__("nested");
-              }
+            if((2 >= 2)) {
+              FnPrint__("nested");
               for(j in (2 + 1):2) {
                 FnPrint__("nested");
               }
@@ -3409,8 +3543,8 @@ let%expect_test "adlevel_optimization 2" =
         w_trans = 1;
         {
           data int x;
-          data array[real, 2] y;
-          data real z;
+          array[real, 2] y;
+          real z;
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + x); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];

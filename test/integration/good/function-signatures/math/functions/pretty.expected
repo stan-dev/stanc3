@@ -961,6 +961,40 @@ model {
   y_p ~ normal(0, 1);
 }
 
+  $ ../../../../../../../install/default/bin/stanc --auto-format hmm_hidden_states_prob.stan
+data {
+  int N;
+  int K;
+  matrix[K, N] log_omega;
+  matrix[K, K] Gamma;
+  vector[K] rho;
+}
+transformed data {
+  matrix[K, N] prob = hmm_hidden_state_prob(log_omega, Gamma, rho);
+}
+parameters {
+  real y_p;
+}
+transformed parameters {
+  matrix[K, N] log_omega_v;
+  matrix[K, K] Gamma_v;
+  vector[K] rho_v;
+}
+model {
+  y_p ~ normal(0, 1);
+}
+generated quantities {
+  matrix[K, N] prob_gen;
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma_v, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma_v, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma_v, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma_v, rho_v);
+}
+
   $ ../../../../../../../install/default/bin/stanc --auto-format hypot.stan
 data {
   int d_int;
@@ -1325,6 +1359,36 @@ transformed parameters {
   transformed_param_real = if_else(is_nan(d_real), d_real, p_real);
   transformed_param_real = if_else(is_nan(d_real), p_real, d_real);
   transformed_param_real = if_else(is_nan(d_real), p_real, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
+data {
+  int d_int;
+  real d_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = lambert_w0(d_int);
+  transformed_data_real = lambert_w0(d_real);
+  transformed_data_real = lambert_wm1(d_int);
+  transformed_data_real = lambert_wm1(d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lambert_w0(d_int);
+  transformed_param_real = lambert_w0(d_real);
+  transformed_param_real = lambert_w0(p_real);
+  transformed_param_real = lambert_wm1(d_int);
+  transformed_param_real = lambert_wm1(d_real);
+  transformed_param_real = lambert_wm1(p_real);
 }
 model {
   y_p ~ normal(0, 1);
@@ -2055,6 +2119,8 @@ transformed data {
   transformed_data_int = d_int - d_int;
   transformed_data_int = d_int * d_int;
   transformed_data_int = d_int / d_int;
+  transformed_data_int = d_int %/% d_int;
+  transformed_data_int = d_int % d_int;
   transformed_data_int = -d_int;
   transformed_data_int = +d_int;
 }
@@ -2067,6 +2133,8 @@ transformed parameters {
   transformed_param_real = d_int - d_int;
   transformed_param_real = d_int * d_int;
   transformed_param_real = d_int / d_int;
+  transformed_param_real = d_int %/% d_int;
+  transformed_param_real = d_int % d_int;
   transformed_param_real = -d_int;
   transformed_param_real = +d_int;
 }
@@ -2076,10 +2144,16 @@ model {
 
 Info: Found int division at 'operators_int.stan', line 10, column 25 to column 30:
   d_int / d_int
-Values will be rounded towards zero.
-Info: Found int division at 'operators_int.stan', line 24, column 27 to column 32:
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
+Info: Found int division at 'operators_int.stan', line 26, column 27 to column 32:
   d_int / d_int
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
 data {
   int d_int;
@@ -2103,6 +2177,8 @@ transformed data {
   transformed_data_real = d_int / d_real;
   transformed_data_real = d_real / d_int;
   transformed_data_real = d_int / d_int;
+  transformed_data_real = d_int %/% d_int;
+  transformed_data_real = d_int % d_int;
   transformed_data_real = -d_real;
   transformed_data_real = -d_int;
   transformed_data_real = +d_real;
@@ -2145,6 +2221,8 @@ transformed parameters {
   transformed_param_real = d_real / d_int;
   transformed_param_real = d_int / d_real;
   transformed_param_real = d_int / d_int;
+  transformed_param_real = d_int %/% d_int;
+  transformed_param_real = d_int % d_int;
   transformed_param_real = p_real / d_real;
   transformed_param_real = p_real / d_int;
   transformed_param_real = d_real / p_real;
@@ -2163,10 +2241,16 @@ model {
 
 Info: Found int division at 'operators_real.stan', line 23, column 26 to column 31:
   d_int / d_int
-Values will be rounded towards zero.
-Info: Found int division at 'operators_real.stan', line 67, column 27 to column 32:
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
+Info: Found int division at 'operators_real.stan', line 69, column 27 to column 32:
   d_int / d_int
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;

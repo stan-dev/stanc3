@@ -30,7 +30,10 @@ let stan2cpp model_name model_string =
         and msg = (Fmt.to_to_string Semantic_error.pp) error in
         Result.Error (Fmt.strf "%a" Errors.pp_semantic_error (msg, loc))
     | Result.Ok _ as ok -> ok
-    | _ -> Result.Error "The impossible happened."
+    | Result.Error [] ->
+        Result.Error
+          "Semantic check failed but reported no errors. This should never \
+           happen."
   in
   Result.bind ast
     ~f:
@@ -61,4 +64,4 @@ let wrap2 f s1 s2 =
   let s1, s2 = map2 Js.to_string (s1, s2) in
   f s1 s2 |> wrap_result
 
-let _ = Js.export "stanc" (wrap2 stan2cpp)
+let () = Js.export "stanc" (wrap2 stan2cpp)

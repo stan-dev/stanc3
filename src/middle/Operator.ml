@@ -7,6 +7,7 @@ type t =
   | PMinus
   | Times
   | Divide
+  | IntDivide
   | Modulo
   | LDivide
   | EltTimes
@@ -29,6 +30,7 @@ let pp ppf = function
   | Minus | PMinus -> Fmt.pf ppf "-"
   | Times -> Fmt.pf ppf "*"
   | Divide -> Fmt.pf ppf "/"
+  | IntDivide -> Fmt.pf ppf "%%/%%"
   | Modulo -> Fmt.pf ppf "%%"
   | LDivide -> Fmt.pf ppf "\\"
   | EltTimes -> Fmt.pf ppf ".*"
@@ -66,6 +68,7 @@ let stan_math_name = function
     *)
   | Divide -> "mdivide_right"
   (* | Divide -> "divide" *)
+  | IntDivide -> "divide"
   | Modulo -> "modulus"
   | LDivide -> "mdivide_left"
   | EltTimes -> "elt_multiply"

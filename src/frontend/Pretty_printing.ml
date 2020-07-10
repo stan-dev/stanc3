@@ -89,6 +89,7 @@ and pp_operator ppf = function
   | Times -> Fmt.pf ppf "*"
   | Divide -> Fmt.pf ppf "/"
   | Modulo -> Fmt.pf ppf "%%"
+  | IntDivide -> Fmt.pf ppf "%%/%%"
   | LDivide -> Fmt.pf ppf "\\"
   | EltTimes -> Fmt.pf ppf ".*"
   | EltDivide -> Fmt.pf ppf "./"

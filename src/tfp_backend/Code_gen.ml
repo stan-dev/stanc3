@@ -8,7 +8,11 @@ let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-let pystring_of_operator = function x -> strf "%a" Operator.pp x
+
+let pystring_of_operator = function
+  | Operator.IntDivide -> "//"
+  | Operator.Pow -> "**"
+  | x -> strf "%a" Operator.pp x
 
 let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
@@ -46,12 +50,11 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.strided_slice
 *)
       raise_s [%message "Multi-indices not supported yet"]
-  | Indexed (obj, indices) ->
-      let pp_indexed ppf = function
-        | [] -> ()
-        | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
-      in
-      pf ppf "%a%a" pp_expr obj pp_indexed indices
+  | Indexed (obj, indices) -> pf ppf "%a%a" pp_expr obj pp_indices indices
+
+and pp_indices ppf = function
+  | [] -> ()
+  | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
 
 and pp_paren ppf expr =
   match expr.Expr.Fixed.pattern with
@@ -61,11 +64,9 @@ and pp_paren ppf expr =
   | _ -> pp_expr ppf expr
 
 let rec pp_stmt ppf s =
-  let fake_expr pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   match s.Stmt.Fixed.pattern with
   | Assignment ((lhs, _, indices), rhs) ->
-      let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
-      pf ppf "%a = %a" pp_expr indexed pp_expr rhs
+      pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
@@ -190,7 +191,9 @@ let get_params p =
 
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
+    let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
+    pf ppf "(nchains__, @[<hov>%a@])"
+      (list ~sep:comma cast_expr)
       (SizedType.get_dims out_unconstrained_st)
   in
   let ppbody ppf =
@@ -207,10 +210,7 @@ let pp_bijector ppf trans =
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
-    | LowerUpper (lb, ub) ->
-        [ ("Sigmoid", [])
-        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
-        ; ("Shift", [lb]) ]
+    | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
     | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
@@ -275,7 +275,7 @@ from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =
-  pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
+  pf ppf "@[<v>%s@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]@]" imports
     (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
   pf ppf "@ model = %s" p.prog_name
 

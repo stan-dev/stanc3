@@ -21,6 +21,8 @@ transformed data {
   transformed_data_real = d_int / d_real;
   transformed_data_real = d_real / d_int;
   transformed_data_real = d_int / d_int;
+  transformed_data_real = d_int %/% d_int;
+  transformed_data_real = d_int % d_int;
 
   transformed_data_real = -d_real;
   transformed_data_real = -d_int;
@@ -65,6 +67,8 @@ transformed parameters {
   transformed_param_real = d_real / d_int;
   transformed_param_real = d_int / d_real;
   transformed_param_real = d_int / d_int;
+  transformed_param_real = d_int %/% d_int;
+  transformed_param_real = d_int % d_int;
   transformed_param_real = p_real / d_real;
   transformed_param_real = p_real / d_int;
   transformed_param_real = d_real / p_real;
