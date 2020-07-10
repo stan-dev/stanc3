@@ -46,15 +46,15 @@ let pp ppf = function
   | Geq -> Fmt.pf ppf ">="
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
+;;
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
 
 let of_string_opt x =
-  try
-    String.chop_suffix_exn ~suffix:"__" x |> Sexp.of_string |> t_of_sexp |> Some
-  with
+  try String.chop_suffix_exn ~suffix:"__" x |> Sexp.of_string |> t_of_sexp |> Some with
   | Sexplib.Conv.Of_sexp_error _ -> None
   | Invalid_argument _ -> None
+;;
 
 let stan_math_name = function
   | Plus -> "add"
@@ -83,3 +83,4 @@ let stan_math_name = function
   | Geq -> "logical_gte"
   | PNot -> "logical_negation"
   | Transpose -> "transpose"
+;;

@@ -3,7 +3,11 @@ open Common
 
 module Fixed : sig
   module Pattern : sig
-    type litType = Int | Real | Str [@@deriving sexp, hash, compare]
+    type litType =
+      | Int
+      | Real
+      | Str
+    [@@deriving sexp, hash, compare]
 
     type 'a t =
       | Var of string
@@ -36,9 +40,10 @@ end
 module Typed : sig
   module Meta : sig
     type t =
-      { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; adlevel: UnsizedType.autodifftype }
+      { type_ : UnsizedType.t
+      ; loc : Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel : UnsizedType.autodifftype
+      }
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
@@ -54,10 +59,11 @@ end
 module Labelled : sig
   module Meta : sig
     type t =
-      { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; adlevel: UnsizedType.autodifftype
-      ; label: Label.Int_label.t }
+      { type_ : UnsizedType.t
+      ; loc : Location_span.t sexp_opaque [@compare.ignore]
+      ; adlevel : UnsizedType.autodifftype
+      ; label : Label.Int_label.t
+      }
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
@@ -71,9 +77,7 @@ module Labelled : sig
   val label_of : t -> Label.Int_label.t
   val label : ?init:int -> Typed.t -> t
   val associate : ?init:t Label.Int_label.Map.t -> t -> t Label.Int_label.Map.t
-
-  val associate_index :
-    t Label.Int_label.Map.t -> t Index.t -> t Label.Int_label.Map.t
+  val associate_index : t Label.Int_label.Map.t -> t Index.t -> t Label.Int_label.Map.t
 end
 
 module Helpers : sig

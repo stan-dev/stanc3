@@ -13,9 +13,9 @@ let%expect_test "Operator-assign example" =
         }
       |}
   |> trans_prog ""
-  |> (fun Program.{log_prob; _} -> log_prob)
+  |> (fun Program.{ log_prob; _ } -> log_prob)
   |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
       {
@@ -23,9 +23,9 @@ let%expect_test "Operator-assign example" =
         array[vector[2], 4] x;
         x[1] = (x[1] ./ r);
       } |}]
+;;
 
-let mir_from_string s =
-  Frontend_utils.typed_ast_of_string_exn s |> trans_prog ""
+let mir_from_string s = Frontend_utils.typed_ast_of_string_exn s |> trans_prog ""
 
 let%expect_test "Prefix-Op-Example" =
   let mir =
@@ -39,7 +39,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Stmt.Located.t list)] ;
+  print_s [%sexp (op : Stmt.Located.t list)];
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
@@ -68,10 +68,11 @@ let%expect_test "Prefix-Op-Example" =
               ()))
             (meta <opaque>)))))
         (meta <opaque>))) |}]
+;;
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
-  print_s [%sexp (m.prepare_data : Stmt.Located.t list)] ;
+  print_s [%sexp (m.prepare_data : Stmt.Located.t list)];
   [%expect
     {|
     (((pattern
@@ -87,10 +88,11 @@ let%expect_test "read data" =
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (meta <opaque>))) |}]
+;;
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
-  print_s [%sexp (m.log_prob : Stmt.Located.t list)] ;
+  print_s [%sexp (m.log_prob : Stmt.Located.t list)];
   [%expect
     {|
     (((pattern
@@ -201,12 +203,11 @@ let%expect_test "read param" =
               (meta <opaque>)))))
           (meta <opaque>)))))
       (meta <opaque>))) |}]
+;;
 
 let%expect_test "gen quant" =
-  let m =
-    mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }"
-  in
-  print_s [%sexp (m.generate_quantities : Stmt.Located.t list)] ;
+  let m = mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }" in
+  print_s [%sexp (m.generate_quantities : Stmt.Located.t list)];
   [%expect
     {|
     (((pattern
@@ -324,3 +325,4 @@ let%expect_test "gen quant" =
               (meta <opaque>)))))
           (meta <opaque>)))))
       (meta <opaque>))) |}]
+;;

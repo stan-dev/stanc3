@@ -3,12 +3,14 @@ open Frontend
 open Analysis_and_optimization.Pedantic_analysis
 
 let build_program prog =
-  Ast_to_Mir.trans_prog ""
+  Ast_to_Mir.trans_prog
+    ""
     (Option.value_exn
        (Result.ok
           (Semantic_check.semantic_check_program
              (Option.value_exn
                 (Result.ok (Parse.parse_string Parser.Incremental.program prog))))))
+;;
 
 let sigma_example =
   {|
@@ -30,9 +32,10 @@ let sigma_example =
           x ~ normal (0, z);
         }
       |}
+;;
 
 let%expect_test "Unbounded sigma warning" =
-  print_warn_pedantic (build_program sigma_example) ;
+  print_warn_pedantic (build_program sigma_example);
   [%expect
     {|
       Warning:
@@ -60,6 +63,7 @@ let%expect_test "Unbounded sigma warning" =
         A normal distribution is given value -1 as a scale parameter (argument 2),
         but a scale parameter is not strictly positive.
     |}]
+;;
 
 let uniform_example =
   {|
@@ -77,9 +81,10 @@ let uniform_example =
           d ~ uniform(0, 1);
         }
       |}
+;;
 
 let%expect_test "Uniform warning" =
-  print_warn_pedantic (build_program uniform_example) ;
+  print_warn_pedantic (build_program uniform_example);
   [%expect
     {|
       Warning:
@@ -112,6 +117,7 @@ let%expect_test "Uniform warning" =
         constraints; for example, instead of giving an elasticity parameter a
         uniform(0,1) distribution, try normal(0.5,0.5).
     |}]
+;;
 
 let unscaled_example =
   {|
@@ -129,9 +135,10 @@ let unscaled_example =
           z = -1000 + 0.00001;
         }
       |}
+;;
 
 let%expect_test "Unscaled warning" =
-  print_warn_pedantic (build_program unscaled_example) ;
+  print_warn_pedantic (build_program unscaled_example);
   [%expect
     {|
       Warning at 'string', line 11, column 21 to column 26:
@@ -140,6 +147,7 @@ let%expect_test "Unscaled warning" =
       Warning at 'string', line 11, column 28 to column 33:
         Argument 10000 suggests there may be parameters that are not unit scale;
         consider rescaling with a multiplier (see manual section 22.12). |}]
+;;
 
 let multi_twiddle_example =
   {|
@@ -153,9 +161,10 @@ let multi_twiddle_example =
           x ~ normal(y, 1);
         }
       |}
+;;
 
 let%expect_test "Multi twiddle warning" =
-  print_warn_pedantic (build_program multi_twiddle_example) ;
+  print_warn_pedantic (build_program multi_twiddle_example);
   [%expect
     {|
       Warning:
@@ -165,6 +174,7 @@ let%expect_test "Multi twiddle warning" =
       Warning at 'string', line 7, column 10 to column 27:
         The parameter x is on the left-hand side of more than one twiddle
         statement. |}]
+;;
 
 let hard_constrained_example =
   {|
@@ -179,9 +189,10 @@ let hard_constrained_example =
         model {
         }
       |}
+;;
 
 let%expect_test "Hard constraint warning" =
-  print_warn_pedantic (build_program hard_constrained_example) ;
+  print_warn_pedantic (build_program hard_constrained_example);
   [%expect
     {|
       Warning:
@@ -222,6 +233,7 @@ let%expect_test "Hard constraint warning" =
         soft constraints rather than hard constraints; for example, instead of
         constraining an elasticity parameter to fall between 0, and 1, leave it
         unconstrained and give it a normal(0.5,0.5) prior distribution. |}]
+;;
 
 let unused_param_example =
   {|
@@ -243,9 +255,10 @@ let unused_param_example =
           real g = d;
         }
       |}
+;;
 
 let%expect_test "Unused param warning" =
-  print_warn_pedantic (build_program unused_param_example) ;
+  print_warn_pedantic (build_program unused_param_example);
   [%expect
     {|
       Warning:
@@ -258,6 +271,7 @@ let%expect_test "Unused param warning" =
         The parameter e was declared but was not used in the density calculation.
       Warning:
         The parameter f was declared but was not used in the density calculation. |}]
+;;
 
 let param_dependant_cf_example =
   {|
@@ -281,9 +295,10 @@ let param_dependant_cf_example =
           }
         }
       |}
+;;
 
 let%expect_test "Parameter dependent control flow warning" =
-  print_warn_pedantic (build_program param_dependant_cf_example) ;
+  print_warn_pedantic (build_program param_dependant_cf_example);
   [%expect
     {|
       Warning at 'string', line 9, column 10 to line 13, column 11:
@@ -292,6 +307,7 @@ let%expect_test "Parameter dependent control flow warning" =
         A control flow statement depends on parameter(s): a.
       Warning at 'string', line 17, column 10 to line 19, column 11:
         A control flow statement depends on parameter(s): a. |}]
+;;
 
 let non_one_priors_example =
   {|
@@ -313,9 +329,10 @@ let non_one_priors_example =
           x ~ normal(c, d);
         }
       |}
+;;
 
 let%expect_test "Non-one priors no warning" =
-  print_warn_pedantic (build_program non_one_priors_example) ;
+  print_warn_pedantic (build_program non_one_priors_example);
   [%expect
     {|
       Warning at 'string', line 15, column 24 to column 25:
@@ -324,6 +341,7 @@ let%expect_test "Non-one priors no warning" =
       Warning at 'string', line 17, column 24 to column 25:
         A normal distribution is given parameter d as a scale parameter (argument
         2), but d was not constrained to be strictly positive. |}]
+;;
 
 let non_one_priors_example2 =
   {|
@@ -351,9 +369,10 @@ let non_one_priors_example2 =
           f ~ normal(e, 1);
         }
       |}
+;;
 
 let%expect_test "Non-one priors warning" =
-  print_warn_pedantic (build_program non_one_priors_example2) ;
+  print_warn_pedantic (build_program non_one_priors_example2);
   [%expect
     {|
       Warning:
@@ -371,6 +390,7 @@ let%expect_test "Non-one priors warning" =
       Warning at 'string', line 22, column 10 to column 27:
         The parameter f is on the left-hand side of more than one twiddle
         statement. |}]
+;;
 
 let gamma_args_example =
   {|
@@ -389,9 +409,10 @@ let gamma_args_example =
           d ~ gamma(0.4, 0.6);
         }
       |}
+;;
 
 let%expect_test "Gamma args warning" =
-  print_warn_pedantic (build_program gamma_args_example) ;
+  print_warn_pedantic (build_program gamma_args_example);
   [%expect
     {|
       Warning:
@@ -424,6 +445,7 @@ let%expect_test "Gamma args warning" =
         A inv_gamma distribution is given parameter b as a scale parameter
         (argument 2), but b was not constrained to be strictly positive.
     |}]
+;;
 
 let dist_bounds_example =
   {|
@@ -440,9 +462,10 @@ let dist_bounds_example =
           d ~ lognormal(2, 2);
         }
       |}
+;;
 
 let%expect_test "Dist bounds warning" =
-  print_warn_pedantic (build_program dist_bounds_example) ;
+  print_warn_pedantic (build_program dist_bounds_example);
   [%expect
     {|
       Warning at 'string', line 9, column 10 to column 11:
@@ -452,6 +475,7 @@ let%expect_test "Dist bounds warning" =
         Parameter c is given a lognormal distribution, which has strictly positive
         support, but c was not constrained to be strictly positive.
     |}]
+;;
 
 let dist_examples =
   {|
@@ -593,11 +617,12 @@ model {
   cov ~ inv_wishart(pos_p, cov);
 }
 |}
+;;
 
 (* Distribution warnings should appear only on alternating lines,
    since the program lines go incorrect,correct,incorrect,correct,etc.*)
 let%expect_test "Dist warnings" =
-  print_warn_pedantic (build_program dist_examples) ;
+  print_warn_pedantic (build_program dist_examples);
   [%expect
     {|
       Warning:
@@ -958,6 +983,7 @@ let%expect_test "Dist warnings" =
         A inv_wishart distribution is given parameter mat as a scale matrix
         (argument 2), but mat was not constrained to be covariance.
     |}]
+;;
 
 let fundef_cf_example =
   {|
@@ -981,9 +1007,10 @@ model {
   x ~ normal(0, func(sigma));
 }
 |}
+;;
 
 let%expect_test "Function body parameter-dependent control flow" =
-  print_warn_pedantic (build_program fundef_cf_example) ;
+  print_warn_pedantic (build_program fundef_cf_example);
   [%expect
     {|
       Warning:
@@ -993,3 +1020,4 @@ let%expect_test "Function body parameter-dependent control flow" =
         'string', line 19, column 21 to column 26, the value of b depends on
         parameter(s): sigma.
     |}]
+;;

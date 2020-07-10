@@ -23,10 +23,7 @@ module type S = sig
   val get_errors_opt : 'a t -> error list option
   val get_first_error_opt : 'a t -> error option
   val get_success_opt : 'a t -> 'a option
-
-  val get_with :
-    'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
-
+  val get_with : 'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
   val to_result : 'a t -> ('a, error list) result
 
   module Validation_infix : Infix with type 'a t := 'a t

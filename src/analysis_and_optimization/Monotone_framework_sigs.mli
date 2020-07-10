@@ -1,7 +1,7 @@
-open Core_kernel
 (** The API for a monotone framework, as described in 2.3-2.4 of
     Nielson, Nielson, and Hankin or 9.3 of Aho et al..
     This gives a modular way of implementing many static analyses. *)
+open Core_kernel
 
 (** The API for a flowgraph, needed for the mfp algorithm
     in the monotone framework.
@@ -46,10 +46,10 @@ module type LATTICE_NO_BOT = sig
 
   val leq : properties -> properties -> bool
 
-  val initial : properties
   (**  An initial value, which might not be the top element.
        The idea is that this is the property that you start with
        (you assume to be true at the start of your analysis). *)
+  val initial : properties
 
   val lub : properties -> properties -> properties
 end
@@ -73,7 +73,10 @@ module type TRANSFER_FUNCTION = sig
   val transfer_function : labels -> properties -> properties
 end
 
-type 'a entry_exit = {entry: 'a; exit: 'a}
+type 'a entry_exit =
+  { entry : 'a
+  ; exit : 'a
+  }
 
 (** The API for a monotone framework. mfp computes the minimal fixed
     point of the equations/inequalities defined between property lattice

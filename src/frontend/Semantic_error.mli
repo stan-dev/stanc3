@@ -5,12 +5,13 @@ type t
 val pp : Format.formatter -> t -> unit
 val location : t -> Location_span.t
 
-val mismatched_return_types :
-  Location_span.t -> UnsizedType.returntype -> UnsizedType.returntype -> t
+val mismatched_return_types
+  :  Location_span.t
+  -> UnsizedType.returntype
+  -> UnsizedType.returntype
+  -> t
 
-val mismatched_array_types :
-  Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
-
+val mismatched_array_types : Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 val invalid_row_vector_types : Location_span.t -> UnsizedType.t -> t
 val invalid_matrix_types : Location_span.t -> UnsizedType.t -> t
 val int_expected : Location_span.t -> string -> UnsizedType.t -> t
@@ -18,55 +19,60 @@ val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
 val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
 
-val scalar_or_type_expected :
-  Location_span.t -> string -> UnsizedType.t -> UnsizedType.t -> t
+val scalar_or_type_expected
+  :  Location_span.t
+  -> string
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> t
 
-val array_vector_rowvector_matrix_expected :
-  Location_span.t -> UnsizedType.t -> t
+val array_vector_rowvector_matrix_expected : Location_span.t -> UnsizedType.t -> t
 
-val illtyped_assignment :
-     Location_span.t
+val illtyped_assignment
+  :  Location_span.t
   -> Ast.assignmentoperator
   -> UnsizedType.t
   -> UnsizedType.t
   -> t
 
-val illtyped_ternary_if :
-  Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
+val illtyped_ternary_if
+  :  Location_span.t
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> t
 
 val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
 val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 val returning_fn_expected_undeclaredident_found : Location_span.t -> string -> t
 
-val illtyped_reduce_sum :
-     Location_span.t
+val illtyped_reduce_sum
+  :  Location_span.t
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> t
 
-val illtyped_reduce_sum_generic :
-  Location_span.t -> string -> UnsizedType.t list -> t
-
+val illtyped_reduce_sum_generic : Location_span.t -> string -> UnsizedType.t list -> t
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
+val nonreturning_fn_expected_undeclaredident_found : Location_span.t -> string -> t
+val illtyped_stanlib_fn_app : Location_span.t -> string -> UnsizedType.t list -> t
 
-val nonreturning_fn_expected_undeclaredident_found :
-  Location_span.t -> string -> t
-
-val illtyped_stanlib_fn_app :
-  Location_span.t -> string -> UnsizedType.t list -> t
-
-val illtyped_userdefined_fn_app :
-     Location_span.t
+val illtyped_userdefined_fn_app
+  :  Location_span.t
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.returntype
   -> UnsizedType.t list
   -> t
 
-val illtyped_binary_op :
-  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
+val illtyped_binary_op
+  :  Location_span.t
+  -> Operator.t
+  -> UnsizedType.t
+  -> UnsizedType.t
+  -> t
 
 val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
 val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
@@ -99,10 +105,7 @@ val void_ouside_nonreturning_fn : Location_span.t -> t
 val non_data_variable_size_decl : Location_span.t -> t
 val non_int_bounds : Location_span.t -> t
 val transformed_params_int : Location_span.t -> t
-
-val mismatched_fn_def_decl :
-  Location_span.t -> string -> UnsizedType.t option -> t
-
+val mismatched_fn_def_decl : Location_span.t -> string -> UnsizedType.t option -> t
 val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t

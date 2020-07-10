@@ -7,11 +7,7 @@ module type S = sig
 
   include Pretty.S with type t := t
   include Comparator.S with type t := t
-
-  include
-    Comparable.S
-      with type t := t
-       and type comparator_witness := comparator_witness
+  include Comparable.S with type t := t and type comparator_witness := comparator_witness
 
   val init : t
   val next : t -> t

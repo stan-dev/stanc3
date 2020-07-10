@@ -5,13 +5,13 @@ open Analysis_and_optimization.Dataflow_types
 
 let semantic_check_program ast =
   Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+    (Result.ok (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+;;
 
 let reject_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
         parameters {
           real x;
@@ -49,11 +49,12 @@ let reject_example =
       |}
   in
   Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+;;
 
 let%expect_test "Factor graph reject example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = prog_factor_graph reject_example in
-  print_s [%sexp (deps : factor_graph)] ;
+  print_s [%sexp (deps : factor_graph)];
   [%expect
     {|
       ((factor_map
@@ -70,10 +71,12 @@ let%expect_test "Factor graph reject example" =
           ())))
        (var_map ()))
     |}]
+;;
 
 let complex_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
         parameters {
           real a;
@@ -101,10 +104,11 @@ let complex_example =
       |}
   in
   Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+;;
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
-  print_s [%sexp (deps : factor_graph)] ;
+  print_s [%sexp (deps : factor_graph)];
   [%expect
     {|
       ((factor_map
@@ -326,10 +330,12 @@ let%expect_test "Factor graph complex example" =
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
             21))))))
     |}]
+;;
 
 let complex_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
         data {
           real x;
@@ -357,11 +363,11 @@ let complex_example =
       |}
   in
   Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+;;
 
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
-  print_s
-    [%sexp (priors : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t)] ;
+  print_s [%sexp (priors : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t)];
   [%expect
     {|
       (((VVar a)
@@ -423,3 +429,4 @@ let%expect_test "Priors complex example" =
            13))))
        ((VVar c) (())) ((VVar d) (())) ((VVar e) (())) ((VVar f) (())))
     |}]
+;;

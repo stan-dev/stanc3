@@ -6,9 +6,8 @@ open Analysis_and_optimization.Dataflow_types
 
 let semantic_check_program ast =
   Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+    (Result.ok (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+;;
 
 (***********************************)
 (* Tests                           *)
@@ -16,7 +15,8 @@ let semantic_check_program ast =
 
 let%expect_test "Loop test" =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
       model {
         for (i in 1:2)
@@ -29,18 +29,17 @@ let%expect_test "Loop test" =
   let statement_map =
     Stmt.Fixed.(
       build_statement_map
-        (fun {pattern; _} -> pattern)
-        (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block}) in
+        (fun { pattern; _ } -> pattern)
+        (fun { meta; _ } -> meta)
+        { meta = Location_span.empty; pattern = block })
+  in
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
-      ( statement_map
-        : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
-  print_s [%sexp (exits : label Set.Poly.t)] ;
-  print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)] ;
+      (statement_map
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t) Map.Poly.t)];
+  print_s [%sexp (exits : label Set.Poly.t)];
+  print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -88,10 +87,12 @@ let%expect_test "Loop test" =
       (1)
       ((1 (2)) (2 (3)) (3 (4)) (4 (5)) (5 (3)))
     |}]
+;;
 
 let%expect_test "Loop passthrough" =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
         model {
           if (1) {
@@ -123,18 +124,21 @@ let%expect_test "Loop passthrough" =
   let statement_map =
     Stmt.Fixed.(
       build_statement_map
-        (fun {pattern; _} -> pattern)
-        (fun {meta; _} -> meta)
-        {meta= Location_span.empty; pattern= block}) in
+        (fun { pattern; _ } -> pattern)
+        (fun { meta; _ } -> meta)
+        { meta = Location_span.empty; pattern = block })
+  in
   let exits, _ = build_predecessor_graph statement_map in
-  print_s [%sexp (exits : label Set.Poly.t)] ;
+  print_s [%sexp (exits : label Set.Poly.t)];
   [%expect {|
       (1)
     |}]
+;;
 
 let example1_program =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
         model
         {                                // 1
@@ -170,20 +174,22 @@ let example1_program =
   in
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
+  Stmt.Fixed.{ meta = Location_span.empty; pattern = block }
+;;
 
 let example1_statement_map =
   Stmt.Fixed.(
     build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
+      (fun { pattern; _ } -> pattern)
+      (fun { meta; _ } -> meta)
       example1_program)
+;;
 
 let%expect_test "Statement label map example" =
   print_s
     [%sexp
-      ( Map.Poly.map example1_statement_map ~f:fst
-        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t )] ;
+      (Map.Poly.map example1_statement_map ~f:fst
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t)];
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
@@ -280,12 +286,11 @@ let%expect_test "Statement label map example" =
          (((pattern (Lit Str Fin))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
+;;
 
 let%expect_test "Predecessor graph example" =
   let exits, preds = build_predecessor_graph example1_statement_map in
-  print_s
-    [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (exits, preds : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1)
@@ -294,10 +299,11 @@ let%expect_test "Predecessor graph example" =
         (15 (16)) (16 (14)) (17 (14 15)) (18 (19)) (19 (17)) (20 (21)) (21 (17))
         (22 (18 20))))
     |}]
+;;
 
 let%expect_test "Controlflow graph example" =
   let cf = build_cf_graph example1_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 ()) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
@@ -305,17 +311,22 @@ let%expect_test "Controlflow graph example" =
        (17 (9 16)) (18 (16 17)) (19 (16 17)) (20 (16 17)) (21 (16 17))
        (22 (9 16 19)))
     |}]
+;;
 
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun pattern meta -> Stmt.Fixed.{pattern; meta})
-      example1_statement_map 1 in
+      (fun pattern meta -> Stmt.Fixed.{ pattern; meta })
+      example1_statement_map
+      1
+  in
   stmt = example1_program
+;;
 
 let example3_program =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
       model {
         while (42);
@@ -326,24 +337,24 @@ let example3_program =
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
-      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
+      Pattern.SList [ { pattern = Block mir.log_prob; meta = Location_span.empty } ])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.Fixed.{ meta = Location_span.empty; pattern = blocks }
+;;
 
 let example3_statement_map =
   Stmt.Fixed.(
     build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
+      (fun { pattern; _ } -> pattern)
+      (fun { meta; _ } -> meta)
       example3_program)
+;;
 
 let%expect_test "Statement label map example 3" =
   print_s
     [%sexp
-      ( example3_statement_map
-        : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+      (example3_statement_map
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t) Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -384,13 +395,15 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 4) (col_num 22) (included_from ())))))))
     |}]
+;;
 
 let%expect_test "Controlflow graph example 3" =
   let cf = build_cf_graph example3_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 ()))
     |}]
+;;
 
 let%expect_test "Predecessor graph example 3" =
   (* TODO: this is still wrong. The correct answer is
@@ -398,17 +411,16 @@ let%expect_test "Predecessor graph example 3" =
      Similarly for for-loops.
      ) *)
   let exits, preds = build_predecessor_graph example3_statement_map in
-  print_s
-    [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
-  [%expect
-    {|
+  print_s [%sexp (exits, preds : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
+  [%expect {|
       ((2) ((1 ()) (2 (3)) (3 (6)) (4 (1 5)) (5 (4)) (6 (4))))
     |}]
+;;
 
 let example4_program =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
       model {
         for (i in 1:6) {
@@ -421,24 +433,24 @@ let example4_program =
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
-      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
+      Pattern.SList [ { pattern = Block mir.log_prob; meta = Location_span.empty } ])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.Fixed.{ meta = Location_span.empty; pattern = blocks }
+;;
 
 let example4_statement_map =
   Stmt.Fixed.(
     build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
+      (fun { pattern; _ } -> pattern)
+      (fun { meta; _ } -> meta)
       example4_program)
+;;
 
 let%expect_test "Statement label map example 4" =
   print_s
     [%sexp
-      ( example4_statement_map
-        : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+      (example4_statement_map
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t) Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -484,14 +496,15 @@ let%expect_test "Statement label map example 4" =
           (end_loc
            ((filename string) (line_num 5) (col_num 11) (included_from ())))))))
     |}]
+;;
 
 let%expect_test "Controlflow graph example 4" =
   let cf = build_cf_graph example4_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
-  [%expect
-    {|
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
+  [%expect {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4)) (7 (4 6)))
     |}]
+;;
 
 let%expect_test "Predecessor graph example 4" =
   let exits, preds = build_predecessor_graph example4_statement_map in
@@ -500,17 +513,17 @@ let%expect_test "Predecessor graph example 4" =
      or a very conservative approximation
      ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
   *)
-  print_s
-    [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (exits, preds : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((2) ((1 ()) (2 (3)) (3 (4)) (4 (1 5 6)) (5 (7)) (6 (4)) (7 (6))))
     |}]
+;;
 
 let example5_program =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Parse.parse_string
+      Parser.Incremental.program
       {|
       model {
         for (i in 1:6) {
@@ -524,24 +537,24 @@ let example5_program =
   let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
-      Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
+      Pattern.SList [ { pattern = Block mir.log_prob; meta = Location_span.empty } ])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.Fixed.{ meta = Location_span.empty; pattern = blocks }
+;;
 
 let example5_statement_map =
   Stmt.Fixed.(
     build_statement_map
-      (fun {pattern; _} -> pattern)
-      (fun {meta; _} -> meta)
+      (fun { pattern; _ } -> pattern)
+      (fun { meta; _ } -> meta)
       example5_program)
+;;
 
 let%expect_test "Statement label map example 5" =
   print_s
     [%sexp
-      ( example5_statement_map
-        : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+      (example5_statement_map
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t) Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -592,14 +605,15 @@ let%expect_test "Statement label map example 5" =
            ((filename string) (line_num 7) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 7) (col_num 9) (included_from ())))))))
     |}]
+;;
 
 let%expect_test "Controlflow graph example 5" =
   let cf = build_cf_graph example5_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
-  [%expect
-    {|
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
+  [%expect {|
       ((1 ()) (2 ()) (3 ()) (4 (6)) (5 (4)) (6 (4)) (7 (4)) (8 ()))
     |}]
+;;
 
 let%expect_test "Predecessor graph example 5" =
   let exits, preds = build_predecessor_graph example5_statement_map in
@@ -607,10 +621,9 @@ let%expect_test "Predecessor graph example 5" =
      (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
      but maybe that's too much to ask for
      ) *)
-  print_s
-    [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (exits, preds : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))
     |}]
+;;

@@ -11,13 +11,15 @@ module type Frontend = sig
 
   val render_error : frontend_error -> string
 
-  val mir_of_file :
-       opts:frontend_opts
+  val mir_of_file
+    :  opts:frontend_opts
     -> file:string
     -> (Program.Typed.t, frontend_error) result
 
-  val mir_of_string :
-    opts:frontend_opts -> str:string -> (Program.Typed.t, frontend_error) result
+  val mir_of_string
+    :  opts:frontend_opts
+    -> str:string
+    -> (Program.Typed.t, frontend_error) result
 end
 
 module type Backend = sig
@@ -51,24 +53,30 @@ module Compiler = struct
 
     val default_compiler_opts : compiler_opts
 
-    val compiler_opts_of_string :
-      string -> (compiler_opts, compiler_opts_error list) result
+    val compiler_opts_of_string
+      :  string
+      -> (compiler_opts, compiler_opts_error list) result
 
-    val compile_from_file :
-      opts:compiler_opts -> file:string -> (string, frontend_error) result
+    val compile_from_file
+      :  opts:compiler_opts
+      -> file:string
+      -> (string, frontend_error) result
   end
 
   module Make (F : Frontend) (O : Optimization) (B : Backend) :
     S with type frontend_error := F.frontend_error = struct
     type compiler_opts =
-      { frontend_opts: F.frontend_opts
-      ; optimization_opts: O.optimization_opts
-      ; backend_opts: B.backend_opts }
+      { frontend_opts : F.frontend_opts
+      ; optimization_opts : O.optimization_opts
+      ; backend_opts : B.backend_opts
+      }
 
     let default_compiler_opts =
-      { frontend_opts= F.default_frontend_opts
-      ; optimization_opts= O.default_optimization_opts
-      ; backend_opts= B.default_backend_opts }
+      { frontend_opts = F.default_frontend_opts
+      ; optimization_opts = O.default_optimization_opts
+      ; backend_opts = B.default_backend_opts
+      }
+    ;;
 
     [@@@ocaml.warning "-37"]
 
@@ -77,11 +85,12 @@ module Compiler = struct
       | Optimize_opts_error of string
       | Backend_opts_error of string
 
-    let compiler_opts_of_string str = Error [Frontend_opts_error ("todo " ^ str)]
+    let compiler_opts_of_string str = Error [ Frontend_opts_error ("todo " ^ str) ]
 
     let compile_from_file ~opts ~file =
       F.mir_of_file ~opts:opts.frontend_opts ~file
       |> Result.map ~f:(O.optimize ~opts:opts.optimization_opts)
       |> Result.map ~f:(B.mir_to_string ~opts:opts.backend_opts)
+    ;;
   end
 end

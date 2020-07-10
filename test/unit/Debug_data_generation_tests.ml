@@ -5,7 +5,8 @@ open Debug_data_generation
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|       data {
                   int<lower=7> K;
                   int<lower=1> D;
@@ -18,10 +19,10 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{\
@@ -32,11 +33,13 @@ let%expect_test "whole program data generation check" =
       \n     2.56799363086151, 3.3282621325833865, 2.7103944900448411,\
       \n     5.2015419032442969, 4.25312636944623]]\
       \n}" |}]
+;;
 
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|       data {
                     int x[3, 4];
                     int y[5, 2, 4];
@@ -49,10 +52,10 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{\
@@ -75,11 +78,13 @@ let%expect_test "whole program data generation check" =
       \n    [4.0434169569431706, 5.2448759493135153, 2.0095894885098069],\
       \n    [3.8556222147542085, 3.226595023801782, 2.292622453020976]]\
       \n}" |}]
+;;
 
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|       data {
                   int<lower=2, upper=4> K;
                   int<lower=K, upper=K> D;
@@ -93,10 +98,10 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{\
@@ -109,11 +114,13 @@ let%expect_test "whole program data generation check" =
       \n    [3.543689144366625, 6.0288479433993629],\
       \n    [3.604405750889411, 4.0759938356540726]]\
       \n}" |}]
+;;
 
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|
         data {
           corr_matrix[5] d;
@@ -131,10 +138,10 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{\
@@ -188,11 +195,13 @@ let%expect_test "whole program data generation check" =
       \n    [1.8124656303877222, 1.8059981193977444, 1.9574266472261275,\
       \n      1.3421609989627226]]\
       \n}" |}]
+;;
 
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|
         data {
           int<lower=0> N;
@@ -222,10 +231,10 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{\
@@ -333,11 +342,13 @@ let%expect_test "whole program data generation check" =
       \n      [1.275024919645803, 0.6402078241901894, 0.],\
       \n      [1.2238398605980445, 1.0912017876639934, 1.8199435094277936]]]\
       \n}" |}]
+;;
 
 let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
-    parse_string Parser.Incremental.program
+    parse_string
+      Parser.Incremental.program
       {|
       data {
         int<lower = 0> K;                     // players
@@ -351,11 +362,12 @@ let%expect_test "whole program data generation check" =
   let ast =
     Option.value_exn
       (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast)))) in
+         (Semantic_check.semantic_check_program (Option.value_exn (Result.ok ast))))
+  in
   let str = print_data_prog ast in
-  print_s [%sexp (str : string)] ;
+  print_s [%sexp (str : string)];
   [%expect
     {|
        "{ \"K\": 3, \"N\": 1, \"player1\": [2], \"player0\": [1], \"y\": [1]\
       \n}" |}]
+;;

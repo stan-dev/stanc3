@@ -14,13 +14,19 @@ module Fixed : sig
       | Skip
       | IfElse of 'a * 'b * 'b option
       | While of 'a * 'b
-      | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
+      | For of
+          { loopvar : string
+          ; lower : 'a
+          ; upper : 'a
+          ; body : 'b
+          }
       | Block of 'b list
       | SList of 'b list
       | Decl of
-          { decl_adtype: UnsizedType.autodifftype
-          ; decl_id: string
-          ; decl_type: 'a Type.t }
+          { decl_adtype : UnsizedType.autodifftype
+          ; decl_id : string
+          ; decl_type : 'a Type.t
+          }
     [@@deriving sexp, hash, compare]
 
     and 'a lvalue = string * UnsizedType.t * 'a Index.t list
@@ -58,15 +64,15 @@ module Located : sig
   include
     Specialized.S
       with module Meta := Meta
-       and type t =
-            (Expr.Typed.Meta.t, (Meta.t sexp_opaque[@compare.ignore])) Fixed.t
+       and type t = (Expr.Typed.Meta.t, (Meta.t sexp_opaque[@compare.ignore])) Fixed.t
 
   val loc_of : t -> Location_span.t
 
   module Non_recursive : sig
     type t =
-      { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
-      ; meta: Meta.t sexp_opaque [@compare.ignore] }
+      { pattern : (Expr.Typed.t, int) Fixed.Pattern.t
+      ; meta : Meta.t sexp_opaque [@compare.ignore]
+      }
     [@@deriving compare, sexp, hash]
   end
 end
@@ -74,8 +80,9 @@ end
 module Labelled : sig
   module Meta : sig
     type t =
-      { loc: Location_span.t sexp_opaque [@compare.ignore]
-      ; label: Int_label.t [@compare.ignore] }
+      { loc : Location_span.t sexp_opaque [@compare.ignore]
+      ; label : Int_label.t [@compare.ignore]
+      }
     [@@deriving compare, create, sexp, hash]
 
     include Specialized.Meta with type t := t
@@ -91,7 +98,9 @@ module Labelled : sig
   val label : ?init:int -> Located.t -> t
 
   type associations =
-    {exprs: Expr.Labelled.t Int_label.Map.t; stmts: t Int_label.Map.t}
+    { exprs : Expr.Labelled.t Int_label.Map.t
+    ; stmts : t Int_label.Map.t
+    }
 
   val associate : ?init:associations -> t -> associations
 end
@@ -112,47 +121,52 @@ module Numbered : sig
 end
 
 module Helpers : sig
-  val ensure_var :
-    (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
+  val ensure_var : (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
 
-  val internal_nrfunapp :
-    Internal_fun.t -> 'a Fixed.First.t list -> 'b -> ('a, 'b) Fixed.t
+  val internal_nrfunapp
+    :  Internal_fun.t
+    -> 'a Fixed.First.t list
+    -> 'b
+    -> ('a, 'b) Fixed.t
 
   val contains_fn : Internal_fun.t -> ?init:bool -> ('a, 'b) Fixed.t -> bool
 
-  val mkfor :
-       Expr.Typed.t
+  val mkfor
+    :  Expr.Typed.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
-  val for_each :
-    (Expr.Typed.t -> Located.t) -> Expr.Typed.t -> Location_span.t -> Located.t
+  val for_each
+    :  (Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> Located.t
 
-  val for_scalar :
-       Expr.Typed.t SizedType.t
+  val for_scalar
+    :  Expr.Typed.t SizedType.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
-  val for_scalar_inv :
-       Expr.Typed.t SizedType.t
+  val for_scalar_inv
+    :  Expr.Typed.t SizedType.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
-  val for_eigen :
-       Expr.Typed.t SizedType.t
+  val for_eigen
+    :  Expr.Typed.t SizedType.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t
     -> Location_span.t
     -> Located.t
 
-  val assign_indexed :
-       UnsizedType.t
+  val assign_indexed
+    :  UnsizedType.t
     -> string
     -> 'a
     -> ('b Expr.Fixed.t -> 'b Expr.Fixed.t)

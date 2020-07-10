@@ -5,20 +5,23 @@ open Fmt
 open Stan_math_code_gen
 
 let%expect_test "udf" =
-  let with_no_loc stmt =
-    Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num} in
-  let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
+  let with_no_loc stmt = Stmt.Fixed.{ pattern = stmt; meta = Locations.no_span_num } in
+  let w e = Expr.{ Fixed.pattern = e; meta = Typed.Meta.empty } in
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
-  { fdrt= None
-  ; fdname= "sars"
-  ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
-  ; fdbody=
+  { fdrt = None
+  ; fdname = "sars"
+  ; fdargs = [ DataOnly, "x", UMatrix; AutoDiffable, "y", URowVector ]
+  ; fdbody =
       Stmt.Fixed.Pattern.Return
-        (Some (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
-      |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
-  ; fdloc= Location_span.empty }
+        (Some (w @@ FunApp (StanLib, "add", [ w @@ Var "x"; w @@ Lit (Int, "1") ])))
+      |> with_no_loc
+      |> List.return
+      |> Stmt.Fixed.Pattern.Block
+      |> with_no_loc
+  ; fdloc = Location_span.empty
+  }
   |> strf "@[<v>%a" pp_fun_def_w_rs
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
     template <typename T1__>
@@ -50,3 +53,4 @@ let%expect_test "udf" =
     return sars(x, y, pstream__);
     }
     }; |}]
+;;
