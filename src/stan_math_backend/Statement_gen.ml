@@ -34,10 +34,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
     pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
 
 let%expect_test "set size mat array" =
-  let int i =
-    { Expr.Fixed.pattern= Lit (Int, string_of_int i)
-    ; meta= Expr.Typed.Meta.empty }
-  in
+  let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_set_size
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
@@ -149,9 +146,7 @@ let rec pp_statement (ppf : Format.formatter)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnPrint ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
-      let args =
-        args @ [{pattern= Lit (Str, "\n"); meta= Expr.Typed.Meta.empty}]
-      in
+      let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnReject ->
