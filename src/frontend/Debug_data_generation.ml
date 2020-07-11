@@ -113,11 +113,6 @@ let gen_row_vector m n t =
     | {expr= RowVectorExpr unpacked_e1; _}, {expr= RowVectorExpr unpacked_e2; _}
      |{expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} ->
         create_bounds unpacked_e1 unpacked_e2
-    (* | ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}), ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}) ->
-       wrap_row_vector
-        (List.map2_exn
-           ~f:(fun x y -> gen_real m (Program.LowerUpper (x, y)))
-           l u) *)
     | ( ({expr= RealNumeral _; _} | {expr= IntNumeral _; _})
       , ( {expr= RowVectorExpr unpacked_e2; _}
         | {expr= ArrayExpr unpacked_e2; _} ) ) ->
