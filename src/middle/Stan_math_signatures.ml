@@ -150,10 +150,14 @@ let non_variadic_ode_functions =
   ; "integrate_ode_rk45" ]
 
 let ode_tolerances_suffix = "_tol"
+
 let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
 
 let is_variadic_ode_fn f =
   List.mem ~equal:String.equal variadic_ode_functions f
+
+let is_variadic_ode_tol_fn f = 
+  is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 let is_non_variadic_ode_fn f =
   List.mem ~equal:String.equal non_variadic_ode_functions f
