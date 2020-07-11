@@ -113,13 +113,15 @@ let gen_row_vector m n t =
     | {expr= RowVectorExpr unpacked_e1; _}, {expr= RowVectorExpr unpacked_e2; _}
      |{expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} ->
         create_bounds unpacked_e1 unpacked_e2
-    | {expr= RealNumeral _; _}, {expr= ArrayExpr unpacked_e2; _}
-     |{expr= RealNumeral _; _}, {expr= RowVectorExpr unpacked_e2; _} ->
+    | ( ({expr= RealNumeral _; _} | {expr= IntNumeral _; _})
+      , ( {expr= RowVectorExpr unpacked_e2; _}
+        | {expr= ArrayExpr unpacked_e2; _} ) ) ->
         create_bounds
           (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
           unpacked_e2
-    | {expr= RowVectorExpr unpacked_e1; _}, {expr= RealNumeral _; _}
-     |{expr= ArrayExpr unpacked_e1; _}, {expr= RealNumeral _; _} ->
+    | ( ( {expr= RowVectorExpr unpacked_e1; _}
+        | {expr= ArrayExpr unpacked_e1; _} )
+      , ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}) ) ->
         create_bounds unpacked_e1
           (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
     | _ ->
@@ -136,8 +138,9 @@ let gen_row_vector m n t =
   | Program.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
       gen_bounded (fun x -> Program.Upper x) (extract_var e)
   | Program.LowerUpper
-      ( ({emeta= {type_= UVector | URowVector | UReal; _}; _} as e1)
-      , ({emeta= {type_= UVector | URowVector | UReal; _}; _} as e2) ) ->
+      ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
+      , ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e2) )
+    ->
       gen_ul_bounded (extract_var e1) (extract_var e2)
   | _ ->
       { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
