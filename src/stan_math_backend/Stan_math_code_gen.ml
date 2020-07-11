@@ -794,27 +794,12 @@ let pp_register_map_rect_functors ppf p =
     (list ~sep:cut pp_register_functor)
     (List.sort ~compare (Hashtbl.to_alist map_rect_calls))
 
-let fun_used_in_ode_bdf p =
+let is_fun_used_with_variadic_fn variadic_fn_test p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
       ( match pattern with
-      | FunApp (StanLib, x, {pattern= Var f; _} :: _)
-        when Stan_math_signatures.is_ode_fn x ->
-          String.Set.of_list [f]
-      | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
-  in
-  let rec find_functors_stmt accum stmt =
-    Stmt.Fixed.(
-      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
-  in
-  Program.fold find_functors_expr find_functors_stmt String.Set.empty p
-
-let fun_used_in_reduce_sum p =
-  let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
-    String.Set.union accum
-      ( match pattern with
-      | FunApp (StanLib, x, {pattern= Var f; _} :: _)
-        when Stan_math_signatures.is_reduce_sum_fn x ->
+      | FunApp (StanLib, x, {pattern= Var f; _} :: _) when variadic_fn_test x
+        ->
           String.Set.of_list [f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
   in
@@ -828,18 +813,20 @@ let fun_used_in_reduce_sum p =
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  let pp_fun_def_with_rs_list ppf fblock =
-    pp_fun_def ppf fblock (fun_used_in_reduce_sum p) (fun_used_in_ode_bdf p)
+  let pp_fun_def_with_variadic_fn_list ppf fblock =
+    pp_fun_def ppf fblock
+      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
+      (is_fun_used_with_variadic_fn Stan_math_signatures.is_ode_fn p)
   in
   let reduce_sum_struct_decl =
     String.Set.map
       ~f:(fun x -> "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
-      (fun_used_in_reduce_sum p)
+      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
-    (list ~sep:cut pp_fun_def_with_rs_list)
+    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block pp_model p ;
   pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
   pf ppf

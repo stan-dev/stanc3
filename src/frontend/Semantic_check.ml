@@ -438,11 +438,6 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
   | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
-  | StanLib
-    when Stan_math_signatures.is_variadic_ode_fn id.name
-         && String.is_suffix id.name
-              ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
-      semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es
   | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
