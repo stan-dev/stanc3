@@ -49,16 +49,10 @@ let pp_located ppf _ =
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
 
-(** Detect if type contains an integer *)
-let rec contains_int = function
-  | UnsizedType.UInt -> true
-  | UArray t -> contains_int t
-  | _ -> false
-
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
   | UnsizedType.DataOnly, _, _ -> false
-  | _, _, t when contains_int t -> false
+  | _, _, t when UnsizedType.contains_int t -> false
   | _ -> true
 
 (** Print template arguments for C++ functions that need templates
@@ -104,7 +98,7 @@ let pp_promoted_scalar ppf args =
 let pp_returntype ppf arg_types rt =
   let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
-  | Some ut when contains_int ut ->
+  | Some ut when UnsizedType.contains_int ut ->
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
@@ -257,8 +251,11 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
               ( (if is_dist then fdname ^ "<false>" else fdname)
               , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
                 :: List.map ~f:(fun (_, name, _) -> name) rest
-                @ extra @ ["pstream__"] )
-        | _ -> raise_s [%message "impossible!"]
+                @ extra @ ["pstream__"] )        
+        | _ ->
+            raise_s
+              [%message
+                "Ill-formed reduce_sum call! This is bug in the compiler."]
       else if String.Set.mem funs_used_in_ode_bdf fdname then
         (* Produces the reduce_sum functors that has the pstream argument
         as the third and not last argument *)

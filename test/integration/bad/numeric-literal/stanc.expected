@@ -36,6 +36,30 @@ Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
 
 Integer literal cannot be larger than 2_147_483_647.
 
+  $ ../../../../../install/default/bin/stanc int-bad4.stan
+
+Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      int n = 2_147_483_648;
+                     ^
+     3:  }
+   -------------------------------------------------
+
+Integer literal cannot be larger than 2_147_483_647.
+
+  $ ../../../../../install/default/bin/stanc int-bad6.stan
+
+Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      int n = -2147483648;
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Integer literal cannot be larger than 2_147_483_647.
+
   $ ../../../../../install/default/bin/stanc real-bad1.stan
 
 Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
