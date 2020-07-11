@@ -50,25 +50,12 @@ val illtyped_reduce_sum :
 val illtyped_reduce_sum_generic :
   Location_span.t -> string -> UnsizedType.t list -> t
 
-val illtyped_variadic_ode_tol :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> t
-
-val illtyped_variadic_ode_generic_tol :
-  Location_span.t -> string -> UnsizedType.t list -> t
-
 val illtyped_variadic_ode :
      Location_span.t
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> t
-
-val illtyped_variadic_ode_generic :
-  Location_span.t -> string -> UnsizedType.t list -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t

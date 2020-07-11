@@ -370,14 +370,14 @@ let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
           ~type_:(UnsizedType.UArray UnsizedType.UVector) ~loc
         |> Validate.ok
       else
-        Semantic_error.illtyped_variadic_ode_tol loc id.name
+        Semantic_error.illtyped_variadic_ode loc id.name
           (List.map ~f:type_of_expr_typed es)
           fun_args
         |> Validate.error
   | _ ->
-      es
-      |> List.map ~f:type_of_expr_typed
-      |> Semantic_error.illtyped_variadic_ode_generic_tol loc id.name
+      Semantic_error.illtyped_variadic_ode loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        []
       |> Validate.error
 
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
@@ -413,9 +413,9 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
           fun_args
         |> Validate.error
   | _ ->
-      es
-      |> List.map ~f:type_of_expr_typed
-      |> Semantic_error.illtyped_variadic_ode_generic loc id.name
+      Semantic_error.illtyped_variadic_ode loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        []
       |> Validate.error
 
 let fn_kind_from_application id es =

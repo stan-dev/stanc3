@@ -251,7 +251,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
               ( (if is_dist then fdname ^ "<false>" else fdname)
               , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
                 :: List.map ~f:(fun (_, name, _) -> name) rest
-                @ extra @ ["pstream__"] )        
+                @ extra @ ["pstream__"] )
         | _ ->
             raise_s
               [%message

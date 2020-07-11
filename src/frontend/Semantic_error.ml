@@ -26,12 +26,6 @@ module TypeError = struct
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedVariadicODEGeneric of string * UnsizedType.t list
-    | IllTypedVariadicODETol of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedVariadicODEGenericTol of string * UnsizedType.t list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -162,65 +156,60 @@ module TypeError = struct
           (String.concat ~sep:"" lines)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-    | IllTypedVariadicODE (name, arg_tys, args) | IllTypedVariadicODETol (name, arg_tys, args) ->
-        let optional_tol_args = 
+    | IllTypedVariadicODE (name, arg_tys, args) ->
+        let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_tol_fn name then
             [UnsizedType.UReal; UReal; UInt]
-          else
-            []
+          else []
         in
         let arg_types = List.map ~f:(fun (_, t) -> t) args in
         let generate_ode_sig =
-          List.concat
-            [ [ UnsizedType.UFun
-                  ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
-                  , ReturnType UVector ) ]
-            ; [UnsizedType.UVector; UReal; UArray UReal;] @ optional_tol_args ]
-            @ arg_types
+          [ UnsizedType.UFun
+              ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
+              , ReturnType UVector ) ]
+          @ [UnsizedType.UVector; UReal; UArray UReal]
+          @ optional_tol_args @ arg_types
         in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Expected \
-           arguments:@[<h>%a@]\n\
-           @[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          Fmt.(list UnsizedType.pp ~sep:comma) generate_ode_sig
-          Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
-    | IllTypedVariadicODEGeneric (name, arg_tys) | IllTypedVariadicODEGenericTol (name, arg_tys) ->
         let variadic_ode_generic_signature =
-          let optional_tol_args = 
+          let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_tol_fn name then
-              Fmt.strf "%a, %a, %a, "
-                UnsizedType.pp UReal
-                (* rel_tol *)
-                UnsizedType.pp UReal
-                (* abs_tol *)
-                UnsizedType.pp UInt
-                (* max_num_steps *)
-            else
-              ""
+              [UnsizedType.UReal; UReal; UInt]
+            else []
+          in
+          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" UnsizedType.pp
+            UReal (* fun: time *)
+                  UnsizedType.pp UVector (* fun: state *)
+                                         UnsizedType.pp UVector
+            (* fun: return *)
+            UnsizedType.pp UVector (* initial_state *)
+                                   UnsizedType.pp UReal
+            (* initial_time *)
+            UnsizedType.pp (UArray UReal)
+            (* times *)
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            optional_tol_args
         in
-        Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %s...\n"
-          UnsizedType.pp UReal
-          (* fun: time *)
-          UnsizedType.pp UVector
-          (* fun: state *)
-          UnsizedType.pp UVector
-          (* fun: return *)
-          UnsizedType.pp UVector
-          (* initial_state *)
-          UnsizedType.pp UReal
-          (* initial_time *)
-          UnsizedType.pp (UArray UReal)
-          (* times *)
-          optional_tol_args
-        in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %s@[<h>Instead supplied arguments \
-           of incompatible type: %a@]"
-          name variadic_ode_generic_signature
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+        if List.length args = 0 then
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. Expected \
+             arguments:@[<h>%a@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a@]"
+            name
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            generate_ode_sig
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
+        else
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. @[<h>Available \
+             signatures:\n\
+             %s.@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a.@]"
+            name variadic_ode_generic_signature
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -557,15 +546,6 @@ let illtyped_reduce_sum_generic loc name arg_tys =
 
 let illtyped_variadic_ode loc name arg_tys args =
   TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args))
-
-let illtyped_variadic_ode_generic loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedVariadicODEGeneric (name, arg_tys))
-
-let illtyped_variadic_ode_tol loc name arg_tys args =
-  TypeError (loc, TypeError.IllTypedVariadicODETol (name, arg_tys, args))
-
-let illtyped_variadic_ode_generic_tol loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedVariadicODEGenericTol (name, arg_tys))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
