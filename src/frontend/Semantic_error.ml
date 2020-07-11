@@ -175,65 +175,48 @@ module TypeError = struct
             [ [ UnsizedType.UFun
                   ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
                   , ReturnType UVector ) ]
-            ; [UnsizedType.UVector; UReal; UArray UReal;] @ optional_tol_args
-            ; arg_types ]
+            ; [UnsizedType.UVector; UReal; UArray UReal;] @ optional_tol_args ]
+            @ arg_types
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Expected \
            arguments:@[<h>%a@]\n\
            @[<h>Instead supplied arguments of incompatible type: %a@]"
           name
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          generate_ode_sig
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+          Fmt.(list UnsizedType.pp ~sep:comma) generate_ode_sig
+          Fmt.(list UnsizedType.pp ~sep:comma) arg_tys
     | IllTypedVariadicODEGeneric (name, arg_tys) | IllTypedVariadicODEGenericTol (name, arg_tys) ->
         let variadic_ode_generic_signature =
           let optional_tol_args = 
-          if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            Fmt.strf "%a, %a, %a, "
-              Pretty_printing.pp_unsizedtype UReal
-              (* rel_tol *)
-              Pretty_printing.pp_unsizedtype UReal
-              (* abs_tol *)
-              Pretty_printing.pp_unsizedtype UInt
-              (* max_num_steps *)
-          else
-            ""
+            if Stan_math_signatures.is_variadic_ode_tol_fn name then
+              Fmt.strf "%a, %a, %a, "
+                UnsizedType.pp UReal
+                (* rel_tol *)
+                UnsizedType.pp UReal
+                (* abs_tol *)
+                UnsizedType.pp UInt
+                (* max_num_steps *)
+            else
+              ""
         in
-          if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %s...\n"
-              Pretty_printing.pp_unsizedtype UReal
-              (* fun: time *)
-              Pretty_printing.pp_unsizedtype UVector
-              (* fun: state *)
-              Pretty_printing.pp_unsizedtype UVector
-              (* fun: return *)
-              Pretty_printing.pp_unsizedtype (UArray UReal)
-              (* initial_state *)
-              Pretty_printing.pp_unsizedtype UReal
-              (* initial_time *)
-              Pretty_printing.pp_unsizedtype (UArray UReal)
-              (* times *)
-              optional_tol_args
-          else
-            Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, ...\n"
-              Pretty_printing.pp_unsizedtype UReal
-              (* fun: time *)
-              Pretty_printing.pp_unsizedtype UVector
-              (* fun: state *)
-              Pretty_printing.pp_unsizedtype UVector
-              (* fun: return *)
-              Pretty_printing.pp_unsizedtype UVector
-              (* initial_state *)
-              Pretty_printing.pp_unsizedtype UReal
-              (* initial_time *)
-              Pretty_printing.pp_unsizedtype (UArray UReal)
-            (* times *)
+        Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %s...\n"
+          UnsizedType.pp UReal
+          (* fun: time *)
+          UnsizedType.pp UVector
+          (* fun: state *)
+          UnsizedType.pp UVector
+          (* fun: return *)
+          UnsizedType.pp UVector
+          (* initial_state *)
+          UnsizedType.pp UReal
+          (* initial_time *)
+          UnsizedType.pp (UArray UReal)
+          (* times *)
+          optional_tol_args
         in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %sWhere T1 and T2 are of any type.@[<h>Instead supplied arguments \
+           %s@[<h>Instead supplied arguments \
            of incompatible type: %a@]"
           name variadic_ode_generic_signature
           Fmt.(list UnsizedType.pp ~sep:comma)
