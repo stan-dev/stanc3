@@ -73,11 +73,9 @@ let expr_loc_lub exprs =
   | [hd] -> hd
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
+(** Least upper bound of expression autodiff types *)
 let expr_ad_lub exprs =
-  exprs
-  |> List.map ~f:(fun e -> e.emeta.ad_level)
-  |> List.max_elt ~compare
-  |> Option.value ~default:DataOnly
+  exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> UnsizedType.lub_ad_type
 
 (** Assignment operators *)
 type assignmentoperator =

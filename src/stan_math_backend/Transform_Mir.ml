@@ -55,10 +55,12 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.mapi args ~f:(move_cl_args cl_args)
     | false -> args
   in
-  let trim_propto f = String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f in
   match pattern with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
-      let trigger = Map.find_exn opencl_triggers (trim_propto f) in
+  | FunApp (StanLib, f, args)
+    when Map.mem opencl_triggers (Utils.stdlib_distribution_name f) ->
+      let trigger =
+        Map.find_exn opencl_triggers (Utils.stdlib_distribution_name f)
+      in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with
@@ -176,11 +178,10 @@ let param_read smeta
     let bodyfn var =
       let readfnapp (var : Expr.Typed.t) =
         Expr.(
-          Helpers.internal_funapp FnReadParam
-            ( { Fixed.pattern=
-                  Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
-              ; meta= Typed.Meta.empty }
-            :: SizedType.dims_of ucst )
+          Helpers.(
+            internal_funapp FnReadParam
+              ( str (base_ut_to_string (SizedType.to_unsized ucst))
+              :: SizedType.dims_of ucst ))
             Typed.Meta.{var.meta with type_= base_type ucst})
       in
       Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
@@ -310,6 +311,27 @@ let gen_write (decl_id, sizedtype) =
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
+
+let gen_write_unconstrained (decl_id, sizedtype) =
+  let bodyfn var =
+    let var =
+      match var.Expr.Fixed.pattern with
+      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
+          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
+      | _ -> var
+    in
+    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+  in
+  let meta =
+    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+  in
+  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+  let writefn var =
+    Stmt.Helpers.for_scalar_inv
+      (SizedType.inner_type sizedtype)
+      bodyfn var Location_span.empty
+  in
+  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
@@ -495,48 +517,6 @@ and validate_dims_stmt stmt =
   in
   {stmt with pattern}
 
-let make_fill vident st loc =
-  let rhs =
-    Expr.(
-      Helpers.internal_funapp FnNaN []
-      @@ Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly ())
-  in
-  let ut = SizedType.to_unsized st in
-  let var =
-    Expr.(
-      let meta = {Typed.Meta.empty with type_= ut; loc} in
-      Fixed.{meta; pattern= Var vident})
-  in
-  let bodyfn var =
-    Stmt.Fixed.
-      { pattern=
-          Assignment ((vident, ut, Expr.Helpers.collect_indices var), rhs)
-      ; meta= loc }
-  in
-  Stmt.Helpers.for_scalar st bodyfn var loc
-
-let rec contains_eigen = function
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | _ -> false
-
-let type_needs_fill decl_id ut =
-  Utils.is_user_ident decl_id
-  && (contains_eigen ut || match ut with UReal -> true | _ -> false)
-
-let rec add_fill no_fill_required = function
-  | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-    decl
-    when (not (Set.mem no_fill_required decl_id))
-         && type_needs_fill decl_id (SizedType.to_unsized st) ->
-      (* I *think* we only need to initialize eigen types and scalars because we already construct
-       std::vectors with 0s.
-    *)
-      Stmt.Fixed.{pattern= SList [decl; make_fill decl_id st meta]; meta}
-  | {pattern; meta} ->
-      Stmt.Fixed.
-        {pattern= Pattern.map Fn.id (add_fill no_fill_required) pattern; meta}
-
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -558,7 +538,20 @@ let trans_prog (p : Program.Typed.t) =
         Some (name, out_constrained_st)
     | _ -> None
   in
+  let get_pname_ust = function
+    | ( name
+      , { Program.out_block= Parameters
+        ; out_constrained_st
+        ; out_unconstrained_st; _ } )
+      when SizedType.to_unsized out_constrained_st
+           = SizedType.to_unsized out_unconstrained_st ->
+        Some (name, out_unconstrained_st)
+    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
+        Some (name ^ "_free__", out_unconstrained_st)
+    | _ -> None
+  in
   let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
+  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars
       ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
@@ -568,9 +561,6 @@ let trans_prog (p : Program.Typed.t) =
            | Parameters -> `Fst x
            | TransformedParameters -> `Snd x
            | GeneratedQuantities -> `Trd x )
-  in
-  let data_and_params =
-    List.map ~f:fst constrained_params @ List.map ~f:fst p.input_vars
   in
   let tparam_start stmt =
     Stmt.Fixed.(
@@ -613,6 +603,20 @@ let trans_prog (p : Program.Typed.t) =
       ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
       p.functions_block
   in
+  let tparam_writes_cond =
+    match tparam_writes with
+    | [] -> []
+    | _ ->
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.
+                      { Fixed.pattern= Var "emit_transformed_parameters__"
+                      ; meta= Typed.Meta.empty }
+                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  , None )
+            ; meta= Location_span.empty } ]
+  in
   let generate_quantities =
     ( p.generate_quantities
     |> add_validate_dims p.output_vars
@@ -620,7 +624,7 @@ let trans_prog (p : Program.Typed.t) =
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
-    |> insert_before gq_start tparam_writes )
+    |> insert_before gq_start tparam_writes_cond )
     @ gq_writes
   in
   let log_prob =
@@ -678,11 +682,10 @@ let trans_prog (p : Program.Typed.t) =
         init_pos
         @ ( add_validate_dims p.output_vars p.transform_inits
           |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write constrained_params
+        @ List.map ~f:gen_write_unconstrained free_params
     ; generate_quantities }
   in
   Program.(
     p
     |> map Fn.id ensure_body_in_block
-    |> map Fn.id (add_fill (String.Set.of_list data_and_params))
     |> map_prog_stmt_lists flatten_slists_list)

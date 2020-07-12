@@ -4,6 +4,8 @@ open Core_kernel
 open Mir_utils
 open Middle
 
+let preserve_stability = false
+
 let is_int i Expr.Fixed.({pattern; _}) =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
   match pattern with
@@ -39,6 +41,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Minus__" -> i1 - i2
         | "Times__" -> i1 * i2
         | "Divide__" -> i1 / i2
+        | "IntDivide__" -> i1 / i2
         | "Modulo__" -> i1 % i2
         | "Equals__" -> Bool.to_int (i1 = i2)
         | "NEquals__" -> Bool.to_int (i1 <> i2)
@@ -216,7 +219,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Minus__"
                         , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
                   } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
               , [ { pattern=
@@ -225,10 +228,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Minus__"
                         , [y; {pattern= FunApp (StanLib, "inv_logit", [x]); _}]
                         ); _ } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
             | "log", [{pattern= FunApp (StanLib, "Minus__", [y; x]); _}]
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m", [x])
             | ( "log"
               , [ { pattern=
@@ -237,10 +240,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
                   } ] )
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1p_exp", [x])
             | "log", [{pattern= FunApp (StanLib, "Plus__", [y; x]); _}]
-              when is_int 1 y ->
+              when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1p", [x])
             | ( "log"
               , [ { pattern=
@@ -507,6 +510,7 @@ let rec eval_expr (e : Expr.Typed.t) =
             | "pow", [x; {pattern= FunApp (StanLib, "Divide__", [y; z]); _}]
               when is_int 1 y && is_int 2 z ->
                 FunApp (StanLib, "sqrt", [x])
+                (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
             | "square", [{pattern= FunApp (StanLib, "sd", [x]); _}] ->
                 FunApp (StanLib, "variance", [x])
             | "sqrt", [x] when is_int 2 x -> FunApp (StanLib, "sqrt2", [])
@@ -552,11 +556,11 @@ let rec eval_expr (e : Expr.Typed.t) =
               when is_int 1 x ->
                 FunApp (StanLib, "erf", l)
             | "Minus__", [{pattern= FunApp (StanLib, "exp", l'); _}; x]
-              when is_int 1 x ->
+              when is_int 1 x && not preserve_stability ->
                 FunApp (StanLib, "expm1", l')
             | "Plus__", [{pattern= FunApp (StanLib, "Times__", [x; y]); _}; z]
              |"Plus__", [z; {pattern= FunApp (StanLib, "Times__", [x; y]); _}]
-              ->
+              when not preserve_stability ->
                 FunApp (StanLib, "fma", [x; y; z])
             | "Minus__", [x; {pattern= FunApp (StanLib, "gamma_p", l); _}]
               when is_int 1 x ->
@@ -590,7 +594,8 @@ let rec eval_expr (e : Expr.Typed.t) =
               ->
                 FunApp (StanLib, "matrix_exp_multiply", [a; b])
             | "Times__", [x; {pattern= FunApp (StanLib, "log", [y]); _}]
-             |"Times__", [{pattern= FunApp (StanLib, "log", [y]); _}; x] ->
+             |"Times__", [{pattern= FunApp (StanLib, "log", [y]); _}; x]
+              when not preserve_stability ->
                 FunApp (StanLib, "lmultiply", [x; y])
             | ( "Times__"
               , [ {pattern= FunApp (StanLib, "diag_matrix", [v]); _}
@@ -637,9 +642,9 @@ let rec eval_expr (e : Expr.Typed.t) =
               | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}] -> (
               match op with
-              | "Plus__" | "Minus__" | "Times__" | "Divide__" | "Modulo__"
-               |"Or__" | "And__" | "Equals__" | "NEquals__" | "Less__"
-               |"Leq__" | "Greater__" | "Geq__" ->
+              | "Plus__" | "Minus__" | "Times__" | "Divide__" | "IntDivide__"
+               |"Modulo__" | "Or__" | "And__" | "Equals__" | "NEquals__"
+               |"Less__" | "Leq__" | "Greater__" | "Geq__" ->
                   apply_operator_int op (Int.of_string i1) (Int.of_string i2)
               | _ -> FunApp (t, op, l) )
             | op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
@@ -739,10 +744,10 @@ let rec simplify_index_expr pattern =
                          @ inner_tl )
                  ; meta }
                , outer_tl ))
-      | inner_singles, multis ->
+      | inner_singles, (([] | Single _ :: _) as multis) ->
           raise_s
             [%message
-              "impossible"
+              "Impossible! There must be a multi-index."
                 (inner_singles : Expr.Typed.t Index.t list)
                 (multis : Expr.Typed.t Index.t list)] )
     | e -> e)
