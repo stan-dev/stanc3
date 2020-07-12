@@ -806,7 +806,7 @@ let pp_prog ppf (p : Program.Typed.t) =
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block pp_model p ;
-  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name;
+  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
   pf ppf
     {|
 #ifndef USING_R

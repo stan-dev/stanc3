@@ -783,11 +783,10 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
-  let cpp_friendly_prog_name prog_name = 
-    if String.length prog_name > 0 && not (Char.is_alpha prog_name.[0]) then 
+  let cpp_friendly_prog_name prog_name =
+    if String.length prog_name > 0 && not (Char.is_alpha prog_name.[0]) then
       "_" ^ prog_name
-    else
-      prog_name
+    else prog_name
   in
   { functions_block= map (trans_fun_def ud_dists) functionblock
   ; input_vars
