@@ -524,8 +524,6 @@ Semantic error in 'bad_fun_name.stan', line 2, column 7 to column 12:
 
 Identifier 'logit' clashes with Stan Math library function.
 
-  $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
-
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:

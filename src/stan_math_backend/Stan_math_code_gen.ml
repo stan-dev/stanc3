@@ -686,7 +686,7 @@ let model_prefix = "model_"
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s() final { }" p.prog_name ;
+  pf ppf "@ public:@ @[<v 1> ~%s() final { }" prog_name ;
   pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
     (String.drop_prefix prog_name (String.length model_prefix)) ;
   pf ppf
@@ -806,7 +806,7 @@ let pp_prog ppf (p : Program.Typed.t) =
     (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
     (list ~sep:cut pp_fun_def_with_rs_list)
     p.functions_block pp_model p ;
-  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
+  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name;
   pf ppf
     {|
 #ifndef USING_R

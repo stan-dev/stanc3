@@ -200,17 +200,10 @@ let use_file filename =
 let remove_dotstan s = String.drop_suffix s 5
 
 let mangle =
-  let is_alphanum_or_underscore c = 
-    match c with
-    | _ when (Char.is_alphanum c) ->
-      true
-    | '_' -> true
-    | _ -> false
-  in
   String.concat_map ~f:(fun c ->
       Char.(
-        if is_alphanum_or_underscore c then to_string c
-        else "x" ^ Int.to_string (to_int c)))
+        if is_alphanum c || c = '_' then to_string c
+        else "x" ^ Int.to_string (to_int c)) )
 
 let main () =
   (* Parse the arguments. *)
@@ -225,10 +218,10 @@ let main () =
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
-      (mangle (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))) ^ "_model"
-  else
-    Semantic_check.model_name :=
-      Stan_math_code_gen.model_prefix ^ (mangle !Semantic_check.model_name) ;
+      mangle
+        (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
+      ^ "_model"
+  else Semantic_check.model_name := mangle !Semantic_check.model_name ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
