@@ -526,18 +526,6 @@ Identifier 'logit' clashes with Stan Math library function.
 
   $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
 
-Semantic error in 'bad_model_name_var.stan', line 3, column 6 to column 30:
-   -------------------------------------------------
-     1:  data {
-     2:    // declare matching model name should fail
-     3:    int model_bad_model_name_var;  
-               ^
-     4:  }
-     5:  parameters {
-   -------------------------------------------------
-
-Identifier 'model_bad_model_name_var' clashes with model name.
-
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
