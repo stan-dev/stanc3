@@ -358,11 +358,12 @@ let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
                       } (* max_num_steps *)
                       
                       :: args
-    when arg_match (AutoDiffable, UReal) initial_time
-         && arg_match (AutoDiffable, UVector) initial_state
-         && arg_match (AutoDiffable, UArray UReal) times
-         && arg_match (DataOnly, UReal) rel_tol
-         && arg_match (DataOnly, UReal) abs_tol ->
+    when List.for_all2_exn ~f:arg_match
+           [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+           ; (AutoDiffable, UVector)
+           ; (AutoDiffable, UArray UReal)
+           ; (DataOnly, UReal); (DataOnly, UReal) ]
+           [initial_state; initial_time; times; rel_tol; abs_tol] ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
@@ -398,9 +399,11 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
                     :: fun_args
               , ReturnType UnsizedType.UVector ); _ }; _ }
     :: initial_state :: initial_time :: times :: args
-    when arg_match (AutoDiffable, UReal) initial_time
-         && arg_match (AutoDiffable, UVector) initial_state
-         && arg_match (AutoDiffable, UArray UReal) times ->
+    when List.for_all2_exn ~f:arg_match
+           [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+           ; (AutoDiffable, UVector)
+           ; (AutoDiffable, UArray UReal) ]
+           [initial_time; initial_state; times] ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
@@ -438,6 +441,11 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
   | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
+  | StanLib
+    when Stan_math_signatures.is_variadic_ode_fn id.name
+         && String.is_suffix id.name
+              ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+      semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es
   | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
