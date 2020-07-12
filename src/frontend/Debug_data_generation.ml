@@ -94,13 +94,15 @@ let gen_row_vector m n t =
   in
   let gen_bounded t e =
     match e with
-    | {expr= RowVectorExpr unpacked_e; _} | {expr= ArrayExpr unpacked_e; _} ->
+    | {expr= RowVectorExpr unpacked_e; _}
+     |{expr= ArrayExpr unpacked_e; _}
+     |{expr= PostfixOp ({expr= RowVectorExpr unpacked_e; _}, Transpose); _} ->
         wrap_row_vector (List.map ~f:(fun x -> gen_real m (t x)) unpacked_e)
     | _ ->
-        failwith
-          ( "Bad bounded (upper OR lower) expr: "
-          ^ Sexp.to_string [%sexp (e : (typed_expr_meta, fun_kind) expr_with)]
-          )
+        raise_s
+          [%message
+            "Bad bounded (upper OR lower) expr: "
+              (e : (typed_expr_meta, fun_kind) expr_with)]
   in
   let gen_ul_bounded e1 e2 =
     let create_bounds l u =
@@ -110,27 +112,35 @@ let gen_row_vector m n t =
            l u)
     in
     match (e1, e2) with
-    | {expr= RowVectorExpr unpacked_e1; _}, {expr= RowVectorExpr unpacked_e2; _}
-     |{expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} ->
+    | ( ( {expr= RowVectorExpr unpacked_e1 | ArrayExpr unpacked_e1; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
+          )
+      , ( {expr= RowVectorExpr unpacked_e2 | ArrayExpr unpacked_e2; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
+          ) ) ->
+        (* | {expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} -> *)
         create_bounds unpacked_e1 unpacked_e2
     | ( ({expr= RealNumeral _; _} | {expr= IntNumeral _; _})
       , ( {expr= RowVectorExpr unpacked_e2; _}
-        | {expr= ArrayExpr unpacked_e2; _} ) ) ->
+        | {expr= ArrayExpr unpacked_e2; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
+          ) ) ->
         create_bounds
           (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
           unpacked_e2
     | ( ( {expr= RowVectorExpr unpacked_e1; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
         | {expr= ArrayExpr unpacked_e1; _} )
       , ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}) ) ->
         create_bounds unpacked_e1
           (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
     | _ ->
-        failwith
-          ( "Bad upper and lower bounded expr: "
-          ^ Sexp.to_string [%sexp (e1 : (typed_expr_meta, fun_kind) expr_with)]
-          ^ " and "
-          ^ Sexp.to_string [%sexp (e2 : (typed_expr_meta, fun_kind) expr_with)]
-          )
+        raise_s
+          [%message
+            "Bad bounded upper and lower expr: "
+              (e1 : (typed_expr_meta, fun_kind) expr_with)
+              " and "
+              (e2 : (typed_expr_meta, fun_kind) expr_with)]
   in
   match t with
   | Program.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
