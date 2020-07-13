@@ -257,6 +257,7 @@ pipeline {
                     agent { label "WSL" }
                     steps {
                         script {
+                            println "${pwd()}"
                             dir("${pwd()}"){
                                 bat "bash -cl \"cd test/integration\""
                                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
