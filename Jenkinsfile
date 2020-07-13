@@ -26,262 +26,234 @@ pipeline {
     }
     options {parallelsAlwaysFailFast()}
     stages {
-        //stage('Kill previous builds') {
-        //    when {
-        //        not { branch 'develop' }
-        //        not { branch 'master' }
-        //        not { branch 'downstream_tests' }
-        //    }
-        //    steps { script { utils.killOldBuilds() } }
-        //}
-        //stage("Build") {
-        //    agent {
-        //        dockerfile {
-        //            filename 'docker/debian/Dockerfile'
-        //            //Forces image to ignore entrypoint
-        //            args "-u root --entrypoint=\'\'"
-        //        }
-        //    }
-        //    steps {
-        //        sh 'printenv'
-        //        runShell("""
-        //            eval \$(opam env)
-        //            dune build @install
-        //        """)
-        //        sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-        //        stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
-        //    }
-        //    post { always { runShell("rm -rf ./*") }}
-        //}
-        //stage("Code formatting") {
-        //    agent {
-        //        dockerfile {
-        //            filename 'docker/debian/Dockerfile'
-        //            //Forces image to ignore entrypoint
-        //            args "-u root --entrypoint=\'\'"
-        //        }
-        //    }
-        //    steps {
-        //        sh 'printenv'
-        //        sh """
-        //            eval \$(opam env)
-        //            make format  || 
-        //            (
-        //                set +x &&
-        //                echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-        //                echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
-        //                exit 1;
-        //            )
-        //        """
-        //    }
-        //    post { always { runShell("rm -rf ./*") }}
-        //}        
-        //stage("Test") {
-            //parallel {
-                //stage("Dune tests") {
-                //    agent {
-                //        dockerfile {
-                //            filename 'docker/debian/Dockerfile'
-                //            //Forces image to ignore entrypoint
-                //            args "-u root --entrypoint=\'\'"
-                //        }
-                //    }
-                //    steps {
-                //        sh 'printenv'
-                //        runShell("""
-                //            eval \$(opam env)
-                //            dune runtest
-                //        """)
-                //    }
-                //    post { always { runShell("rm -rf ./*") }}
-                //}
-                //stage("Try to compile all good integration models") {
-                //    when { expression { params.compile_all } }
-                //    agent { label 'linux' }
-                //    steps {
-                //        unstash 'ubuntu-exe'
-                //        sh """
-                //            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                //        """
-//
-                //        writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                //                  text:"O=0\nCXXFLAGS+=-o/dev/null -S -Wno-unused-command-line-argument")
-                //        sh """
-                //            cd performance-tests-cmdstan
-                //            cd cmdstan; make -j${env.PARALLEL} build; cd ..
-                //            cp ../bin/stanc cmdstan/bin/stanc
-                //            git clone --depth 1 https://github.com/stan-dev/stanc3
-                //            CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
-                //        """
-//
-                //        xunit([GoogleTest(
-                //            deleteOutputFiles: false,
-                //            failIfNotNew: true,
-                //            pattern: 'performance-tests-cmdstan/performance.xml',
-                //            skipNoTestFiles: false,
-                //            stopProcessingIfError: false)
-                //        ])
-                //    }
-                //    post { always { runShell("rm -rf ./*") }}
-                //}
-                //stage("Run all models end-to-end") {
-                //    agent { label 'linux' }
-                //    steps {
-                //        unstash 'ubuntu-exe'
-                //        sh """
-                //            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                //        """
-                //        sh """
-                //            cd performance-tests-cmdstan
-                //            git show HEAD --stat
-                //            echo "example-models/regression_tests/mother.stan" > all.tests
-                //            cat known_good_perf_all.tests >> all.tests
-                //            echo "" >> all.tests
-                //            cat shotgun_perf_all.tests >> all.tests
-                //            cat all.tests
-                //            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                //            cd cmdstan; git show HEAD --stat; STANC2=true make -j4 build; cd ..
-                //            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                //        """
-//
-                //        xunit([GoogleTest(
-                //            deleteOutputFiles: false,
-                //            failIfNotNew: true,
-                //            pattern: 'performance-tests-cmdstan/performance.xml',
-                //            skipNoTestFiles: false,
-                //            stopProcessingIfError: false)
-                //        ])
-//
-                //        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-//
-                //        perfReport modePerformancePerTestCase: true,
-                //            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                //            modeThroughput: false,
-                //            excludeResponseTime: true,
-                //            errorFailedThreshold: 100,
-                //            errorUnstableThreshold: 100
-                //    }
-                //    post { always { runShell("rm -rf ./*") }}
-                //}
-                //stage("TFP tests") {
-                //    agent {
-                //        docker {
-                //            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
-                //            args '-u root'
-                //        }
-                //    }
-                //    steps {
-                //        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
-                //        sh "python3 test/integration/tfp/tests.py"
-                //    }
-                //    post { always { runShell("rm -rf ./*") }}
-                //}
-            //}
-        //}
+        stage('Kill previous builds') {
+            when {
+                not { branch 'develop' }
+                not { branch 'master' }
+                not { branch 'downstream_tests' }
+            }
+            steps { script { utils.killOldBuilds() } }
+        }
+        stage("Build") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+        stage("Code formatting") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                sh """
+                    eval \$(opam env)
+                    make format  || 
+                    (
+                        set +x &&
+                        echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+                        echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
+                        exit 1;
+                    )
+                """
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }        
+        stage("Test") {
+            parallel {
+                stage("Dune tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Try to compile all good integration models") {
+                    when { expression { params.compile_all } }
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
+
+                        writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                                  text:"O=0\nCXXFLAGS+=-o/dev/null -S -Wno-unused-command-line-argument")
+                        sh """
+                            cd performance-tests-cmdstan
+                            cd cmdstan; make -j${env.PARALLEL} build; cd ..
+                            cp ../bin/stanc cmdstan/bin/stanc
+                            git clone --depth 1 https://github.com/stan-dev/stanc3
+                            CXX="${CXX}" ./runPerformanceTests.py --runs=0 stanc3/test/integration/good || true
+                        """
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Run all models end-to-end") {
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
+                        sh """
+                            cd performance-tests-cmdstan
+                            git show HEAD --stat
+                            echo "example-models/regression_tests/mother.stan" > all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
+                            cat all.tests
+                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            cd cmdstan; git show HEAD --stat; STANC2=true make -j4 build; cd ..
+                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                        """
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("TFP tests") {
+                    agent {
+                        docker {
+                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
+                            args '-u root'
+                        }
+                    }
+                    steps {
+                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
+                        sh "python3 test/integration/tfp/tests.py"
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+            }
+        }
         stage("Build and test static release binaries") {
             //when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
-                //stage("Build & test Mac OS X binary") {
-                //    agent { label "osx && ocaml" }
-                //    steps {
-                //        runShell("""
-                //            eval \$(opam env)
-                //            opam update || true
-                //            bash -x scripts/install_build_deps.sh
-                //            dune subst
-                //            dune build @install
-                //        """)
-//
-                //        echo runShell("""
-                //            eval \$(opam env)
-                //            time dune runtest --verbose
-                //        """)
-//
-                //        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                //        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
-//
-                //        stash name:'mac-exe', includes:'bin/*'
-                //    }
-                //    post { always { runShell("rm -rf ./*") }}
-                //}
-                //stage("Build stanc.js") {
-                //    agent {
-                //        dockerfile {
-                //            filename 'docker/debian/Dockerfile'
-                //            //Forces image to ignore entrypoint
-                //            args "-u root --entrypoint=\'\'"
-                //        }
-                //    }
-                //    steps {
-                //        runShell("""
-                //            eval \$(opam env)
-                //            dune subst
-                //            dune build --profile release src/stancjs
-                //        """)
-//
-                //        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                //        sh "mv `find _build -name index.html` bin/load_stanc.html"
-                //        stash name:'js-exe', includes:'bin/*'
-                //    }
-                //    post {always { runShell("rm -rf ./*")}}
-                //}
-                //stage("Build & test a static Linux binary") {
-                //    agent {
-                //        dockerfile {
-                //            filename 'docker/static/Dockerfile'
-                //            //Forces image to ignore entrypoint
-                //            args "-u 1000 --entrypoint=\'\'"
-                //        }
-                //    }
-                //    steps {
-                //        runShell("""
-                //            eval \$(opam env)
-                //            dune subst
-                //            dune build @install --profile static
-                //        """)
-//
-                //        echo runShell("""
-                //            eval \$(opam env)
-                //            time dune runtest --profile static --verbose
-                //        """)
-//
-                //        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                //        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
-//
-                //        stash name:'linux-exe', includes:'bin/*'
-                //    }
-                //    post {always { runShell("rm -rf ./*")}}
-                //}
-                stage("Build & test static Windows binary") {
-                //    agent {
-                //        dockerfile {
-                //            filename 'docker/static/Dockerfile'
-                //            //Forces image to ignore entrypoint
-                //            args "-u 1000 --entrypoint=\'\'"
-                //        }
-                //    }
-                //    steps {
-//
-                //        runShell("""
-                //            eval \$(opam env)
-                //            dune subst
-                //            dune build -x windows
-                //        """)
-//
-                //        echo runShell("""
-                //            eval \$(opam env)
-                //            time dune runtest --verbose
-                //        """)
-//
-                //        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/windows-stanc"
-                //        sh "mv `find _build -name stan2tfp.exe` bin/windows-stan2tfp"
-//
-                //        stash name:'windows-exe', includes:'bin/*'
-                //    }
-//
-                //    post {always { runShell("rm -rf ./*")}}
+                stage("Build & test Mac OS X binary") {
+                    agent { label "osx && ocaml" }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            opam update || true
+                            bash -x scripts/install_build_deps.sh
+                            dune subst
+                            dune build @install
+                        """)
 
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
+
+                        stash name:'mac-exe', includes:'bin/*'
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Build stanc.js") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build --profile release src/stancjs
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                        sh "mv `find _build -name index.html` bin/load_stanc.html"
+                        stash name:'js-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build @install --profile static
+                        """)
+
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
+
+                        stash name:'linux-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test static Windows binary") {
                     agent { label "WSL" }
                     steps {
                         script {
@@ -302,7 +274,6 @@ pipeline {
                             }
                         }
                     }
-
                 }
             }
         }
