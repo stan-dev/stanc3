@@ -256,14 +256,16 @@ pipeline {
                 stage("Build & test static Windows binary") {
                     agent { label "WSL" }
                     steps {
-                        dir("$WORKSPACE"){
-                            bat "bash -cl \"cd test/integration\""
-                            bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                            bat "bash -cl \"cd ..\""
-                            bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
-                            bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
-                            bat "bash -cl \"mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp\""
-                            stash name:'windows-exe', includes:'bin/*'
+                        script {
+                            dir("${pwd()}"){
+                                bat "bash -cl \"cd test/integration\""
+                                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                                bat "bash -cl \"cd ..\""
+                                bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
+                                bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                                bat "bash -cl \"mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp\""
+                                stash name:'windows-exe', includes:'bin/*'
+                            }
                         }
                     }
                 }
