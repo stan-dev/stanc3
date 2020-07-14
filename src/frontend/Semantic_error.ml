@@ -157,34 +157,51 @@ module TypeError = struct
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedVariadicODE (name, arg_tys, args) ->
+        let types x = List.map ~f:(fun (_, t) -> t) x in
         let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            [UnsizedType.UReal; UReal; UInt]
+            List.map
+              ~f:(fun (_, y) -> y)
+              Stan_math_signatures.variadic_ode_tol_arg_types
           else []
         in
-        let arg_types = List.map ~f:(fun (_, t) -> t) args in
+        let args_types = List.map ~f:(fun (_, t) -> t) args in
         let generate_ode_sig =
           [ UnsizedType.UFun
-              ( (AutoDiffable, UReal) :: (AutoDiffable, UVector) :: args
-              , ReturnType UVector ) ]
-          @ [UnsizedType.UVector; UReal; UArray UReal]
-          @ optional_tol_args @ arg_types
+              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
+              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
+          ]
+          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_args @ args_types
         in
         let variadic_ode_generic_signature =
           let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_tol_fn name then
-              [UnsizedType.UReal; UReal; UInt]
+              types Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
-          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" UnsizedType.pp
-            UReal (* fun: time *)
-                  UnsizedType.pp UVector (* fun: state *)
-                                         UnsizedType.pp UVector
-            (* fun: return *)
-            UnsizedType.pp UVector (* initial_state *)
-                                   UnsizedType.pp UReal
-            (* initial_time *)
-            UnsizedType.pp (UArray UReal)
+          let time_type =
+            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_fun_args) 1
+          in
+          let state_type =
+            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_fun_args) 2
+          in
+          let init_state_type =
+            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 1
+          in
+          let init_time_type =
+            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 2
+          in
+          let times_type =
+            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 3
+          in
+          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" 
+            UnsizedType.pp time_type
+            UnsizedType.pp state_type 
+            UnsizedType.pp Stan_math_signatures.variadic_ode_fun_return_type
+            UnsizedType.pp init_state_type
+            UnsizedType.pp init_time_type
+            UnsizedType.pp times_type
             (* times *)
             Fmt.(list UnsizedType.pp ~sep:comma)
             optional_tol_args
