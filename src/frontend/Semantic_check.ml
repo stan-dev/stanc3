@@ -362,8 +362,9 @@ let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
            [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
            ; (AutoDiffable, UVector)
            ; (AutoDiffable, UArray UReal)
-           ; (DataOnly, UReal); (DataOnly, UReal) ]
-           [initial_state; initial_time; times; rel_tol; abs_tol] ->
+           ; (DataOnly, UReal)
+           ; (DataOnly, UReal) ]
+           [initial_time; initial_state; times; rel_tol; abs_tol] ->
       if args_match fun_args args then
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
