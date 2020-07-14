@@ -94,6 +94,23 @@ let reduce_sum_slice_types =
   in
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
+(* Variadic ODE *)
+let variadic_ode_tol_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+
+let variadic_ode_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
+  ; (AutoDiffable, UReal)
+  ; (AutoDiffable, UArray UReal) ]
+
+let variadic_ode_mandatory_fun_args = [
+  (UnsizedType.AutoDiffable, UnsizedType.UReal);
+  (UnsizedType.AutoDiffable, UnsizedType.UVector)]
+
+let variadic_ode_fun_return_type = UnsizedType.UVector
+let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
+
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
