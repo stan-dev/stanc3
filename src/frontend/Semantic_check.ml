@@ -295,14 +295,14 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
+let arg_match (x_ad, x_t) y =
+  UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
+  && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
+
+let args_match a b =
+  List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
+
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
-  let arg_match (x_ad, x_t) y =
-    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
-    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
-  in
-  let args_match a b =
-    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
-  in
   match es with
   | { emeta=
         { type_=
@@ -332,95 +332,52 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_reduce_sum_generic loc id.name
       |> Validate.error
 
-let semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es =
-  let arg_match (x_ad, x_t) y =
-    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
-    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
-  in
-  let args_match a b =
-    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
-  in
-  match es with
-  | { emeta=
-        { type_=
-            UnsizedType.UFun
-              ( (_, UReal) (* time *)
-                
-                :: (_, UnsizedType.UVector) (* initial_state *)
-                    :: fun_args
-              , ReturnType UnsizedType.UVector ); _ }; _ }
-    :: initial_state
-       :: initial_time
-          :: times
-             :: rel_tol
-                :: abs_tol
-                   :: { emeta= {type_= UInt; ad_level= UnsizedType.DataOnly; _}; _
-                      } (* max_num_steps *)
-                      
-                      :: args
-    when List.for_all2_exn ~f:arg_match
-           [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-           ; (AutoDiffable, UVector)
-           ; (AutoDiffable, UArray UReal)
-           ; (DataOnly, UReal)
-           ; (DataOnly, UReal) ]
-           [initial_time; initial_state; times; rel_tol; abs_tol] ->
-      if args_match fun_args args then
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-          ~ad_level:(expr_ad_lub es)
-          ~type_:(UnsizedType.UArray UnsizedType.UVector) ~loc
-        |> Validate.ok
-      else
-        Semantic_error.illtyped_variadic_ode loc id.name
-          (List.map ~f:type_of_expr_typed es)
-          fun_args
-        |> Validate.error
-  | _ ->
-      Semantic_error.illtyped_variadic_ode loc id.name
-        (List.map ~f:type_of_expr_typed es)
-        []
-      |> Validate.error
-
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
-  let arg_match (x_ad, x_t) y =
-    UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
-    && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
+  let optional_tol_mandatory_args =
+    if Stan_math_signatures.is_variadic_ode_tol_fn id.name then
+      [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+      ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+    else []
   in
-  let args_match a b =
-    List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
+  let mandatory_arg_types =
+    [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
+    ; (AutoDiffable, UReal)
+    ; (AutoDiffable, UArray UReal) ]
+    @ optional_tol_mandatory_args
+  in
+  let generic_variadic_ode_semantic_error =
+    Semantic_error.illtyped_variadic_ode loc id.name
+      (List.map ~f:type_of_expr_typed es)
+      []
+    |> Validate.error
   in
   match es with
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( (_, UReal) (* time *)
-                
-                :: (_, UnsizedType.UVector) (* initial_state *)
-                    :: fun_args
+              ( (_, UReal) :: (_, UnsizedType.UVector) :: fun_args
               , ReturnType UnsizedType.UVector ); _ }; _ }
-    :: initial_state :: initial_time :: times :: args
-    when List.for_all2_exn ~f:arg_match
-           [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-           ; (AutoDiffable, UVector)
-           ; (AutoDiffable, UArray UReal) ]
-           [initial_time; initial_state; times] ->
-      if args_match fun_args args then
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-          ~ad_level:(expr_ad_lub es)
-          ~type_:(UnsizedType.UArray UnsizedType.UVector) ~loc
-        |> Validate.ok
-      else
-        Semantic_error.illtyped_variadic_ode loc id.name
-          (List.map ~f:type_of_expr_typed es)
-          fun_args
-        |> Validate.error
-  | _ ->
-      Semantic_error.illtyped_variadic_ode loc id.name
-        (List.map ~f:type_of_expr_typed es)
-        []
-      |> Validate.error
+    :: args ->
+      let num_of_mandatory_args =
+        if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
+      in
+      let mandatory_args, variadic_args =
+        List.split_n args num_of_mandatory_args
+      in
+      if args_match mandatory_arg_types mandatory_args then
+        if args_match fun_args variadic_args then
+          mk_typed_expression
+            ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+            ~ad_level:(expr_ad_lub es)
+            ~type_:(UnsizedType.UArray UnsizedType.UVector) ~loc
+          |> Validate.ok
+        else
+          Semantic_error.illtyped_variadic_ode loc id.name
+            (List.map ~f:type_of_expr_typed es)
+            fun_args
+          |> Validate.error
+      else generic_variadic_ode_semantic_error
+  | _ -> generic_variadic_ode_semantic_error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
@@ -442,11 +399,6 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
   | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
-  | StanLib
-    when Stan_math_signatures.is_variadic_ode_fn id.name
-         && String.is_suffix id.name
-              ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
-      semantic_check_variadic_ode_tol ~is_cond_dist ~loc id es
   | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
