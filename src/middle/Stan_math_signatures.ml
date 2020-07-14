@@ -104,9 +104,9 @@ let variadic_ode_mandatory_arg_types =
   ; (AutoDiffable, UReal)
   ; (AutoDiffable, UArray UReal) ]
 
-let variadic_ode_mandatory_fun_args = [
-  (UnsizedType.AutoDiffable, UnsizedType.UReal);
-  (UnsizedType.AutoDiffable, UnsizedType.UVector)]
+let variadic_ode_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
 
 let variadic_ode_fun_return_type = UnsizedType.UVector
 let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector

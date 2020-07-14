@@ -339,7 +339,8 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     else []
   in
   let mandatory_arg_types =
-    Stan_math_signatures.variadic_ode_mandatory_arg_types @ optional_tol_mandatory_args
+    Stan_math_signatures.variadic_ode_mandatory_arg_types
+    @ optional_tol_mandatory_args
   in
   let generic_variadic_ode_semantic_error =
     Semantic_error.illtyped_variadic_ode loc id.name
@@ -355,19 +356,22 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     List.length a = List.length b && List.for_all2_exn ~f:fun_arg_match a b
   in
   match es with
-  | {emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type); _}; _} :: args ->
+  | {emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type); _}; _}
+    :: args ->
       let num_of_mandatory_args =
         if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
       in
       let mandatory_args, variadic_args =
         List.split_n args num_of_mandatory_args
       in
-      let mandatory_fun_args, variadic_fun_args =
-        List.split_n fun_args 2
-      in
-      if fun_args_match mandatory_fun_args Stan_math_signatures.variadic_ode_mandatory_fun_args  &&
-         UnsizedType.check_of_same_type_mod_conv "" return_type Stan_math_signatures.variadic_ode_fun_return_type &&
-         args_match mandatory_arg_types mandatory_args then
+      let mandatory_fun_args, variadic_fun_args = List.split_n fun_args 2 in
+      if
+        fun_args_match mandatory_fun_args
+          Stan_math_signatures.variadic_ode_mandatory_fun_args
+        && UnsizedType.check_of_same_type_mod_conv "" return_type
+             Stan_math_signatures.variadic_ode_fun_return_type
+        && args_match mandatory_arg_types mandatory_args
+      then
         if args_match variadic_fun_args variadic_args then
           mk_typed_expression
             ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))

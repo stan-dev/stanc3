@@ -816,7 +816,7 @@ let pp_prog ppf (p : Program.Typed.t) =
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     pp_fun_def ppf fblock
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_ode_fn p)
+      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
   in
   let reduce_sum_struct_decl =
     String.Set.map

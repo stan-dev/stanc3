@@ -9280,19 +9280,6 @@ return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
-
-struct sho_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           std::ostream* pstream__, const std::vector<T2__>& theta,
-           const std::vector<T3__>& x, const std::vector<int>& x_int)  const 
-{
-return sho(t, y, theta, x, x_int, pstream__);
-}
-};
-
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 stan::promote_args_t<T0__, T1__, T2__,
 T3__>
@@ -15743,19 +15730,6 @@ T3__>>
 operator()(const T0__& t, const std::vector<T1__>& z,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__)  const 
-{
-return dz_dt(t, z, theta, x_r, x_i, pstream__);
-}
-};
-
-
-struct dz_dt_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__>& z,
-           std::ostream* pstream__, const std::vector<T2__>& theta,
-           const std::vector<T3__>& x_r, const std::vector<int>& x_i)  const 
 {
 return dz_dt(t, z, theta, x_r, x_i, pstream__);
 }

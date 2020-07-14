@@ -167,19 +167,6 @@ return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 }
 };
 
-
-struct simple_SIR_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           std::ostream* pstream__, const std::vector<T2__>& theta,
-           const std::vector<T3__>& x_r, const std::vector<int>& x_i)  const 
-{
-return simple_SIR(t, y, theta, x_r, x_i, pstream__);
-}
-};
-
 class ad_level_failing_model final : public model_base_crtp<ad_level_failing_model> {
 
  private:
