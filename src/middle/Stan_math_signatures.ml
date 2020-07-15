@@ -404,6 +404,47 @@ let add_nullary name = add_unqualified (name, UnsizedType.ReturnType UReal, [])
 let add_binary name =
   add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
 
+  let add_binary_vec name = 
+(  
+  for i = 0 to 1 do
+    for j = 0 to 1 do
+      add_unqualified
+        (name, ReturnType UReal, [ bare_types i; bare_types j]) ;
+      add_unqualified
+        (name, ReturnType (bare_array_type(UReal, 1)), [ bare_array_type(bare_types i, 1); bare_types j]) ;
+      add_unqualified
+        (name, ReturnType (bare_array_type(UReal, 1)), [ bare_types i; bare_array_type(bare_types j, 1)]) ;
+    done ;
+      add_unqualified
+        (name, ReturnType (bare_array_type(UReal, 1)), [ bare_array_type(bare_types i, 1); bare_array_type(bare_types i, 1)]) ;
+  done ;
+  for k = 2 to bare_types_size - 2 do
+    for i = 0 to 1 do
+      add_unqualified
+        (name, ReturnType (bare_types k), [ bare_types i; bare_types k]) ;
+      add_unqualified
+        (name, ReturnType (bare_types k), [ bare_types k; bare_types i]) ;
+      add_unqualified
+        (name, ReturnType (bare_array_type (bare_types k, 1)), [ bare_types i; (bare_array_type (bare_types k, 1))]) ;
+      add_unqualified
+        (name, ReturnType (bare_array_type (bare_types k, 1)), [ (bare_array_type (bare_types k, 1)); bare_types i]) ;
+    done ;
+    add_unqualified
+      (name, ReturnType (bare_array_type (bare_types k, 1)), [ (bare_array_type (bare_types k, 1)); (bare_array_type (bare_types k, 1))]) ;
+  done ;
+  for i = 0 to 1 do
+    for j = 0 to 1 do
+      add_unqualified
+        (name, ReturnType (bare_array_type (UMatrix, i)), [ bare_types j; (bare_array_type (UMatrix, i))]) ;
+      add_unqualified
+        (name, ReturnType (bare_array_type (UMatrix, i)), [ (bare_array_type (UMatrix, i)); bare_types j]) ;
+    done ;
+    add_unqualified
+      (name, ReturnType (bare_array_type (UMatrix, i)), [ (bare_array_type (UMatrix, i)); 
+                                                          (bare_array_type (UMatrix, i))]) ;
+  done ;
+)
+
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
@@ -1487,22 +1528,7 @@ let () =
     , ReturnType UReal
     , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
   add_nullary "positive_infinity" ;
-  for i = 0 to 1 do
-    for j = 0 to 1 do
-      add_unqualified
-        ("pow", ReturnType UReal, [ bare_types i; bare_types j]) ;
-      done ;
-  done ;
-  for i = 2 to bare_types_size - 1 do
-      add_unqualified
-        ("pow", ReturnType (bare_types i), [ bare_types i; bare_types i]) ;
-    for j = 0 to 1 do
-      add_unqualified
-        ("pow", ReturnType (bare_types i), [ bare_types j; bare_types i]) ;
-      add_unqualified
-        ("pow", ReturnType (bare_types i), [ bare_types i; bare_types j])
-    done ;
-  done ;
+  add_binary_vec "pow" ;
   add_unqualified ("prod", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
   add_unqualified ("prod", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
