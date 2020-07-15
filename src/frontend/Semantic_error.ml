@@ -181,27 +181,35 @@ module TypeError = struct
             else []
           in
           let time_type =
-            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_fun_args) 0
+            List.nth_exn
+              (types Stan_math_signatures.variadic_ode_mandatory_fun_args)
+              0
           in
           let state_type =
-            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_fun_args) 1
+            List.nth_exn
+              (types Stan_math_signatures.variadic_ode_mandatory_fun_args)
+              1
           in
           let init_state_type =
-            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 0
+            List.nth_exn
+              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
+              0
           in
           let init_time_type =
-            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 1
+            List.nth_exn
+              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
+              1
           in
           let times_type =
-            List.nth_exn (types Stan_math_signatures.variadic_ode_mandatory_arg_types) 2
+            List.nth_exn
+              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
+              2
           in
-          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" 
-            UnsizedType.pp time_type
-            UnsizedType.pp state_type 
-            UnsizedType.pp Stan_math_signatures.variadic_ode_fun_return_type
-            UnsizedType.pp init_state_type
-            UnsizedType.pp init_time_type
-            UnsizedType.pp times_type
+          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" UnsizedType.pp
+            time_type UnsizedType.pp state_type UnsizedType.pp
+            Stan_math_signatures.variadic_ode_fun_return_type UnsizedType.pp
+            init_state_type UnsizedType.pp init_time_type UnsizedType.pp
+            times_type
             (* times *)
             Fmt.(list UnsizedType.pp ~sep:comma)
             optional_tol_args
