@@ -180,37 +180,20 @@ module TypeError = struct
               types Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
-          let time_type =
+          let nth_fun_arg n =
             List.nth_exn
               (types Stan_math_signatures.variadic_ode_mandatory_fun_args)
-              0
+              n
           in
-          let state_type =
-            List.nth_exn
-              (types Stan_math_signatures.variadic_ode_mandatory_fun_args)
-              1
-          in
-          let init_state_type =
+          let nth_arg n =
             List.nth_exn
               (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
-              0
-          in
-          let init_time_type =
-            List.nth_exn
-              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
-              1
-          in
-          let times_type =
-            List.nth_exn
-              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
-              2
+              n
           in
           Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" UnsizedType.pp
-            time_type UnsizedType.pp state_type UnsizedType.pp
+            (nth_fun_arg 0) UnsizedType.pp (nth_fun_arg 1) UnsizedType.pp
             Stan_math_signatures.variadic_ode_fun_return_type UnsizedType.pp
-            init_state_type UnsizedType.pp init_time_type UnsizedType.pp
-            times_type
-            (* times *)
+            (nth_arg 0) UnsizedType.pp (nth_arg 1) UnsizedType.pp (nth_arg 2)
             Fmt.(list UnsizedType.pp ~sep:comma)
             optional_tol_args
         in

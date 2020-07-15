@@ -151,7 +151,7 @@ let variadic_ode_functor_suffix = "_odefunctor__"
 let functor_suffix_select hof =
   match hof with
   | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
-  | x when Stan_math_signatures.is_ode_fn x -> variadic_ode_functor_suffix
+  | x when Stan_math_signatures.is_variadic_ode_fn x -> variadic_ode_functor_suffix
   | _ -> functor_suffix
 
 let rec pp_index ppf = function

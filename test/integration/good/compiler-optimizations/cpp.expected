@@ -403,9 +403,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           .add(1000000).add(gamma).add(xi).add(delta).array(),
           "assigning variable lcm_sym25__");
         assign(lcm_sym20__, nil_index_list(),
-          integrate_ode_rk45(simple_SIR_odefunctor__(), y0, 0, t,
-            lcm_sym25__, x_r, x_i, pstream__),
-          "assigning variable lcm_sym20__");
+          integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t, lcm_sym25__,
+            x_r, x_i, pstream__), "assigning variable lcm_sym20__");
         assign(y, nil_index_list(), lcm_sym20__, "assigning variable y");
       }
       current_statement__ = 5;
@@ -642,7 +641,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           .add(gamma).add(xi).add(delta).array(),
           "assigning variable lcm_sym9__");
         assign(lcm_sym8__, nil_index_list(),
-          integrate_ode_rk45(simple_SIR_odefunctor__(), y0, 0, t, lcm_sym9__,
+          integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t, lcm_sym9__,
             x_r, x_i, pstream__), "assigning variable lcm_sym8__");
         assign(y, nil_index_list(), lcm_sym8__, "assigning variable y");
       }
