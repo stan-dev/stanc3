@@ -131,7 +131,7 @@ module Labelled = struct
       Label.Int_label.Map.add ~key:(label_of expr) ~data:expr
         (associate_pattern assocs @@ pattern)
     in
-    match assocs_result with `Ok x -> x | _ -> assocs
+    match assocs_result with `Ok x -> x | `Duplicate -> assocs
 
   and associate_pattern assocs = function
     | Fixed.Pattern.Lit _ | Var _ -> assocs

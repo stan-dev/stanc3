@@ -15,4 +15,4 @@ let to_unsized = function
 
 let associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | Sized st -> SizedType.associate ~init:assocs st
-  | _ -> assocs
+  | Unsized _ -> assocs

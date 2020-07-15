@@ -48,50 +48,43 @@ let rec op_to_funapp op args =
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
-  let type_ = emeta.Ast.type_
-  and loc = emeta.loc
-  and adlevel = emeta.ad_level in
+  let ewrap pattern =
+    Expr.
+      { Fixed.pattern
+      ; meta=
+          Typed.Meta.
+            {type_= emeta.Ast.type_; adlevel= emeta.ad_level; loc= emeta.loc}
+      }
+  in
   match expr with
   | Ast.Paren x -> trans_expr x
-  | BinOp (lhs, And, rhs) ->
-      Expr.
-        { Fixed.pattern= EAnd (trans_expr lhs, trans_expr rhs)
-        ; meta= Typed.Meta.create ~type_ ~adlevel ~loc () }
-  | BinOp (lhs, Or, rhs) ->
-      Expr.
-        { Fixed.pattern= EOr (trans_expr lhs, trans_expr rhs)
-        ; meta= Typed.Meta.create ~type_ ~adlevel ~loc () }
+  | BinOp (lhs, And, rhs) -> EAnd (trans_expr lhs, trans_expr rhs) |> ewrap
+  | BinOp (lhs, Or, rhs) -> EOr (trans_expr lhs, trans_expr rhs) |> ewrap
   | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
   | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
-  | _ ->
-      let pattern =
-        match expr with
-        | Ast.TernaryIf (cond, ifb, elseb) ->
-            Expr.Fixed.Pattern.TernaryIf
-              (trans_expr cond, trans_expr ifb, trans_expr elseb)
-        | Variable {name; _} -> Var name
-        | IntNumeral x -> Lit (Int, format_number x)
-        | RealNumeral x -> Lit (Real, format_number x)
-        | FunApp (fn_kind, {name; _}, args)
-         |CondDistApp (fn_kind, {name; _}, args) ->
-            FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
-        | GetLP | GetTarget -> FunApp (StanLib, "target", [])
-        | ArrayExpr eles ->
-            FunApp
-              ( CompilerInternal
-              , Internal_fun.to_string FnMakeArray
-              , trans_exprs eles )
-        | RowVectorExpr eles ->
-            FunApp
-              ( CompilerInternal
-              , Internal_fun.to_string FnMakeRowVec
-              , trans_exprs eles )
-        | Indexed (lhs, indices) ->
-            Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
-        | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
-            raise_s [%message "Impossible!"]
-      and meta = Expr.Typed.Meta.create ~type_ ~adlevel ~loc () in
-      {meta; pattern}
+  | Ast.TernaryIf (cond, ifb, elseb) ->
+      Expr.Fixed.Pattern.TernaryIf
+        (trans_expr cond, trans_expr ifb, trans_expr elseb)
+      |> ewrap
+  | Variable {name; _} -> Var name |> ewrap
+  | IntNumeral x -> Lit (Int, format_number x) |> ewrap
+  | RealNumeral x -> Lit (Real, format_number x) |> ewrap
+  | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
+    ->
+      FunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> ewrap
+  | GetLP | GetTarget -> FunApp (StanLib, "target", []) |> ewrap
+  | ArrayExpr eles ->
+      FunApp
+        (CompilerInternal, Internal_fun.to_string FnMakeArray, trans_exprs eles)
+      |> ewrap
+  | RowVectorExpr eles ->
+      FunApp
+        ( CompilerInternal
+        , Internal_fun.to_string FnMakeRowVec
+        , trans_exprs eles )
+      |> ewrap
+  | Indexed (lhs, indices) ->
+      Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
 
 and trans_idx = function
   | Ast.All -> All
@@ -515,7 +508,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
       let rec get_lhs_indices = function
         | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
-        | _ -> []
+        | {Ast.lval= Ast.LVariable _; _} -> []
       in
       let assign_indices = get_lhs_indices assign_lhs in
       let assignee =
@@ -643,8 +636,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl
-      {decl_type; transformation; identifier; initial_value; is_global} ->
-      ignore is_global ;
+      {decl_type; transformation; identifier; initial_value; is_global= _} ->
       trans_decl declc smeta decl_type
         (Program.map_transformation trans_expr transformation)
         identifier initial_value
