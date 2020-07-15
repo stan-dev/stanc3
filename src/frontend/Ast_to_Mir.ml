@@ -783,7 +783,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let transform_inits =
     gen_from_block {declc with dconstrain= Some Unconstrain} Parameters
   in
-  let cpp_friendly_prog_name prog_name =
+  let normalize_prog_name prog_name =
     if String.length prog_name > 0 && not (Char.is_alpha prog_name.[0]) then
       "_" ^ prog_name
     else prog_name
@@ -795,5 +795,5 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; generate_quantities
   ; transform_inits
   ; output_vars
-  ; prog_name= cpp_friendly_prog_name !Semantic_check.model_name
+  ; prog_name= normalize_prog_name !Semantic_check.model_name
   ; prog_path= filename }

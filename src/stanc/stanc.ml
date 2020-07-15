@@ -203,7 +203,11 @@ let mangle =
   String.concat_map ~f:(fun c ->
       Char.(
         if is_alphanum c || c = '_' then to_string c
-        else "x" ^ Int.to_string (to_int c)) )
+        else 
+          match c with 
+          | '-' ->  "_"
+          | _ -> "x" ^ Int.to_string (to_int c)
+      ))
 
 let main () =
   (* Parse the arguments. *)

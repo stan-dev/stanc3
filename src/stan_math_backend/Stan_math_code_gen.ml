@@ -687,8 +687,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() final { }" prog_name ;
-  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
-    (String.drop_prefix prog_name (String.length model_prefix)) ;
+  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }" prog_name ;
   pf ppf
     {|
 

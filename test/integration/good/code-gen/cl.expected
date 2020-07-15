@@ -288,7 +288,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
  public:
   ~optimize_glm_model() final { }
   
-  std::string model_name() const final { return "ze_glm_model"; }
+  std::string model_name() const final { return "optimize_glm_model"; }
 
   std::vector<std::string> model_compile_info() const {
     std::vector<std::string> stanc_info;
