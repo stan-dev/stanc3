@@ -344,6 +344,135 @@ let%expect_test "whole program data generation check" =
   let ast =
     parse_string Parser.Incremental.program
       {|
+        data {
+          vector<upper=10>[5] x_vect;
+          vector<lower=20.0>[5] x_vect_up;
+
+          vector<lower=x_vect>[5] y_lower_vect;
+          vector<upper=x_vect_up>[5] y_upper_vect;
+          vector<lower=x_vect, upper=20>[5] y_lower_vect_upper_int;
+          vector<lower=x_vect, upper=20.0>[5] y_lower_vect_upper_float;
+          vector<lower=1, upper=x_vect_up>[5] y_lower_int_upper_vect;
+          vector<lower=1.3, upper=x_vect_up>[5] y_lower_float_upper_vect;
+          vector<lower=[1,2,3,4,5]'>[5] y_given_bound;
+          vector<lower=0.5, upper=[1,2,3,4,5]'>[5] y_given_bound_and_scalar;
+          vector<lower=[1,2,3,4,5]',upper=[2,3,4,5,6]'>[5] y_lu_given_bound;
+          vector<lower=x_vect,upper=x_vect_up>[5] y_lu_vector_bound;
+          vector<lower=[1,2,3,4,5]',upper=x_vect_up>[5] y_lu_vector_bound_mixed;
+
+          row_vector<upper=10>[5] x_row_vect;
+          row_vector<lower=20.0>[5] x_row_vect_up;
+
+          row_vector<lower=x_row_vect>[5] y_row_lower_vect;
+          row_vector<upper=x_row_vect_up>[5] y_row_upper_vect;
+          row_vector<lower=x_row_vect, upper=20>[5] y_row_lower_vect_upper_int;
+          row_vector<lower=x_row_vect, upper=20.0>[5] y_row_lower_vect_upper_float;
+          row_vector<lower=1, upper=x_row_vect_up>[5] y_row_lower_int_upper_vect;
+          row_vector<lower=1.3, upper=x_row_vect_up>[5] y_row_lower_float_upper_vect;
+          row_vector<lower=[1,2,3,4,5]>[5] y_row_given_bound;
+          row_vector<lower=0.5, upper=[1,2,3,4,5]>[5] y_row_given_bound_and_scalar;
+          row_vector<lower=[1,2,3,4,5],upper=[2,3,4,5,6]>[5] y_row_lu_given_bound;
+          row_vector<lower=x_row_vect,upper=x_row_vect_up>[5] y_row_lu_vector_bound;
+          row_vector<lower=[1,2,3,4,5],upper=x_row_vect_up>[5] y_row_lu_vector_bound_mixed;
+        }
+      |}
+  in
+  let ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
+  in
+  let str = print_data_prog ast in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+     "{\
+    \n\"x_vect\":\
+    \n  [8.2015419032442978, 7.25312636944623, 7.8441784126802627,\
+    \n    9.8017664359959333, 7.1815278199399577],\
+    \n\"x_vect_up\":\
+    \n  [21.604405750889413, 22.075993835654074, 20.567993630861508,\
+    \n    21.328262132583387, 20.710394490044841],\
+    \n\"y_lower_vect\":\
+    \n  [12.230389846643661, 8.7968155138128541, 9.9906954563838966,\
+    \n    13.681737544547856, 9.7026262968757],\
+    \n\"y_upper_vect\":\
+    \n  [16.887008330595059, 20.387644823859947, 17.316283931536105,\
+    \n    19.837012945553113, 17.488443437039837],\
+    \n\"y_lower_vect_upper_int\":\
+    \n  [8.5792936687636541, 12.265292761958673, 16.047224185229535,\
+    \n    13.187230533411139, 17.476856907913916],\
+    \n\"y_lower_vect_upper_float\":\
+    \n  [14.266246309179426, 8.89785609233398, 10.864902829276518,\
+    \n    13.00828734528784, 16.72189250329998],\
+    \n\"y_lower_int_upper_vect\":\
+    \n  [9.3733771939167347, 2.3890771978580387, 8.1546438928324338,\
+    \n    12.667666133698285, 7.81707005693119],\
+    \n\"y_lower_float_upper_vect\":\
+    \n  [21.48544692378394, 10.238695244795489, 9.7582986893893331,\
+    \n    20.582549733207138, 12.737067049619402],\
+    \n\"y_given_bound\":\
+    \n  [3.7922353997475788, 2.292622453020976, 4.2265950238017815,\
+    \n    5.8556222147542085, 5.0095894885098069],\
+    \n\"y_given_bound_and_scalar\":\
+    \n  [0.82448759493135149, 1.1130250870829512, 2.3879692452529397,\
+    \n    2.0496645680552019, 2.9008771151791017],\
+    \n\"y_lu_given_bound\":\
+    \n  [1.9197316803230775, 2.8857541366723432, 3.239767126025078,\
+    \n    4.1173974461415845, 5.0059733522048191],\
+    \n\"y_lu_vector_bound\":\
+    \n  [9.51603998848283, 7.6439600075597367, 16.831074637713225,\
+    \n    19.16320072095121, 10.961331321544691],\
+    \n\"y_lu_vector_bound_mixed\":\
+    \n  [13.06721606547222, 3.5165504060569628, 18.648274434942191,\
+    \n    18.640003384204142, 15.702847399887819],\
+    \n\"x_row_vect\":\
+    \n  [8.6252338866513316, 6.2151318313470769, 7.3293598111485032,\
+    \n    9.8340525891748189, 7.5064008029760334],\
+    \n\"x_row_vect_up\":\
+    \n  [24.292751435287528, 23.799222988799588, 24.483581935187267,\
+    \n    24.248078840175644, 20.713724015519453],\
+    \n\"y_row_lower_vect\":\
+    \n  [12.451207745869167, 7.1656732625637076, 11.205515806023248,\
+    \n    10.211232126191987, 8.03844011716138],\
+    \n\"y_row_upper_vect\":\
+    \n  [23.920336589877845, 23.670701496181813, 21.047092019585282,\
+    \n    22.603481337582451, 20.607290633584771],\
+    \n\"y_row_lower_vect_upper_int\":\
+    \n  [18.896636991299772, 18.70743171890166, 12.344812829622761,\
+    \n    15.712189270972098, 19.692595473643294],\
+    \n\"y_row_lower_vect_upper_float\":\
+    \n  [17.541966084049413, 18.641171164764664, 14.698335567057759,\
+    \n    16.878613905060728, 10.075020686212124],\
+    \n\"y_row_lower_int_upper_vect\":\
+    \n  [17.753084921780715, 19.116252093723773, 6.26211226163225,\
+    \n    1.7706324590421687, 6.8683446700968274],\
+    \n\"y_row_lower_float_upper_vect\":\
+    \n  [19.386839965324132, 5.2544931804636361, 5.09235967101705,\
+    \n    13.021914842963989, 9.928503770154137],\
+    \n\"y_row_given_bound\":\
+    \n  [3.7986730251024765, 3.703372210540532, 6.9619668759770406,\
+    \n    8.47594480825167, 5.0751514717342907],\
+    \n\"y_row_given_bound_and_scalar\":\
+    \n  [0.56811385812158555, 1.1569050337052729, 0.82673601008326014,\
+    \n    1.9362536607727068, 3.4236502509817615],\
+    \n\"y_row_lu_given_bound\":\
+    \n  [1.3578080578646723, 2.4982287440121644, 3.5140597272209417,\
+    \n    4.7710849381494187, 5.6396938677991066],\
+    \n\"y_row_lu_vector_bound\":\
+    \n  [9.050412855379685, 22.068719455252968, 17.280759768009172,\
+    \n    19.572734365483463, 12.348137644499662],\
+    \n\"y_row_lu_vector_bound_mixed\":\
+    \n  [23.68117004588095, 21.859463377110153, 16.93731450392735,\
+    \n    19.994339965018462, 16.065041740638126]\
+    \n}" |}]
+
+let%expect_test "whole program data generation check" =
+  let open Parse in
+  let ast =
+    parse_string Parser.Incremental.program
+      {|
       data {
         int<lower = 0> K;                     // players
         int<lower = 0> N;                     // games
