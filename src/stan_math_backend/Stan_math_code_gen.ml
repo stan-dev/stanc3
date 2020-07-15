@@ -660,11 +660,13 @@ let pp_model_public ppf p =
   (* Boilerplate *)
   pf ppf "@ %a" pp_overloads ()
 
+let model_prefix = "model_"
+
 (** Print the full model class. *)
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s() final { }" p.prog_name ;
+  pf ppf "@ public:@ @[<v 1> ~%s() final { }" prog_name ;
   pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
     prog_name ;
   pf ppf
