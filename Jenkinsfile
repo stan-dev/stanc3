@@ -264,7 +264,7 @@ pipeline {
                                 bat "bash -cl \"pwd\""
                                 bat "bash -cl \"ls\""
 
-                                bat "bash -cl \"cd /d/workspace/stanc3_*/test/integration; find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                                bat "bash -cl \"sudo apt install dos2unix; cd /d/workspace/stanc3_*/test/integration; find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                                 bat "bash -cl \"cd /d/workspace/stanc3_*/test/integration; eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                                 bat "bash -cl \"cd /d/workspace/stanc3_*/test/integration; rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc\""
                                 bat "bash -cl \"cd /d/workspace/stanc3_*/test/integration; mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp\""
