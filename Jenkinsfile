@@ -34,48 +34,48 @@ pipeline {
             }
             steps { script { utils.killOldBuilds() } }
         }
-        stage("Build") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh 'printenv'
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
-                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
-        stage("Code formatting") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh 'printenv'
-                sh """
-                    eval \$(opam env)
-                    make format  || 
-                    (
-                        set +x &&
-                        echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-                        echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
-                        exit 1;
-                    )
-                """
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }        
+        // stage("Build") {
+        //     agent {
+        //         dockerfile {
+        //             filename 'docker/debian/Dockerfile'
+        //             //Forces image to ignore entrypoint
+        //             args "-u root --entrypoint=\'\'"
+        //         }
+        //     }
+        //     steps {
+        //         sh 'printenv'
+        //         runShell("""
+        //             eval \$(opam env)
+        //             dune build @install
+        //         """)
+        //         sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+        //         stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+        //     }
+        //     post { always { runShell("rm -rf ./*") }}
+        // }
+        // stage("Code formatting") {
+        //     agent {
+        //         dockerfile {
+        //             filename 'docker/debian/Dockerfile'
+        //             //Forces image to ignore entrypoint
+        //             args "-u root --entrypoint=\'\'"
+        //         }
+        //     }
+        //     steps {
+        //         sh 'printenv'
+        //         sh """
+        //             eval \$(opam env)
+        //             make format  || 
+        //             (
+        //                 set +x &&
+        //                 echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+        //                 echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
+        //                 exit 1;
+        //             )
+        //         """
+        //     }
+        //     post { always { runShell("rm -rf ./*") }}
+        // }        
         // stage("Test") {
         //     parallel {
         //         stage("Dune tests") {
@@ -182,77 +182,77 @@ pipeline {
             //when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
-                stage("Build & test Mac OS X binary") {
-                    agent { label "osx && ocaml" }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            opam update || true
-                            bash -x scripts/install_build_deps.sh
-                            dune subst
-                            dune build @install
-                        """)
+                // stage("Build & test Mac OS X binary") {
+                //     agent { label "osx && ocaml" }
+                //     steps {
+                //         runShell("""
+                //             eval \$(opam env)
+                //             opam update || true
+                //             bash -x scripts/install_build_deps.sh
+                //             dune subst
+                //             dune build @install
+                //         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
+                //         echo runShell("""
+                //             eval \$(opam env)
+                //             time dune runtest --verbose
+                //         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
+                //         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                //         sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
-                        stash name:'mac-exe', includes:'bin/*'
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
-                stage("Build stanc.js") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u root --entrypoint=\'\'"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build --profile release src/stancjs
-                        """)
+                //         stash name:'mac-exe', includes:'bin/*'
+                //     }
+                //     post { always { runShell("rm -rf ./*") }}
+                // }
+                // stage("Build stanc.js") {
+                //     agent {
+                //         dockerfile {
+                //             filename 'docker/debian/Dockerfile'
+                //             //Forces image to ignore entrypoint
+                //             args "-u root --entrypoint=\'\'"
+                //         }
+                //     }
+                //     steps {
+                //         runShell("""
+                //             eval \$(opam env)
+                //             dune subst
+                //             dune build --profile release src/stancjs
+                //         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                        sh "mv `find _build -name index.html` bin/load_stanc.html"
-                        stash name:'js-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
-                stage("Build & test a static Linux binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\'"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build @install --profile static
-                        """)
+                //         sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                //         sh "mv `find _build -name index.html` bin/load_stanc.html"
+                //         stash name:'js-exe', includes:'bin/*'
+                //     }
+                //     post {always { runShell("rm -rf ./*")}}
+                // }
+                // stage("Build & test a static Linux binary") {
+                //     agent {
+                //         dockerfile {
+                //             filename 'docker/static/Dockerfile'
+                //             //Forces image to ignore entrypoint
+                //             args "-u 1000 --entrypoint=\'\'"
+                //         }
+                //     }
+                //     steps {
+                //         runShell("""
+                //             eval \$(opam env)
+                //             dune subst
+                //             dune build @install --profile static
+                //         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
+                //         echo runShell("""
+                //             eval \$(opam env)
+                //             time dune runtest --profile static --verbose
+                //         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
+                //         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                //         sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
-                        stash name:'linux-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
+                //         stash name:'linux-exe', includes:'bin/*'
+                //     }
+                //     post {always { runShell("rm -rf ./*")}}
+                // }
                 stage("Build & test static Windows binary") {
                     agent { label "WSL" }
                     steps {
@@ -264,8 +264,8 @@ pipeline {
                                 bat "bash -cl \"pwd\""
                                 bat "bash -cl \"ls\""
 
-                                bat "bash -cl \"cd /d/workspace/stanc3_*/test/integration\""
-                                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                                bat "bash -cl \"ls -l\""
+                                bat "bash -cl \"find test/integration/ -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                                 bat "bash -cl \"cd ..\""
                                 bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                                 bat "bash -cl \"rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc\""
