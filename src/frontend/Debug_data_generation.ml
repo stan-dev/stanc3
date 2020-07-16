@@ -89,8 +89,75 @@ let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
-  { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
-  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UMatrix} }
+  let extract_var e =
+    match e with {expr= Variable x; _} -> Map.find_exn m x.name | _ -> e
+  in
+  let gen_bounded t e =
+    match e with
+    | {expr= RowVectorExpr unpacked_e; _}
+     |{expr= ArrayExpr unpacked_e; _}
+     |{expr= PostfixOp ({expr= RowVectorExpr unpacked_e; _}, Transpose); _} ->
+        wrap_row_vector (List.map ~f:(fun x -> gen_real m (t x)) unpacked_e)
+    | _ ->
+        raise_s
+          [%message
+            "Bad bounded (upper OR lower) expr: "
+              (e : (typed_expr_meta, fun_kind) expr_with)]
+  in
+  let gen_ul_bounded e1 e2 =
+    let create_bounds l u =
+      wrap_row_vector
+        (List.map2_exn
+           ~f:(fun x y -> gen_real m (Program.LowerUpper (x, y)))
+           l u)
+    in
+    match (e1, e2) with
+    | ( ( {expr= RowVectorExpr unpacked_e1 | ArrayExpr unpacked_e1; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
+          )
+      , ( {expr= RowVectorExpr unpacked_e2 | ArrayExpr unpacked_e2; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
+          ) ) ->
+        (* | {expr= ArrayExpr unpacked_e1; _}, {expr= ArrayExpr unpacked_e2; _} -> *)
+        create_bounds unpacked_e1 unpacked_e2
+    | ( ({expr= RealNumeral _; _} | {expr= IntNumeral _; _})
+      , ( {expr= RowVectorExpr unpacked_e2; _}
+        | {expr= ArrayExpr unpacked_e2; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e2; _}, Transpose); _}
+          ) ) ->
+        create_bounds
+          (List.init (List.length unpacked_e2) ~f:(fun _ -> e1))
+          unpacked_e2
+    | ( ( {expr= RowVectorExpr unpacked_e1; _}
+        | {expr= PostfixOp ({expr= RowVectorExpr unpacked_e1; _}, Transpose); _}
+        | {expr= ArrayExpr unpacked_e1; _} )
+      , ({expr= RealNumeral _; _} | {expr= IntNumeral _; _}) ) ->
+        create_bounds unpacked_e1
+          (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
+    | _ ->
+        raise_s
+          [%message
+            "Bad bounded upper and lower expr: "
+              (e1 : (typed_expr_meta, fun_kind) expr_with)
+              " and "
+              (e2 : (typed_expr_meta, fun_kind) expr_with)]
+  in
+  match t with
+  | Program.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded (fun x -> Program.Lower x) (extract_var e)
+  | Program.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
+      gen_bounded (fun x -> Program.Upper x) (extract_var e)
+  | Program.LowerUpper
+      ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
+      , ({emeta= {type_= UVector | URowVector; _}; _} as e2) )
+   |Program.LowerUpper
+      ( ({emeta= {type_= UVector | URowVector; _}; _} as e1)
+      , ({emeta= {type_= UReal | UInt; _}; _} as e2) ) ->
+      gen_ul_bounded (extract_var e1) (extract_var e2)
+  | _ ->
+      { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
+      ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UMatrix}
+      }
 
 let gen_vector m n t =
   let gen_ordered n =
