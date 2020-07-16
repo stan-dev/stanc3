@@ -276,38 +276,20 @@ let pp_ctor ppf p =
   pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
     (list ~sep:comma string) params ;
   let pp_mul ppf () = pf ppf " * " in
-  let pp_num_param ppf (checks, dims) =
-    if List.length checks > 0 then (
-      list ~sep:cut pp_statement ppf checks ;
-      cut ppf () ) ;
+  let pp_num_param ppf dims =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
   in
   let get_param_st = function
-    | ( decl_id
-      , { Program.out_block= Parameters
-        ; out_unconstrained_st= st
-        ; out_constrained_st= cst
-        ; out_trans= tr } ) -> (
-        let meta =
-          p.log_prob
-          |> List.find ~f:(function
-               | {Stmt.Fixed.pattern= Decl {decl_id= id; _}; _}
-                 when id = decl_id ->
-                   true
-               | _ -> false )
-          |> Option.map ~f:(fun x -> x.meta)
-          |> Option.value ~default:Stmt.Numbered.Meta.empty
-        in
-        let dims_check = Transform_Mir.validate_sized decl_id meta (Some tr) in
-        match SizedType.get_dims st with
-        | [] -> Some (dims_check cst, [Expr.Helpers.loop_bottom])
-        | ls -> Some (dims_check cst, ls) )
+    | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
+      match SizedType.get_dims st with
+      | [] -> Some [Expr.Helpers.loop_bottom]
+      | ls -> Some ls )
     | _ -> None
   in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
-    | Decl {decl_id; decl_type; _} -> (
+    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
       match decl_type with
       | Sized st ->
           Locations.pp_smeta ppf meta ;
@@ -339,16 +321,14 @@ let pp_ctor ppf p =
 
 let rec top_level_decls Stmt.Fixed.({pattern; _}) =
   match pattern with
-  | Decl d ->
-      [Some (d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
+  | Decl d when d.decl_id <> "pos__" ->
+      [(d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
-  | _ -> [None]
+  | _ -> []
 
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
-  let data_decls =
-    List.concat_map ~f:top_level_decls prepare_data |> List.filter_map ~f:ident
-  in
+  let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 (** Print the signature and blocks of the model class methods.
@@ -680,11 +660,13 @@ let pp_model_public ppf p =
   (* Boilerplate *)
   pf ppf "@ %a" pp_overloads ()
 
+let model_prefix = "model_"
+
 (** Print the full model class. *)
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s() final { }" p.prog_name ;
+  pf ppf "@ public:@ @[<v 1> ~%s() final { }" prog_name ;
   pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
     prog_name ;
   pf ppf
