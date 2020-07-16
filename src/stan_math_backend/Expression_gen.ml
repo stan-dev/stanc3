@@ -221,8 +221,7 @@ and gen_operator_app = function
         pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
   | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
   | EltPow ->
-      fun ppf es ->
-        pp_scalar_binary ppf "(%a@ *@ %a)" "pow(@,%a,@ %a)" es
+      fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "pow(@,%a,@ %a)" es
   | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
   | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
   | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
