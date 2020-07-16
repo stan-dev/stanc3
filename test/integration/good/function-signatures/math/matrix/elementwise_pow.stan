@@ -4,6 +4,7 @@ data {
   int d_int_array_2d[d_int,d_int];
   real d_real;
   real d_real_array[d_int];
+  real d_real_array_2d[d_int,d_int];
   matrix[d_int,d_int] d_matrix;
   matrix[d_int,d_int] d_matrix_array[d_int];
   vector[d_int] d_vector;
@@ -15,6 +16,7 @@ data {
 transformed data {
   real transformed_data_real;
   real transformed_data_real_array[d_int];
+  real transformed_data_real_array_2d[d_int, d_int];
   matrix[d_int,d_int] transformed_data_matrix;
   matrix[d_int,d_int] transformed_data_matrix_array[d_int];
   vector[d_int] transformed_data_vector;
@@ -33,6 +35,20 @@ transformed data {
   transformed_data_real_array = d_int .^ d_real_array;
   transformed_data_real_array = d_real .^ d_real_array;
   transformed_data_real_array = d_real_array .^ d_real_array;
+
+  transformed_data_real_array_2d = d_int_array_2d .^ d_int;
+  transformed_data_real_array_2d = d_int_array_2d .^ d_real;
+  transformed_data_real_array_2d = d_int .^ d_int_array_2d;
+  transformed_data_real_array_2d = d_real .^ d_int_array_2d;
+  transformed_data_real_array_2d = d_int_array_2d .^ d_int_array_2d;
+
+  transformed_data_real_array_2d = d_real_array_2d .^ d_int;
+  transformed_data_real_array_2d = d_real_array_2d .^ d_real;
+  transformed_data_real_array_2d = d_int .^ d_real_array_2d;
+  transformed_data_real_array_2d = d_real .^ d_real_array_2d;
+  transformed_data_real_array_2d = d_real_array_2d .^ d_real_array_2d;
+  transformed_data_real_array_2d = d_int_array_2d .^ d_real_array_2d;
+  transformed_data_real_array_2d = d_real_array_2d .^ d_int_array_2d;
 
   transformed_data_vector = d_vector .^ d_int;
   transformed_data_vector = d_vector .^ d_real;
@@ -75,6 +91,7 @@ transformed data {
 parameters {
   real p_real;
   real p_real_array[d_int];
+  real p_real_array_2d[d_int,d_int];
   real y_p;
   matrix[d_int,d_int] p_matrix;
   matrix[d_int,d_int] p_matrix_array[d_int];
@@ -85,12 +102,42 @@ parameters {
 }
 transformed parameters {
   real transformed_param_array[d_int];
+  real transformed_param_array_2d[d_int,d_int];
   matrix[d_int,d_int] transformed_param_matrix;
   matrix[d_int,d_int] transformed_param_matrix_array[d_int];
   vector[d_int] transformed_param_vector;
   vector[d_int] transformed_param_vector_array[d_int];
   row_vector[d_int] transformed_param_row_vector;
   row_vector[d_int] transformed_param_row_vector_array[d_int];
+
+  transformed_param_array = d_int_array .^ p_real;
+  transformed_param_array = p_real .^ d_int_array;
+
+  transformed_param_array = p_real_array .^ d_int;
+  transformed_param_array = d_real_array .^ p_real;
+  transformed_param_array = p_real_array .^ d_real;
+  transformed_param_array = p_real_array .^ p_real;
+  transformed_param_array = d_int .^ p_real_array;
+  transformed_param_array = d_real .^ p_real_array;
+  transformed_param_array = p_real .^ d_real_array;
+  transformed_param_array = p_real .^ p_real_array;
+  transformed_param_array = d_real_array .^ p_real_array;
+  transformed_param_array = p_real_array .^ d_real_array;
+  transformed_param_array = p_real_array .^ p_real_array;
+
+  transformed_param_array_2d = d_int_array_2d .^ p_real;
+  transformed_param_array_2d = p_real_array_2d .^ p_real;
+  transformed_param_array_2d = d_real_array_2d .^ p_real;
+  transformed_param_array_2d = p_real_array_2d .^ d_real;
+  transformed_param_array_2d = p_real .^ d_int_array_2d;
+  transformed_param_array_2d = p_real .^ p_real_array_2d;
+  transformed_param_array_2d = d_real .^ p_real_array_2d;
+  transformed_param_array_2d = p_real .^ d_real_array_2d;
+  transformed_param_array_2d = p_real_array_2d .^ d_int_array_2d;
+  transformed_param_array_2d = d_int_array_2d .^ p_real_array_2d;
+  transformed_param_array_2d = p_real_array_2d .^ p_real_array_2d;
+  transformed_param_array_2d = p_real_array_2d .^ d_real_array_2d;
+  transformed_param_array_2d = d_real_array_2d .^ p_real_array_2d;
 
   transformed_param_vector = p_vector .^ p_real;
   transformed_param_vector = p_vector .^ d_real;
@@ -177,9 +224,6 @@ transformed parameters {
   transformed_param_matrix_array = p_matrix_array .^ p_matrix_array;
   transformed_param_matrix_array = p_matrix_array .^ d_matrix_array;
   transformed_param_matrix_array = d_matrix_array .^ p_matrix_array;
-  transformed_param_matrix_array = d_int_array_2d .^ p_matrix_array;
-  transformed_param_matrix_array = p_matrix_array .^ d_int_array_2d;
-
 }
 model {  
   y_p ~ normal(0,1);
