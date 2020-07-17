@@ -67,15 +67,18 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in '8_schools_ncp.stan', line 20, column 2 to column 29)",
                                                       " (in '8_schools_ncp.stan', line 21, column 2 to column 27)",
                                                       " (in '8_schools_ncp.stan', line 2, column 2 to column 17)",
+                                                      " (in '8_schools_ncp.stan', line 3, column 9 to column 10)",
                                                       " (in '8_schools_ncp.stan', line 3, column 2 to column 12)",
-                                                      " (in '8_schools_ncp.stan', line 4, column 2 to column 25)"};
+                                                      " (in '8_schools_ncp.stan', line 4, column 22 to column 23)",
+                                                      " (in '8_schools_ncp.stan', line 4, column 2 to column 25)",
+                                                      " (in '8_schools_ncp.stan', line 10, column 9 to column 10)",
+                                                      " (in '8_schools_ncp.stan', line 14, column 9 to column 10)"};
 
 
 
 class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> {
 
  private:
-  int pos__;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -106,6 +109,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
@@ -116,35 +120,39 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       
       current_statement__ = 9;
       J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 9;
+      current_statement__ = 9;
+      check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       validate_non_negative_index("y", "J", J);
-      current_statement__ = 10;
+      current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(J));
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       assign(y, nil_index_list(), context__.vals_r("y"),
         "assigning variable y");
-      current_statement__ = 11;
+      current_statement__ = 12;
       validate_non_negative_index("sigma", "J", J);
-      current_statement__ = 11;
+      current_statement__ = 13;
       context__.validate_dims("data initialization","sigma","double",
           context__.to_vec(J));
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 11;
+      current_statement__ = 13;
       assign(sigma, nil_index_list(), context__.vals_r("sigma"),
         "assigning variable sigma");
-      current_statement__ = 9;
-      current_statement__ = 9;
-      check_greater_or_equal(function__, "J", J, 0);
-      current_statement__ = 11;
+      current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 11;
-        current_statement__ = 11;
+        current_statement__ = 13;
+        current_statement__ = 13;
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
+      current_statement__ = 14;
+      validate_non_negative_index("theta_tilde", "J", J);
+      current_statement__ = 15;
+      validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -155,8 +163,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     try {
       num_params_r__ += 1;
       num_params_r__ += 1;
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       num_params_r__ += J;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -198,16 +204,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         current_statement__ = 2;
         tau = stan::math::lb_constrain(tau, 0);
       }
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
-      current_statement__ = 4;
-      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
@@ -269,16 +271,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = in__.scalar();
       current_statement__ = 2;
       tau = stan::math::lb_constrain(tau, 0);
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
-      current_statement__ = 4;
-      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
@@ -334,8 +332,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = context__.vals_r("tau")[(1 - 1)];
       current_statement__ = 2;
       tau = stan::math::lb_free(tau, 0);
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
@@ -581,7 +577,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class _8start_with_number_model final : public model_base_crtp<_8start_with_number_model> {
 
  private:
-  int pos__;
   int good_model;
  
  public:
@@ -610,6 +605,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
