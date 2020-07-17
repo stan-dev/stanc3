@@ -67,15 +67,18 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in '8_schools_ncp.stan', line 20, column 2 to column 29)",
                                                       " (in '8_schools_ncp.stan', line 21, column 2 to column 27)",
                                                       " (in '8_schools_ncp.stan', line 2, column 2 to column 17)",
+                                                      " (in '8_schools_ncp.stan', line 3, column 9 to column 10)",
                                                       " (in '8_schools_ncp.stan', line 3, column 2 to column 12)",
-                                                      " (in '8_schools_ncp.stan', line 4, column 2 to column 25)"};
+                                                      " (in '8_schools_ncp.stan', line 4, column 22 to column 23)",
+                                                      " (in '8_schools_ncp.stan', line 4, column 2 to column 25)",
+                                                      " (in '8_schools_ncp.stan', line 10, column 9 to column 10)",
+                                                      " (in '8_schools_ncp.stan', line 14, column 9 to column 10)"};
 
 
 
 class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> {
 
  private:
-  int pos__;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -106,6 +109,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
@@ -116,35 +120,39 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       
       current_statement__ = 9;
       J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 9;
+      current_statement__ = 9;
+      check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       validate_non_negative_index("y", "J", J);
-      current_statement__ = 10;
+      current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(J));
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       assign(y, nil_index_list(), context__.vals_r("y"),
         "assigning variable y");
-      current_statement__ = 11;
+      current_statement__ = 12;
       validate_non_negative_index("sigma", "J", J);
-      current_statement__ = 11;
+      current_statement__ = 13;
       context__.validate_dims("data initialization","sigma","double",
           context__.to_vec(J));
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 11;
+      current_statement__ = 13;
       assign(sigma, nil_index_list(), context__.vals_r("sigma"),
         "assigning variable sigma");
-      current_statement__ = 9;
-      current_statement__ = 9;
-      check_greater_or_equal(function__, "J", J, 0);
-      current_statement__ = 11;
+      current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 11;
-        current_statement__ = 11;
+        current_statement__ = 13;
+        current_statement__ = 13;
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
+      current_statement__ = 14;
+      validate_non_negative_index("theta_tilde", "J", J);
+      current_statement__ = 15;
+      validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -155,8 +163,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     try {
       num_params_r__ += 1;
       num_params_r__ += 1;
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       num_params_r__ += J;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -198,16 +204,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         current_statement__ = 2;
         tau = stan::math::lb_constrain(tau, 0);
       }
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
-      current_statement__ = 4;
-      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
@@ -269,16 +271,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = in__.scalar();
       current_statement__ = 2;
       tau = stan::math::lb_constrain(tau, 0);
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       theta_tilde = in__.vector(J);
-      current_statement__ = 4;
-      validate_non_negative_index("theta", "J", J);
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
@@ -334,8 +332,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = context__.vals_r("tau")[(1 - 1)];
       current_statement__ = 2;
       tau = stan::math::lb_free(tau, 0);
-      current_statement__ = 3;
-      validate_non_negative_index("theta_tilde", "J", J);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
@@ -581,7 +577,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class _8start_with_number_model final : public model_base_crtp<_8start_with_number_model> {
 
  private:
-  int pos__;
   int good_model;
  
  public:
@@ -610,6 +605,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
@@ -11947,6 +11943,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'new_integrate_interface.stan', line 637, column 2 to column 35)",
                                                       " (in 'new_integrate_interface.stan', line 638, column 2 to column 35)",
                                                       " (in 'new_integrate_interface.stan', line 639, column 2 to column 34)",
+                                                      " (in 'new_integrate_interface.stan', line 239, column 15 to column 16)",
+                                                      " (in 'new_integrate_interface.stan', line 239, column 9 to column 10)",
                                                       " (in 'new_integrate_interface.stan', line 239, column 2 to column 73)",
                                                       " (in 'new_integrate_interface.stan', line 241, column 2 to column 60)",
                                                       " (in 'new_integrate_interface.stan', line 242, column 2 to column 59)",
@@ -12149,8 +12147,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'new_integrate_interface.stan', line 8, column 2 to column 8)",
                                                       " (in 'new_integrate_interface.stan', line 9, column 2 to column 9)",
                                                       " (in 'new_integrate_interface.stan', line 10, column 2 to column 10)",
+                                                      " (in 'new_integrate_interface.stan', line 11, column 11 to column 12)",
                                                       " (in 'new_integrate_interface.stan', line 11, column 2 to column 14)",
+                                                      " (in 'new_integrate_interface.stan', line 12, column 9 to column 10)",
                                                       " (in 'new_integrate_interface.stan', line 12, column 2 to column 15)",
+                                                      " (in 'new_integrate_interface.stan', line 16, column 15 to column 16)",
+                                                      " (in 'new_integrate_interface.stan', line 16, column 9 to column 10)",
                                                       " (in 'new_integrate_interface.stan', line 16, column 2 to column 73)",
                                                       " (in 'new_integrate_interface.stan', line 17, column 2 to column 60)",
                                                       " (in 'new_integrate_interface.stan', line 18, column 2 to column 62)",
@@ -12163,6 +12165,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'new_integrate_interface.stan', line 25, column 2 to column 41)",
                                                       " (in 'new_integrate_interface.stan', line 26, column 2 to column 40)",
                                                       " (in 'new_integrate_interface.stan', line 27, column 2 to column 40)",
+                                                      " (in 'new_integrate_interface.stan', line 32, column 10 to column 11)",
+                                                      " (in 'new_integrate_interface.stan', line 33, column 9 to column 10)",
+                                                      " (in 'new_integrate_interface.stan', line 37, column 14 to column 15)",
+                                                      " (in 'new_integrate_interface.stan', line 37, column 9 to column 10)",
+                                                      " (in 'new_integrate_interface.stan', line 442, column 15 to column 16)",
+                                                      " (in 'new_integrate_interface.stan', line 442, column 9 to column 10)",
                                                       " (in 'new_integrate_interface.stan', line 3, column 4 to column 13)",
                                                       " (in 'new_integrate_interface.stan', line 2, column 47 to line 4, column 3)"};
 
@@ -12179,7 +12187,7 @@ f(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& a,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 616;
+    current_statement__ = 628;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12216,7 +12224,6 @@ return f(t, z, a, b, pstream__);
 class new_integrate_interface_model final : public model_base_crtp<new_integrate_interface_model> {
 
  private:
-  int pos__;
   int N;
   int id;
   double rd;
@@ -12250,43 +12257,44 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 599;
+      current_statement__ = 601;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 599;
+      current_statement__ = 601;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 600;
+      current_statement__ = 602;
       context__.validate_dims("data initialization","id","int",
           context__.to_vec());
       id = std::numeric_limits<int>::min();
       
-      current_statement__ = 600;
+      current_statement__ = 602;
       id = context__.vals_i("id")[(1 - 1)];
-      current_statement__ = 601;
+      current_statement__ = 603;
       context__.validate_dims("data initialization","rd","double",
           context__.to_vec());
       rd = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 601;
+      current_statement__ = 603;
       rd = context__.vals_r("rd")[(1 - 1)];
-      current_statement__ = 602;
+      current_statement__ = 604;
       validate_non_negative_index("rad", "N", N);
-      current_statement__ = 602;
+      current_statement__ = 605;
       context__.validate_dims("data initialization","rad","double",
           context__.to_vec(N));
       rad = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 602;
+      current_statement__ = 605;
       assign(rad, nil_index_list(), context__.vals_r("rad"),
         "assigning variable rad");
-      current_statement__ = 603;
+      current_statement__ = 606;
       validate_non_negative_index("vd", "N", N);
-      current_statement__ = 603;
+      current_statement__ = 607;
       context__.validate_dims("data initialization","vd","double",
           context__.to_vec(N));
       vd = Eigen::Matrix<double, -1, 1>(N);
@@ -12294,75 +12302,87 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       
       {
         std::vector<local_scalar_t__> vd_flat__;
-        current_statement__ = 603;
+        current_statement__ = 607;
         assign(vd_flat__, nil_index_list(), context__.vals_r("vd"),
           "assigning variable vd_flat__");
-        current_statement__ = 603;
+        current_statement__ = 607;
         pos__ = 1;
-        current_statement__ = 603;
+        current_statement__ = 607;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 603;
+          current_statement__ = 607;
           assign(vd, cons_list(index_uni(sym1__), nil_index_list()),
             vd_flat__[(pos__ - 1)], "assigning variable vd");
-          current_statement__ = 603;
+          current_statement__ = 607;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 604;
+      current_statement__ = 608;
       validate_non_negative_index("zd", "N", N);
-      current_statement__ = 604;
+      current_statement__ = 609;
       validate_non_negative_index("zd", "N", N);
-      current_statement__ = 604;
+      current_statement__ = 610;
       zd = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(zd, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 604;
+      current_statement__ = 610;
       assign(zd, nil_index_list(),
         ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 605;
+      current_statement__ = 611;
       assign(zd, nil_index_list(),
         ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 606;
+      current_statement__ = 612;
       assign(zd, nil_index_list(),
         ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 607;
+      current_statement__ = 613;
       assign(zd, nil_index_list(),
         ode_adams_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 608;
+      current_statement__ = 614;
       assign(zd, nil_index_list(),
         ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 609;
+      current_statement__ = 615;
       assign(zd, nil_index_list(),
         ode_rk45_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
           pstream__, rd, vd), "assigning variable zd");
-      current_statement__ = 610;
+      current_statement__ = 616;
       assign(zd, nil_index_list(),
         ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
         "assigning variable zd");
-      current_statement__ = 611;
+      current_statement__ = 617;
       assign(zd, nil_index_list(),
         ode_bdf(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
         "assigning variable zd");
-      current_statement__ = 612;
+      current_statement__ = 618;
       assign(zd, nil_index_list(),
         ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
         "assigning variable zd");
-      current_statement__ = 613;
+      current_statement__ = 619;
       assign(zd, nil_index_list(),
         ode_adams(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
         "assigning variable zd");
-      current_statement__ = 614;
+      current_statement__ = 620;
       assign(zd, nil_index_list(),
         ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
         "assigning variable zd");
-      current_statement__ = 615;
+      current_statement__ = 621;
       assign(zd, nil_index_list(),
         ode_rk45(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
         "assigning variable zd");
+      current_statement__ = 622;
+      validate_non_negative_index("ra", "N", N);
+      current_statement__ = 623;
+      validate_non_negative_index("v", "N", N);
+      current_statement__ = 624;
+      validate_non_negative_index("z", "N", N);
+      current_statement__ = 625;
+      validate_non_negative_index("z", "N", N);
+      current_statement__ = 626;
+      validate_non_negative_index("zg", "N", N);
+      current_statement__ = 627;
+      validate_non_negative_index("zg", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12372,11 +12392,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     
     try {
       num_params_r__ += 1;
-      current_statement__ = 2;
-      validate_non_negative_index("ra", "N", N);
       num_params_r__ += N;
-      current_statement__ = 3;
-      validate_non_negative_index("v", "N", N);
       num_params_r__ += N;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12405,8 +12421,6 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       
       current_statement__ = 1;
       r = in__.scalar();
-      current_statement__ = 2;
-      validate_non_negative_index("ra", "N", N);
       std::vector<local_scalar_t__> ra;
       ra = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
@@ -12415,18 +12429,12 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         current_statement__ = 2;
         assign(ra, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable ra");}
-      current_statement__ = 3;
-      validate_non_negative_index("v", "N", N);
       Eigen::Matrix<local_scalar_t__, -1, 1> v;
       v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(v, DUMMY_VAR__);
       
       current_statement__ = 3;
       v = in__.vector(N);
-      current_statement__ = 4;
-      validate_non_negative_index("z", "N", N);
-      current_statement__ = 4;
-      validate_non_negative_index("z", "N", N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
       z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(z, DUMMY_VAR__);
@@ -13226,805 +13234,805 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       {
         current_statement__ = 400;
         validate_non_negative_index("zm", "N", N);
-        current_statement__ = 400;
+        current_statement__ = 401;
         validate_non_negative_index("zm", "N", N);
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> zm;
         zm = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         stan::math::fill(zm, DUMMY_VAR__);
         
-        current_statement__ = 400;
+        current_statement__ = 402;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
             pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 401;
-        assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 402;
-        assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 403;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 404;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 405;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 406;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 407;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 408;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 409;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 410;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 411;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 412;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 413;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 414;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 415;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 416;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 417;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 418;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 419;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 420;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 421;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 422;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 423;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 424;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 425;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 426;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 427;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 428;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 429;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
-            rd, vd), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 430;
         assign(zm, nil_index_list(),
-          ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
-            rd, v), "assigning variable zm");
+          ode_bdf_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 431;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
-            r, vd), "assigning variable zm");
+            rd, vd), "assigning variable zm");
         current_statement__ = 432;
         assign(zm, nil_index_list(),
           ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
-            r, v), "assigning variable zm");
+            rd, v), "assigning variable zm");
         current_statement__ = 433;
+        assign(zm, nil_index_list(),
+          ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
+            r, vd), "assigning variable zm");
+        current_statement__ = 434;
+        assign(zm, nil_index_list(),
+          ode_bdf_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100, pstream__,
+            r, v), "assigning variable zm");
+        current_statement__ = 435;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
             pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 434;
-        assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 435;
-        assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 436;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 437;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 438;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 439;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 440;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 441;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 442;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 443;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 444;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 445;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 446;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 447;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 448;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 449;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 450;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 451;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 452;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 453;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 454;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 455;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 456;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 457;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 458;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 459;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 460;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 461;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 462;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 463;
         assign(zm, nil_index_list(),
-          ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_rk45_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 464;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 465;
         assign(zm, nil_index_list(),
           ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 466;
+        assign(zm, nil_index_list(),
+          ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
+        current_statement__ = 467;
+        assign(zm, nil_index_list(),
+          ode_rk45_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
+        current_statement__ = 468;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
             pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 467;
-        assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
-        current_statement__ = 468;
-        assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 469;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 470;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 471;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 472;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 473;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 474;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 475;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 476;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 477;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 478;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 479;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 480;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 481;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 482;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 483;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 484;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), vd, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 485;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 486;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 487;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 488;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, rd, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 489;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 490;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 491;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 492;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, rd, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 493;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 494;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 495;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, vd), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
         current_statement__ = 496;
         assign(zm, nil_index_list(),
-          ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, rd, v), "assigning variable zm");
+          ode_adams_tol(f_odefunctor__(), v, r, rad, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
         current_statement__ = 497;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, vd), "assigning variable zm");
+            pstream__, rd, vd), "assigning variable zm");
         current_statement__ = 498;
         assign(zm, nil_index_list(),
           ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
-            pstream__, r, v), "assigning variable zm");
+            pstream__, rd, v), "assigning variable zm");
         current_statement__ = 499;
+        assign(zm, nil_index_list(),
+          ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, vd), "assigning variable zm");
+        current_statement__ = 500;
+        assign(zm, nil_index_list(),
+          ode_adams_tol(f_odefunctor__(), v, r, ra, 1e-6, 1e-6, 100,
+            pstream__, r, v), "assigning variable zm");
+        current_statement__ = 501;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 500;
+        current_statement__ = 502;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 501;
+        current_statement__ = 503;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 502;
+        current_statement__ = 504;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 503;
+        current_statement__ = 505;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 504;
+        current_statement__ = 506;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 505;
+        current_statement__ = 507;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 506;
+        current_statement__ = 508;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 507;
+        current_statement__ = 509;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 508;
+        current_statement__ = 510;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 509;
+        current_statement__ = 511;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 510;
+        current_statement__ = 512;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 511;
+        current_statement__ = 513;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 512;
+        current_statement__ = 514;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 513;
+        current_statement__ = 515;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 514;
+        current_statement__ = 516;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 515;
+        current_statement__ = 517;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), vd, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 516;
+        current_statement__ = 518;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 517;
+        current_statement__ = 519;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 518;
+        current_statement__ = 520;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 519;
+        current_statement__ = 521;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 520;
+        current_statement__ = 522;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 521;
+        current_statement__ = 523;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 522;
+        current_statement__ = 524;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 523;
+        current_statement__ = 525;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 524;
+        current_statement__ = 526;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 525;
+        current_statement__ = 527;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 526;
+        current_statement__ = 528;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 527;
+        current_statement__ = 529;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 528;
+        current_statement__ = 530;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 529;
+        current_statement__ = 531;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 530;
+        current_statement__ = 532;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 531;
+        current_statement__ = 533;
         assign(zm, nil_index_list(),
           ode_adams(f_odefunctor__(), v, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 532;
+        current_statement__ = 534;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 533;
+        current_statement__ = 535;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 534;
+        current_statement__ = 536;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 535;
+        current_statement__ = 537;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 536;
+        current_statement__ = 538;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 537;
+        current_statement__ = 539;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 538;
+        current_statement__ = 540;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 539;
+        current_statement__ = 541;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 540;
+        current_statement__ = 542;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 541;
+        current_statement__ = 543;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 542;
+        current_statement__ = 544;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 543;
+        current_statement__ = 545;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 544;
+        current_statement__ = 546;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 545;
+        current_statement__ = 547;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 546;
+        current_statement__ = 548;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 547;
+        current_statement__ = 549;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 548;
+        current_statement__ = 550;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), vd, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 549;
+        current_statement__ = 551;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 550;
+        current_statement__ = 552;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 551;
+        current_statement__ = 553;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 552;
+        current_statement__ = 554;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 553;
+        current_statement__ = 555;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 554;
+        current_statement__ = 556;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 555;
+        current_statement__ = 557;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 556;
+        current_statement__ = 558;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 557;
+        current_statement__ = 559;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 558;
+        current_statement__ = 560;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 559;
+        current_statement__ = 561;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 560;
+        current_statement__ = 562;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 561;
+        current_statement__ = 563;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 562;
+        current_statement__ = 564;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 563;
+        current_statement__ = 565;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 564;
+        current_statement__ = 566;
         assign(zm, nil_index_list(),
           ode_rk45(f_odefunctor__(), v, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 565;
+        current_statement__ = 567;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 566;
+        current_statement__ = 568;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 567;
+        current_statement__ = 569;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 568;
+        current_statement__ = 570;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 569;
+        current_statement__ = 571;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 570;
+        current_statement__ = 572;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 571;
+        current_statement__ = 573;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 572;
+        current_statement__ = 574;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 573;
+        current_statement__ = 575;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 574;
+        current_statement__ = 576;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 575;
+        current_statement__ = 577;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 576;
+        current_statement__ = 578;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 577;
+        current_statement__ = 579;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 578;
+        current_statement__ = 580;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 579;
+        current_statement__ = 581;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 580;
+        current_statement__ = 582;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 581;
+        current_statement__ = 583;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), vd, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 582;
+        current_statement__ = 584;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 583;
+        current_statement__ = 585;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 584;
+        current_statement__ = 586;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 585;
+        current_statement__ = 587;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 586;
+        current_statement__ = 588;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 587;
+        current_statement__ = 589;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 588;
+        current_statement__ = 590;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 589;
+        current_statement__ = 591;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, rd, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 590;
+        current_statement__ = 592;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, rad, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 591;
+        current_statement__ = 593;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, rad, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 592;
+        current_statement__ = 594;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, rad, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 593;
+        current_statement__ = 595;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, rad, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 594;
+        current_statement__ = 596;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, ra, pstream__, rd, vd),
           "assigning variable zm");
-        current_statement__ = 595;
+        current_statement__ = 597;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, ra, pstream__, rd, v),
           "assigning variable zm");
-        current_statement__ = 596;
+        current_statement__ = 598;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, ra, pstream__, r, vd),
           "assigning variable zm");
-        current_statement__ = 597;
+        current_statement__ = 599;
         assign(zm, nil_index_list(),
           ode_bdf(f_odefunctor__(), v, r, ra, pstream__, r, v),
           "assigning variable zm");
-        current_statement__ = 598;
+        current_statement__ = 600;
         lp_accum__.add(normal_lpdf<propto__>(r, 0, 1));
       }
     } catch (const std::exception& e) {
@@ -14064,8 +14072,6 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       
       current_statement__ = 1;
       r = in__.scalar();
-      current_statement__ = 2;
-      validate_non_negative_index("ra", "N", N);
       std::vector<double> ra;
       ra = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
@@ -14074,18 +14080,12 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         current_statement__ = 2;
         assign(ra, cons_list(index_uni(sym1__), nil_index_list()),
           in__.scalar(), "assigning variable ra");}
-      current_statement__ = 3;
-      validate_non_negative_index("v", "N", N);
       Eigen::Matrix<double, -1, 1> v;
       v = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       v = in__.vector(N);
-      current_statement__ = 4;
-      validate_non_negative_index("z", "N", N);
-      current_statement__ = 4;
-      validate_non_negative_index("z", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> z;
       z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
@@ -14899,10 +14899,6 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
-      current_statement__ = 202;
-      validate_non_negative_index("zg", "N", N);
-      current_statement__ = 202;
-      validate_non_negative_index("zg", "N", N);
       std::vector<Eigen::Matrix<double, -1, 1>> zg;
       zg = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(zg, std::numeric_limits<double>::quiet_NaN());
@@ -15728,16 +15724,12 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       
       current_statement__ = 1;
       r = context__.vals_r("r")[(1 - 1)];
-      current_statement__ = 2;
-      validate_non_negative_index("ra", "N", N);
       std::vector<double> ra;
       ra = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       assign(ra, nil_index_list(), context__.vals_r("ra"),
         "assigning variable ra");
-      current_statement__ = 3;
-      validate_non_negative_index("v", "N", N);
       Eigen::Matrix<double, -1, 1> v;
       v = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(v, std::numeric_limits<double>::quiet_NaN());
@@ -16023,9 +16015,12 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'old_integrate_interface.stan', line 47, column 17 to line 50, column 3)",
                                                       " (in 'old_integrate_interface.stan', line 47, column 2 to line 50, column 3)",
                                                       " (in 'old_integrate_interface.stan', line 21, column 2 to column 19)",
+                                                      " (in 'old_integrate_interface.stan', line 22, column 10 to column 11)",
                                                       " (in 'old_integrate_interface.stan', line 22, column 2 to column 13)",
                                                       " (in 'old_integrate_interface.stan', line 23, column 2 to column 17)",
+                                                      " (in 'old_integrate_interface.stan', line 24, column 20 to column 21)",
                                                       " (in 'old_integrate_interface.stan', line 24, column 2 to column 26)",
+                                                      " (in 'old_integrate_interface.stan', line 35, column 9 to column 10)",
                                                       " (in 'old_integrate_interface.stan', line 7, column 4 to column 18)",
                                                       " (in 'old_integrate_interface.stan', line 8, column 4 to column 18)",
                                                       " (in 'old_integrate_interface.stan', line 10, column 4 to column 26)",
@@ -16054,44 +16049,44 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
     local_scalar_t__ u;
     u = DUMMY_VAR__;
     
-    current_statement__ = 22;
+    current_statement__ = 25;
     u = rvalue(z, cons_list(index_uni(1), nil_index_list()), "z");
     local_scalar_t__ v;
     v = DUMMY_VAR__;
     
-    current_statement__ = 23;
+    current_statement__ = 26;
     v = rvalue(z, cons_list(index_uni(2), nil_index_list()), "z");
     local_scalar_t__ alpha;
     alpha = DUMMY_VAR__;
     
-    current_statement__ = 24;
+    current_statement__ = 27;
     alpha = rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta");
     local_scalar_t__ beta;
     beta = DUMMY_VAR__;
     
-    current_statement__ = 25;
+    current_statement__ = 28;
     beta = rvalue(theta, cons_list(index_uni(2), nil_index_list()), "theta");
     local_scalar_t__ gamma;
     gamma = DUMMY_VAR__;
     
-    current_statement__ = 26;
+    current_statement__ = 29;
     gamma = rvalue(theta, cons_list(index_uni(3), nil_index_list()), "theta");
     local_scalar_t__ delta;
     delta = DUMMY_VAR__;
     
-    current_statement__ = 27;
+    current_statement__ = 30;
     delta = rvalue(theta, cons_list(index_uni(4), nil_index_list()), "theta");
     local_scalar_t__ du_dt;
     du_dt = DUMMY_VAR__;
     
-    current_statement__ = 28;
+    current_statement__ = 31;
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt;
     dv_dt = DUMMY_VAR__;
     
-    current_statement__ = 29;
+    current_statement__ = 32;
     dv_dt = ((-gamma + (delta * u)) * v);
-    current_statement__ = 30;
+    current_statement__ = 33;
     return stan::math::array_builder<local_scalar_t__>().add(du_dt)
         .add(dv_dt).array();
   } catch (const std::exception& e) {
@@ -16117,7 +16112,6 @@ return dz_dt(t, z, theta, x_r, x_i, pstream__);
 class old_integrate_interface_model final : public model_base_crtp<old_integrate_interface_model> {
 
  private:
-  int pos__;
   int N;
   std::vector<double> ts;
   std::vector<double> y_init;
@@ -16149,6 +16143,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     (void) DUMMY_VAR__;  // suppress unused var warning
     
     try {
+      int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
@@ -16159,65 +16154,63 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       
       current_statement__ = 18;
       N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 18;
+      current_statement__ = 18;
+      check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 19;
       validate_non_negative_index("ts", "N", N);
-      current_statement__ = 19;
+      current_statement__ = 20;
       context__.validate_dims("data initialization","ts","double",
           context__.to_vec(N));
       ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 19;
+      current_statement__ = 20;
       assign(ts, nil_index_list(), context__.vals_r("ts"),
         "assigning variable ts");
-      current_statement__ = 20;
-      validate_non_negative_index("y_init", "2", 2);
-      current_statement__ = 20;
+      current_statement__ = 21;
       context__.validate_dims("data initialization","y_init","double",
           context__.to_vec(2));
       y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 20;
+      current_statement__ = 21;
       assign(y_init, nil_index_list(), context__.vals_r("y_init"),
         "assigning variable y_init");
-      current_statement__ = 21;
+      current_statement__ = 22;
       validate_non_negative_index("y", "N", N);
-      current_statement__ = 21;
-      validate_non_negative_index("y", "2", 2);
-      current_statement__ = 21;
+      current_statement__ = 23;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N, 2));
       y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 21;
+        current_statement__ = 23;
         assign(y_flat__, nil_index_list(), context__.vals_r("y"),
           "assigning variable y_flat__");
-        current_statement__ = 21;
+        current_statement__ = 23;
         pos__ = 1;
-        current_statement__ = 21;
+        current_statement__ = 23;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 21;
+          current_statement__ = 23;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 21;
+            current_statement__ = 23;
             assign(y,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               y_flat__[(pos__ - 1)], "assigning variable y");
-            current_statement__ = 21;
+            current_statement__ = 23;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 18;
-      current_statement__ = 18;
-      check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 21;
+      current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 21;
+        current_statement__ = 23;
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          current_statement__ = 21;
-          current_statement__ = 21;
+          current_statement__ = 23;
+          current_statement__ = 23;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                  y[(sym1__ - 1)][(sym2__ - 1)], 0);}}
+      current_statement__ = 24;
+      validate_non_negative_index("z", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -16230,11 +16223,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       num_params_r__ += 1;
       num_params_r__ += 1;
       num_params_r__ += 1;
-      current_statement__ = 5;
-      validate_non_negative_index("z_init", "2", 2);
       num_params_r__ += 2;
-      current_statement__ = 6;
-      validate_non_negative_index("sigma", "2", 2);
       num_params_r__ += 2;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16310,8 +16299,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         current_statement__ = 4;
         delta = stan::math::lb_constrain(delta, 0);
       }
-      current_statement__ = 5;
-      validate_non_negative_index("z_init", "2", 2);
       std::vector<local_scalar_t__> z_init;
       z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
@@ -16334,8 +16321,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
             stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
             "assigning variable z_init");
         }}
-      current_statement__ = 6;
-      validate_non_negative_index("sigma", "2", 2);
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
@@ -16358,10 +16343,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
             stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
             "assigning variable sigma");
         }}
-      current_statement__ = 7;
-      validate_non_negative_index("z", "N", N);
-      current_statement__ = 7;
-      validate_non_negative_index("z", "2", 2);
       std::vector<std::vector<local_scalar_t__>> z;
       z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       
@@ -16470,8 +16451,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       delta = in__.scalar();
       current_statement__ = 4;
       delta = stan::math::lb_constrain(delta, 0);
-      current_statement__ = 5;
-      validate_non_negative_index("z_init", "2", 2);
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
@@ -16486,8 +16465,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
           "assigning variable z_init");}
-      current_statement__ = 6;
-      validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
@@ -16502,10 +16479,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
           "assigning variable sigma");}
-      current_statement__ = 7;
-      validate_non_negative_index("z", "N", N);
-      current_statement__ = 7;
-      validate_non_negative_index("z", "2", 2);
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
@@ -16584,8 +16557,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       delta = context__.vals_r("delta")[(1 - 1)];
       current_statement__ = 4;
       delta = stan::math::lb_free(delta, 0);
-      current_statement__ = 5;
-      validate_non_negative_index("z_init", "2", 2);
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
@@ -16598,8 +16569,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(z_init[(sym1__ - 1)], 0),
           "assigning variable z_init");}
-      current_statement__ = 6;
-      validate_non_negative_index("sigma", "2", 2);
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
