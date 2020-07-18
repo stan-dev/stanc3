@@ -397,7 +397,7 @@ let add_binary_vec name =
             , [bare_array_type (j, i); bare_array_type (j, i)] ) )
         [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
       )
-    (List.range 0 2) ;
+    (List.range 0 8) ;
   List.iter
     ~f:(fun i ->
       List.iter
@@ -410,7 +410,7 @@ let add_binary_vec name =
                 , [bare_array_type (k, j); i] ) )
             [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
             ; UMatrix ] )
-        (List.range 0 2) )
+        (List.range 0 8) )
     [UnsizedType.UInt; UReal] ;
   List.iter
     ~f:(fun i ->
@@ -424,7 +424,7 @@ let add_binary_vec name =
                 , [i; bare_array_type (k, j)] ) )
             [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
             ; UMatrix ] )
-        (List.range 0 2) )
+        (List.range 0 8) )
     [UnsizedType.UInt; UReal]
 
 let add_ternary name =
