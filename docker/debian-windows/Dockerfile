@@ -4,7 +4,7 @@ FROM ubuntu:bionic
 #Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   curl ca-certificates \
-  rsync git build-essential m4 unzip pkg-config libpcre3-dev mingw-w64 gcc wget
+  rsync git build-essential m4 unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk
 
 RUN echo "Reload build from here"
 
