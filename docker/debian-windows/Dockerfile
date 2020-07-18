@@ -3,14 +3,13 @@ FROM ubuntu:bionic
 
 #Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  curl ca-certificates \
-  rsync git build-essential m4 unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk
-
-RUN echo "Reload build from here"
+  curl ca-certificates rsync git build-essential m4 \
+  unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk \
+  vim nano
 
 #Copy our script and install ocaml + init
 COPY ./scripts/install_ocaml_windows.sh ./
-RUN printf "\n" | bash -x install_ocaml_windows.sh "--disable-sandboxing -y"
+RUN printf "\n" | bash -x install_ocaml_windows.sh "--comp 4.02.3 --disable-sandboxing -y"
 
 #Copy our script and install build dependencies
 COPY ./scripts/install_build_deps_windows.sh ./
