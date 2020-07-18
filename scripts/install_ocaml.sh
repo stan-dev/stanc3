@@ -4,3 +4,5 @@ sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.
 opam init $1
 eval $(opam env)
 opam switch create 4.07.0
+opam switch 4.07.0
+eval $(opam env)
