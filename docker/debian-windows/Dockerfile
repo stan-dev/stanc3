@@ -20,7 +20,6 @@ RUN bash -x install_build_deps_windows.sh
 # RUN bash -x install_dev_deps.sh
 
 RUN opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
-RUN eval \$(opam env)
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
