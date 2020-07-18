@@ -12,7 +12,7 @@ RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 
 #Copy our script and install build dependencies
 COPY ./scripts/install_build_deps_windows.sh ./
-RUN opam update; bash -x install_build_deps.sh
+RUN opam update; bash -x install_build_deps_windows.sh
 
 #Copy our script and install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
