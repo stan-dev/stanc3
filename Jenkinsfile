@@ -179,7 +179,7 @@ pipeline {
         //    }
         //}
         stage("Build and test static release binaries") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            //when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
 
@@ -275,7 +275,7 @@ pipeline {
                             eval \$(opam env)
                             time dune runtest --verbose
                         """)
-                        
+
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/windows-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/windows-stan2tfp"
 
