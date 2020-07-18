@@ -7,8 +7,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   rsync git build-essential m4 unzip pkg-config libpcre3-dev mingw-w64 gcc
 
 #Copy our script and install ocaml + init
-COPY ./scripts/install_ocaml.sh ./
-RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
+COPY ./scripts/install_ocaml_windows.sh ./
+RUN printf "\n" | bash -x install_ocaml_windows.sh "--disable-sandboxing -y"
 
 #Copy our script and install build dependencies
 COPY ./scripts/install_build_deps_windows.sh ./
