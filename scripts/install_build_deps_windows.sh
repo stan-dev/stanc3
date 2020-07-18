@@ -3,7 +3,7 @@
 # Menhir is our parsing library and annoyingly its module name does not match
 # its library name, so we install it manually here.
 opam pin -y ocamlformat 0.8
-opam pin -y dune 1.11.3
+opam pin -y dune 1.11.4
 
 # Add windows repository
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
