@@ -15,8 +15,7 @@ opam switch create 4.07.0
 opam switch 4.07.0
 
 # Have further shell commands be evaluated in the proper opam context.
-eval $(opam env)eval $(opam env)
-
+eval $(opam env)
 
 
 

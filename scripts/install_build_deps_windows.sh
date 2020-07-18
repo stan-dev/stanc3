@@ -14,3 +14,5 @@ opam install "ocaml-windows64<=4.07.0"
 
 # Install dependencies
 opam install -y core_kernel-windows menhir-windows ppx_deriving-windows fmt-windows yojson-windows
+
+eval $(opam env)
