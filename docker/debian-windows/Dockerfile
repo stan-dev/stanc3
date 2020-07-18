@@ -4,7 +4,7 @@ FROM ubuntu:bionic
 #Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   curl ca-certificates \
-  rsync git build-essential m4 unzip pkg-config libpcre3-dev
+  rsync git build-essential m4 unzip pkg-config libpcre3-dev mingw-w64 gcc
 
 #Copy our script and install ocaml + init
 COPY ./scripts/install_ocaml.sh ./
