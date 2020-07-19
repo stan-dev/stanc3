@@ -278,7 +278,7 @@ pipeline {
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                        sh "mv _build/default.windows/src/stanc/stan2tfp.exe bin/windows-stan2tfp"
+                        sh "mv `find _build -name stan2tfp.exe` bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
                     }
