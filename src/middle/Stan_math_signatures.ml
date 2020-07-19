@@ -94,6 +94,23 @@ let reduce_sum_slice_types =
   in
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
+(* Variadic ODE *)
+let variadic_ode_tol_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+
+let variadic_ode_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
+  ; (AutoDiffable, UReal)
+  ; (AutoDiffable, UArray UReal) ]
+
+let variadic_ode_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
+
+let variadic_ode_fun_return_type = UnsizedType.UVector
+let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
+
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
@@ -139,8 +156,21 @@ let mk_declarative_sig (fnkinds, name, args) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
-let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
-let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
+
+let reduce_sum_functions =
+  String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+
+let variadic_ode_functions =
+  String.Set.of_list
+    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
+    ; "ode_adams" ]
+
+let ode_tolerances_suffix = "_tol"
+let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
+let is_variadic_ode_fn f = Set.mem variadic_ode_functions f
+
+let is_variadic_ode_tol_fn f =
+  is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
@@ -260,6 +290,8 @@ let stan_math_returntype name args =
   in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
+  | x when is_variadic_ode_fn x ->
+      Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
