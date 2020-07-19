@@ -198,9 +198,10 @@ module TypeError = struct
           | _ ->
               raise_s
                 [%message
-                  "This should not happen. Variadic ODE functions have exactly three \
-                   mandatory arguments and the function supplied to the variadic ODE \
-                   function has exactly two mandatory arguments."]
+                  "This should not happen. Variadic ODE functions have \
+                   exactly three mandatory arguments and the function \
+                   supplied to the variadic ODE function has exactly two \
+                   mandatory arguments."]
         in
         if List.length args = 0 then
           Fmt.pf ppf
