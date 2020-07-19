@@ -161,7 +161,7 @@ let pp_template_decorator ppf = function
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
-    funs_used_in_reduce_sum funs_used_in_ode_bdf =
+    funs_used_in_reduce_sum funs_used_in_variadic_ode =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -256,8 +256,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
             raise_s
               [%message
                 "Ill-formed reduce_sum call! This is bug in the compiler."]
-      else if String.Set.mem funs_used_in_ode_bdf fdname then
-        (* Produces the reduce_sum functors that has the pstream argument
+      else if String.Set.mem funs_used_in_variadic_ode fdname then
+        (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
           variadic_ode_functor_suffix pp_sig_variadic_ode "operator()"

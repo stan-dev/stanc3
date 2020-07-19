@@ -157,45 +157,50 @@ module TypeError = struct
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedVariadicODE (name, arg_tys, args) ->
-        let types x = List.map ~f:(fun (_, t) -> t) x in
+        let types x = List.map ~f:snd x in
         let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            List.map
-              ~f:(fun (_, y) -> y)
-              Stan_math_signatures.variadic_ode_tol_arg_types
+            types Stan_math_signatures.variadic_ode_tol_arg_types
           else []
         in
-        let args_types = List.map ~f:(fun (_, t) -> t) args in
         let generate_ode_sig =
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
               , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
           ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_args @ args_types
+          @ optional_tol_args @ types args
         in
+        (* This function is used to generate the generic signature for variadic ODEs,
+           i.e. with ... representing the variadic parts of the signature.
+           This should be removed once a type representing variadic arguments is added.
+           The generic signature is printed when there is a semantic error with one of
+            the non-variadic arguments in the signature. If there is a mismatch in the
+            variadic arguments, we print the non-generic expected signature
+            (with explicit types for variadic args). *)
         let variadic_ode_generic_signature =
           let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_tol_fn name then
               types Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
-          let nth_fun_arg n =
-            List.nth_exn
-              (types Stan_math_signatures.variadic_ode_mandatory_fun_args)
-              n
-          in
-          let nth_arg n =
-            List.nth_exn
-              (types Stan_math_signatures.variadic_ode_mandatory_arg_types)
-              n
-          in
-          Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n" UnsizedType.pp
-            (nth_fun_arg 0) UnsizedType.pp (nth_fun_arg 1) UnsizedType.pp
-            Stan_math_signatures.variadic_ode_fun_return_type UnsizedType.pp
-            (nth_arg 0) UnsizedType.pp (nth_arg 1) UnsizedType.pp (nth_arg 2)
-            Fmt.(list UnsizedType.pp ~sep:comma)
-            optional_tol_args
+          match
+            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
+            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
+          with
+          | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
+              Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
+                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
+                Stan_math_signatures.variadic_ode_fun_return_type
+                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
+                Fmt.(list UnsizedType.pp ~sep:comma)
+                optional_tol_args
+          | _ ->
+              raise_s
+                [%message
+                  "This should not happen. Variadic ODE functions have exactly three \
+                   mandatory arguments and the function supplied to the variadic ODE \
+                   function has exactly two mandatory arguments."]
         in
         if List.length args = 0 then
           Fmt.pf ppf
