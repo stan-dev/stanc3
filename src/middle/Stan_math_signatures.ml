@@ -331,6 +331,7 @@ let operator_to_stan_math_fns = function
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
   | Pow -> ["pow"]
+  | EltPow -> ["pow"]
   | Or -> ["logical_or"]
   | And -> ["logical_and"]
   | Equals -> ["logical_eq"]
@@ -409,6 +410,54 @@ let add_nullary name = add_unqualified (name, UnsizedType.ReturnType UReal, [])
 
 let add_binary name =
   add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
+
+let add_binary_vec name =
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified (name, ReturnType (ints_to_real i), [i; j]) )
+        [UnsizedType.UInt; UReal] )
+    [UnsizedType.UInt; UReal] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (ints_to_real (bare_array_type (j, i)))
+            , [bare_array_type (j, i); bare_array_type (j, i)] ) )
+        [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
+      )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , [bare_array_type (k, j); i] ) )
+            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
+            ; UMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UInt; UReal] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , [i; bare_array_type (k, j)] ) )
+            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
+            ; UMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UInt; UReal]
 
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
@@ -1096,6 +1145,7 @@ let () =
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
+  add_unqualified ("matrix_power", ReturnType UMatrix, [UMatrix; UInt]) ;
   add_unqualified ("max", ReturnType UInt, [UArray UInt]) ;
   add_unqualified ("max", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("max", ReturnType UReal, [UVector]) ;
@@ -1341,7 +1391,7 @@ let () =
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector] ) ;
   add_nullary "positive_infinity" ;
-  add_binary "pow" ;
+  add_binary_vec "pow" ;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt]) ;
   add_unqualified ("prod", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
