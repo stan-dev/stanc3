@@ -53,7 +53,7 @@ opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
 6. Install the compiler
 ```
-   opam install ocaml-windows
+   opam install "ocaml-windows64<=4.07.0"
 ```
 7. Install opam packages that are required for build/runtest
 ```
