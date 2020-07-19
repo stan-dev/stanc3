@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Cross compiling for windows on debian
+
 # Pin dune to 1.11.3 as newer and 2+ do not work for ocaml-windows64 !
 opam pin -y dune 1.11.3
 

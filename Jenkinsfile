@@ -255,6 +255,7 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
 
+                // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
                     agent {
                         dockerfile {

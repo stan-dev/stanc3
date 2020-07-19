@@ -1,6 +1,9 @@
 #Pull the ubuntu:bionic image
 FROM ubuntu:bionic
 
+# This image is for cross compiling for windows on debian
+
+# Set the opam root
 ENV OPAMROOT /usr/local/opam
 
 #Install OS dependencies
