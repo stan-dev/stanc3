@@ -182,6 +182,7 @@ pipeline {
             when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
+
                 stage("Build & test Mac OS X binary") {
                     agent { label "osx && ocaml" }
                     steps {
@@ -253,18 +254,38 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
+
+                // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
-                    agent { label "WSL" }
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian-windows/Dockerfile'
+                            label 'linux-ec2'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\'"
+                        }
+                    }
                     steps {
-                        bat "bash -cl \"cd test/integration\""
-                        bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                        bat "bash -cl \"cd ..\""
-                        bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
-                        bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
-                        bat "bash -cl \"mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp\""
+                        
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build -x windows
+                        """)
+
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
+                        sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
+
                         stash name:'windows-exe', includes:'bin/*'
                     }
+                    post {always { runShell("rm -rf ./*")}}
                 }
+
             }
         }
         stage("Release tag and publish binaries") {

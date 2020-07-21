@@ -146,10 +146,14 @@ let fn_renames =
 let map_rect_calls = Int.Table.create ()
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
+let variadic_ode_functor_suffix = "_odefunctor__"
 
 let functor_suffix_select hof =
-  if Stan_math_signatures.is_reduce_sum_fn hof then reduce_sum_functor_suffix
-  else functor_suffix
+  match hof with
+  | x when Stan_math_signatures.is_reduce_sum_fn x -> reduce_sum_functor_suffix
+  | x when Stan_math_signatures.is_variadic_ode_fn x ->
+      variadic_ode_functor_suffix
+  | _ -> functor_suffix
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -220,6 +224,8 @@ and gen_operator_app = function
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
   | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
+  | EltPow ->
+      fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "pow(@,%a,@ %a)" es
   | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
   | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
   | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
@@ -313,6 +319,16 @@ and gen_fun_app ppf fname es =
       | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
         when Stan_math_signatures.is_reduce_sum_fn x ->
           (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+      | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
+        when Stan_math_signatures.is_variadic_ode_fn x
+             && String.is_suffix fname
+                  ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+          ( fname
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
+            :: tl )
+      | true, x, f :: y0 :: t0 :: ts :: tl
+        when Stan_math_signatures.is_variadic_ode_fn x ->
+          (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;

@@ -28,8 +28,10 @@ let type_ast_or_exit ast =
         and msg = Fmt.strf "%a" Semantic_error.pp error in
         Errors.pp_semantic_error Fmt.stderr (msg, loc) ;
         exit 1
-    | _ ->
-        Printf.eprintf "The impossible happened" ;
+    | Result.Error [] ->
+        Printf.eprintf
+          "Semantic check failed but reported no errors. This should never \
+           happen." ;
         exit 1
   with Errors.SemanticError err ->
     Errors.pp_semantic_error Fmt.stderr err ;

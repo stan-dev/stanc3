@@ -94,6 +94,23 @@ let reduce_sum_slice_types =
   in
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
+(* Variadic ODE *)
+let variadic_ode_tol_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+
+let variadic_ode_mandatory_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
+  ; (AutoDiffable, UReal)
+  ; (AutoDiffable, UArray UReal) ]
+
+let variadic_ode_mandatory_fun_args =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
+
+let variadic_ode_fun_return_type = UnsizedType.UVector
+let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
+
 let mk_declarative_sig (fnkinds, name, args) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
@@ -139,8 +156,21 @@ let mk_declarative_sig (fnkinds, name, args) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
-let reduce_sum_functions = ["reduce_sum"; "reduce_sum_static"]
-let is_reduce_sum_fn f = List.mem ~equal:String.equal reduce_sum_functions f
+
+let reduce_sum_functions =
+  String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+
+let variadic_ode_functions =
+  String.Set.of_list
+    [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
+    ; "ode_adams" ]
+
+let ode_tolerances_suffix = "_tol"
+let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
+let is_variadic_ode_fn f = Set.mem variadic_ode_functions f
+
+let is_variadic_ode_tol_fn f =
+  is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
@@ -260,6 +290,8 @@ let stan_math_returntype name args =
   in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
+  | x when is_variadic_ode_fn x ->
+      Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
@@ -299,6 +331,7 @@ let operator_to_stan_math_fns = function
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
   | Pow -> ["pow"]
+  | EltPow -> ["pow"]
   | Or -> ["logical_or"]
   | And -> ["logical_and"]
   | Equals -> ["logical_eq"]
@@ -358,42 +391,17 @@ let pretty_print_math_lib_assignmentoperator_sigs op =
   assignmentoperator_to_stan_math_fn op |> Option.map ~f:pretty_print_math_sigs
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
-let bare_types = function
-  | 0 -> UnsizedType.UInt
-  | 1 -> UReal
-  | 2 -> UVector
-  | 3 -> URowVector
-  | 4 -> UMatrix
-  | i -> raise_s [%sexp (i : int)]
+let bare_types = [UnsizedType.UInt; UReal; UVector; URowVector; UMatrix]
+let bare_types_size = List.length bare_types
+let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
+let vector_types_size = List.length vector_types
+let primitive_types = [UnsizedType.UInt; UReal]
+let primitive_types_size = List.length primitive_types
 
-let bare_types_size = 5
+let all_vector_types =
+  [UnsizedType.UReal; UArray UReal; UVector; URowVector; UInt; UArray UInt]
 
-let vector_types = function
-  | 0 -> UnsizedType.UReal
-  | 1 -> UArray UReal
-  | 2 -> UVector
-  | 3 -> URowVector
-  | i -> raise_s [%sexp (i : int)]
-
-let vector_types_size = 4
-
-let primitive_types = function
-  | 0 -> UnsizedType.UInt
-  | 1 -> UReal
-  | i -> raise_s [%sexp (i : int)]
-
-let primitive_types_size = 2
-
-let all_vector_types = function
-  | 0 -> UnsizedType.UReal
-  | 1 -> UArray UReal
-  | 2 -> UVector
-  | 3 -> URowVector
-  | 4 -> UInt
-  | 5 -> UArray UInt
-  | i -> raise_s [%sexp (i : int)]
-
-let all_vector_types_size = 6
+let all_vector_types_size = List.length all_vector_types
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
@@ -403,18 +411,59 @@ let add_nullary name = add_unqualified (name, UnsizedType.ReturnType UReal, [])
 let add_binary name =
   add_unqualified (name, ReturnType UReal, [UnsizedType.UReal; UReal])
 
+let add_binary_vec name =
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified (name, ReturnType (ints_to_real i), [i; j]) )
+        [UnsizedType.UInt; UReal] )
+    [UnsizedType.UInt; UReal] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (ints_to_real (bare_array_type (j, i)))
+            , [bare_array_type (j, i); bare_array_type (j, i)] ) )
+        [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
+      )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , [bare_array_type (k, j); i] ) )
+            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
+            ; UMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UInt; UReal] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (ints_to_real (bare_array_type (k, j)))
+                , [i; bare_array_type (k, j)] ) )
+            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
+            ; UMatrix ] )
+        (List.range 0 8) )
+    [UnsizedType.UInt; UReal]
+
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
-let for_all_vector_types s =
-  for i = 0 to all_vector_types_size - 1 do
-    s (all_vector_types i)
-  done
-
-let for_vector_types s =
-  for i = 0 to vector_types_size - 1 do
-    s (vector_types i)
-  done
+let for_all_vector_types s = List.iter ~f:s all_vector_types
+let for_vector_types s = List.iter ~f:s vector_types
 
 (* -- Start populating stan_math_signaturess -- *)
 let () =
@@ -422,10 +471,9 @@ let () =
       Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args) ) ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ("add", ReturnType (bare_types i), [bare_types i; bare_types i])
-  done ;
+  List.iter
+    ~f:(fun x -> add_unqualified ("add", ReturnType x, [x; x]))
+    bare_types ;
   add_unqualified ("add", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("add", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("add", ReturnType UMatrix, [UMatrix; UReal]) ;
@@ -477,28 +525,16 @@ let () =
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
-  for i = 1 to 8 - 1 do
-    add_unqualified
-      ( "append_array"
-      , ReturnType (bare_array_type (UInt, i))
-      , [bare_array_type (UInt, i); bare_array_type (UInt, i)] ) ;
-    add_unqualified
-      ( "append_array"
-      , ReturnType (bare_array_type (UReal, i))
-      , [bare_array_type (UReal, i); bare_array_type (UReal, i)] ) ;
-    add_unqualified
-      ( "append_array"
-      , ReturnType (bare_array_type (UVector, i))
-      , [bare_array_type (UVector, i); bare_array_type (UVector, i)] ) ;
-    add_unqualified
-      ( "append_array"
-      , ReturnType (bare_array_type (URowVector, i))
-      , [bare_array_type (URowVector, i); bare_array_type (URowVector, i)] ) ;
-    add_unqualified
-      ( "append_array"
-      , ReturnType (bare_array_type (UMatrix, i))
-      , [bare_array_type (UMatrix, i); bare_array_type (UMatrix, i)] )
-  done ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ( "append_array"
+            , ReturnType (bare_array_type (t, i))
+            , [bare_array_type (t, i); bare_array_type (t, i)] ) )
+        bare_types )
+    (List.range 1 8) ;
   add_unqualified ("assign_multiply", Void, [UInt; UInt]) ;
   add_unqualified ("assign_multiply", Void, [UMatrix; UMatrix]) ;
   add_unqualified ("assign_multiply", Void, [UMatrix; UReal]) ;
@@ -559,11 +595,11 @@ let () =
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UReal; UVector] ) ;
+    , [UArray UInt; UMatrix; UReal; UVector] ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+    , [UArray UInt; UMatrix; UVector; UVector] ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
@@ -575,11 +611,11 @@ let () =
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UReal; UVector] ) ;
+    , [UArray UInt; URowVector; UReal; UVector] ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
+    , [UArray UInt; URowVector; UVector; UVector] ) ;
   add_unqualified ("bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
   add_unqualified ("bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
@@ -598,7 +634,7 @@ let () =
   add_unqualified
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UVector; UMatrix] ) ;
+    , [UArray UInt; UMatrix; UVector; UMatrix] ) ;
   add_unqualified
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
@@ -606,7 +642,7 @@ let () =
   add_unqualified
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UVector; UMatrix] ) ;
+    , [UArray UInt; URowVector; UVector; UMatrix] ) ;
   add_unqualified
     ( "categorical_logit_glm_lpmf"
     , ReturnType UReal
@@ -635,55 +671,36 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix]) ;
   add_unqualified
-    ( "cov_exp_quad"
-    , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+    ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
+  add_unqualified
+    ("cov_exp_quad", ReturnType UMatrix, [UArray UVector; UReal; UReal]) ;
+  add_unqualified
+    ("cov_exp_quad", ReturnType UMatrix, [UArray URowVector; UReal; UReal]) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal] ) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
-    , [bare_array_type (URowVector, 1); UReal; UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal] ) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
-  add_unqualified
-    ( "cov_exp_quad"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
-    ) ;
-  add_unqualified
-    ( "cov_exp_quad"
-    , ReturnType UMatrix
-    , [ bare_array_type (URowVector, 1)
-      ; bare_array_type (URowVector, 1)
-      ; UReal; UReal ] ) ;
+    , [UArray URowVector; UArray URowVector; UReal; UReal] ) ;
   add_unqualified ("crossprod", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ( "csr_matrix_times_vector"
     , ReturnType UVector
-    , [ UInt; UInt; UVector
-      ; bare_array_type (UInt, 1)
-      ; bare_array_type (UInt, 1)
-      ; UVector ] ) ;
+    , [UInt; UInt; UVector; UArray UInt; UArray UInt; UVector] ) ;
   add_unqualified
     ( "csr_to_dense_matrix"
     , ReturnType UMatrix
-    , [ UInt; UInt; UVector
-      ; bare_array_type (UInt, 1)
-      ; bare_array_type (UInt, 1) ] ) ;
+    , [UInt; UInt; UVector; UArray UInt; UArray UInt] ) ;
   add_unqualified ("csr_extract_w", ReturnType UVector, [UMatrix]) ;
-  add_unqualified
-    ("csr_extract_v", ReturnType (bare_array_type (UInt, 1)), [UMatrix]) ;
-  add_unqualified
-    ("csr_extract_u", ReturnType (bare_array_type (UInt, 1)), [UMatrix]) ;
-  add_unqualified
-    ( "cumulative_sum"
-    , ReturnType (bare_array_type (UReal, 1))
-    , [bare_array_type (UReal, 1)] ) ;
+  add_unqualified ("csr_extract_v", ReturnType (UArray UInt), [UMatrix]) ;
+  add_unqualified ("csr_extract_u", ReturnType (UArray UInt), [UMatrix]) ;
+  add_unqualified ("cumulative_sum", ReturnType (UArray UReal), [UArray UReal]) ;
   add_unqualified ("cumulative_sum", ReturnType UVector, [UVector]) ;
   add_unqualified ("cumulative_sum", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("determinant", ReturnType UReal, [UMatrix]) ;
@@ -695,33 +712,19 @@ let () =
   add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [URowVector; UMatrix]) ;
   add_unqualified ("diagonal", ReturnType UVector, [UMatrix]) ;
-  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UInt]) ;
-  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UReal]) ;
-  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UVector]) ;
-  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [URowVector]) ;
-  add_unqualified ("dims", ReturnType (bare_array_type (UInt, 1)), [UMatrix]) ;
-  for i = 0 to 8 - 1 do
-    add_unqualified
-      ( "dims"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UInt, i + 1)] ) ;
-    add_unqualified
-      ( "dims"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UReal, i + 1)] ) ;
-    add_unqualified
-      ( "dims"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UVector, i + 1)] ) ;
-    add_unqualified
-      ( "dims"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (URowVector, i + 1)] ) ;
-    add_unqualified
-      ( "dims"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UMatrix, i + 1)] )
-  done ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UInt]) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UReal]) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UVector]) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [URowVector]) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UMatrix]) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ("dims", ReturnType (UArray UInt), [bare_array_type (t, i + 1)]) )
+        bare_types )
+    (List.range 0 8) ;
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector]) ;
   add_unqualified ("distance", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector]) ;
@@ -737,9 +740,7 @@ let () =
   add_unqualified ("dot_product", ReturnType UReal, [UVector; URowVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; UVector]) ;
   add_unqualified
-    ( "dot_product"
-    , ReturnType UReal
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1)] ) ;
+    ("dot_product", ReturnType UReal, [UArray UReal; UArray UReal]) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector]) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector]) ;
   add_nullary "e" ;
@@ -788,173 +789,124 @@ let () =
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] ) ;
+  add_unqualified ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal]) ;
   add_unqualified
-    ("gp_dot_prod_cov", ReturnType UMatrix, [bare_array_type (UReal, 1); UReal]) ;
+    ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UArray UReal; UReal]) ;
   add_unqualified
-    ( "gp_dot_prod_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal] ) ;
+    ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UArray UReal; UReal]) ;
   add_unqualified
-    ( "gp_dot_prod_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal] ) ;
+    ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UVector; UReal]) ;
   add_unqualified
     ( "gp_dot_prod_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal] ) ;
   add_unqualified
-    ( "gp_dot_prod_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal] ) ;
+    ("gp_exp_quad_cov", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
     ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal] ) ;
+  add_unqualified
+    ("gp_exp_quad_cov", ReturnType UMatrix, [UArray UVector; UReal; UReal]) ;
   add_unqualified
     ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal] ) ;
   add_unqualified
     ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+    , [UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
     ( "gp_exp_quad_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
-    ) ;
+    , [UArray UVector; UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
-    ( "gp_exp_quad_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ( "gp_exp_quad_cov"
-    , ReturnType UMatrix
-    , [ bare_array_type (UVector, 1)
-      ; bare_array_type (UVector, 1)
-      ; UReal
-      ; bare_array_type (UReal, 1) ] ) ;
+    ("gp_matern32_cov", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
     ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal] ) ;
+  add_unqualified
+    ("gp_matern32_cov", ReturnType UMatrix, [UArray UVector; UReal; UReal]) ;
   add_unqualified
     ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal] ) ;
   add_unqualified
     ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+    , [UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
     ( "gp_matern32_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
-    ) ;
+    , [UArray UVector; UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
-    ( "gp_matern32_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ( "gp_matern32_cov"
-    , ReturnType UMatrix
-    , [ bare_array_type (UVector, 1)
-      ; bare_array_type (UVector, 1)
-      ; UReal
-      ; bare_array_type (UReal, 1) ] ) ;
+    ("gp_matern52_cov", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
     ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal] ) ;
+  add_unqualified
+    ("gp_matern52_cov", ReturnType UMatrix, [UArray UVector; UReal; UReal]) ;
   add_unqualified
     ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal] ) ;
   add_unqualified
     ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+    , [UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
     ( "gp_matern52_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
-    ) ;
+    , [UArray UVector; UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
-    ( "gp_matern52_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ( "gp_matern52_cov"
-    , ReturnType UMatrix
-    , [ bare_array_type (UVector, 1)
-      ; bare_array_type (UVector, 1)
-      ; UReal
-      ; bare_array_type (UReal, 1) ] ) ;
+    ("gp_exponential_cov", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
     ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal] ) ;
+  add_unqualified
+    ("gp_exponential_cov", ReturnType UMatrix, [UArray UVector; UReal; UReal]) ;
   add_unqualified
     ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); bare_array_type (UReal, 1); UReal; UReal] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal] ) ;
   add_unqualified
     ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal] ) ;
+    , [UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
     ( "gp_exponential_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); bare_array_type (UVector, 1); UReal; UReal]
-    ) ;
+    , [UArray UVector; UArray UVector; UReal; UArray UReal] ) ;
   add_unqualified
-    ( "gp_exponential_cov"
-    , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ( "gp_exponential_cov"
-    , ReturnType UMatrix
-    , [ bare_array_type (UVector, 1)
-      ; bare_array_type (UVector, 1)
-      ; UReal
-      ; bare_array_type (UReal, 1) ] ) ;
+    ("gp_periodic_cov", ReturnType UMatrix, [UArray UReal; UReal; UReal; UReal]) ;
   add_unqualified
     ( "gp_periodic_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UReal; UReal; UReal] ) ;
+    , [UArray UReal; UArray UReal; UReal; UReal; UReal] ) ;
   add_unqualified
     ( "gp_periodic_cov"
     , ReturnType UMatrix
-    , [ bare_array_type (UReal, 1)
-      ; bare_array_type (UReal, 1)
-      ; UReal; UReal; UReal ] ) ;
+    , [UArray UVector; UReal; UReal; UReal] ) ;
   add_unqualified
     ( "gp_periodic_cov"
     , ReturnType UMatrix
-    , [bare_array_type (UVector, 1); UReal; UReal; UReal] ) ;
-  add_unqualified
-    ( "gp_periodic_cov"
-    , ReturnType UMatrix
-    , [ bare_array_type (UVector, 1)
-      ; bare_array_type (UVector, 1)
-      ; UReal; UReal; UReal ] ) ;
+    , [UArray UVector; UArray UVector; UReal; UReal; UReal] ) ;
   (* ; add_nullary ("get_lp")   *)
   add_unqualified ("head", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("head", ReturnType UVector, [UVector; UInt]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ( "head"
-      , ReturnType (bare_array_type (bare_types i, 1))
-      , [bare_array_type (bare_types i, 1); UInt] ) ;
-    add_unqualified
-      ( "head"
-      , ReturnType (bare_array_type (bare_types i, 2))
-      , [bare_array_type (bare_types i, 2); UInt] ) ;
-    add_unqualified
-      ( "head"
-      , ReturnType (bare_array_type (bare_types i, 3))
-      , [bare_array_type (bare_types i, 3); UInt] )
-  done ;
+  List.iter
+    ~f:(fun t ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( "head"
+            , ReturnType (bare_array_type (t, j))
+            , [bare_array_type (t, j); UInt] ) )
+        (List.range 1 4) )
+    bare_types ;
   add_unqualified
     ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
   add_qualified
@@ -962,9 +914,7 @@ let () =
     , ReturnType UMatrix
     , [(DataOnly, UMatrix); (DataOnly, UMatrix); (DataOnly, UVector)] ) ;
   add_unqualified
-    ( "hmm_latent_rng"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [UMatrix; UMatrix; UVector] ) ;
+    ("hmm_latent_rng", ReturnType (UArray UInt), [UMatrix; UMatrix; UVector]) ;
   add_unqualified
     ("hypergeometric_log", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified
@@ -972,29 +922,16 @@ let () =
   add_unqualified ("hypergeometric_rng", ReturnType UInt, [UInt; UInt; UInt]) ;
   add_binary "hypot" ;
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
-  for j = 0 to 8 - 1 do
-    add_unqualified
-      ( "if_else"
-      , ReturnType (bare_array_type (UReal, j))
-      , [UInt; bare_array_type (UReal, j); bare_array_type (UReal, j)] ) ;
-    add_unqualified
-      ( "if_else"
-      , ReturnType (bare_array_type (UInt, j))
-      , [UInt; bare_array_type (UInt, j); bare_array_type (UInt, j)] ) ;
-    add_unqualified
-      ( "if_else"
-      , ReturnType (bare_array_type (UVector, j))
-      , [UInt; bare_array_type (UVector, j); bare_array_type (UVector, j)] ) ;
-    add_unqualified
-      ( "if_else"
-      , ReturnType (bare_array_type (URowVector, j))
-      , [UInt; bare_array_type (URowVector, j); bare_array_type (URowVector, j)]
-      ) ;
-    add_unqualified
-      ( "if_else"
-      , ReturnType (bare_array_type (UMatrix, j))
-      , [UInt; bare_array_type (UMatrix, j); bare_array_type (UMatrix, j)] )
-  done ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ( "if_else"
+            , ReturnType (bare_array_type (t, i))
+            , [UInt; bare_array_type (t, i); bare_array_type (t, i)] ) )
+        bare_types )
+    (List.range 0 8) ;
   add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UInt]) ;
@@ -1163,49 +1100,35 @@ let () =
   add_binary "log_diff_exp" ;
   add_binary "log_falling_factorial" ;
   add_ternary "log_mix" ;
-  for i = 1 to vector_types_size - 1 do
-    for j = 1 to vector_types_size - 1 do
-      add_unqualified
-        ("log_mix", ReturnType UReal, [vector_types i; vector_types j])
-    done ;
-    add_unqualified
-      ( "log_mix"
-      , ReturnType UReal
-      , [vector_types i; bare_array_type (UVector, 1)] ) ;
-    add_unqualified
-      ( "log_mix"
-      , ReturnType UReal
-      , [vector_types i; bare_array_type (URowVector, 1)] )
-  done ;
+  List.iter
+    ~f:(fun v1 ->
+      List.iter
+        ~f:(fun v2 -> add_unqualified ("log_mix", ReturnType UReal, [v1; v2]))
+        (List.tl_exn vector_types) ;
+      add_unqualified ("log_mix", ReturnType UReal, [v1; UArray UVector]) ;
+      add_unqualified ("log_mix", ReturnType UReal, [v1; UArray URowVector]) )
+    (List.tl_exn vector_types) ;
   add_binary "log_rising_factorial" ;
   add_unqualified ("log_softmax", ReturnType UVector, [UVector]) ;
-  add_unqualified
-    ("log_sum_exp", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("log_sum_exp", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UMatrix]) ;
   add_binary "log_sum_exp" ;
-  for i = 0 to primitive_types_size - 1 do
-    add_unqualified ("logical_negation", ReturnType UInt, [primitive_types i]) ;
-    for j = 0 to primitive_types_size - 1 do
-      add_unqualified
-        ("logical_or", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_and", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_eq", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_neq", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_lt", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_lte", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_gt", ReturnType UInt, [primitive_types i; primitive_types j]) ;
-      add_unqualified
-        ("logical_gte", ReturnType UInt, [primitive_types i; primitive_types j])
-    done
-  done ;
+  let logical_binops =
+    [ "logical_or"; "logical_and"; "logical_eq"; "logical_neq"; "logical_lt"
+    ; "logical_lte"; "logical_gt"; "logical_gte" ]
+  in
+  List.iter
+    ~f:(fun t1 ->
+      add_unqualified ("logical_negation", ReturnType UInt, [t1]) ;
+      List.iter
+        ~f:(fun t2 ->
+          List.iter
+            ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2]))
+            logical_binops )
+        primitive_types )
+    primitive_types ;
   add_nullary "machine_precision" ;
   add_qualified
     ( "map_rect"
@@ -1222,8 +1145,9 @@ let () =
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
-  add_unqualified ("max", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
-  add_unqualified ("max", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("matrix_power", ReturnType UMatrix, [UMatrix; UInt]) ;
+  add_unqualified ("max", ReturnType UInt, [UArray UInt]) ;
+  add_unqualified ("max", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("max", ReturnType UReal, [UVector]) ;
   add_unqualified ("max", ReturnType UReal, [URowVector]) ;
   add_unqualified ("max", ReturnType UReal, [UMatrix]) ;
@@ -1246,12 +1170,12 @@ let () =
     ("mdivide_right_tri_low", ReturnType URowVector, [URowVector; UMatrix]) ;
   add_unqualified
     ("mdivide_right_tri_low", ReturnType UMatrix, [UMatrix; UMatrix]) ;
-  add_unqualified ("mean", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("mean", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("mean", ReturnType UReal, [UVector]) ;
   add_unqualified ("mean", ReturnType UReal, [URowVector]) ;
   add_unqualified ("mean", ReturnType UReal, [UMatrix]) ;
-  add_unqualified ("min", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
-  add_unqualified ("min", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("min", ReturnType UInt, [UArray UInt]) ;
+  add_unqualified ("min", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("min", ReturnType UReal, [UVector]) ;
   add_unqualified ("min", ReturnType UReal, [URowVector]) ;
   add_unqualified ("min", ReturnType UReal, [UMatrix]) ;
@@ -1268,39 +1192,37 @@ let () =
   add_unqualified ("modulus", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("multi_normal_rng", ReturnType UVector, [UVector; UMatrix]) ;
   add_unqualified
-    ( "multi_normal_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [bare_array_type (UVector, 1); UMatrix] ) ;
+    ("multi_normal_rng", ReturnType (UArray UVector), [UArray UVector; UMatrix]) ;
   add_unqualified
     ("multi_normal_rng", ReturnType UVector, [URowVector; UMatrix]) ;
   add_unqualified
     ( "multi_normal_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [bare_array_type (URowVector, 1); UMatrix] ) ;
+    , ReturnType (UArray UVector)
+    , [UArray URowVector; UMatrix] ) ;
   add_unqualified
     ("multi_normal_cholesky_rng", ReturnType UVector, [UVector; UMatrix]) ;
   add_unqualified
     ( "multi_normal_cholesky_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [bare_array_type (UVector, 1); UMatrix] ) ;
+    , ReturnType (UArray UVector)
+    , [UArray UVector; UMatrix] ) ;
   add_unqualified
     ("multi_normal_cholesky_rng", ReturnType UVector, [URowVector; UMatrix]) ;
   add_unqualified
     ( "multi_normal_cholesky_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [bare_array_type (URowVector, 1); UMatrix] ) ;
+    , ReturnType (UArray UVector)
+    , [UArray URowVector; UMatrix] ) ;
   add_unqualified
     ("multi_student_t_rng", ReturnType UVector, [UReal; UVector; UMatrix]) ;
   add_unqualified
     ( "multi_student_t_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [UReal; bare_array_type (UVector, 1); UMatrix] ) ;
+    , ReturnType (UArray UVector)
+    , [UReal; UArray UVector; UMatrix] ) ;
   add_unqualified
     ("multi_student_t_rng", ReturnType UVector, [UReal; URowVector; UMatrix]) ;
   add_unqualified
     ( "multi_student_t_rng"
-    , ReturnType (bare_array_type (UVector, 1))
-    , [UReal; bare_array_type (URowVector, 1); UMatrix] ) ;
+    , ReturnType (UArray UVector)
+    , [UReal; UArray URowVector; UMatrix] ) ;
   add_unqualified
     ("multinomial_log", ReturnType UReal, [bare_array_type (UInt, 1); UVector]) ;
   add_unqualified
@@ -1313,6 +1235,9 @@ let () =
     ("multinomial_logit_lpmf", ReturnType UReal, [UArray UInt; UVector]) ;
   add_unqualified
     ("multinomial_logit_rng", ReturnType (UArray UInt), [UVector; UInt]) ;
+  add_unqualified ("multinomial_log", ReturnType UReal, [UArray UInt; UVector]) ;
+  add_unqualified ("multinomial_lpmf", ReturnType UReal, [UArray UInt; UVector]) ;
+  add_unqualified ("multinomial_rng", ReturnType (UArray UInt), [UVector; UInt]) ;
   add_unqualified ("multiply", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("multiply", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("multiply", ReturnType UVector, [UVector; UReal]) ;
@@ -1332,11 +1257,11 @@ let () =
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UReal; UVector; UReal] ) ;
+    , [UArray UInt; UMatrix; UReal; UVector; UReal] ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UVector; UVector; UReal] ) ;
+    , [UArray UInt; UMatrix; UVector; UVector; UReal] ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
@@ -1348,11 +1273,11 @@ let () =
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UReal; UVector; UReal] ) ;
+    , [UArray UInt; URowVector; UReal; UVector; UReal] ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UVector; UVector; UReal] ) ;
+    , [UArray UInt; URowVector; UVector; UVector; UReal] ) ;
   add_nullary "negative_infinity" ;
   add_unqualified
     ( "normal_id_glm_lpdf"
@@ -1382,18 +1307,14 @@ let () =
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix]) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector]) ;
   add_unqualified ("num_elements", ReturnType UInt, [URowVector]) ;
-  for i = 1 to 10 - 1 do
-    add_unqualified
-      ("num_elements", ReturnType UInt, [bare_array_type (UInt, i)]) ;
-    add_unqualified
-      ("num_elements", ReturnType UInt, [bare_array_type (UReal, i)]) ;
-    add_unqualified
-      ("num_elements", ReturnType UInt, [bare_array_type (UMatrix, i)]) ;
-    add_unqualified
-      ("num_elements", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
-    add_unqualified
-      ("num_elements", ReturnType UInt, [bare_array_type (UVector, i)])
-  done ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ("num_elements", ReturnType UInt, [bare_array_type (t, i)]) )
+        bare_types )
+    (List.range 1 10) ;
   add_unqualified ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt]) ;
   add_unqualified ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt]) ;
   add_unqualified ("one_hot_row_vector", ReturnType URowVector, [UInt; UInt]) ;
@@ -1405,11 +1326,11 @@ let () =
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+    , [UArray UInt; UMatrix; UVector; UVector] ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
+    , [UArray UInt; URowVector; UVector; UVector] ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
@@ -1421,44 +1342,36 @@ let () =
   add_unqualified
     ("ordered_logistic_log", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
-    ( "ordered_logistic_log"
-    , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; UVector] ) ;
+    ("ordered_logistic_log", ReturnType UReal, [UArray UInt; UVector; UVector]) ;
   add_unqualified
     ( "ordered_logistic_log"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; bare_array_type (UVector, 1)] ) ;
+    , [UArray UInt; UVector; UArray UVector] ) ;
   add_unqualified
     ("ordered_logistic_lpmf", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
-    ( "ordered_logistic_lpmf"
-    , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; UVector] ) ;
+    ("ordered_logistic_lpmf", ReturnType UReal, [UArray UInt; UVector; UVector]) ;
   add_unqualified
     ( "ordered_logistic_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; bare_array_type (UVector, 1)] ) ;
+    , [UArray UInt; UVector; UArray UVector] ) ;
   add_unqualified ("ordered_logistic_rng", ReturnType UInt, [UReal; UVector]) ;
   add_unqualified
     ("ordered_probit_log", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
-    ( "ordered_probit_log"
-    , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; UVector] ) ;
+    ("ordered_probit_log", ReturnType UReal, [UArray UInt; UVector; UVector]) ;
   add_unqualified
     ( "ordered_probit_log"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UVector; bare_array_type (UVector, 1)] ) ;
+    , [UArray UInt; UVector; UArray UVector] ) ;
   add_unqualified
     ("ordered_probit_lpmf", ReturnType UReal, [UInt; UReal; UVector]) ;
   add_unqualified
-    ( "ordered_probit_lpmf"
-    , ReturnType UReal
-    , [bare_array_type (UInt, 1); UReal; UVector] ) ;
+    ("ordered_probit_lpmf", ReturnType UReal, [UArray UInt; UReal; UVector]) ;
   add_unqualified
     ( "ordered_probit_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UReal; bare_array_type (UVector, 1)] ) ;
+    , [UArray UInt; UReal; UArray UVector] ) ;
   add_unqualified ("ordered_probit_rng", ReturnType UInt, [UReal; UVector]) ;
   add_binary "owens_t" ;
   add_nullary "pi" ;
@@ -1470,11 +1383,11 @@ let () =
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UReal; UVector] ) ;
+    , [UArray UInt; UMatrix; UReal; UVector] ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); UMatrix; UVector; UVector] ) ;
+    , [UArray UInt; UMatrix; UVector; UVector] ) ;
   add_unqualified
     ("poisson_log_glm_lpmf", ReturnType UReal, [UInt; UMatrix; UReal; UVector]) ;
   add_unqualified
@@ -1484,15 +1397,15 @@ let () =
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UReal; UVector] ) ;
+    , [UArray UInt; URowVector; UReal; UVector] ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
-    , [bare_array_type (UInt, 1); URowVector; UVector; UVector] ) ;
+    , [UArray UInt; URowVector; UVector; UVector] ) ;
   add_nullary "positive_infinity" ;
-  add_binary "pow" ;
-  add_unqualified ("prod", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
-  add_unqualified ("prod", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_binary_vec "pow" ;
+  add_unqualified ("prod", ReturnType UInt, [UArray UInt]) ;
+  add_unqualified ("prod", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
   add_unqualified ("prod", ReturnType UReal, [URowVector]) ;
   add_unqualified ("prod", ReturnType UReal, [UMatrix]) ;
@@ -1502,8 +1415,8 @@ let () =
   add_unqualified ("quad_form_sym", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("quad_form_diag", ReturnType UMatrix, [UMatrix; UVector]) ;
   add_unqualified ("quad_form_diag", ReturnType UMatrix, [UMatrix; URowVector]) ;
-  add_unqualified ("rank", ReturnType UInt, [bare_array_type (UInt, 1); UInt]) ;
-  add_unqualified ("rank", ReturnType UInt, [bare_array_type (UReal, 1); UInt]) ;
+  add_unqualified ("rank", ReturnType UInt, [UArray UInt; UInt]) ;
+  add_unqualified ("rank", ReturnType UInt, [UArray UReal; UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [URowVector; UInt]) ;
   add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix]) ;
@@ -1513,63 +1426,49 @@ let () =
   add_unqualified ("append_row", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UVector; UReal]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ( "rep_array"
-      , ReturnType (bare_array_type (bare_types i, 1))
-      , [bare_types i; UInt] ) ;
-    add_unqualified
-      ( "rep_array"
-      , ReturnType (bare_array_type (bare_types i, 2))
-      , [bare_types i; UInt; UInt] ) ;
-    add_unqualified
-      ( "rep_array"
-      , ReturnType (bare_array_type (bare_types i, 3))
-      , [bare_types i; UInt; UInt; UInt] ) ;
-    for j = 1 to 3 - 1 do
+  List.iter
+    ~f:(fun t ->
+      add_unqualified
+        ("rep_array", ReturnType (bare_array_type (t, 1)), [t; UInt]) ;
+      add_unqualified
+        ("rep_array", ReturnType (bare_array_type (t, 2)), [t; UInt; UInt]) ;
       add_unqualified
         ( "rep_array"
-        , ReturnType (bare_array_type (bare_types i, j + 1))
-        , [bare_array_type (bare_types i, j); UInt] ) ;
-      add_unqualified
-        ( "rep_array"
-        , ReturnType (bare_array_type (bare_types i, j + 2))
-        , [bare_array_type (bare_types i, j); UInt; UInt] ) ;
-      add_unqualified
-        ( "rep_array"
-        , ReturnType (bare_array_type (bare_types i, j + 3))
-        , [bare_array_type (bare_types i, j); UInt; UInt; UInt] )
-    done
-  done ;
+        , ReturnType (bare_array_type (t, 3))
+        , [t; UInt; UInt; UInt] ) ;
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( "rep_array"
+            , ReturnType (bare_array_type (t, j + 1))
+            , [bare_array_type (t, j); UInt] ) ;
+          add_unqualified
+            ( "rep_array"
+            , ReturnType (bare_array_type (t, j + 2))
+            , [bare_array_type (t, j); UInt; UInt] ) ;
+          add_unqualified
+            ( "rep_array"
+            , ReturnType (bare_array_type (t, j + 3))
+            , [bare_array_type (t, j); UInt; UInt; UInt] ) )
+        (List.range 1 3) )
+    bare_types ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt]) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt]) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt]) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt]) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt]) ;
-  for i = 0 to 7 do
-    add_unqualified
-      ( "reverse"
-      , ReturnType (bare_array_type (UVector, i))
-      , [bare_array_type (UVector, i)] ) ;
-    add_unqualified
-      ( "reverse"
-      , ReturnType (bare_array_type (URowVector, i))
-      , [bare_array_type (URowVector, i)] )
-  done ;
-  for i = 1 to 7 do
-    add_unqualified
-      ( "reverse"
-      , ReturnType (bare_array_type (UInt, i))
-      , [bare_array_type (UInt, i)] ) ;
-    add_unqualified
-      ( "reverse"
-      , ReturnType (bare_array_type (UReal, i))
-      , [bare_array_type (UReal, i)] ) ;
-    add_unqualified
-      ( "reverse"
-      , ReturnType (bare_array_type (UMatrix, i))
-      , [bare_array_type (UMatrix, i)] )
-  done ;
+  add_unqualified ("reverse", ReturnType UVector, [UVector]) ;
+  add_unqualified ("reverse", ReturnType URowVector, [URowVector]) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified
+            ( "reverse"
+            , ReturnType (bare_array_type (t, i))
+            , [bare_array_type (t, i)] ) )
+        bare_types )
+    (List.range 1 8) ;
   add_unqualified ("rising_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("rising_factorial", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt]) ;
@@ -1585,82 +1484,52 @@ let () =
   add_unqualified ("rows_dot_self", ReturnType UVector, [UMatrix]) ;
   add_unqualified
     ("scale_matrix_exp_multiply", ReturnType UMatrix, [UReal; UMatrix; UMatrix]) ;
-  add_unqualified ("sd", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("sd", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("sd", ReturnType UReal, [UVector]) ;
   add_unqualified ("sd", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sd", ReturnType UReal, [UMatrix]) ;
   add_unqualified ("segment", ReturnType URowVector, [URowVector; UInt; UInt]) ;
   add_unqualified ("segment", ReturnType UVector, [UVector; UInt; UInt]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ( "segment"
-      , ReturnType (bare_array_type (bare_types i, 1))
-      , [bare_array_type (bare_types i, 1); UInt; UInt] ) ;
-    add_unqualified
-      ( "segment"
-      , ReturnType (bare_array_type (bare_types i, 2))
-      , [bare_array_type (bare_types i, 2); UInt; UInt] ) ;
-    add_unqualified
-      ( "segment"
-      , ReturnType (bare_array_type (bare_types i, 3))
-      , [bare_array_type (bare_types i, 3); UInt; UInt] )
-  done ;
+  List.iter
+    ~f:(fun t ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( "segment"
+            , ReturnType (bare_array_type (t, j))
+            , [bare_array_type (t, j); UInt; UInt] ) )
+        (List.range 1 4) )
+    bare_types ;
   add_unqualified ("singular_values", ReturnType UVector, [UMatrix]) ;
-  for i = 1 to 8 - 1 do
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (UInt, i)]) ;
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (UReal, i)]) ;
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (UVector, i)]) ;
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (URowVector, i)]) ;
-    add_unqualified ("size", ReturnType UInt, [bare_array_type (UMatrix, i)])
-  done ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified ("size", ReturnType UInt, [bare_types i])
-  done ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun t ->
+          add_unqualified ("size", ReturnType UInt, [bare_array_type (t, i)])
+          )
+        bare_types )
+    (List.range 1 8) ;
+  List.iter
+    ~f:(fun t -> add_unqualified ("size", ReturnType UInt, [t]))
+    bare_types ;
   add_unqualified ("softmax", ReturnType UVector, [UVector]) ;
-  add_unqualified
-    ( "sort_asc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UInt, 1)] ) ;
-  add_unqualified
-    ( "sort_asc"
-    , ReturnType (bare_array_type (UReal, 1))
-    , [bare_array_type (UReal, 1)] ) ;
+  add_unqualified ("sort_asc", ReturnType (UArray UInt), [UArray UInt]) ;
+  add_unqualified ("sort_asc", ReturnType (UArray UReal), [UArray UReal]) ;
   add_unqualified ("sort_asc", ReturnType UVector, [UVector]) ;
   add_unqualified ("sort_asc", ReturnType URowVector, [URowVector]) ;
-  add_unqualified
-    ( "sort_desc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UInt, 1)] ) ;
-  add_unqualified
-    ( "sort_desc"
-    , ReturnType (bare_array_type (UReal, 1))
-    , [bare_array_type (UReal, 1)] ) ;
+  add_unqualified ("sort_desc", ReturnType (UArray UInt), [UArray UInt]) ;
+  add_unqualified ("sort_desc", ReturnType (UArray UReal), [UArray UReal]) ;
   add_unqualified ("sort_desc", ReturnType UVector, [UVector]) ;
   add_unqualified ("sort_desc", ReturnType URowVector, [URowVector]) ;
+  add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [UArray UInt]) ;
+  add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [UArray UReal]) ;
+  add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [UVector]) ;
+  add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [URowVector]) ;
+  add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UArray UInt]) ;
   add_unqualified
-    ( "sort_indices_asc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UInt, 1)] ) ;
-  add_unqualified
-    ( "sort_indices_asc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ("sort_indices_asc", ReturnType (bare_array_type (UInt, 1)), [UVector]) ;
-  add_unqualified
-    ("sort_indices_asc", ReturnType (bare_array_type (UInt, 1)), [URowVector]) ;
-  add_unqualified
-    ( "sort_indices_desc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UInt, 1)] ) ;
-  add_unqualified
-    ( "sort_indices_desc"
-    , ReturnType (bare_array_type (UInt, 1))
-    , [bare_array_type (UReal, 1)] ) ;
-  add_unqualified
-    ("sort_indices_desc", ReturnType (bare_array_type (UInt, 1)), [UVector]) ;
-  add_unqualified
-    ("sort_indices_desc", ReturnType (bare_array_type (UInt, 1)), [URowVector]) ;
+    ("sort_indices_desc", ReturnType (UArray UInt), [UArray UReal]) ;
+  add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UVector]) ;
+  add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [URowVector]) ;
   add_unqualified ("squared_distance", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("squared_distance", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified
@@ -1671,54 +1540,48 @@ let () =
   add_unqualified ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt]) ;
   add_unqualified
     ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ("subtract", ReturnType (bare_types i), [bare_types i; bare_types i])
-  done ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( "subtract"
+        , ReturnType (List.nth_exn bare_types i)
+        , [List.nth_exn bare_types i; List.nth_exn bare_types i] ) )
+    (List.range 0 bare_types_size) ;
   add_unqualified ("subtract", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("subtract", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UMatrix; UReal]) ;
   add_unqualified ("subtract", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("subtract", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("subtract", ReturnType UMatrix, [UReal; UMatrix]) ;
-  add_unqualified ("sum", ReturnType UInt, [bare_array_type (UInt, 1)]) ;
-  add_unqualified ("sum", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("sum", ReturnType UInt, [UArray UInt]) ;
+  add_unqualified ("sum", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("sum", ReturnType UReal, [UVector]) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix]) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_unqualified
-      ( "tail"
-      , ReturnType (bare_array_type (bare_types i, 1))
-      , [bare_array_type (bare_types i, 1); UInt] ) ;
-    add_unqualified
-      ( "tail"
-      , ReturnType (bare_array_type (bare_types i, 2))
-      , [bare_array_type (bare_types i, 2); UInt] ) ;
-    add_unqualified
-      ( "tail"
-      , ReturnType (bare_array_type (bare_types i, 3))
-      , [bare_array_type (bare_types i, 3); UInt] )
-  done ;
+  List.iter
+    ~f:(fun t ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( "tail"
+            , ReturnType (bare_array_type (t, j))
+            , [bare_array_type (t, j); UInt] ) )
+        (List.range 1 4) )
+    bare_types ;
   add_unqualified ("tcrossprod", ReturnType UMatrix, [UMatrix]) ;
-  add_unqualified
-    ("to_array_1d", ReturnType (bare_array_type (UReal, 1)), [UMatrix]) ;
-  add_unqualified
-    ("to_array_1d", ReturnType (bare_array_type (UReal, 1)), [UVector]) ;
-  add_unqualified
-    ("to_array_1d", ReturnType (bare_array_type (UReal, 1)), [URowVector]) ;
-  for i = 1 to 10 - 1 do
-    add_unqualified
-      ( "to_array_1d"
-      , ReturnType (bare_array_type (UReal, 1))
-      , [bare_array_type (UReal, i)] ) ;
-    add_unqualified
-      ( "to_array_1d"
-      , ReturnType (bare_array_type (UInt, 1))
-      , [bare_array_type (UInt, i)] )
-  done ;
+  add_unqualified ("to_array_1d", ReturnType (UArray UReal), [UMatrix]) ;
+  add_unqualified ("to_array_1d", ReturnType (UArray UReal), [UVector]) ;
+  add_unqualified ("to_array_1d", ReturnType (UArray UReal), [URowVector]) ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ("to_array_1d", ReturnType (UArray UReal), [bare_array_type (UReal, i)]) ;
+      add_unqualified
+        ("to_array_1d", ReturnType (UArray UInt), [bare_array_type (UInt, i)])
+      )
+    (List.range 1 10) ;
   add_unqualified
     ("to_array_2d", ReturnType (bare_array_type (UReal, 2)), [UMatrix]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix]) ;
@@ -1731,34 +1594,25 @@ let () =
   add_unqualified ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt]) ;
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt; UInt]) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt]) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 1); UInt; UInt]) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt; UInt]) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt]) ;
   add_unqualified
-    ( "to_matrix"
-    , ReturnType UMatrix
-    , [bare_array_type (UReal, 1); UInt; UInt; UInt] ) ;
-  add_unqualified
-    ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 1); UInt; UInt]) ;
-  add_unqualified
-    ( "to_matrix"
-    , ReturnType UMatrix
-    , [bare_array_type (UInt, 1); UInt; UInt; UInt] ) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt; UInt]) ;
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 2)]) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UMatrix]) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UVector]) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [URowVector]) ;
-  add_unqualified
-    ("to_row_vector", ReturnType URowVector, [bare_array_type (UReal, 1)]) ;
-  add_unqualified
-    ("to_row_vector", ReturnType URowVector, [bare_array_type (UInt, 1)]) ;
+  add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UReal]) ;
+  add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UInt]) ;
   add_unqualified ("to_vector", ReturnType UVector, [UMatrix]) ;
   add_unqualified ("to_vector", ReturnType UVector, [UVector]) ;
   add_unqualified ("to_vector", ReturnType UVector, [URowVector]) ;
-  add_unqualified
-    ("to_vector", ReturnType UVector, [bare_array_type (UReal, 1)]) ;
-  add_unqualified ("to_vector", ReturnType UVector, [bare_array_type (UInt, 1)]) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UArray UReal]) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UArray UInt]) ;
   add_unqualified ("trace", ReturnType UReal, [UMatrix]) ;
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix]) ;
@@ -1768,7 +1622,7 @@ let () =
   add_unqualified ("transpose", ReturnType UVector, [URowVector]) ;
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt]) ;
-  add_unqualified ("variance", ReturnType UReal, [bare_array_type (UReal, 1)]) ;
+  add_unqualified ("variance", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("variance", ReturnType UReal, [UVector]) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector]) ;
   add_unqualified ("variance", ReturnType UReal, [UMatrix]) ;

@@ -178,11 +178,10 @@ let param_read smeta
     let bodyfn var =
       let readfnapp (var : Expr.Typed.t) =
         Expr.(
-          Helpers.internal_funapp FnReadParam
-            ( { Fixed.pattern=
-                  Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
-              ; meta= Typed.Meta.empty }
-            :: SizedType.dims_of ucst )
+          Helpers.(
+            internal_funapp FnReadParam
+              ( str (base_ut_to_string (SizedType.to_unsized ucst))
+              :: SizedType.dims_of ucst ))
             Typed.Meta.{var.meta with type_= base_type ucst})
       in
       Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
@@ -449,75 +448,6 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let validate_sized decl_id meta transform st =
-  let check fn x =
-    Stmt.Helpers.internal_nrfunapp fn
-      Expr.Helpers.
-        [str decl_id; str (Fmt.strf "%a" Expression_gen.pp_expr x); x]
-      meta
-  in
-  let nrfunapp fname args =
-    Stmt.Fixed.{pattern= NRFunApp (CompilerInternal, fname, args); meta}
-  in
-  let rec dims_check = function
-    | SizedType.SInt | SReal -> []
-    | SArray (st, s) -> check FnValidateSize s :: dims_check st
-    | SVector s | SRowVector s ->
-        let fn =
-          match transform with
-          | Some Program.Simplex -> Internal_fun.FnValidateSizeSimplex
-          | Some UnitVector -> FnValidateSizeUnitVector
-          | _ -> FnValidateSize
-        in
-        [check fn s]
-    | SMatrix (rows, cols) ->
-        let validate_rows =
-          match transform with
-          | Some CholeskyCov ->
-              nrfunapp "check_greater_or_equal"
-                Expr.Helpers.
-                  [ str ("cholesky_factor_cov " ^ decl_id)
-                  ; str "num rows (must be greater or equal to num cols)"
-                  ; rows; cols ]
-          | _ -> check FnValidateSize rows
-        in
-        [validate_rows; check FnValidateSize cols]
-  in
-  dims_check st
-
-let rec add_validate_dims outvars stmts =
-  let transforms =
-    List.filter_map
-      ~f:(function
-        | decl_id, Program.({out_block= Parameters; out_trans; _}) ->
-            Some (decl_id, out_trans)
-        | _ -> None)
-      outvars
-    |> String.Map.of_alist_exn
-  in
-  let with_size_checks = function
-    | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-      decl ->
-        let tr = Map.find transforms decl_id in
-        validate_sized decl_id meta tr st @ [decl]
-    | stmt -> [validate_dims_stmt stmt]
-  in
-  List.concat_map ~f:with_size_checks stmts
-
-and validate_dims_stmt stmt =
-  let pattern =
-    match stmt.pattern with
-    | Stmt.Fixed.Pattern.Block s ->
-        Stmt.Fixed.Pattern.Block (add_validate_dims [] s)
-    | SList s -> SList (add_validate_dims [] s)
-    | While (a, b) -> While (a, validate_dims_stmt b)
-    | For f -> For {f with body= validate_dims_stmt f.body}
-    | IfElse (p, t, e) ->
-        IfElse (p, validate_dims_stmt t, Option.map ~f:validate_dims_stmt e)
-    | s -> s
-  in
-  {stmt with pattern}
-
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -599,11 +529,6 @@ let trans_prog (p : Program.Typed.t) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
-  let functions_block =
-    List.map
-      ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
-      p.functions_block
-  in
   let tparam_writes_cond =
     match tparam_writes with
     | [] -> []
@@ -620,7 +545,6 @@ let trans_prog (p : Program.Typed.t) =
   in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
@@ -630,7 +554,6 @@ let trans_prog (p : Program.Typed.t) =
   in
   let log_prob =
     p.log_prob |> List.map ~f:add_jacobians
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> constrain_in_params p.output_vars
     |> translate_to_open_cl
@@ -671,18 +594,15 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      functions_block
-    ; log_prob
+      log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ ( add_validate_dims [] p.prepare_data
-          |> add_reads p.input_vars data_read )
+        @ (p.prepare_data |> add_reads p.input_vars data_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ ( add_validate_dims p.output_vars p.transform_inits
-          |> add_reads constrained_params data_read )
+        @ (p.transform_inits |> add_reads constrained_params data_read)
         @ List.map ~f:gen_write_unconstrained free_params
     ; generate_quantities }
   in
