@@ -1223,6 +1223,18 @@ let () =
     ( "multi_student_t_rng"
     , ReturnType (UArray UVector)
     , [UReal; UArray URowVector; UMatrix] ) ;
+  add_unqualified
+    ("multinomial_log", ReturnType UReal, [bare_array_type (UInt, 1); UVector]) ;
+  add_unqualified
+    ("multinomial_lpmf", ReturnType UReal, [bare_array_type (UInt, 1); UVector]) ;
+  add_unqualified
+    ("multinomial_rng", ReturnType (bare_array_type (UInt, 1)), [UVector; UInt]) ;
+  add_unqualified
+    ("multinomial_logit_log", ReturnType UReal, [UArray UInt; UVector]) ;
+  add_unqualified
+    ("multinomial_logit_lpmf", ReturnType UReal, [UArray UInt; UVector]) ;
+  add_unqualified
+    ("multinomial_logit_rng", ReturnType (UArray UInt), [UVector; UInt]) ;
   add_unqualified ("multinomial_log", ReturnType UReal, [UArray UInt; UVector]) ;
   add_unqualified ("multinomial_lpmf", ReturnType UReal, [UArray UInt; UVector]) ;
   add_unqualified ("multinomial_rng", ReturnType (UArray UInt), [UVector; UInt]) ;
