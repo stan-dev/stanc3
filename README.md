@@ -60,7 +60,7 @@ Alternatively, the following is sometimes a faster way to build:
 
     nix-shell --command "dune build"
 
-To drop into a sandboxed development shell with all of the dependencies of Stanc3 plus `dune`, run:
+To drop into a sandboxed development shell with all of the dependencies of Stanc3 plus packages for an OCaml development environment (`dune`, `ocp-indent`, `ocamlformat`, `merlin` and `utop`), run:
 
     nix-shell
 
