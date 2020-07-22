@@ -10,8 +10,12 @@ stdenv.mkDerivation rec {
     merlin
     utop
     findlib
-  ] ++ derivation.buildInputs;
-  
+  ]
+  ++ [
+    ncurses
+  ]
+  ++ derivation.buildInputs;
+
   # This is useful for emacs integration
   merlin = pkgs.ocamlPackages.merlin;
 }
