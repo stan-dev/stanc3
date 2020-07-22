@@ -22,6 +22,10 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
     | IllTypedReduceSumGeneric of string * UnsizedType.t list
+    | IllTypedVariadicODE of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -152,6 +156,74 @@ module TypeError = struct
           (String.concat ~sep:"" lines)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
+    | IllTypedVariadicODE (name, arg_tys, args) ->
+        let types x = List.map ~f:snd x in
+        let optional_tol_args =
+          if Stan_math_signatures.is_variadic_ode_tol_fn name then
+            types Stan_math_signatures.variadic_ode_tol_arg_types
+          else []
+        in
+        let generate_ode_sig =
+          [ UnsizedType.UFun
+              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
+              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
+          ]
+          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_args @ types args
+        in
+        (* This function is used to generate the generic signature for variadic ODEs,
+           i.e. with ... representing the variadic parts of the signature.
+           This should be removed once a type representing variadic arguments is added.
+           The generic signature is printed when there is a semantic error with one of
+            the non-variadic arguments in the signature. If there is a mismatch in the
+            variadic arguments, we print the non-generic expected signature
+            (with explicit types for variadic args). *)
+        let variadic_ode_generic_signature =
+          let optional_tol_args =
+            if Stan_math_signatures.is_variadic_ode_tol_fn name then
+              types Stan_math_signatures.variadic_ode_tol_arg_types
+            else []
+          in
+          match
+            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
+            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
+          with
+          | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
+              Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
+                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
+                Stan_math_signatures.variadic_ode_fun_return_type
+                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
+                Fmt.(list UnsizedType.pp ~sep:comma)
+                optional_tol_args
+          | _ ->
+              raise_s
+                [%message
+                  "This should not happen. Variadic ODE functions have \
+                   exactly three mandatory arguments and the function \
+                   supplied to the variadic ODE function has exactly two \
+                   mandatory arguments."]
+        in
+        if List.length args = 0 then
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. Expected \
+             arguments:@[<h>%a@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a@]"
+            name
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            generate_ode_sig
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
+        else
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. @[<h>Available \
+             signatures:\n\
+             %s.@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a.@]"
+            name variadic_ode_generic_signature
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -485,6 +557,9 @@ let illtyped_reduce_sum loc name arg_tys args =
 
 let illtyped_reduce_sum_generic loc name arg_tys =
   TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
+
+let illtyped_variadic_ode loc name arg_tys args =
+  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)

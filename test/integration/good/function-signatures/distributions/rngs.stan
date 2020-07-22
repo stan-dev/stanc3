@@ -332,6 +332,7 @@ generated quantities {
   n = categorical_rng(theta);
   n = categorical_logit_rng(theta);
   ns = multinomial_rng(theta,20);
+  ns = multinomial_logit_rng(theta,20);
 
   x = chi_square_rng(alpha);
   x = chi_square_rng(nu);
