@@ -257,7 +257,7 @@ let pp_methods ppf p =
 
 let pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
   let no_body_default : Stmt.Located.t =
-    {pattern= Stmt.Fixed.Pattern.Skip; meta=Location_span.empty}
+    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
   in
   pp_method ppf fdname
     (List.map ~f:(fun (_, name, _) -> name) fdargs)

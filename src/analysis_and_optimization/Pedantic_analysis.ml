@@ -124,22 +124,22 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (Location_span.t * int * string) Set.Poly.t =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
   (* Only look for control flow if this function definition has a body *)
-  Option.value_map fun_def.fdbody ~default:Set.Poly.empty
-    ~f:(fun body ->
-       (* build dataflow data structure *)
-       let info_map = build_dep_info_map mir body in
-       let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
-       union_map cf_deps ~f:(fun (loc, names) ->
-           Set.Poly.map names ~f:(fun name ->
-               let ix, _ =
-                 Option.value_exn
-                   ~message:
-                     "INTERNAL ERROR: Pedantic mode found CF dependent on an \
-                      arg,but the arg is mismatched. Please report a bug.\n"
-                   (List.findi args ~f:(fun _ arg -> arg = name))
-               in
-               (loc, ix, name) ) )
-    )
+  Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
+      (* build dataflow data structure *)
+      let info_map = build_dep_info_map mir body in
+      let cf_deps =
+        list_target_dependant_cf info_map (Set.Poly.of_list args)
+      in
+      union_map cf_deps ~f:(fun (loc, names) ->
+          Set.Poly.map names ~f:(fun name ->
+              let ix, _ =
+                Option.value_exn
+                  ~message:
+                    "INTERNAL ERROR: Pedantic mode found CF dependent on an \
+                     arg,but the arg is mismatched. Please report a bug.\n"
+                  (List.findi args ~f:(fun _ arg -> arg = name))
+              in
+              (loc, ix, name) ) ) )
 
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =

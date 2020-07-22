@@ -493,7 +493,7 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
 
 let unwrap_block_or_skip = function
   | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
-  | [({pattern= Skip; _})] -> None
+  | [{pattern= Skip; _}] -> None
   | x ->
       raise_s
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
