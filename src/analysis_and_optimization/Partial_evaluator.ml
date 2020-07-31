@@ -576,8 +576,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , [{pattern= FunApp (StanLib, "Times__", [t; a]); _}] ); _
                   }
                 ; b ] )
-              when Expr.Typed.type_of t = UInt || Expr.Typed.type_of t = UReal
-              ->
+              when Expr.Typed.type_of t = UInt
+                   || Expr.Typed.type_of t = UReal
+                   || Expr.Typed.type_of t = UComplex ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
             | ( "Times__"
               , [ { pattern=
@@ -587,8 +588,9 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , [{pattern= FunApp (StanLib, "Times__", [a; t]); _}] ); _
                   }
                 ; b ] )
-              when Expr.Typed.type_of t = UInt || Expr.Typed.type_of t = UReal
-              ->
+              when Expr.Typed.type_of t = UInt
+                   || Expr.Typed.type_of t = UReal
+                   || Expr.Typed.type_of t = UComplex ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
             | "Times__", [{pattern= FunApp (StanLib, "matrix_exp", [a]); _}; b]
               ->

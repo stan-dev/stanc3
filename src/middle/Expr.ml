@@ -195,9 +195,19 @@ module Helpers = struct
      |UMatrix, [MultiIndex _]
      |UMatrix, [Single _] ->
         UVector
+    | UnsizedType.UComplexMatrix, [All; Single _]
+     |UComplexMatrix, [Upfrom _; Single _]
+     |UComplexMatrix, [Between _; Single _]
+     |UComplexMatrix, [MultiIndex _]
+     |UComplexMatrix, [Single _] ->
+        UComplexVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
     | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UComplexMatrix, [Single _; Single _]
+     |UComplexVector, [_]
+     |UComplexRowVector, [_] ->
+        UComplex
     | _ -> raise_s [%message "Can't index" (ut : UnsizedType.t)]
 
   (** [add_index expression index] returns an expression that (additionally)

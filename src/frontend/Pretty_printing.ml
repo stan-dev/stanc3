@@ -62,6 +62,10 @@ and pp_unsizedtype ppf = function
   | UVector -> Fmt.pf ppf "vector"
   | URowVector -> Fmt.pf ppf "row_vector"
   | UMatrix -> Fmt.pf ppf "matrix"
+  | UComplex -> Fmt.pf ppf "complex"
+  | UComplexVector -> Fmt.pf ppf "complex_vector"
+  | UComplexRowVector -> Fmt.pf ppf "complex_row_vector"
+  | UComplexMatrix -> Fmt.pf ppf "complex_matrix"
   | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
@@ -193,6 +197,11 @@ and pp_sizedtype ppf = function
   | SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
+  | SComplex -> Fmt.pf ppf "complex"
+  | SComplexVector e -> Fmt.pf ppf "complex_vector[%a]" pp_expression e
+  | SComplexRowVector e -> Fmt.pf ppf "complex_row_vector[%a]" pp_expression e
+  | SComplexMatrix (e1, e2) ->
+      Fmt.pf ppf "complex_matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
@@ -231,14 +240,20 @@ and pp_transformed_type ppf (pst, trans) =
   in
   let sizes_fmt =
     match pst with
-    | Sized (SVector e) | Sized (SRowVector e) ->
+    | Sized (SVector e)
+     |Sized (SRowVector e)
+     |Sized (SComplexVector e)
+     |Sized (SComplexRowVector e) ->
         Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e
-    | Sized (SMatrix (e1, e2)) ->
+    | Sized (SMatrix (e1, e2)) | Sized (SComplexMatrix (e1, e2)) ->
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
-    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
-      ->
+    | Sized (SArray _)
+     |Unsized _
+     |Sized Middle.SizedType.SInt
+     |Sized SReal
+     |Sized SComplex ->
         Fmt.nop
   in
   let cov_sizes_fmt =

@@ -70,6 +70,8 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
 let rec base_type = function
   | SizedType.SArray (t, _) -> base_type t
   | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
+  | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ ->
+      UnsizedType.UComplex
   | x -> SizedType.to_unsized x
 
 let pos = "pos__"
@@ -90,18 +92,19 @@ let data_read smeta (decl_id, st) =
       Expr.Typed.Meta.{var.meta with type_= flat_type}
   in
   match unsized with
-  | UInt | UReal ->
+  | UInt | UReal | UComplex ->
       [ Assignment
           ( (decl_id, unsized, [])
           , { Expr.Fixed.pattern=
                 Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
             ; meta= {decl_var.meta with type_= unsized} } )
         |> swrap ]
-  | UArray UInt | UArray UReal ->
+  | UArray UInt | UArray UReal | UArray UComplex ->
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
-  | UVector | URowVector | UMatrix | UArray _ ->
+  | UVector | URowVector | UMatrix | UComplexVector | UComplexRowVector
+   |UComplexMatrix | UArray _ ->
       let decl, assign, flat_var =
         let decl_id = decl_id ^ "_flat__" in
         ( Stmt.Fixed.Pattern.Decl
@@ -143,6 +146,10 @@ let rec base_ut_to_string = function
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "scalar"
+  | UnsizedType.UComplexMatrix -> "complex_matrix"
+  | UComplexVector -> "complex_vector"
+  | UComplexRowVector -> "complex_row_vector"
+  | UComplex -> "complex"
   | UInt -> "integer"
   | UArray t -> base_ut_to_string t
   | t ->

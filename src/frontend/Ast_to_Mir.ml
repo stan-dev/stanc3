@@ -313,7 +313,8 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
-    | SInt | SReal | SRowVector _ ->
+    | SComplexVector d | SComplexMatrix (d, _) -> SComplexVector (f d)
+    | SInt | SReal | SComplex | SRowVector _ | SComplexRowVector _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -322,7 +323,9 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (d1, d2) -> SVector (f d1 d2)
-    | SInt | SReal | SRowVector _ | SVector _ ->
+    | SComplexMatrix (d1, d2) -> SComplexVector (f d1 d2)
+    | SInt | SReal | SComplex | SRowVector _ | SVector _
+     |SComplexRowVector _ | SComplexVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -429,7 +432,7 @@ let check_sizedtype name =
             n.meta.loc ]
   in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector s ->
         let e = trans_expr s in
         (check s e, SizedType.SVector e)
@@ -440,6 +443,16 @@ let check_sizedtype name =
         let er = trans_expr r in
         let ec = trans_expr c in
         (check r er @ check c ec, SizedType.SMatrix (er, ec))
+    | SComplexVector s ->
+        let e = trans_expr s in
+        (check s e, SizedType.SComplexVector e)
+    | SComplexRowVector s ->
+        let e = trans_expr s in
+        (check s e, SizedType.SComplexRowVector e)
+    | SComplexMatrix (r, c) ->
+        let er = trans_expr r in
+        let ec = trans_expr c in
+        (check r er @ check c ec, SizedType.SComplexMatrix (er, ec))
     | SArray (t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in
@@ -637,6 +650,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let decl_type =
         match Expr.Typed.type_of iteratee' with
         | UMatrix -> UnsizedType.UReal
+        | UComplexMatrix -> UnsizedType.UComplex
         | t ->
             Expr.Helpers.(infer_type_of_indexed t [Index.Single loop_bottom])
       in
@@ -737,7 +751,7 @@ let trans_sizedtype_decl declc tr name =
         ([decl; assign; check fn s var], var)
   in
   let rec go n = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector s ->
         let fn =
           match (declc.dconstrain, tr) with
@@ -770,6 +784,38 @@ let trans_sizedtype_decl declc tr name =
           | _ -> []
         in
         (l1 @ l2 @ cf_cov, SizedType.SMatrix (r, c))
+    | SComplexVector s ->
+        let fn =
+          match (declc.dconstrain, tr) with
+          | Some Constrain, Program.Simplex ->
+              Internal_fun.FnValidateSizeSimplex
+          | Some Constrain, UnitVector -> FnValidateSizeUnitVector
+          | _ -> FnValidateSize
+        in
+        let l, s = grab_size fn n s in
+        (l, SizedType.SComplexVector s)
+    | SComplexRowVector s ->
+        let l, s = grab_size FnValidateSize n s in
+        (l, SizedType.SComplexRowVector s)
+    | SComplexMatrix (r, c) ->
+        let l1, r = grab_size FnValidateSize n r in
+        let l2, c = grab_size FnValidateSize (n + 1) c in
+        let cf_cov =
+          match (declc.dconstrain, tr) with
+          | Some Constrain, CholeskyCov ->
+              [ { Stmt.Fixed.pattern=
+                    NRFunApp
+                      ( StanLib
+                      , "check_greater_or_equal"
+                      , Expr.Helpers.
+                          [ str ("cholesky_factor_cov " ^ name)
+                          ; str
+                              "num rows (must be greater or equal to num cols)"
+                          ; r; c ] )
+                ; meta= r.Expr.Fixed.meta.Expr.Typed.Meta.loc } ]
+          | _ -> []
+        in
+        (l1 @ l2 @ cf_cov, SizedType.SComplexMatrix (r, c))
     | SArray (t, s) ->
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in

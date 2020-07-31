@@ -17,6 +17,16 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
         [ ("name", `String "matrix")
         ; ("rows", `String (emit_cpp_expr d1))
         ; ("cols", `String (emit_cpp_expr d2)) ]
+  | SComplex -> `Assoc [("name", `String "complex")]
+  | SComplexVector d | SComplexRowVector d ->
+      `Assoc
+        [ ("name", `String "complex_vector")
+        ; ("length", `String (emit_cpp_expr d)) ]
+  | SComplexMatrix (d1, d2) ->
+      `Assoc
+        [ ("name", `String "complex_matrix")
+        ; ("rows", `String (emit_cpp_expr d1))
+        ; ("cols", `String (emit_cpp_expr d2)) ]
   | SArray (st, d) ->
       `Assoc
         [ ("name", `String "array")

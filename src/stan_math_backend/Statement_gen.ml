@@ -9,7 +9,8 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
+  | UComplexMatrix | UComplexRowVector | UComplexVector -> true
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
@@ -24,9 +25,11 @@ let pp_set_size ppf (decl_id, st, adtype) =
     in
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
-    | SReal -> pf ppf "%s" real_nan
-    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
-    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SReal | SComplex -> pf ppf "%s" real_nan
+    | SVector d | SRowVector d | SComplexVector d | SComplexRowVector d ->
+        pf ppf "%a(%a)" pp_st st pp_expr d
+    | SMatrix (d1, d2) | SComplexMatrix (d1, d2) ->
+        pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
   pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
@@ -51,7 +54,9 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
-  | SizedType.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
+  | SizedType.SReal | SVector _ | SMatrix _ | SRowVector _ | SComplex
+   |SComplexVector _ | SComplexMatrix _ | SComplexRowVector _ ->
+      false
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
@@ -102,10 +107,12 @@ let rec pp_statement (ppf : Format.formatter)
   match pattern with
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
-   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
+   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs))
+   |Assignment ((vident, _, []), ({meta= {type_= UComplex; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment ((assignee, UInt, idcs), rhs)
    |Assignment ((assignee, UReal, idcs), rhs)
+   |Assignment ((assignee, UComplex, idcs), rhs)
     when List.for_all ~f:is_single_index idcs ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
         rhs

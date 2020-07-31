@@ -26,6 +26,7 @@ let check_of_compatible_return_type rt1 srt2 =
      |Void, AnyReturnType ->
         true
     | ReturnType UReal, Complete (ReturnType UInt) -> true
+    | ReturnType UReal, Complete (ReturnType UComplex) -> true
     | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
     | ReturnType _, AnyReturnType -> true
     | _ -> false)
@@ -77,7 +78,7 @@ let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
 let has_int_or_real_type ue =
-  match ue.emeta.type_ with UInt | UReal -> true | _ -> false
+  match ue.emeta.type_ with UInt | UReal | UComplex -> true | _ -> false
 
 let probability_distribution_name_variants id =
   let name = id.name in
@@ -590,6 +591,12 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
      |UMatrix, [(Between _, _); (Single _, UInt)]
      |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
         k @@ Validate.ok UnsizedType.UVector
+    | UnsizedType.UComplexMatrix, [(All, _); (Single _, UnsizedType.UInt)]
+     |UComplexMatrix, [(Upfrom _, _); (Single _, UInt)]
+     |UComplexMatrix, [(Downfrom _, _); (Single _, UInt)]
+     |UComplexMatrix, [(Between _, _); (Single _, UInt)]
+     |UComplexMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
+        k @@ Validate.ok UnsizedType.UComplexVector
     | _, [] -> k @@ Validate.ok ut
     | _, next :: rest -> (
       match next with
@@ -597,7 +604,9 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
         match ut with
         | UArray inner_ty -> aux k inner_ty rest
         | UVector | URowVector -> aux k UReal rest
+        | UComplexVector | UComplexRowVector -> aux k UComplex rest
         | UMatrix -> aux k URowVector rest
+        | UComplexMatrix -> aux k UComplexRowVector rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
       | _ -> (
         match ut with
@@ -607,6 +616,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
             in
             aux k' inner_ty rest
         | UVector | URowVector | UMatrix -> aux k ut rest
+        | UComplexVector | UComplexRowVector | UComplexMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
   in
   aux Fn.id ut (List.map ~f:index_with_type indices)
@@ -829,6 +839,7 @@ let semantic_check_expression_of_scalar_or_type cf t e name =
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
+  | SComplex -> Validate.ok SizedType.SComplex
   | SVector e ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
       |> Validate.map ~f:(fun ue -> SizedType.SVector ue)
@@ -839,6 +850,18 @@ let rec semantic_check_sizedtype cf = function
       let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
       Validate.liftA2 (fun ue1 ue2 -> SizedType.SMatrix (ue1, ue2)) ue1 ue2
+  | SComplexVector e ->
+      semantic_check_expression_of_int_type cf e "Vector sizes"
+      |> Validate.map ~f:(fun ue -> SizedType.SComplexVector ue)
+  | SComplexRowVector e ->
+      semantic_check_expression_of_int_type cf e "Row vector sizes"
+      |> Validate.map ~f:(fun ue -> SizedType.SComplexRowVector ue)
+  | SComplexMatrix (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
+      and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
+      Validate.liftA2
+        (fun ue1 ue2 -> SizedType.SComplexMatrix (ue1, ue2))
+        ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
@@ -1122,6 +1145,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
   and argumenttypes = List.map ~f:arg_type arguments
   and is_real_rt = function
     | UnsizedType.ReturnType UReal -> true
+    | UnsizedType.ReturnType UComplex -> true
     | _ -> false
   in
   let is_reat_rt_for_suffix suffix =
@@ -1152,6 +1176,7 @@ let cumulative_density_is_defined id arguments =
   and argumenttypes = List.map ~f:arg_type arguments
   and is_real_rt = function
     | UnsizedType.ReturnType UReal -> true
+    | UnsizedType.ReturnType UComplex -> true
     | _ -> false
   in
   let is_reat_rt_for_suffix suffix =
@@ -1386,6 +1411,8 @@ and semantic_check_foreach_loop_identifier_type ~loc ty =
     match ty with
     | UnsizedType.UArray ut -> ok ut
     | UVector | URowVector | UMatrix -> ok UnsizedType.UReal
+    | UComplexVector | UComplexRowVector | UComplexMatrix ->
+        ok UnsizedType.UComplex
     | _ ->
         Semantic_error.array_vector_rowvector_matrix_expected loc ty |> error)
 
@@ -1587,7 +1614,12 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
        |UArray UReal
        |UArray UVector
        |UArray URowVector
-       |UArray UMatrix ->
+       |UArray UMatrix
+       |UComplex | UComplexVector | UComplexRowVector | UComplexMatrix
+       |UArray UComplex
+       |UArray UComplexVector
+       |UArray UComplexRowVector
+       |UArray UComplexMatrix ->
           true
       | _ -> false
     in

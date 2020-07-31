@@ -4,9 +4,13 @@ open Common.Helpers
 type t =
   | UInt
   | UReal
+  | UComplex
   | UVector
   | URowVector
   | UMatrix
+  | UComplexVector
+  | UComplexRowVector
+  | UComplexMatrix
   | UArray of t
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
@@ -32,6 +36,10 @@ let rec pp ppf = function
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
+  | UComplex -> pp_keyword ppf "complex"
+  | UComplexVector -> pp_keyword ppf "complex_vector"
+  | UComplexRowVector -> pp_keyword ppf "complex_row_vector"
+  | UComplexMatrix -> pp_keyword ppf "complex_matrix"
   | UArray ut ->
       let ty, depth = unsized_array_depth ut in
       let commas = String.make depth ',' in
@@ -67,6 +75,7 @@ let check_of_same_type_mod_conv name t1 t2 =
   else
     match (t1, t2) with
     | UReal, UInt -> true
+    | UComplex, UReal -> true
     | UFun (l1, rt1), UFun (l2, rt2) ->
         rt1 = rt2
         && List.for_all
@@ -96,6 +105,7 @@ let check_compatible_arguments_mod_conv name args1 args2 =
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function
   | UReal, UInt | UInt, UReal -> Some UReal
+  | UComplex, UReal | UReal, UComplex -> Some UComplex
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | t1, t2 when t1 = t2 -> Some t1
@@ -107,16 +117,22 @@ let is_real_type = function
    |UArray UReal
    |UArray UVector
    |UArray URowVector
-   |UArray UMatrix ->
+   |UArray UMatrix
+   |UComplex | UComplexVector | UComplexRowVector | UComplexMatrix
+   |UArray UComplex
+   |UArray UComplexVector
+   |UArray UComplexRowVector
+   |UArray UComplexMatrix ->
       true
   | _ -> false
 
 let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
+  | UComplex | UComplexVector | UComplexRowVector | UComplexMatrix -> true
   | UArray t -> is_autodiffable t
   | _ -> false
 
-let is_scalar_type = function UReal | UInt -> true | _ -> false
+let is_scalar_type = function UReal | UInt | UComplex -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
 let is_fun_type = function UFun _ -> true | _ -> false
 
@@ -128,6 +144,8 @@ let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
   | UMatrix, [] -> false
   | UMatrix, _ -> true
+  | UComplexMatrix, [] -> false
+  | UComplexMatrix, _ -> true
   | _ -> false
 
 module Comparator = Comparator.Make (struct

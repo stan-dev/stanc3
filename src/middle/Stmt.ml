@@ -277,9 +277,10 @@ module Helpers = struct
       Expr.Helpers.internal_funapp FnLength [e] emeta'
     in
     match Expr.Typed.type_of iteratee with
-    | UInt | UReal -> bodyfn iteratee
-    | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
-    | UMatrix ->
+    | UInt | UReal | UComplex -> bodyfn iteratee
+    | UVector | URowVector | UComplexVector | UComplexRowVector ->
+        mkfor (len iteratee) bodyfn iteratee smeta
+    | UMatrix | UComplexMatrix ->
         let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
@@ -315,7 +316,8 @@ module Helpers = struct
 *)
   let rec for_eigen st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _
+     |SMatrix _ | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
@@ -330,10 +332,15 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal -> bodyfn var
-    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+    | SizedType.SInt | SReal | SComplex -> bodyfn var
+    | SVector d | SRowVector d | SComplexVector d | SComplexRowVector d ->
+        mkfor d bodyfn var smeta
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
+    | SComplexMatrix (d1, d2) ->
+        mkfor d1
+          (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
+          var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
@@ -354,6 +361,9 @@ module Helpers = struct
       | SMatrix (d1, d2) ->
           let bodyfn' var = mkfor d1 bodyfn var smeta in
           go (SRowVector d2) bodyfn' var smeta
+      | SComplexMatrix (d1, d2) ->
+          let bodyfn' var = mkfor d1 bodyfn var smeta in
+          go (SComplexRowVector d2) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta
     in
     go st (Fn.compose bodyfn invert_index_order) var smeta

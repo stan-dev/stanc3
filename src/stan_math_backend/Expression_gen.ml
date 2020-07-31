@@ -28,10 +28,20 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e =
-  match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
+  match Expr.Typed.type_of e with
+  | UInt | UReal | UComplex -> true
+  | _ -> false
 
-let is_matrix e = Expr.Typed.type_of e = UMatrix
-let is_row_vector e = Expr.Typed.type_of e = URowVector
+let is_matrix e =
+  match Expr.Typed.type_of e with
+  | UMatrix | UComplexMatrix -> true
+  | _ -> false
+
+let is_row_vector e =
+  match Expr.Typed.type_of e with
+  | URowVector | UComplexRowVector -> true
+  | _ -> false
+
 let pretty_print e = Fmt.to_to_string Expr.Typed.pp e
 
 let pp_call ppf (name, pp_arg, args) =
@@ -39,6 +49,7 @@ let pp_call ppf (name, pp_arg, args) =
 
 let rec stantype_prim_str = function
   | UnsizedType.UInt -> "int"
+  | UComplex -> "std::complex<double>"
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
@@ -69,6 +80,8 @@ let promote_unsizedtype es =
     match (accum, mtype) with
     | UnsizedType.UReal, _ -> UnsizedType.UReal
     | _, UnsizedType.UReal -> UReal
+    | UnsizedType.UComplex, _ -> UnsizedType.UComplex
+    | _, UnsizedType.UComplex -> UComplex
     | UArray t1, UArray t2 -> UArray (fold_type t1 t2)
     | _, mtype -> mtype
   in
@@ -95,6 +108,10 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | UComplex -> pf ppf "std::complex<%s>" scalar
+  | UComplexMatrix -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, -1>" scalar
+  | UComplexRowVector -> pf ppf "Eigen::Matrix<std::complex<%s>, 1, -1>" scalar
+  | UComplexVector -> pf ppf "Eigen::Matrix<std::complex<%s>, -1, 1>" scalar
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
@@ -263,7 +280,9 @@ and read_data ut ppf es =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
+    | UArray UComplex -> "r"
+    | UInt | UReal | UVector | URowVector | UMatrix | UComplex
+     |UComplexVector | UComplexRowVector | UComplexMatrix | UArray _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
