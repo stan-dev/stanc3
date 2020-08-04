@@ -1080,10 +1080,17 @@ let () =
   add_binary "lbeta" ;
   add_binary "lchoose" ;
   add_qualified
-    ("linspaced_array", ReturnType (UArray UReal), [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)]) ;
+    ( "linspaced_array"
+    , ReturnType (UArray UReal)
+    , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)] ) ;
   add_qualified
-    ("linspaced_row_vector", ReturnType URowVector, [(DataOnly,UInt); (DataOnly,UReal); (DataOnly,UReal)]) ;
-  add_qualified ("linspaced_vector", ReturnType UVector, [(DataOnly,UInt); (DataOnly,UReal); (DataOnly,UReal)]) ;
+    ( "linspaced_row_vector"
+    , ReturnType URowVector
+    , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)] ) ;
+  add_qualified
+    ( "linspaced_vector"
+    , ReturnType UVector
+    , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)] ) ;
   add_unqualified ("lkj_corr_cholesky_log", ReturnType UReal, [UMatrix; UReal]) ;
   add_unqualified ("lkj_corr_cholesky_lpdf", ReturnType UReal, [UMatrix; UReal]) ;
   add_unqualified ("lkj_corr_cholesky_rng", ReturnType UMatrix, [UInt; UReal]) ;
