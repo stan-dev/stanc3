@@ -358,11 +358,16 @@ and pp_user_defined_fun ppf (f, es) =
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
     let pp_add_method ppf () = pf ppf ")@,.add(" in
-    pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
-      pp_unsizedtype_local
-      (promote_adtype es, promote_unsizedtype es)
-      (list ~sep:pp_add_method pp_expr)
-      es
+    if List.length es = 0 then
+      pf ppf "stan::math::array_builder<%a>()@,.add(0)@,.array()"
+        pp_unsizedtype_local
+        (promote_adtype es, promote_unsizedtype es)
+    else
+      pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
+        pp_unsizedtype_local
+        (promote_adtype es, promote_unsizedtype es)
+        (list ~sep:pp_add_method pp_expr)
+        es
   in
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
