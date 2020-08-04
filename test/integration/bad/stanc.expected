@@ -1,5 +1,3 @@
-  $ ../../../../install/default/bin/stanc 1_starts_with_number.stan
-Model name must not start with a number or symbol other than underscore.
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:

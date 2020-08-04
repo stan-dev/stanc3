@@ -30,7 +30,7 @@ class nested_expr_model(tfd__.Distribution):
     
     # Target log probability computation
     z = x if (y < x) else (y if (tf__.cast(1, tf__.float64) < y) else tf__.cast(1, tf__.float64))
-    v = z * (z + (x ^ tf__.cast(2, tf__.float64)))
+    v = z * (z + (x ** tf__.cast(2, tf__.float64)))
     u = ((y < tf__.cast(1, tf__.float64)) and (x < tf__.cast(1, tf__.float64))) * (-x)
     target += tf__.reduce_sum(tfd__.Normal(u, v).log_prob(s))
     return target
