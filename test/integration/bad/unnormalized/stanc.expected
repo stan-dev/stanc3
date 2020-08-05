@@ -1,3 +1,17 @@
+  $ ../../../../../install/default/bin/stanc lupdf_in_functions.stan
+
+Semantic error in 'lupdf_in_functions.stan', line 3, column 15 to column 34:
+   -------------------------------------------------
+     1:  functions {
+     2:      real test(real y) {
+     3:          return normal_lupdf(y|0,1);
+                        ^
+     4:      }
+     5:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
   $ ../../../../../install/default/bin/stanc lupdf_in_gq.stan
 
 Semantic error in 'lupdf_in_gq.stan', line 8, column 13 to column 34:
