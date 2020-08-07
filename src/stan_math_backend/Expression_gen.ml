@@ -219,8 +219,7 @@ and gen_operator_app = function
       fun ppf es ->
         pp_scalar_binary ppf "(%a@ /@ %a)" "elt_divide(@,%a,@ %a)" es
   | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
-  | EltPow ->
-      fun ppf es -> pp_scalar_binary ppf "(%a@ *@ %a)" "pow(@,%a,@ %a)" es
+  | EltPow -> fun ppf es -> pp_binary_f ppf "pow" es
   | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
   | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
   | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
@@ -358,11 +357,16 @@ and pp_user_defined_fun ppf (f, es) =
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
     let pp_add_method ppf () = pf ppf ")@,.add(" in
-    pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
-      pp_unsizedtype_local
-      (promote_adtype es, promote_unsizedtype es)
-      (list ~sep:pp_add_method pp_expr)
-      es
+    if List.length es = 0 then
+      pf ppf "stan::math::array_builder<%a>()@,.add(0)@,.array()"
+        pp_unsizedtype_local
+        (promote_adtype es, promote_unsizedtype es)
+    else
+      pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
+        pp_unsizedtype_local
+        (promote_adtype es, promote_unsizedtype es)
+        (list ~sep:pp_add_method pp_expr)
+        es
   in
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
