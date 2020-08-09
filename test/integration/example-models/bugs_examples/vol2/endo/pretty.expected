@@ -7,8 +7,8 @@ data {
 }
 transformed data {
   int J;
-  int Y[2, I];
-  vector<lower=0>[I] est[2];
+  array[2, I] int Y;
+  array[2] vector<lower=0>[I] est;
   vector[I] est1m2;
   J <- 2;
   for (i in 1 : I) {
@@ -281,8 +281,8 @@ data {
   int J;
 }
 transformed data {
-  int<lower=0> Y[I, 2];
-  int<lower=0> est[I, 2];
+  array[I, 2] int<lower=0> Y;
+  array[I, 2] int<lower=0> est;
   for (i in 1 : I) {
     Y[i, 1] <- 1;
     Y[i, 2] <- 0;
@@ -308,7 +308,7 @@ parameters {
   real beta;
 }
 model {
-  real p[I, 2];
+  array[I, 2] real p;
   beta ~ normal(0, 1000);
   for (i in 1 : I) {
     p[i, 1] <- exp(beta * est[i, 1]);
@@ -550,8 +550,8 @@ data {
 }
 transformed data {
   int J;
-  int<lower=0> Y[2, I];
-  vector<lower=0>[I] est[2];
+  array[2, I] int<lower=0> Y;
+  array[2] vector<lower=0>[I] est;
   J <- 2;
   for (i in 1 : I) {
     Y[1, i] <- 1;

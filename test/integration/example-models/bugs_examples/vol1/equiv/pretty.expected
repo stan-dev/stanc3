@@ -2,12 +2,12 @@
 data {
   int<lower=0> P;
   int<lower=0> N;
-  int group[N];
-  real Y[N, P];
-  int sign[2];
+  array[N] int group;
+  array[N, P] real Y;
+  array[2] int sign;
 }
 transformed data {
-  int T[N, P];
+  array[N, P] int T;
   for (n in 1 : N) 
     for (p in 1 : P) 
       T[n, p] <- (group[n] * (2 * p - 3) + 3) / 2;
@@ -18,7 +18,7 @@ parameters {
   real pi;
   real<lower=0> sigmasq1;
   real<lower=0> sigmasq2;
-  real delta[N];
+  array[N] real delta;
 }
 transformed parameters {
   real sigma1;

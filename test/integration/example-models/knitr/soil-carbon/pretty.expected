@@ -1,12 +1,12 @@
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation.stan
 functions {
-  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
-                           int[] x_i) {
+  array[] real two_pool_feedback(real t, array[] real C, array[] real theta,
+                                 array[] real x_r, array[] int x_i) {
     real k1;
     real k2;
     real alpha21;
     real alpha12;
-    real dC_dt[2];
+    array[2] real dC_dt;
     k1 <- theta[1];
     k2 <- theta[2];
     alpha21 <- theta[3];
@@ -15,13 +15,14 @@ functions {
     dC_dt[2] <- -k2 * C[2] + alpha21 * k1 * C[1];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
-                     real totalC_t0, real k1, real k2, real alpha21,
-                     real alpha12, data real[] x_r, data int[] x_i) {
-    real C_t0[2];
-    real theta[4];
-    real C_hat[N_t, 2];
-    real eCO2_hat[N_t];
+  array[] real evolved_CO2(int N_t, data real t0, data array[] real ts,
+                           real gamma, real totalC_t0, real k1, real k2,
+                           real alpha21, real alpha12, data array[] real x_r,
+                           data array[] int x_i) {
+    array[2] real C_t0;
+    array[4] real theta;
+    array[N_t, 2] real C_hat;
+    array[N_t] real eCO2_hat;
     C_t0[1] <- gamma * totalC_t0;
     C_t0[2] <- (1 - gamma) * totalC_t0;
     theta[1] <- k1;
@@ -38,12 +39,12 @@ data {
   real<lower=0> totalC_t0;
   real t0;
   int<lower=0> N_t;
-  real<lower=t0> ts[N_t];
-  real<lower=0> eCO2mean[N_t];
+  array[N_t] real<lower=t0> ts;
+  array[N_t] real<lower=0> eCO2mean;
 }
 transformed data {
-  real x_r[0];
-  int x_i[0];
+  array[0] real x_r;
+  array[0] int x_i;
 }
 parameters {
   real<lower=0> k1;
@@ -54,7 +55,7 @@ parameters {
   real<lower=0> sigma;
 }
 transformed parameters {
-  real eCO2_hat[N_t];
+  array[N_t] real eCO2_hat;
   eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21,
                           alpha12, x_r, x_i);
 }
@@ -266,13 +267,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
-  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
-                           int[] x_i) {
+  array[] real two_pool_feedback(real t, array[] real C, array[] real theta,
+                                 array[] real x_r, array[] int x_i) {
     real k1;
     real k2;
     real alpha21;
     real alpha12;
-    real dC_dt[2];
+    array[2] real dC_dt;
     k1 <- theta[1];
     k2 <- theta[2];
     alpha21 <- theta[3];
@@ -281,13 +282,14 @@ functions {
     dC_dt[2] <- alpha21 * k1 * C[1] - k2 * C[2];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
-                     real totalC_t0, real k1, real k2, real alpha21,
-                     real alpha12, data real[] x_r, data int[] x_i) {
-    real C_t0[2];
-    real theta[4];
-    real C_hat[N_t, 2];
-    real eCO2_hat[N_t];
+  array[] real evolved_CO2(int N_t, data real t0, data array[] real ts,
+                           real gamma, real totalC_t0, real k1, real k2,
+                           real alpha21, real alpha12, data array[] real x_r,
+                           data array[] int x_i) {
+    array[2] real C_t0;
+    array[4] real theta;
+    array[N_t, 2] real C_hat;
+    array[N_t] real eCO2_hat;
     C_t0[1] <- gamma * totalC_t0;
     C_t0[2] <- (1 - gamma) * totalC_t0;
     theta[1] <- k1;
@@ -304,13 +306,13 @@ data {
   real<lower=0> totalC_t0;
   real t0;
   int<lower=0> N_t;
-  real<lower=t0> ts[N_t];
+  array[N_t] real<lower=t0> ts;
   vector<lower=0>[N_t] eCO2mean;
-  real<lower=0> eCO2sd[N_t];
+  array[N_t] real<lower=0> eCO2sd;
 }
 transformed data {
-  real x_r[0];
-  int x_i[0];
+  array[0] real x_r;
+  array[0] int x_i;
 }
 parameters {
   real<lower=0> k1;
@@ -322,7 +324,7 @@ parameters {
   vector<lower=0>[N_t] eCO2;
 }
 transformed parameters {
-  real eCO2_hat[N_t];
+  array[N_t] real eCO2_hat;
   eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21,
                           alpha12, x_r, x_i);
 }

@@ -4,7 +4,7 @@ data {
   int<lower=0> I;
   int<lower=0> K;
   matrix[T, I] X;
-  real<lower=0> sigma[I];
+  array[I] real<lower=0> sigma;
 }
 transformed data {
   real<lower=0> g_bar;
@@ -20,7 +20,7 @@ transformed data {
 }
 parameters {
   matrix<lower=0>[T, K] G;
-  simplex[I] F[K];
+  array[K] simplex[I] F;
 }
 model {
   for (t in 1 : T) 
@@ -122,7 +122,7 @@ data {
   int<lower=0> I;
   int<lower=0> K;
   matrix<lower=0.0>[T, I] X;
-  real<lower=0> sigma[I];
+  array[I] real<lower=0> sigma;
 }
 transformed data {
   real<lower=0> g_bar;
@@ -135,7 +135,7 @@ transformed data {
 }
 parameters {
   matrix<lower=0>[T, K] G;
-  simplex[I] F[K];
+  array[K] simplex[I] F;
 }
 model {
   for (t in 1 : T) 

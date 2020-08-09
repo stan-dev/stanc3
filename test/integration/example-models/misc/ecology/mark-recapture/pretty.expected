@@ -2,12 +2,12 @@
 data {
   int<lower=2> K;
   int<lower=0> I;
-  int<lower=0, upper=1> X[I, K];
+  array[I, K] int<lower=0, upper=1> X;
 }
 transformed data {
-  int<lower=0, upper=K + 1> first[I];
-  int<lower=0, upper=K + 1> last[I];
-  int<lower=0, upper=I> n_captured[K];
+  array[I] int<lower=0, upper=K + 1> first;
+  array[I] int<lower=0, upper=K + 1> last;
+  array[K] int<lower=0, upper=I> n_captured;
   first <- rep_array(K + 1, I);
   last <- rep_array(0, I);
   for (i in 1 : I) {
@@ -272,14 +272,14 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format cjs.stan
 data {
-  int<lower=0> history[7];
+  array[7] int<lower=0> history;
 }
 parameters {
-  real<lower=0, upper=1> phi[2];
-  real<lower=0, upper=1> p[3];
+  array[2] real<lower=0, upper=1> phi;
+  array[3] real<lower=0, upper=1> p;
 }
 transformed parameters {
-  real<lower=0, upper=1> chi[3];
+  array[3] real<lower=0, upper=1> chi;
   chi[3] <- 1;
   chi[2] <- (1 - phi[2]) + phi[2] * (1 - p[3]);
   chi[1] <- (1 - phi[1]) + phi[1] * (1 - p[2]) * chi[2];

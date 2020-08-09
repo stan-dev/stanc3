@@ -4,17 +4,17 @@ data {
   int<lower=2> V;
   int<lower=1> M;
   int<lower=1> N;
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
   simplex[K] theta;
-  simplex[V] phi[K];
+  array[K] simplex[V] phi;
 }
 model {
-  real gamma[M, K];
+  array[M, K] real gamma;
   theta ~ dirichlet(alpha);
   for (k in 1 : K) 
     phi[k] ~ dirichlet(beta);
@@ -73,15 +73,15 @@ data {
   int<lower=1> V;
   int<lower=0> M;
   int<lower=0> N;
-  int<lower=1, upper=K> z[M];
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[M] int<lower=1, upper=K> z;
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
   simplex[K] theta;
-  simplex[V] phi[K];
+  array[K] simplex[V] phi;
 }
 model {
   theta ~ dirichlet(alpha);

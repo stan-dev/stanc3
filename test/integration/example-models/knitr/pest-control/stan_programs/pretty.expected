@@ -9,12 +9,12 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector[N] log_sq_foot;
   int<lower=1> K;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
 }
 parameters {
@@ -39,7 +39,7 @@ model {
                                   + log_sq_foot, phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) {
     real eta_n = mu[building_idx[n]] + beta * traps[n] + log_sq_foot[n];
     y_rep[n] = neg_binomial_2_log_safe_rng(eta_n, phi);
@@ -57,12 +57,12 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector[N] log_sq_foot;
   int<lower=1> K;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
 }
 parameters {
@@ -88,7 +88,7 @@ model {
                                   + log_sq_foot, phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) {
     real eta_n = mu[building_idx[n]] + beta * traps[n] + log_sq_foot[n];
     y_rep[n] = neg_binomial_2_log_safe_rng(eta_n, phi);
@@ -106,12 +106,12 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector[N] log_sq_foot;
   int<lower=1> K;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
 }
 parameters {
@@ -145,7 +145,7 @@ model {
                                   + log_sq_foot, phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) {
     real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n]
                  + log_sq_foot[n];
@@ -164,15 +164,15 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector[N] log_sq_foot;
   int<lower=1> K;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
   int<lower=1> M;
-  int<lower=1, upper=M> mo_idx[N];
+  array[N] int<lower=1, upper=M> mo_idx;
 }
 parameters {
   real<lower=0> inv_phi;
@@ -217,7 +217,7 @@ model {
                                   + log_sq_foot, phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) {
     real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n]
                  + mo[mo_idx[n]] + log_sq_foot[n];
@@ -241,16 +241,16 @@ data {
   int<lower=1> N;
   int<lower=1> M;
   int<lower=1> K;
-  int complaints[N];
+  array[N] int complaints;
   vector[N] traps;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
   vector[N] log_sq_foot;
-  int<lower=1> mo_idx[N];
+  array[N] int<lower=1> mo_idx;
 }
 transformed data {
-  real mo_gp_vec[M];
+  array[M] real mo_gp_vec;
   for (m in 1 : M) 
     mo_gp_vec[m] = m;
 }
@@ -308,7 +308,7 @@ model {
                                   + log_sq_foot, phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) 
     y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]]
                                            + kappa[building_idx[n]]
@@ -328,21 +328,21 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector[N] log_sq_foot;
   int<lower=1> K;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
   int<lower=1> M;
-  int<lower=1, upper=M> mo_idx[N];
+  array[N] int<lower=1, upper=M> mo_idx;
   int<lower=1> M_forward;
   vector[J] log_sq_foot_pred;
 }
 transformed data {
   int N_hypo_traps = 21;
-  int hypo_traps[N_hypo_traps];
+  array[N_hypo_traps] int hypo_traps;
   for (i in 1 : N_hypo_traps) 
     hypo_traps[i] = i - 1;
 }
@@ -391,11 +391,11 @@ model {
   }
 }
 generated quantities {
-  int y_pred[J, N_hypo_traps];
+  array[J, N_hypo_traps] int y_pred;
   matrix[J, N_hypo_traps] rev_pred;
   for (j in 1 : J) {
     for (i in 1 : N_hypo_traps) {
-      int y_pred_by_month[M_forward];
+      array[M_forward] int y_pred_by_month;
       vector[M_forward] mo_forward;
       mo_forward[1] = normal_rng(rho * mo[M], sigma_mo);
       for (m in 2 : M_forward) 
@@ -426,13 +426,13 @@ functions {
 data {
   int<lower=1> N;
   int<lower=1> K;
-  int complaints[N];
+  array[N] int complaints;
   vector[N] traps;
   int<lower=1> J;
-  int<lower=1, upper=J> building_idx[N];
+  array[N] int<lower=1, upper=J> building_idx;
   matrix[J, K] building_data;
   vector[N] log_sq_foot;
-  int mo_idx[N];
+  array[N] int mo_idx;
   int M;
 }
 parameters {
@@ -466,7 +466,7 @@ model {
                                   + log_sq_foot, prec);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   vector[N] std_resid;
   vector[M] mo_resid = rep_vector(0, M);
   for (n in 1 : N) {
@@ -496,7 +496,7 @@ data {
   vector<lower=0>[N] traps;
   vector<lower=0, upper=1>[N] live_in_super;
   vector[N] log_sq_foot;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
 }
 parameters {
   real alpha;
@@ -517,7 +517,7 @@ model {
                                   phi);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) 
     y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n]
                                            + beta_super * live_in_super[n]
@@ -533,9 +533,9 @@ model {
 }
 generated quantities {
   vector[N] log_sq_foot;
-  int live_in_super[N];
-  int traps[N];
-  int complaints[N];
+  array[N] int live_in_super;
+  array[N] int traps;
+  array[N] int complaints;
   real alpha = normal_rng(log(4), 0.1);
   real beta = normal_rng(-0.25, 0.1);
   real beta_super = normal_rng(-0.5, 0.1);
@@ -562,7 +562,7 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
   vector<lower=0, upper=1>[N] live_in_super;
   vector[N] log_sq_foot;
@@ -580,7 +580,7 @@ model {
                            + log_sq_foot);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) 
     y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]
                                     + beta_super * live_in_super[n]
@@ -596,9 +596,9 @@ model {
 }
 generated quantities {
   vector[N] log_sq_foot;
-  int live_in_super[N];
-  int traps[N];
-  int complaints[N];
+  array[N] int live_in_super;
+  array[N] int traps;
+  array[N] int complaints;
   real alpha = normal_rng(log(4), 0.1);
   real beta = normal_rng(-0.25, 0.1);
   real beta_super = normal_rng(-0.5, 0.1);
@@ -622,7 +622,7 @@ functions {
 }
 data {
   int<lower=1> N;
-  int<lower=0> complaints[N];
+  array[N] int<lower=0> complaints;
   vector<lower=0>[N] traps;
 }
 parameters {
@@ -635,7 +635,7 @@ model {
   complaints ~ poisson_log(alpha + beta * traps);
 }
 generated quantities {
-  int y_rep[N];
+  array[N] int y_rep;
   for (n in 1 : N) 
     y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]);
 }
@@ -649,8 +649,8 @@ model {
 
 }
 generated quantities {
-  int traps[N];
-  int complaints[N];
+  array[N] int traps;
+  array[N] int complaints;
   real alpha = normal_rng(log(4), 0.1);
   real beta = normal_rng(-0.25, 0.1);
   for (n in 1 : N) {

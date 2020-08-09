@@ -72,9 +72,9 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format golf1.stan
 data {
   int J;
-  int n[J];
+  array[J] int n;
   vector[J] x;
-  int y[J];
+  array[J] int y;
   real r;
   real R;
 }
@@ -96,9 +96,9 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
 data {
   int J;
-  int n[J];
+  array[J] int n;
   vector[J] x;
-  int y[J];
+  array[J] int y;
 }
 parameters {
   real a;
@@ -112,15 +112,15 @@ model {
 data {
   int K;
   int N;
-  real y[N];
-  real mu[K];
+  array[N] real y;
+  array[K] real mu;
 }
 parameters {
   simplex[K] theta;
   real sigma;
 }
 model {
-  real ps[K];
+  array[K] real ps;
   sigma ~ cauchy(0, 2.5);
   mu ~ normal(0, 10);
   for (n in 1 : N) {
@@ -135,15 +135,15 @@ model {
 data {
   int K;
   int N;
-  real y[N];
-  real mu[K];
+  array[N] real y;
+  array[K] real mu;
 }
 parameters {
   simplex[K] theta;
   real sigma;
 }
 model {
-  real ps[K];
+  array[K] real ps;
   sigma ~ cauchy(0, 2.5);
   mu ~ normal(0, 10);
   for (n in 1 : N) {
@@ -185,7 +185,7 @@ model {
 data {
   int N;
   vector[N] y;
-  int<lower=1, upper=2> movie[N];
+  array[N] int<lower=1, upper=2> movie;
 }
 parameters {
   vector<lower=0, upper=5>[2] theta;
@@ -201,7 +201,7 @@ data {
   int N;
   vector[N] y;
   int J;
-  int<lower=1, upper=J> movie[N];
+  array[N] int<lower=1, upper=J> movie;
 }
 parameters {
   vector<lower=0, upper=5>[J] theta;
@@ -218,8 +218,8 @@ data {
   vector[N] y;
   int J;
   int K;
-  int<lower=1, upper=J> movie[N];
-  int<lower=1, upper=K> rater[N];
+  array[N] int<lower=1, upper=J> movie;
+  array[N] int<lower=1, upper=K> rater;
 }
 parameters {
   vector[J] alpha;
@@ -281,8 +281,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -315,8 +315,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -349,8 +349,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -391,8 +391,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -427,8 +427,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;

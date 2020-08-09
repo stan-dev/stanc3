@@ -2,9 +2,9 @@
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
   real<lower=0> scaling_factor;
 }
@@ -39,7 +39,7 @@ generated quantities {
   vector[N] eta = log_E + beta0 + convolved_re * sigma;
   vector[N] mu = exp(eta);
   vector[N] log_lik;
-  int y_rep[N];
+  array[N] int y_rep;
   if (max(eta) > 20) {
     print("max eta too big: ", max(eta));
     for (n in 1 : N) {
@@ -57,11 +57,11 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format test_gq.stan
 parameters {
-  real<lower=-10, upper=10> y[2];
+  array[2] real<lower=-10, upper=10> y;
 }
 transformed parameters {
   real w;
-  real<lower=0> z[2];
+  array[2] real<lower=0> z;
   w = y[1];
   z[1] = exp(y[1]);
   z[2] = exp(y[2]) * exp(y[1]);
@@ -78,7 +78,7 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format test_gq2.stan
 parameters {
-  real<lower=-10, upper=10> y[2];
+  array[2] real<lower=-10, upper=10> y;
 }
 model {
   y ~ normal(0, 1);
@@ -89,10 +89,10 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
 parameters {
-  real<lower=-10, upper=10> y[2];
+  array[2] real<lower=-10, upper=10> y;
 }
 transformed parameters {
-  real<lower=0> z[2];
+  array[2] real<lower=0> z;
   z[1] = exp(y[1]);
   z[2] = exp(y[2]) * exp(y[1]);
 }

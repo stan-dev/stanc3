@@ -3,14 +3,14 @@ data {
   int<lower=1> J;
   int<lower=1> K;
   int<lower=1> N;
-  int<lower=1, upper=J> jj[N];
-  int<lower=1, upper=K> kk[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=1, upper=K> kk;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real delta;
-  real alpha[J];
-  real beta[K];
+  array[J] real alpha;
+  array[K] real beta;
 }
 model {
   alpha ~ normal(0, 1);
@@ -25,15 +25,15 @@ data {
   int<lower=1> J;
   int<lower=1> K;
   int<lower=1> N;
-  int<lower=1, upper=J> jj[N];
-  int<lower=1, upper=K> kk[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=1, upper=K> kk;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real delta;
-  real alpha[J];
-  real beta[K];
-  real log_gamma[K];
+  array[J] real alpha;
+  array[K] real beta;
+  array[K] real log_gamma;
 }
 model {
   alpha ~ normal(0, 1);
@@ -50,15 +50,15 @@ data {
   int<lower=1> J;
   int<lower=1> K;
   int<lower=1> N;
-  int<lower=1, upper=J> jj[N];
-  int<lower=1, upper=K> kk[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=1, upper=K> kk;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real delta;
-  real alpha[J];
-  real beta[K];
-  real log_gamma[K];
+  array[J] real alpha;
+  array[K] real beta;
+  array[K] real log_gamma;
   real<lower=0> sigma_alpha;
   real<lower=0> sigma_beta;
   real<lower=0> sigma_gamma;
@@ -81,14 +81,14 @@ data {
   int<lower=1> J;
   int<lower=1> K;
   int<lower=1> N;
-  int<lower=1, upper=J> jj[N];
-  int<lower=1, upper=K> kk[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=1, upper=K> kk;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real delta;
-  real alpha[J];
-  real beta[K];
+  array[J] real alpha;
+  array[K] real beta;
   real<lower=0> sigma_alpha;
   real<lower=0> sigma_beta;
 }

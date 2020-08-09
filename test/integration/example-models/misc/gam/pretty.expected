@@ -12,7 +12,7 @@ functions {
   matrix bspline(vector x, int K, int q) {
     real dx;
     row_vector[K] t;
-    int r[K];
+    array[K] int r;
     matrix[rows(x), K] T;
     matrix[rows(x), K] X;
     matrix[rows(x), K] P;
@@ -104,7 +104,7 @@ functions {
 data {
   int<lower=1> N;
   int<lower=1> K;
-  int y[N];
+  array[N] int y;
   vector[N] x;
 }
 transformed data {

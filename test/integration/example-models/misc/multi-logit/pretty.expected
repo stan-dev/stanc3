@@ -4,7 +4,7 @@ data {
   int<lower=2> D;
   int<lower=0> N;
   matrix[N, D] x;
-  int<lower=1, upper=K> y[N];
+  array[N] int<lower=1, upper=K> y;
 }
 parameters {
   matrix[K, D] beta;

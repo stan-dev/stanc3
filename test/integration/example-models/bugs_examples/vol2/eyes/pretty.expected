@@ -1,7 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format eyes.stan
 data {
   int<lower=0> N;
-  real y[N];
+  array[N] real y;
 }
 parameters {
   real<lower=0> sigmasq;
@@ -10,7 +10,7 @@ parameters {
   real<lower=0, upper=1> p1;
 }
 transformed parameters {
-  real lambda[2];
+  array[2] real lambda;
   real sigma;
   sigma <- sqrt(sigmasq);
   lambda[1] <- lambda_1;

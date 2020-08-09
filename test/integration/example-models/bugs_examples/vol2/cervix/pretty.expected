@@ -2,14 +2,14 @@
 data {
   int<lower=0> Nc;
   int<lower=0> Ni;
-  int xc[Nc];
-  int wc[Nc];
-  int dc[Nc];
-  int wi[Ni];
-  int di[Ni];
+  array[Nc] int xc;
+  array[Nc] int wc;
+  array[Nc] int dc;
+  array[Ni] int wi;
+  array[Ni] int di;
 }
 parameters {
-  real<lower=0, upper=1> phi[2, 2];
+  array[2, 2] real<lower=0, upper=1> phi;
   real<lower=0, upper=1> q;
   real beta0C;
   real beta;

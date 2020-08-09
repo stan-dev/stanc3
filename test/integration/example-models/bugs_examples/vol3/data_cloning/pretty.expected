@@ -1,8 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds.stan
 data {
   int<lower=0> I;
-  int<lower=0> n[I];
-  int<lower=0> N[I];
+  array[I] int<lower=0> n;
+  array[I] int<lower=0> N;
   vector[I] x1;
   vector[I] x2;
 }
@@ -18,7 +18,7 @@ parameters {
   real alpha2;
   real alpha12;
   real<lower=0> tau;
-  vector[K] b[I];
+  array[I] vector[K] b;
 }
 transformed parameters {
   real sigma;

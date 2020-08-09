@@ -1,7 +1,7 @@
   $ ../../../../../../../../../install/default/bin/stanc --auto-format categorical_log.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -31,7 +31,7 @@ transformed data {
   int N = 2;
   int M = 3;
   int d_y = 1;
-  int d_y_a[N] = {1, 0};
+  array[N] int d_y_a = {1, 0};
   matrix[N, M] d_x_m = [[1, 2, 3], [4, 5, 6]];
   row_vector[M] d_x_rv = [1, 2, 3];
   matrix[N, M] d_beta_m = [[1, 2, 3], [4, 5, 6]];
@@ -63,7 +63,7 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format categorical_logit_log.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }

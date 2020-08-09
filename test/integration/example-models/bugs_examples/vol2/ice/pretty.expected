@@ -3,15 +3,15 @@ data {
   int<lower=0> N;
   int<lower=0> Nage;
   int<lower=0> K;
-  int year[N];
-  int cases[N];
-  int age[N];
-  int pyr[N];
+  array[N] int year;
+  array[N] int cases;
+  array[N] int age;
+  array[N] int pyr;
   real alpha1;
 }
 parameters {
-  real alpha[Nage - 1];
-  real beta[K];
+  array[Nage - 1] real alpha;
+  array[K] real beta;
   real<lower=0, upper=1> sigma;
 }
 model {
@@ -31,7 +31,7 @@ model {
   cases ~ poisson_log(r);
 }
 generated quantities {
-  real logRR[K];
+  array[K] real logRR;
   for (k in 1 : K) 
     logRR[k] <- beta[k] - beta[5];
 }

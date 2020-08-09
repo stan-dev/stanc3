@@ -1,7 +1,8 @@
   $ ../../../../install/default/bin/stanc --print-canonical deprecated.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
-    real dydt[2];
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
+    array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
     return dydt;
@@ -18,12 +19,12 @@ transformed data {
   real b = 1.5;
   int c = abs(a);
   real d = fabs(b);
-  int x_i[0];
-  real x_r[0];
+  array[0] int x_i;
+  array[0] real x_r;
 }
 parameters {
   real x;
-  real theta[3];
+  array[3] real theta;
 }
 model {
   real k = (b < 0) ? lmultiply(1, d) : 0;
@@ -48,9 +49,10 @@ model {
   print("target: ", target());
 }
 generated quantities {
-  real y0[2] = {1.0, 2.0};
-  real ts[3] = {0.5, 1.0, 2.0};
-  real y_hat[3, 2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i);
+  array[2] real y0 = {1.0, 2.0};
+  array[3] real ts = {0.5, 1.0, 2.0};
+  array[3, 2] real y_hat = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r,
+                                              x_i);
 }
 
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan

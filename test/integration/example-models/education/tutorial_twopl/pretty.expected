@@ -3,10 +3,10 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -43,11 +43,11 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
-  int<lower=0, upper=1> Ik[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
+  array[N] int<lower=0, upper=1> Ik;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -101,10 +101,10 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -156,9 +156,9 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector<lower=0>[I] alpha;

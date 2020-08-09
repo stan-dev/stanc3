@@ -17,7 +17,7 @@ model {
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -62,7 +62,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -107,7 +107,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {
@@ -157,7 +157,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {
@@ -198,7 +198,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] x;
   vector[N] y;
 }
@@ -238,7 +238,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=1> N;
   int<lower=1> J;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] x;
   vector[N] y;
 }

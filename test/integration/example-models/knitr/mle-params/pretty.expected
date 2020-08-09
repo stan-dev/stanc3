@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format logodds-jac.stan
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real alpha;
@@ -45,7 +45,7 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
   $ ../../../../../../install/default/bin/stanc --auto-format logodds.stan
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real alpha;
@@ -76,7 +76,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format prob.stan
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0, upper=1> theta;

@@ -14,7 +14,7 @@ functions {
 data {
   int<lower=0> M;
   int<lower=0> n_occasions;
-  int<lower=1, upper=2> y[M, n_occasions];
+  array[M, n_occasions] int<lower=1, upper=2> y;
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
@@ -27,8 +27,8 @@ parameters {
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi;
   vector<lower=0, upper=1>[n_occ_minus_1] p;
-  simplex[3] ps[3, M, n_occ_minus_1];
-  simplex[2] po[3, M, n_occ_minus_1];
+  array[3, M, n_occ_minus_1] simplex[3] ps;
+  array[3, M, n_occ_minus_1] simplex[2] po;
   for (t in 1 : n_occ_minus_1) {
     phi[t] = mean_phi;
     p[t] = mean_p;
@@ -54,8 +54,8 @@ transformed parameters {
   }
 }
 model {
-  real acc[3];
-  vector[3] gam[n_occasions];
+  array[3] real acc;
+  array[n_occasions] vector[3] gam;
   for (i in 1 : M) {
     gam[1, 1] = 1.0;
     gam[1, 2] = 0.0;
@@ -75,9 +75,9 @@ generated quantities {
   real<lower=0, upper=1> psi;
   vector<lower=0, upper=1>[n_occ_minus_1] b;
   int<lower=0> Nsuper;
-  int<lower=0> N[n_occ_minus_1];
-  int<lower=0> B[n_occ_minus_1];
-  int<lower=1, upper=3> z[M, n_occasions];
+  array[n_occ_minus_1] int<lower=0> N;
+  array[n_occ_minus_1] int<lower=0> B;
+  array[M, n_occasions] int<lower=1, upper=3> z;
   for (i in 1 : M) {
     z[i, 1] = 1;
     for (t in 2 : n_occasions) 
@@ -85,10 +85,10 @@ generated quantities {
   }
   {
     vector[n_occ_minus_1] cprob = seq_cprob(gamma[ : n_occ_minus_1]);
-    int al[M, n_occ_minus_1];
-    int d[M, n_occ_minus_1];
-    int alive[M];
-    int w[M];
+    array[M, n_occ_minus_1] int al;
+    array[M, n_occ_minus_1] int d;
+    array[M] int alive;
+    array[M] int w;
     psi = sum(cprob);
     b = cprob / psi;
     for (i in 1 : M) {
@@ -110,13 +110,13 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format js_rest_occ.stan
 functions {
-  int first_capture(int[] y_i) {
+  int first_capture(array[] int y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
         return k;
     return 0;
   }
-  int last_capture(int[] y_i) {
+  int last_capture(array[] int y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -140,8 +140,8 @@ functions {
     }
     return chi;
   }
-  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p,
-                      matrix phi, vector gamma, matrix chi) {
+  void jolly_seber_lp(array[,] int y, array[] int first, array[] int last,
+                      matrix p, matrix phi, vector gamma, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qgamma = 1.0 - gamma;
@@ -201,12 +201,12 @@ functions {
 data {
   int<lower=0> M;
   int<lower=0> n_occasions;
-  int<lower=0, upper=1> y[M, n_occasions];
+  array[M, n_occasions] int<lower=0, upper=1> y;
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
-  int<lower=0, upper=n_occasions> first[M];
-  int<lower=0, upper=n_occasions> last[M];
+  array[M] int<lower=0, upper=n_occasions> first;
+  array[M] int<lower=0, upper=n_occasions> last;
   for (i in 1 : M) 
     first[i] = first_capture(y[i]);
   for (i in 1 : M) 
@@ -232,9 +232,9 @@ generated quantities {
   real psi;
   vector[n_occasions] b;
   int Nsuper;
-  int N[n_occasions];
-  int B[n_occasions];
-  int z[M, n_occasions];
+  array[n_occasions] int N;
+  array[n_occasions] int B;
+  array[M, n_occasions] int z;
   for (i in 1 : M) {
     int q = 1;
     real mu2;
@@ -247,9 +247,9 @@ generated quantities {
   }
   {
     vector[n_occasions] cprob = seq_cprob(gamma);
-    int recruit[M, n_occasions] = rep_array(0, M, n_occasions);
-    int Nind[M];
-    int Nalive[M];
+    array[M, n_occasions] int recruit = rep_array(0, M, n_occasions);
+    array[M] int Nind;
+    array[M] int Nalive;
     psi = sum(cprob);
     b = cprob / psi;
     for (i in 1 : M) {
@@ -271,13 +271,13 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format js_super.stan
 functions {
-  int first_capture(int[] y_i) {
+  int first_capture(array[] int y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
         return k;
     return 0;
   }
-  int last_capture(int[] y_i) {
+  int last_capture(array[] int y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -301,8 +301,8 @@ functions {
     }
     return chi;
   }
-  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi,
-                   real psi, vector nu, matrix chi) {
+  void js_super_lp(array[,] int y, array[] int first, array[] int last,
+                   matrix p, matrix phi, real psi, vector nu, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qnu = 1.0 - nu;
@@ -354,12 +354,12 @@ functions {
 data {
   int<lower=0> M;
   int<lower=0> n_occasions;
-  int<lower=0, upper=1> y[M, n_occasions];
+  array[M, n_occasions] int<lower=0, upper=1> y;
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
-  int<lower=0, upper=n_occasions> first[M];
-  int<lower=0, upper=n_occasions> last[M];
+  array[M] int<lower=0, upper=n_occasions> first;
+  array[M] int<lower=0, upper=n_occasions> last;
   for (i in 1 : M) 
     first[i] = first_capture(y[i]);
   for (i in 1 : M) 
@@ -397,9 +397,9 @@ model {
 }
 generated quantities {
   int<lower=0> Nsuper;
-  int<lower=0> N[n_occasions];
-  int<lower=0> B[n_occasions];
-  int<lower=0, upper=1> z[M, n_occasions];
+  array[n_occasions] int<lower=0> N;
+  array[n_occasions] int<lower=0> B;
+  array[M, n_occasions] int<lower=0, upper=1> z;
   for (i in 1 : M) {
     if (bernoulli_rng(psi)) {
       z[i, 1] = bernoulli_rng(nu[1]);
@@ -413,9 +413,9 @@ generated quantities {
     }
   }
   {
-    int recruit[M, n_occasions] = rep_array(0, M, n_occasions);
-    int Nind[M];
-    int Nalive[M];
+    array[M, n_occasions] int recruit = rep_array(0, M, n_occasions);
+    array[M] int Nind;
+    array[M] int Nalive;
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
       if (f > 0) 
@@ -435,13 +435,13 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format js_super_indran.stan
 functions {
-  int first_capture(int[] y_i) {
+  int first_capture(array[] int y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
         return k;
     return 0;
   }
-  int last_capture(int[] y_i) {
+  int last_capture(array[] int y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -465,8 +465,8 @@ functions {
     }
     return chi;
   }
-  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi,
-                   real psi, vector nu, matrix chi) {
+  void js_super_lp(array[,] int y, array[] int first, array[] int last,
+                   matrix p, matrix phi, real psi, vector nu, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qnu = 1.0 - nu;
@@ -518,11 +518,11 @@ functions {
 data {
   int<lower=0> M;
   int<lower=0> n_occasions;
-  int<lower=0, upper=1> y[M, n_occasions];
+  array[M, n_occasions] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0, upper=n_occasions> first[M];
-  int<lower=0, upper=n_occasions> last[M];
+  array[M] int<lower=0, upper=n_occasions> first;
+  array[M] int<lower=0, upper=n_occasions> last;
   for (i in 1 : M) 
     first[i] = first_capture(y[i]);
   for (i in 1 : M) 
@@ -565,9 +565,9 @@ model {
 generated quantities {
   real<lower=0> sigma2;
   int<lower=0> Nsuper;
-  int<lower=0> N[n_occasions];
-  int<lower=0> B[n_occasions];
-  int<lower=0, upper=1> z[M, n_occasions];
+  array[n_occasions] int<lower=0> N;
+  array[n_occasions] int<lower=0> B;
+  array[M, n_occasions] int<lower=0, upper=1> z;
   sigma2 = square(sigma);
   for (i in 1 : M) {
     if (bernoulli_rng(psi)) {
@@ -581,9 +581,9 @@ generated quantities {
     }
   }
   {
-    int recruit[M, n_occasions] = rep_array(0, M, n_occasions);
-    int Nind[M];
-    int Nalive[M];
+    array[M, n_occasions] int recruit = rep_array(0, M, n_occasions);
+    array[M] int Nind;
+    array[M] int Nalive;
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
       if (f > 0) 
@@ -603,13 +603,13 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format js_tempran.stan
 functions {
-  int first_capture(int[] y_i) {
+  int first_capture(array[] int y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
         return k;
     return 0;
   }
-  int last_capture(int[] y_i) {
+  int last_capture(array[] int y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -633,8 +633,8 @@ functions {
     }
     return chi;
   }
-  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p,
-                      matrix phi, vector gamma, matrix chi) {
+  void jolly_seber_lp(array[,] int y, array[] int first, array[] int last,
+                      matrix p, matrix phi, vector gamma, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qgamma = 1.0 - gamma;
@@ -694,11 +694,11 @@ functions {
 data {
   int<lower=0> M;
   int<lower=0> n_occasions;
-  int<lower=0, upper=1> y[M, n_occasions];
+  array[M, n_occasions] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0, upper=n_occasions> first[M];
-  int<lower=0, upper=n_occasions> last[M];
+  array[M] int<lower=0, upper=n_occasions> first;
+  array[M] int<lower=0, upper=n_occasions> last;
   for (i in 1 : M) 
     first[i] = first_capture(y[i]);
   for (i in 1 : M) 
@@ -730,9 +730,9 @@ generated quantities {
   real psi;
   vector[n_occasions] b;
   int Nsuper;
-  int N[n_occasions];
-  int B[n_occasions];
-  int z[M, n_occasions];
+  array[n_occasions] int N;
+  array[n_occasions] int B;
+  array[M, n_occasions] int z;
   for (i in 1 : M) {
     int q = 1;
     real mu2;
@@ -745,9 +745,9 @@ generated quantities {
   }
   {
     vector[n_occasions] cprob = seq_cprob(gamma);
-    int recruit[M, n_occasions] = rep_array(0, M, n_occasions);
-    int Nind[M];
-    int Nalive[M];
+    array[M, n_occasions] int recruit = rep_array(0, M, n_occasions);
+    array[M] int Nind;
+    array[M] int Nalive;
     sigma2 = square(sigma);
     psi = sum(cprob);
     b = cprob / psi;

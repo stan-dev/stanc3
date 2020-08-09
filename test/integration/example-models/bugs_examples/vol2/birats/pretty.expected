@@ -2,13 +2,13 @@
 data {
   int<lower=0> N;
   int<lower=0> T;
-  real x[T];
+  array[T] real x;
   real xbar;
-  real y[N, T];
+  array[N, T] real y;
   cov_matrix[2] Omega;
 }
 parameters {
-  vector[2] beta[N];
+  array[N] vector[2] beta;
   vector[2] mu_beta;
   real<lower=0> sigmasq_y;
   cov_matrix[2] Sigma_beta;

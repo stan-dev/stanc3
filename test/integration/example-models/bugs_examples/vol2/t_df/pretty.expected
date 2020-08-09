@@ -1,7 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format estdof.stan
 data {
   int<lower=0> N;
-  real y[N];
+  array[N] real y;
 }
 parameters {
   real<lower=2, upper=100> d;
@@ -67,7 +67,7 @@ transformed data {
   d <- 4;
 }
 parameters {
-  real y[1000];
+  array[1000] real y;
 }
 model {
   y ~ student_t(d, 0, 1);

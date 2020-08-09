@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format arma11.stan
 data {
   int<lower=1> T;
-  real y[T];
+  array[T] real y;
 }
 parameters {
   real mu;
@@ -80,7 +80,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format arma11_alt.stan
 data {
   int<lower=1> T;
-  real y[T];
+  array[T] real y;
 }
 parameters {
   real mu;

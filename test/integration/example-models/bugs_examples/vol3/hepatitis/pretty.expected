@@ -2,10 +2,10 @@
 data {
   int<lower=0> N1;
   int<lower=0> N;
-  real Yvec1[N1];
-  real tvec1[N1];
-  int<lower=0> idxn1[N1];
-  real y0[N];
+  array[N1] real Yvec1;
+  array[N1] real tvec1;
+  array[N1] int<lower=0> idxn1;
+  array[N] real y0;
 }
 transformed data {
   real y0_mean;
@@ -15,8 +15,8 @@ parameters {
   real<lower=0> sigmasq_y;
   real<lower=0> sigmasq_alpha;
   real<lower=0> sigmasq_beta;
-  real alpha[N];
-  real beta[N];
+  array[N] real alpha;
+  array[N] real beta;
   real gamma;
   real alpha0;
   real beta0;
@@ -31,7 +31,7 @@ transformed parameters {
 }
 model {
   int oldn;
-  real m[N1];
+  array[N1] real m;
   for (n in 1 : N1) {
     oldn <- idxn1[n];
     m[n] <- alpha[oldn] + beta[oldn] * (tvec1[n] - 6.5)
@@ -298,10 +298,10 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N1;
   int<lower=0> N;
-  real Yvec1[N1];
-  real tvec1[N1];
-  int<lower=0> idxn1[N1];
-  real y0[N];
+  array[N1] real Yvec1;
+  array[N1] real tvec1;
+  array[N1] int<lower=0> idxn1;
+  array[N] real y0;
 }
 transformed data {
   real y0_mean;
@@ -316,9 +316,9 @@ parameters {
   real alpha0;
   real beta0;
   real theta;
-  real mu0[N];
-  real alpha[N];
-  real beta[N];
+  array[N] real mu0;
+  array[N] real alpha;
+  array[N] real beta;
 }
 transformed parameters {
   real<lower=0> sigma_y;
@@ -330,7 +330,7 @@ transformed parameters {
 }
 model {
   int oldn;
-  real m[N1];
+  array[N1] real m;
   for (n in 1 : N1) {
     oldn <- idxn1[n];
     m[n] <- alpha[oldn] + beta[oldn] * (tvec1[n] - 6.5)

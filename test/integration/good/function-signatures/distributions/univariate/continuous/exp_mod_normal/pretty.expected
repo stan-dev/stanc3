@@ -1,9 +1,9 @@
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_1.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -311,7 +311,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -3946,9 +3946,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_2.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -4257,7 +4257,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -8302,9 +8302,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_3.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -8613,7 +8613,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -12658,9 +12658,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_4.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -13019,7 +13019,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -17068,9 +17068,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_1.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -17351,7 +17351,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -20556,9 +20556,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_2.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -20858,7 +20858,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -24146,9 +24146,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_3.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -24450,7 +24450,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -27712,9 +27712,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_4.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -28073,7 +28073,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -31363,9 +31363,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_1.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -31669,7 +31669,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -34963,9 +34963,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_2.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -35274,7 +35274,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -38569,9 +38569,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_3.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -38880,7 +38880,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -42175,9 +42175,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_4.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -42536,7 +42536,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -45833,9 +45833,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_1.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -46116,7 +46116,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -49321,9 +49321,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_2.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -49623,7 +49623,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -52911,9 +52911,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_3.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -53215,7 +53215,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -56477,9 +56477,9 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_4.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -56838,7 +56838,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;

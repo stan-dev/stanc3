@@ -108,7 +108,7 @@ model {
 data {
   int<lower=0> N;
   vector[N] kid_score;
-  int mom_work[N];
+  array[N] int mom_work;
 }
 transformed data {
   vector[N] work2;
@@ -437,7 +437,7 @@ data {
   vector[N] educ1;
   vector[N] gender;
   vector[N] income;
-  int age_discrete[N];
+  array[N] int age_discrete;
 }
 transformed data {
   vector[N] age30_44;

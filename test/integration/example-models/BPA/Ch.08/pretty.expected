@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl.stan
 data {
   int n_occasions;
-  int marr[n_occasions, n_occasions + 1];
+  array[n_occasions, n_occasions + 1] int marr;
 }
 parameters {
   real<lower=0, upper=1> mean_s;
@@ -10,7 +10,7 @@ parameters {
 transformed parameters {
   vector[n_occasions] s;
   vector[n_occasions] r;
-  simplex[n_occasions + 1] pr[n_occasions];
+  array[n_occasions] simplex[n_occasions + 1] pr;
   s = rep_vector(mean_s, n_occasions);
   r = rep_vector(mean_r, n_occasions);
   for (t in 1 : n_occasions) {
@@ -31,8 +31,8 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl_age.stan
 data {
   int n_occasions;
-  int marr_j[n_occasions, n_occasions + 1];
-  int marr_a[n_occasions, n_occasions + 1];
+  array[n_occasions, n_occasions + 1] int marr_j;
+  array[n_occasions, n_occasions + 1] int marr_a;
 }
 parameters {
   real<lower=0, upper=1> mean_sj;
@@ -45,8 +45,8 @@ transformed parameters {
   vector[n_occasions] sa;
   vector[n_occasions] rj;
   vector[n_occasions] ra;
-  simplex[n_occasions + 1] pr_a[n_occasions];
-  simplex[n_occasions + 1] pr_j[n_occasions];
+  array[n_occasions] simplex[n_occasions + 1] pr_a;
+  array[n_occasions] simplex[n_occasions + 1] pr_j;
   for (t in 1 : n_occasions) {
     sj[t] = mean_sj;
     sa[t] = mean_sa;
@@ -85,8 +85,8 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl_age3.stan
 data {
   int n_age;
-  int marr_j[n_age + 1];
-  int marr_a[n_age + 1];
+  array[n_age + 1] int marr_j;
+  array[n_age + 1] int marr_a;
 }
 parameters {
   real<lower=0, upper=1> sjuv;
@@ -115,13 +115,13 @@ model {
 
   $ ../../../../../../install/default/bin/stanc --auto-format mr_ss.stan
 functions {
-  int first_capture(int[] y_i) {
+  int first_capture(array[] int y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
         return k;
     return 0;
   }
-  int last_capture(int[] y_i) {
+  int last_capture(array[] int y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -145,12 +145,12 @@ functions {
 data {
   int<lower=0> nind;
   int<lower=0> n_occasions;
-  int<lower=0, upper=1> y[nind, n_occasions];
+  array[nind, n_occasions] int<lower=0, upper=1> y;
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
-  int<lower=0, upper=n_occasions> first[nind];
-  int<lower=0, upper=n_occasions> last[nind];
+  array[nind] int<lower=0, upper=n_occasions> first;
+  array[nind] int<lower=0, upper=n_occasions> last;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 

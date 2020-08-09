@@ -217,7 +217,8 @@ unsized_type:
        let size =
          match ud with Some d -> 1 + d | None -> 0
        in
-       reparray size bt    }
+       reparray size bt
+    }
 
 basic_type:
   | INT

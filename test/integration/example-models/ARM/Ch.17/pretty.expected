@@ -3,8 +3,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_treatment;
   int<lower=0> n_airport;
-  int<lower=0, upper=n_treatment> treatment[N];
-  int<lower=0, upper=n_airport> airport[N];
+  array[N] int<lower=0, upper=n_treatment> treatment;
+  array[N] int<lower=0, upper=n_airport> airport;
   vector[N] y;
 }
 parameters {
@@ -35,13 +35,13 @@ data {
   int<lower=0> n_edu;
   int<lower=0> n_region;
   int<lower=0> n_state;
-  int<lower=0, upper=1> female[N];
-  int<lower=0, upper=1> black[N];
-  int<lower=0, upper=n_age> age[N];
-  int<lower=0, upper=n_edu> edu[N];
-  int<lower=0, upper=n_state> region[n_state];
-  int<lower=0, upper=n_state> state[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> female;
+  array[N] int<lower=0, upper=1> black;
+  array[N] int<lower=0, upper=n_age> age;
+  array[N] int<lower=0, upper=n_edu> edu;
+  array[n_state] int<lower=0, upper=n_state> region;
+  array[N] int<lower=0, upper=n_state> state;
+  array[N] int<lower=0, upper=1> y;
   vector[n_state] v_prev;
   vector[N] z;
 }
@@ -106,13 +106,13 @@ data {
   int<lower=0> n_edu;
   int<lower=0> n_region;
   int<lower=0> n_state;
-  int<lower=0, upper=1> female[N];
-  int<lower=0, upper=1> black[N];
-  int<lower=0, upper=n_age> age[N];
-  int<lower=0, upper=n_edu> edu[N];
-  int<lower=0, upper=n_state> region[n_state];
-  int<lower=0, upper=n_state> state[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> female;
+  array[N] int<lower=0, upper=1> black;
+  array[N] int<lower=0, upper=n_age> age;
+  array[N] int<lower=0, upper=n_edu> edu;
+  array[n_state] int<lower=0, upper=n_state> region;
+  array[N] int<lower=0, upper=n_state> state;
+  array[N] int<lower=0, upper=1> y;
   vector[n_state] v_prev;
 }
 parameters {
@@ -167,8 +167,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_cut;
   int<lower=0> n_player;
-  int<lower=0, upper=n_player> player[N];
-  int<lower=0, upper=n_cut> y[N];
+  array[N] int<lower=0, upper=n_player> player;
+  array[N] int<lower=0, upper=n_cut> y;
   vector[N] x;
 }
 parameters {
@@ -207,10 +207,10 @@ data {
   int<lower=0> N;
   int<lower=0> n_eth;
   int<lower=0> n_precint;
-  int<lower=0, upper=n_precint> precint[N];
-  int<lower=0, upper=n_eth> eth[N];
+  array[N] int<lower=0, upper=n_precint> precint;
+  array[N] int<lower=0, upper=n_eth> eth;
   vector[N] offeset;
-  int<lower=0> stops[N];
+  array[N] int<lower=0> stops;
 }
 parameters {
   real mu;
@@ -244,8 +244,8 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
 }
 parameters {
   real<lower=0> sigma;
@@ -294,8 +294,8 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
   vector[N] u;
 }
 parameters {
@@ -346,7 +346,7 @@ data {
   int<lower=0> K;
   vector[N] y;
   matrix[N, K] X;
-  int county[N];
+  array[N] int county;
   matrix[K, K] W;
 }
 parameters {
@@ -397,7 +397,7 @@ data {
   vector[N] y;
   vector[L] U;
   matrix[N, K] X;
-  int county[N];
+  array[N] int county;
 }
 parameters {
   real<lower=0> sigma;
@@ -453,8 +453,8 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
 }
 parameters {
   real<lower=0> sigma;
@@ -484,8 +484,8 @@ data {
   int<lower=0> n_county;
   vector[N] y;
   vector[N] u;
-  int<lower=0, upper=1> x[N];
-  int<lower=1, upper=n_county> county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int<lower=1, upper=n_county> county;
 }
 parameters {
   real<lower=0> sigma;
@@ -526,8 +526,8 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
   matrix[2, 2] W;
 }
 parameters {
@@ -583,8 +583,8 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
   matrix[2, 2] W;
 }
 parameters {
@@ -638,9 +638,9 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
+  array[N] int<lower=0, upper=1> x;
   vector[N] u;
-  int county[N];
+  array[N] int county;
   matrix[2, 2] W;
 }
 parameters {
@@ -700,13 +700,13 @@ data {
   int<lower=0> n_edu;
   int<lower=0> n_region;
   int<lower=0> n_state;
-  int<lower=0, upper=1> female[N];
-  int<lower=0, upper=1> black[N];
-  int<lower=0, upper=n_age> age[N];
-  int<lower=0, upper=n_edu> edu[N];
-  int<lower=0, upper=n_state> region[n_state];
-  int<lower=0, upper=n_state> state[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> female;
+  array[N] int<lower=0, upper=1> black;
+  array[N] int<lower=0, upper=n_age> age;
+  array[N] int<lower=0, upper=n_edu> edu;
+  array[n_state] int<lower=0, upper=n_state> region;
+  array[N] int<lower=0, upper=n_state> state;
+  array[N] int<lower=0, upper=1> y;
   vector[N] z;
   vector[N] v_prev;
 }

@@ -1,7 +1,7 @@
   $ ../../../../../install/default/bin/stanc --auto-format bernoulli.stan
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0, upper=1> theta;
@@ -15,7 +15,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format negative_binomial.stan
 data {
   int<lower=1> N;
-  int<lower=0> y[N];
+  array[N] int<lower=0> y;
 }
 parameters {
   real<lower=0> alpha;
@@ -31,7 +31,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format negative_binomial2.stan
 data {
   int<lower=1> N;
-  int<lower=0> y[N];
+  array[N] int<lower=0> y;
 }
 parameters {
   real<lower=0> alpha;
@@ -64,7 +64,7 @@ data {
   real U;
   int<lower=0> N_censored;
   int<lower=0> N_observed;
-  real<upper=U> y[N_observed];
+  array[N_observed] real<upper=U> y;
 }
 parameters {
   real mu;
@@ -90,7 +90,7 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 
   $ ../../../../../install/default/bin/stanc --auto-format normal_loc.stan
 transformed data {
-  real y[5];
+  array[5] real y;
   y[1] <- 2.0;
   y[2] <- 1.0;
   y[3] <- -0.5;
@@ -173,11 +173,11 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
 data {
   int<lower=0> N;
-  real y[N];
+  array[N] real y;
 }
 parameters {
   real<lower=0, upper=1> theta;
-  real mu[2];
+  array[2] real mu;
 }
 transformed parameters {
   real log_theta;
@@ -238,15 +238,15 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 data {
   int<lower=1> K;
   int<lower=1> N;
-  real y[N];
+  array[N] real y;
 }
 parameters {
   simplex[K] theta;
-  real mu[K];
-  real<lower=0, upper=10> sigma[K];
+  array[K] real mu;
+  array[K] real<lower=0, upper=10> sigma;
 }
 model {
-  real ps[K];
+  array[K] real ps;
   mu ~ normal(0, 10);
   for (n in 1 : N) {
     for (k in 1 : K) 
@@ -285,14 +285,14 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 data {
   int<lower=1> K;
   int<lower=1> N;
-  real y[N];
+  array[N] real y;
 }
 parameters {
   simplex[K] theta;
   simplex[K] mu_prop;
   real mu_loc;
   real<lower=0> mu_scale;
-  real<lower=0> sigma[K];
+  array[K] real<lower=0> sigma;
 }
 transformed parameters {
   ordered[K] mu;
@@ -303,7 +303,7 @@ model {
   mu_scale ~ cauchy(0, 5);
   sigma ~ cauchy(0, 5);
   {
-    real ps[K];
+    array[K] real ps;
     vector[K] log_theta;
     log_theta <- log(theta);
     for (n in 1 : N) {
@@ -371,13 +371,13 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 data {
   int<lower=0> N;
   int<lower=0> J;
-  vector[N] y[J];
-  vector[N] z[J];
+  array[J] vector[N] y;
+  array[J] vector[N] z;
   matrix[N, N] sigma;
 }
 transformed data {
-  row_vector[N] ry[J];
-  row_vector[N] rz[J];
+  array[J] row_vector[N] ry;
+  array[J] row_vector[N] rz;
   matrix[N, N] inv_sigma;
   for (n in 1 : N) 
     for (j in 1 : J) {
@@ -387,8 +387,8 @@ transformed data {
   inv_sigma <- inverse_spd(sigma);
 }
 parameters {
-  vector[N] beta[J];
-  row_vector[N] rbeta[J];
+  array[J] vector[N] beta;
+  array[J] row_vector[N] rbeta;
 }
 model {
   y ~ multi_normal(beta, sigma);
@@ -564,7 +564,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   real U;
   int<lower=1> N;
-  real<upper=U> y[N];
+  array[N] real<upper=U> y;
 }
 parameters {
   real mu;

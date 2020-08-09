@@ -6,15 +6,15 @@ data {
   int<lower=0> n_edu;
   int<lower=0> n_region;
   int<lower=0> n_state;
-  int<lower=1, upper=n_age> age[N];
-  int<lower=1, upper=n_age_edu> age_edu[N];
+  array[N] int<lower=1, upper=n_age> age;
+  array[N] int<lower=1, upper=n_age_edu> age_edu;
   vector<lower=0, upper=1>[N] black;
-  int<lower=1, upper=n_edu> edu[N];
+  array[N] int<lower=1, upper=n_edu> edu;
   vector<lower=0, upper=1>[N] female;
-  int<lower=1, upper=n_region> region[n_state];
-  int<lower=1, upper=n_state> state[N];
+  array[n_state] int<lower=1, upper=n_region> region;
+  array[N] int<lower=1, upper=n_state> state;
   vector[n_state] v_prev;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[n_age] b_age;
@@ -87,15 +87,15 @@ data {
   int<lower=0> n_edu;
   int<lower=0> n_region;
   int<lower=0> n_state;
-  int<lower=1, upper=n_age> age[N];
-  int<lower=1, upper=n_age_edu> age_edu[N];
+  array[N] int<lower=1, upper=n_age> age;
+  array[N] int<lower=1, upper=n_age_edu> age_edu;
   vector<lower=0, upper=1>[N] black;
-  int<lower=1, upper=n_edu> edu[N];
+  array[N] int<lower=1, upper=n_edu> edu;
   vector<lower=0, upper=1>[N] female;
-  int<lower=1, upper=n_region> region[n_state];
-  int<lower=1, upper=n_state> state[N];
+  array[n_state] int<lower=1, upper=n_region> region;
+  array[N] int<lower=1, upper=n_state> state;
   vector[n_state] v_prev;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real b_0;
@@ -185,10 +185,10 @@ data {
   int<lower=0> K;
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=0, upper=J> j[N];
-  int<lower=1, upper=K> k[N];
+  array[N] int<lower=0, upper=J> j;
+  array[N] int<lower=1, upper=K> k;
   vector[N] x;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[J] a_raw;
@@ -240,8 +240,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_airport;
   int<lower=0> n_treatment;
-  int<lower=1, upper=n_airport> airport[N];
-  int<lower=1, upper=n_treatment> treatment[N];
+  array[N] int<lower=1, upper=n_airport> airport;
+  array[N] int<lower=1, upper=n_treatment> treatment;
   vector[N] y;
 }
 parameters {
@@ -286,8 +286,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_airport;
   int<lower=0> n_treatment;
-  int<lower=1, upper=n_airport> airport[N];
-  int<lower=1, upper=n_treatment> treatment[N];
+  array[N] int<lower=1, upper=n_airport> airport;
+  array[N] int<lower=1, upper=n_treatment> treatment;
   vector[N] y;
 }
 parameters {
@@ -333,7 +333,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {
@@ -359,7 +359,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {
@@ -385,7 +385,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {
@@ -417,7 +417,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] y;
 }
 parameters {

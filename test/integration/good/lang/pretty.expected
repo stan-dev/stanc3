@@ -9,11 +9,11 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format good_cov.stan
 data {
-  vector[5] y[10];
-  vector[5] mu[10];
+  array[10] vector[5] y;
+  array[10] vector[5] mu;
 }
 parameters {
-  cov_matrix[5] Sigma[10];
+  array[10] cov_matrix[5] Sigma;
 }
 model {
   for (i in 1 : 10) 
@@ -67,10 +67,10 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format good_local_var_array_size.stan
 data {
-  int M[5];
+  array[5] int M;
 }
 transformed data {
-  int N[2];
+  array[2] int N;
   N[1] = 1;
   N[2] = 4;
 }
@@ -80,7 +80,7 @@ parameters {
 model {
   y ~ normal(0, 1);
   for (i in 1 : 10) {
-    real x[i];
+    array[i] real x;
     for (j in 1 : i) 
       x[j] = j * j;
   }
@@ -92,10 +92,10 @@ model {
     }
   }
   for (i in 1 : 5) {
-    real x[M[i]];
+    array[M[i]] real x;
   }
   for (i in 1 : 2) {
-    real x[N[i]];
+    array[N[i]] real x;
   }
 }
 
@@ -466,10 +466,10 @@ data {
 
 }
 parameters {
-  real<lower=-10, upper=10> y[2];
+  array[2] real<lower=-10, upper=10> y;
 }
 transformed parameters {
-  real<lower=0> z[2];
+  array[2] real<lower=0> z;
   z[1] = exp(y[1]);
   z[2] = exp(y[2]) * exp(y[1]);
 }
@@ -539,10 +539,10 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
 parameters {
-  real<lower=-10, upper=10> y[2];
+  array[2] real<lower=-10, upper=10> y;
 }
 transformed parameters {
-  real<lower=0> z[2];
+  array[2] real<lower=0> z;
   z[1] = exp(y[1]);
   z[2] = exp(y[2]) * exp(y[1]);
 }

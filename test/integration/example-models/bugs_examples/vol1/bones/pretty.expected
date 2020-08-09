@@ -2,17 +2,17 @@
 data {
   int<lower=0> nChild;
   int<lower=0> nInd;
-  real gamma[nInd, 4];
-  real delta[nInd];
-  int<lower=0> ncat[nInd];
-  int grade[nChild, nInd];
+  array[nInd, 4] real gamma;
+  array[nInd] real delta;
+  array[nInd] int<lower=0> ncat;
+  array[nChild, nInd] int grade;
 }
 parameters {
-  real theta[nChild];
+  array[nChild] real theta;
 }
 model {
-  real p[nChild, nInd, 5];
-  real Q[nChild, nInd, 4];
+  array[nChild, nInd, 5] real p;
+  array[nChild, nInd, 4] real Q;
   theta ~ normal(0.0, 36);
   for (i in 1 : nChild) {
     for (j in 1 : nInd) {

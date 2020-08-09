@@ -338,7 +338,7 @@ parameters {
   vector<lower=0>[2] sigma;
 }
 model {
-  vector[N] mu[2];
+  array[2] vector[N] mu;
   alpha ~ normal(0, 10);
   beta ~ normal(0, 5);
   mu[1] <- alpha + beta * x_std;

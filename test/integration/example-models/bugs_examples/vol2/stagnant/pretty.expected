@@ -1,18 +1,18 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format stagnant.stan
 data {
   int<lower=0> N;
-  real x[N];
-  real Y[N];
+  array[N] real x;
+  array[N] real Y;
 }
 parameters {
   real<lower=0> sigma;
   real<lower=0> alpha;
-  real beta[2];
+  array[2] real beta;
   simplex[N] theta;
 }
 model {
-  real log_probs[N];
-  real mu[N];
+  array[N] real log_probs;
+  array[N] real mu;
   theta ~ dirichlet(rep_vector(0.01, N));
   alpha ~ normal(0, 5);
   beta ~ normal(0, 5);
@@ -77,17 +77,17 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
   $ ../../../../../../../install/default/bin/stanc --auto-format stagnant2.stan
 data {
   int<lower=0> N;
-  real x[N];
-  real Y[N];
+  array[N] real x;
+  array[N] real Y;
 }
 parameters {
   real<lower=0> sigma;
   real<lower=0> alpha;
-  real beta[2];
+  array[2] real beta;
   real<lower=min(x), upper=max(x)> x_change;
 }
 model {
-  real mu[N];
+  array[N] real mu;
   alpha ~ normal(0, 5);
   beta ~ normal(0, 5);
   sigma ~ cauchy(0, 5);

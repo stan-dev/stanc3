@@ -1,7 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format fire.stan
 data {
   int<lower=0> N;
-  real x[N];
+  array[N] real x;
 }
 parameters {
   real<lower=0> alpha;
@@ -12,7 +12,7 @@ transformed parameters {
   real mu = log(theta) - alpha * sigma * sigma;
 }
 model {
-  real lpa[N];
+  array[N] real lpa;
   real tmp;
   real log_tmp;
   real neg_log1p_temp;
