@@ -1658,11 +1658,11 @@ Matrix expression must have all row_vector entries. Found type int.
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
 
-Syntax error in 'matrix_expr_bad3.stan', line 2, column 38 to column 39, parsing error:
+Syntax error in 'matrix_expr_bad3.stan', line 2, column 25 to column 38, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ [ 1 ] ] ], [ [ 2 ] ] ];
-                                                ^
+                                               ^
      3:  }
      4:  model {
    -------------------------------------------------

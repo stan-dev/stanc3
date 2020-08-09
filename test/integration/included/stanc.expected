@@ -273,7 +273,7 @@ Syntax error in '../included/parse-err.stan', line 2, column 2, included from
                   ^
    -------------------------------------------------
 
-Expected identifier after type and array dimensions in declaration.
+Only top-level variable declarations allowed in data and parameters blocks.
 
 
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_semantic_error.stan

@@ -14919,7 +14919,7 @@ program: DATABLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 ## ASSIGN
 ##
 
-Expected an expression on the right-hand side of an assignment.
+Assignments are not allowed in this block.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTPOW REALNUMERAL WHILE
 ##
