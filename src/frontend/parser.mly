@@ -27,7 +27,7 @@ let reducearray (sbt, l) =
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
 %token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE
-%token VOID INT REAL VECTOR ROWVECTOR MATRIX ORDERED POSITIVEORDERED SIMPLEX
+%token VOID INT REAL VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
@@ -282,7 +282,7 @@ decl(type_rule, rhs):
     }
   (* Array dimensions option must be inlined, else it will conflict with first
      rule. *)
-  | ty=type_rule dims_opt=ioption(dims)
+  | dims_opt=ioption(arr_dims) ty=type_rule
       id_rhs=id_and_optional_assignment(rhs) SEMICOLON
     { (fun ~is_global ->
       (* map over each variable in v (often only one), assigning each the same
@@ -401,6 +401,10 @@ offset_mult:
     { grammar_logger "offset" ; Offset e }
   | MULTIPLIER ASSIGN e=constr_expression
     { grammar_logger "multiplier" ; Multiplier e }
+
+arr_dims:
+  | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
+               { grammar_logger "array dims" ; l  }
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
