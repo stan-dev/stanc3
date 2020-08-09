@@ -354,8 +354,8 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
         | Unsized _ -> []
       in
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type (pst, trans)
-            pp_identifier id pp_init init )
+          Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
+            (pst, trans) pp_identifier id pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       with_box ppf 0 (fun () ->
