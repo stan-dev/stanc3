@@ -299,6 +299,20 @@ decl(type_rule, rhs):
                 }
           ; smeta= {
               loc=
+                (* From the docs:
+                We remark that, if the current production has an empty right-hand side,
+                then $startpos and $endpos are equal, and (by convention) are the end
+                position of the most recently parsed symbol (that is, the symbol that
+                happens to be on top of the automaton’s stack when this production is
+                reduced). If the current production has a nonempty right-hand side,
+                then $startpos is the same as $startpos($1) and $endpos is the same
+                as $endpos($n), where n is the length of the right-hand side.
+
+
+                So when dims_opt is empty, it uses the preview token as its startpos,
+                but that makes the whole declaration think it starts at the previous
+                token
+                 *)
                 let startpos = match dims_opt with
                   | None -> $startpos(ty)
                   | Some _ -> $startpos
