@@ -5,16 +5,6 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
-(*
-
-     -Only top-level variable declarations are allowed in data and parameter blocks.
-                                                                   -
-                                                                   +(Parse error state 723)
--Expected top-level variable declaration, statement or "}".
--
-+(Parse error state 775)
-
- *)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -44,7 +34,12 @@ let reducearray (sbt, l) =
 %token TRUNCATE
 %token EOF
 
-(* Unreachable tokens are useful for differentiating states *)
+(* UNREACHABLE tokens will never be produced by the lexer, so we can use them as
+   "a thing that will never parse". This is useful in a few places. For example,
+   when we the parser to differentiate between different failing states for
+   error message purposes, we can partially accept one of them and then fail by
+   requiring an UNREACHABLE token. That's the approach taken in decl_identifier.
+ *)
 %token UNREACHABLE
 
 %right COMMA
@@ -241,10 +236,8 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-      let loc = Location_span.of_positions_exn $startpos $endpos in
-      { expr= Variable {name= "UNREACHABLE"; id_loc= loc}
-      ; emeta= {loc}
-      }
+      raise (Failure "This should be unreachable; the UNREACHABLE token should \
+                      never be produced")
     }
 
 optional_assignment(rhs):
