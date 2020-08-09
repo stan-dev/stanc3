@@ -135,6 +135,11 @@ generated quantities {
   print("gq_m_ar_dim2_2 = ", gq_m_ar_dim2_2);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_mixed.stan
+transformed parameters {
+  real td_arr33[3, 3] = {{1, 2, 3}, {1, 2., 3}, {1., 2., 3}};
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_primitives.stan
 functions {
   int[] f1_arr_int() {
