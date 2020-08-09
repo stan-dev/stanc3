@@ -298,7 +298,12 @@ decl(type_rule, rhs):
                 ; is_global
                 }
           ; smeta= {
-              loc= Location_span.of_positions_exn $startpos $endpos
+              loc=
+                let startpos = match dims_opt with
+                  | None -> $startpos(ty)
+                  | Some _ -> $startpos
+                in
+                Location_span.of_positions_exn startpos $endpos
             }
           }
     )}
