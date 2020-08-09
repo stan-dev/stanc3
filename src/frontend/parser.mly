@@ -204,7 +204,12 @@ arg_decl:
     {  grammar_logger "arg_decl" ;
        match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
+always(x):
+  | x=x
+    { Some(x) }
+
 unsized_type:
+  | ARRAY ud=always(unsized_dims) bt=basic_type
   | bt=basic_type ud=option(unsized_dims)
     {  grammar_logger "unsized_type" ;
        let rec reparray n x =
