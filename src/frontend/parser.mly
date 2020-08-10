@@ -94,28 +94,28 @@ function_block:
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; tvd }
+    { grammar_logger "data_block" ; List.concat tvd }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ;  tvds }
+    {  grammar_logger "transformed_data_block" ; List.concat tvds }
     (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; tvd }
+    { grammar_logger "parameters_block" ; List.concat tvd }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; tvds }
+    { grammar_logger "transformed_parameters_block" ; List.concat tvds }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; vds  }
+    { grammar_logger "model_block" ; List.concat vds  }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; tvds }
+    { grammar_logger "generated_quantities_block" ; List.concat tvds }
 
 (* function definitions *)
 identifier:
@@ -267,7 +267,7 @@ decl(type_rule, rhs):
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
     { (fun ~is_global ->
-      { stmt=
+      [{ stmt=
           VarDecl {
               decl_type= Sized (reducearray (fst ty, dims))
             ; transformation= snd ty
@@ -278,17 +278,17 @@ decl(type_rule, rhs):
       ; smeta= {
           loc= Location_span.of_positions_exn $startpos $endpos
         }
-    })
+    }])
     }
   (* Array dimensions option must be inlined, else it will conflict with first
      rule. *)
   | dims_opt=ioption(arr_dims) ty=type_rule
-      id_rhs=id_and_optional_assignment(rhs) SEMICOLON
+      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
       (* map over each variable in v (often only one), assigning each the same
          type. *)
       let dims = Option.value dims_opt ~default:[] in
-      let (id, rhs_opt) = id_rhs in
+      List.map vs ~f:(fun (id, rhs_opt) ->
           { stmt=
               VarDecl {
                   decl_type= Sized (reducearray (fst ty, dims))
@@ -319,7 +319,7 @@ decl(type_rule, rhs):
                 in
                 Location_span.of_positions_exn startpos $endpos
             }
-          }
+          })
     )}
 
 var_decl:
@@ -719,17 +719,17 @@ nested_statement:
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+    {  grammar_logger "block_statement" ; Block (List.concat l) } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
 (* statement or var decls *)
 vardecl_or_statement:
   | s=statement
-    { grammar_logger "vardecl_or_statement_statement" ; s }
+    { grammar_logger "vardecl_or_statement_statement" ; [s] }
   | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
   | s=statement
-    { grammar_logger "top_vardecl_or_statement_statement" ; s }
+    { grammar_logger "top_vardecl_or_statement_statement" ; [s] }
   | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }
