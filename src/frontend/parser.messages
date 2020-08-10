@@ -15644,3 +15644,15 @@ program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ASSI
 ##
 
 Expected identifer on the left-hand side of an assignment.
+
+program: MODELBLOCK LBRACE REAL TRUNCATE COMMA UNREACHABLE
+##
+## Ends in an error in state: 499.
+##
+## separated_nonempty_list(COMMA,id_and_optional_assignment(expression)) -> id_and_optional_assignment(expression) COMMA . separated_nonempty_list(COMMA,id_and_optional_assignment(expression)) [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## id_and_optional_assignment(expression) COMMA
+##
+
+Unreachable state.
