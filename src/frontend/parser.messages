@@ -14806,19 +14806,6 @@ program: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ASSIGN UNREACHA
 
 Unreachable state.
 
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL TRUNCATE ASSIGN UNREACHABLE WHILE
-##
-## Ends in an error in state: 698.
-##
-## separated_nonempty_list(COMMA,id_and_optional_assignment(no_assign)) -> id_and_optional_assignment(no_assign) . [ SEMICOLON ]
-## separated_nonempty_list(COMMA,id_and_optional_assignment(no_assign)) -> id_and_optional_assignment(no_assign) . COMMA separated_nonempty_list(COMMA,id_and_optional_assignment(no_assign)) [ SEMICOLON ]
-##
-## The known suffix of the stack is as follows:
-## id_and_optional_assignment(no_assign)
-##
-
-Unreachable state.
-
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL TRUNCATE WHILE
 ##
 ## Ends in an error in state: 701.
@@ -15623,7 +15610,7 @@ program: DATABLOCK LBRACE REAL TRUNCATE COMMA UNREACHABLE
 ## id_and_optional_assignment(no_assign) COMMA
 ##
 
-Unreachable state.
+Ill-formed expression. Expected another identifier after comma.
 
 program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ASSIGN IDENTIFIER COMMA
 ##
@@ -15655,4 +15642,4 @@ program: MODELBLOCK LBRACE REAL TRUNCATE COMMA UNREACHABLE
 ## id_and_optional_assignment(expression) COMMA
 ##
 
-Unreachable state.
+Ill-formed expression. Expected another identifier after comma.
