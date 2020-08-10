@@ -843,6 +843,8 @@ let rec semantic_check_sizedtype cf = function
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
+  | STuple _ ->
+    raise_s [%message "TUPLE STUB"]
 
 (* -- Transformations ------------------------------------------------------- *)
 let semantic_check_transformation cf ut = function

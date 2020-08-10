@@ -426,7 +426,13 @@ let rec update_expr_ad_levels autodiffable_variables
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
           } }
   | TupleIndexed (e, ix) ->
-    (* TODO Tuples should be treated as n Vars *)
+    (* TUPLE TODO
+       For the purposes of program analysis, tuples should be treated as n Vars
+       So for example, autodiffable_variables should possibly include tuple.1
+
+       In the mean time, what's the most conservative?
+       Make the whole thing AD when any part is?
+    *)
     let e' = update_expr_ad_levels autodiffable_variables e in
     { pattern= TupleIndexed (e', ix)
     ; meta=

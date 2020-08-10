@@ -34,12 +34,20 @@ module Fixed = struct
           Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
             pp_e texpr pp_builtin_syntax ":" pp_e fexpr
       | Indexed (expr, indices) ->
-        Fmt.pf ppf {|@[%a%a@]|} pp_e expr
-          ( if List.is_empty indices then fun _ _ -> ()
+          Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+            ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
-          indices
+            indices
       | TupleIndexed (expr, ix) ->
-        Fmt.pf ppf {|@[(%a).%d@]|} pp_e expr ix
+          (* TUPLE DESIGN
+             Do I need the extra parens here?
+             ((1,2)).1
+             only if there might be tuple operators, like
+             (1,1) + (2,2)
+             needs parens
+             Defaulting to conservative parens
+          *)
+          Fmt.pf ppf {|@[(%a).%d@]|} pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
@@ -147,7 +155,7 @@ module Labelled = struct
     | Indexed (e, idxs) ->
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
     | TupleIndexed (e, _) ->
-      associate ~init:assocs e
+        associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -214,7 +222,7 @@ module Helpers = struct
       match e.pattern with
       | Var _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
-      (* rybern: why do we error here? we can also index container literals *)
+      (* rybern: shouldn't we also handle adding an index to e.g. container literals? *)
       | _ -> raise_s [%message "These should go away with Ryan's LHS"]
     in
     Fixed.{meta; pattern}

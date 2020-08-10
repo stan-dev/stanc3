@@ -313,7 +313,11 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
-    | SInt | SReal | SRowVector _ | STuple _ ->
+    (* TUPLE MAYBE
+       I have very little idea of what this function does, this is my best guesses
+    *)
+    | STuple ts -> STuple (List.map ~f:(shrink_eigen f) ts)
+    | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -322,6 +326,9 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (d1, d2) -> SVector (f d1 d2)
+    (* TUPLE MAYBE
+       I have very little idea of what this function does, this is my best guesses
+    *)
     | SInt | SReal | SRowVector _ | SVector _ | STuple _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -444,6 +451,8 @@ let check_sizedtype name =
         let e = trans_expr s in
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
+    | STuple _ ->
+      raise_s [%message "TUPLE STUB"]
   in
   function
   | Type.Sized st ->
@@ -774,6 +783,8 @@ let trans_sizedtype_decl declc tr name =
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
         (l @ ll, SizedType.SArray (t, s))
+    | STuple _ ->
+      raise_s [%message "TUPLE STUB"]
   in
   go 1
 

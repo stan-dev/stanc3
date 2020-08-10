@@ -54,7 +54,7 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
   | STuple ts ->
-    List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
+      List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
 
 let is_scalar = function SInt | SReal -> true | _ -> false
 let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
@@ -64,10 +64,22 @@ let rec dims_of st =
   | SArray (t, _) -> dims_of t
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal | STuple _ -> []
+  (* TUPLE MAYBE
+     What does it mean for tuples to have dimensions?
+     I think dims are used to emit parameter names
+     But this is the only non-rectangular container
+     Defaulting to 'no dimensions'
+  *)
+  | STuple _
+  | SInt | SReal -> []
 
 let rec get_dims = function
-  | SInt | SReal | STuple _ -> []
+  (* TUPLE MAYBE
+     Same as above?
+     Although this one seems to have a sense of recursion
+  *)
+  | STuple _
+  | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t

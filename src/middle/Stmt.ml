@@ -274,7 +274,8 @@ module Helpers = struct
     let stmt =
       Fixed.Pattern.SList
         (List.mapi ts ~f:(fun tuple_ix t ->
-             let e = Expr.Helpers.add_tuple_index iteratee tuple_ix in
+             (* We need ix+1 because Stan tuples are indexed from 1 *)
+             let e = Expr.Helpers.add_tuple_index iteratee (tuple_ix + 1) in
              bodyfn t e))
     in
     Fixed.{meta; pattern= stmt}
@@ -328,6 +329,9 @@ module Helpers = struct
     | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+    (* TUPLE MAYBE
+       I think this is right but I'm not familiar with the application
+    *)
     | STuple ts ->
       for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
 

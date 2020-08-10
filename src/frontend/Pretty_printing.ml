@@ -67,7 +67,7 @@ and pp_unsizedtype ppf = function
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp_unsizedtype ut2
   (* note from rybern: why not always delegate to UnsizedType.pp like this?
-     isn't this doing the same thing? *)
+     isn't this doing the same thing as pp_unsizedtype? *)
   | UTuple ts -> Middle.UnsizedType.pp ppf (UTuple ts)
   | UFun (argtypes, rt) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
@@ -241,6 +241,8 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
+    (* TUPLE MAYBE
+       Not clear on the purpose here, do tuples need to be recursive? *)
     | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal | Sized (STuple _)
       ->
         Fmt.nop

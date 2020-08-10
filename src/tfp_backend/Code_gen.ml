@@ -52,6 +52,8 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
       raise_s [%message "Multi-indices not supported yet"]
   | Indexed (obj, indices) -> pf ppf "%a%a" pp_expr obj pp_indices indices
   | TupleIndexed (obj, ix) ->
+    (* This assumes that however TFP models tuples, it's compatible with
+       standard indexing *)
     pf ppf "%a[%d]" pp_expr obj ix
 
 and pp_indices ppf = function

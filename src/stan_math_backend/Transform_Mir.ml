@@ -99,6 +99,10 @@ let data_read smeta (decl_id, st) =
         |> swrap ]
   | UArray UInt | UArray UReal ->
       [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+  (* TUPLE STUB
+     Data read from tuples
+     There seems to be dispatch to a FnReadData function, could foist to C++
+  *)
   | UTuple _ ->
     raise_s [%message "Reading from tuples not implemented."]
   | UFun _ | UMathLibraryFunction ->
@@ -450,7 +454,7 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-(* TODO TUPLES
+(* TUPLES TODO
    This section appears to be outdated in head
 
 let validate_sized decl_id meta transform st =
