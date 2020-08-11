@@ -21,6 +21,7 @@ let reducearray (sbt, l) =
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
+%token <string> REALNUMERALDOT
 %token <string> REALNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
@@ -535,10 +536,15 @@ constr_expression:
        emeta={loc=Location_span.of_positions_exn $startpos $endpos}}
     }
 
+real_numeral:
+  | r=REALNUMERAL
+  | r=REALNUMERALDOT
+  { r }
+
 common_expression:
   | i=INTNUMERAL
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
-  | r=REALNUMERAL
+  | r=real_numeral
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
@@ -561,6 +567,18 @@ common_expression:
     {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
+  | e=common_expression ix_str=REALNUMERALDOT
+    {  grammar_logger "common_expression tuple index" ;
+       match int_of_string_opt (String.drop_prefix ix_str 1) with
+       | None ->
+          raise (Failure ("Could not parse integer from string " ^ ix_str
+                          ^ " in from tuple index. This should never happen."))
+       | Some ix ->
+          TupleIndexed ({expr=e;
+                         emeta=
+                           {loc= Location_span.of_positions_exn $startpos $endpos}},
+                        ix)
+    }
 
 %inline prefixOp:
   | BANG

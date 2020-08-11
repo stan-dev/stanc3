@@ -23,8 +23,9 @@ let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
 let exp_literal = ['e' 'E'] ['+' '-']? integer_constant
 let real_constant1 = integer_constant '.' integer_constant? exp_literal?
-let real_constant2 = '.' integer_constant exp_literal?
+let real_constant2 = '.' integer_constant exp_literal
 let real_constant3 = integer_constant exp_literal
+let real_constant_dot = '.' integer_constant
 let real_constant = real_constant1 | real_constant2 | real_constant3
 let space = ' ' | '\t' | '\012'
 let newline = '\r' | '\n' | '\r'*'\n'
@@ -173,6 +174,8 @@ rule token = parse
 (* Constants and identifiers *)
   | integer_constant as i     { lexer_logger ("int_constant " ^ i) ;
                                 Parser.INTNUMERAL (lexeme lexbuf) }
+  | real_constant_dot as r    { lexer_logger ("real_constant_dot " ^ r) ;
+                                Parser.REALNUMERALDOT (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
