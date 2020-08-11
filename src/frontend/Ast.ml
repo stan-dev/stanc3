@@ -265,6 +265,8 @@ let rec lvalue_of_expr {expr; emeta} =
       ( match expr with
       | Variable s -> LVariable s
       | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
+      (* TUPLE STUB *)
+      | TupleIndexed (_, _) -> failwith "Cannot yet use a tuple index on the LHS" 
       | _ -> failwith "Trying to convert illegal expression to lval." )
   ; lmeta= emeta }
 
