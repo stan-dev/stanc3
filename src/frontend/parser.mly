@@ -282,46 +282,69 @@ decl(type_rule, rhs):
     }
   (* Array dimensions option must be inlined, else it will conflict with first
      rule. *)
-  | dims_opt=ioption(arr_dims) ty=type_rule
-      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
+  | ty=higher_type(type_rule)
+         vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
       (* map over each variable in v (often only one), assigning each the same
          type. *)
-      let dims = Option.value dims_opt ~default:[] in
+      let (type_, trans) = ty in
       List.map vs ~f:(fun (id, rhs_opt) ->
           { stmt=
               VarDecl {
-                  decl_type= Sized (reducearray (fst ty, dims))
-                ; transformation= snd ty
+                  decl_type= Sized type_
+                ; transformation= trans
                 ; identifier= id
                 ; initial_value= rhs_opt
                 ; is_global
                 }
           ; smeta= {
               loc=
-                (* From the docs:
-                We remark that, if the current production has an empty right-hand side,
-                then $startpos and $endpos are equal, and (by convention) are the end
-                position of the most recently parsed symbol (that is, the symbol that
-                happens to be on top of the automaton’s stack when this production is
-                reduced). If the current production has a nonempty right-hand side,
-                then $startpos is the same as $startpos($1) and $endpos is the same
-                as $endpos($n), where n is the length of the right-hand side.
-
-
-                So when dims_opt is empty, it uses the preview token as its startpos,
-                but that makes the whole declaration think it starts at the previous
-                token
-                 *)
-                let startpos = match dims_opt with
-                  | None -> $startpos(ty)
-                  | Some _ -> $startpos
-                in
-                Location_span.of_positions_exn startpos $endpos
+                Location_span.of_positions_exn $startpos $endpos
             }
           })
     )}
 
+%inline higher_type(type_rule):
+  | ty=array_type(type_rule)
+  | ty=tuple_type(type_rule)
+  | ty=type_rule
+  {
+    ty
+  }
+
+array_type(type_rule):
+  | dims=arr_dims ty=type_rule
+  | dims=arr_dims ty=tuple_type(type_rule)
+  {
+    let (type_, trans) = ty in
+    ((reducearray (type_, dims)), trans)
+  }
+
+tuple_type(type_rule):
+  | LPAREN ts=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
+  {
+    let trans = snd (List.hd_exn ts) in
+    let types = List.map ~f:fst ts in
+    (SizedType.STuple types, trans)
+  }
+
+  (* From the docs:
+       We remark that, if the current production has an empty right-hand side,
+       then $startpos and $endpos are equal, and (by convention) are the end
+       position of the most recently parsed symbol (that is, the symbol that
+       happens to be on top of the automaton’s stack when this production is
+       reduced). If the current production has a nonempty right-hand side,
+       then $startpos is the same as $startpos($1) and $endpos is the same
+       as $endpos($n), where n is the length of the right-hand side.
+
+       So when dims_opt is empty, it uses the preview token as its startpos,
+       but that makes the whole declaration think it starts at the previous
+       token
+   *)
+  (* let startpos = match dims_opt with
+   *   | None -> $startpos(ty)
+   *   | Some _ -> $startpos
+   * in *)
 var_decl:
   | d_fn=decl(sized_basic_type, expression)
     { grammar_logger "var_decl" ;
