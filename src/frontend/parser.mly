@@ -204,17 +204,31 @@ always(x):
   | x=x
     { Some(x) }
 
-unsized_type:
-  | ARRAY ud=always(unsized_dims) bt=basic_type
-  | bt=basic_type ud=option(unsized_dims)
-    {  grammar_logger "unsized_type" ;
-       let rec reparray n x =
-           if n <= 0 then x else reparray (n-1) (UnsizedType.UArray x) in
-       let size =
-         match ud with Some d -> 1 + d | None -> 0
-       in
-       reparray size bt
-    }
+%inline unsized_type:
+  | ty=unsized_array_type
+  | ty=unsized_tuple_type
+  | ty=basic_type
+  {
+    ty
+  }
+
+unsized_array_type:
+  (* TUPLE DECISION include old unsized array syntax, but keep it to basic types *)
+  | ty=basic_type d=unsized_dims
+  | ARRAY d=unsized_dims ty=unsized_type
+  {  grammar_logger "unsized_array_type" ;
+     let rec reparray n x =
+       if n <= 0 then x else reparray (n-1) (UnsizedType.UArray x)
+     in
+     reparray (d+1) ty
+  }
+
+unsized_tuple_type:
+  | LPAREN ts=separated_nonempty_list(COMMA, unsized_type) RPAREN
+  {
+    UnsizedType.UTuple ts
+  }
+
 
 basic_type:
   | INT
