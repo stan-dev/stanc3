@@ -88,8 +88,10 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | TupleIndexed (lhs, i) ->
       TupleIndexed (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
+    (* TUPLE MAYBE IMPL *)
     FunApp
-      (CompilerInternal, Internal_fun.to_string FnMakeTuple, trans_exprs eles)
+      (CompilerInternal, "std::make_tuple", trans_exprs eles)
+      (* (CompilerInternal, Internal_fun.to_string FnMakeTuple, trans_exprs eles) *)
     |> ewrap
 
 and trans_idx = function
@@ -457,8 +459,10 @@ let check_sizedtype name =
         let e = trans_expr s in
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
-    | STuple _ ->
-      raise_s [%message "TUPLE STUB"]
+    | STuple ts ->
+      let sizedtypes = List.map ~f:sizedtype ts in
+      let (checks, types) = List.unzip sizedtypes in
+      (List.concat checks, SizedType.STuple types)
   in
   function
   | Type.Sized st ->

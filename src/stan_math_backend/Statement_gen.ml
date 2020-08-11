@@ -29,12 +29,19 @@ let pp_set_size ppf (decl_id, st, adtype) =
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
-    (* TUPLE STUB
+    (* TUPLE MAYBE IMPL initialization
        Something like:
          Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp_st) ts
          But it depends on the C++ tuple type
+       From https://en.cppreference.com/w/cpp/utility/tuple,
+       might have to be {} instead of ()
+
+       This is setting the initial value, which is filling the size if eigen
+
+       Need to be recursive
       *)
-    | STuple _ -> raise_s [%message "Tuple codegen not implmeneted"]
+    | (STuple ts) as t ->
+        pf ppf "%a{%a}" pp_st t (list ~sep:(Fmt.unit ", ") pp_size_ctor) ts
   in
   pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
   if contains_eigen (SizedType.to_unsized st) then

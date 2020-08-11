@@ -95,6 +95,10 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  (* TUPLE MAYBE IMPL probably wrong, don't know what scalar should be *)
+  | UTuple ts ->
+      pf ppf "std::tuple<%a>" (list ~sep:comma pp_unsizedtype_custom_scalar)
+        (List.map ~f:(fun t -> (scalar, t)) ts)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_local ppf (adtype, ut) =
@@ -450,8 +454,9 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
-  (* TUPLE STUB *)
-  | TupleIndexed _ -> raise_s [%message "Tuple codegen not implemented"]
+  (* TUPLE MAYBE IMPL indexing *)
+  | TupleIndexed (t, ix) ->
+    pf ppf "std::get<%d>(%a)" ix pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =
