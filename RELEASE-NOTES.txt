@@ -1,6 +1,16 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v.2.24.1 (11 August 2020)
+======================================================================
+
+Bugfixes:
+
+- added using std::pow to generated code
+- fixed code generation for pow()
+- added data quantifier to linspaced_* signatures
+- fixed code generation for empty matrices
+
 v.2.24.0 (28 July 2020)
 ======================================================================
 
