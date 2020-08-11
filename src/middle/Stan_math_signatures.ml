@@ -464,23 +464,35 @@ let add_binary_vec_int_real name =
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
-          add_unqualified (name, ReturnType (bare_array_type (i, j)), [UInt ; bare_array_type (i, j)]) )
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [UInt; bare_array_type (i, j)] ) )
         (List.range 0 8) )
-    [UnsizedType.UArray UReal; UVector; URowVector ; UMatrix ] ;
+    [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] ;
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
-          add_unqualified (name, ReturnType (bare_array_type (i, j)), [bare_array_type (UInt, j+1) ; bare_array_type (i, j)]) )
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [bare_array_type (UInt, j + 1); bare_array_type (i, j)] ) )
         (List.range 0 8) )
-    [UnsizedType.UArray UReal; UVector; URowVector ] ;
+    [UnsizedType.UArray UReal; UVector; URowVector] ;
   List.iter
     ~f:(fun i ->
-      add_unqualified (name, ReturnType (bare_array_type (UMatrix, i)), [bare_array_type (UInt, i+2) ; bare_array_type (UMatrix, i)]) )
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UMatrix, i))
+        , [bare_array_type (UInt, i + 2); bare_array_type (UMatrix, i)] ) )
     (List.range 0 8) ;
   List.iter
     ~f:(fun i ->
-      add_unqualified (name, ReturnType (bare_array_type (UReal, i)), [bare_array_type (UInt, i) ; UReal]) )
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UReal, i))
+        , [bare_array_type (UInt, i); UReal] ) )
     (List.range 0 8)
 
 let add_ternary name =
