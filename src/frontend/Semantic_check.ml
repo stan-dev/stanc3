@@ -781,6 +781,27 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
+  | TupleIndexed (e, i) ->
+      Validate.(
+        semantic_check_expression cf e
+        >>= fun typed ->
+        match typed.emeta.type_ with
+        | UTuple ts ->
+          (match List.nth ts i with
+           | Some t ->
+             (* TUPLE MAYBE ADLEVEL *)
+             mk_typed_expression ~expr:(TupleIndexed (typed, i)) ~ad_level:typed.emeta.ad_level
+               ~type_:t ~loc:emeta.loc
+             |> ok
+           | None ->
+             Semantic_error.tuple_index_invalid_index emeta.loc (List.length ts) i
+             |> Validate.error
+          )
+        | _ ->
+          Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
+          |> Validate.error
+      )
+
 
 and semantic_check_funapp ~is_cond_dist id es cf emeta =
   let name_check =

@@ -34,7 +34,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
          Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp_st) ts
          But it depends on the C++ tuple type
       *)
-    | STuple ts -> raise_s [%message "Tuple codegen not implmeneted"]
+    | STuple _ -> raise_s [%message "Tuple codegen not implmeneted"]
   in
   pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
   if contains_eigen (SizedType.to_unsized st) then

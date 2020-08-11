@@ -41,7 +41,10 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | TupleIndexInvalidIndex of int * int
+    | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t
+
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
@@ -224,6 +227,16 @@ module TypeError = struct
             name variadic_ode_generic_signature
             Fmt.(list UnsizedType.pp ~sep:comma)
             arg_tys
+    | TupleIndexInvalidIndex (ix_max, ix) ->
+      Fmt.pf ppf
+        "Found tuple index expression with index %d, but the tuple only \
+         indices 1-%d are valid."
+        ix ix_max
+    | TupleIndexNotTuple ut ->
+        Fmt.pf ppf
+        "Only tuple expressions can be indexed as a tuple. Instead, found \
+         type %a."
+        UnsizedType.pp ut
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -305,6 +318,7 @@ module TypeError = struct
           |> String.concat ~sep:"\n" )
           UnsizedType.pp ut
 end
+
 
 module IdentifierError = struct
   type t =
@@ -595,6 +609,12 @@ let illtyped_postfix_op loc op ut =
   TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
 
 let not_indexable loc ut = TypeError (loc, TypeError.NotIndexable ut)
+
+let tuple_index_invalid_index loc ix_max ix =
+  TypeError (loc, TypeError.TupleIndexInvalidIndex (ix_max, ix))
+
+let tuple_index_not_tuple loc ut =
+  TypeError (loc, TypeError.TupleIndexNotTuple ut)
 
 let ident_is_keyword loc name =
   IdentifierError (loc, IdentifierError.IsKeyword name)

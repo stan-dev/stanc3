@@ -39,6 +39,7 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
+  | TupleIndexed of 'e * int
 [@@deriving sexp, hash, compare, map]
 
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}

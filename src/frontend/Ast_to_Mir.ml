@@ -85,6 +85,8 @@ and trans_expr {Ast.expr; Ast.emeta} =
       |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
+  | TupleIndexed (lhs, i) ->
+      TupleIndexed (trans_expr lhs, i) |> ewrap
 
 and trans_idx = function
   | Ast.All -> All
