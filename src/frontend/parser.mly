@@ -323,21 +323,21 @@ decl(type_rule, rhs):
   | ty=array_type(type_rule)
   | ty=tuple_type(type_rule)
   | ty=type_rule
-  {
+  { grammar_logger "higher_type" ;
     ty
   }
 
 array_type(type_rule):
   | dims=arr_dims ty=type_rule
   | dims=arr_dims ty=tuple_type(type_rule)
-  {
+  { grammar_logger "array_type" ;
     let (type_, trans) = ty in
     ((reducearray (type_, dims)), trans)
   }
 
 tuple_type(type_rule):
   | LPAREN ts=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
-  {
+  { grammar_logger "tuple_type" ;
     let trans = snd (List.hd_exn ts) in
     let types = List.map ~f:fst ts in
     (SizedType.STuple types, trans)
@@ -549,6 +549,8 @@ common_expression:
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
+  | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
+    {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
