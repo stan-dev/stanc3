@@ -488,6 +488,7 @@ non_lhs:
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
   | e=expression op=postfixOp
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
+  (* This indexing should probably be in common_expression *)
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr=ue;
@@ -676,6 +677,16 @@ lhs:
     {  grammar_logger "lhs_index" ;
       {expr=Indexed (l, indices)
       ;emeta = { loc=Location_span.of_positions_exn $startpos $endpos}}}
+  | l=lhs ix_str=REALNUMERALDOT
+    {  grammar_logger "common_expression tuple index" ;
+       match int_of_string_opt (String.drop_prefix ix_str 1) with
+       | None ->
+          raise (Failure ("Could not parse integer from string " ^ ix_str
+                          ^ " in from tuple index. This should never happen."))
+       | Some ix ->
+          {expr= TupleIndexed (l, ix)
+          ;emeta= {loc= Location_span.of_positions_exn $startpos $endpos}}
+    }
 
 (* statements *)
 statement:
