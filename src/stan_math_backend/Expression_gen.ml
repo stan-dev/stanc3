@@ -456,7 +456,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
   (* TUPLE MAYBE IMPL indexing *)
   | TupleIndexed (t, ix) ->
-    pf ppf "std::get<%d>(%a)" ix pp_expr t
+    pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

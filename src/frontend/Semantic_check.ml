@@ -787,7 +787,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         >>= fun typed ->
         match typed.emeta.type_ with
         | UTuple ts ->
-          (match List.nth ts i with
+          (match List.nth ts (i - 1) with
            | Some t ->
              (* TUPLE MAYBE ADLEVEL *)
              mk_typed_expression ~expr:(TupleIndexed (typed, i)) ~ad_level:typed.emeta.ad_level
