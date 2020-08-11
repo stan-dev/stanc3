@@ -801,7 +801,20 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
           |> Validate.error
       )
-
+  | TupleExpr es ->
+    Validate.(
+      es
+      |> List.map ~f:(semantic_check_expression cf)
+      |> sequence
+      >>= fun ues ->
+      if List.is_empty ues then
+        Semantic_error.empty_tuple emeta.loc |> error
+      else
+        (* TUPLE MAYBE ADLEVEL *)
+        mk_typed_expression ~expr:(TupleExpr ues) ~ad_level:(expr_ad_lub ues)
+          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) ues)) ~loc:emeta.loc
+        |> ok
+    )
 
 and semantic_check_funapp ~is_cond_dist id es cf emeta =
   let name_check =

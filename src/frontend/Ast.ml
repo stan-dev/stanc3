@@ -40,6 +40,7 @@ type ('e, 'f) expression =
   | Paren of 'e
   | Indexed of 'e * 'e index list
   | TupleIndexed of 'e * int
+  | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map]
 
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}

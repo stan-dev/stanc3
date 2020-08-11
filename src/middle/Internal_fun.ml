@@ -3,6 +3,7 @@ open Core_kernel
 type t =
   | FnLength
   | FnMakeArray
+  | FnMakeTuple
   | FnMakeRowVec
   | FnNegInf
   | FnReadData

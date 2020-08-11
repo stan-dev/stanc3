@@ -165,6 +165,9 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
   | TupleIndexed (e, i) -> (
     Fmt.pf ppf "%a.%d" pp_expression e i )
+  | TupleExpr es ->
+    Fmt.pf ppf "(" ;
+    with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
 and pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)

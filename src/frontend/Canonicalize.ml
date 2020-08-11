@@ -180,7 +180,7 @@ let rec no_parens {expr; emeta} =
             ( keep_parens e
             , i)
       ; emeta }
-  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ ->
+  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | TupleExpr _ | CondDistApp _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =

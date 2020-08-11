@@ -349,6 +349,7 @@ module ExpressionError = struct
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | EmptyTuple
     | IntTooLarge
 
   let pp ppf = function
@@ -377,6 +378,8 @@ module ExpressionError = struct
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | EmptyTuple ->
+        Fmt.pf ppf "Tuple expressions must contain at least one element."
     | IntTooLarge ->
         Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
@@ -647,6 +650,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let empty_tuple loc = ExpressionError (loc, ExpressionError.EmptyTuple)
 let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =
