@@ -3941,6 +3941,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_2.stan
@@ -8297,6 +8298,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_3.stan
@@ -12653,6 +12655,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_ccdf_log_4.stan
@@ -17063,6 +17066,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_1.stan
@@ -20551,6 +20555,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_2.stan
@@ -24141,6 +24146,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_3.stan
@@ -27707,6 +27713,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_4.stan
@@ -31358,6 +31365,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_1.stan
@@ -34958,6 +34966,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_2.stan
@@ -38564,6 +38573,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_3.stan
@@ -42170,6 +42180,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_cdf_log_4.stan
@@ -45828,6 +45839,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_1.stan
@@ -49316,6 +49328,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_2.stan
@@ -52906,6 +52919,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_3.stan
@@ -56472,6 +56486,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format exp_mod_normal_log_4.stan
@@ -60123,5 +60138,6 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 

@@ -8,6 +8,9 @@ type identifier =
   {name: string; id_loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
+type comment = LineComment of string | MultiComment of string list
+[@@deriving sexp, hash, compare]
+
 (** Indices for array access *)
 type 'e index =
   | All
@@ -135,6 +138,7 @@ type ('e, 's, 'l, 'f) statement =
   | Print of 'e printable list
   | Reject of 'e printable list
   | Skip
+  | Blank
   | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
   | For of
@@ -179,14 +183,21 @@ type ('e, 'm, 'l, 'f) statement_with =
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped statements, which have location_spans as meta-data *)
-type untyped_statement =
-  (untyped_expression, located_meta, untyped_lval, unit) statement_with
+type stmt_located_meta =
+  { loc: Location_span.t sexp_opaque [@compare.ignore]
+  ; comments: comment list sexp_opaque }
 [@@deriving sexp, compare, map, hash]
 
-let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
+type untyped_statement =
+  (untyped_expression, stmt_located_meta, untyped_lval, unit) statement_with
+[@@deriving sexp, compare, map, hash]
+
+let mk_untyped_statement ~stmt ~loc ~comments : untyped_statement =
+  {stmt; smeta= {loc; comments}}
 
 type stmt_typed_located_meta =
   { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
+  ; comments: comment list sexp_opaque
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 
@@ -200,19 +211,27 @@ type typed_statement =
   statement_with
 [@@deriving sexp, compare, map, hash]
 
-let mk_typed_statement ~stmt ~loc ~return_type =
-  {stmt; smeta= {loc; return_type}}
+let mk_typed_statement ~stmt ~loc ~comments ~return_type =
+  {stmt; smeta= {loc; comments; return_type}}
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
 type 's program =
-  { functionblock: 's list option
+  { comments0: comment list
+  ; functionblock: 's list option
+  ; comments1: comment list
   ; datablock: 's list option
+  ; comments2: comment list
   ; transformeddatablock: 's list option
+  ; comments3: comment list
   ; parametersblock: 's list option
+  ; comments4: comment list
   ; transformedparametersblock: 's list option
+  ; comments5: comment list
   ; modelblock: 's list option
-  ; generatedquantitiesblock: 's list option }
+  ; comments6: comment list
+  ; generatedquantitiesblock: 's list option
+  ; comments7: comment list }
 [@@deriving sexp, hash, compare, map]
 
 (** Untyped programs (before type checking) *)
@@ -245,7 +264,59 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
         (fun _ -> ())
         stmt
-  ; smeta= {loc= smeta.loc} }
+  ; smeta= {loc= smeta.loc; comments= smeta.comments} }
+
+let rec stmt_without_comments : untyped_statement -> untyped_statement option =
+  function
+  | {stmt= Blank; _} -> None
+  | {stmt= Block s; smeta} ->
+      Some
+        { stmt= Block (List.filter_map ~f:stmt_without_comments s)
+        ; smeta= {smeta with comments= []} }
+  | {stmt; smeta} ->
+      Some
+        { stmt=
+            map_statement Fn.id
+              (fun x -> Option.value_exn (stmt_without_comments x))
+              Fn.id Fn.id stmt
+        ; smeta= {smeta with comments= []} }
+
+let program_without_comments
+    { functionblock
+    ; datablock
+    ; transformeddatablock
+    ; parametersblock
+    ; transformedparametersblock
+    ; modelblock
+    ; generatedquantitiesblock; _ } : untyped_program =
+  { comments0= []
+  ; functionblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) functionblock
+  ; comments1= []
+  ; datablock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) datablock
+  ; comments2= []
+  ; transformeddatablock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        transformeddatablock
+  ; comments3= []
+  ; parametersblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) parametersblock
+  ; comments4= []
+  ; transformedparametersblock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        transformedparametersblock
+  ; comments5= []
+  ; modelblock=
+      Option.map ~f:(List.filter_map ~f:stmt_without_comments) modelblock
+  ; comments6= []
+  ; generatedquantitiesblock=
+      Option.map
+        ~f:(List.filter_map ~f:stmt_without_comments)
+        generatedquantitiesblock
+  ; comments7= [] }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =

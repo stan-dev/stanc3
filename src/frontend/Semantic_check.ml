@@ -681,14 +681,14 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
             let hint ppf () =
+              let pp ppf e =
+                untyped_expression_of_typed_expression e
+                |> Pretty_printing.pp_expression ppf
+              in
               match (x.expr, y.expr) with
-              | IntNumeral x, _ ->
-                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_expression y
-              | _, Ast.IntNumeral y ->
-                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_expression x y
-              | _ ->
-                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_expression x
-                    Pretty_printing.pp_expression y
+              | IntNumeral x, _ -> Fmt.pf ppf "%s.0 / %a" x pp y
+              | _, Ast.IntNumeral y -> Fmt.pf ppf "%a / %s.0" pp x y
+              | _ -> Fmt.pf ppf "%a * 1.0 / %a" pp x pp y
             in
             Fmt.pr
               "@[<v>@[<hov 0>Info: Found int division at %s:@]@   @[<hov \
@@ -927,7 +927,7 @@ let semantic_check_nrfn_target ~loc ~cf id =
     then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
     else ok ())
 
-let semantic_check_nrfn_normal ~loc id es =
+let semantic_check_nrfn_normal ~loc ~comments id es =
   Validate.(
     match Symbol_table.look vm id.name with
     | Some (_, UFun (listedtypes, Void))
@@ -935,7 +935,7 @@ let semantic_check_nrfn_normal ~loc id es =
              (get_arg_types es) ->
         mk_typed_statement
           ~stmt:(NRFunApp (UserDefined, id, es))
-          ~return_type:NoReturnType ~loc
+          ~return_type:NoReturnType ~loc ~comments
         |> ok
     | Some (_, UFun (listedtypes, Void)) ->
         es
@@ -954,7 +954,7 @@ let semantic_check_nrfn_normal ~loc id es =
           id.name
         |> error)
 
-let semantic_check_nrfn_stan_math ~loc id es =
+let semantic_check_nrfn_stan_math ~loc ~comments id es =
   Validate.(
     match
       Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
@@ -962,7 +962,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
     | Some UnsizedType.Void ->
         mk_typed_statement
           ~stmt:(NRFunApp (StanLib, id, es))
-          ~return_type:NoReturnType ~loc
+          ~return_type:NoReturnType ~loc ~comments
         |> ok
     | Some (UnsizedType.ReturnType _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
@@ -973,19 +973,19 @@ let semantic_check_nrfn_stan_math ~loc id es =
         |> Semantic_error.illtyped_stanlib_fn_app loc id.name
         |> error)
 
-let semantic_check_nr_fnkind ~loc id es =
+let semantic_check_nr_fnkind ~loc ~comments id es =
   match fn_kind_from_application id es with
-  | StanLib -> semantic_check_nrfn_stan_math ~loc id es
-  | UserDefined -> semantic_check_nrfn_normal ~loc id es
+  | StanLib -> semantic_check_nrfn_stan_math ~loc ~comments id es
+  | UserDefined -> semantic_check_nrfn_normal ~loc ~comments id es
 
-let semantic_check_nr_fn_app ~loc ~cf id es =
+let semantic_check_nr_fn_app ~loc ~comments ~cf id es =
   Validate.(
     es
     |> List.map ~f:(semantic_check_expression cf)
     |> sequence
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
-    >>= semantic_check_nr_fnkind ~loc id)
+    >>= semantic_check_nr_fnkind ~loc ~comments id)
 
 (* -- Assignment ------------------------------------------------------------ *)
 
@@ -1008,7 +1008,7 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
   Assignment
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
-let semantic_check_assignment_operator ~loc assop lhs rhs =
+let semantic_check_assignment_operator ~loc ~comments assop lhs rhs =
   Validate.(
     let err =
       Semantic_error.illtyped_assignment loc assop lhs.emeta.type_
@@ -1020,7 +1020,7 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
           UnsizedType.check_of_same_type_mod_array_conv "" lhs.emeta.type_
             rhs.emeta.type_
         then
-          mk_typed_statement ~return_type:NoReturnType ~loc
+          mk_typed_statement ~return_type:NoReturnType ~loc ~comments
             ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
           |> ok
         else error err
@@ -1030,11 +1030,12 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
         |> Option.value_map ~default:(error err) ~f:(function
              | ReturnType _ -> error err
              | Void ->
-                 mk_typed_statement ~return_type:NoReturnType ~loc
+                 mk_typed_statement ~return_type:NoReturnType ~loc ~comments
                    ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
                  |> ok ))
 
-let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
+let semantic_check_assignment ~loc ~comments ~cf assign_lhs assign_op
+    assign_rhs =
   let assign_id = Ast.id_of_lvalue assign_lhs in
   let lhs = expr_of_lvalue assign_lhs |> semantic_check_expression cf
   and assop = semantic_check_assignmentoperator assign_op
@@ -1053,7 +1054,7 @@ let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
   Validate.(
     liftA2 tuple2 (liftA3 tuple3 lhs assop rhs) block
     >>= fun ((lhs, assop, rhs), block) ->
-    semantic_check_assignment_operator ~loc assop lhs rhs
+    semantic_check_assignment_operator ~loc ~comments assop lhs rhs
     |> apply_const (semantic_check_assignment_global ~loc ~cf ~block assign_id)
     |> apply_const (semantic_check_assignment_read_only ~loc assign_id))
 
@@ -1072,7 +1073,7 @@ let semantic_check_target_pe_usage ~loc ~cf =
     Semantic_error.target_plusequals_outisde_model_or_logprob loc
     |> Validate.error
 
-let semantic_check_target_pe ~loc ~cf e =
+let semantic_check_target_pe ~loc ~comments ~cf e =
   Validate.(
     semantic_check_expression cf e
     |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
@@ -1080,9 +1081,9 @@ let semantic_check_target_pe ~loc ~cf e =
     semantic_check_target_pe_expr_type ~loc ue
     |> map ~f:(fun _ ->
            mk_typed_statement ~stmt:(TargetPE ue) ~return_type:NoReturnType
-             ~loc ))
+             ~loc ~comments ))
 
-let semantic_check_incr_logprob ~loc ~cf e =
+let semantic_check_incr_logprob ~loc ~comments ~cf e =
   Validate.(
     semantic_check_expression cf e
     |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
@@ -1090,7 +1091,7 @@ let semantic_check_incr_logprob ~loc ~cf e =
     semantic_check_target_pe_expr_type ~loc ue
     |> map ~f:(fun _ ->
            mk_typed_statement ~stmt:(IncrementLogProb ue)
-             ~return_type:NoReturnType ~loc ))
+             ~return_type:NoReturnType ~loc ~comments ))
 
 (* -- Tilde (Sampling notation) --------------------------------------------- *)
 
@@ -1193,7 +1194,7 @@ let semantic_check_sampling_cdf_defined ~loc id truncation args =
         ok ()
     | _ -> error @@ Semantic_error.invalid_truncation_cdf_or_ccdf loc)
 
-let semantic_check_tilde ~loc ~cf distribution truncation arg args =
+let semantic_check_tilde ~loc ~comments ~cf distribution truncation arg args =
   Validate.(
     let ue = semantic_check_expression cf arg
     and ues = List.map ~f:(semantic_check_expression cf) args |> sequence
@@ -1210,29 +1211,34 @@ let semantic_check_tilde ~loc ~cf distribution truncation arg args =
     |> apply_const (can_truncate_distribution ~loc arg truncation)
     |> map ~f:(fun _ ->
            let stmt = Tilde {arg; distribution; args; truncation} in
-           mk_typed_statement ~stmt ~loc ~return_type:NoReturnType ))
+           mk_typed_statement ~stmt ~loc ~comments ~return_type:NoReturnType ))
 
 (* -- Break ----------------------------------------------------------------- *)
 (* Break and continue only occur in loops. *)
-let semantic_check_break ~loc ~cf =
+let semantic_check_break ~loc ~comments ~cf =
   Validate.(
     if cf.loop_depth = 0 then Semantic_error.break_outside_loop loc |> error
-    else mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc |> ok)
+    else
+      mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc ~comments
+      |> ok)
 
 (* -- Continue -------------------------------------------------------------- *)
 
-let semantic_check_continue ~loc ~cf =
+let semantic_check_continue ~loc ~comments ~cf =
   Validate.(
     (* Break and continue only occur in loops. *)
     if cf.loop_depth = 0 then Semantic_error.continue_outside_loop loc |> error
-    else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc |> ok)
+    else
+      mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
+        ~comments
+      |> ok)
 
 (* -- Return ---------------------------------------------------------------- *)
 
 (** No returns outside of function definitions
     In case of void function, no return statements anywhere
 *)
-let semantic_check_return ~loc ~cf e =
+let semantic_check_return ~loc ~comments ~cf e =
   Validate.(
     if not cf.in_returning_fun_def then
       Semantic_error.expression_return_outside_returning_fn loc |> error
@@ -1240,44 +1246,51 @@ let semantic_check_return ~loc ~cf e =
       semantic_check_expression cf e
       |> map ~f:(fun ue ->
              mk_typed_statement ~stmt:(Return ue)
-               ~return_type:(Complete (ReturnType ue.emeta.type_)) ~loc ))
+               ~return_type:(Complete (ReturnType ue.emeta.type_)) ~loc
+               ~comments ))
 
 (* -- Return `void` --------------------------------------------------------- *)
 
-let semantic_check_returnvoid ~loc ~cf =
+let semantic_check_returnvoid ~loc ~comments ~cf =
   Validate.(
     if (not cf.in_fun_def) || cf.in_returning_fun_def then
       Semantic_error.void_ouside_nonreturning_fn loc |> error
     else
       mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+        ~comments
       |> ok)
 
 (* -- Print ----------------------------------------------------------------- *)
 
-let semantic_check_print ~loc ~cf ps =
+let semantic_check_print ~loc ~comments ~cf ps =
   Validate.(
     ps
     |> List.map ~f:(semantic_check_printable cf)
     |> sequence
     |> map ~f:(fun ups ->
            mk_typed_statement ~stmt:(Print ups) ~return_type:NoReturnType ~loc
-       ))
+             ~comments ))
 
 (* -- Reject ---------------------------------------------------------------- *)
 
-let semantic_check_reject ~loc ~cf ps =
+let semantic_check_reject ~loc ~comments ~cf ps =
   Validate.(
     ps
     |> List.map ~f:(semantic_check_printable cf)
     |> sequence
     |> map ~f:(fun ups ->
            mk_typed_statement ~stmt:(Reject ups) ~return_type:AnyReturnType
-             ~loc ))
+             ~loc ~comments ))
 
 (* -- Skip ------------------------------------------------------------------ *)
 
-let semantic_check_skip ~loc =
-  mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc |> Validate.ok
+let semantic_check_skip ~loc ~comments =
+  mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc ~comments
+  |> Validate.ok
+
+let semantic_check_blank ~loc ~comments =
+  mk_typed_statement ~stmt:Blank ~return_type:NoReturnType ~loc ~comments
+  |> Validate.ok
 
 (* -- If-Then-Else ---------------------------------------------------------- *)
 
@@ -1304,7 +1317,8 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
       Validate.ok @@ Complete rt
   | AnyReturnType, AnyReturnType -> Validate.ok AnyReturnType
 
-let rec semantic_check_if_then_else ~loc ~cf pred_e s_true s_false_opt =
+let rec semantic_check_if_then_else ~loc ~comments ~cf pred_e s_true
+    s_false_opt =
   let us1 = semantic_check_statement cf s_true
   and uos2 =
     s_false_opt
@@ -1326,10 +1340,11 @@ let rec semantic_check_if_then_else ~loc ~cf pred_e s_true s_false_opt =
       |> Option.value ~default:NoReturnType
     in
     try_compute_ifthenelse_statement_returntype loc srt1 srt2
-    |> map ~f:(fun return_type -> mk_typed_statement ~stmt ~return_type ~loc))
+    |> map ~f:(fun return_type ->
+           mk_typed_statement ~stmt ~return_type ~loc ~comments ))
 
 (* -- While Statements ------------------------------------------------------ *)
-and semantic_check_while ~loc ~cf e s =
+and semantic_check_while ~loc ~comments ~cf e s =
   let us = semantic_check_statement {cf with loop_depth= cf.loop_depth + 1} s
   and ue =
     semantic_check_expression_of_int_or_real_type cf e
@@ -1339,7 +1354,7 @@ and semantic_check_while ~loc ~cf e s =
     (fun ue us ->
       mk_typed_statement
         ~stmt:(While (ue, us))
-        ~return_type:us.smeta.return_type ~loc )
+        ~return_type:us.smeta.return_type ~loc ~comments )
     ue us
 
 (* -- For Statements -------------------------------------------------------- *)
@@ -1356,8 +1371,8 @@ and semantic_check_loop_body ~cf loop_var loop_var_ty loop_body =
   in
   Symbol_table.end_scope vm ; us
 
-and semantic_check_for ~loc ~cf loop_var lower_bound_e upper_bound_e loop_body
-    =
+and semantic_check_for ~loc ~comments ~cf loop_var lower_bound_e upper_bound_e
+    loop_body =
   let ue1 =
     semantic_check_expression_of_int_type cf lower_bound_e
       "Lower bound of for-loop"
@@ -1378,7 +1393,7 @@ and semantic_check_for ~loc ~cf loop_var lower_bound_e upper_bound_e loop_body
                   ; lower_bound= ue1
                   ; upper_bound= ue2
                   ; loop_body= us })
-             ~return_type:us.smeta.return_type ~loc ))
+             ~return_type:us.smeta.return_type ~loc ~comments ))
 
 (* -- Foreach Statements ---------------------------------------------------- *)
 and semantic_check_foreach_loop_identifier_type ~loc ty =
@@ -1389,7 +1404,7 @@ and semantic_check_foreach_loop_identifier_type ~loc ty =
     | _ ->
         Semantic_error.array_vector_rowvector_matrix_expected loc ty |> error)
 
-and semantic_check_foreach ~loc ~cf loop_var foreach_expr loop_body =
+and semantic_check_foreach ~loc ~comments ~cf loop_var foreach_expr loop_body =
   Validate.(
     semantic_check_expression cf foreach_expr
     |> apply_const (semantic_check_identifier loop_var)
@@ -1401,7 +1416,7 @@ and semantic_check_foreach ~loc ~cf loop_var foreach_expr loop_body =
     |> map ~f:(fun us ->
            mk_typed_statement
              ~stmt:(ForEach (loop_var, ue, us))
-             ~return_type:us.smeta.return_type ~loc ))
+             ~return_type:us.smeta.return_type ~loc ~comments ))
 
 (* -- Blocks ---------------------------------------------------------------- *)
 and stmt_is_escape {stmt; _} =
@@ -1440,7 +1455,7 @@ and try_compute_block_statement_returntype loc srt1 srt2 =
    |AnyReturnType, AnyReturnType ->
       Validate.ok AnyReturnType
 
-and semantic_check_block ~loc ~cf stmts =
+and semantic_check_block ~loc ~comments ~cf stmts =
   Symbol_table.begin_scope vm ;
   (* Any statements after a break or continue or return or reject
      do not count for the return type.
@@ -1460,7 +1475,7 @@ and semantic_check_block ~loc ~cf stmts =
          )
     in
     map return_ty ~f:(fun return_type ->
-        mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
+        mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ~comments ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
@@ -1486,7 +1501,7 @@ and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
     then Semantic_error.transformed_params_int loc |> error
     else ok ())
 
-and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
+and semantic_check_var_decl_initial_value ~loc ~comments ~cf id init_val_opt =
   init_val_opt
   |> Option.value_map ~default:(Validate.ok None) ~f:(fun e ->
          let stmt =
@@ -1495,7 +1510,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
              ; assign_op= Assign
              ; assign_rhs= e }
          in
-         mk_untyped_statement ~loc ~stmt
+         mk_untyped_statement ~loc ~stmt ~comments
          |> semantic_check_statement cf
          |> Validate.map ~f:(fun ts ->
                 match (ts.stmt, ts.smeta.return_type) with
@@ -1506,7 +1521,8 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
                     in
                     fatal_error ~msg () ) )
 
-and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
+and semantic_check_var_decl ~loc ~comments ~cf sized_ty trans id init is_global
+    =
   let checked_stmt =
     semantic_check_sizedtype {cf with in_toplevel_decl= is_global} sized_ty
   in
@@ -1522,7 +1538,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     >>= fun (ust, utrans) ->
     let ut = SizedType.to_unsized ust in
     Symbol_table.enter vm id.name (cf.current_block, ut) ;
-    semantic_check_var_decl_initial_value ~loc ~cf id init
+    semantic_check_var_decl_initial_value ~loc ~comments ~cf id init
     |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
     |> apply_const (semantic_check_transformed_param_ty ~loc ~cf is_global ut)
     |> map ~f:(fun uinit ->
@@ -1534,7 +1550,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
                ; initial_value= uinit
                ; is_global }
            in
-           mk_typed_statement ~stmt ~loc ~return_type:NoReturnType ))
+           mk_typed_statement ~stmt ~loc ~comments ~return_type:NoReturnType ))
 
 (* -- Function definitions -------------------------------------------------- *)
 and semantic_check_fundef_overloaded ~loc id arg_tys rt =
@@ -1637,7 +1653,7 @@ and semantic_check_fundef_return_tys ~loc id return_type body =
     then ok ()
     else error @@ Semantic_error.incompatible_return_types loc)
 
-and semantic_check_fundef ~loc ~cf return_ty id args body =
+and semantic_check_fundef ~loc ~comments ~cf return_ty id args body =
   let uargs =
     List.map args ~f:(fun (at, ut, id) ->
         Validate.(
@@ -1706,34 +1722,37 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
            let stmt =
              FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
            in
-           mk_typed_statement ~return_type:NoReturnType ~loc ~stmt ))
+           mk_typed_statement ~return_type:NoReturnType ~loc ~comments ~stmt ))
 
 (* -- Top-level Statements -------------------------------------------------- *)
-and semantic_check_statement cf (s : Ast.untyped_statement) :
-    Ast.typed_statement Validate.t =
+and semantic_check_statement cf s : Ast.typed_statement Validate.t =
   let loc = s.smeta.loc in
+  let comments = s.smeta.comments in
   match s.stmt with
-  | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
+  | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~comments ~cf id es
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
-      semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs
-  | TargetPE e -> semantic_check_target_pe ~loc ~cf e
-  | IncrementLogProb e -> semantic_check_incr_logprob ~loc ~cf e
+      semantic_check_assignment ~loc ~comments ~cf assign_lhs assign_op
+        assign_rhs
+  | TargetPE e -> semantic_check_target_pe ~loc ~comments ~cf e
+  | IncrementLogProb e -> semantic_check_incr_logprob ~loc ~comments ~cf e
   | Tilde {arg; distribution; args; truncation} ->
-      semantic_check_tilde ~loc ~cf distribution truncation arg args
-  | Break -> semantic_check_break ~loc ~cf
-  | Continue -> semantic_check_continue ~loc ~cf
-  | Return e -> semantic_check_return ~loc ~cf e
-  | ReturnVoid -> semantic_check_returnvoid ~loc ~cf
-  | Print ps -> semantic_check_print ~loc ~cf ps
-  | Reject ps -> semantic_check_reject ~loc ~cf ps
-  | Skip -> semantic_check_skip ~loc
-  | IfThenElse (e, s1, os2) -> semantic_check_if_then_else ~loc ~cf e s1 os2
-  | While (e, s) -> semantic_check_while ~loc ~cf e s
+      semantic_check_tilde ~loc ~comments ~cf distribution truncation arg args
+  | Break -> semantic_check_break ~loc ~comments ~cf
+  | Continue -> semantic_check_continue ~loc ~comments ~cf
+  | Return e -> semantic_check_return ~loc ~comments ~cf e
+  | ReturnVoid -> semantic_check_returnvoid ~loc ~comments ~cf
+  | Print ps -> semantic_check_print ~loc ~comments ~cf ps
+  | Reject ps -> semantic_check_reject ~loc ~comments ~cf ps
+  | Skip -> semantic_check_skip ~loc ~comments
+  | Blank -> semantic_check_blank ~loc ~comments
+  | IfThenElse (e, s1, os2) ->
+      semantic_check_if_then_else ~loc ~comments ~cf e s1 os2
+  | While (e, s) -> semantic_check_while ~loc ~comments ~cf e s
   | For {loop_variable; lower_bound; upper_bound; loop_body} ->
-      semantic_check_for ~loc ~cf loop_variable lower_bound upper_bound
-        loop_body
-  | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
-  | Block vdsl -> semantic_check_block ~loc ~cf vdsl
+      semantic_check_for ~loc ~comments ~cf loop_variable lower_bound
+        upper_bound loop_body
+  | ForEach (id, e, s) -> semantic_check_foreach ~loc ~comments ~cf id e s
+  | Block vdsl -> semantic_check_block ~loc ~comments ~cf vdsl
   | VarDecl {decl_type= Unsized _; _} ->
       raise_s [%message "Don't support unsized declarations yet."]
   | VarDecl
@@ -1742,10 +1761,11 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       ; identifier
       ; initial_value
       ; is_global } ->
-      semantic_check_var_decl ~loc ~cf st transformation identifier
+      semantic_check_var_decl ~loc ~comments ~cf st transformation identifier
         initial_value is_global
   | FunDef {returntype; funname; arguments; body} ->
-      semantic_check_fundef ~loc ~cf returntype funname arguments body
+      semantic_check_fundef ~loc ~comments ~cf returntype funname arguments
+        body
 
 (* == Untyped programs ====================================================== *)
 
@@ -1789,13 +1809,21 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
 
 (* The actual semantic checks for all AST nodes! *)
 let semantic_check_program
-    { functionblock= fb
+    { comments0
+    ; functionblock= fb
+    ; comments1
     ; datablock= db
+    ; comments2
     ; transformeddatablock= tdb
+    ; comments3
     ; parametersblock= pb
+    ; comments4
     ; transformedparametersblock= tpb
+    ; comments5
     ; modelblock= mb
-    ; generatedquantitiesblock= gb } =
+    ; comments6
+    ; generatedquantitiesblock= gb
+    ; comments7 } =
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   unsafe_clear_symbol_table vm ;
@@ -1824,26 +1852,42 @@ let semantic_check_program
   Symbol_table.end_scope vm ;
   let ugb = semantic_check_ostatements_in_block ~cf GQuant gb in
   let mk_typed_prog ufb udb utdb upb utpb umb ugb : Ast.typed_program =
-    { functionblock= ufb
+    { comments0
+    ; functionblock= ufb
+    ; comments1
     ; datablock= udb
+    ; comments2
     ; transformeddatablock= utdb
+    ; comments3
     ; parametersblock= upb
+    ; comments4
     ; transformedparametersblock= utpb
+    ; comments5
     ; modelblock= umb
-    ; generatedquantitiesblock= ugb }
+    ; comments6
+    ; generatedquantitiesblock= ugb
+    ; comments7 }
   in
   let apply_to x f = Validate.apply ~f x in
   let check_correctness_invariant (decorated_ast : typed_program) :
       typed_program =
     if
       compare_untyped_program
-        { functionblock= fb
+        { comments0
+        ; functionblock= fb
+        ; comments1
         ; datablock= db
+        ; comments2
         ; transformeddatablock= tdb
+        ; comments3
         ; parametersblock= pb
+        ; comments4
         ; transformedparametersblock= tpb
+        ; comments5
         ; modelblock= mb
-        ; generatedquantitiesblock= gb }
+        ; comments6
+        ; generatedquantitiesblock= gb
+        ; comments7 }
         (untyped_program_of_typed_program decorated_ast)
       = 0
     then decorated_ast

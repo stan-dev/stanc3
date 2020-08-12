@@ -57,7 +57,7 @@ We expect "{" after "transformed parameters".
 
   $ ../../../../../install/default/bin/stanc blocks-bad2.stan
 
-Syntax error in 'blocks-bad2.stan', line 1, column 0 to column 12, parsing error:
+Syntax error in 'blocks-bad2.stan', line 1, column 11 to column 12, parsing error:
    -------------------------------------------------
      1:  functions {} cov_matrix
                      ^
@@ -112,7 +112,7 @@ Ill-formed expression. Expression expected after "!".
 
   $ ../../../../../install/default/bin/stanc blocks-bad7.stan
 
-Syntax error in 'blocks-bad7.stan', line 1, column 0 to column 20, parsing error:
+Syntax error in 'blocks-bad7.stan', line 1, column 19 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data { } .*=
                              ^
@@ -1621,7 +1621,7 @@ Syntax error in 'ill-formed-statement24.stan', line 1, column 28 to column 29, p
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "else"  or statement or variable declaration or "}".
+Expected a statement or variable declaration.
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement25.stan
@@ -1643,7 +1643,7 @@ Syntax error in 'ill-formed-statement26.stan', line 1, column 27 to column 28, p
                                      ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "else" or statement or variable declaration or "}" after conditional true branch.
+Expected a statement or variable declaration.
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
@@ -3395,7 +3395,7 @@ Only top-level variable declarations allowed in data and parameters blocks.
 
   $ ../../../../../install/default/bin/stanc statement-outside-of-block-bad1.stan
 
-Syntax error in 'statement-outside-of-block-bad1.stan', line 1, column 0 to column 8, parsing error:
+Syntax error in 'statement-outside-of-block-bad1.stan', line 1, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  data { } while
                  ^
@@ -3406,7 +3406,7 @@ Expected "transformed data {" or "parameters {" or "transformed parameters {" or
 
   $ ../../../../../install/default/bin/stanc statement-outside-of-block-bad2.stan
 
-Syntax error in 'statement-outside-of-block-bad2.stan', line 1, column 0 to column 13, parsing error:
+Syntax error in 'statement-outside-of-block-bad2.stan', line 1, column 12 to column 13, parsing error:
    -------------------------------------------------
      1:  functions { } while
                       ^

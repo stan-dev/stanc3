@@ -1,29 +1,48 @@
   $ ../../../../../../install/default/bin/stanc --auto-format arma11.stan
 data {
   int<lower=1> T;
+  // number of observations
   real y[T];
+  // observed outputs
 }
 parameters {
   real mu;
+  // mean term
   real phi;
+  // autoregression coeff
   real theta;
+  // moving avg coeff
   real<lower=0> sigma;
+  // noise scale
 }
 model {
   vector[T] nu;
+  // prediction for time t
   vector[T] err;
+  // error for time t
   nu[1] <- mu + phi * mu;
+  // assume err[0] == 0
   err[1] <- y[1] - nu[1];
   for (t in 2 : T) {
     nu[t] <- mu + phi * y[t - 1] + theta * err[t - 1];
     err[t] <- y[t] - nu[t];
   }
+  // priors
   mu ~ normal(0, 10);
   phi ~ normal(0, 2);
   theta ~ normal(0, 2);
   sigma ~ cauchy(0, 5);
+  // likelihood
   err ~ normal(0, sigma);
 }
+// alternative encoding:
+//
+// model {
+//   err <- 0;
+//   for (t in 2:T) {
+//     err <- y[t-1] - (mu + phi * y[t-1] + theta * err[t-1]);
+//     err ~ normal(0,sigma);
+//   }
 
 
 Warning: deprecated language construct used in 'arma11.stan', line 14, column 9:
@@ -78,15 +97,22 @@ Warning: deprecated language construct used in 'arma11.stan', line 18, column 12
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format arma11_alt.stan
+// ARMA(1,1) with Wayne Folta-style err encoding
 data {
   int<lower=1> T;
+  // number of observations
   real y[T];
+  // observed outputs
 }
 parameters {
   real mu;
+  // mean term
   real phi;
+  // autoregression coeff
   real theta;
+  // moving avg coeff
   real<lower=0> sigma;
+  // noise scale
 }
 model {
   real err;
@@ -142,15 +168,21 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format ma2.stan
 data {
   int<lower=3> T;
+  // number of observations
   vector[T] y;
+  // observation at time T
 }
 parameters {
   real mu;
+  // mean
   real<lower=0> sigma;
+  // error scale
   vector[2] theta;
+  // lag coefficients
 }
 transformed parameters {
   vector[T] epsilon;
+  // error terms
   epsilon[1] <- y[1] - mu;
   epsilon[2] <- y[2] - mu - theta[1] * epsilon[1];
   for (t in 3 : T) 
@@ -208,16 +240,23 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format maQ.stan
 data {
   int<lower=0> Q;
+  // num previous noise terms
   int<lower=3> T;
+  // num observations
   vector[T] y;
+  // observation at time t
 }
 parameters {
   real mu;
+  // mean
   real<lower=0> sigma;
+  // error scale
   vector[2] theta;
+  // error coeff, lag -t
 }
 transformed parameters {
   vector[T] epsilon;
+  // error term at time t
   for (t in 1 : T) {
     epsilon[t] <- y[t] - mu;
     for (q in 1 : min(t - 1, Q)) 
@@ -292,16 +331,23 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format stochastic-volatility-optimized.stan
 data {
   int<lower=0> T;
+  // # time points (equally spaced)
   vector[T] y;
+  // mean corrected return at time t
 }
 parameters {
   real mu;
+  // mean log volatility
   real<lower=-1, upper=1> phi;
+  // persistence of volatility
   real<lower=0> sigma;
+  // white noise shock scale
   vector[T] h_std;
+  // std log volatility time t
 }
 transformed parameters {
   vector[T] h;
+  // log volatility at time t
   h <- h_std * sigma;
   h[1] <- h[1] / sqrt(1 - phi * phi);
   h <- h + mu;
@@ -370,13 +416,19 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format stochastic-volatility.stan
 data {
   int<lower=0> T;
+  // # time points (equally spaced)
   vector[T] y;
+  // mean corrected return at time t
 }
 parameters {
   real mu;
+  // mean log volatility
   real<lower=-1, upper=1> phi;
+  // persistence of volatility
   real<lower=0> sigma;
+  // white noise shock scale
   vector[T] h;
+  // log volatility at time t
 }
 model {
   phi ~ uniform(-1, 1);

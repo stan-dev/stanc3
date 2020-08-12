@@ -1,4 +1,6 @@
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_add.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -8,7 +10,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -19,8 +24,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -31,27 +44,43 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int<lower=1> g;
+  // Number of groups
   int<lower=1, upper=g> group[nind];
+  // Groups
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   real beta1 = 0;
+  // Corner constraint
+  //  real beta1;
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
     last[i] = last_capture(y[i]);
+  //  beta1 = 0;      // Corner constraint
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   vector[n_occ_minus_1] gamma;
+  // Time effects
   vector<lower=0, upper=1>[g] p_g;
+  // Group-spec. recapture
   real beta2;
+  // Prior for difference in male and
+  // female survival
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
@@ -60,6 +89,7 @@ transformed parameters {
   vector[g] beta;
   beta[1] = beta1;
   beta[2] = beta2;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -73,8 +103,14 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  p_g ~ uniform(0, 1);
   beta2 ~ normal(0, 10) T[-10, 10];
   gamma ~ normal(0, 10);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -88,11 +124,22 @@ model {
 generated quantities {
   vector<lower=0, upper=1>[n_occ_minus_1] phi_g1;
   vector<lower=0, upper=1>[n_occ_minus_1] phi_g2;
+  // inv_logit was vectorized in Stan 2.13
   phi_g1 = inv_logit(gamma);
+  // Back-transformed survival of males
   phi_g2 = inv_logit(gamma + beta[2]);
+  // Back-transformed survival of females
+  /*
+  for (t in 1:n_occ_minus_1) {
+    phi_g1[t] = inv_logit(gamma[t]);
+    phi_g2[t] = inv_logit(gamma[t] + beta[2]);
+  }
+  */
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_age.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -102,7 +149,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -113,8 +163,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -125,15 +183,22 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int<lower=1> max_age;
+  // Maximum age
   int<lower=0, upper=max_age> x[nind, n_occasions - 1];
+  // Age
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -141,12 +206,17 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   vector<lower=0, upper=1>[max_age] beta;
+  // Mean survival
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
+  // Survival
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
+  // Recapture
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -160,6 +230,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  beta ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -172,6 +247,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_c_c.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -181,7 +258,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -192,8 +272,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -204,13 +292,18 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -218,12 +311,15 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -237,6 +333,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -249,6 +350,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_cov_raneff.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -258,7 +361,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -269,8 +375,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -281,15 +395,21 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   vector[n_occasions - 1] x;
+  // Covariate
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   vector<lower=0, upper=nind>[n_occasions] n_captured;
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -302,16 +422,25 @@ transformed data {
 }
 parameters {
   real beta;
+  // Slope parameter
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   vector[n_occ_minus_1] epsilon;
   real<lower=0, upper=10> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Compoud declaration was enabled in Stan 2.13
   real mu = logit(mean_phi);
+  //  real mu;
+  //  mu = logit(mean_phi);
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -325,6 +454,13 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 10);
+  // In case a weakly informative prior is used
+  //  sigma ~ normal(5, 2.5);
   beta ~ normal(0, 100);
   epsilon ~ normal(0, sigma);
   for (i in 1 : nind) {
@@ -341,10 +477,18 @@ generated quantities {
   real<lower=0> sigma2;
   vector<lower=0, upper=1>[n_occ_minus_1] phi_est;
   sigma2 = square(sigma);
+  // inv_logit was vectorized in Stan 2.13
   phi_est = inv_logit(mu + beta * x + epsilon);
+  // Yearly survival
+  /*
+  for (t in 1:n_occ_minus_1)
+    phi_est[t] = inv_logit(mu + beta * x[t] + epsilon[t]); 
+  */
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_group.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -354,7 +498,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -365,8 +512,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -377,15 +532,22 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int<lower=1> g;
+  // Number of groups
   int<lower=1, upper=g> group[nind];
+  // Groups
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -393,12 +555,15 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[g] phi_g;
+  // Group-specific survival
   vector<lower=0, upper=1>[g] p_g;
+  // Group-specific recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -412,6 +577,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //   phi_g ~ uniform(0, 1);
+  //   p_g ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -424,6 +594,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_group_raneff.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -433,7 +605,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -444,8 +619,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -456,15 +639,23 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int<lower=1> g;
+  // Number of groups
   int<lower=1, upper=g> group[nind];
+  // Groups
 }
 transformed data {
+  // Compoud declaration is enabled in Stan 2.13
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -473,13 +664,18 @@ transformed data {
 parameters {
   vector[g] beta;
   real mean_beta;
+  // Logit of mean survival
   real<lower=0, upper=10> sigma;
+  // SD of logit of survival variability
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
   real<lower=0, upper=1> mean_p;
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -493,8 +689,16 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  phi_g ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 10);
+  // In case a weakly informative prior is used
+  //  sigma ~ normal(5, 2.5);
   beta ~ normal(mean_beta, sigma);
   mean_beta ~ normal(0, sqrt(1000));
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -508,11 +712,14 @@ model {
 generated quantities {
   real<lower=0, upper=1> mean_phi;
   vector<lower=0, upper=1>[g] phi_g;
+  // Group-specific survival
   mean_phi = inv_logit(mean_beta);
   phi_g = inv_logit(beta);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_ind_raneff.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -522,7 +729,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -533,8 +743,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         t_curr = n_occasions - t;
         t_next = t_curr + 1;
         chi[i, t_curr] = (1 - phi[i, t_curr])
@@ -547,13 +765,18 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -561,15 +784,20 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   vector[nind] epsilon;
   real<lower=0, upper=5> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
   real mu;
+  // Constraints
   mu = logit(mean_phi);
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
@@ -584,7 +812,15 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 5);
+  // In case a weaily informative prior is used
+  //  sigma ~ normal(2.5, 1.25);
   epsilon ~ normal(0, sigma);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -603,32 +839,51 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl.stan
 data {
   int<lower=0> n_occasions;
+  // Number of capture occasions
   int<lower=0> marr[n_occasions - 1, n_occasions];
+  // m-array
 }
 transformed data {
+  // Compoud declaration was enabled in Stan 2.13
   int n_occasions_minus_1 = n_occasions - 1;
+  //  int n_occasions_minus_1;
   int r[n_occasions - 1];
+  //  n_occasions_minus_1 = n_occasions - 1;
+  // Calculate the number of birds released each year
   for (t in 1 : n_occasions_minus_1) 
     r[t] = sum(marr[t]);
 }
 parameters {
   vector<lower=0, upper=1>[n_occasions_minus_1] phi;
+  // Survival
   vector<lower=0, upper=1>[n_occasions_minus_1] p;
+  // Recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occasions_minus_1] q;
   simplex[n_occasions] pr[n_occasions_minus_1];
   q = 1.0 - p;
+  // Probability of non-recapture
+  // Define the cell probabilities of the m-array
   for (t in 1 : n_occasions_minus_1) {
+    // Main diagonal
     pr[t, t] = phi[t] * p[t];
+    // Above main diagonal
     for (j in (t + 1) : n_occasions_minus_1) 
       pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
+    // Below main diagonal
     pr[t,  : (t - 1)] = rep_vector(0, t - 1);
   }
+  // Last column: probability of non-recapture
   for (t in 1 : n_occasions_minus_1) 
     pr[t, n_occasions] = 1 - sum(pr[t,  : n_occasions_minus_1]);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  phi ~ uniform(0, 1);
+  //  p ~ uniform(0, 1);
+  // Define the multinomial likelihood
   for (t in 1 : n_occasions_minus_1) 
     marr[t] ~ multinomial(pr[t]);
 }
@@ -639,12 +894,17 @@ generated quantities {
   matrix[n_occasions_minus_1, n_occasions] E_new;
   vector[n_occasions] expmarr[n_occasions_minus_1];
   int<lower=0> marr_new[n_occasions_minus_1, n_occasions];
+  // Assess model fit using Freeman-Tukey statistic
+  // Compute fit statistics for observed data
   for (t in 1 : n_occasions_minus_1) {
     expmarr[t] = r[t] * pr[t];
     for (j in 1 : n_occasions) {
       E_org[t, j] = square((sqrt(marr[t][j]) - sqrt(expmarr[t][j])));
     }
+    //j
   }
+  //t
+  // Generate replicate data and compute fit stats from them
   for (t in 1 : n_occasions_minus_1) {
     marr_new[t] = multinomial_rng(pr[t], r[t]);
     for (j in 1 : n_occasions) {
@@ -658,16 +918,25 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl_age.stan
 data {
   int<lower=0> n_occasions;
+  // Number of capture occasions
   int<lower=0> marr_j[n_occasions - 1, n_occasions];
+  // Juv. m-array
   int<lower=0> marr_a[n_occasions - 1, n_occasions];
+  // Ad. m-array
 }
 transformed data {
+  // Compoud declaration is enabled in Stan 2.13
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
+  //  n_occ_minus_1 = n_occasions - 1;
 }
 parameters {
   real<lower=0, upper=1> mean_phijuv;
+  // Mean juv. survival
   real<lower=0, upper=1> mean_phiad;
+  // Mean ad. survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
 }
 transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi_juv;
@@ -676,27 +945,40 @@ transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] q;
   simplex[n_occasions] pr_j[n_occ_minus_1];
   simplex[n_occasions] pr_a[n_occ_minus_1];
+  // Constraints
   phi_juv = rep_vector(mean_phijuv, n_occ_minus_1);
   phi_ad = rep_vector(mean_phiad, n_occ_minus_1);
   p = rep_vector(mean_p, n_occ_minus_1);
   q = 1.0 - p;
+  // Probability of non-recapture
+  // Define the cell probabilities of the m-arrays
+  // Main diagonal
   for (t in 1 : n_occ_minus_1) {
     pr_j[t, t] = phi_juv[t] * p[t];
     pr_a[t, t] = phi_ad[t] * p[t];
+    // Above main diagonal
     for (j in (t + 1) : n_occ_minus_1) {
       pr_j[t, j] = phi_juv[t] * prod(phi_ad[(t + 1) : j])
                    * prod(q[t : (j - 1)]) * p[j];
       pr_a[t, j] = prod(phi_ad[t : j]) * prod(q[t : (j - 1)]) * p[j];
     }
+    // Below main diagonal
     pr_j[t,  : (t - 1)] = rep_vector(0, t - 1);
     pr_a[t,  : (t - 1)] = rep_vector(0, t - 1);
   }
+  // Last column: probability of non-recapture
   for (t in 1 : n_occ_minus_1) {
     pr_j[t, n_occasions] = 1 - sum(pr_j[t,  : n_occ_minus_1]);
     pr_a[t, n_occasions] = 1 - sum(pr_a[t,  : n_occ_minus_1]);
   }
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phijuv ~ uniform(0, 1);
+  //  mean_phiad ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  // Define the multinomial likelihood
   for (t in 1 : n_occ_minus_1) {
     marr_j[t] ~ multinomial(pr_j[t]);
     marr_a[t] ~ multinomial(pr_a[t]);
@@ -706,17 +988,24 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl_ran.stan
 data {
   int<lower=0> n_occasions;
+  // Number of capture occasions
   int<lower=0> marr[n_occasions - 1, n_occasions];
+  // m-array
 }
 transformed data {
+  // Compoud declaration is enabled in Stan 2.13
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int r[n_occasions];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (t in 1 : n_occ_minus_1) 
     r[t] = sum(marr[t]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   real<lower=0> sigma;
   vector[n_occ_minus_1] epsilon;
 }
@@ -727,20 +1016,38 @@ transformed parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] q;
   simplex[n_occasions] pr[n_occ_minus_1];
   mu = logit(mean_phi);
+  // Constraints
+  // inv_logit was vectorized in Stan 2.13
   phi = inv_logit(mu + epsilon);
+  //  for (t in 1:n_occ_minus_1)
+  //    phi[t] = inv_logit(mu + epsilon[t]);
   p = rep_vector(mean_p, n_occ_minus_1);
   q = 1.0 - p;
+  // Probability of non-recapture
+  // Define the cell probabilities of the m-arrays
+  // Main diagonal
   for (t in 1 : n_occ_minus_1) {
     pr[t, t] = phi[t] * p[t];
+    // Above main diagonal
     for (j in (t + 1) : n_occ_minus_1) 
       pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
+    // Below main diagonal
     pr[t,  : (t - 1)] = rep_vector(0, t - 1);
   }
+  // Last column: probability of non-recapture
   for (t in 1 : n_occ_minus_1) 
     pr[t, n_occasions] = 1 - sum(pr[t,  : n_occ_minus_1]);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 5);
+  // In case a weakly informative prior is used
+  //  sigma ~ normal(2.5, 1.25);
   epsilon ~ normal(0, sigma);
+  // Define the multinomial likelihood
   for (t in 1 : (n_occ_minus_1)) 
     marr[t] ~ multinomial(pr[t]);
 }
@@ -754,12 +1061,16 @@ generated quantities {
   real fit;
   real fit_new;
   sigma2 = square(sigma);
+  // Temporal variance on real scale
   sigma2_real = sigma2 * square(mean_phi * (1 - mean_phi));
+  // Assess model fit using Freeman-Tukey statistic
+  // Compute fit statistics for observed data
   for (t in 1 : n_occ_minus_1) {
     expmarr[t] = r[t] * pr[t];
     for (j in 1 : n_occasions) 
       E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t][j])));
   }
+  // Generate replicate data and compute fit stats from them
   for (t in 1 : n_occ_minus_1) {
     marr_new[t] = multinomial_rng(pr[t], r[t]);
     for (j in 1 : n_occasions) 
@@ -770,6 +1081,8 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_t_t.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -779,7 +1092,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -790,8 +1106,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -802,13 +1126,18 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -816,12 +1145,15 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi_t;
+  // Mean survival
   vector<lower=0, upper=1>[n_occ_minus_1] p_t;
+  // Mean recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -835,6 +1167,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  phi_t ~ uniform(0, 1);
+  //  p_t ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -847,6 +1184,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_corr.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -856,7 +1195,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -867,8 +1209,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -879,17 +1229,27 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int<lower=1> g;
+  // Number of groups
   int<lower=1, upper=g> group[nind];
+  // Groups
   real df;
+  // Degree of freedom
   matrix[g, g] R;
+  // Scale matrix
 }
 transformed data {
+  // Compoud declaration is enabled in Stan 2.13
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -897,7 +1257,9 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[g] mean_phi;
+  // Mean group-spec. survival
   real<lower=0, upper=1> p_g[g];
+  // Group-spec. recapture
   matrix[n_occ_minus_1, g] eta_phi;
   cov_matrix[g] Sigma;
 }
@@ -908,6 +1270,7 @@ transformed parameters {
   vector[g] mu_phi;
   for (u in 1 : g) 
     mu_phi[u] = logit(mean_phi[u]);
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -921,9 +1284,16 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // for survival parameters
   Sigma ~ inv_wishart(df, R);
   for (t in 1 : n_occ_minus_1) 
     eta_phi[t] ~ multi_normal(mu_phi, Sigma);
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  // for recapture parameters
+  //  p_g ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -936,6 +1306,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_fixeff.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -945,7 +1317,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -956,8 +1331,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -968,11 +1351,16 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
 }
 transformed data {
   int n_occ_minus_1;
+  // Compoud declaration is enabled in Stan 2.13
+  //  int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   n_occ_minus_1 = n_occasions - 1;
@@ -983,12 +1371,15 @@ transformed data {
 }
 parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] alpha;
+  // Mean survival
   vector<lower=0, upper=1>[n_occ_minus_1] beta;
+  // Mean recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -1002,6 +1393,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  alpha ~ uniform(0, 1);
+  //  beta ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -1014,6 +1410,8 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_raneff.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -1023,7 +1421,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -1034,8 +1435,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -1046,13 +1455,19 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
 }
 transformed data {
+  // Compoud declaration is enabled in Stan 2.13
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -1060,8 +1475,12 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> mean_p;
+  // Mean recapture
   real<lower=0, upper=10> sigma;
+  // In case a weakly informative prior is used
+  //  real<lower=0> sigma;
   vector[n_occ_minus_1] epsilon;
 }
 transformed parameters {
@@ -1070,6 +1489,7 @@ transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
   real mu;
   mu = logit(mean_phi);
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -1083,7 +1503,15 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  mean_p ~ uniform(0, 1);
+  //  sigma ~ uniform(0, 10);
+  // In case weakly informative prior is used
+  //  sigma ~ normal(5, 2.5);
   epsilon ~ normal(0, sigma);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -1100,6 +1528,8 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_trap.stan
+// This models is derived from section 12.3 of "Stan Modeling Language
+// User's Guide and Reference Manual"
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
@@ -1109,7 +1539,10 @@ functions {
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
+      // Compoud declaration was enabled in Stan 2.13
       int k = size(y_i) - k_rev;
+      //      int k;
+      //      k = size(y_i) - k_rev;
       if (y_i[k]) 
         return k;
     }
@@ -1120,8 +1553,16 @@ functions {
     for (i in 1 : nind) {
       chi[i, n_occasions] = 1.0;
       for (t in 1 : (n_occasions - 1)) {
+        // Compoud declaration was enabled in Stan 2.13
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
+        /*
+        int t_curr;
+        int t_next;
+        
+        t_curr = n_occasions - t;
+        t_next = t_curr + 1;
+        */
         chi[i, t_curr] = (1 - phi[i, t_curr])
                          + phi[i, t_curr] * (1 - p[i, t_next - 1])
                            * chi[i, t_next];
@@ -1132,14 +1573,19 @@ functions {
 }
 data {
   int<lower=0> nind;
+  // Number of individuals
   int<lower=2> n_occasions;
+  // Number of capture occasions
   int<lower=0, upper=1> y[nind, n_occasions];
+  // Capture-history
   int m[nind, n_occasions - 1];
 }
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
+  //  int n_occ_minus_1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
+  //  n_occ_minus_1 = n_occasions - 1;
   for (i in 1 : nind) 
     first[i] = first_capture(y[i]);
   for (i in 1 : nind) 
@@ -1147,12 +1593,15 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
+  // Mean survival
   real<lower=0, upper=1> beta[2];
+  // Mean recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] phi;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -1166,6 +1615,11 @@ transformed parameters {
   chi = prob_uncaptured(nind, n_occasions, p, phi);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_phi ~ uniform(0, 1);
+  //  beta ~ uniform(0, 1);
+  // Likelihood
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {

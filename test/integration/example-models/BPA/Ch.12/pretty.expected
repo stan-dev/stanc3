@@ -1,5 +1,23 @@
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix0.stan
+// Open-population binomial-mixuture model
 functions {
+  /**
+  * Returns log likelihood of N-mixture model
+  * with 2 replicated observations using
+  * bivariate Poisson distibution
+  *
+  * References
+  * Dennis et al. (2015) Computational aspects of N-mixture models.
+  *   Biometrics 71:237--246. DOI:10.1111/biom.12246
+  * Stan users mailing list
+  *   https://groups.google.com/forum/#!topic/stan-users/9mMsp1oB69g
+  *
+  * @param n          Number of observed individuals
+  * @param log_lambda Log of Poisson mean of population size
+  * @param p          Detection probability
+  *
+  * return Log probability
+  */
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
@@ -17,10 +35,15 @@ functions {
 }
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of replications; fixed as 2
   int<lower=-1> y[R, 2, 7];
+  // Counts (-1:NA)
   int<lower=1, upper=7> first[R];
+  // First occasion
   int<lower=1, upper=7> last[R];
+  // Last occasion
   int<lower=1> K;
 }
 transformed data {
@@ -37,9 +60,13 @@ transformed data {
 parameters {
   vector[7] alpha_lam;
   vector<lower=0, upper=1>[7] p;
+  // Capture probability
 }
 model {
+  // Priors
   alpha_lam ~ normal(0, 10);
+  // A flat prior Uniform(0, 1) is implicitly used on p.
+  // Likelihood
   for (i in 1 : R) 
     for (k in first[i] : last[i]) 
       y[i, 1 : T, k] ~ bivariate_poisson_log(alpha_lam[k], p[k]);
@@ -51,10 +78,13 @@ generated quantities {
   vector[7] mean_abundance;
   {
     int N[R, 7];
+    // Abundance
     real eval[R, 7];
+    // Expected values
     int y_new[R, T, 7];
     matrix[T, 7] E[R];
     matrix[T, 7] E_new[R];
+    // Initialize N, E and E_new
     N = rep_array(0, R, 7);
     E[1] = rep_matrix(0, T, 7);
     E_new[1] = rep_matrix(0, T, 7);
@@ -73,7 +103,11 @@ generated quantities {
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         eval[i, k] = p[k] * N[i, k];
         for (j in 1 : T) {
+          // Assess model fit using Chi-squared discrepancy
+          // Compute fit statistic E for observed data
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          // Generate replicate data and
+          // Compute fit statistic E_new for replicate data
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
           E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
                            / (eval[i, k] + 0.5);
@@ -82,6 +116,7 @@ generated quantities {
     }
     for (k in 1 : 7) 
       totalN[k] = sum(N[1 : R, k]);
+    // Total pop. size across all sites
     for (i in 1 : R) {
       fit = fit + sum(E[i]);
       fit_new = fit_new + sum(E_new[i]);
@@ -91,7 +126,25 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
+// Zero-inflated Poisson binomial-mixture model
 functions {
+  /**
+  * Returns log likelihood of N-mixture model
+  * with 2 replicated observations using
+  * bivariate Poisson distibution
+  *
+  * References
+  * Dennis et al. (2015) Computational aspects of N-mixture models.
+  *   Biometrics 71:237--246. DOI:10.1111/biom.12246
+  * Stan users mailing list
+  *   https://groups.google.com/forum/#!topic/stan-users/9mMsp1oB69g
+  *
+  * @param n          Number of observed individuals
+  * @param log_lambda Log of Poisson mean of population size
+  * @param p          Detection probability
+  *
+  * return Log probability
+  */
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
@@ -106,6 +159,16 @@ functions {
                  + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
+  /**
+  * Return log probability of Poisson Binomial Mixture
+  *
+  * @param y          Count
+  * @param n          Population size
+  * @param log_lambda Log of Poisson mean
+  * @param p          Detection probability
+  *
+  * @return Log probability
+  */
   real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
     if (max(y) > n) 
       return negative_infinity();
@@ -114,11 +177,17 @@ functions {
 }
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of replications; fixed as 2
   int<lower=-1> y[R, 2, 7];
+  // Counts (-1:NA)
   int<lower=1, upper=7> first[R];
+  // First occasion
   int<lower=1, upper=7> last[R];
+  // Last occasion
   int<lower=0> K;
+  // Upper bounds of population size
 }
 transformed data {
   int<lower=0> max_y[R, 7];
@@ -135,11 +204,17 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
+  // Suitability
   vector[7] alpha_lam;
+  // Log abundance
   vector<lower=0, upper=1>[7] p;
+  // Captue probability
 }
 model {
+  // Priors
+  // Implicit flat priors [0, 1] are used on omega and p.
   alpha_lam ~ normal(0, 10);
+  // Likelihood
   for (i in 1 : R) {
     if (max_y_site[i]) {
       real lp = bernoulli_lpmf(1| omega);
@@ -161,15 +236,19 @@ model {
 }
 generated quantities {
   int totalN[7];
+  // Total pop. size across all sites
   real fit = 0;
   real fit_new = 0;
   vector[7] mean_abundance;
   {
     int N[R, 7];
+    // Latent abundance state
     real eval[R, 7];
+    // Expected values
     int y_new[R, T, 7];
     matrix[T, 7] E[R];
     matrix[T, 7] E_new[R];
+    // Initialize N, E and E_new
     N = rep_array(0, R, 7);
     E[1] = rep_matrix(0, T, 7);
     E_new[1] = rep_matrix(0, T, 7);
@@ -179,6 +258,8 @@ generated quantities {
     }
     for (i in 1 : R) {
       real log_p_unobs;
+      // Log of prob. site is suitable
+      // but no indiv. observed.
       for (k in first[i] : last[i]) {
         vector[K + 1] lp;
         for (n in 0 : K) 
@@ -186,8 +267,10 @@ generated quantities {
         N[i, k] = categorical_rng(softmax(lp)) - 1;
       }
       if (max_y_site[i] == 0) {
+        // Unobserved
         log_p_unobs = log(omega) + binomial_lpmf(0| N[i], p) * T;
         if (bernoulli_rng(exp(log_p_unobs)) == 0) {
+          // Site is not suitable
           for (k in first[i] : last[i]) 
             N[i, k] = 0;
         }
@@ -195,7 +278,10 @@ generated quantities {
       for (k in first[i] : last[i]) {
         eval[i, k] = p[k] * N[i, k];
         for (j in 1 : T) {
+          // Assess model fit using Chi-squared discrepancy
+          // Compute fit statistic E for observed data
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          // Generate replicate data and compute fit stats for them
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
           E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
                            / (eval[i, k] + 0.5);
@@ -213,7 +299,25 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
+// Binomial-mixture model with overdispersion in both abundance and detection
 functions {
+  /**
+  * Returns log likelihood of N-mixture model
+  * with 2 replicated observations using
+  * bivariate Poisson distibution
+  *
+  * References
+  * Dennis et al. (2015) Computational aspects of N-mixture models.
+  *   Biometrics 71:237--246. DOI:10.1111/biom.12246
+  * Stan users mailing list
+  *   https://groups.google.com/forum/#!topic/stan-users/9mMsp1oB69g
+  *
+  * @param n          Number of observed individuals
+  * @param log_lambda Log of Poisson mean of population size
+  * @param logit_p    Logit of detection probability
+  *
+  * return Log probability
+  */
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
     real s[min(n) + 1];
     if (size(n) != 2) 
@@ -231,11 +335,17 @@ functions {
 }
 data {
   int<lower=1> R;
+  // Number of sites
   int<lower=1> T;
+  // Number of replications; fixed as 2
   int<lower=-1> y[R, 2, 7];
+  // Counts (-1:NA)
   int<lower=1, upper=7> first[R];
+  // First occasion
   int<lower=1, upper=7> last[R];
+  // Last occasion
   int<lower=0> K;
+  // Upper bounds of population size
 }
 transformed data {
   int<lower=0> max_y[R, 7];
@@ -256,14 +366,22 @@ transformed data {
 }
 parameters {
   vector<upper=7>[7] alpha_lam;
+  // Constraint for stability
   vector[7] beta;
   vector<upper=7>[R] eps_raw;
+  // Constraint for stability
+  // Without these constraints, some
+  // estimates become unstable maybe due
+  // to insufficient information in the
+  // data used in the BPA book.
   real<lower=0> sd_lam;
   real<lower=0> sd_p;
   vector<lower=-7, upper=7>[7] logit_p[R, T];
+  // Originally `lp' in the BPA book
 }
 transformed parameters {
   vector[R] eps;
+  // Abundance noise
   matrix[R, 7] log_lambda;
   eps = sd_lam * eps_raw;
   for (k in 1 : 7) 
@@ -271,14 +389,18 @@ transformed parameters {
       log_lambda[i, k] = alpha_lam[k] + eps[i];
 }
 model {
+  // Priors
   alpha_lam ~ normal(0, sqrt(10));
   beta ~ normal(0, sqrt(10));
   eps_raw ~ normal(0, 1);
+  // Weakly informative priors are used on sd_lam and sd_p,
+  // instead of uniform(0, 3) used in the book
   sd_lam ~ normal(1.5, 0.75);
   sd_p ~ normal(1.5, 0.75);
   for (i in 1 : R) 
     for (j in 1 : T) 
       logit_p[i, j] ~ normal(beta, sd_p);
+  // Likelihood
   for (i in 1 : R) 
     for (k in first[i] : last[i]) 
       y[i, 1 : 2, k] ~ bivariate_poisson_log(log_lambda[i, k],
@@ -286,6 +408,7 @@ model {
 }
 generated quantities {
   int totalN[7];
+  // Total pop. size across all sites
   vector[7] mean_abundance;
   vector[7] mean_N;
   vector[7] mean_detection;
@@ -293,14 +416,19 @@ generated quantities {
   real fit_new = 0;
   {
     int N[R, 7];
+    // Abundance
     real eval[R, T, 7];
+    // Expected values
     real y_new[R, T, 7];
+    // Replicate data
     vector[7] p[R, T];
     matrix[T, 7] E[R];
     matrix[T, 7] E_new[R];
     matrix[R, 7] ik_p;
+    // Initialize N and ik_p
     N = rep_array(0, R, 7);
     ik_p = rep_matrix(0, R, 7);
+    // Initialize E and E_new
     E[1] = rep_matrix(0, T, 7);
     E_new[1] = rep_matrix(0, T, 7);
     for (i in 2 : R) {
@@ -319,9 +447,12 @@ generated quantities {
                       + binomial_lpmf(y[i, 1 : T, k]| n, p[i, 1 : T, k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         for (j in 1 : T) {
+          // Assess model fit using Chi-squared discrepancy
+          // Compute fit statistic E for observed data
           eval[i, j, k] = p[i, j, k] * N[i, k];
           E[i, j, k] = square(y[i, j, k] - eval[i, j, k])
                        / (eval[i, j, k] + 0.5);
+          // Generate replicate data and compute fit stats for them
           y_new[i, j, k] = binomial_rng(N[i, k], p[i, j, k]);
           E_new[i, j, k] = square(y_new[i, j, k] - eval[i, j, k])
                            / (eval[i, j, k] + 0.5);
@@ -343,11 +474,16 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format binmix.stan
+// Simplest binomial mixture model
 data {
   int<lower=0> R;
+  // Number of sites
   int<lower=0> T;
+  // Number of temporal replications
   int<lower=0> y[R, T];
+  // Counts
   int<lower=0> K;
+  // Upper bound of population size
 }
 transformed data {
   int<lower=0> max_y[R];
@@ -356,10 +492,17 @@ transformed data {
 }
 parameters {
   real<lower=0> lambda;
+  // Mean population size
   real<lower=0, upper=1> p;
+  // Detection probability
 }
 model {
+  // Priors
+  // A half Cauchy prior is used on lambda, instead of
+  // gamma(0.005, 0.005) or uniform(0, 10) proposed in the book.
   lambda ~ cauchy(0, 10);
+  // A flat prior [0, 1] is implicitly used on p.
+  // Likelihood
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
     for (j in 1 : (K - max_y[i] + 1)) 
@@ -370,12 +513,18 @@ model {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format binmix_cov.stan
+// Binomial mixture model with covariates
 data {
   int<lower=0> R;
+  // Number of sites
   int<lower=0> T;
+  // Number of temporal replications
   int<lower=0> y[R, T];
+  // Counts
   vector[R] X;
+  // Covariate
   int<lower=0> K;
+  // Upper bound of population size
 }
 transformed data {
   int<lower=0> max_y[R];
@@ -390,11 +539,17 @@ parameters {
 }
 transformed parameters {
   vector[R] log_lambda;
+  // Log population size
   matrix[R, T] logit_p;
+  // Logit detection probability
   log_lambda = alpha0 + alpha1 * X;
   logit_p = rep_matrix(beta0 + beta1 * X, T);
 }
 model {
+  // Priors
+  // Improper flat priors are implicitly used on
+  // alpha0, alpha1, beta0 and beta1.
+  // Likelihood
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
     for (j in 1 : (K - max_y[i] + 1)) 

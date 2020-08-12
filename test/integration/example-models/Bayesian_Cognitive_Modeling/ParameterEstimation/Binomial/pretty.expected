@@ -1,4 +1,5 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_1.stan
+// Inferring a Rate
 data {
   int<lower=1> n;
   int<lower=0> k;
@@ -7,11 +8,14 @@ parameters {
   real<lower=0, upper=1> theta;
 }
 model {
+  // Prior Distribution for Rate Theta
   theta ~ beta(1, 1);
+  // Observed Counts
   k ~ binomial(n, theta);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_2.stan
+// Difference Between Two Rates
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -27,8 +31,10 @@ transformed parameters {
   delta <- theta1 - theta2;
 }
 model {
+  // Prior Distribution for Rate Theta
   theta1 ~ beta(1, 1);
   theta2 ~ beta(1, 1);
+  // Observed Counts
   k1 ~ binomial(n1, theta1);
   k2 ~ binomial(n2, theta2);
 }
@@ -47,6 +53,7 @@ Warning: deprecated language construct used in 'Rate_2.stan', line 14, column 9:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_3.stan
+// Inferring a Common Rate
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -57,12 +64,15 @@ parameters {
   real<lower=0, upper=1> theta;
 }
 model {
+  // Prior on Single Rate Theta
   theta ~ beta(1, 1);
+  // Observed Counts
   k1 ~ binomial(n1, theta);
   k2 ~ binomial(n2, theta);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_4.stan
+// Prior and Posterior Prediction
 data {
   int<lower=1> n;
   int<lower=0> k;
@@ -72,14 +82,18 @@ parameters {
   real<lower=0, upper=1> thetaprior;
 }
 model {
+  // Prior on Rate Theta
   theta ~ beta(1, 1);
   thetaprior ~ beta(1, 1);
+  // Observed Data
   k ~ binomial(n, theta);
 }
 generated quantities {
   int<lower=0> postpredk;
   int<lower=0> priorpredk;
+  // Posterior Predictive
   postpredk <- binomial_rng(n, theta);
+  // Prior Predictive
   priorpredk <- binomial_rng(n, thetaprior);
 }
 
@@ -109,6 +123,7 @@ Warning: deprecated language construct used in 'Rate_4.stan', line 24, column 14
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_5.stan
+// Inferring a Common Rate, With Posterior Predictive
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -119,13 +134,16 @@ parameters {
   real<lower=0, upper=1> theta;
 }
 model {
+  // Prior on Single Rate Theta
   theta ~ beta(1, 1);
+  // Observed Counts
   k1 ~ binomial(n1, theta);
   k2 ~ binomial(n2, theta);
 }
 generated quantities {
   int<lower=0, upper=n1> postpredk1;
   int<lower=0, upper=n2> postpredk2;
+  // Posterior Predictive
   postpredk1 <- binomial_rng(n1, theta);
   postpredk2 <- binomial_rng(n2, theta);
 }
@@ -156,6 +174,15 @@ Warning: deprecated language construct used in 'Rate_5.stan', line 25, column 14
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format Survey.stan
+/* 
+* Notes to Stan model 
+* --------------------
+* This model code is more difficult to understand in Stan implementation since 
+* Stan is unable to sample discrete parameters. This may change in the future. 
+* For better understanding read Stan manual chapter "Mixture Modeling" (p.68 in 
+* version 2.4.0) first.
+*/
+// Inferring Return Rate and Number of Surveys from Observed Returns
 data {
   int<lower=0> nmax;
   int<lower=0> m;
@@ -163,6 +190,7 @@ data {
 }
 transformed data {
   int<lower=0> nmin;
+  // Minimal possible n
   nmin <- max(k);
 }
 parameters {
@@ -170,18 +198,23 @@ parameters {
 }
 transformed parameters {
   vector[nmax] lp_parts;
+  // Log probability for each n
+  // First part of the trick for mixture model
   for (n in 1 : nmax) 
     if (n < nmin) 
       lp_parts[n] <- log(1.0 / nmax) + negative_infinity();
+      // Zero probability
     else 
       lp_parts[n] <- log(1.0 / nmax) + binomial_log(k, n, theta);
 }
 model {
+  // Second part of the trick for mixture model
   increment_log_prob(log_sum_exp(lp_parts));
 }
 generated quantities {
   int<lower=1, upper=nmax> n;
   simplex[nmax] prob_n;
+  // Transforming lp_parts to probabilities of each n
   prob_n <- softmax(lp_parts);
   n <- categorical_rng(prob_n);
 }

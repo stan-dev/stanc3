@@ -5,25 +5,38 @@ data {
 }
 parameters {
   real<lower=0, upper=1> mean_s;
+  // Mean survival
   real<lower=0, upper=1> mean_r;
+  // Mean recovery
 }
 transformed parameters {
   vector[n_occasions] s;
   vector[n_occasions] r;
   simplex[n_occasions + 1] pr[n_occasions];
+  // Constraints
   s = rep_vector(mean_s, n_occasions);
   r = rep_vector(mean_r, n_occasions);
+  // Define the cell probabilities of the m-array
+  // Main diagonal
   for (t in 1 : n_occasions) {
     pr[t, t] = (1 - s[t]) * r[t];
+    // Above main diagonal
     for (j in (t + 1) : n_occasions) 
       pr[t, j] = prod(s[t : (j - 1)]) * (1 - s[j]) * r[j];
+    // Below main diagonal
     for (j in 1 : (t - 1)) 
       pr[t, j] = 0;
   }
+  // Last column: probability of non-recovery
   for (t in 1 : n_occasions) 
     pr[t, n_occasions + 1] = 1 - sum(pr[t,  : n_occasions]);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_s ~ uniform(0, 1);
+  //  mean_r ~ uniform(0, 1);
+  // Define the multinomial likelihood
   for (t in 1 : n_occasions) 
     marr[t] ~ multinomial(pr[t]);
 }
@@ -36,9 +49,13 @@ data {
 }
 parameters {
   real<lower=0, upper=1> mean_sj;
+  // Mean juv. survival
   real<lower=0, upper=1> mean_sa;
+  // Mean ad. survival
   real<lower=0, upper=1> mean_rj;
+  // Mean juv. recovery
   real<lower=0, upper=1> mean_ra;
+  // Mean ad. recovery
 }
 transformed parameters {
   vector[n_occasions] sj;
@@ -47,35 +64,53 @@ transformed parameters {
   vector[n_occasions] ra;
   simplex[n_occasions + 1] pr_a[n_occasions];
   simplex[n_occasions + 1] pr_j[n_occasions];
+  // Constraints
   for (t in 1 : n_occasions) {
     sj[t] = mean_sj;
     sa[t] = mean_sa;
     rj[t] = mean_rj;
     ra[t] = mean_ra;
   }
+  // Define the cell probabilities of the juvenile m-array
+  // Main diagonal
   for (t in 1 : n_occasions) {
     pr_j[t, t] = (1 - sj[t]) * rj[t];
+    // Further above main diagonal
     for (j in (t + 2) : n_occasions) 
       pr_j[t, j] = sj[t] * prod(segment(sa, t + 1, j - t - 1)) * (1 - sa[j])
                    * ra[j];
+    // Below main diagonal
     for (j in 1 : (t - 1)) 
       pr_j[t, j] = 0;
   }
   for (t in 1 : (n_occasions - 1)) 
     pr_j[t, t + 1] = sj[t] * (1 - sa[t + 1]) * ra[t + 1];
+  // Last column: probability of non-recovery
   for (t in 1 : n_occasions) 
     pr_j[t, n_occasions + 1] = 1 - sum(pr_j[t,  : n_occasions]);
+  // Define the cell probabilities of the adult m-array
+  // Main diagonal
   for (t in 1 : n_occasions) {
     pr_a[t, t] = (1 - sa[t]) * ra[t];
+    // Above main diagonal
     for (j in (t + 1) : n_occasions) 
       pr_a[t, j] = prod(sa[t : (j - 1)]) * (1 - sa[j]) * ra[j];
+    // Below main diagonal
     for (j in 1 : (t - 1)) 
       pr_a[t, j] = 0;
   }
+  // Last column: probability of non-recovery
   for (t in 1 : n_occasions) 
     pr_a[t, n_occasions + 1] = 1 - sum(pr_a[t,  : n_occasions]);
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_sj ~ uniform(0, 1);
+  //  mean_sa ~ uniform(0, 1);
+  //  mean_rj ~ uniform(0, 1);
+  //  mean_ra ~ uniform(0, 1);
+  // Define the multinomial likelihood
   for (t in 1 : n_occasions) {
     marr_j[t] ~ multinomial(pr_j[t]);
     marr_a[t] ~ multinomial(pr_a[t]);
@@ -90,31 +125,61 @@ data {
 }
 parameters {
   real<lower=0, upper=1> sjuv;
+  // Juv. survival
   real<lower=0, upper=1> ssub;
+  // Subad. survival
   real<lower=0, upper=1> sad;
+  // Ad. survival
   real<lower=0, upper=1> rjuv;
+  // Juv. recovery
   real<lower=0, upper=1> rad;
+  // Ad. recovery
 }
 transformed parameters {
   simplex[n_age + 1] pr_a;
   simplex[n_age + 1] pr_j;
+  // Define the cell probabilities of the juvenile m-array
+  // First element
   pr_j[1] = (1 - sjuv) * rjuv;
+  // Second element
   pr_j[2] = sjuv * (1 - ssub) * rad;
+  // Third and further elements
   for (t in 3 : n_age) 
     pr_j[t] = sjuv * ssub * pow(sad, t - 3) * (1 - sad) * rad;
+  // Probability of non-recovery
   pr_j[n_age + 1] = 1 - sum(pr_j[ : n_age]);
+  // Define the cell probabilities of the adult m-array
+  // All elements
   for (t in 1 : n_age) 
     pr_a[t] = pow(sad, t - 1) * (1 - sad) * rad;
+  // Probability of non-recovery
   pr_a[n_age + 1] = 1 - sum(pr_a[ : n_age]);
 }
 model {
+  // Priors
   sjuv ~ beta(4.2, 2.8);
+  // Informative prior for juv. survival: Analysis A
+  //sjuv ~ uniform(0, 1);  // Non-informative for juv. survival prior: Analysis B
+  // Uniform priors are implicitly defined.
+  //  ssub ~ uniform(0, 1);
+  //  sad ~ uniform(0, 1);
+  //  rjuv ~ uniform(0, 1);
+  //  rad ~ uniform(0, 1);
+  // Define the multinomial likelihood
   marr_j ~ multinomial(pr_j);
   marr_a ~ multinomial(pr_a);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mr_ss.stan
 functions {
+  /**
+  * Return an integer value denoting occasion of first capture.
+  * This function is derived from Stan Modeling Language
+  * User's Guide and Reference Manual.
+  *
+  * @param y         Observed values
+  * @return Occasion of first capture
+  */
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
       if (y_i[k]) 
@@ -122,6 +187,14 @@ functions {
     return 0;
   }
   int last_capture(int[] y_i) {
+    /**
+    * Return an integer value denoting occasion of last capture.
+    * This function is derived from Stan Modeling Language
+    * User's Guide and Reference Manual.
+    *
+    * @param y         Observed values
+    * @return Occasion of last capture
+    */
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
       if (y_i[k]) 
@@ -158,11 +231,14 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> mean_s;
+  // Mean survival
   real<lower=0, upper=1> mean_r;
+  // Mean recapture
 }
 transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] s;
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] r;
+  // Constraints
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       s[i, t] = 0;
@@ -175,6 +251,11 @@ transformed parameters {
   }
 }
 model {
+  // Priors
+  // Uniform priors are implicitly defined.
+  //  mean_s ~ uniform(0, 1);
+  //  mean_r ~ uniform(0, 1);
+  // Likelihood 
   for (i in 1 : nind) {
     real pr;
     if (first[i] > 0) {

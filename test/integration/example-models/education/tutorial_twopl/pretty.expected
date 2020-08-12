@@ -1,18 +1,29 @@
   $ ../../../../../../install/default/bin/stanc --auto-format reg_centered.stan
 data {
   int<lower=1> I;
+  // # questions
   int<lower=1> J;
+  // # persons
   int<lower=1> N;
+  // # observations
   int<lower=1, upper=I> ii[N];
+  // question for n
   int<lower=1, upper=J> jj[N];
+  // person for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
   real x[J];
+  // covariate for person j
 }
 parameters {
   vector<lower=0>[I] alpha;
+  // discrimination for item i
   vector[I] beta;
+  // difficulty for item i
   vector[J] theta;
+  // ability for person j
   real gamma;
+  // regression coefficient of x
 }
 model {
   vector[N] eta;
@@ -41,24 +52,38 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format reg_dif.stan
 data {
   int<lower=1> I;
+  // # questions
   int<lower=1> J;
+  // # persons
   int<lower=1> N;
+  // # observations
   int<lower=1, upper=I> ii[N];
+  // question for n
   int<lower=1, upper=J> jj[N];
+  // person for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
   real x[J];
+  // covariate for person j
   int<lower=0, upper=1> Ik[N];
+  // Indicator for item k
 }
 parameters {
   vector<lower=0>[I] alpha;
+  // discrimination for item i
   vector[I] beta;
+  // difficulty for item i
   real gamma;
+  // regression coefficient of x
   vector[J] epsilon;
+  // error term in the regression model
   real delta;
+  // DIF parameter for item k
 }
 model {
   vector[N] eta;
   vector[J] theta;
+  // ability for person j
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
   epsilon ~ normal(0, 1);
@@ -99,22 +124,34 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format reg_noncentered.stan
 data {
   int<lower=1> I;
+  // # questions
   int<lower=1> J;
+  // # persons
   int<lower=1> N;
+  // # observations
   int<lower=1, upper=I> ii[N];
+  // question for n
   int<lower=1, upper=J> jj[N];
+  // person for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
   real x[J];
+  // covariate for person j
 }
 parameters {
   vector<lower=0>[I] alpha;
+  // discrimination for item i
   vector[I] beta;
+  // difficulty for item i
   real gamma;
+  // regression coefficient of x
   vector[J] epsilon;
+  // error term in the regression model
 }
 model {
   vector[N] eta;
   vector[J] theta;
+  // ability for person j
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
   epsilon ~ normal(0, 1);
@@ -154,16 +191,25 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format twopl.stan
 data {
   int<lower=1> I;
+  // # questions
   int<lower=1> J;
+  // # persons
   int<lower=1> N;
+  // # observations
   int<lower=1, upper=I> ii[N];
+  // question for n
   int<lower=1, upper=J> jj[N];
+  // person for n
   int<lower=0, upper=1> y[N];
+  // correctness for n
 }
 parameters {
   vector<lower=0>[I] alpha;
+  // discrimination for item i
   vector[I] beta;
+  // difficulty for item i
   vector[J] theta;
+  // ability for person j
 }
 model {
   vector[N] eta;

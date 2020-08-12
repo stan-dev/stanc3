@@ -33,6 +33,7 @@ data {
 }
 transformed data {
   vector[N] dist100;
+  // rescaling
   dist100 = dist / 100.0;
 }
 parameters {
@@ -80,6 +81,7 @@ data {
 }
 transformed data {
   vector[N] dist100;
+  // rescaling
   vector[N] educ4;
   dist100 = dist / 100.0;
   educ4 = educ / 4.0;
@@ -129,8 +131,10 @@ data {
 }
 transformed data {
   vector[N] dist100;
+  // rescaling
   vector[N] educ4;
   vector[N] inter;
+  // interaction
   dist100 = dist / 100.0;
   educ4 = educ / 4.0;
   inter = dist100 .* arsenic;
@@ -153,9 +157,11 @@ data {
 }
 transformed data {
   vector[N] c_dist100;
+  // centering
   vector[N] c_arsenic;
   vector[N] c_educ4;
   vector[N] da_inter;
+  // interactions
   vector[N] de_inter;
   vector[N] ae_inter;
   c_dist100 = (dist - mean(dist)) / 100.0;
@@ -196,6 +202,7 @@ data {
 }
 transformed data {
   vector[N] dist100;
+  // rescaling
   dist100 = dist / 100.0;
 }
 parameters {
@@ -214,7 +221,9 @@ data {
 }
 transformed data {
   vector[N] dist100;
+  // rescaling
   vector[N] inter;
+  // interaction
   dist100 = dist / 100.0;
   inter = dist100 .* arsenic;
 }
@@ -235,8 +244,10 @@ data {
 }
 transformed data {
   vector[N] c_dist100;
+  // centering
   vector[N] c_arsenic;
   vector[N] inter;
+  // interaction
   c_dist100 = (dist - mean(dist)) / 100.0;
   c_arsenic = arsenic - mean(arsenic);
   inter = c_dist100 .* c_arsenic;

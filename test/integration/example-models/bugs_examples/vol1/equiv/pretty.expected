@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format equiv.stan
+// Equiv: bioequivalence in a cross-over trial
+//  http://www.openbugs.net/Examples/Equiv.html
 data {
   int<lower=0> P;
   int<lower=0> N;

@@ -20,6 +20,7 @@ parameters {
 model {
   real p[J];
   theta1 ~ normal(0, 32);
+  // 32^2 = 1024 
   theta2 ~ normal(0, 32);
   X ~ normal(alpha + beta * Z, sigma);
   y ~ binomial_logit(n, theta1 + theta2 * X);

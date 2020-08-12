@@ -1,4 +1,10 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format inhalers.stan
+// Inhaler: ordered categorical data 
+//# http://www.openbugs.net/Examples/Inhalers.html
+//# FIXME ii: 
+//# specify using categorical distribution directly 
+//# done (but x ~ categorical[p], in which x starts
+//# from 0). 
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -12,6 +18,7 @@ data {
   int carry[2, 2];
 }
 transformed data {
+  // Construct individual response data from contingency table
   int group[N];
   int response[N, T];
   for (i in 1 : Ncum[1, 1]) {
@@ -56,6 +63,7 @@ model {
   real mu[G, T];
   for (g in 1 : G) {
     for (t in 1 : T) {
+      // logistic mean for group g in period t
       mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5
                   + kappa * carry[g, t];
     }

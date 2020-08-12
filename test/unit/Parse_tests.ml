@@ -15,8 +15,9 @@ let%expect_test "parse conditional" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-    ((functionblock ()) (datablock ()) (transformeddatablock ())
-     (parametersblock ()) (transformedparametersblock ())
+    ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+     (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+     (comments4 ()) (transformedparametersblock ()) (comments5 ())
      (modelblock
       ((((stmt
           (IfThenElse
@@ -26,11 +27,12 @@ let%expect_test "parse conditional" =
             (emeta ((loc <opaque>))))
            ((stmt
              (Block
-              (((stmt (Print ((PString "\"hi\"")))) (smeta ((loc <opaque>)))))))
-            (smeta ((loc <opaque>))))
+              (((stmt (Print ((PString "\"hi\""))))
+                (smeta ((loc <opaque>) (comments <opaque>)))))))
+            (smeta ((loc <opaque>) (comments <opaque>))))
            ()))
-         (smeta ((loc <opaque>)))))))
-     (generatedquantitiesblock ())) |}]
+         (smeta ((loc <opaque>) (comments <opaque>)))))))
+     (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse dangling else problem" =
   let ast =
@@ -43,8 +45,9 @@ let%expect_test "parse dangling else problem" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
+      ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+       (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+       (comments4 ()) (transformedparametersblock ()) (comments5 ())
        (modelblock
         ((((stmt
             (IfThenElse
@@ -52,20 +55,22 @@ let%expect_test "parse dangling else problem" =
                (BinOp ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))) Less
                 ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))
               (emeta ((loc <opaque>))))
-             ((stmt (Print ((PString "\"I'm sorry\"")))) (smeta ((loc <opaque>))))
+             ((stmt (Print ((PString "\"I'm sorry\""))))
+              (smeta ((loc <opaque>) (comments <opaque>))))
              ()))
-           (smeta ((loc <opaque>))))
+           (smeta ((loc <opaque>) (comments <opaque>))))
           ((stmt
             (IfThenElse
              ((expr
                (BinOp ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))) Less
                 ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))))
               (emeta ((loc <opaque>))))
-             ((stmt (Print ((PString "\", Dave, \"")))) (smeta ((loc <opaque>))))
+             ((stmt (Print ((PString "\", Dave, \""))))
+              (smeta ((loc <opaque>) (comments <opaque>))))
              (((stmt (Print ((PString "\"I'm afraid I can't do that.\""))))
-               (smeta ((loc <opaque>)))))))
-           (smeta ((loc <opaque>)))))))
-       (generatedquantitiesblock ())) |}]
+               (smeta ((loc <opaque>) (comments <opaque>)))))))
+           (smeta ((loc <opaque>) (comments <opaque>)))))))
+       (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse minus unary" =
   let ast =
@@ -76,14 +81,15 @@ let%expect_test "parse minus unary" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
+      ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+       (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+       (comments4 ()) (transformedparametersblock ()) (comments5 ())
        (modelblock
         ((((stmt
             (VarDecl (decl_type (Sized SReal)) (transformation Identity)
              (identifier ((name x) (id_loc <opaque>))) (initial_value ())
              (is_global false)))
-           (smeta ((loc <opaque>))))
+           (smeta ((loc <opaque>) (comments <opaque>))))
           ((stmt
             (Assignment
              (assign_lhs
@@ -96,8 +102,8 @@ let%expect_test "parse minus unary" =
                  ((expr (Variable ((name x) (id_loc <opaque>))))
                   (emeta ((loc <opaque>))))))
                (emeta ((loc <opaque>)))))))
-           (smeta ((loc <opaque>)))))))
-       (generatedquantitiesblock ())) |}]
+           (smeta ((loc <opaque>) (comments <opaque>)))))))
+       (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse unary over binary" =
   let ast =
@@ -108,8 +114,9 @@ let%expect_test "parse unary over binary" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-    ((functionblock ()) (datablock ()) (transformeddatablock ())
-     (parametersblock ()) (transformedparametersblock ())
+    ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+     (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+     (comments4 ()) (transformedparametersblock ()) (comments5 ())
      (modelblock
       ((((stmt
           (VarDecl (decl_type (Sized SReal)) (transformation Identity)
@@ -136,8 +143,8 @@ let%expect_test "parse unary over binary" =
                  (emeta ((loc <opaque>))))))
               (emeta ((loc <opaque>))))))
            (is_global false)))
-         (smeta ((loc <opaque>)))))))
-     (generatedquantitiesblock ())) |}]
+         (smeta ((loc <opaque>) (comments <opaque>)))))))
+     (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse indices, two different colons" =
   let ast =
@@ -149,8 +156,9 @@ let%expect_test "parse indices, two different colons" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
+      ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+       (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+       (comments4 ()) (transformedparametersblock ()) (comments5 ())
        (modelblock
         ((((stmt
             (VarDecl
@@ -160,7 +168,7 @@ let%expect_test "parse indices, two different colons" =
                 ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
              (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
              (initial_value ()) (is_global false)))
-           (smeta ((loc <opaque>))))
+           (smeta ((loc <opaque>) (comments <opaque>))))
           ((stmt
             (Print
              ((PExpr
@@ -180,8 +188,8 @@ let%expect_test "parse indices, two different colons" =
                      (emeta ((loc <opaque>))))
                     ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))))
                 (emeta ((loc <opaque>))))))))
-           (smeta ((loc <opaque>)))))))
-       (generatedquantitiesblock ())) |}]
+           (smeta ((loc <opaque>) (comments <opaque>)))))))
+       (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse operator precedence" =
   let ast =
@@ -194,8 +202,9 @@ let%expect_test "parse operator precedence" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
+      ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+       (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+       (comments4 ()) (transformedparametersblock ()) (comments5 ())
        (modelblock
         ((((stmt
             (Print
@@ -353,8 +362,8 @@ let%expect_test "parse operator precedence" =
                        (emeta ((loc <opaque>))))))
                     (emeta ((loc <opaque>)))))))
                 (emeta ((loc <opaque>))))))))
-           (smeta ((loc <opaque>)))))))
-       (generatedquantitiesblock ())) |}]
+           (smeta ((loc <opaque>) (comments <opaque>)))))))
+       (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse crazy truncation example" =
   let ast =
@@ -372,8 +381,9 @@ let%expect_test "parse crazy truncation example" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
+      ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+       (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+       (comments4 ()) (transformedparametersblock ()) (comments5 ())
        (modelblock
         ((((stmt
             (VarDecl
@@ -392,7 +402,7 @@ let%expect_test "parse crazy truncation example" =
                     (emeta ((loc <opaque>)))))))
                 (emeta ((loc <opaque>))))))
              (is_global false)))
-           (smeta ((loc <opaque>))))
+           (smeta ((loc <opaque>) (comments <opaque>))))
           ((stmt
             (Tilde (arg ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
              (distribution ((name normal) (id_loc <opaque>)))
@@ -408,7 +418,7 @@ let%expect_test "parse crazy truncation example" =
                   ((Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                    (Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))))
                 (emeta ((loc <opaque>))))))))
-           (smeta ((loc <opaque>))))
+           (smeta ((loc <opaque>) (comments <opaque>))))
           ((stmt
             (Print
              ((PExpr
@@ -419,8 +429,8 @@ let%expect_test "parse crazy truncation example" =
                   ((Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                    (Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))))
                 (emeta ((loc <opaque>))))))))
-           (smeta ((loc <opaque>)))))))
-       (generatedquantitiesblock ())) |}]
+           (smeta ((loc <opaque>) (comments <opaque>)))))))
+       (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]
 
 let%expect_test "parse nested loop" =
   let ast =
@@ -437,8 +447,9 @@ let%expect_test "parse nested loop" =
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
-    ((functionblock ()) (datablock ()) (transformeddatablock ())
-     (parametersblock ()) (transformedparametersblock ())
+    ((comments0 ()) (functionblock ()) (comments1 ()) (datablock ())
+     (comments2 ()) (transformeddatablock ()) (comments3 ()) (parametersblock ())
+     (comments4 ()) (transformedparametersblock ()) (comments5 ())
      (modelblock
       ((((stmt
           (For (loop_variable ((name i) (id_loc <opaque>)))
@@ -451,7 +462,7 @@ let%expect_test "parse nested loop" =
                (upper_bound ((expr (IntNumeral 4)) (emeta ((loc <opaque>)))))
                (loop_body
                 ((stmt (Print ((PString "\"Badger\""))))
-                 (smeta ((loc <opaque>)))))))
-             (smeta ((loc <opaque>)))))))
-         (smeta ((loc <opaque>)))))))
-     (generatedquantitiesblock ())) |}]
+                 (smeta ((loc <opaque>) (comments <opaque>)))))))
+             (smeta ((loc <opaque>) (comments <opaque>)))))))
+         (smeta ((loc <opaque>) (comments <opaque>)))))))
+     (comments6 ()) (generatedquantitiesblock ()) (comments7 ())) |}]

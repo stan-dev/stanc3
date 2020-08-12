@@ -710,7 +710,7 @@ Expected "{" after block keyword.
 
   $ ../../../../install/default/bin/stanc err-expected-end-of-model.stan
 
-Syntax error in 'err-expected-end-of-model.stan', line 1, column 0 to line 2, column 1, parsing error:
+Syntax error in 'err-expected-end-of-model.stan', line 2, column 0 to column 1, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
@@ -723,7 +723,7 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-generated.stan
 
-Syntax error in 'err-expected-generated.stan', line 1, column 0 to line 2, column 1, parsing error:
+Syntax error in 'err-expected-generated.stan', line 2, column 0 to column 1, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
@@ -737,7 +737,7 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-model.stan
 
-Syntax error in 'err-expected-model.stan', line 4, column 0 to line 7, column 1, parsing error:
+Syntax error in 'err-expected-model.stan', line 7, column 0 to column 1, parsing error:
    -------------------------------------------------
      5:    int n;
      6:    n = 2;
@@ -994,7 +994,7 @@ Ill-formed expression. Found expression "||". Expect an expression next.
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
 
-Syntax error in 'err-transformed-params.stan', line 1, column 0 to line 3, column 1, parsing error:
+Syntax error in 'err-transformed-params.stan', line 3, column 0 to column 1, parsing error:
    -------------------------------------------------
      1:  parameters {
      2:    real y;
@@ -1017,7 +1017,7 @@ Syntax error in 'expect_statement_seq_close_brace.stan', line 5, column 2 to col
                            ^
    -------------------------------------------------
 
-Variable declaration, statement or "}" expected.
+Expected a statement or variable declaration.
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_2.stan
@@ -1032,12 +1032,12 @@ Syntax error in 'expect_statement_seq_close_brace_2.stan', line 12, column 6 to 
     14:  
    -------------------------------------------------
 
-Variable declaration, statement or "}" expected.
+Expected a statement or variable declaration.
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 
-Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to line 6, column 3, parsing error:
+Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 19 to line 6, column 3, parsing error:
    -------------------------------------------------
      4:    for (v in vs[1]) {
      5:      z = 3;
@@ -1047,7 +1047,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to l
      8:  parameters {
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Expect a statement or top-level variable declaration.
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
@@ -1061,7 +1061,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 8, column 2 to c
      9:  
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Expect a statement or top-level variable declaration.
 
 
   $ ../../../../install/default/bin/stanc experiment.stan

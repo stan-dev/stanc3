@@ -1,10 +1,23 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format hepatitis.stan
+// Hepatitis: a normal hierarchical model with measurement 
+// error
+//  http://openbugs.net/Examples/Hepatitis.html
+// In this version the measurement errors are not modeled.  
+// See hepatisisME for the version with measurement errors. 
+//# note that we have missing data in the orignal data Y[N, T]; 
+//# here, we turn Y[N, T] into Yvec with the missing
+//# data removed.  
 data {
   int<lower=0> N1;
+  //# N1 is the length of the vector, Yvec1, that is 
   int<lower=0> N;
+  //# created from concatenate columns of matrix Y[N, T] 
   real Yvec1[N1];
+  //# with NA's removed. 
   real tvec1[N1];
+  //# N is the nrow of original matrix Y[N, T] 
   int<lower=0> idxn1[N1];
+  //# idxn1 maps Yvec to its orignal n index 
   real y0[N];
 }
 transformed data {
@@ -295,12 +308,24 @@ Warning: deprecated language construct used in 'hepatitis.stan', line 55, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format hepatitisME.stan
+// Hepatitis: a normal hierarchical model with measurement 
+// error
+//  http://openbugs.net/Examples/Hepatitis.html
+// model the measurement eror here (compared with hepatitis.stan) 
+//# note that we have missing data in the orignal data Y[N, T]; 
+//# here, we turn Y[N, T] into Yvec with the missing
+//# data removed.  
 data {
   int<lower=0> N1;
+  //# N1 is the length of the vector, Yvec1, that is 
   int<lower=0> N;
+  //# created from concatenate columns of matrix Y[N, T] 
   real Yvec1[N1];
+  //# with NA's removed. 
   real tvec1[N1];
+  //# N is the nrow of original matrix Y[N, T] 
   int<lower=0> idxn1[N1];
+  //# idxn1 maps Yvec to its orignal n index 
   real y0[N];
 }
 transformed data {
@@ -338,6 +363,8 @@ model {
   }
   Yvec1 ~ normal(m, sigma_y);
   mu0 ~ normal(theta, sigma_mu0);
+  //# It is a bit weird that to specify gamma prior on sigma_mu0 instead on gamma_mu0^2
+  //# in the bugs example. 
   for (n in 1 : N) 
     y0[n] ~ normal(mu0[n], sigma_y);
   alpha ~ normal(alpha0, sigma_alpha);

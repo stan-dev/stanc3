@@ -912,6 +912,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(p_row_vector_array,
                                                      p_row_vector_array,
                                                      p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(p_vector_array[1],
                                                      p_vector_array[1],
                                                      d_matrix_array[1]);
@@ -960,6 +961,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(p_row_vector_array,
                                                      p_row_vector_array,
                                                      d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(p_vector_array[1],
                                                      d_vector_array[1],
                                                      p_matrix_array[1]);
@@ -1008,6 +1010,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(p_row_vector_array,
                                                      d_row_vector_array,
                                                      p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(p_vector_array[1],
                                                      d_vector_array[1],
                                                      d_matrix_array[1]);
@@ -1056,6 +1059,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(p_row_vector_array,
                                                      d_row_vector_array,
                                                      d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(d_vector_array[1],
                                                      p_vector_array[1],
                                                      p_matrix_array[1]);
@@ -1104,6 +1108,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(d_row_vector_array,
                                                      p_row_vector_array,
                                                      p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(d_vector_array[1],
                                                      p_vector_array[1],
                                                      d_matrix_array[1]);
@@ -1152,6 +1157,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(d_row_vector_array,
                                                      p_row_vector_array,
                                                      d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(d_vector_array[1],
                                                      d_vector_array[1],
                                                      p_matrix_array[1]);
@@ -1200,6 +1206,7 @@ transformed parameters {
   transformed_param_real = multi_normal_cholesky_log(d_row_vector_array,
                                                      d_row_vector_array,
                                                      p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_cholesky_log(d_vector_array[1],
                                                      d_vector_array[1],
                                                      d_matrix_array[1]);
@@ -1281,6 +1288,8 @@ model {
                                              d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
                                              d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
                                             p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
@@ -1312,6 +1321,7 @@ model {
                                              p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
                                              p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
                                             d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
@@ -1343,6 +1353,7 @@ model {
                                              d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
                                              d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
                                             p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
@@ -1374,6 +1385,7 @@ model {
                                              p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
                                              p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
                                             d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
@@ -1405,6 +1417,7 @@ model {
                                              d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
                                              d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
                                             p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
@@ -1436,6 +1449,7 @@ model {
                                              p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
                                              p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
                                             d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
@@ -1467,6 +1481,7 @@ model {
                                              d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
                                              d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
                                             p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
@@ -1498,6 +1513,7 @@ model {
                                              p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
                                              p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
                                             d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
@@ -1652,6 +1668,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(p_row_vector_array,
                                             p_row_vector_array,
                                             p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(p_vector_array[1],
                                             p_vector_array[1],
                                             d_matrix_array[1]);
@@ -1699,6 +1716,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(p_row_vector_array,
                                             p_row_vector_array,
                                             d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(p_vector_array[1],
                                             d_vector_array[1],
                                             p_matrix_array[1]);
@@ -1746,6 +1764,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(p_row_vector_array,
                                             d_row_vector_array,
                                             p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(p_vector_array[1],
                                             d_vector_array[1],
                                             d_matrix_array[1]);
@@ -1793,6 +1812,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(p_row_vector_array,
                                             d_row_vector_array,
                                             d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(d_vector_array[1],
                                             p_vector_array[1],
                                             p_matrix_array[1]);
@@ -1840,6 +1860,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(d_row_vector_array,
                                             p_row_vector_array,
                                             p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(d_vector_array[1],
                                             p_vector_array[1],
                                             d_matrix_array[1]);
@@ -1887,6 +1908,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(d_row_vector_array,
                                             p_row_vector_array,
                                             d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(d_vector_array[1],
                                             d_vector_array[1],
                                             p_matrix_array[1]);
@@ -1934,6 +1956,7 @@ transformed parameters {
   transformed_param_real = multi_normal_log(d_row_vector_array,
                                             d_row_vector_array,
                                             p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_log(d_vector_array[1],
                                             d_vector_array[1],
                                             d_matrix_array[1]);
@@ -2000,6 +2023,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal(p_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
@@ -2017,6 +2042,7 @@ model {
   p_row_vector_array[1] ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal(p_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
@@ -2034,6 +2060,7 @@ model {
   p_row_vector_array[1] ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal(d_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
@@ -2051,6 +2078,7 @@ model {
   p_row_vector_array[1] ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal(d_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
@@ -2068,6 +2096,7 @@ model {
   p_row_vector_array[1] ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal(p_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
@@ -2085,6 +2114,7 @@ model {
   d_row_vector_array[1] ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal(p_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
@@ -2102,6 +2132,7 @@ model {
   d_row_vector_array[1] ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal(d_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
@@ -2119,6 +2150,7 @@ model {
   d_row_vector_array[1] ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal(d_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
@@ -2265,6 +2297,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(p_row_vector_array,
                                                  p_row_vector_array,
                                                  p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(p_vector_array[1],
                                                  p_vector_array[1],
                                                  d_matrix_array[1]);
@@ -2313,6 +2346,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(p_row_vector_array,
                                                  p_row_vector_array,
                                                  d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(p_vector_array[1],
                                                  d_vector_array[1],
                                                  p_matrix_array[1]);
@@ -2361,6 +2395,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(p_row_vector_array,
                                                  d_row_vector_array,
                                                  p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(p_vector_array[1],
                                                  d_vector_array[1],
                                                  d_matrix_array[1]);
@@ -2409,6 +2444,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(p_row_vector_array,
                                                  d_row_vector_array,
                                                  d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(d_vector_array[1],
                                                  p_vector_array[1],
                                                  p_matrix_array[1]);
@@ -2457,6 +2493,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(d_row_vector_array,
                                                  p_row_vector_array,
                                                  p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(d_vector_array[1],
                                                  p_vector_array[1],
                                                  d_matrix_array[1]);
@@ -2505,6 +2542,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(d_row_vector_array,
                                                  p_row_vector_array,
                                                  d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(d_vector_array[1],
                                                  d_vector_array[1],
                                                  p_matrix_array[1]);
@@ -2553,6 +2591,7 @@ transformed parameters {
   transformed_param_real = multi_normal_prec_log(d_row_vector_array,
                                                  d_row_vector_array,
                                                  p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_normal_prec_log(d_vector_array[1],
                                                  d_vector_array[1],
                                                  d_matrix_array[1]);
@@ -2629,6 +2668,8 @@ model {
                                          d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(d_row_vector_array,
                                          d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
@@ -2655,6 +2696,7 @@ model {
                                          p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(p_row_vector_array,
                                          p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
@@ -2681,6 +2723,7 @@ model {
                                          d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(p_row_vector_array,
                                          d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
@@ -2707,6 +2750,7 @@ model {
                                          p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(d_row_vector_array,
                                          p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
@@ -2733,6 +2777,7 @@ model {
                                          d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(d_row_vector_array,
                                          d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
@@ -2759,6 +2804,7 @@ model {
                                          p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(p_row_vector_array,
                                          p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
@@ -2785,6 +2831,7 @@ model {
                                          d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(p_row_vector_array,
                                          d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
@@ -2811,6 +2858,7 @@ model {
                                          p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(d_row_vector_array,
                                          p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
@@ -3014,6 +3062,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_real,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_real,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -3062,6 +3111,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_real,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_real,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -3110,6 +3160,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_real,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_real,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -3158,6 +3209,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_real,
                                                d_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_real,
                                                p_vector_array[1],
                                                p_matrix_array[1]);
@@ -3206,6 +3258,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_real,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_real,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -3254,6 +3307,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_real,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_real,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -3302,6 +3356,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_real,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_real,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -3398,6 +3453,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_int,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_int,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -3446,6 +3502,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_int,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_int,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -3494,6 +3551,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_int,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], d_int,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -3542,6 +3600,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, d_int,
                                                d_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_int,
                                                p_vector_array[1],
                                                p_matrix_array[1]);
@@ -3590,6 +3649,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_int,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_int,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -3638,6 +3698,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_int,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_int,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -3686,6 +3747,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, d_int,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], d_int,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -3782,6 +3844,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, p_real,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], p_real,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -3830,6 +3893,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, p_real,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], p_real,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -3878,6 +3942,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, p_real,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(p_vector_array[1], p_real,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -3926,6 +3991,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(p_row_vector_array, p_real,
                                                d_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], p_real,
                                                p_vector_array[1],
                                                p_matrix_array[1]);
@@ -3974,6 +4040,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, p_real,
                                                p_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], p_real,
                                                p_vector_array[1],
                                                d_matrix_array[1]);
@@ -4022,6 +4089,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, p_real,
                                                p_row_vector_array,
                                                d_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], p_real,
                                                d_vector_array[1],
                                                p_matrix_array[1]);
@@ -4070,6 +4138,7 @@ transformed parameters {
   transformed_param_real = multi_student_t_log(d_row_vector_array, p_real,
                                                d_row_vector_array,
                                                p_matrix_array[1]);
+  //------------------------------------------------------------
   transformed_param_real = multi_student_t_log(d_vector_array[1], p_real,
                                                d_vector_array[1],
                                                d_matrix_array[1]);
@@ -4151,6 +4220,8 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
@@ -4182,6 +4253,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
@@ -4213,6 +4285,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
@@ -4244,6 +4317,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
@@ -4275,6 +4349,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
@@ -4306,6 +4381,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
@@ -4337,6 +4413,7 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
@@ -4368,6 +4445,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
@@ -4430,6 +4508,8 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
@@ -4461,6 +4541,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
@@ -4492,6 +4573,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
@@ -4523,6 +4605,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
@@ -4554,6 +4637,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
@@ -4585,6 +4669,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
@@ -4616,6 +4701,7 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
@@ -4647,6 +4733,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
@@ -4709,6 +4796,8 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
@@ -4740,6 +4829,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
@@ -4771,6 +4861,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
                                       p_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
@@ -4802,6 +4893,7 @@ model {
                                        p_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
                                       d_matrix_array[1]);
   p_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
@@ -4833,6 +4925,7 @@ model {
                                        d_matrix_array[1]);
   p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
@@ -4864,6 +4957,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
@@ -4895,6 +4989,7 @@ model {
                                        d_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
                                        d_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
                                       p_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
@@ -4926,6 +5021,7 @@ model {
                                        p_matrix_array[1]);
   d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
                                        p_matrix_array[1]);
+  //------------------------------------------------------------
   d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
                                       d_matrix_array[1]);
   d_vector_array[1] ~ multi_student_t(p_real, d_vector_array,

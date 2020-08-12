@@ -3484,6 +3484,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_ccdf_log_2.stan
@@ -7074,6 +7075,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_ccdf_log_3.stan
@@ -10640,6 +10642,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_ccdf_log_4.stan
@@ -14291,6 +14294,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_1.stan
@@ -17393,6 +17397,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_2.stan
@@ -20843,6 +20848,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_3.stan
@@ -24224,6 +24230,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_4.stan
@@ -27750,6 +27757,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_log_1.stan
@@ -31187,6 +31195,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_log_2.stan
@@ -34762,6 +34771,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_log_3.stan
@@ -38301,6 +38311,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_cdf_log_4.stan
@@ -41939,6 +41950,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_log_1.stan
@@ -45041,6 +45053,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_log_2.stan
@@ -48491,6 +48504,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_log_3.stan
@@ -51872,6 +51886,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format student_t_log_4.stan
@@ -55398,5 +55413,6 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 

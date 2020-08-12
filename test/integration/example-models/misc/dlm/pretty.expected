@@ -129,7 +129,10 @@ Warning: deprecated language construct used in 'fx_equicorr.stan', line 31, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format fx_factor.stan
+// Kalman Filter (Multivariate Form)
+// - no missing values
 data {
+  // system matrices
   int r;
   int T;
   matrix[r, T] y;

@@ -1,4 +1,11 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format dugongs.stan
+// https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/WinBUGS_Vol2.pdf
+// Page 2: Dugongs 
+// 
+//
+// note that in the original example, the parameter 
+// called gamma is called lambda here.  
+// 
 data {
   int<lower=0> N;
   real x[N];
@@ -8,6 +15,7 @@ parameters {
   real alpha;
   real beta;
   real<lower=.5, upper=1> lambda;
+  // orginal gamma in the JAGS example  
   real<lower=0> tau;
 }
 transformed parameters {

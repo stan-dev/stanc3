@@ -1,4 +1,9 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format leuk.stan
+/*
+* Leuk: Cox regression 
+* URL of OpenBugs' implementation: 
+*   http://www.openbugs.net/Examples/Leuk.html
+*/
 data {
   int<lower=0> N;
   int<lower=0> NT;
@@ -41,6 +46,7 @@ generated quantities {
   real S_placebo[NT];
   real S_treat[NT];
   for (j in 1 : NT) {
+    // Survivor function = exp(-Integral{l0(u)du})^exp(beta*z)
     real s;
     s <- 0;
     for (i in 1 : j) 

@@ -30,6 +30,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_logistic_log.stan

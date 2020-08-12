@@ -5,19 +5,31 @@ data {
 }
 parameters {
   real<lower=0, upper=10> mean_lambda;
+  // Mean growth rate
   real<lower=0, upper=10> sigma_proc;
+  // SD of state process
   real<lower=0, upper=100> sigma_obs;
+  // SD of observation process
   vector<lower=0>[T - 1] lambda;
   real<lower=0, upper=500> N_est1;
+  // Initial population size
 }
 transformed parameters {
   vector<lower=0>[T] N_est;
   N_est[1] = N_est1;
+  // State process
   for (t in 1 : (T - 1)) 
     N_est[t + 1] = N_est[t] * lambda[t];
 }
 model {
+  // Priors are implicitly defined
+  //  N_est1 ~ uniform(0, 500);
+  //  mean_lambda ~ uniform(0, 10);
+  //  sigma_proc ~ uniform(0, 10);
+  //  sigma_obs ~ uniform(0, 100);
+  // Likelihood
   lambda ~ normal(mean_lambda, sigma_proc);
+  // Observation process
   y ~ normal(N_est, sigma_obs);
 }
 generated quantities {
@@ -32,32 +44,47 @@ data {
   int<lower=0> T;
   vector[T] y;
   int<lower=0> pyears;
+  // Number of years for prediction
 }
 parameters {
   real logN_est1;
+  // Initial log population size
   real mean_r;
+  // Mean growth rate
   real<lower=0, upper=1> sigma_proc;
+  // SD of state procesdatas
   real<lower=0, upper=1> sigma_obs;
+  // SD of observation process
   vector[T - 1] r;
 }
 transformed parameters {
   vector[T] logN_est;
+  // Log population size
+  // State process
   logN_est[1] = logN_est1;
   for (t in 1 : (T - 1)) 
     logN_est[t + 1] = logN_est[t] + r[t];
 }
 model {
+  // Priors and constraints
   logN_est1 ~ normal(5.6, 10);
   mean_r ~ normal(1, sqrt(1000));
+  //  sigma_proc ~ uniform(0, 1);
+  //  sigma_obs ~ uniform(0, 1);
+  // Likelihood
   r ~ normal(mean_r, sigma_proc);
+  // Observation process
   y ~ normal(logN_est, sigma_obs);
 }
 generated quantities {
+  // Population sizes on real scale
   real sigma2_proc;
   real sigma2_obs;
   vector[pyears] pr;
   vector[pyears] plogN_est;
+  // Predicted log population size
   vector<lower=0>[T + pyears] N_est;
+  // Population size
   sigma2_proc = square(sigma_proc);
   sigma2_obs = square(sigma_obs);
   pr[1] = normal_rng(mean_r, sigma_proc);

@@ -14,14 +14,21 @@ functions {
 }
 data {
   int<lower=0> N;
+  // number of measurement times
   real ts[N];
+  // measurement times > 0
   real y_init[2];
+  // initial measured populations
   real<lower=0> y[N, 2];
+  // measured populations
 }
 parameters {
   real<lower=0> theta[4];
+  // { alpha, beta, gamma, delta }
   real<lower=0> z_init[2];
+  // initial population
   real<lower=0> sigma[2];
+  // measurement errors
 }
 transformed parameters {
   real z[N, 2] = integrate_ode_rk45(dz_dt, z_init, 0, ts, theta,

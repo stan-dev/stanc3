@@ -26,11 +26,11 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tdata_mvmer.stan
 
-Syntax error in 'tdata_mvmer.stan', line 2, column 2 to column 5, parsing error:
+Syntax error in 'tdata_mvmer.stan', line 1, column 29 to line 2, column 0, parsing error:
    -------------------------------------------------
      1:    // dimensions for hs priors
      2:    int<lower=0> yHs1 = get_nvars_for_hs(M > 0 ? y_prior_dist[1] : 0);
-              ^
+         ^
      3:    int<lower=0> yHs2 = get_nvars_for_hs(M > 1 ? y_prior_dist[2] : 0);
      4:    int<lower=0> yHs3 = get_nvars_for_hs(M > 2 ? y_prior_dist[3] : 0);
    -------------------------------------------------

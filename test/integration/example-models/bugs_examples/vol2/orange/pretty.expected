@@ -1,4 +1,7 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format orange.stan
+// Orange Trees 
+// http://www.openbugs.net/Examples/Otrees.html
+// status: error thrown out during execution immediately 
 data {
   int<lower=0> K;
   int<lower=0> N;

@@ -1,4 +1,6 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds.stan
+//# 
+//#  http://www.openbugs.net/Examples/Seeds.html
 data {
   int<lower=0> I;
   int<lower=0> n[I];
@@ -83,12 +85,18 @@ Warning: deprecated language construct used in 'seeds.stan', line 25, column 12:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds_centered.stan
+//  http://www.openbugs.net/Examples/Seeds.html
+// tau replaced by sigma direct estimation
+// using narrower semi-informative priors
+// Centered coefficients as in BUGS manual chapter 3.1
 data {
   int<lower=0> I;
   int<lower=0> n[I];
   int<lower=0> N[I];
   vector[I] x1;
+  // seed type
   vector[I] x2;
+  // root extract
 }
 transformed data {
   vector[I] x1x2;
@@ -108,6 +116,7 @@ transformed parameters {
 }
 model {
   alpha0 ~ normal(0.0, 1.0);
+  // Narrower priors
   alpha1 ~ normal(0.0, 1.0);
   alpha2 ~ normal(0.0, 1.0);
   alpha12 ~ normal(0.0, 1.0);
@@ -232,12 +241,17 @@ Warning: deprecated language construct used in 'seeds_centered.stan', line 32, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds_stanified.stan
+//#  http://www.openbugs.net/Examples/Seeds.html
+//# tau replaced by sigma direct estimation
+//# using narrower semi-informative priors
 data {
   int<lower=0> I;
   int<lower=0> n[I];
   int<lower=0> N[I];
   vector[I] x1;
+  // seed type
   vector[I] x2;
+  // root extract
 }
 transformed data {
   vector[I] x1x2;
@@ -253,6 +267,7 @@ parameters {
 }
 model {
   alpha0 ~ normal(0.0, 1.0);
+  // Narrower priors
   alpha1 ~ normal(0.0, 1.0);
   alpha2 ~ normal(0.0, 1.0);
   alpha12 ~ normal(0.0, 1.0);

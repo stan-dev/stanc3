@@ -53,6 +53,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
   int<lower=0> m1;
+  // make sure didn't mess up spacing
   int<lower=0> m2;
   int<lower=0> m3;
   int<lower=0> m4;
@@ -60,6 +61,7 @@ data {
 transformed data {
   int intercept;
   intercept = 5;
+  // failed in 1.0.2
 }
 model {
 
@@ -81,6 +83,7 @@ model {
   y ~ normal(0, 1);
   for (i in 1 : 10) {
     real x[i];
+    // should allow i here.
     for (j in 1 : i) 
       x[j] = j * j;
   }
@@ -93,9 +96,11 @@ model {
   }
   for (i in 1 : 5) {
     real x[M[i]];
+    // data
   }
   for (i in 1 : 2) {
     real x[N[i]];
+    // tdata
   }
 }
 
@@ -144,6 +149,7 @@ transformed data {
   b = a + b + 1.0;
   {
     real b_local;
+    // init to 0 locally
     b = a + b + b_local;
     b_local = a + b + b_local;
   }

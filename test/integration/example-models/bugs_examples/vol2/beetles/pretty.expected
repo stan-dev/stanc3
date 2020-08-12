@@ -33,6 +33,7 @@ generated quantities {
   for (i in 1 : N) {
     llike[i] <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1 - p[i]);
     rhat[i] <- p[i] * n[i];
+    // fitted values
   }
 }
 
@@ -149,6 +150,7 @@ generated quantities {
     p[i] <- inv_logit(m[i]);
     llike[i] <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1 - p[i]);
     rhat[i] <- p[i] * n[i];
+    // fitted values
   }
   alpha <- alpha_star - beta * mean_x;
 }

@@ -1,4 +1,5 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format pump.stan
+// BUGS pump example (Vol 1, Example 2)
 data {
   int<lower=0> N;
   int<lower=0> x[N];

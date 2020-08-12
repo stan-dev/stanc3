@@ -1,10 +1,14 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_a_normal.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model a) normal error
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
@@ -213,12 +217,16 @@ Warning: deprecated language construct used in 'stacks_a_normal.stan', line 58, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_b_dexp.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model b) double exponential error
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
@@ -442,12 +450,16 @@ Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 61, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_c_t4.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model c) t error
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
@@ -460,6 +472,7 @@ transformed data {
       z[i, j] <- (x[i, j] - mean_x[j]) / sd_x[j];
   }
   d <- 4;
+  // degrees of freedom for t
 }
 parameters {
   real beta0;
@@ -470,6 +483,7 @@ transformed parameters {
   real<lower=0> sigma;
   vector[N] mu;
   sigma <- sqrt(d * sigmasq / (d - 2));
+  // t errors on d degrees of freedom
   mu <- beta0 + z * beta;
 }
 model {
@@ -671,12 +685,16 @@ Warning: deprecated language construct used in 'stacks_c_t4.stan', line 62, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_d_normal_ridge.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model d) normal error ridge regression
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
@@ -887,12 +905,16 @@ Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', lin
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_e_dexp_ridge.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model e) double exponential error ridge regression
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   real z[N, p];
   real mean_x[p];
@@ -1121,12 +1143,16 @@ Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format stacks_f_t4_ridge.stan
+// Stacks: robust regression and ridge regression 
+// http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
+// Model f) t error ridge regression
 data {
   int<lower=0> N;
   int<lower=0> p;
   real Y[N];
   matrix[N, p] x;
 }
+// to standardize the x's 
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
@@ -1139,6 +1165,7 @@ transformed data {
       z[i, j] <- (x[i, j] - mean_x[j]) / sd_x[j];
   }
   d <- 4;
+  // degrees of freedom for t
 }
 parameters {
   real beta0;
@@ -1150,6 +1177,7 @@ transformed parameters {
   real<lower=0> sigma;
   vector[N] mu;
   sigma <- sqrt(d * sigmasq / (d - 2));
+  // t errors on d degrees of freedom
   mu <- beta0 + z * beta;
 }
 model {

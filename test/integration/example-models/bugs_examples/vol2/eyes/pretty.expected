@@ -1,4 +1,12 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format eyes.stan
+/*
+* http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
+* Page 11: Eyes: Normal Mixture Model 
+* 
+
+* works using the mixture distribution form instead of 
+* latent indicators 
+*/
 data {
   int<lower=0> N;
   real y[N];

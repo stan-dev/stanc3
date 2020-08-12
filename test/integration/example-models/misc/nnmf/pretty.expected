@@ -21,6 +21,7 @@ transformed data {
 parameters {
   matrix<lower=0>[T, K] G;
   simplex[I] F[K];
+  // implicit unif prior on simplexes
 }
 model {
   for (t in 1 : T) 
@@ -117,6 +118,10 @@ Warning: deprecated language construct used in 'nnmf.stan', line 35, column 12:
 assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format nnmf_vec.stan
+// Evan Ira Blumgart (2012) Hamiltonian Monte Carlo Estimation of
+// PM2.5 Source Apportionment and Related Health Effects.
+// M.A. Dissertation.  Department of Statistics. 
+// The University of Auckland.
 data {
   int<lower=0> T;
   int<lower=0> I;

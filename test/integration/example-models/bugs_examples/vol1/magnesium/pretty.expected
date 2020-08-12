@@ -1,4 +1,12 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format magnesium.stan
+// Sensitivity to prior distributions: application to Magnesium meta-analysis
+//  http://www.openbugs.net/Examples/Magnesium.html
+// prior specification 1, 2, 3, 4, 5, and 6 combined  
+// in one posterior distribution.  
+// For individual model specification, see magnesium$i.stan ($i=1,...,6)
+//
+// Note: tau is really the standard deviation parameter in the normal distribution.
+//
 data {
   int N_studies;
   int rt[N_studies];
@@ -35,11 +43,17 @@ transformed parameters {
   tau[6] <- sqrt(tau_sq_6);
 }
 model {
+  // prior 1: gamma(0.001, 0.001) on inv_tau_sq
   inv_tau_sq_1 ~ gamma(0.001, 0.001);
+  // Prior 2: Uniform(0, 50) on tau.sqrd
   tau_sq_2 ~ uniform(0, 50);
+  // Prior 3: Uniform(0, 50) on tau
   tau_3 ~ uniform(0, 50);
+  // Prior 4: Uniform shrinkage on tau.sqrd
   B0 ~ uniform(0, 1);
+  // Prior 5: Dumouchel on tau
   D0 ~ uniform(0, 1);
+  // Prior 6: Half-Normal on tau.sqrd
   tau_sq_6 ~ normal(0, p0_sigma) T[0, ];
   mu ~ uniform(-10, 10);
   for (prior in 1 : N_priors) {

@@ -50,6 +50,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf.stan
@@ -104,6 +105,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf_log.stan
@@ -158,6 +160,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log.stan
@@ -212,6 +215,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_glm.stan
@@ -252,6 +256,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_log.stan
@@ -306,5 +311,6 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 

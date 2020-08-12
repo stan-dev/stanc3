@@ -1,5 +1,15 @@
   $ ../../../../../../install/default/bin/stanc --auto-format ipm.stan
+// Integrated population model
 functions {
+  /**
+  * Return log probability of Poisson distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n      Outcome
+  * @param lambda Mean
+  *
+  * @return Log probability
+  */
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
     if (lambda < 0) {
@@ -13,6 +23,16 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return log probability of binomial distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n     Outcome
+  * @param N     Size
+  * @param theta Probability
+  *
+  * @return Log probability
+  */
   real real_binomial_lpdf(real n, real N, real theta) {
     real lp;
     if (N < 0) {
@@ -29,14 +49,27 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return m-array cell probabilities
+  *
+  * @param nyears Number of years
+  * @param sjuv   Survival probability of juveniles
+  * @param sad    Survival probability of adults
+  * @param p      Recapture probability
+  *
+  * @return m-array cell probabilities
+  */
   vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     vector[nyears] pr[2 * ny_minus_1];
     vector[ny_minus_1] q = 1 - p;
     real prod_s;
     real prod_q;
+    // m-array cell probabilities for juveniles
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t, t] = sjuv[t] * p[t];
+      // Above main diagonal
       prod_s = 1;
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -44,12 +77,17 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t, j] = sjuv[t] * prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t, j] = 0;
+      // Last column: probability of non-recapture
       pr[t, nyears] = 1 - sum(pr[t, 1 : ny_minus_1]);
     }
+    // m-array cell probabilities for adults
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t + nyears - 1, t] = sad[t] * p[t];
+      // Above main diagonal
       prod_s = sad[t];
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -57,8 +95,10 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t + nyears - 1, j] = prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t + nyears - 1, j] = 0;
+      // Last column
       pr[t + nyears - 1, nyears] = 1
                                    - sum(pr[t + nyears - 1, 1 : ny_minus_1]);
     }
@@ -67,22 +107,34 @@ functions {
 }
 data {
   int nyears;
+  // Number of years
   vector[nyears] y;
+  // Population counts
   int J[nyears - 1];
+  // Total number of nestings recorded
   int R[nyears - 1];
+  // Annual number of surveyed broods
   int m[2 * (nyears - 1), nyears];
+  // Capture-recapture data in m-array format
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
 }
 parameters {
   real<lower=0> sigma_y;
+  // Observation error
   vector<lower=0>[nyears] N1;
+  // Number of 1-year juveniles
   vector<lower=0>[nyears] Nad;
+  // Number of adults
   real<lower=0, upper=1> mean_sjuv;
+  // Mean survival prob. juveniles
   real<lower=0, upper=1> mean_sad;
+  // Mean survival prob. adults
   real<lower=0, upper=1> mean_p;
+  // Mean recapture prob.
   real<lower=0> mean_fec;
+  // Mean productivity
 }
 transformed parameters {
   vector<lower=0, upper=1>[ny_minus_1] sjuv;
@@ -92,40 +144,67 @@ transformed parameters {
   vector<lower=0>[nyears] Ntot;
   simplex[nyears] pr[2 * ny_minus_1];
   vector<lower=0>[ny_minus_1] rho;
+  // Survival and recapture probabilities, as well as productivity
   for (t in 1 : ny_minus_1) {
     sjuv[t] = mean_sjuv;
     sad[t] = mean_sad;
     p[t] = mean_p;
     f[t] = mean_fec;
   }
+  // Total number of individuals
   Ntot = Nad + N1;
+  // m-array
   pr = marray(nyears, sjuv, sad, p);
+  // Productivity
   for (t in 1 : ny_minus_1) 
     rho[t] = R[t] * f[t];
 }
 model {
+  // Priors
+  // Initial population sizes
+  // Constraints ensure truncated normal (> 0)
   N1[1] ~ normal(100, 100);
   Nad[1] ~ normal(100, 100);
+  // Proper flat prios [0, 1] are implicitly use on mean_sjuv, mean_sad
+  // and mean_p.
+  // Improper flat priors are implicitly used on sigma_y and mean_fec.
+  // Likelihood for population count data (state-space model)
+  // System process
   for (t in 2 : nyears) {
     real mean1;
     mean1 = f[t - 1] / 2 * sjuv[t - 1] * Ntot[t - 1];
     N1[t] ~ real_poisson(mean1);
     Nad[t] ~ real_binomial(Ntot[t - 1], sad[t - 1]);
   }
+  // Observation process
   y ~ normal(Ntot, sigma_y);
+  // Likelihood for capture-recapture data: CJS model (2 age classes)
+  // Multinomial likelihood
   for (t in 1 : (2 * ny_minus_1)) {
     m[t] ~ multinomial(pr[t]);
   }
+  // Likelihood for productivity data: Poisson regression
   J ~ poisson(rho);
 }
 generated quantities {
   vector<lower=0>[ny_minus_1] lambda;
+  // Population growth rate
   real<lower=0> sigma2_y = square(sigma_y);
   lambda[1 : ny_minus_1] = Ntot[2 : nyears] ./ Ntot[1 : ny_minus_1];
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_hoopoe.stan
+// Integrated population model
 functions {
+  /**
+  * Return log probability of Poisson distribution.
+  * outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n      Outcome
+  * @param lambda Mean
+  *
+  * @return Log probability
+  */
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
     if (lambda < 0) {
@@ -139,6 +218,16 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return log probability of binomial distribution.
+  * outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n     Outcome
+  * @param N     Size
+  * @param theta Probability
+  *
+  * @return Log probability
+  */
   real real_binomial_lpdf(real n, real N, real theta) {
     real lp;
     if (N < 0) {
@@ -155,6 +244,15 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return m-array  cell probabilities for juveniles
+  *
+  * @param nyears Number of years
+  * @param phij   Survival probability
+  * @param p      Recapture probability
+  *
+  * @return m-array cell probabilities for juveniles
+  */
   vector[] marray_juveniles(int nyears, vector phij, vector phia, vector p) {
     int ny_minus_1 = nyears - 1;
     vector[nyears] pr_j[ny_minus_1];
@@ -162,7 +260,9 @@ functions {
     real prod_phi;
     real prod_q;
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr_j[t, t] = phij[t] * p[t];
+      // Above main diagonal
       prod_phi = 1;
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -170,12 +270,23 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr_j[t, j] = phij[t] * prod_phi * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr_j[t, j] = 0;
+      // Last column: probability of non-recapture
       pr_j[t, nyears] = 1 - sum(pr_j[t, 1 : (nyears - 1)]);
     }
     return pr_j;
   }
+  /**
+  * Return m-array cell probabilities for adults
+  *
+  * @param nyears Number of years
+  * @param phia   Survival probability
+  * @param p      Recapture probability
+  *
+  * @return m-array cell probabilities for adults
+  */
   vector[] marray_adults(int nyears, vector phia, vector p) {
     int ny_minus_1 = nyears - 1;
     vector[nyears] pr_a[ny_minus_1];
@@ -183,7 +294,9 @@ functions {
     real prod_phi;
     real prod_q;
     for (t in 1 : (nyears - 1)) {
+      // Main diagonal
       pr_a[t, t] = phia[t] * p[t];
+      // Above main diagonal
       prod_phi = phia[t];
       prod_q = 1;
       for (j in (t + 1) : (nyears - 1)) {
@@ -191,8 +304,10 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr_a[t, j] = prod_phi * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr_a[t, j] = 0;
+      // Last column
       pr_a[t, nyears] = 1 - sum(pr_a[t, 1 : (nyears - 1)]);
     }
     return pr_a;
@@ -200,19 +315,27 @@ functions {
 }
 data {
   int nyears;
+  // Number of years
   int y[nyears];
+  // Population counts
   int J[nyears - 1];
+  // Productivity data
   int R[nyears - 1];
   int marray_j[nyears - 1, nyears];
+  // Data in m-array format for juveniles
   int marray_a[nyears - 1, nyears];
+  // Data in m-array format for adults
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
 }
 parameters {
   vector<lower=0>[nyears] N1;
+  // Number of 1-year old individuals
   vector<lower=0>[nyears] NadSurv;
+  // Number of Adults >= 2 years
   vector<lower=0>[nyears] Nadimm;
+  // Number of immigrants
   real l_mphij;
   real l_mphia;
   real l_mfec;
@@ -233,18 +356,26 @@ transformed parameters {
   vector[ny_minus_1] epsilon_fec;
   vector[ny_minus_1] epsilon_im;
   vector<lower=0, upper=1>[ny_minus_1] phij;
+  // Juv. apparent survival
   vector<lower=0, upper=1>[ny_minus_1] phia;
+  // Adult apparent survival
   vector<lower=0>[ny_minus_1] f;
+  // Productivity
   vector<lower=0>[ny_minus_1] omega;
+  // Immigration
   vector<lower=0, upper=1>[ny_minus_1] p;
+  // Recapture probability
   vector<lower=0>[nyears] Ntot;
+  // Number of total individuals
   vector<lower=0>[ny_minus_1] rho;
   simplex[nyears] pr_j[ny_minus_1];
   simplex[nyears] pr_a[ny_minus_1];
+  // Distribution of error terms
   epsilon_phij = sig_phij * epsilon_phij_raw;
   epsilon_phia = sig_phia * epsilon_phia_raw;
   epsilon_fec = sig_fec * epsilon_fec_raw;
   epsilon_im = sig_im * epsilon_im_raw;
+  // Constrain parameters
   for (t in 1 : (nyears - 1)) {
     phij[t] = inv_logit(l_mphij + epsilon_phij[t]);
     phia[t] = inv_logit(l_mphia + epsilon_phia[t]);
@@ -252,25 +383,37 @@ transformed parameters {
     omega[t] = exp(l_mim + epsilon_im[t]);
     p[t] = inv_logit(l_p);
   }
+  // Total number of individuals
   Ntot = NadSurv + Nadimm + N1;
+  // m-array
   pr_j = marray_juveniles(nyears, phij, phia, p);
   pr_a = marray_adults(nyears, phia, p);
+  // Productivity
   for (t in 1 : ny_minus_1) 
     rho[t] = R[t] * f[t];
 }
 model {
+  // Priors
+  // Initial population sizes
+  // Constraints ensure truncated normal (> 0)
   N1[1] ~ normal(100, 100);
   NadSurv[1] ~ normal(100, 100);
   Nadimm[1] ~ normal(100, 100);
+  // Mean demographic parameters (on appropriate scale)
   l_mphij ~ normal(0, 100);
   l_mphia ~ normal(0, 100);
   l_mfec ~ normal(0, 100);
   l_mim ~ normal(0, 100);
   l_p ~ normal(0, 100);
+  // Improper flat priors are implicitly used on
+  // scale parameters, sig_phij, sig_phia, sig_fec and sig_im.
+  // Efficient form of priors
   epsilon_phij_raw ~ normal(0, 1);
   epsilon_phia_raw ~ normal(0, 1);
   epsilon_fec_raw ~ normal(0, 1);
   epsilon_im_raw ~ normal(0, 1);
+  // Likelihood for population population count data (state-space model)
+  // System process
   for (t in 2 : nyears) {
     real mean1 = 0.5 * f[t - 1] * phij[t - 1] * Ntot[t - 1];
     real mpo = Ntot[t - 1] * omega[t - 1];
@@ -278,28 +421,49 @@ model {
     NadSurv[t] ~ real_binomial(Ntot[t - 1], phia[t - 1]);
     Nadimm[t] ~ real_poisson(mpo);
   }
+  // Observation process
   y ~ poisson(Ntot);
+  // Likelihood for capture-recapture data: CJS model (2 age classes)
+  // Multinomial likelihood
   for (t in 1 : (nyears - 1)) {
     marray_j[t] ~ multinomial(pr_j[t]);
     marray_a[t] ~ multinomial(pr_a[t]);
   }
+  // Likelihood for productivity data: Poisson regression
   J ~ poisson(rho);
 }
 generated quantities {
   real<lower=0, upper=1> mphij = inv_logit(l_mphij);
+  // Mean juv. survival prob.
   real<lower=0, upper=1> mphia = inv_logit(l_mphia);
+  // Mean adult survival prob.
   real<lower=0> mfec = exp(l_mfec);
+  // Mean productivity
   real<lower=0> mim = exp(l_mim);
+  // Mean immigration rate
   vector<lower=0>[ny_minus_1] lambda;
+  // Population growth rate
   vector[ny_minus_1] logla;
   real<lower=0> mlam;
+  // Population growth rate
   lambda[1 : (nyears - 1)] = Ntot[2 : nyears] ./ Ntot[1 : (nyears - 1)];
   logla = log(lambda);
+  // Geometric mean
   mlam = exp(1.0 / ny_minus_1 * sum(logla));
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_pred.stan
+// Integrated population model
 functions {
+  /**
+  * Return log probability of Poisson distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n      Outcome
+  * @param lambda Mean
+  *
+  * @return Log probability
+  */
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
     if (lambda < 0) {
@@ -313,6 +477,16 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return log probability of binomial distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n     Outcome
+  * @param N     Size
+  * @param theta Probability
+  *
+  * @return Log probability
+  */
   real real_binomial_lpdf(real n, real N, real theta) {
     real lp;
     if (N < 0) {
@@ -329,14 +503,27 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return m-array cell probabilities
+  *
+  * @param nyears Number of years
+  * @param sjuv   Survival probability of juveniles
+  * @param sad    Survival probability of adults
+  * @param p      Recapture probability
+  *
+  * @return m-array cell probabilities
+  */
   vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     vector[nyears] pr[2 * ny_minus_1];
     vector[nyears] q = 1 - p;
     real prod_s;
     real prod_q;
+    // m-array cell probabilities for juveniles
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t, t] = sjuv[t] * p[t];
+      // Above main diagonal
       prod_s = 1;
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -344,12 +531,17 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t, j] = sjuv[t] * prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t, j] = 0;
+      // Last column: probability of non-recapture
       pr[t, nyears] = 1 - sum(pr[t, 1 : ny_minus_1]);
     }
+    // m-array cell probabilities for adults
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t + ny_minus_1, t] = sad[t] * p[t];
+      // Above main diagonal
       prod_s = sad[t];
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -357,8 +549,10 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t + ny_minus_1, j] = prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t + ny_minus_1, j] = 0;
+      // Last column
       pr[t + ny_minus_1, nyears] = 1
                                    - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
     }
@@ -367,23 +561,36 @@ functions {
 }
 data {
   int nyears;
+  // Number of years
   vector[nyears] y;
+  // Population counts
   int J[nyears - 1];
+  // Total number of nestings recorded
   int R[nyears - 1];
+  // Annual number of surveyed broods
   int m[2 * (nyears - 1), nyears];
+  // Capture-recapture data in m-array format
   int<lower=1> t_pred;
+  // Number of years to predict
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
 }
 parameters {
   real<lower=0> sigma_y;
+  // Observation error
   vector<lower=0>[nyears] N1;
+  // Number of 1-year juveniles
   vector<lower=0>[nyears] Nad;
+  // Number of adults
   real<lower=0, upper=1> mean_sjuv;
+  // Mean survival prob. juveniles
   real<lower=0, upper=1> mean_sad;
+  // Mean survival prob. adults
   real<lower=0, upper=1> mean_p;
+  // Mean recapture prob.
   real<lower=0> mean_fec;
+  // Mean productivity
 }
 transformed parameters {
   vector<lower=0, upper=1>[nyears] sjuv;
@@ -393,33 +600,52 @@ transformed parameters {
   vector<lower=0>[nyears] Ntot;
   simplex[nyears] pr[2 * (ny_minus_1)];
   vector<lower=0>[ny_minus_1] rho;
+  // Survival and recapture probabilities, as well as productivity
   for (t in 1 : nyears) {
     sjuv[t] = mean_sjuv;
     sad[t] = mean_sad;
     p[t] = mean_p;
     f[t] = mean_fec;
   }
+  // Total number of individuals
   Ntot = Nad + N1;
+  // m-array
   pr = marray(nyears, sjuv, sad, p);
+  // Productivity
   for (t in 1 : ny_minus_1) 
     rho[t] = R[t] * f[t];
 }
 model {
+  // Priors
+  // Initial population sizes
+  // Constraints ensure truncated normal (> 0)
   N1[1] ~ normal(100, 100);
   Nad[1] ~ normal(100, 100);
+  // Proper flat priors [0, 1] are implicitly used on mean_sjuv, mean_sad
+  // and mean_p.
+  // Improper flat priors are implicitly used on sigma_y and mean_fec.
+  // Likelihood for population population count data (state-space model)
+  // System process
   for (t in 2 : nyears) {
     real mean1;
     mean1 = f[t - 1] / 2 * sjuv[t - 1] * Ntot[t - 1];
     N1[t] ~ real_poisson(mean1);
     Nad[t] ~ real_binomial(Ntot[t - 1], sad[t - 1]);
   }
+  // Observation process
   y ~ normal(Ntot, sigma_y);
+  // Likelihood for capture-recapture data: CJS model (2 age classes)
+  // Multinomial likelihood
   for (t in 1 : (2 * ny_minus_1)) 
     m[t] ~ multinomial(pr[t]);
+  // Likelihood for productivity data: Poisson regression
   J ~ poisson(rho);
 }
 generated quantities {
+  // Number of individuals are assigned as integer values
+  // in this block
   vector<lower=0>[ny_minus_1] lambda;
+  // Population growth rate
   real<lower=0> sigma2_y = square(sigma_y);
   vector<lower=0, upper=1>[t_pred] sjuv_pred;
   vector<lower=0, upper=1>[t_pred] sad_pred;
@@ -429,6 +655,7 @@ generated quantities {
   int<lower=0> Ntot_pred[t_pred];
   int<lower=0> Ntot0;
   lambda[1 : ny_minus_1] = Ntot[2 : nyears] ./ Ntot[1 : ny_minus_1];
+  // Prediction
   {
     int ind = 1;
     int UP = 10000;
@@ -438,6 +665,7 @@ generated quantities {
       sad_pred[t] = mean_sad;
       f_pred[t] = mean_fec;
     }
+    // Ntot0 = Ntot[nyears]; assign an integer value
     while (ind < Ntot[nyears] && ind < UP) {
       ind = ind + 1;
     }
@@ -461,7 +689,17 @@ generated quantities {
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ipm_prod.stan
+// Integrated population model
 functions {
+  /**
+  * Return log probability of Poisson distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n      Outcome
+  * @param lambda Mean
+  *
+  * @return Log probability
+  */
   real real_poisson_lpdf(real n, real lambda) {
     real lp;
     if (lambda < 0) {
@@ -475,6 +713,16 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return log probability of binomial distribution.
+  * Outcome n may be a real value; for compatibility with Win/OpenBUGS.
+  *
+  * @param n     Outcome
+  * @param N     Size
+  * @param theta Probability
+  *
+  * @return Log probability
+  */
   real real_binomial_lpdf(real n, real N, real theta) {
     real lp;
     if (N < 0) {
@@ -491,14 +739,27 @@ functions {
     }
     return lp;
   }
+  /**
+  * Return m-array cell probabilities
+  *
+  * @param nyears Number of years
+  * @param sjuv   Survival probability of juveniles
+  * @param sad    Survival probability of adults
+  * @param p      Recapture probability
+  *
+  * @return m-array cell probabilities
+  */
   vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     vector[nyears] pr[2 * ny_minus_1];
     vector[nyears - 1] q = 1 - p;
     real prod_s;
     real prod_q;
+    // m-array cell probabilities for juveniles
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t, t] = sjuv[t] * p[t];
+      // Above main diagonal
       prod_s = 1;
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -506,12 +767,17 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t, j] = sjuv[t] * prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t, j] = 0;
+      // Last column: probability of non-recapture
       pr[t, nyears] = 1 - sum(pr[t, 1 : ny_minus_1]);
     }
+    // m-array cell probabilities for adults
     for (t in 1 : ny_minus_1) {
+      // Main diagonal
       pr[t + ny_minus_1, t] = sad[t] * p[t];
+      // Above main diagonal
       prod_s = sad[t];
       prod_q = 1;
       for (j in (t + 1) : ny_minus_1) {
@@ -519,8 +785,10 @@ functions {
         prod_q = prod_q * q[j - 1];
         pr[t + ny_minus_1, j] = prod_s * prod_q * p[j];
       }
+      // Below main diagonal
       for (j in 1 : (t - 1)) 
         pr[t + nyears - 1, j] = 0;
+      // Last column
       pr[t + nyears - 1, nyears] = 1
                                    - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
     }
@@ -529,20 +797,30 @@ functions {
 }
 data {
   int nyears;
+  // Number of years
   vector[nyears] y;
+  // Population counts
   int m[2 * (nyears - 1), nyears];
+  // Capture-recapture data in m-array format
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
 }
 parameters {
   real<lower=0> sigma_y;
+  // Observation error
   vector<lower=0>[nyears] N1;
+  // Number of 1-year juveniles
   vector<lower=0>[nyears] Nad;
+  // Number of adults
   real<lower=0, upper=1> mean_sjuv;
+  // Mean survival prob. juveniles
   real<lower=0, upper=1> mean_sad;
+  // Mean survival prob. adults
   real<lower=0, upper=1> mean_p;
+  // Mean recapture prob.
   real<lower=0> mean_fec;
+  // Mean productivity
 }
 transformed parameters {
   vector<lower=0, upper=1>[ny_minus_1] sjuv;
@@ -551,29 +829,44 @@ transformed parameters {
   vector<lower=0>[ny_minus_1] f;
   vector<lower=0>[nyears] Ntot;
   simplex[nyears] pr[2 * ny_minus_1];
+  // Survival and recapture probabilities, as well as productivity
   for (t in 1 : ny_minus_1) {
     sjuv[t] = mean_sjuv;
     sad[t] = mean_sad;
     p[t] = mean_p;
     f[t] = mean_fec;
   }
+  // Total number of individuals
   Ntot = Nad + N1;
+  // m-array
   pr = marray(nyears, sjuv, sad, p);
 }
 model {
+  // Priors
+  // Initial population sizes
+  // Constraints ensure truncated normal (> 0)
   N1[1] ~ normal(100, 100);
   Nad[1] ~ normal(100, 100);
+  // Proper flat priors [0, 1] are implicitly used on mean_sjuv, mean_sad
+  // and mean_p.
+  // Improper flat priors are implicitly used on sigma_y and mean_fec.
+  // Likelihood for population count data (state-space model)
+  // System process
   for (t in 2 : nyears) {
     real mean1 = f[t - 1] * 0.5 * sjuv[t - 1] * Ntot[t - 1];
     N1[t] ~ real_poisson(mean1);
     Nad[t] ~ real_binomial(Ntot[t - 1], sad[t - 1]);
   }
+  // Observation process
   y ~ normal(Ntot, sigma_y);
+  // Likelihood for capture-recapture data: CJS model (2 age classes)
+  // Multinomial likelihood
   for (t in 1 : (2 * ny_minus_1)) 
     m[t] ~ multinomial(pr[t]);
 }
 generated quantities {
   vector<lower=0>[ny_minus_1] lambda;
+  // Population growth rate
   real<lower=0> sigma2_y = square(sigma_y);
   lambda[1 : ny_minus_1] = Ntot[2 : nyears] ./ Ntot[1 : ny_minus_1];
 }

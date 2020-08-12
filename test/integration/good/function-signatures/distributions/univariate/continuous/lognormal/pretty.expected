@@ -1278,6 +1278,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format lognormal_cdf.stan
@@ -2326,6 +2327,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format lognormal_cdf_log.stan
@@ -3602,6 +3604,7 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
   $ ../../../../../../../../../install/default/bin/stanc --auto-format lognormal_log.stan
@@ -4650,5 +4653,6 @@ transformed parameters {
 }
 model {
   y_p ~ normal(0, 1);
+  // in case anyone tries to run it
 }
 
