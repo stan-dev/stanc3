@@ -12,6 +12,8 @@ parameters {
   real logit;
   real bernoulli_logit_glm_lpmf;
   real reduce_sum;
+  real ode_bdf;
+  real ode_bdf_tol;
 }
 transformed parameters {
   real mu;

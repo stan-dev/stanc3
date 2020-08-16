@@ -119,9 +119,9 @@ let check_fresh_variable_basic id is_udf =
     if
       is_udf
       && ( Stan_math_signatures.is_stan_math_function_name id.name
-         || Stan_math_signatures.is_reduce_sum_fn id.name )
-      (* variadic functions are currently on in math sigs *)
-      || Stan_math_signatures.is_variadic_ode_fn id.name
+         (* variadic functions are currently on in math sigs *)
+         || Stan_math_signatures.is_reduce_sum_fn id.name
+         || Stan_math_signatures.is_variadic_ode_fn id.name )
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
