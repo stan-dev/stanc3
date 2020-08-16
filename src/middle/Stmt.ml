@@ -338,9 +338,11 @@ module Helpers = struct
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
-  let for_scalar_inv st bodyfn var smeta =
+  let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
+    let var = {var with pattern= Indexed (var, [])} in
     let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
       match pattern with
+      | Indexed (obj, []) -> obj
       | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
       | _ -> e
     in

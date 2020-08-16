@@ -1,5 +1,3 @@
-  $ ../../../../install/default/bin/stanc 1_starts_with_number.stan
-Model name must not start with a number or symbol other than underscore.
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
@@ -402,7 +400,7 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 7 to column 8,
      8:  model {
    -------------------------------------------------
 
-Only top-level variable declarations are allowed in data and parameter blocks.
+";" is expected after a top-level variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
@@ -445,7 +443,7 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 7 to column 9
      5:  parameters {
    -------------------------------------------------
 
-Only top-level variable declarations are allowed in data and parameter blocks.
+";" is expected after a top-level variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
@@ -460,7 +458,7 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 7 to column 9
      8:  model {
    -------------------------------------------------
 
-Only top-level variable declarations are allowed in data and parameter blocks.
+";" is expected after a top-level variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan

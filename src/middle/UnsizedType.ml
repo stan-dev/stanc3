@@ -56,6 +56,12 @@ and pp_returntype ppf = function
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
 
+let rec lub_ad_type = function
+  | [] -> DataOnly
+  | x :: xs ->
+      let y = lub_ad_type xs in
+      if compare_autodifftype x y < 0 then y else x
+
 let check_of_same_type_mod_conv name t1 t2 =
   if String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
@@ -113,6 +119,10 @@ let rec is_autodiffable = function
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
 let is_fun_type = function UFun _ -> true | _ -> false
+
+(** Detect if type contains an integer *)
+let rec contains_int ut =
+  match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)

@@ -109,7 +109,11 @@ let rec remove_unused_stmts s =
         Stmt.Fixed.Pattern.Skip
     | Decl _ -> Stmt.Fixed.Pattern.Skip
     | NRFunApp (CompilerInternal, name, _)
-      when Internal_fun.to_string FnCheck = name ->
+      when Internal_fun.(
+             to_string FnCheck = name
+             || to_string FnValidateSize = name
+             || to_string FnValidateSizeSimplex = name
+             || to_string FnValidateSizeUnitVector = name) ->
         Stmt.Fixed.Pattern.Skip
     | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x
   in
