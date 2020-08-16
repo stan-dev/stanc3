@@ -459,6 +459,42 @@ let add_binary_vec name =
         (List.range 0 8) )
     [UnsizedType.UInt; UReal]
 
+let add_binary_vec_int_real name =
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [UInt; bare_array_type (i, j)] ) )
+        (List.range 0 8) )
+    [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [bare_array_type (UInt, j + 1); bare_array_type (i, j)] ) )
+        (List.range 0 8) )
+    [UnsizedType.UArray UReal; UVector; URowVector] ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UMatrix, i))
+        , [bare_array_type (UInt, i + 2); bare_array_type (UMatrix, i)] ) )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UReal, i))
+        , [bare_array_type (UInt, i); UReal] ) )
+    (List.range 0 8)
+
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
@@ -616,8 +652,8 @@ let () =
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector] ) ;
-  add_unqualified ("bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
-  add_unqualified ("bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
+  add_binary_vec_int_real "bessel_first_kind" ;
+  add_binary_vec_int_real "bessel_second_kind" ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
