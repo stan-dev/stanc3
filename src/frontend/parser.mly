@@ -263,7 +263,14 @@ id_and_optional_assignment(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
-  (* When dims are after identifier, do not allow multiple identifiers *)
+  (* This rule matches the old array syntax, e.g:
+       int x[1,2] = ..;
+
+     We need to match it separately because we won't support multiple inline
+     declarations using this form.
+
+     This form is likely TO BE DEPRECIATED in Stan 3
+   *)
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
     { (fun ~is_global ->
@@ -280,13 +287,14 @@ decl(type_rule, rhs):
         }
     })
     }
-  (* Array dimensions option must be inlined, else it will conflict with first
-     rule. *)
+  (* This rule matches non-array declarations and also the new array syntax, e.g:
+       array[1,2] int x = ..;
+   *)
+  (* Note that the array dimensions option must be inlined with ioption, else
+     it will conflict with first rule. *)
   | dims_opt=ioption(arr_dims) ty=type_rule
       id_rhs=id_and_optional_assignment(rhs) SEMICOLON
     { (fun ~is_global ->
-      (* map over each variable in v (often only one), assigning each the same
-         type. *)
       let dims = Option.value dims_opt ~default:[] in
       let (id, rhs_opt) = id_rhs in
           { stmt=
