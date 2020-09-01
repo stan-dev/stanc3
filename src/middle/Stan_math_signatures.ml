@@ -495,6 +495,29 @@ let add_binary_vec_int_real name =
         , [bare_array_type (UInt, i); UReal] ) )
     (List.range 0 8)
 
+let add_binary_vec_int_int name =
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UInt, i))
+        , [bare_array_type (UInt, i); UInt] ) )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UInt, i))
+        , [UInt; bare_array_type (UInt, i)] ) )
+    (List.range 1 8) ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UInt, i))
+        , [bare_array_type (UInt, i); bare_array_type (UInt, i)] ) )
+    (List.range 1 8)
+
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
@@ -662,7 +685,7 @@ let () =
             , ReturnType (rng_return_type UReal [t; u])
             , [t; u] ) ) ) ;
   add_unqualified ("binary_log_loss", ReturnType UReal, [UInt; UReal]) ;
-  add_binary "binomial_coefficient_log" ;
+  add_binary_vec "binomial_coefficient_log" ;
   add_unqualified
     ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt]) ;
   add_unqualified ("categorical_rng", ReturnType UInt, [UVector]) ;
@@ -692,7 +715,7 @@ let () =
   add_unqualified ("append_col", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix]) ;
-  add_unqualified ("choose", ReturnType UInt, [UInt; UInt]) ;
+  add_binary_vec_int_int "choose" ;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt]) ;
   add_unqualified ("cols", ReturnType UInt, [UVector]) ;
   add_unqualified ("cols", ReturnType UInt, [URowVector]) ;
