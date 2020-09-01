@@ -654,6 +654,7 @@ let () =
     , [UArray UInt; URowVector; UVector; UVector] ) ;
   add_binary_vec_int_real "bessel_first_kind" ;
   add_binary_vec_int_real "bessel_second_kind" ;
+  add_binary_vec "beta" ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
@@ -661,7 +662,7 @@ let () =
             ( "beta_proportion_rng"
             , ReturnType (rng_return_type UReal [t; u])
             , [t; u] ) ) ) ;
-  add_unqualified ("binary_log_loss", ReturnType UReal, [UInt; UReal]) ;
+  add_binary_vec_int_real "binary_log_loss" ;
   add_binary "binomial_coefficient_log" ;
   add_unqualified
     ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt]) ;
