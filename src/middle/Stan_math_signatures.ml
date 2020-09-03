@@ -495,6 +495,42 @@ let add_binary_vec_int_real name =
         , [bare_array_type (UInt, i); UReal] ) )
     (List.range 0 8)
 
+let add_binary_vec_real_int name =
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [bare_array_type (i, j); UInt] ) )
+        (List.range 0 8) )
+    [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (i, j))
+            , [bare_array_type (i, j); bare_array_type (UInt, j + 1)] ) )
+        (List.range 0 8) )
+    [UnsizedType.UArray UReal; UVector; URowVector] ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UMatrix, i))
+        , [bare_array_type (UMatrix, i); bare_array_type (UInt, i + 2)] ) )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      add_unqualified
+        ( name
+        , ReturnType (bare_array_type (UReal, i))
+        , [UReal; bare_array_type (UInt, i)] ) )
+    (List.range 0 8)
+
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
@@ -800,13 +836,13 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
-  add_unqualified ("falling_factorial", ReturnType UReal, [UReal; UInt]) ;
   add_unqualified ("falling_factorial", ReturnType UInt, [UInt; UInt]) ;
-  add_binary "fdim" ;
+  add_binary_vec_real_int "falling_factorial" ;
+  add_binary_vec "fdim" ;
   add_ternary "fma" ;
-  add_binary "fmax" ;
-  add_binary "fmin" ;
-  add_binary "fmod" ;
+  add_binary_vec "fmax" ;
+  add_binary_vec "fmin" ;
+  add_binary_vec "fmod" ;
   add_binary "gamma_p" ;
   add_binary "gamma_q" ;
   add_unqualified
