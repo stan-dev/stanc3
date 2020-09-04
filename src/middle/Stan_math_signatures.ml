@@ -1217,6 +1217,7 @@ let () =
   add_unqualified ("is_nan", ReturnType UInt, [UReal]) ;
   add_binary_vec "lbeta" ;
   add_binary "lchoose" ;
+  add_binary_vec_real_int "ldexp" ;
   add_qualified
     ( "linspaced_array"
     , ReturnType (UArray UReal)
@@ -1237,13 +1238,13 @@ let () =
   add_unqualified ("lkj_corr_rng", ReturnType UMatrix, [UInt; UReal]) ;
   add_unqualified
     ("lkj_cov_log", ReturnType UReal, [UMatrix; UVector; UVector; UReal]) ;
-  add_unqualified ("lmgamma", ReturnType UReal, [UInt; UReal]) ;
+  add_binary_vec_int_real "lmgamma" ;
   add_binary "lmultiply" ;
   add_nullary "log10" ;
   add_nullary "log2" ;
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
-  add_binary "log_diff_exp" ;
-  add_binary "log_falling_factorial" ;
+  add_binary_vec "log_diff_exp" ;
+  add_binary_vec "log_falling_factorial" ;
   add_ternary "log_mix" ;
   List.iter
     ~f:(fun v1 ->
