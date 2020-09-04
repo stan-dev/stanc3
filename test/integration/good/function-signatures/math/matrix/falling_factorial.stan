@@ -40,10 +40,14 @@ transformed data {
   row_vector[d_int] transformed_data_row_vector_array_2d[d_int,2];
   row_vector[d_int] transformed_data_row_vector_array_3d[d_int,2,3];
 
+  transformed_data_real_array = falling_factorial(d_int,d_int_array);
   transformed_data_real_array = falling_factorial(d_real,d_int_array);
+  transformed_data_real_array = falling_factorial(d_int_array,d_int_array);
   transformed_data_real_array = falling_factorial(d_real_array,d_int_array);
   transformed_data_real_array_2d = falling_factorial(d_real,d_int_array_2d);
+  transformed_data_real_array_2d = falling_factorial(d_int,d_int_array_2d);
   transformed_data_real_array_2d = falling_factorial(d_real_array_2d,d_int_array_2d);
+  transformed_data_real_array_2d = falling_factorial(d_int_array_2d,d_int_array_2d);
   transformed_data_real_array_3d = falling_factorial(d_real,d_int_array_3d);
   transformed_data_real_array_3d = falling_factorial(d_real_array_3d,d_int_array_3d);
 

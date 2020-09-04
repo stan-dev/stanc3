@@ -836,7 +836,7 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
-  add_unqualified ("falling_factorial", ReturnType UInt, [UInt; UInt]) ;
+  add_binary_vec_int_int "falling_factorial" ;
   add_binary_vec_real_int "falling_factorial" ;
   add_binary_vec "fdim" ;
   add_ternary "fma" ;
