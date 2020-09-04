@@ -50,6 +50,8 @@ transformed data {
   transformed_data_real_array_2d = falling_factorial(d_int_array_2d,d_int_array_2d);
   transformed_data_real_array_3d = falling_factorial(d_real,d_int_array_3d);
   transformed_data_real_array_3d = falling_factorial(d_real_array_3d,d_int_array_3d);
+  transformed_data_real_array_3d = falling_factorial(d_int,d_int_array_3d);
+  transformed_data_real_array_3d = falling_factorial(d_int_array_3d,d_int_array_3d);
 
   transformed_data_real_array = falling_factorial(d_real_array,d_int);
   transformed_data_real_array_2d = falling_factorial(d_real_array_2d,d_int);
