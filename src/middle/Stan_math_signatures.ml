@@ -469,8 +469,7 @@ let add_binary_vec_real_real name =
             ( name
             , ReturnType (bare_array_type (j, i))
             , [bare_array_type (j, i); bare_array_type (j, i)] ) )
-        [UnsizedType.UArray UReal; UVector; URowVector; UMatrix]
-      )
+        [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
     (List.range 0 8) ;
   List.iter
     ~f:(fun i ->
@@ -482,8 +481,7 @@ let add_binary_vec_real_real name =
                 ( name
                 , ReturnType (bare_array_type (k, j))
                 , [bare_array_type (k, j); i] ) )
-            [ UnsizedType.UArray UReal; UVector; URowVector
-            ; UMatrix ] )
+            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
         (List.range 0 8) )
     [UnsizedType.UReal] ;
   List.iter
@@ -496,8 +494,7 @@ let add_binary_vec_real_real name =
                 ( name
                 , ReturnType (bare_array_type (k, j))
                 , [i; bare_array_type (k, j)] ) )
-            [ UnsizedType.UArray UReal; UVector; URowVector
-            ; UMatrix ] )
+            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
         (List.range 0 8) )
     [UnsizedType.UReal]
 
