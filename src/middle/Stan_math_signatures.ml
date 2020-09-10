@@ -1242,6 +1242,7 @@ let () =
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
   add_binary_vec "log_diff_exp" ;
   add_binary_vec "log_falling_factorial" ;
+  add_binary_vec "log_inv_logit_diff" ;
   add_ternary "log_mix" ;
   List.iter
     ~f:(fun v1 ->
@@ -1251,7 +1252,8 @@ let () =
       add_unqualified ("log_mix", ReturnType UReal, [v1; UArray UVector]) ;
       add_unqualified ("log_mix", ReturnType UReal, [v1; UArray URowVector]) )
     (List.tl_exn vector_types) ;
-  add_binary "log_rising_factorial" ;
+  add_binary_vec "log_modified_bessel_first_kind" ;
+  add_binary_vec "log_rising_factorial" ;
   add_unqualified ("log_softmax", ReturnType UVector, [UVector]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UArray UReal]) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector]) ;
@@ -1328,10 +1330,8 @@ let () =
   add_unqualified ("minus", ReturnType UVector, [UVector]) ;
   add_unqualified ("minus", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("minus", ReturnType UMatrix, [UMatrix]) ;
-  add_unqualified
-    ("modified_bessel_first_kind", ReturnType UReal, [UInt; UReal]) ;
-  add_unqualified
-    ("modified_bessel_second_kind", ReturnType UReal, [UInt; UReal]) ;
+  add_binary_vec_int_real "modified_bessel_first_kind" ;
+  add_binary_vec_int_real "modified_bessel_second_kind" ;
   add_unqualified ("modulus", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("multi_normal_rng", ReturnType UVector, [UVector; UMatrix]) ;
   add_unqualified
