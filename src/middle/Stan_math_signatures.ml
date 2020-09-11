@@ -1236,7 +1236,7 @@ let () =
   add_unqualified
     ("lkj_cov_log", ReturnType UReal, [UMatrix; UVector; UVector; UReal]) ;
   add_binary_vec_int_real "lmgamma" ;
-  add_binary "lmultiply" ;
+  add_binary_vec "lmultiply" ;
   add_nullary "log10" ;
   add_nullary "log2" ;
   add_unqualified ("log_determinant", ReturnType UReal, [UMatrix]) ;
@@ -1394,7 +1394,7 @@ let () =
   add_unqualified ("multiply", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("multiply", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("multiply", ReturnType UMatrix, [UReal; UMatrix]) ;
-  add_binary "multiply_log" ;
+  add_binary_vec "multiply_log" ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified
@@ -1516,7 +1516,7 @@ let () =
     , ReturnType UReal
     , [UArray UInt; UReal; UArray UVector] ) ;
   add_unqualified ("ordered_probit_rng", ReturnType UInt, [UReal; UVector]) ;
-  add_binary "owens_t" ;
+  add_binary_vec_real_real "owens_t" ;
   add_nullary "pi" ;
   add_unqualified ("plus", ReturnType UInt, [UInt]) ;
   add_unqualified ("plus", ReturnType UReal, [UReal]) ;
@@ -1612,8 +1612,8 @@ let () =
             , [bare_array_type (t, i)] ) )
         bare_types )
     (List.range 1 8) ;
-  add_unqualified ("rising_factorial", ReturnType UReal, [UReal; UInt]) ;
-  add_unqualified ("rising_factorial", ReturnType UInt, [UInt; UInt]) ;
+  add_binary_vec_int_int "rising_factorial" ;
+  add_binary_vec_real_int "rising_factorial" ;
   add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt]) ;
   add_unqualified ("rows", ReturnType UInt, [UVector]) ;
   add_unqualified ("rows", ReturnType UInt, [URowVector]) ;
