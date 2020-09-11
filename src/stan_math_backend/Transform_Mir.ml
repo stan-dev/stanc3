@@ -562,8 +562,6 @@ let trans_prog (p : Program.Typed.t) =
           match
             List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
           with
-          | Some st when SizedType.to_unsized st = UInt ->
-              SizedType.to_unsized st
           | Some st -> SizedType.to_unsized st
           | None -> UnsizedType.UMatrix
         in
