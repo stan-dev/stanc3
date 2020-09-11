@@ -18,7 +18,8 @@ let opencl_triggers =
 
 let opencl_suffix = "_opencl__"
 
-let to_matrix_cl e = Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
+let to_matrix_cl e =
+  Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
@@ -500,8 +501,11 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-        match pattern with 
-        | Decl d when (d.decl_type) <> Sized SInt && (d.decl_type) <> Sized SReal -> Some d.decl_id | _ -> None
+        match pattern with
+        | Decl d when d.decl_type <> Sized SInt && d.decl_type <> Sized SReal
+          ->
+            Some d.decl_id
+        | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in
@@ -558,7 +562,8 @@ let trans_prog (p : Program.Typed.t) =
           match
             List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
           with
-          | Some st when (SizedType.to_unsized st) = UInt -> SizedType.to_unsized st
+          | Some st when SizedType.to_unsized st = UInt ->
+              SizedType.to_unsized st
           | Some st -> SizedType.to_unsized st
           | None -> UnsizedType.UMatrix
         in
