@@ -459,6 +459,45 @@ let add_binary_vec name =
         (List.range 0 8) )
     [UnsizedType.UInt; UReal]
 
+let add_binary_vec_real_real name =
+  add_binary name ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (j, i))
+            , [bare_array_type (j, i); bare_array_type (j, i)] ) )
+        [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
+    (List.range 0 8) ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [bare_array_type (k, j); i] ) )
+            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
+        (List.range 0 8) )
+    [UnsizedType.UReal] ;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [i; bare_array_type (k, j)] ) )
+            [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] )
+        (List.range 0 8) )
+    [UnsizedType.UReal]
+
 let add_binary_vec_int_real name =
   List.iter
     ~f:(fun i ->
@@ -867,8 +906,8 @@ let () =
   add_binary_vec "fmax" ;
   add_binary_vec "fmin" ;
   add_binary_vec "fmod" ;
-  add_binary "gamma_p" ;
-  add_binary "gamma_q" ;
+  add_binary_vec_real_real "gamma_p" ;
+  add_binary_vec_real_real "gamma_q" ;
   add_unqualified
     ( "gaussian_dlm_obs_log"
     , ReturnType UReal
@@ -1016,7 +1055,7 @@ let () =
   add_unqualified
     ("hypergeometric_lpmf", ReturnType UReal, [UInt; UInt; UInt; UInt]) ;
   add_unqualified ("hypergeometric_rng", ReturnType UInt, [UInt; UInt; UInt]) ;
-  add_binary "hypot" ;
+  add_binary_vec "hypot" ;
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
   List.iter
     ~f:(fun i ->
@@ -1173,7 +1212,7 @@ let () =
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("is_inf", ReturnType UInt, [UReal]) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal]) ;
-  add_binary "lbeta" ;
+  add_binary_vec "lbeta" ;
   add_binary "lchoose" ;
   add_qualified
     ( "linspaced_array"
