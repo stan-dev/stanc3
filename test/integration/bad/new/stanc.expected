@@ -107,7 +107,7 @@ Syntax error in 'blocks-bad6.stan', line 1, column 21 to column 24, parsing erro
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "!". 
+Ill-formed expression. Expression expected after "!".
 
 
   $ ../../../../../install/default/bin/stanc blocks-bad7.stan
@@ -1427,7 +1427,7 @@ Syntax error in 'ill-formed-statement1.stan', line 1, column 19 to column 24, pa
                                  ^
    -------------------------------------------------
 
-Expected ";" after "break". 
+Expected ";" after "break".
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement10.stan
@@ -1548,7 +1548,7 @@ Syntax error in 'ill-formed-statement2.stan', line 1, column 19 to column 27, pa
                                     ^
    -------------------------------------------------
 
-Expected ";" after "continue". 
+Expected ";" after "continue".
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement20.stan
@@ -1615,13 +1615,13 @@ Ill-formed statement. Expected statement after "else".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
 
-Syntax error in 'ill-formed-statement24.stan', line 1, column 28 to column 29, parsing error:
+Syntax error in 'ill-formed-statement24.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( 1 ) ; upper}
-                                      ^
+                                            ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "else"  or statement or variable declaration or "}".
+Ill-formed phrase. Found L-value. This can be completed in many ways.
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement25.stan
@@ -1637,13 +1637,13 @@ Ill-formed statement. Expected statement after else.
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
 
-Syntax error in 'ill-formed-statement26.stan', line 1, column 27 to column 28, parsing error:
+Syntax error in 'ill-formed-statement26.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; upper
-                                     ^
+                                           ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "else" or statement or variable declaration or "}" after conditional true branch.
+Ill-formed statement or expression. A statement or expression could be expected here.
 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
@@ -2290,7 +2290,7 @@ Syntax error in 'mystery2.stan', line 1, column 21 to column 22, parsing error:
                                ^
    -------------------------------------------------
 
-Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator. 
+Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator.
 
 
   $ ../../../../../install/default/bin/stanc mystery20.stan
@@ -3790,7 +3790,7 @@ Syntax error in 'transformations-bad17.stan', line 1, column 13 to column 14, pa
                        ^
    -------------------------------------------------
 
-We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<". 
+We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<".
 
 
   $ ../../../../../install/default/bin/stanc transformations-bad2.stan

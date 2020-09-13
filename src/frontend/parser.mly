@@ -110,18 +110,21 @@ generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "generated_quantities_block" ; tvds }
 
+build_id(ID):
+  | ID { fun id -> (
+           grammar_logger ("identifier " ^ id);
+           {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos})}
+
 (* function definitions *)
 identifier:
   | id=IDENTIFIER
-    {
-      grammar_logger ("identifier " ^ id) ;
-      {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos}
-    }
-  | TRUNCATE
-    {
-      grammar_logger "identifier T" ;
-      {name="T"; id_loc=Location_span.of_positions_exn $startpos $endpos}
-    }
+     {grammar_logger ("identifier " ^ id);
+      {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos}}
+  | f=build_id(TRUNCATE) { f "T"}
+  | f=build_id(OFFSET) { f "offset"}
+  | f=build_id(MULTIPLIER) { f "multiplier"}
+  | f=build_id(LOWER) { f "lower"}
+  | f=build_id(UPPER) { f "upper"}
 
 decl_identifier:
   | id=identifier { id }
@@ -157,10 +160,6 @@ decl_identifier:
   | CHOLESKYFACTORCOV UNREACHABLE
   | CORRMATRIX UNREACHABLE
   | COVMATRIX UNREACHABLE
-  | LOWER UNREACHABLE
-  | UPPER UNREACHABLE
-  | OFFSET UNREACHABLE
-  | MULTIPLIER UNREACHABLE
   | PRINT UNREACHABLE
   | REJECT UNREACHABLE
   | TARGET UNREACHABLE
