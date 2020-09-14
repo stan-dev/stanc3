@@ -2100,7 +2100,7 @@ let%expect_test "try partially evaluate" =
           vector[2] a;
           vector[2] b;
           FnPrint__(log_diff_exp(x, y));
-          FnPrint__(log((exp(a) - exp(b))));
+          FnPrint__(log_diff_exp(a, b));
         }
       }
 
