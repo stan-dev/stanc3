@@ -544,6 +544,8 @@ transformed data {
 }
 parameters {
   real p_real;
+  real<lower=p_real> p_upper;
+  real<upper=p_upper> p_lower;
   real<offset=1, multiplier=2> offset_multiplier[5];
   real<multiplier=2> no_offset_multiplier[5];
   real<offset=3> offset_no_multiplier[5];
