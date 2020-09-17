@@ -1,4 +1,5 @@
 (** stanc console application *)
+let trans_id = Middle.Program.Identity
 
 open Core_kernel
 open Frontend
@@ -160,6 +161,73 @@ let use_file filename =
         (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
     else Frontend_utils.get_ast_or_exit filename
   in
+  (* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX *)
+  if true then begin
+    let dir = Filename.dirname filename in
+    let model_name = Filename.chop_suffix (Filename.basename filename) ".stan" in
+    let info_name = dir ^ "/../info/" ^ model_name ^ ".info.json" in
+    let output_name = dir ^ "/../info/" ^ model_name ^ ".inputs.json" in
+    let info = In_channel.create info_name in
+    let ch = Out_channel.create output_name in
+    let ff = Format.formatter_of_out_channel ch in
+    let rec loop () =
+      let s = In_channel.input_line_exn info in
+      if Str.string_match (Str.regexp ".*model_implementations.*") s 0 then
+        s
+      else
+        (Format.fprintf ff "%s@." s; loop ())
+    in
+    let next = loop () in
+    (* let ff = Format.std_formatter in *)
+    match ast.datablock with
+    | Some db ->
+      let rec sized_basetype_dims t =
+        match t with
+        | SizedType.SInt -> "int", 0
+        | SReal -> "real", 0
+        | SVector _
+        | SRowVector _ -> "real", 1
+        | SMatrix _ -> "real", 2
+        | SArray (t, _) -> let bt, n = sized_basetype_dims t in bt, n + 1
+      in
+      let rec unsized_basetype_dims t =
+        match t with
+        | UnsizedType.UInt -> "int", 0
+        | UReal -> "real", 0
+        | UVector
+        | URowVector -> "real", 1
+        | UMatrix -> "real", 2
+        | UArray t -> let bt, n = unsized_basetype_dims t in bt, n + 1
+        | UMathLibraryFunction | UFun _ -> assert false
+      in
+      let basetype_dims t =
+        match t with
+        | Type.Sized t -> sized_basetype_dims t
+        | Type.Unsized t -> unsized_basetype_dims t
+      in
+      let print_info ff s =
+        match s.Ast.stmt with
+        | Ast.VarDecl decl ->
+          let t, n = basetype_dims decl.decl_type in
+          Format.fprintf ff "\"%s\": { \"base_type\": \"%s\", \"dimensions\": %d}"
+            decl.identifier.name t n
+        | _ -> ()
+      in
+      Format.fprintf ff "  inputs: [ @[<v 0>";
+      Format.fprintf ff "%a"
+        (Format.pp_print_list ~pp_sep:(fun ff () -> Format.fprintf ff ",@,") print_info) db;
+      Format.fprintf ff " @]],@.";
+      Format.fprintf ff "%s@." next;
+    let rec loop () =
+      match In_channel.input_line info with
+      | Some s -> (Format.fprintf ff "%s@." s; loop ())
+      | None -> ()
+    in
+    loop ();
+    Out_channel.close ch
+    | _ -> ()
+  end else begin
+  (* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX *)
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
@@ -196,6 +264,7 @@ let use_file filename =
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
+    end (* XXXXXXXXXXXXXXXXXXXX *)
 
 let remove_dotstan s = String.drop_suffix s 5
 
