@@ -209,14 +209,14 @@ let use_file filename =
         match s.Ast.stmt with
         | Ast.VarDecl decl ->
           let t, n = basetype_dims decl.decl_type in
-          Format.fprintf ff "{ \"%s\": { \"type\": \"%s\", \"dimensions\": %d} }"
+          Format.fprintf ff "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}"
             decl.identifier.name t n
         | _ -> ()
       in
-      Format.fprintf ff "  \"inputs\": [ @[<v 0>";
+      Format.fprintf ff "  \"inputs\": { @[<v 0>";
       Format.fprintf ff "%a"
         (Format.pp_print_list ~pp_sep:(fun ff () -> Format.fprintf ff ",@,") print_info) db;
-      Format.fprintf ff " @]],@.";
+      Format.fprintf ff " @]},@.";
       Format.fprintf ff "%s@." next;
     let rec loop () =
       match In_channel.input_line info with
