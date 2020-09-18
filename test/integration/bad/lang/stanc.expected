@@ -703,6 +703,11 @@ Syntax error in 'incomplete4.stan', line 2, column 2 to column 13, parsing error
      3:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found expression. There are many options to continue the phrase after this: "~", "[", "]" or an infix or postfix operator.
+Found a expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
 
 
