@@ -654,3 +654,55 @@ Semantic error in 'good_all.stan', line 25, column 2 to column 8:
 
 Cannot assign to global variable 'm' declared in previous blocks.
 
+  $ ../../../../../install/default/bin/stanc incomplete.stan
+
+Syntax error in 'incomplete.stan', line 2, column 15 to column 17, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real x = 2.0 .^ ;
+                          ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed expression. Expected expression after expression followed by ".^".
+
+
+  $ ../../../../../install/default/bin/stanc incomplete2.stan
+
+Syntax error in 'incomplete2.stan', line 2, column 18 to column 25, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real x = 1.0 .^ upper[] while
+                                  ^
+     3:  }
+   -------------------------------------------------
+
+Expected ";".
+
+
+  $ ../../../../../install/default/bin/stanc incomplete3.stan
+
+Syntax error in 'incomplete3.stan', line 2, column 6 to column 9, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    2.0 %/% while (1) { print("hi"); }
+                  ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed expression. Expected expression after expression followed by "%/%".
+
+
+  $ ../../../../../install/default/bin/stanc incomplete4.stan
+
+Syntax error in 'incomplete4.stan', line 2, column 2 to column 13, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    2.0 %/% 1.0; while (1) { print("hi"); }
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed phrase. Found expression. There are many options to continue the phrase after this: "~", "[", "]" or an infix or postfix operator.
+
+
