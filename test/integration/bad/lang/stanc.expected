@@ -664,20 +664,25 @@ Syntax error in 'incomplete.stan', line 2, column 15 to column 17, parsing error
      3:  }
    -------------------------------------------------
 
-Ill-formed expression. Expected expression after expression followed by ".^".
+Found an incomplete binary expression - are you missing the right hand side?
 
 
   $ ../../../../../install/default/bin/stanc incomplete2.stan
 
-Syntax error in 'incomplete2.stan', line 2, column 18 to column 25, parsing error:
+Syntax error in 'incomplete2.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
      1:  transformed data {
-     2:    real x = 1.0 .^ upper[] while
-                                  ^
+     2:    1.0 .^ upper[] while
+                         ^
      3:  }
    -------------------------------------------------
 
-Expected ";".
+Found a expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
 
 
   $ ../../../../../install/default/bin/stanc incomplete3.stan
