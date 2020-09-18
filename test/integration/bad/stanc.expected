@@ -989,7 +989,7 @@ Syntax error in 'err-second-operand-plus.stan', line 3, column 8 to column 10, p
      5:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found expression "||". Expect an expression next.
+Found an incomplete binary expression - are you missing the right hand side?
 
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
