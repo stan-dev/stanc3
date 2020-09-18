@@ -28,6 +28,7 @@ let stan2cpp model_name model_string flags_string =
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "--allow_undefined" || is_flag_set "--allow-undefined") ;
+  Transform_Mir.use_opencl := is_flag_set "--use-opencl" ;
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
@@ -59,8 +60,7 @@ let stan2cpp model_name model_string flags_string =
            let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog tx_mir in
            printf "%d\n"
              (List.length
-                (Set.Poly.to_list
-                   (Pedantic_analysis.warning_set mir))) ;
+                (Set.Poly.to_list (Pedantic_analysis.warning_set mir))) ;
            Pedantic_analysis.print_warn_pedantic mir ;
            ( cpp
            , warn_uninitialized_msgs
