@@ -1456,8 +1456,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      sigma = stan::math::lb_free(sigma, 0);
+      sigma_free__ = stan::math::lb_free(sigma, 0);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
@@ -1539,7 +1542,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         vars__.emplace_back(beta[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(cuts[(sym1__ - 1)]);}
-      vars__.emplace_back(sigma);
+      vars__.emplace_back(sigma_free__);
       vars__.emplace_back(alpha);
       vars__.emplace_back(phi);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
