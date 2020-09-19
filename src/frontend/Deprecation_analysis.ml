@@ -1,0 +1,197 @@
+open Core_kernel
+open Ast
+open Middle
+
+let deprecated_functions =
+  String.Map.of_alist_exn
+    [ ("multiply_log", "lmultiply")
+    ; ("binomial_coefficient_log", "lchoose")
+    ; ("integrate_ode", "integrate_ode_rk45")
+    ; ("cov_exp_quad", "gp_cov_exp_quad") ]
+
+let deprecated_distributions =
+  String.Map.of_alist_exn
+    (List.concat_map Middle.Stan_math_signatures.distributions
+       ~f:(fun (fnkinds, name, _) ->
+         List.filter_map fnkinds ~f:(function
+           | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
+           | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
+           | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
+           | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
+           | Rng | UnaryVectorized -> None ) ))
+
+let deprecated_userdefined : string String.Table.t = String.Table.create ()
+
+let is_distribution name =
+  Option.is_some (String.Map.find deprecated_distributions name)
+
+let rename_distribution name =
+  Option.value ~default:name (String.Map.find deprecated_distributions name)
+
+let rename_function name =
+  Option.value ~default:name (String.Map.find deprecated_functions name)
+
+let distribution_suffix name =
+  String.is_suffix ~suffix:"_lpdf" name
+  || String.is_suffix ~suffix:"_lpmf" name
+  || String.is_suffix ~suffix:"_lcdf" name
+  || String.is_suffix ~suffix:"_lccdf" name
+
+let userdef_distributions stmts =
+  List.filter_map
+    ~f:(function
+      | {stmt= FunDef {funname= {name; _}; _}; _} ->
+          if
+            String.is_suffix ~suffix:"_log_lpdf" name
+            || String.is_suffix ~suffix:"_log_lpmf" name
+          then Some (String.drop_suffix name 5)
+          else if String.is_suffix ~suffix:"_log_log" name then
+            Some (String.drop_suffix name 4)
+          else None
+      | _ -> None)
+    (Option.value ~default:[] stmts)
+
+let without_suffix user_dists name =
+  if
+    String.is_suffix ~suffix:"_lpdf" name
+    || String.is_suffix ~suffix:"_lpmf" name
+  then String.drop_suffix name 5
+  else if
+    String.is_suffix ~suffix:"_log" name
+    && not
+         ( is_distribution (name ^ "_log")
+         || List.exists ~f:(( = ) name) user_dists )
+  then String.drop_suffix name 4
+  else name
+
+(* let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
+   let str =
+    Fmt.strf "%a"
+      (Fmt.list ~sep:Fmt.nop pp_warning)
+      (Set.Poly.to_list warnings)
+   in
+   Out_channel.output_string Out_channel.stderr str *)
+let pp_warning ppf (loc, msg) =
+  let loc_str =
+    if loc = Location_span.empty then ""
+    else " at " ^ Location_span.to_string loc
+  in
+  Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
+
+(* Print a set of 'warnings', where each warning comes with its location.
+   By tupling with location and using a set, we're also sorting the warning
+   messages by increasing location.
+   I am not using Fmt to print to stderr here because there was a pretty awful
+   bug where it would unpredictably fail to flush. It would flush when using
+   stdout or when trying to print some strings and not others. I tried using
+   Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
+   string, and Out_channel to write it.
+*)
+let warn_deprecated (warning : Location_span.t * string) =
+  let str = Fmt.strf "%a" pp_warning warning in
+  Out_channel.output_string Out_channel.stderr str
+
+(* Out_channel.flush Out_channel.stderr *)
+(* let warn_deprecated (loc_span, message) =
+   Out_channel.output_string Out_channel.stderr (Fmt.strf 
+                                                  "@[<v>@,Warning: deprecated language construct used in %s:@,%s@]@."
+                                                  (Location_span.to_string loc_span) message) *)
+(* Out_channel.output_string Out_channel.stderr 
+   ("Warning: deprecated language construct used in " ^ (Location_span.to_string loc_span) ^ ":" ^ message) *)
+
+let replace_suffix = function
+  | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
+    ; smeta= _ }
+    when String.is_suffix ~suffix:"_log" name ->
+      let newname =
+        if String.is_suffix ~suffix:"_cdf_log" name then
+          String.drop_suffix name 8 ^ "_lcdf"
+        else if String.is_suffix ~suffix:"_ccdf_log" name then
+          String.drop_suffix name 9 ^ "_lccdf"
+        else if Middle.UnsizedType.is_real_type type_ then
+          String.drop_suffix name 4 ^ "_lpdf"
+        else String.drop_suffix name 4 ^ "_lpmf"
+      in
+      String.Table.add deprecated_userdefined ~key:name ~data:newname
+      |> (ignore : [`Ok | `Duplicate] -> unit)
+  | _ -> ()
+
+let rec warn_deprecated_expr
+    ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
+    (typed_expr_meta, fun_kind) expr_with =
+  let expr =
+    match expr with
+    | GetLP ->
+        warn_deprecated
+          ( emeta.loc
+          , "The no-argument function `get_lp()` is deprecated. Use the \
+             no-argument function `target()` instead." ) ;
+        GetLP
+    | FunApp (StanLib, {name= "abs"; id_loc}, [e])
+      when Middle.UnsizedType.is_real_type e.emeta.type_ ->
+        warn_deprecated
+          ( emeta.loc
+          , "Use of the `abs` function with real-valued arguments is \
+             deprecated; use functions `fabs` instead." ) ;
+        FunApp (StanLib, {name= "abs"; id_loc}, [warn_deprecated_expr e])
+    | FunApp (StanLib, {name= "if_else"; id_loc}, l) ->
+        warn_deprecated
+          ( emeta.loc
+          , "The function `if_else` is deprecated. Use the conditional \
+             operator (x ? y : z) instead." ) ;
+        FunApp
+          ( StanLib
+          , {name= "if_else"; id_loc}
+          , List.map ~f:warn_deprecated_expr l )
+    | FunApp (StanLib, {name; id_loc}, l) ->
+        if Option.is_some (String.Map.find deprecated_distributions name) then
+          warn_deprecated
+            ( emeta.loc
+            , name ^ " is deprecated, use " ^ rename_distribution name
+              ^ " instead" )
+        else if Option.is_some (String.Map.find deprecated_functions name) then
+          warn_deprecated
+            ( emeta.loc
+            , name ^ " is deprecated, use " ^ rename_function name ^ " instead"
+            ) ;
+        FunApp (StanLib, {name; id_loc}, List.map ~f:warn_deprecated_expr l)
+    | FunApp (UserDefined, {name; id_loc}, l) ->
+        let newname = String.Table.find deprecated_userdefined name in
+        if Option.is_some newname then
+          warn_deprecated
+            ( emeta.loc
+            , "Use of the _log suffix in user defined function " ^ name
+              ^ " is deprecated, use " ^ Option.value_exn newname ^ " instead."
+            ) ;
+        FunApp (UserDefined, {name; id_loc}, List.map ~f:warn_deprecated_expr l)
+    | _ -> map_expression warn_deprecated_expr ident expr
+  in
+  {expr; emeta}
+
+let warn_deprecated_lval = map_lval_with warn_deprecated_expr ident
+
+let rec warn_deprecated_stmt {stmt; smeta} =
+  let stmt =
+    match stmt with
+    | IncrementLogProb e -> IncrementLogProb (warn_deprecated_expr e)
+    | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
+        Assignment
+          { assign_lhs= warn_deprecated_lval l
+          ; assign_op= ArrowAssign
+          ; assign_rhs= warn_deprecated_expr e }
+    | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+        FunDef
+          { returntype
+          ; funname= {name; id_loc}
+          ; arguments
+          ; body= warn_deprecated_stmt body }
+    | _ ->
+        map_statement warn_deprecated_expr warn_deprecated_stmt
+          warn_deprecated_lval ident stmt
+  in
+  {stmt; smeta}
+
+let emit_warnings program : typed_program =
+  String.Table.clear deprecated_userdefined ;
+  program.functionblock |> Option.iter ~f:(List.iter ~f:replace_suffix) ;
+  program |> map_program warn_deprecated_stmt
