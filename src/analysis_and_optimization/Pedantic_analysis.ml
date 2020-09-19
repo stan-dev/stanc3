@@ -463,15 +463,15 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
   let warning_set =
-  Set.Poly.union_list
-    [ uninitialized_warnings mir
-    ; unscaled_constants_warnings distributions_info
-    ; multi_twiddles_warnings mir
-    ; hard_constrained_warnings mir
-    ; unused_params_warnings factor_graph mir
-    ; param_dependant_cf_warnings mir
-    ; param_dependant_fundef_cf_warnings mir
-    ; non_one_priors_warnings factor_graph mir
-    ; distribution_warnings distributions_info ]
+    Set.Poly.union_list
+      [ uninitialized_warnings mir
+      ; unscaled_constants_warnings distributions_info
+      ; multi_twiddles_warnings mir
+      ; hard_constrained_warnings mir
+      ; unused_params_warnings factor_graph mir
+      ; param_dependant_cf_warnings mir
+      ; param_dependant_fundef_cf_warnings mir
+      ; non_one_priors_warnings factor_graph mir
+      ; distribution_warnings distributions_info ]
   in
   print_warning_set warning_set
