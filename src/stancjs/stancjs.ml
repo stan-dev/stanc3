@@ -52,20 +52,17 @@ let stan2cpp model_name model_string flags_string =
            Semantic_check.semantic_check_program)
     |> Result.map ~f:(fun typed_ast ->
            let mir = Ast_to_Mir.trans_prog model_name typed_ast in
-           (* if is_flag_set "--warn-uninitialized" then
-              Pedantic_analysis.print_warn_uninitialized mir ;
-           if is_flag_set "--warn-pedantic" then
-              Pedantic_analysis.print_warn_pedantic mir ; *)
            let tx_mir = Transform_Mir.trans_prog mir in
            let opt_mir =
              if is_flag_set "--O" then Optimize.optimization_suite tx_mir
              else tx_mir
            in
            let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
-           ( cpp
-           , warn_uninitialized_msgs
-               (Dependence_analysis.mir_uninitialized_variables mir)
-             @ warn_uninitialized_msgs (Pedantic_analysis.warning_set mir) ) )
+           if is_flag_set "--warn-uninitialized" then
+             Pedantic_analysis.print_warn_uninitialized mir ;
+           if is_flag_set "--warn-pedantic" then
+             Pedantic_analysis.print_warn_pedantic mir ;
+           (cpp, []) )
 
 let wrap_result = function
   | Result.Ok (s, k) ->

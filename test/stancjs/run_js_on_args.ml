@@ -2,9 +2,7 @@ open Core_kernel
 
 let run_capturing_output cmd =
   let noflags = Array.create ~len:0 "" in
-  let stdout, stdin, stderr =
-    Unix.open_process_full cmd noflags
-  in
+  let stdout, stdin, stderr = Unix.open_process_full cmd noflags in
   let chns = [stdout; stderr] in
   let out = List.map ~f:In_channel.input_lines chns in
   ignore (Unix.close_process_full (stdout, stdin, stderr)) ;

@@ -1,0 +1,52 @@
+var stanc = require('../../src/stancjs/stancjs.bc.js');
+var utils = require("./utils/utils.js");
+
+var opt_model = `
+transformed data { 
+    real p = 0;
+    for(t in 1:5){
+        p = p + 1;
+    }
+}
+`
+var opt_test = stanc.stanc("optimization", opt_model, "");
+var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
+if (ind == -1) {
+    console.log("ERROR: Optimization without --O flag!")
+}
+
+var opt_test = stanc.stanc("optimization", opt_model, "--O");
+var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
+if (ind > -1) {
+    console.log("ERROR: No optimization without --O flag!")
+}
+
+var glm_model = `
+data {
+    int<lower=1> k;
+    int<lower=0> n;
+    matrix[n, k] X;
+    int y[n];
+  } 
+   
+  parameters {
+    vector[k] beta;
+    real alpha;
+  } 
+  
+  model {
+    target += bernoulli_logit_glm_lpmf(y | X, alpha, beta);
+  }
+`
+
+var no_opencl_test = stanc.stanc("no_opencl", glm_model, "");
+var ind = no_opencl_test.result.search("matrix_cl<int> y_opencl__");
+if (ind > -1) {
+    console.log("ERROR: OpenCL code found without --use-opencl flag!")
+}
+
+var opencl_test = stanc.stanc("opencl", glm_model, "--use-opencl");
+var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
+if (ind == -1) {
+    console.log("ERROR: No OpenCL code found with --use-opencl flag!")
+}
