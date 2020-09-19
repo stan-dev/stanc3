@@ -53,15 +53,15 @@ let stan2cpp model_name model_string flags_string =
     |> Result.map ~f:(fun typed_ast ->
            let mir = Ast_to_Mir.trans_prog model_name typed_ast in
            (* if is_flag_set "--warn-uninitialized" then
-              Pedantic_analysis.print_warn_uninitialized mir ; *)
-           (* if is_flag_set "--warn-pedantic" then
+              Pedantic_analysis.print_warn_uninitialized mir ;
+           if is_flag_set "--warn-pedantic" then
               Pedantic_analysis.print_warn_pedantic mir ; *)
            let tx_mir = Transform_Mir.trans_prog mir in
-           let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog tx_mir in
-           printf "%d\n"
-             (List.length
-                (Set.Poly.to_list (Pedantic_analysis.warning_set mir))) ;
-           Pedantic_analysis.print_warn_pedantic mir ;
+           let opt_mir =
+             if is_flag_set "--O" then Optimize.optimization_suite tx_mir
+             else tx_mir
+           in
+           let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
            ( cpp
            , warn_uninitialized_msgs
                (Dependence_analysis.mir_uninitialized_variables mir)
