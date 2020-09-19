@@ -14,6 +14,11 @@ Identifier 'z' not in scope.
 
 $ node optimization.js
 
+Semantic error in 'string', line 3, column 4 to column 20:
+
+Some function is declared without specifying a definition.
+
+
 $ node pedantic.js
 Warning:
   The parameter k was declared but was not used in the density calculation.
@@ -23,5 +28,6 @@ Warning at 'string', line 7, column 17 to column 22:
 Warning at 'string', line 4, column 9 to column 11:
   The variable tt may not have been assigned a value before its use.
 $ node version.js
+%%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
