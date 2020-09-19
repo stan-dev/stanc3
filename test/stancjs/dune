@@ -7,7 +7,7 @@
 
 (rule
  (targets stancjs.output)
- (deps ../../src/stancjs/stancjs.bc.js (:jsfiles (glob_files *.js)))
+ (deps ../../src/stancjs/stancjs.bc.js (:jsfiles (glob_files *.js)) utils/utils.js)
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_js_on_args} %{jsfiles}))))

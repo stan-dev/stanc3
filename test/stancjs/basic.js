@@ -1,6 +1,7 @@
 var stanc = require('../../src/stancjs/stancjs.bc.js');
+var utils = require("./utils/utils.js");
 
-var basic_model = `
+let basic_model = `
 parameters {
 	real y;
 }
@@ -9,5 +10,5 @@ model {
 }
 `
 
-var version = stanc.stanc("basic", basic_model, "");
-console.log(version.result)
+let basic = stanc.stanc("basic", basic_model, "");
+utils.print_error(basic)
