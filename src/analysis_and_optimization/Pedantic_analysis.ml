@@ -453,7 +453,8 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
-let warning_set (mir_unopt : Program.Typed.t) =
+(* Print all pedantic mode warnings, sorted, to stderr *)
+let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
     Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt
@@ -461,6 +462,7 @@ let warning_set (mir_unopt : Program.Typed.t) =
   (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
+  let warning_set =
   Set.Poly.union_list
     [ uninitialized_warnings mir
     ; unscaled_constants_warnings distributions_info
@@ -471,7 +473,5 @@ let warning_set (mir_unopt : Program.Typed.t) =
     ; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-
-(* Print all pedantic mode warnings, sorted, to stderr *)
-let print_warn_pedantic (mir_unopt : Program.Typed.t) =
-  print_warning_set (warning_set mir_unopt)
+  in
+  print_warning_set warning_set
