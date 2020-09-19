@@ -23,8 +23,6 @@ let warn_uninitialized_msgs
 let stan2cpp model_name model_string flags_string =
   let flags = String.split_on_chars ~on:[' '] flags_string in
   let is_flag_set flag = List.mem ~equal:String.equal flags flag in
-  (* let flag_value flag = 
-    List.find ~equal:flag  *)
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "--allow_undefined" || is_flag_set "--allow-undefined") ;
