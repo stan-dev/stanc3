@@ -27,8 +27,8 @@ let stan2cpp model_name model_string flags =
   in
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
-    not (is_flag_set "--allow_undefined" || is_flag_set "--allow-undefined") ;
-  Transform_Mir.use_opencl := is_flag_set "--use-opencl" ;
+    not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
+  Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
@@ -44,7 +44,7 @@ let stan2cpp model_name model_string flags =
           "Semantic check failed but reported no errors. This should never \
            happen."
   in
-  if is_flag_set "--version" then Result.Ok (Fmt.strf "%s" version, [])
+  if is_flag_set "version" then Result.Ok (Fmt.strf "%s" version, [])
   else
     Result.bind ast
       ~f:
@@ -54,13 +54,13 @@ let stan2cpp model_name model_string flags =
            let mir = Ast_to_Mir.trans_prog model_name typed_ast in
            let tx_mir = Transform_Mir.trans_prog mir in
            let opt_mir =
-             if is_flag_set "--O" then Optimize.optimization_suite tx_mir
+             if is_flag_set "O" then Optimize.optimization_suite tx_mir
              else tx_mir
            in
            let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
-           if is_flag_set "--warn-uninitialized" then
+           if is_flag_set "warn-uninitialized" then
              Pedantic_analysis.print_warn_uninitialized mir ;
-           if is_flag_set "--warn-pedantic" then
+           if is_flag_set "warn-pedantic" then
              Pedantic_analysis.print_warn_pedantic mir ;
            (cpp, []) )
 

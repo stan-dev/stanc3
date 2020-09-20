@@ -12,13 +12,13 @@ transformed data {
 var opt_test = stanc.stanc("optimization", opt_model, []);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
 if (ind == -1) {
-    console.log("ERROR: Optimization without --O flag!")
+    console.log("ERROR: Optimization without the O flag!")
 }
 
-var opt_test = stanc.stanc("optimization", opt_model, ["--O"]);
+var opt_test = stanc.stanc("optimization", opt_model, ["O"]);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
 if (ind > -1) {
-    console.log("ERROR: No optimization without --O flag!")
+    console.log("ERROR: No optimization without the O flag!")
 }
 
 var glm_model = `
@@ -43,14 +43,14 @@ var no_opencl_test = stanc.stanc("no_opencl", glm_model);
 utils.print_error(no_opencl_test)
 var ind = no_opencl_test.result.search("matrix_cl<int> y_opencl__");
 if (ind > -1) {
-    console.log("ERROR: OpenCL code found without --use-opencl flag!")
+    console.log("ERROR: OpenCL code found without the use-opencl flag!")
 }
 
-var opencl_test = stanc.stanc("opencl", glm_model, ["--use-opencl"]);
+var opencl_test = stanc.stanc("opencl", glm_model, ["use-opencl"]);
 utils.print_error(opencl_test)
 var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
 if (ind == -1) {
-    console.log("ERROR: No OpenCL code found with --use-opencl flag!")
+    console.log("ERROR: No OpenCL code found with the use-opencl flag!")
 }
 
 // multiple flags
@@ -80,12 +80,12 @@ model {
     target += bernoulli_logit_glm_lpmf(y | X, alpha, beta);
 }
 `
-var opencl_test = stanc.stanc("opencl", glm_model2, "--use-opencl");
+var opencl_test = stanc.stanc("opencl", glm_model2, "use-opencl");
 utils.print_error(opencl_test)
 
-var opencl_test = stanc.stanc("opencl", glm_model2, ["--use-opencl", "--allow-undefined"]);
+var opencl_test = stanc.stanc("opencl", glm_model2, ["use-opencl", "allow-undefined"]);
 utils.print_error(opencl_test)
 var ind = opencl_test.result.search("matrix_cl<int> y_opencl__");
 if (ind == -1) {
-    console.log("ERROR: No OpenCL code found with --use-opencl flag!")
+    console.log("ERROR: No OpenCL code found with the use-opencl flag!")
 }
