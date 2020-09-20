@@ -21,7 +21,8 @@ let warn_uninitialized_msgs
     (Set.Poly.map filtered_uninit_vars ~f:(fun v_info -> show_var_info v_info))
 
 let stan2cpp model_name model_string flags =
-  let is_flag_set = match flags with
+  let is_flag_set =
+    match flags with
     | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
     | None -> fun _ -> false
   in
@@ -77,12 +78,11 @@ let wrap_result = function
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
-  stan2cpp (Js.to_string name)
-    (Js.to_string code)
-    Js.(Opt.map flags (fun a -> str_array a
-                                |> Js.to_array
-                                |> Array.map ~f:to_string)
-        |> Opt.to_option)
+  stan2cpp (Js.to_string name) (Js.to_string code)
+    Js.(
+      Opt.map flags (fun a ->
+          str_array a |> Js.to_array |> Array.map ~f:to_string )
+      |> Opt.to_option)
   |> wrap_result
 
 let _ = Js.export "stanc" stan2cpp_wrapped
