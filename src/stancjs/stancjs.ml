@@ -20,9 +20,8 @@ let warn_uninitialized_msgs
   Set.Poly.to_list
     (Set.Poly.map filtered_uninit_vars ~f:(fun v_info -> show_var_info v_info))
 
-let stan2cpp model_name model_string flags_string =
-  let flags = String.split_on_chars ~on:[' '] flags_string in
-  let is_flag_set flag = List.mem ~equal:String.equal flags flag in
+let stan2cpp model_name model_string flags =
+  let is_flag_set flag = Array.mem ~equal:String.equal flags flag in
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "--allow_undefined" || is_flag_set "--allow-undefined") ;
@@ -74,10 +73,7 @@ let wrap_result = function
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
 
-let map3 f (x, y, z) = (f x, f y, f z)
+let stan2cpp_wrapped s1 s2 s3 =
+  stan2cpp (Js.to_string s1) (Js.to_string s2) (Js.to_array s3) |> wrap_result
 
-let wrap3 f s1 s2 s3 =
-  let s1, s2, s3 = map3 Js.to_string (s1, s2, s3) in
-  f s1 s2 s3 |> wrap_result
-
-let _ = Js.export "stanc" (wrap3 stan2cpp)
+let _ = Js.export "stanc" stan2cpp_wrapped
