@@ -17,8 +17,7 @@ let warn_uninitialized_msgs
   let filtered_uninit_vars =
     Set.filter ~f:(fun (span, _) -> span <> Location_span.empty) uninit_vars
   in
-  Set.Poly.to_list
-    (Set.Poly.map filtered_uninit_vars ~f:(fun v_info -> show_var_info v_info))
+  Set.Poly.(to_list (map filtered_uninit_vars ~f:show_var_info))
 
 let stan2cpp model_name model_string flags =
   let is_flag_set =
@@ -85,4 +84,4 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       |> Opt.to_option)
   |> wrap_result
 
-let _ = Js.export "stanc" stan2cpp_wrapped
+let () = Js.export "stanc" stan2cpp_wrapped
