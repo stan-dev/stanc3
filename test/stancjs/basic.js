@@ -13,6 +13,8 @@ model {
 let basic = stanc.stanc("basic", basic_model, []);
 utils.print_error(basic)
 
+let basic_no_args = stanc.stanc("basic", basic_model);
+utils.print_error(basic_no_args)
 
 let basic_model_err = `
 parameters {
