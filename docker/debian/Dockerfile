@@ -23,7 +23,8 @@ RUN opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.
 # Add Javascript dev environment
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   nodejs
-RUN opam update; bash -x scripts/install_js_deps.sh
+COPY ./scripts/install_js_deps.sh ./
+RUN opam update; bash -x install_js_deps.sh
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
