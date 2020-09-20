@@ -65,17 +65,18 @@ pipeline {
                 sh 'printenv'
                 sh """
                     eval \$(opam env)
-                    make format  || 
+                    make format  ||
                     (
                         set +x &&
                         echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-                        echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
+                        echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+                        echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
                         exit 1;
                     )
                 """
             }
             post { always { runShell("rm -rf ./*") }}
-        }        
+        }
         stage("Test") {
             parallel {
                 stage("Dune tests") {
@@ -176,6 +177,23 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
+                stage("stancjs tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
             }
         }
         stage("Build and test static release binaries") {
@@ -266,7 +284,7 @@ pipeline {
                         }
                     }
                     steps {
-                        
+
                         runShell("""
                             eval \$(opam env)
                             dune subst
