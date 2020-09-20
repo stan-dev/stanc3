@@ -69,7 +69,8 @@ pipeline {
                     (
                         set +x &&
                         echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-                        echo "Please consider installing a pre-commit git hook for formatting with the above command." &&
+                        echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+                        echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
                         exit 1;
                     )
                 """
