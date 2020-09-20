@@ -57,14 +57,10 @@ let rec integer_el_type = function
 
 let pp_decl ppf (vident, ut, adtype) =
   let pp_type =
-    if
-      Transform_Mir.is_opencl_var vident
-      && ut <> UnsizedType.UInt && ut <> UnsizedType.UReal
-    then fun ppf _ ->
-      match ut with
-      | UArray UInt -> pf ppf "matrix_cl<int>"
-      | _ -> pf ppf "matrix_cl<double>"
-    else pp_unsizedtype_local
+    match (Transform_Mir.is_opencl_var vident, ut) with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 

@@ -21,24 +21,18 @@ let opencl_suffix = "_opencl__"
 let to_matrix_cl e =
   Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
 
-let to_matrix_cl_non_scalar e =
-  match Expr.Typed.type_of e with
-  | UnsizedType.UInt | UReal -> e
-  | _ -> to_matrix_cl e
-
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.({pattern; _}) as e) =
-    match pattern with
-    | Var s when is_avail s ->
+  let to_cl (Expr.Fixed.({pattern; meta= {Expr.Typed.Meta.type_; _}}) as e) =
+    match (pattern, type_) with
+    | Var s, _ when is_avail s ->
         Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl_non_scalar e
+    | _, UnsizedType.(UInt | UReal) -> to_matrix_cl e
+    | _, _ -> e
   in
   let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let any_req_met args req_args =
-    List.exists ~f:(fun x -> List.for_all ~f:(check_type args) x) req_args
-  in
+  let any_req_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
   let maybe_map_args args req_args =
     match any_req_met args req_args with
     | true -> List.map args ~f:to_cl
@@ -505,9 +499,7 @@ let trans_prog (p : Program.Typed.t) =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
         match pattern with
-        | Decl d when d.decl_type <> Sized SInt && d.decl_type <> Sized SReal
-          ->
-            Some d.decl_id
+        | Decl {decl_id; decl_type= Sized (SInt | SReal); _} -> Some decl_id
         | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
