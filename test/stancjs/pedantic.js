@@ -10,9 +10,9 @@ model {
     y ~ normal(0,10000);
 }
 `
-var pedantic_test = stanc.stanc("pedantic", pedantic_model, "--warn-pedantic");
+var pedantic_test = stanc.stanc("pedantic", pedantic_model, ["--warn-pedantic"]);
 
-var pedantic_test = stanc.stanc("pedantic", pedantic_model, "");
+var pedantic_test = stanc.stanc("pedantic", pedantic_model);
 
 var warn_uninit_model = `
 transformed data { 
@@ -20,6 +20,6 @@ transformed data {
     tt = tt + 2;
 }
 `
-var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model, "--warn-uninitialized");
+var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model, ["--warn-uninitialized"]);
 
-var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model, "");
+var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model);

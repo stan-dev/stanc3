@@ -10,7 +10,7 @@ model {
 }
 `
 
-let basic = stanc.stanc("basic", basic_model, "");
+let basic = stanc.stanc("basic", basic_model, []);
 utils.print_error(basic)
 
 
@@ -23,5 +23,5 @@ model {
 }
 `
 
-let basic_err = stanc.stanc("basic_err", basic_model_err, "");
+let basic_err = stanc.stanc("basic_err", basic_model_err, []);
 utils.print_error(basic_err)
