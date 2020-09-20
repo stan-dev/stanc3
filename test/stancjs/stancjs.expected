@@ -5,12 +5,31 @@ Semantic error in 'string', line 3, column 4 to column 20:
 Some function is declared without specifying a definition.
 
 
+$ node auto-format.js
+parameters {
+  real y;
+}
+model {
+  y ~ std_normal();
+}
+
 $ node basic.js
 
 Semantic error in 'string', line 6, column 4 to column 5:
 
 Identifier 'z' not in scope.
 
+
+$ node canonical.js
+transformed data {
+  real a = lmultiply(4, 5);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
 
 $ node optimization.js
 
