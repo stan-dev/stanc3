@@ -64,13 +64,6 @@ let without_suffix user_dists name =
   then String.drop_suffix name 4
   else name
 
-(* let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
-   let str =
-    Fmt.strf "%a"
-      (Fmt.list ~sep:Fmt.nop pp_warning)
-      (Set.Poly.to_list warnings)
-   in
-   Out_channel.output_string Out_channel.stderr str *)
 let pp_warning ppf (loc, msg) =
   let loc_str =
     if loc = Location_span.empty then ""
@@ -78,26 +71,9 @@ let pp_warning ppf (loc, msg) =
   in
   Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
 
-(* Print a set of 'warnings', where each warning comes with its location.
-   By tupling with location and using a set, we're also sorting the warning
-   messages by increasing location.
-   I am not using Fmt to print to stderr here because there was a pretty awful
-   bug where it would unpredictably fail to flush. It would flush when using
-   stdout or when trying to print some strings and not others. I tried using
-   Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
-   string, and Out_channel to write it.
-*)
 let warn_deprecated (warning : Location_span.t * string) =
   let str = Fmt.strf "%a" pp_warning warning in
   Out_channel.output_string Out_channel.stderr str
-
-(* Out_channel.flush Out_channel.stderr *)
-(* let warn_deprecated (loc_span, message) =
-   Out_channel.output_string Out_channel.stderr (Fmt.strf 
-                                                  "@[<v>@,Warning: deprecated language construct used in %s:@,%s@]@."
-                                                  (Location_span.to_string loc_span) message) *)
-(* Out_channel.output_string Out_channel.stderr 
-   ("Warning: deprecated language construct used in " ^ (Location_span.to_string loc_span) ^ ":" ^ message) *)
 
 let replace_suffix = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
