@@ -31,8 +31,10 @@ RUN opam switch 4.07.0
 RUN eval $(opam env)
 
 #Copy script & Install build dependencies
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+  dune
 COPY ./scripts/install_build_deps.sh ./
-RUN opam update; bash -x install_build_deps.sh
+RUN opam update; bash -x install_build_deps.sh; opam pin -y dune 1.11.4
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
