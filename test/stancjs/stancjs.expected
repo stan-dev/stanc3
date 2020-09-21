@@ -1,0 +1,52 @@
+$ node allow-undefined.js
+
+Semantic error in 'string', line 3, column 4 to column 20:
+
+Some function is declared without specifying a definition.
+
+
+$ node auto-format.js
+parameters {
+  real y;
+}
+model {
+  y ~ std_normal();
+}
+
+$ node basic.js
+
+Semantic error in 'string', line 6, column 4 to column 5:
+
+Identifier 'z' not in scope.
+
+
+$ node canonical.js
+transformed data {
+  real a = lmultiply(4, 5);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+$ node optimization.js
+
+Semantic error in 'string', line 3, column 4 to column 20:
+
+Some function is declared without specifying a definition.
+
+
+$ node pedantic.js
+Warning:
+  The parameter k was declared but was not used in the density calculation.
+Warning at 'string', line 7, column 17 to column 22:
+  Argument 10000 suggests there may be parameters that are not unit scale;
+  consider rescaling with a multiplier (see manual section 22.12).
+Warning at 'string', line 4, column 9 to column 11:
+  The variable tt may not have been assigned a value before its use.
+$ node version.js
+%%NAME%% %%VERSION%%
+%%NAME%% %%VERSION%%
+%%NAME%% %%VERSION%%
