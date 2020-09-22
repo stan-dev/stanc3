@@ -4,21 +4,13 @@ functions {
     return exp(-square(x));
   }
 
-  real[] integrand_ode(real r, real[] f, real[] theta, real[] x_r, int[] x_i) {
-    real df_dx[1];
-    real x = logit(r);
-    df_dx[1] = exp(-square(x)) * 1/(r * (1-r));
-    return(df_dx);
+  vector f(real t, vector z, real a, vector b) {
+    return z;
   }
 
-  real ode_integrate() {
-    int x_i[0];
-    // ok:
-    //return(integrate_ode_rk45(integrand_ode, rep_array(0.0, 1),
-    //1E-5, rep_array(1.0-1E-5, 1), rep_array(0.0, 0), rep_array(0.0,
-    //0), x_i)[1,1]);
-    // not ok
-    return(integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5, rep_array(1.0-1E-5, 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i)[1,1]);
+  real ode_integrate(vector vd, real rd, real[] rad) {
+    vector[size(vd)] a[size(vd)] = ode_bdf_tol(f, vd, rd, rad, 1e-6, 1e-6, 100, rd, vd);
+    return a[1][1];
   }
 
 }
