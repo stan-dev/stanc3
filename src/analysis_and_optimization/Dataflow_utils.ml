@@ -18,20 +18,20 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
    Merge two maps whose values are sets, and union the sets when there's a collision.
 *)
 let merge_set_maps m1 m2 =
-  let merge_map_elems ~key:_ es = match es with
+  let merge_map_elems ~key:_ es =
+    match es with
     | `Left e1 -> Some e1
     | `Right e2 -> Some e2
     | `Both (e1, e2) -> Some (Set.Poly.union e1 e2)
-  in Map.Poly.merge ~f:merge_map_elems m1 m2
+  in
+  Map.Poly.merge ~f:merge_map_elems m1 m2
 
 (**
    Generate a Map by applying a function to each element of a key set.
 *)
 let generate_map s ~f =
-  Set.Poly.fold
-    s
-    ~init:Map.Poly.empty
-    ~f:(fun m e -> Map.Poly.add_exn m ~key:e ~data:(f e))
+  Set.Poly.fold s ~init:Map.Poly.empty ~f:(fun m e ->
+      Map.Poly.add_exn m ~key:e ~data:(f e) )
 
 (**
    Like a forward traversal, but branches accumulate two different states that are
@@ -128,9 +128,7 @@ let is_ctrl_flow pattern =
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
 *)
-let build_cf_graphs
-    ?flatten_loops:(flatten_loops=false)
-    ?blocks_after_body:(blocks_after_body=true)
+let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
@@ -159,42 +157,42 @@ let build_cf_graphs
     let substmt_state, predecessors =
       match stmt with
       | For _ | While _ ->
-        (* Loop statements are preceded by:
+          (* Loop statements are preceded by:
            1. The statements that come before the loop
            2. The natural exit points of the loop body
            3. Continue statements in the loop body
            This comment mangling brought to you by the autoformatter
         *)
-        let loop_predecessors =
-          Set.Poly.union_list
-            [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits
-            ; (*3*)
-              Set.Poly.diff substmt_state_unlooped.continues in_state.continues
-            ]
-        in
-        (* Loop exits are:
+          let loop_predecessors =
+            Set.Poly.union_list
+              [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits
+              ; (*3*)
+                Set.Poly.diff substmt_state_unlooped.continues
+                  in_state.continues ]
+          in
+          (* Loop exits are:
            1. The loop node itself, since the last action of a typical loop execution is
               to check if there are any iterations remaining
            2. Break statements in the loop body, since broken loops don't execute the
               loop statement
         *)
-        let loop_exits =
-          if flatten_loops then
-            substmt_state_unlooped.exits
-          else
-            Set.Poly.union_list
-              [ (*1*) Set.Poly.singleton label
-              ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
-              ]
-        in
-        ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
+          let loop_exits =
+            if flatten_loops then substmt_state_unlooped.exits
+            else
+              Set.Poly.union_list
+                [ (*1*) Set.Poly.singleton label
+                ; (*2*)
+                  Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+                ]
+          in
+          ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       | Block _ when blocks_after_body ->
-        (* Block statements are preceded by the natural exit points of the block
+          (* Block statements are preceded by the natural exit points of the block
            body *)
-        let block_predecessors = substmt_state_unlooped.exits in
-        (* Block exits are just the block node *)
-        let block_exits = Set.Poly.singleton label in
-        ({substmt_state_unlooped with exits= block_exits}, block_predecessors)
+          let block_predecessors = substmt_state_unlooped.exits in
+          (* Block exits are just the block node *)
+          let block_exits = Set.Poly.singleton label in
+          ({substmt_state_unlooped with exits= block_exits}, block_predecessors)
       | _ -> (substmt_state_unlooped, in_state.exits)
     in
     (* Some statements interact with the break/return/continue states
@@ -260,10 +258,8 @@ let build_cf_graph statement_map =
   cf_graph
 
 (** See interface file *)
-let build_predecessor_graph
-    ?flatten_loops:(flatten_loops=false)
-    ?blocks_after_body:(blocks_after_body=true)
-    statement_map =
+let build_predecessor_graph ?(flatten_loops = false)
+    ?(blocks_after_body = true) statement_map =
   let exits, pred_graph, _ =
     build_cf_graphs ~flatten_loops ~blocks_after_body statement_map
   in

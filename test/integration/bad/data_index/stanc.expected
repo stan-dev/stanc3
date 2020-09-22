@@ -1,11 +1,11 @@
   $ ../../../../../install/default/bin/stanc non_data_index1.stan
 
-Semantic error in 'non_data_index1.stan', line 6, column 2 to column 18:
+Semantic error in 'non_data_index1.stan', line 6, column 14 to column 15:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    real z[size(y)];
-           ^
+                       ^
      7:  }
    -------------------------------------------------
 
@@ -13,12 +13,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index10.stan
 
-Semantic error in 'non_data_index10.stan', line 6, column 2 to column 33:
+Semantic error in 'non_data_index10.stan', line 6, column 27 to column 28:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    cholesky_factor_cov[size(y)] z;
-           ^
+                                    ^
      7:  }
    -------------------------------------------------
 
@@ -26,12 +26,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index11.stan
 
-Semantic error in 'non_data_index11.stan', line 6, column 2 to column 36:
+Semantic error in 'non_data_index11.stan', line 6, column 30 to column 31:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    cholesky_factor_cov[3, size(y)] z;
-           ^
+                                       ^
      7:  }
    -------------------------------------------------
 
@@ -39,12 +39,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index12.stan
 
-Semantic error in 'non_data_index12.stan', line 6, column 2 to column 34:
+Semantic error in 'non_data_index12.stan', line 6, column 28 to column 29:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    cholesky_factor_corr[size(y)] z;
-           ^
+                                     ^
      7:  }
    -------------------------------------------------
 
@@ -52,12 +52,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index13.stan
 
-Semantic error in 'non_data_index13.stan', line 6, column 2 to column 25:
+Semantic error in 'non_data_index13.stan', line 6, column 19 to column 20:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    corr_matrix[size(y)] z;
-           ^
+                            ^
      7:  }
    -------------------------------------------------
 
@@ -65,12 +65,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index14.stan
 
-Semantic error in 'non_data_index14.stan', line 6, column 2 to column 24:
+Semantic error in 'non_data_index14.stan', line 6, column 18 to column 19:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    cov_matrix[size(y)] z;
-           ^
+                           ^
      7:  }
    -------------------------------------------------
 
@@ -78,12 +78,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index2.stan
 
-Semantic error in 'non_data_index2.stan', line 6, column 2 to column 20:
+Semantic error in 'non_data_index2.stan', line 6, column 14 to column 15:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    vector[size(y)] z;
-           ^
+                       ^
      7:  }
    -------------------------------------------------
 
@@ -91,12 +91,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index3.stan
 
-Semantic error in 'non_data_index3.stan', line 6, column 2 to column 24:
+Semantic error in 'non_data_index3.stan', line 6, column 18 to column 19:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    row_vector[size(y)] z;
-           ^
+                           ^
      7:  }
    -------------------------------------------------
 
@@ -104,12 +104,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index4.stan
 
-Semantic error in 'non_data_index4.stan', line 5, column 2 to column 23:
+Semantic error in 'non_data_index4.stan', line 5, column 14 to column 15:
    -------------------------------------------------
      3:  }
      4:  transformed parameters {
      5:    matrix[size(y), 2] m;
-           ^
+                       ^
      6:  }
    -------------------------------------------------
 
@@ -117,12 +117,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index5.stan
 
-Semantic error in 'non_data_index5.stan', line 6, column 2 to column 23:
+Semantic error in 'non_data_index5.stan', line 6, column 17 to column 18:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    matrix[2, size(y)] m;
-           ^
+                          ^
      7:  
      8:  }
    -------------------------------------------------
@@ -131,12 +131,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index6.stan
 
-Semantic error in 'non_data_index6.stan', line 6, column 2 to column 21:
+Semantic error in 'non_data_index6.stan', line 6, column 15 to column 16:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    simplex[size(y)] z;
-           ^
+                        ^
      7:  }
    -------------------------------------------------
 
@@ -144,12 +144,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index7.stan
 
-Semantic error in 'non_data_index7.stan', line 6, column 2 to column 21:
+Semantic error in 'non_data_index7.stan', line 6, column 15 to column 16:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    ordered[size(y)] z;
-           ^
+                        ^
      7:  }
    -------------------------------------------------
 
@@ -157,12 +157,12 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index8.stan
 
-Semantic error in 'non_data_index8.stan', line 6, column 2 to column 30:
+Semantic error in 'non_data_index8.stan', line 6, column 24 to column 25:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    positive_ordered[size(y)] z;
-           ^
+                                 ^
      7:  }
    -------------------------------------------------
 
@@ -170,14 +170,27 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index9.stan
 
-Semantic error in 'non_data_index9.stan', line 6, column 2 to column 25:
+Semantic error in 'non_data_index9.stan', line 6, column 19 to column 20:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
      6:    unit_vector[size(y)] z;
-           ^
+                            ^
      7:  }
    -------------------------------------------------
 
 Non-data variables are not allowed in top level size declarations.
+
+  $ ../../../../../install/default/bin/stanc rng_index1.stan
+
+Semantic error in 'rng_index1.stan', line 6, column 9 to column 24:
+   -------------------------------------------------
+     4:  }
+     5:  transformed parameters {
+     6:    real z[poisson_rng(10)];
+                  ^
+     7:  }
+   -------------------------------------------------
+
+Random number generators are not allowed in top level size declarations.
 

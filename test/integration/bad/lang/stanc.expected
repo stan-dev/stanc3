@@ -511,33 +511,6 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 12, column 0 to lin
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
 
-  $ ../../../../../install/default/bin/stanc bad_fun_name.stan
-
-Semantic error in 'bad_fun_name.stan', line 2, column 7 to column 12:
-   -------------------------------------------------
-     1:  data {
-     2:    real logit; // causes error because logit is fun name
-                ^
-     3:  }
-     4:  parameters {
-   -------------------------------------------------
-
-Identifier 'logit' clashes with Stan Math library function.
-
-  $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
-
-Semantic error in 'bad_model_name_var.stan', line 3, column 6 to column 30:
-   -------------------------------------------------
-     1:  data {
-     2:    // declare matching model name should fail
-     3:    int bad_model_name_var_model;  
-               ^
-     4:  }
-     5:  parameters {
-   -------------------------------------------------
-
-Identifier 'bad_model_name_var_model' clashes with model name.
-
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:

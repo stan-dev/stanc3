@@ -1,37 +1,41 @@
 open Core_kernel
 open Middle
 open Dataflow_types
-val var_declarations :
-  ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
 
+val var_declarations : ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
-  { lower : [ `None | `Nonlit | `Lit of float ]
-  ; upper : [ `None | `Nonlit | `Lit of float ]}
+  { lower: [`None | `Nonlit | `Lit of float]
+  ; upper: [`None | `Nonlit | `Lit of float] }
 
 val trans_bounds_values : Expr.Typed.t Program.transformation -> bound_values
-
 val is_dist : string -> bool
-
 val chop_dist_name : string -> string Option.t
-
 val top_var_declarations : Stmt.Located.t -> string Set.Poly.t
 
-val data_set : ?exclude_transformed:bool -> ?exclude_ints:bool -> Program.Typed.t -> string Set.Poly.t
+val data_set :
+     ?exclude_transformed:bool
+  -> ?exclude_ints:bool
+  -> Program.Typed.t
+  -> string Set.Poly.t
 
-val parameter_set : ?include_transformed:bool -> Program.Typed.t -> (string * Expr.Typed.t Program.transformation) Set.Poly.t
+val parameter_set :
+     ?include_transformed:bool
+  -> Program.Typed.t
+  -> (string * Expr.Typed.t Program.transformation) Set.Poly.t
 
-val parameter_names_set : ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t
+val parameter_names_set :
+  ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t
 
 val fold_expr :
-  take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
+     take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
   -> init:'c
   -> Expr.Typed.t
   -> 'c
 
 val fold_stmts :
-  take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
+     take_expr:('c -> Expr.Typed.Meta.t Expr.Fixed.t -> 'c)
   -> take_stmt:('c -> Stmt.Located.t -> 'c)
   -> init:'c
   -> Stmt.Located.t List.t
@@ -134,7 +138,8 @@ val index_var_set :
    For use in RHS sets, not LHS assignment sets, except in a target term
 *)
 
-val stmt_rhs : (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.t Set.Poly.t
+val stmt_rhs :
+  (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.t Set.Poly.t
 (**
    The set of variables that can affect the value or behavior of the expression, i.e. rhs.
    Using Set.Poly instead of ExprSet so that 'e can be polymorphic, it usually doesn't
@@ -182,7 +187,6 @@ val subst_stmt :
 val name_subst_stmt :
   (string, string) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
 (** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
-
 
 val expr_subst_expr :
   Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t

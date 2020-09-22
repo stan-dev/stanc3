@@ -1,10 +1,11 @@
 with (import (builtins.fetchTarball {
-  name = "nixpkgs-20.03";
-  # Tarball of tagged release of Nixpkgs 20.03
-  url = "https://github.com/nixos/nixpkgs/archive/5272327b81ed355bbed5659b8d303cf2979b6953.tar.gz";
+  name = "nixpkgs-19.09";
+  # Tarball of tagged release of Nixpkgs 19.09
+  url = "https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz";
   # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
-  sha256 = "0182ys095dfx02vl2a20j1hz92dx3mfgz2a6fhn31bqlp1wa8hlq";
+  sha256 = "0mhqhq21y5vrr1f30qd2bvydv4bbbslvyzclhw0kdxmkgg3z4c92";
 }) {});
+
 
 ocamlPackages.buildDunePackage rec {
   pname = "stanc";
@@ -39,4 +40,6 @@ ocamlPackages.buildDunePackage rec {
     license = stdenv.lib.licenses.bsd3;
     maintainers = with stdenv.lib.maintainers; [ rybern ];
   };
+
+  inherit pkgs;
 }

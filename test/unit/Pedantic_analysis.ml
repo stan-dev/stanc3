@@ -3,13 +3,12 @@ open Frontend
 open Analysis_and_optimization.Pedantic_analysis
 
 let build_program prog =
-    (Ast_to_Mir.trans_prog ""
-       (Option.value_exn
-          (Result.ok
-             (Semantic_check.semantic_check_program
-                (Option.value_exn
-                   (Result.ok
-                      (Parse.parse_string Parser.Incremental.program prog)))))))
+  Ast_to_Mir.trans_prog ""
+    (Option.value_exn
+       (Result.ok
+          (Semantic_check.semantic_check_program
+             (Option.value_exn
+                (Result.ok (Parse.parse_string Parser.Incremental.program prog))))))
 
 let sigma_example =
   {|
@@ -63,7 +62,7 @@ let%expect_test "Unbounded sigma warning" =
     |}]
 
 let uniform_example =
-      {|
+  {|
         parameters {
           real a;
           real<lower=0, upper=1> b;
@@ -115,7 +114,7 @@ let%expect_test "Uniform warning" =
     |}]
 
 let unscaled_example =
-      {|
+  {|
         functions {
           real f() {
             return 1000;
@@ -143,7 +142,7 @@ let%expect_test "Unscaled warning" =
         consider rescaling with a multiplier (see manual section 22.12). |}]
 
 let multi_twiddle_example =
-      {|
+  {|
         parameters {
           real x;
           real y;
@@ -168,7 +167,7 @@ let%expect_test "Multi twiddle warning" =
         statement. |}]
 
 let hard_constrained_example =
-      {|
+  {|
         parameters {
           real<lower=0, upper=1> a;
           real<lower=-1, upper=1> b;
@@ -225,7 +224,7 @@ let%expect_test "Hard constraint warning" =
         unconstrained and give it a normal(0.5,0.5) prior distribution. |}]
 
 let unused_param_example =
-      {|
+  {|
         parameters {
           real a;
           real b;
@@ -261,7 +260,7 @@ let%expect_test "Unused param warning" =
         The parameter f was declared but was not used in the density calculation. |}]
 
 let param_dependant_cf_example =
-      {|
+  {|
         parameters {
           real a;
           real b;
@@ -295,7 +294,7 @@ let%expect_test "Parameter dependent control flow warning" =
         A control flow statement depends on parameter(s): a. |}]
 
 let non_one_priors_example =
-      {|
+  {|
         data {
           real x;
         }
@@ -327,7 +326,7 @@ let%expect_test "Non-one priors no warning" =
         2), but d was not constrained to be strictly positive. |}]
 
 let non_one_priors_example2 =
-      {|
+  {|
         data {
           real x;
           real y;
@@ -374,7 +373,7 @@ let%expect_test "Non-one priors warning" =
         statement. |}]
 
 let gamma_args_example =
-      {|
+  {|
         parameters {
           real<lower=0> a;
           real b;
@@ -427,7 +426,7 @@ let%expect_test "Gamma args warning" =
     |}]
 
 let dist_bounds_example =
-      {|
+  {|
         parameters {
           real a;
           real<lower=0> b;
@@ -985,7 +984,7 @@ model {
 
 let%expect_test "Function body parameter-dependent control flow" =
   print_warn_pedantic (build_program fundef_cf_example) ;
-[%expect
+  [%expect
     {|
       Warning:
         The parameter sigma has no priors.
