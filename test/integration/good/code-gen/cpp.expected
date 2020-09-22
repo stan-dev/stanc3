@@ -2010,12 +2010,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 675, column 31 to column 32)",
                                                       " (in 'mother.stan', line 675, column 10 to column 11)",
                                                       " (in 'mother.stan', line 678, column 40 to column 41)",
-                                                      " (in 'mother.stan', line 10, column 16 to column 17)",
                                                       " (in 'mother.stan', line 13, column 16 to column 25)",
                                                       " (in 'mother.stan', line 13, column 4 to column 25)",
                                                       " (in 'mother.stan', line 14, column 4 to column 26)",
                                                       " (in 'mother.stan', line 12, column 17 to line 15, column 3)",
-                                                      " (in 'mother.stan', line 22, column 31 to column 32)",
                                                       " (in 'mother.stan', line 29, column 4 to column 17)",
                                                       " (in 'mother.stan', line 30, column 4 to column 19)",
                                                       " (in 'mother.stan', line 31, column 4 to column 38)",
@@ -2221,12 +2219,12 @@ foo(const int& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 578;
+    current_statement__ = 577;
     if (logical_eq(n, 0)) {
-      current_statement__ = 577;
+      current_statement__ = 576;
       return 1;
     } 
-    current_statement__ = 579;
+    current_statement__ = 578;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2267,14 +2265,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
-    current_statement__ = 583;
+    current_statement__ = 581;
     assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
       "assigning variable dydt");
-    current_statement__ = 584;
+    current_statement__ = 582;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
       (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
       "assigning variable dydt");
-    current_statement__ = 585;
+    current_statement__ = 583;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2305,7 +2303,7 @@ foo_bar0(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 587;
+    current_statement__ = 585;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2333,7 +2331,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 589;
+    current_statement__ = 587;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2363,7 +2361,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 591;
+    current_statement__ = 589;
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2391,7 +2389,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 593;
+    current_statement__ = 591;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2420,7 +2418,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 595;
+    current_statement__ = 593;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2449,7 +2447,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 597;
+    current_statement__ = 595;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2480,7 +2478,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 599;
+    current_statement__ = 597;
     return normal_rng(mu, sigma, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2511,9 +2509,9 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 601;
+    current_statement__ = 599;
     lp_accum__.add(normal_log<false>(u, 0, 1));
-    current_statement__ = 602;
+    current_statement__ = 600;
     lp_accum__.add(uniform_lpdf<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2543,34 +2541,34 @@ foo_1(const int& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 605;
+    current_statement__ = 603;
     while (1) {
       break;
     }
-    current_statement__ = 607;
+    current_statement__ = 605;
     while (0) {
       continue;
     }
-    current_statement__ = 609;
+    current_statement__ = 607;
     for (int i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 611;
+    current_statement__ = 609;
     for (int i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 616;
+    current_statement__ = 614;
     while (1) {
       int b;
       b = std::numeric_limits<int>::min();
       
-      current_statement__ = 613;
+      current_statement__ = 611;
       b = 5;
       break;
     }
-    current_statement__ = 623;
+    current_statement__ = 621;
     while (1) {
-      current_statement__ = 621;
+      current_statement__ = 619;
       if (0) {
         break;
       } else {
-        current_statement__ = 619;
+        current_statement__ = 617;
         if (1) {
           break;
         } else {
@@ -2578,19 +2576,19 @@ foo_1(const int& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 626;
+    current_statement__ = 624;
     while (1) {
-      current_statement__ = 625;
+      current_statement__ = 623;
       while (0) {
         break;
       }
     }
-    current_statement__ = 630;
+    current_statement__ = 628;
     while (1) {
-      current_statement__ = 628;
+      current_statement__ = 626;
       for (int i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 645;
+    current_statement__ = 643;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
@@ -2598,50 +2596,50 @@ foo_1(const int& a, std::ostream* pstream__) {
       int z;
       z = std::numeric_limits<int>::min();
       
-      current_statement__ = 633;
+      current_statement__ = 631;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 633;
+          current_statement__ = 631;
           assign(v, nil_index_list(), vs[(sym1__ - 1)],
             "assigning variable v");
-          current_statement__ = 634;
+          current_statement__ = 632;
           z = 0;
           break;
         }}
-      current_statement__ = 636;
+      current_statement__ = 634;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 636;
+          current_statement__ = 634;
           assign(v, nil_index_list(), vs[(sym1__ - 1)],
             "assigning variable v");
-          current_statement__ = 637;
+          current_statement__ = 635;
           z = 0;
           continue;
         }}
-      current_statement__ = 639;
+      current_statement__ = 637;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 639;
+          current_statement__ = 637;
           assign(v, nil_index_list(), vs[(sym1__ - 1)],
             "assigning variable v");
-          current_statement__ = 640;
+          current_statement__ = 638;
           for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
-              current_statement__ = 640;
+              current_statement__ = 638;
               vv = v[(sym1__ - 1)];
-              current_statement__ = 641;
+              current_statement__ = 639;
               z = 0;
               break;
             }}
-          current_statement__ = 643;
+          current_statement__ = 641;
           z = 1;
         }}
     }
-    current_statement__ = 655;
+    current_statement__ = 653;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -2650,9 +2648,9 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 648;
+      current_statement__ = 646;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 648;
+        current_statement__ = 646;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(
                          rvalue(vs,
@@ -2660,17 +2658,17 @@ foo_1(const int& a, std::ostream* pstream__) {
                            "vs")); ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 648;
+            current_statement__ = 646;
             v = rvalue(vs,
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "vs");
-            current_statement__ = 649;
+            current_statement__ = 647;
             z = 0;
             break;
           }}}
-      current_statement__ = 651;
+      current_statement__ = 649;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 651;
+        current_statement__ = 649;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(
                          rvalue(vs,
@@ -2678,16 +2676,16 @@ foo_1(const int& a, std::ostream* pstream__) {
                            "vs")); ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 651;
+            current_statement__ = 649;
             v = rvalue(vs,
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "vs");
-            current_statement__ = 652;
+            current_statement__ = 650;
             z = 3.1;
             continue;
           }}}
     }
-    current_statement__ = 665;
+    current_statement__ = 663;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -2696,28 +2694,28 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 658;
+      current_statement__ = 656;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 658;
+          current_statement__ = 656;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 659;
+          current_statement__ = 657;
           z = 0;
           break;
         }}
-      current_statement__ = 661;
+      current_statement__ = 659;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 661;
+          current_statement__ = 659;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 662;
+          current_statement__ = 660;
           z = 3.2;
           continue;
         }}
     }
-    current_statement__ = 675;
+    current_statement__ = 673;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -2726,44 +2724,44 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 668;
+      current_statement__ = 666;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 668;
+          current_statement__ = 666;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 669;
+          current_statement__ = 667;
           z = 0;
           break;
         }}
-      current_statement__ = 671;
+      current_statement__ = 669;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 671;
+          current_statement__ = 669;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 672;
+          current_statement__ = 670;
           z = 3.3;
           continue;
         }}
     }
-    current_statement__ = 683;
+    current_statement__ = 681;
     while (1) {
       int b;
       b = std::numeric_limits<int>::min();
       
-      current_statement__ = 677;
+      current_statement__ = 675;
       b = 5;
       {
         int c;
         c = std::numeric_limits<int>::min();
         
-        current_statement__ = 679;
+        current_statement__ = 677;
         c = 6;
         break;
       }
     }
-    current_statement__ = 684;
+    current_statement__ = 682;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2796,16 +2794,16 @@ foo_2(const int& a, std::ostream* pstream__) {
     int y;
     y = std::numeric_limits<int>::min();
     
-    current_statement__ = 688;
+    current_statement__ = 686;
     for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
-        current_statement__ = 688;
+        current_statement__ = 686;
         v = vs[(sym1__ - 1)];
-        current_statement__ = 689;
+        current_statement__ = 687;
         y = v;
       }}
-    current_statement__ = 690;
+    current_statement__ = 688;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2833,7 +2831,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 692;
+    current_statement__ = 690;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2862,7 +2860,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 694;
+    current_statement__ = 692;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2893,7 +2891,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 696;
+    current_statement__ = 694;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -2933,13 +2931,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     local_scalar_t__ avg_scale;
     avg_scale = DUMMY_VAR__;
     
-    current_statement__ = 700;
+    current_statement__ = 698;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 701;
+    current_statement__ = 699;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 703;
+    current_statement__ = 701;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 702;
+      current_statement__ = 700;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -2949,9 +2947,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 705;
+    current_statement__ = 703;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 704;
+      current_statement__ = 702;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -2961,7 +2959,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 706;
+    current_statement__ = 704;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2996,7 +2994,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 708;
+    current_statement__ = 706;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).array()));
   } catch (const std::exception& e) {
@@ -3037,7 +3035,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 710;
+    current_statement__ = 708;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3077,7 +3075,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 712;
+    current_statement__ = 710;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3113,27 +3111,27 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const int& invert,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 714;
+    current_statement__ = 712;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
-    current_statement__ = 715;
+    current_statement__ = 713;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     stan::math::fill(o, DUMMY_VAR__);
     
-    current_statement__ = 717;
+    current_statement__ = 715;
     assign(o, nil_index_list(), mat, "assigning variable o");
-    current_statement__ = 718;
+    current_statement__ = 716;
     assign(o, cons_list(index_uni(1), nil_index_list()),
       stan::model::deep_copy(
         rvalue(o, cons_list(index_uni(2), nil_index_list()), "o")),
       "assigning variable o");
-    current_statement__ = 719;
+    current_statement__ = 717;
     assign(o, cons_list(index_min_max(3, 4), nil_index_list()),
       stan::model::deep_copy(
         rvalue(o, cons_list(index_min_max(1, 2), nil_index_list()), "o")),
       "assigning variable o");
-    current_statement__ = 720;
+    current_statement__ = 718;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3180,7 +3178,7 @@ f0(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 722;
+    current_statement__ = 720;
     if (pstream__) {
       stan_print(pstream__, "hi");
       stan_print(pstream__, "\n");
@@ -3240,7 +3238,7 @@ f1(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 724;
+    current_statement__ = 722;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3297,7 +3295,7 @@ f2(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 726;
+    current_statement__ = 724;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3354,7 +3352,7 @@ f3(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 728;
+    current_statement__ = 726;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3413,7 +3411,7 @@ f4(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 730;
+    current_statement__ = 728;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3474,7 +3472,7 @@ f5(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 732;
+    current_statement__ = 730;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3535,7 +3533,7 @@ f6(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 734;
+    current_statement__ = 732;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3596,7 +3594,7 @@ f7(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 736;
+    current_statement__ = 734;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3657,7 +3655,7 @@ f8(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 738;
+    current_statement__ = 736;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3718,7 +3716,7 @@ f9(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 740;
+    current_statement__ = 738;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3779,7 +3777,7 @@ f10(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 742;
+    current_statement__ = 740;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3840,7 +3838,7 @@ f11(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 744;
+    current_statement__ = 742;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3901,7 +3899,7 @@ f12(const int& a1, const std::vector<int>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 746;
+    current_statement__ = 744;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3955,7 +3953,7 @@ foo_6(std::ostream* pstream__) {
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
     
-    current_statement__ = 752;
+    current_statement__ = 750;
     assign(ar_mat,
       cons_list(index_uni(1),
         cons_list(index_uni(1),
@@ -3986,7 +3984,7 @@ matfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 754;
+    current_statement__ = 752;
     return stan::math::to_matrix(
         stan::math::array_builder<Eigen::Matrix<double, 1, -1>>()
         .add(stan::math::to_row_vector(stan::math::array_builder<int>()
@@ -4022,7 +4020,7 @@ vecfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 756;
+    current_statement__ = 754;
     return transpose(stan::math::to_row_vector(
              stan::math::array_builder<int>().add(1).add(2).add(3).add(4)
              .add(5).add(6).add(7).add(8).add(9).add(10).array()));
@@ -4056,10 +4054,10 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 758;
+    current_statement__ = 756;
     assign(l, nil_index_list(), multiply(mu, vecfoo(pstream__)),
       "assigning variable l");
-    current_statement__ = 759;
+    current_statement__ = 757;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4092,13 +4090,13 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 761;
+    current_statement__ = 759;
     assign(l, nil_index_list(),
       multiply(mu,
         transpose(stan::math::to_row_vector(stan::math::array_builder<int>()
           .add(1).add(2).add(3).add(4).add(5).add(6).add(7).add(8).add(9)
           .add(10).array()))), "assigning variable l");
-    current_statement__ = 762;
+    current_statement__ = 760;
     return rvalue(l,
              cons_list(index_multi(stan::math::array_builder<int>().add(1)
                .add(2).add(3).add(4).add(5).array()), nil_index_list()), "l");
@@ -4137,13 +4135,13 @@ algebra_system(const Eigen::Matrix<T0__, -1, 1>& x,
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 765;
+    current_statement__ = 763;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
       (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
-    current_statement__ = 766;
+    current_statement__ = 764;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
       (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
-    current_statement__ = 767;
+    current_statement__ = 765;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4183,10 +4181,10 @@ binomialf(const Eigen::Matrix<T0__, -1, 1>& phi,
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     stan::math::fill(lpmf, DUMMY_VAR__);
     
-    current_statement__ = 770;
+    current_statement__ = 768;
     assign(lpmf, cons_list(index_uni(1), nil_index_list()), 0.0,
       "assigning variable lpmf");
-    current_statement__ = 771;
+    current_statement__ = 769;
     return lpmf;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
