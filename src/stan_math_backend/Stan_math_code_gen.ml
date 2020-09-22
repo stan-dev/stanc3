@@ -298,9 +298,8 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
   match Stmt.Fixed.(fdbody.pattern) with
   | Skip -> pf ppf ";@ "
   | _ ->
-      pf ppf "@,// [[Rcpp::export]]@,auto %s%a @,{@,return %s::%a;@,}@,"
-      fdname pp_sig_standalone
-        "" namespace_fun pp_call_str
+      pf ppf "@,// [[Rcpp::export]]@,auto %s%a @,{@,return %s::%a;@,}@," fdname
+        pp_sig_standalone "" namespace_fun pp_call_str
         ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
           else fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
@@ -858,14 +857,15 @@ let pp_prog ppf (p : Program.Typed.t) =
       (list ~sep:cut pp_standalone_funs_def)
       p.functions_block
   else (
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) custom_functions usings Locations.pp_globals s
-    (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
-    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
-    p.functions_block pp_model p ;
-  pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
-  pf ppf
-    {|
+    pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]"
+      version includes (namespace p) custom_functions usings
+      Locations.pp_globals s
+      (String.concat ~sep:"\n" (String.Set.elements reduce_sum_struct_decl))
+      (list ~sep:cut pp_fun_def_with_variadic_fn_list)
+      p.functions_block pp_model p ;
+    pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
+    pf ppf
+      {|
 #ifndef USING_R
 
 // Boilerplate
