@@ -385,7 +385,7 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
       let unconstrained_decls, decl_id, ut =
         let ut = SizedType.to_unsized (param_size t st) in
         match dconstrain with
-        | Some Unconstrain when SizedType.to_unsized st <> ut ->
+        | Some Unconstrain when t <> Identity ->
             ( [ Stmt.Fixed.
                   { pattern=
                       Decl

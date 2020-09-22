@@ -472,10 +472,8 @@ let trans_prog (p : Program.Typed.t) =
   let get_pname_ust = function
     | ( name
       , { Program.out_block= Parameters
-        ; out_constrained_st
-        ; out_unconstrained_st; _ } )
-      when SizedType.to_unsized out_constrained_st
-           = SizedType.to_unsized out_unconstrained_st ->
+        ; out_unconstrained_st
+        ; out_trans= Identity; _ } ) ->
         Some (name, out_unconstrained_st)
     | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
         Some (name ^ "_free__", out_unconstrained_st)

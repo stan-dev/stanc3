@@ -724,7 +724,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; |}
+using namespace stan::math;
+using stan::math::pow; |}
 
 (** Functions needed in the model class not defined yet in stan math.
  FIXME: Move these to the Stan repo when these repos are joined. 
