@@ -33,7 +33,7 @@ RUN eval $(opam env)
 RUN opam repo add internet https://opam.ocaml.org
 
 COPY ./scripts/install_build_deps.sh ./
-RUN opam update; bash -x install_build_deps.sh; opam pin -y dune 1.11.4
+RUN opam update; bash -x install_build_deps.sh
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
