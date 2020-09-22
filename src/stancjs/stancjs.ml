@@ -84,7 +84,7 @@ let wrap_result = function
   | Error e ->
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
-         ; ("warnings", Js.Unsafe.inject (Js.string "")) |]
+         ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   stan2cpp (Js.to_string name) (Js.to_string code)
