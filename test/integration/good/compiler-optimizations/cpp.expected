@@ -54,7 +54,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -678,33 +679,45 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       
       current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
+      double beta_free__;
+      beta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      beta = stan::math::lb_free(beta, 0);
+      beta_free__ = stan::math::lb_free(beta, 0);
       double gamma;
       gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       gamma = context__.vals_r("gamma")[(1 - 1)];
+      double gamma_free__;
+      gamma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      gamma = stan::math::lb_free(gamma, 0);
+      gamma_free__ = stan::math::lb_free(gamma, 0);
       double xi;
       xi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       xi = context__.vals_r("xi")[(1 - 1)];
+      double xi_free__;
+      xi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      xi = stan::math::lb_free(xi, 0);
+      xi_free__ = stan::math::lb_free(xi, 0);
       double delta;
       delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
+      double delta_free__;
+      delta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      delta = stan::math::lb_free(delta, 0);
-      vars__.emplace_back(beta);
-      vars__.emplace_back(gamma);
-      vars__.emplace_back(xi);
-      vars__.emplace_back(delta);
+      delta_free__ = stan::math::lb_free(delta, 0);
+      vars__.emplace_back(beta_free__);
+      vars__.emplace_back(gamma_free__);
+      vars__.emplace_back(xi_free__);
+      vars__.emplace_back(delta_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -920,7 +933,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -3227,6 +3241,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       double lcm_sym52__;
       double lcm_sym51__;
       double lcm_sym50__;
+      double lcm_sym49__;
+      double lcm_sym48__;
       int lcm_sym47__;
       int lcm_sym46__;
       int pos__;
@@ -3238,8 +3254,11 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       
       current_statement__ = 1;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
@@ -3266,23 +3285,27 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             pos__ = (pos__ + 1);}
         } 
       }
+      Eigen::Matrix<double, -1, 1> beta_free__;
+      beta_free__ = Eigen::Matrix<double, -1, 1>(max_age);
+      stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       if (lcm_sym46__) {
         current_statement__ = 2;
-        assign(beta, cons_list(index_uni(1), nil_index_list()),
+        assign(beta_free__, cons_list(index_uni(1), nil_index_list()),
           stan::math::lub_free(beta[(1 - 1)], 0, 1),
-          "assigning variable beta");
+          "assigning variable beta_free__");
         for (int sym1__ = 2; sym1__ <= max_age; ++sym1__) {
           current_statement__ = 2;
-          assign(beta, cons_list(index_uni(sym1__), nil_index_list()),
+          assign(beta_free__, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_free(beta[(sym1__ - 1)], 0, 1),
-            "assigning variable beta");}
+            "assigning variable beta_free__");}
       } 
-      vars__.emplace_back(mean_p);
+      vars__.emplace_back(mean_p_free__);
       if (lcm_sym46__) {
-        vars__.emplace_back(beta[(1 - 1)]);
+        vars__.emplace_back(beta_free__[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= max_age; ++sym1__) {
-          vars__.emplace_back(beta[(sym1__ - 1)]);}
+          vars__.emplace_back(beta_free__[(sym1__ - 1)]);}
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3533,7 +3556,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -4602,43 +4626,61 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 1;
       sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      sigma = stan::math::lb_free(sigma, 0);
+      sigma_free__ = stan::math::lb_free(sigma, 0);
       double sigma_age;
       sigma_age = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       sigma_age = context__.vals_r("sigma_age")[(1 - 1)];
+      double sigma_age_free__;
+      sigma_age_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      sigma_age = stan::math::lb_free(sigma_age, 0);
+      sigma_age_free__ = stan::math::lb_free(sigma_age, 0);
       double sigma_edu;
       sigma_edu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       sigma_edu = context__.vals_r("sigma_edu")[(1 - 1)];
+      double sigma_edu_free__;
+      sigma_edu_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      sigma_edu = stan::math::lb_free(sigma_edu, 0);
+      sigma_edu_free__ = stan::math::lb_free(sigma_edu, 0);
       double sigma_state;
       sigma_state = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       sigma_state = context__.vals_r("sigma_state")[(1 - 1)];
+      double sigma_state_free__;
+      sigma_state_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      sigma_state = stan::math::lb_free(sigma_state, 0);
+      sigma_state_free__ = stan::math::lb_free(sigma_state, 0);
       double sigma_region;
       sigma_region = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
       sigma_region = context__.vals_r("sigma_region")[(1 - 1)];
+      double sigma_region_free__;
+      sigma_region_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
-      sigma_region = stan::math::lb_free(sigma_region, 0);
+      sigma_region_free__ = stan::math::lb_free(sigma_region, 0);
       double sigma_age_edu;
       sigma_age_edu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
       sigma_age_edu = context__.vals_r("sigma_age_edu")[(1 - 1)];
+      double sigma_age_edu_free__;
+      sigma_age_edu_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
-      sigma_age_edu = stan::math::lb_free(sigma_age_edu, 0);
+      sigma_age_edu_free__ = stan::math::lb_free(sigma_age_edu, 0);
       double b_0;
       b_0 = std::numeric_limits<double>::quiet_NaN();
       
@@ -4822,12 +4864,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
             pos__ = (pos__ + 1);}
         } 
       }
-      vars__.emplace_back(sigma);
-      vars__.emplace_back(sigma_age);
-      vars__.emplace_back(sigma_edu);
-      vars__.emplace_back(sigma_state);
-      vars__.emplace_back(sigma_region);
-      vars__.emplace_back(sigma_age_edu);
+      vars__.emplace_back(sigma_free__);
+      vars__.emplace_back(sigma_age_free__);
+      vars__.emplace_back(sigma_edu_free__);
+      vars__.emplace_back(sigma_state_free__);
+      vars__.emplace_back(sigma_region_free__);
+      vars__.emplace_back(sigma_age_edu_free__);
       vars__.emplace_back(b_0);
       vars__.emplace_back(b_female);
       vars__.emplace_back(b_black);
@@ -5176,7 +5218,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -5539,7 +5582,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -5898,7 +5942,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -6252,6 +6297,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     try {
       double lcm_sym9__;
       double lcm_sym8__;
+      double lcm_sym3__;
+      double lcm_sym2__;
       double lcm_sym7__;
       double lcm_sym6__;
       double lcm_sym5__;
@@ -6287,24 +6334,32 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           }
         }
       }
+      Eigen::Matrix<double, -1, 1> mu_free__;
+      mu_free__ = Eigen::Matrix<double, -1, 1>(2);
+      stan::math::fill(mu_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
-      assign(mu, nil_index_list(), stan::math::ordered_free(mu),
-        "assigning variable mu");
+      assign(mu_free__, nil_index_list(), stan::math::ordered_free(mu),
+        "assigning variable mu_free__");
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       assign(sigma, nil_index_list(), context__.vals_r("sigma"),
         "assigning variable sigma");
+      std::vector<double> sigma_free__;
+      sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       {
         current_statement__ = 2;
-        assign(sigma, cons_list(index_uni(1), nil_index_list()),
-          stan::math::lb_free(sigma[(1 - 1)], 0), "assigning variable sigma");
+        assign(sigma_free__, cons_list(index_uni(1), nil_index_list()),
+          stan::math::lb_free(sigma[(1 - 1)], 0),
+          "assigning variable sigma_free__");
         {
           current_statement__ = 2;
-          assign(sigma, cons_list(index_uni(2), nil_index_list()),
+          assign(sigma_free__, cons_list(index_uni(2), nil_index_list()),
             stan::math::lb_free(sigma[(2 - 1)], 0),
-            "assigning variable sigma");
+            "assigning variable sigma_free__");
         }
       }
       double theta;
@@ -6312,21 +6367,24 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       
       current_statement__ = 3;
       theta = context__.vals_r("theta")[(1 - 1)];
+      double theta_free__;
+      theta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      theta = stan::math::lub_free(theta, 0, 1);
+      theta_free__ = stan::math::lub_free(theta, 0, 1);
       {
-        vars__.emplace_back(mu[(1 - 1)]);
+        vars__.emplace_back(mu_free__[(1 - 1)]);
         {
-          vars__.emplace_back(mu[(2 - 1)]);
+          vars__.emplace_back(mu_free__[(2 - 1)]);
         }
       }
       {
-        vars__.emplace_back(sigma[(1 - 1)]);
+        vars__.emplace_back(sigma_free__[(1 - 1)]);
         {
-          vars__.emplace_back(sigma[(2 - 1)]);
+          vars__.emplace_back(sigma_free__[(2 - 1)]);
         }
       }
-      vars__.emplace_back(theta);
+      vars__.emplace_back(theta_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6533,7 +6591,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -6826,15 +6885,18 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       
       current_statement__ = 3;
       tau = context__.vals_r("tau")[(1 - 1)];
+      double tau_free__;
+      tau_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      tau = stan::math::lb_free(tau, 0);
+      tau_free__ = stan::math::lb_free(tau, 0);
       vars__.emplace_back(mu);
       if (logical_gte(J, 1)) {
         vars__.emplace_back(theta[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
           vars__.emplace_back(theta[(sym1__ - 1)]);}
       } 
-      vars__.emplace_back(tau);
+      vars__.emplace_back(tau_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -7035,7 +7097,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -8243,36 +8306,51 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 7;
       sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
+      double sigma_a_free__;
+      sigma_a_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 7;
-      sigma_a = stan::math::lub_free(sigma_a, 0, 100);
+      sigma_a_free__ = stan::math::lub_free(sigma_a, 0, 100);
       double sigma_b;
       sigma_b = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 8;
       sigma_b = context__.vals_r("sigma_b")[(1 - 1)];
+      double sigma_b_free__;
+      sigma_b_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 8;
-      sigma_b = stan::math::lub_free(sigma_b, 0, 100);
+      sigma_b_free__ = stan::math::lub_free(sigma_b, 0, 100);
       double sigma_c;
       sigma_c = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 9;
       sigma_c = context__.vals_r("sigma_c")[(1 - 1)];
+      double sigma_c_free__;
+      sigma_c_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 9;
-      sigma_c = stan::math::lub_free(sigma_c, 0, 100);
+      sigma_c_free__ = stan::math::lub_free(sigma_c, 0, 100);
       double sigma_d;
       sigma_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 10;
       sigma_d = context__.vals_r("sigma_d")[(1 - 1)];
+      double sigma_d_free__;
+      sigma_d_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 10;
-      sigma_d = stan::math::lub_free(sigma_d, 0, 100);
+      sigma_d_free__ = stan::math::lub_free(sigma_d, 0, 100);
       double sigma_e;
       sigma_e = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 11;
       sigma_e = context__.vals_r("sigma_e")[(1 - 1)];
+      double sigma_e_free__;
+      sigma_e_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 11;
-      sigma_e = stan::math::lub_free(sigma_e, 0, 100);
+      sigma_e_free__ = stan::math::lub_free(sigma_e, 0, 100);
       if (lcm_sym1__) {
         vars__.emplace_back(a[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= n_age; ++sym1__) {
@@ -8313,11 +8391,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
           vars__.emplace_back(beta[(5 - 1)]);
         }
       }
-      vars__.emplace_back(sigma_a);
-      vars__.emplace_back(sigma_b);
-      vars__.emplace_back(sigma_c);
-      vars__.emplace_back(sigma_d);
-      vars__.emplace_back(sigma_e);
+      vars__.emplace_back(sigma_a_free__);
+      vars__.emplace_back(sigma_b_free__);
+      vars__.emplace_back(sigma_c_free__);
+      vars__.emplace_back(sigma_d_free__);
+      vars__.emplace_back(sigma_e_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -8599,7 +8677,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -9209,8 +9288,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       current_statement__ = 1;
       tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
+      double tau_phi_free__;
+      tau_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      tau_phi = stan::math::lb_free(tau_phi, 0);
+      tau_phi_free__ = stan::math::lb_free(tau_phi, 0);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<double, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
@@ -9241,7 +9323,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             pos__ = (pos__ + 1);}
         } 
       }
-      vars__.emplace_back(tau_phi);
+      vars__.emplace_back(tau_phi_free__);
       if (lcm_sym1__) {
         vars__.emplace_back(phi_std_raw[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= lcm_sym2__; ++sym1__) {
@@ -9520,7 +9602,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -11721,15 +11804,21 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      double mean_phi_free__;
+      mean_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_phi = stan::math::lub_free(mean_phi, 0, 1);
+      mean_phi_free__ = stan::math::lub_free(mean_phi, 0, 1);
       double mean_p;
       mean_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> epsilon;
       epsilon = Eigen::Matrix<double, -1, 1>(nind);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
@@ -11761,16 +11850,19 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      sigma = stan::math::lub_free(sigma, 0, 5);
-      vars__.emplace_back(mean_phi);
-      vars__.emplace_back(mean_p);
+      sigma_free__ = stan::math::lub_free(sigma, 0, 5);
+      vars__.emplace_back(mean_phi_free__);
+      vars__.emplace_back(mean_p_free__);
       if (lcm_sym46__) {
         vars__.emplace_back(epsilon[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= nind; ++sym1__) {
           vars__.emplace_back(epsilon[(sym1__ - 1)]);}
       } 
-      vars__.emplace_back(sigma);
+      vars__.emplace_back(sigma_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12038,7 +12130,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -15844,6 +15937,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym123__;
       double lcm_sym122__;
       double lcm_sym121__;
+      double lcm_sym120__;
+      double lcm_sym119__;
       int lcm_sym118__;
       int lcm_sym117__;
       int lcm_sym116__;
@@ -15856,22 +15951,31 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      double mean_phi_free__;
+      mean_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_phi = stan::math::lub_free(mean_phi, 0, 1);
+      mean_phi_free__ = stan::math::lub_free(mean_phi, 0, 1);
       double mean_p;
       mean_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       double psi;
       psi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
       psi = context__.vals_r("psi")[(1 - 1)];
+      double psi_free__;
+      psi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      psi = stan::math::lub_free(psi, 0, 1);
+      psi_free__ = stan::math::lub_free(psi, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
@@ -15898,16 +16002,21 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             pos__ = (pos__ + 1);}
         } 
       }
+      Eigen::Matrix<double, -1, 1> beta_free__;
+      beta_free__ = Eigen::Matrix<double, -1, 1>(n_occasions);
+      stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 4;
       if (lcm_sym117__) {
         current_statement__ = 4;
-        assign(beta, cons_list(index_uni(1), nil_index_list()),
-          stan::math::lb_free(beta[(1 - 1)], 0), "assigning variable beta");
+        assign(beta_free__, cons_list(index_uni(1), nil_index_list()),
+          stan::math::lb_free(beta[(1 - 1)], 0),
+          "assigning variable beta_free__");
         for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
           current_statement__ = 4;
-          assign(beta, cons_list(index_uni(sym1__), nil_index_list()),
+          assign(beta_free__, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lb_free(beta[(sym1__ - 1)], 0),
-            "assigning variable beta");}
+            "assigning variable beta_free__");}
       } 
       Eigen::Matrix<double, -1, 1> epsilon;
       epsilon = Eigen::Matrix<double, -1, 1>(M);
@@ -15940,22 +16049,25 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       
       current_statement__ = 6;
       sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
-      sigma = stan::math::lub_free(sigma, 0, 5);
-      vars__.emplace_back(mean_phi);
-      vars__.emplace_back(mean_p);
-      vars__.emplace_back(psi);
+      sigma_free__ = stan::math::lub_free(sigma, 0, 5);
+      vars__.emplace_back(mean_phi_free__);
+      vars__.emplace_back(mean_p_free__);
+      vars__.emplace_back(psi_free__);
       if (lcm_sym117__) {
-        vars__.emplace_back(beta[(1 - 1)]);
+        vars__.emplace_back(beta_free__[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
-          vars__.emplace_back(beta[(sym1__ - 1)]);}
+          vars__.emplace_back(beta_free__[(sym1__ - 1)]);}
       } 
       if (lcm_sym116__) {
         vars__.emplace_back(epsilon[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           vars__.emplace_back(epsilon[(sym1__ - 1)]);}
       } 
-      vars__.emplace_back(sigma);
+      vars__.emplace_back(sigma_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -16299,7 +16411,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -17336,15 +17449,15 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       double lcm_sym22__;
       double lcm_sym21__;
       double lcm_sym20__;
-      Eigen::Matrix<double, -1, 1> lcm_sym9__;
       double lcm_sym19__;
       double lcm_sym18__;
-      Eigen::Matrix<double, -1, 1> lcm_sym8__;
       double lcm_sym17__;
       double lcm_sym16__;
-      Eigen::Matrix<double, -1, 1> lcm_sym7__;
       double lcm_sym15__;
       double lcm_sym14__;
+      Eigen::Matrix<double, -1, 1> lcm_sym9__;
+      Eigen::Matrix<double, -1, 1> lcm_sym8__;
+      Eigen::Matrix<double, -1, 1> lcm_sym7__;
       Eigen::Matrix<double, -1, 1> lcm_sym6__;
       double lcm_sym13__;
       double lcm_sym12__;
@@ -17385,9 +17498,13 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             pos__ = (pos__ + 1);}
         } 
       }
+      Eigen::Matrix<double, -1, 1> pi_free__;
+      pi_free__ = Eigen::Matrix<double, -1, 1>((K - 1));
+      stan::math::fill(pi_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 1;
-      assign(pi, nil_index_list(), stan::math::simplex_free(pi),
-        "assigning variable pi");
+      assign(pi_free__, nil_index_list(), stan::math::simplex_free(pi),
+        "assigning variable pi_free__");
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(K)));
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
@@ -17500,79 +17617,87 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           lcm_sym1__ = logical_gte(J, 1);
         }
       }
+      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta_free__;
+      theta_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
+        (K - 1))));
+      stan::math::fill(theta_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       if (lcm_sym1__) {
         current_statement__ = 2;
         if (lcm_sym2__) {
           current_statement__ = 2;
-          assign(theta,
+          assign(theta_free__,
             cons_list(index_uni(1),
               cons_list(index_uni(1), nil_index_list())),
             stan::math::simplex_free(theta[(1 - 1)][(1 - 1)]),
-            "assigning variable theta");
+            "assigning variable theta_free__");
           for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
             current_statement__ = 2;
-            assign(theta,
+            assign(theta_free__,
               cons_list(index_uni(1),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::simplex_free(theta[(1 - 1)][(sym2__ - 1)]),
-              "assigning variable theta");}
+              "assigning variable theta_free__");}
         } 
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
           current_statement__ = 2;
           if (lcm_sym2__) {
             current_statement__ = 2;
-            assign(theta,
+            assign(theta_free__,
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(1), nil_index_list())),
               stan::math::simplex_free(theta[(sym1__ - 1)][(1 - 1)]),
-              "assigning variable theta");
+              "assigning variable theta_free__");
             for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
               current_statement__ = 2;
-              assign(theta,
+              assign(theta_free__,
                 cons_list(index_uni(sym1__),
                   cons_list(index_uni(sym2__), nil_index_list())),
                 stan::math::simplex_free(theta[(sym1__ - 1)][(sym2__ - 1)]),
-                "assigning variable theta");}
+                "assigning variable theta_free__");}
           } }
       } 
       lcm_sym4__ = (K - 1);
       lcm_sym3__ = logical_gte(lcm_sym4__, 1);
       if (lcm_sym3__) {
-        vars__.emplace_back(pi[(1 - 1)]);
+        vars__.emplace_back(pi_free__[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= lcm_sym4__; ++sym1__) {
-          vars__.emplace_back(pi[(sym1__ - 1)]);}
+          vars__.emplace_back(pi_free__[(sym1__ - 1)]);}
       } 
       if (lcm_sym1__) {
         if (lcm_sym2__) {
           if (lcm_sym3__) {
-            vars__.emplace_back(theta[(1 - 1)][(1 - 1)][(1 - 1)]);
+            vars__.emplace_back(theta_free__[(1 - 1)][(1 - 1)][(1 - 1)]);
             for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
-              vars__.emplace_back(theta[(1 - 1)][(1 - 1)][(sym3__ - 1)]);}
+              vars__.emplace_back(
+                theta_free__[(1 - 1)][(1 - 1)][(sym3__ - 1)]);}
           } 
           for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
             if (lcm_sym3__) {
-              vars__.emplace_back(theta[(1 - 1)][(sym2__ - 1)][(1 - 1)]);
+              vars__.emplace_back(
+                theta_free__[(1 - 1)][(sym2__ - 1)][(1 - 1)]);
               for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                 vars__.emplace_back(
-                  theta[(1 - 1)][(sym2__ - 1)][(sym3__ - 1)]);}
+                  theta_free__[(1 - 1)][(sym2__ - 1)][(sym3__ - 1)]);}
             } }
         } 
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
           if (lcm_sym2__) {
             if (lcm_sym3__) {
-              vars__.emplace_back(theta[(sym1__ - 1)][(1 - 1)][(1 - 1)]);
+              vars__.emplace_back(
+                theta_free__[(sym1__ - 1)][(1 - 1)][(1 - 1)]);
               for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                 vars__.emplace_back(
-                  theta[(sym1__ - 1)][(1 - 1)][(sym3__ - 1)]);}
+                  theta_free__[(sym1__ - 1)][(1 - 1)][(sym3__ - 1)]);}
             } 
             for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
               if (lcm_sym3__) {
                 vars__.emplace_back(
-                  theta[(sym1__ - 1)][(sym2__ - 1)][(1 - 1)]);
+                  theta_free__[(sym1__ - 1)][(sym2__ - 1)][(1 - 1)]);
                 for (int sym3__ = 2; sym3__ <= lcm_sym4__; ++sym3__) {
                   vars__.emplace_back(
-                    theta[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}
+                    theta_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}
               } }
           } }
       } 
@@ -17807,7 +17932,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -18328,15 +18454,21 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       
       current_statement__ = 3;
       tau_theta = context__.vals_r("tau_theta")[(1 - 1)];
+      double tau_theta_free__;
+      tau_theta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 3;
-      tau_theta = stan::math::lb_free(tau_theta, 0);
+      tau_theta_free__ = stan::math::lb_free(tau_theta, 0);
       double tau_phi;
       tau_phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
       tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
+      double tau_phi_free__;
+      tau_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      tau_phi = stan::math::lb_free(tau_phi, 0);
+      tau_phi_free__ = stan::math::lb_free(tau_phi, 0);
       Eigen::Matrix<double, -1, 1> theta_std;
       theta_std = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(theta_std, std::numeric_limits<double>::quiet_NaN());
@@ -18395,8 +18527,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       }
       vars__.emplace_back(beta0);
       vars__.emplace_back(beta1);
-      vars__.emplace_back(tau_theta);
-      vars__.emplace_back(tau_phi);
+      vars__.emplace_back(tau_theta_free__);
+      vars__.emplace_back(tau_phi_free__);
       if (lcm_sym1__) {
         vars__.emplace_back(theta_std[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
@@ -18642,7 +18774,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -20949,6 +21082,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       double lcm_sym52__;
       double lcm_sym51__;
       double lcm_sym50__;
+      double lcm_sym49__;
+      double lcm_sym48__;
       int lcm_sym47__;
       int lcm_sym46__;
       int pos__;
@@ -20960,8 +21095,11 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       
       current_statement__ = 1;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
@@ -20988,23 +21126,27 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             pos__ = (pos__ + 1);}
         } 
       }
+      Eigen::Matrix<double, -1, 1> beta_free__;
+      beta_free__ = Eigen::Matrix<double, -1, 1>(max_age);
+      stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 2;
       if (lcm_sym46__) {
         current_statement__ = 2;
-        assign(beta, cons_list(index_uni(1), nil_index_list()),
+        assign(beta_free__, cons_list(index_uni(1), nil_index_list()),
           stan::math::lub_free(beta[(1 - 1)], 0, 1),
-          "assigning variable beta");
+          "assigning variable beta_free__");
         for (int sym1__ = 2; sym1__ <= max_age; ++sym1__) {
           current_statement__ = 2;
-          assign(beta, cons_list(index_uni(sym1__), nil_index_list()),
+          assign(beta_free__, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_free(beta[(sym1__ - 1)], 0, 1),
-            "assigning variable beta");}
+            "assigning variable beta_free__");}
       } 
-      vars__.emplace_back(mean_p);
+      vars__.emplace_back(mean_p_free__);
       if (lcm_sym46__) {
-        vars__.emplace_back(beta[(1 - 1)]);
+        vars__.emplace_back(beta_free__[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= max_age; ++sym1__) {
-          vars__.emplace_back(beta[(sym1__ - 1)]);}
+          vars__.emplace_back(beta_free__[(sym1__ - 1)]);}
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21255,7 +21397,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -24948,6 +25091,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym141__;
       double lcm_sym140__;
       double lcm_sym139__;
+      double lcm_sym134__;
+      double lcm_sym133__;
       double lcm_sym138__;
       double lcm_sym137__;
       double lcm_sym136__;
@@ -24965,15 +25110,21 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      double mean_phi_free__;
+      mean_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_phi = stan::math::lub_free(mean_phi, 0, 1);
+      mean_phi_free__ = stan::math::lub_free(mean_phi, 0, 1);
       double mean_p;
       mean_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> gamma;
       gamma = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(gamma, std::numeric_limits<double>::quiet_NaN());
@@ -25000,17 +25151,22 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             pos__ = (pos__ + 1);}
         } 
       }
+      Eigen::Matrix<double, -1, 1> gamma_free__;
+      gamma_free__ = Eigen::Matrix<double, -1, 1>(n_occasions);
+      stan::math::fill(gamma_free__, std::numeric_limits<double>::quiet_NaN());
+      
       current_statement__ = 3;
       if (lcm_sym129__) {
         current_statement__ = 3;
-        assign(gamma, cons_list(index_uni(1), nil_index_list()),
+        assign(gamma_free__, cons_list(index_uni(1), nil_index_list()),
           stan::math::lub_free(gamma[(1 - 1)], 0, 1),
-          "assigning variable gamma");
+          "assigning variable gamma_free__");
         for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
           current_statement__ = 3;
-          assign(gamma, cons_list(index_uni(sym1__), nil_index_list()),
+          assign(gamma_free__,
+            cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_free(gamma[(sym1__ - 1)], 0, 1),
-            "assigning variable gamma");}
+            "assigning variable gamma_free__");}
       } 
       Eigen::Matrix<double, -1, 1> epsilon;
       epsilon = Eigen::Matrix<double, -1, 1>((n_occasions - 1));
@@ -25044,21 +25200,24 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       current_statement__ = 5;
       sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
-      sigma = stan::math::lub_free(sigma, 0, 5);
-      vars__.emplace_back(mean_phi);
-      vars__.emplace_back(mean_p);
+      sigma_free__ = stan::math::lub_free(sigma, 0, 5);
+      vars__.emplace_back(mean_phi_free__);
+      vars__.emplace_back(mean_p_free__);
       if (lcm_sym129__) {
-        vars__.emplace_back(gamma[(1 - 1)]);
+        vars__.emplace_back(gamma_free__[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
-          vars__.emplace_back(gamma[(sym1__ - 1)]);}
+          vars__.emplace_back(gamma_free__[(sym1__ - 1)]);}
       } 
       if (lcm_sym130__) {
         vars__.emplace_back(epsilon[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= lcm_sym131__; ++sym1__) {
           vars__.emplace_back(epsilon[(sym1__ - 1)]);}
       } 
-      vars__.emplace_back(sigma);
+      vars__.emplace_back(sigma_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -25393,7 +25552,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -25749,7 +25909,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -26111,7 +26272,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -26519,7 +26681,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -28632,17 +28795,23 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      double mean_phi_free__;
+      mean_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 1;
-      mean_phi = stan::math::lub_free(mean_phi, 0, 1);
+      mean_phi_free__ = stan::math::lub_free(mean_phi, 0, 1);
       double mean_p;
       mean_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      double mean_p_free__;
+      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 2;
-      mean_p = stan::math::lub_free(mean_p, 0, 1);
-      vars__.emplace_back(mean_phi);
-      vars__.emplace_back(mean_p);
+      mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
+      vars__.emplace_back(mean_phi_free__);
+      vars__.emplace_back(mean_p_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -28886,7 +29055,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -29937,7 +30107,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -30637,22 +30808,31 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       
       current_statement__ = 6;
       sigma_a1 = context__.vals_r("sigma_a1")[(1 - 1)];
+      double sigma_a1_free__;
+      sigma_a1_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 6;
-      sigma_a1 = stan::math::lub_free(sigma_a1, 0, 100);
+      sigma_a1_free__ = stan::math::lub_free(sigma_a1, 0, 100);
       double sigma_a2;
       sigma_a2 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 7;
       sigma_a2 = context__.vals_r("sigma_a2")[(1 - 1)];
+      double sigma_a2_free__;
+      sigma_a2_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 7;
-      sigma_a2 = stan::math::lub_free(sigma_a2, 0, 100);
+      sigma_a2_free__ = stan::math::lub_free(sigma_a2, 0, 100);
       double sigma_y;
       sigma_y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 8;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
+      double sigma_y_free__;
+      sigma_y_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 8;
-      sigma_y = stan::math::lub_free(sigma_y, 0, 100);
+      sigma_y_free__ = stan::math::lub_free(sigma_y, 0, 100);
       vars__.emplace_back(beta);
       if (lcm_sym1__) {
         vars__.emplace_back(eta1[(1 - 1)]);
@@ -30666,9 +30846,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       } 
       vars__.emplace_back(mu_a1);
       vars__.emplace_back(mu_a2);
-      vars__.emplace_back(sigma_a1);
-      vars__.emplace_back(sigma_a2);
-      vars__.emplace_back(sigma_y);
+      vars__.emplace_back(sigma_a1_free__);
+      vars__.emplace_back(sigma_a2_free__);
+      vars__.emplace_back(sigma_y_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -30931,7 +31111,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -32413,7 +32594,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -33006,15 +33188,21 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 4;
       sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
+      double sigma_a_free__;
+      sigma_a_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 4;
-      sigma_a = stan::math::lub_free(sigma_a, 0, 100);
+      sigma_a_free__ = stan::math::lub_free(sigma_a, 0, 100);
       double sigma_y;
       sigma_y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
+      double sigma_y_free__;
+      sigma_y_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
-      sigma_y = stan::math::lub_free(sigma_y, 0, 100);
+      sigma_y_free__ = stan::math::lub_free(sigma_y, 0, 100);
       if (lcm_sym1__) {
         vars__.emplace_back(a[(1 - 1)]);
         for (int sym1__ = 2; sym1__ <= n_pair; ++sym1__) {
@@ -33027,8 +33215,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         }
       }
       vars__.emplace_back(mu_a);
-      vars__.emplace_back(sigma_a);
-      vars__.emplace_back(sigma_y);
+      vars__.emplace_back(sigma_a_free__);
+      vars__.emplace_back(sigma_y_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -33254,7 +33442,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
@@ -33833,8 +34022,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       
       current_statement__ = 5;
       tau = context__.vals_r("tau")[(1 - 1)];
+      double tau_free__;
+      tau_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       current_statement__ = 5;
-      tau = stan::math::lb_free(tau, 0);
+      tau_free__ = stan::math::lb_free(tau, 0);
       std::vector<Eigen::Matrix<double, -1, 1>> b;
       b = std::vector<Eigen::Matrix<double, -1, 1>>(I, Eigen::Matrix<double, -1, 1>(8));
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
@@ -34013,7 +34205,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       vars__.emplace_back(alpha1);
       vars__.emplace_back(alpha2);
       vars__.emplace_back(alpha12);
-      vars__.emplace_back(tau);
+      vars__.emplace_back(tau_free__);
       if (lcm_sym1__) {
         {
           vars__.emplace_back(b[(1 - 1)][(1 - 1)]);
@@ -34456,7 +34648,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; 
+using namespace stan::math;
+using stan::math::pow; 
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",

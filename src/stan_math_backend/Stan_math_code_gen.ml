@@ -231,9 +231,9 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
   pp_sig ppf fdname ;
-  match Stmt.Fixed.(fdbody.pattern) with
-  | Skip -> pf ppf ";@ "
-  | _ ->
+  match fdbody with
+  | None -> pf ppf ";@ "
+  | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
         functor_suffix pp_sig "operator()" pp_call_str
@@ -724,7 +724,8 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using namespace stan::math; |}
+using namespace stan::math;
+using stan::math::pow; |}
 
 (** Functions needed in the model class not defined yet in stan math.
  FIXME: Move these to the Stan repo when these repos are joined. 

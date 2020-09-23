@@ -26,7 +26,7 @@ let transform_program (mir : Program.Typed.t)
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
+        {fs with fdbody= Option.map ~f:transform fs.fdbody} )
   in
   match transformed_prog_body with
   | { pattern=
@@ -59,15 +59,9 @@ let transform_program_blockwise (mir : Program.Typed.t)
         raise
           (Failure "Something went wrong with program transformation packing!")
   in
-  (* Right now, we have an implicit constraint where if fdbody = Skip, the
-     fun_def is a function declaration. When that's the case we don't want
-     to change it from Skip.*)
-  let non_decl_functions =
-    List.filter ~f:(fun def -> def.fdbody.pattern <> Skip) mir.functions_block
-  in
   let transformed_functions =
-    List.map non_decl_functions ~f:(fun fs ->
-        {fs with fdbody= transform (Some fs) fs.fdbody} )
+    List.map mir.functions_block ~f:(fun fs ->
+        {fs with fdbody= Option.map ~f:(transform (Some fs)) fs.fdbody} )
   in
   { mir with
     functions_block= transformed_functions
@@ -437,8 +431,8 @@ let create_function_inline_map adt l =
     else
       let accum' =
         match fdbody with
-        | Stmt.Fixed.({pattern= Stmt.Fixed.Pattern.Skip; _}) -> accum
-        | _ -> (
+        | None -> accum
+        | Some fdbody -> (
             let data =
               ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
               , List.map ~f:(fun (_, name, _) -> name) fdargs
