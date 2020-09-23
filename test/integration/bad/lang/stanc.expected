@@ -728,3 +728,19 @@ Syntax error in 'incomplete5.stan', line 2, column 11 to column 12, parsing erro
 Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
+  $ ../../../../../install/default/bin/stanc incomplete6.stan
+
+Syntax error in 'incomplete6.stan', line 3, column 15 to column 16, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    print(upper[2.0]);
+     3:    real x = sars[while (0)];
+                         ^
+     4:  }
+   -------------------------------------------------
+
+Expected an expression inside "[" and "]" but found a statement. Indexing should look like
+  var[1 + i]
+not
+  var[for (n in 1:N) ...]
+

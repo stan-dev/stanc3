@@ -1941,7 +1941,10 @@ Syntax error in 'indices-bad3.stan', line 1, column 21 to column 22, parsing err
                                ^
    -------------------------------------------------
 
-(Parse error state 131)
+Expected an expression inside "[" and "]" but found a statement. Indexing should look like
+  var[1 + i]
+not
+  var[for (n in 1:N) ...]
 
   $ ../../../../../install/default/bin/stanc lexing_error.stan
 
