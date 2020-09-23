@@ -716,3 +716,15 @@ Or did you mean to use the preceding expression in:
 * assignment to a variable?
 
 
+  $ ../../../../../install/default/bin/stanc incomplete5.stan
+
+Syntax error in 'incomplete5.stan', line 2, column 11 to column 12, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    if (2.0) ;
+                     ^
+   -------------------------------------------------
+
+Ill-formed block. Expected a statement, variable declaration, or just "}".
+
+
