@@ -492,8 +492,8 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
   else size_checks @ (decl :: rhs_assignment)
 
 let unwrap_block_or_skip = function
-  | [({Stmt.Fixed.pattern= Block _; _} as b)] | [({pattern= Skip; _} as b)] ->
-      b
+  | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
+  | [{pattern= Skip; _}] -> None
   | x ->
       raise_s
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]

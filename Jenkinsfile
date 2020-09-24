@@ -197,7 +197,6 @@ pipeline {
             }
         }
         stage("Build and test static release binaries") {
-            when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
 
@@ -303,8 +302,8 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
-
             }
+
         }
         stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
