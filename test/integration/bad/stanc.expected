@@ -776,7 +776,7 @@ Syntax error in 'err-if-else-double-else.stan', line 3, column 2 to column 8, pa
      5:    else y = 4;
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
@@ -947,7 +947,7 @@ Syntax error in 'err-no-statement.stan', line 3, column 7 to column 8, parsing e
      5:  model {
    -------------------------------------------------
 
-Ill-formed statement. Statement expected for true branch of conditional. 
+Ill-formed statement. Statement expected for true branch of conditional.
 
 
   $ ../../../../install/default/bin/stanc err-non-int-dims.stan
@@ -989,7 +989,7 @@ Syntax error in 'err-second-operand-plus.stan', line 3, column 8 to column 10, p
      5:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found expression "||". Expect an expression next.
+Found an incomplete binary expression - are you missing the right hand side?
 
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
@@ -1047,7 +1047,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to l
      8:  parameters {
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
@@ -1061,7 +1061,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 8, column 2 to c
      9:  
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc experiment.stan

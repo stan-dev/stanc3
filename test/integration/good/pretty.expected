@@ -3136,6 +3136,15 @@ model {
   infty ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format identifiers.stan
+data {
+  int array;
+  int upper;
+  int lower;
+  int multiplier;
+  int offset;
+}
+
   $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
 parameters {
   real y;
