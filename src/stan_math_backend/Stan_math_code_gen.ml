@@ -295,9 +295,9 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
     in
     pf ppf "(@[<hov>%a@]) " (list ~sep:comma string) arg_strs
   in
-  match Stmt.Fixed.(fdbody.pattern) with
-  | Skip -> pf ppf ";@ "
-  | _ ->
+  match fdbody with
+  | None -> pf ppf ";@ "
+  | Some _ ->
       pf ppf "@,// [[Rcpp::export]]@,auto %s%a @,{@,return %s::%a;@,}@," fdname
         pp_sig_standalone "" namespace_fun pp_call_str
         ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
