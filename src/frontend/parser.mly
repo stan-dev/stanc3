@@ -10,6 +10,10 @@ open Debugging
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
+
+let build_id id startpos endpos =
+  grammar_logger ("identifier " ^ id);
+  {name=id; id_loc=Location_span.of_positions_exn startpos endpos}
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -110,21 +114,14 @@ generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "generated_quantities_block" ; tvds }
 
-build_id(ID):
-  | ID { fun id -> (
-           grammar_logger ("identifier " ^ id);
-           {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos})}
-
 (* function definitions *)
 identifier:
-  | id=IDENTIFIER
-     {grammar_logger ("identifier " ^ id);
-      {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos}}
-  | f=build_id(TRUNCATE) { f "T"}
-  | f=build_id(OFFSET) { f "offset"}
-  | f=build_id(MULTIPLIER) { f "multiplier"}
-  | f=build_id(LOWER) { f "lower"}
-  | f=build_id(UPPER) { f "upper"}
+  | id=IDENTIFIER { build_id id $startpos $endpos }
+  | TRUNCATE { build_id "T" $startpos $endpos}
+  | OFFSET { build_id "offset" $startpos $endpos}
+  | MULTIPLIER { build_id "multiplier" $startpos $endpos}
+  | LOWER { build_id "lower" $startpos $endpos}
+  | UPPER { build_id "upper" $startpos $endpos}
 
 decl_identifier:
   | id=identifier { id }
