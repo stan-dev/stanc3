@@ -541,6 +541,9 @@ transformed data {
   transformed_data_matrix_array = d_matrix_array .^ d_matrix_array;
   transformed_data_matrix_array_2d = d_matrix_array_2d .^ d_matrix_array_2d;
   transformed_data_matrix_array_3d = d_matrix_array_3d .^ d_matrix_array_3d;
+
+  td_int = d_int .* d_int;
+  transformed_data_real = d_real .* d_real;
 }
 parameters {
   real p_real;
@@ -584,6 +587,7 @@ transformed parameters {
   cholesky_factor_cov[3] tp_cfcov_33;
   cholesky_factor_cov[3] tp_cfcov_33_ar[K];
   vector[2] theta_p;
+  real tp_real;
 
   tp_real_1d_ar = p_real_1d_ar;
   tp_real_3d_ar = p_real_3d_ar;
@@ -616,6 +620,9 @@ transformed parameters {
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01, 10);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
+
+  tp_real = p_real .* p_real;
+  tp_real = p_real ./ p_real;
 }
 model {
   vector[0] tmp;

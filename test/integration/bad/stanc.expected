@@ -1803,6 +1803,8 @@ Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator ./. Available signatures: 
+(int, int) => int
+(real, real) => real
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
@@ -1826,6 +1828,8 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
+(int, int) => int
+(real, real) => real
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
