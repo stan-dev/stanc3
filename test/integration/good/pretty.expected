@@ -3273,17 +3273,12 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format identifiers.stan
-
-Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    int array;
-                    ^
-     3:    int upper;
-     4:    int lower;
-   -------------------------------------------------
-
-(Parse error state 86)
+data {
+  int upper;
+  int lower;
+  int multiplier;
+  int offset;
+}
 
   $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
 parameters {

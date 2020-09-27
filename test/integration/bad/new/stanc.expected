@@ -1946,6 +1946,7 @@ Expected an expression inside "[" and "]" but found a statement. Indexing should
 not
   var[for (n in 1:N) ...]
 
+
   $ ../../../../../install/default/bin/stanc lexing_error.stan
 
 Syntax error in 'lexing_error.stan', line 1, column 6, lexing error:
