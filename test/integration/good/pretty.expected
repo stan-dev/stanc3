@@ -3272,6 +3272,19 @@ model {
   infty ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format identifiers.stan
+
+Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int array;
+                    ^
+     3:    int upper;
+     4:    int lower;
+   -------------------------------------------------
+
+(Parse error state 86)
+
   $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
 parameters {
   real y;
@@ -4489,12 +4502,19 @@ parameters {
   real positive_infinity;
   real negative_infinity;
   real machine_precision;
+  real inv_logit;
+  real logit;
+  real bernoulli_logit_glm_lpmf;
+  real reduce_sum;
+  real ode_bdf;
+  real ode_bdf_tol;
 }
 transformed parameters {
   real mu;
   mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number()
        + positive_infinity() + negative_infinity() + machine_precision(
        );
+  mu += logit + bernoulli_logit_glm_lpmf + reduce_sum;
 }
 model {
 

@@ -10,6 +10,10 @@ open Debugging
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
+
+let build_id id startpos endpos =
+  grammar_logger ("identifier " ^ id);
+  {name=id; id_loc=Location_span.of_positions_exn startpos endpos}
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -119,16 +123,12 @@ generated_quantities_block:
 
 (* function definitions *)
 identifier:
-  | id=IDENTIFIER
-    {
-      grammar_logger ("identifier " ^ id) ;
-      {name=id; id_loc=Location_span.of_positions_exn $startpos $endpos}
-    }
-  | TRUNCATE
-    {
-      grammar_logger "identifier T" ;
-      {name="T"; id_loc=Location_span.of_positions_exn $startpos $endpos}
-    }
+  | id=IDENTIFIER { build_id id $startpos $endpos }
+  | TRUNCATE { build_id "T" $startpos $endpos}
+  | OFFSET { build_id "offset" $startpos $endpos}
+  | MULTIPLIER { build_id "multiplier" $startpos $endpos}
+  | LOWER { build_id "lower" $startpos $endpos}
+  | UPPER { build_id "upper" $startpos $endpos}
 
 decl_identifier:
   | id=identifier { id }
@@ -164,11 +164,7 @@ decl_identifier:
   | CHOLESKYFACTORCOV UNREACHABLE
   | CORRMATRIX UNREACHABLE
   | COVMATRIX UNREACHABLE
-  | LOWER UNREACHABLE
-  | UPPER UNREACHABLE
   | ARRAY UNREACHABLE
-  | OFFSET UNREACHABLE
-  | MULTIPLIER UNREACHABLE
   | PRINT UNREACHABLE
   | REJECT UNREACHABLE
   | TARGET UNREACHABLE
