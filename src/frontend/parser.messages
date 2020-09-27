@@ -5413,6 +5413,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 
 Ill-formed expression. We expect a comma separated list of expressions.
 
+program: DATABLOCK LBRACE ARRAY LBRACK UPPER RPAREN
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 ##
 ## Ends in an error in state: 294.
@@ -9650,6 +9651,7 @@ not
   var[for (n in 1:N) ...]
 
 program: FUNCTIONBLOCK LBRACE ARRAY WHILE
+program: DATABLOCK LBRACE ARRAY WHILE
 ##
 ## Ends in an error in state: 9.
 ##
@@ -9659,8 +9661,14 @@ program: FUNCTIONBLOCK LBRACE ARRAY WHILE
 ## ARRAY
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected array dimensions after 'array' keyword.
 
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER ASSIGN UNREACHABLE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
+program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
+program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
 program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 16.
@@ -9671,7 +9679,7 @@ program: FUNCTIONBLOCK LBRACE ARRAY LBRACK RBRACK WHILE
 ## ARRAY always(unsized_dims)
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected non-array type after array in return type.
 
 program: MODELBLOCK LBRACE REAL ARRAY WHILE
 ##
@@ -9683,19 +9691,7 @@ program: MODELBLOCK LBRACE REAL ARRAY WHILE
 ## ARRAY
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE ARRAY WHILE
-##
-## Ends in an error in state: 484.
-##
-## arr_dims -> ARRAY . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-##
-## The known suffix of the stack is as follows:
-## ARRAY
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected identifier, but found reserved keyword 'array'
 
 program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
@@ -9707,76 +9703,11 @@ program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ## ARRAY LBRACK
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE ARRAY LBRACK UPPER RPAREN
-##
-## Ends in an error in state: 486.
-##
-## arr_dims -> ARRAY LBRACK separated_nonempty_list(COMMA,expression) . RBRACK [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-##
-## The known suffix of the stack is as follows:
-## ARRAY LBRACK separated_nonempty_list(COMMA,expression)
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 149, spurious reduction of production lhs -> identifier 
-## In state 259, spurious reduction of production separated_nonempty_list(COMMA,expression) -> lhs 
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
-##
-## Ends in an error in state: 508.
-##
-## decl(sized_basic_type,expression) -> arr_dims . sized_basic_type id_and_optional_assignment(expression) SEMICOLON [ WHILE VECTOR UPPER TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS OFFSET MULTIPLIER MINUS MATRIX LPAREN LOWER LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UNREACHABLE
-##
-## Ends in an error in state: 509.
-##
-## decl(sized_basic_type,expression) -> arr_dims sized_basic_type . id_and_optional_assignment(expression) SEMICOLON [ WHILE VECTOR UPPER TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS OFFSET MULTIPLIER MINUS MATRIX LPAREN LOWER LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims sized_basic_type
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
-##
-## Ends in an error in state: 512.
-##
-## id_and_optional_assignment(expression) -> decl_identifier . optional_assignment(expression) [ SEMICOLON ]
-##
-## The known suffix of the stack is as follows:
-## decl_identifier
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE REAL UPPER ASSIGN UNREACHABLE WHILE
-##
-## Ends in an error in state: 689.
-##
-## decl(top_var_type,no_assign) -> top_var_type id_and_optional_assignment(no_assign) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type id_and_optional_assignment(no_assign)
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected array dimension expression inside braces after array keyword.
 
 program: DATABLOCK LBRACE REAL UPPER ASSIGN WHILE
+program: DATABLOCK LBRACE REAL UPPER ASSIGN UNREACHABLE WHILE
+program: DATABLOCK LBRACE REAL UPPER LBRACK IDENTIFIER RBRACK ASSIGN UNREACHABLE WHILE
 ##
 ## Ends in an error in state: 692.
 ##
@@ -9786,80 +9717,11 @@ program: DATABLOCK LBRACE REAL UPPER ASSIGN WHILE
 ## ASSIGN
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
-program: DATABLOCK LBRACE REAL UPPER LBRACK IDENTIFIER RBRACK ASSIGN UNREACHABLE WHILE
-##
-## Ends in an error in state: 698.
-##
-## decl(top_var_type,no_assign) -> top_var_type decl_identifier dims optional_assignment(no_assign) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type decl_identifier dims optional_assignment(no_assign)
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
-##
-## Ends in an error in state: 703.
-##
-## decl(top_var_type,no_assign) -> arr_dims . top_var_type id_and_optional_assignment(no_assign) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
+program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UNREACHABLE
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
-##
-## Ends in an error in state: 704.
-##
-## decl(top_var_type,no_assign) -> arr_dims top_var_type . id_and_optional_assignment(no_assign) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims top_var_type
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER ASSIGN UNREACHABLE WHILE
-##
-## Ends in an error in state: 705.
-##
-## decl(top_var_type,no_assign) -> arr_dims top_var_type id_and_optional_assignment(no_assign) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims top_var_type id_and_optional_assignment(no_assign)
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UPPER WHILE
-##
-## Ends in an error in state: 707.
-##
-## id_and_optional_assignment(no_assign) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON ]
-##
-## The known suffix of the stack is as follows:
-## decl_identifier
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK WHILE
-##
-## Ends in an error in state: 725.
-##
-## decl(top_var_type,expression) -> arr_dims . top_var_type id_and_optional_assignment(expression) SEMICOLON [ WHILE VECTOR UPPER UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED OFFSET MULTIPLIER MINUS MATRIX LPAREN LOWER LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## arr_dims
-##
-
-TODO: PARSER MESSAGE NEEDED HERE.
-
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
 ##
 ## Ends in an error in state: 726.
@@ -9870,4 +9732,4 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRAC
 ## arr_dims top_var_type
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected identifier after type in declaration.

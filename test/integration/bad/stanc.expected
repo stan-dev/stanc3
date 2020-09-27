@@ -400,7 +400,9 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10
      8:  model {
    -------------------------------------------------
 
-(Parse error state 692)
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
+
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
 
@@ -442,7 +444,9 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 
      5:  parameters {
    -------------------------------------------------
 
-(Parse error state 692)
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
+
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
 
@@ -456,7 +460,9 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 
      8:  model {
    -------------------------------------------------
 
-(Parse error state 692)
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
+
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan
 
