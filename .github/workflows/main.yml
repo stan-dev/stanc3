@@ -1,0 +1,125 @@
+name: Main workflow
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+env:
+  ocaml-version: 4.07.0
+  tfp-version: tfp-nightly==0.11.0.dev20200516
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: opam caching
+        if: runner.os != 'Windows'
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: ubuntu-latest-${{ env.ocaml-version }}
+
+      - name: Install OCaml ${{ env.ocaml-version }}
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ env.ocaml-version }}
+
+      - name: Install dependencies
+        run: |
+          opam update; 
+          bash -x ./scripts/install_build_deps.sh
+          opam update;
+          bash -x ./scripts/install_dev_deps.sh
+          opam update;
+          bash -x ./scripts/install_js_deps.sh
+          eval $(opam env)          
+
+      - name: Build
+        run: |
+          eval $(opam env)
+          dune build @install
+
+      - name: Code formatting
+        run: |
+          eval $(opam env)
+          make format  ||
+          (
+              set +x &&
+              echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+              echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+              echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
+              exit 1;
+          )
+
+      - name: Dune tests
+        run: |
+          eval $(opam env)
+          dune runtest
+
+      - name: Dune JS tests
+        run: |
+          eval $(opam env)
+          dune build @runjstest
+
+  end-to-end:
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout stanc3
+        uses: actions/checkout@v2
+
+      - name: opam caching
+        if: runner.os != 'Windows'
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: ubuntu-latest-${{ env.ocaml-version }}
+
+      - name: Install OCaml ${{ env.ocaml-version }}
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ env.ocaml-version }}
+
+      - name: Install dependencies & build stanc
+        run: |
+          opam update; 
+          bash -x ./scripts/install_build_deps.sh
+          opam update;
+          bash -x ./scripts/install_dev_deps.sh
+          opam update;
+          bash -x ./scripts/install_js_deps.sh
+          eval $(opam env)
+          dune build @install     
+      
+      - name: Run end-to-end tests
+        run: |
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+          cd performance-tests-cmdstan
+          echo "example-models/regression_tests/mother.stan" > all.tests
+          cat known_good_perf_all.tests >> all.tests
+          echo "" >> all.tests
+          cat shotgun_perf_all.tests >> all.tests
+          cat all.tests
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+          cd cmdstan; git show HEAD --stat; STANC2=true make -j4 build; cd ..
+          ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "../_build/install/default/bin/stanc"
+      
+  TFP:
+    runs-on: ubuntu-latest
+    container: tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Install tfp
+        run: pip3 install ${{ env.tfp-version }}
+      
+      - name: Run test
+        run: python3 test/integration/tfp/tests.py
