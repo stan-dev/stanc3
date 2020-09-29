@@ -26,7 +26,9 @@ for new_file, line_no, file_to_update in updates:
                     new_lines.append(line)
                 else:
                     break
-                
+
     new_lines.append("\nTODO: PARSER MESSAGE NEEDED HERE.")
     with open(file_to_update, "a") as f:
         f.writelines(new_lines)
+
+print("Added %d message stubs."% len(updates))
