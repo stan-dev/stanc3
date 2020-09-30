@@ -400,8 +400,7 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10
      8:  model {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
-
+(Parse error state 692)
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
 
@@ -443,8 +442,7 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 
      5:  parameters {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
-
+(Parse error state 692)
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
 
@@ -458,8 +456,7 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 
      8:  model {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
-
+(Parse error state 692)
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan
 
@@ -776,7 +773,7 @@ Syntax error in 'err-if-else-double-else.stan', line 3, column 2 to column 8, pa
      5:    else y = 4;
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
@@ -947,7 +944,7 @@ Syntax error in 'err-no-statement.stan', line 3, column 7 to column 8, parsing e
      5:  model {
    -------------------------------------------------
 
-Ill-formed statement. Statement expected for true branch of conditional. 
+Ill-formed statement. Statement expected for true branch of conditional.
 
 
   $ ../../../../install/default/bin/stanc err-non-int-dims.stan
@@ -989,7 +986,7 @@ Syntax error in 'err-second-operand-plus.stan', line 3, column 8 to column 10, p
      5:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found expression "||". Expect an expression next.
+Found an incomplete binary expression - are you missing the right hand side?
 
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
@@ -1047,7 +1044,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to l
      8:  parameters {
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
@@ -1061,7 +1058,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 8, column 2 to c
      9:  
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc experiment.stan
@@ -1803,6 +1800,8 @@ Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator ./. Available signatures: 
+(int, int) => int
+(real, real) => real
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
@@ -1826,6 +1825,8 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
+(int, int) => int
+(real, real) => real
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
