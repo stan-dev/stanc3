@@ -1273,7 +1273,7 @@ Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Real return type required for probability functions ending in _log, _lpdf, _lpmf, _lcdf, or _lccdf.
+Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf.
 
   $ ../../../../install/default/bin/stanc functions-bad18.stan
 
@@ -2058,7 +2058,7 @@ Semantic error in 'prob-fun-args-no-bar.stan', line 5, column 12 to column 32:
      6:  }
    -------------------------------------------------
 
-Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and _lccdf, require a vertical bar (|) between the first two arguments.
+Probabilty functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-both.stan
 
@@ -2101,15 +2101,15 @@ Truncation is only defined if distribution has _lcdf and _lccdf functions implem
 
   $ ../../../../install/default/bin/stanc propto-bad1.stan
 
-Semantic error in 'propto-bad1.stan', line 2, column 14 to column 43:
+Semantic error in 'propto-bad1.stan', line 2, column 14 to column 37:
    -------------------------------------------------
      1:  model {
-     2:      target += normal_propto_lpdf(1| {0}, 1);
+     2:      target += normal_lupdf(1| {0}, 1);
                        ^
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'normal_propto_lpdf'. Available signatures: 
+Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures: 
 (real, real, real) => real
 (real, real, vector) => real
 (real, real, row_vector) => real
@@ -2586,7 +2586,7 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
    -------------------------------------------------
 
 
-~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
 
 
