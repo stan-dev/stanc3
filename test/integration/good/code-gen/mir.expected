@@ -6631,6 +6631,26 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
+     (Assignment (td_int UInt ())
+      ((pattern
+        (FunApp StanLib EltTimes__
+         (((pattern (Var d_int))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var d_int))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (transformed_data_real UReal ())
+      ((pattern
+        (FunApp StanLib EltTimes__
+         (((pattern (Var d_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var d_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
      (For (loopvar sym1__)
       (lower
        ((pattern (Lit Int 1))
@@ -8800,6 +8820,10 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_real)
+      (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
      (Assignment (tp_real_1d_ar (UArray UReal) ())
       ((pattern (Var p_real_1d_ar))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9191,6 +9215,26 @@
           ((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_real UReal ())
+      ((pattern
+        (FunApp StanLib EltTimes__
+         (((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_real UReal ())
+      ((pattern
+        (FunApp StanLib EltDivide__
+         (((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (For (loopvar sym1__)
@@ -11547,6 +11591,10 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_real)
+      (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
      (IfElse
       ((pattern
         (FunApp StanLib PNot__
@@ -11952,6 +12000,26 @@
           ((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_real UReal ())
+      ((pattern
+        (FunApp StanLib EltTimes__
+         (((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_real UReal ())
+      ((pattern
+        (FunApp StanLib EltDivide__
+         (((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var p_real))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
      (For (loopvar sym1__)
@@ -16214,6 +16282,9 @@
       (SVector
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_real
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))
    (gq_r1
     ((out_unconstrained_st SReal) (out_constrained_st SReal)

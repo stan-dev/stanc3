@@ -1,4 +1,4 @@
-(lang dune 1.5)
+(lang dune 1.10)
 (using fmt 1.0)
 (using menhir 1.1)
 (name stanc)

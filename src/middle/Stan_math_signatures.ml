@@ -885,6 +885,8 @@ let () =
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_thin_R", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("elt_divide", ReturnType UInt, [UInt; UInt]) ;
+  add_unqualified ("elt_divide", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("elt_divide", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified
     ("elt_divide", ReturnType URowVector, [URowVector; URowVector]) ;
@@ -895,6 +897,8 @@ let () =
   add_unqualified ("elt_divide", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UReal; UMatrix]) ;
+  add_unqualified ("elt_multiply", ReturnType UInt, [UInt; UInt]) ;
+  add_unqualified ("elt_multiply", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("elt_multiply", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector]) ;
