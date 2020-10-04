@@ -365,7 +365,7 @@ return basic_model_namespace::test_lgamma(x, pstream__);
 
 
 
-auto test_lp(const double& a, double& lp__,
+void test_lp(const double& a, double& lp__,
              stan::math::accumulator<double>& lp_accum__,
              std::ostream* pstream__ = nullptr)  
 {

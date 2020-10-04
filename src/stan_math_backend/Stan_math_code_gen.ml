@@ -271,14 +271,13 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
 
 (* Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
-let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
+let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; fdrt; _})
     namespace_fun rcpp =
   let extra, extra_templates =
     if is_user_lp fdname then
-      if rcpp then
-      (["lp__"], ["double"])
+      if rcpp then (["lp__"], ["double"])
       else
-      (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
+        (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
     else if String.is_suffix fdname ~suffix:"_rng" then
       (["base_rng__"], ["boost::ecuyer1988"])
     else ([], [])
@@ -295,30 +294,26 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
     let arg_strs =
       args
       @ mk_extra_args extra_templates extra
-      @ ["std::ostream* pstream__ = nullptr"]
+      @ [ ( "std::ostream* pstream__ = "
+          ^ if !rcpp_friendly then "0" else "nullptr" ) ]
     in
     pf ppf "(@[<hov>%a@]) " (list ~sep:comma string) arg_strs
   in
-  let rcpp_comment = 
-    if !rcpp_friendly then 
-      "// [[Rcpp::export]]"
-    else ""
-  in
-  let rcpp_accum = 
-    if !rcpp_friendly then 
-      if is_user_lp fdname then
+  let rcpp_comment = if !rcpp_friendly then "// [[Rcpp::export]]" else "" in
+  let rcpp_accum =
+    if !rcpp_friendly && is_user_lp fdname then
       {|
 stan::math::accumulator<double> lp_accum__;
 |}
-      else
-      ""
     else ""
   in
+  let return_type = match fdrt with None -> "void" | _ -> "auto" in
   match fdbody with
   | None -> pf ppf ";@ "
   | Some _ ->
-      pf ppf "@,%s@,auto %s%a @,{@,%sreturn %s::%a;@,}@," rcpp_comment fdname
-        pp_sig_standalone "" rcpp_accum namespace_fun pp_call_str
+      pf ppf "@,%s@,%s %s%a @,{@,%sreturn %s::%a;@,}@," rcpp_comment
+        return_type fdname pp_sig_standalone "" rcpp_accum namespace_fun
+        pp_call_str
         ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
           else fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]

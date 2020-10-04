@@ -140,8 +140,8 @@ let options =
       )
     ; ( "--rcpp"
       , Arg.Set Stan_math_code_gen.rcpp_friendly
-      , " If set, the generated C++ for standalone functions will Rcpp friendly."
-      ) ]
+      , " If set, the generated C++ for standalone functions will Rcpp \
+         friendly." ) ]
 
 let print_deprecated_arg_warning =
   (* is_prefix is used to also cover the --include-paths=... *)
