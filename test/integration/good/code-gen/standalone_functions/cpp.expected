@@ -547,40 +547,22 @@ auto integrand(const Eigen::Matrix<double, -1, 1>& x,
 }
 
 
-<<<<<<< HEAD
 
-auto f(const double& t, const Eigen::Matrix<double, -1, 1>& z,
-       const double& a, const Eigen::Matrix<double, -1, 1>& b,
-       std::ostream* pstream__ = nullptr)  
-{
- return integrate_model_namespace::f(t, z, a, b, pstream__);
-}
-
-
-
-auto ode_integrate(const Eigen::Matrix<double, -1, 1>& vd, const double& rd,
-                   const std::vector<double>& rad,
-                   std::ostream* pstream__ = nullptr)  
-{
- return integrate_model_namespace::ode_integrate(vd, rd, rad, pstream__);
-=======
-// [[Rcpp::export]]
 auto integrand_ode(const double& r, const std::vector<double>& f,
                    const std::vector<double>& theta,
                    const std::vector<double>& x_r,
                    const std::vector<int>& x_i,
                    std::ostream* pstream__ = nullptr)  
 {
-return integrate_model_namespace::integrand_ode(r, f, theta, x_r, x_i,
-                                    pstream__);
+ return integrate_model_namespace::integrand_ode(r, f, theta, x_r, x_i,
+                                     pstream__);
 }
 
 
-// [[Rcpp::export]]
+
 auto ode_integrate(std::ostream* pstream__ = nullptr)  
 {
-return integrate_model_namespace::ode_integrate(pstream__);
->>>>>>> parent of 5263f903... update integrate model to new interface
+ return integrate_model_namespace::ode_integrate(pstream__);
 }
 
 
