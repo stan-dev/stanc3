@@ -419,13 +419,14 @@ static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'integrate.stan', line 4, column 4 to column 27)",
                                                       " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
-                                                      " (in 'integrate.stan', line 8, column 4 to column 13)",
-                                                      " (in 'integrate.stan', line 7, column 47 to line 9, column 3)",
-                                                      " (in 'integrate.stan', line 12, column 23 to column 31)",
-                                                      " (in 'integrate.stan', line 12, column 11 to column 19)",
-                                                      " (in 'integrate.stan', line 12, column 4 to column 88)",
-                                                      " (in 'integrate.stan', line 13, column 4 to column 19)",
-                                                      " (in 'integrate.stan', line 11, column 53 to line 14, column 3)"};
+                                                      " (in 'integrate.stan', line 8, column 4 to column 18)",
+                                                      " (in 'integrate.stan', line 9, column 4 to column 22)",
+                                                      " (in 'integrate.stan', line 10, column 4 to column 47)",
+                                                      " (in 'integrate.stan', line 11, column 4 to column 18)",
+                                                      " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
+                                                      " (in 'integrate.stan', line 15, column 4 to column 15)",
+                                                      " (in 'integrate.stan', line 21, column 4 to column 142)",
+                                                      " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
 
 
 template <typename T0__>
@@ -458,10 +459,11 @@ return integrand(x, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__,
-T3__>, -1, 1>
-f(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& a,
-  const Eigen::Matrix<T3__, -1, 1>& b, std::ostream* pstream__) {
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+integrand_ode(const T0__& r, const std::vector<T1__>& f,
+              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+              const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   const static bool propto__ = true;
   (void) propto__;
@@ -469,8 +471,20 @@ f(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& a,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 3;
-    return z;
+    std::vector<local_scalar_t__> df_dx;
+    df_dx = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+    
+    local_scalar_t__ x;
+    x = DUMMY_VAR__;
+    
+    current_statement__ = 4;
+    x = logit(r);
+    current_statement__ = 5;
+    assign(df_dx, cons_list(index_uni(1), nil_index_list()),
+      ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx");
+    current_statement__ = 6;
+    return df_dx;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -479,57 +493,35 @@ f(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& a,
   
 }
 
-struct f_functor__ {
+struct integrand_ode_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__,
-T3__>, -1, 1>
-operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z, const T2__& a,
-           const Eigen::Matrix<T3__, -1, 1>& b, std::ostream* pstream__)  const 
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+operator()(const T0__& r, const std::vector<T1__>& f,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i, std::ostream* pstream__)  const 
 {
-return f(t, z, a, b, pstream__);
+return integrand_ode(r, f, theta, x_r, x_i, pstream__);
 }
 };
 
-
-struct f_odefunctor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, T1__, T2__,
-T3__>, -1, 1>
-operator()(const T0__& t, const Eigen::Matrix<T1__, -1, 1>& z,
-           std::ostream* pstream__, const T2__& a,
-           const Eigen::Matrix<T3__, -1, 1>& b)  const 
-{
-return f(t, z, a, b, pstream__);
-}
-};
-
-template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<T0__, T1__,
-T2__>
-ode_integrate(const Eigen::Matrix<T0__, -1, 1>& vd, const T1__& rd,
-              const std::vector<T2__>& rad, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
+double
+ode_integrate(std::ostream* pstream__) {
+  using local_scalar_t__ = double;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 5;
-    validate_non_negative_index("a", "size(vd)", size(vd));
-    current_statement__ = 6;
-    validate_non_negative_index("a", "size(vd)", size(vd));
-    std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a;
-    a = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(size(vd), Eigen::Matrix<local_scalar_t__, -1, 1>(
-      size(vd)));
-    stan::math::fill(a, DUMMY_VAR__);
+    std::vector<int> x_i;
+    x_i = std::vector<int>(0, std::numeric_limits<int>::min());
     
-    current_statement__ = 7;
-    assign(a, nil_index_list(),
-      ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100, pstream__,
-        rd, vd), "assigning variable a");
-    current_statement__ = 8;
-    return a[(1 - 1)][(1 - 1)];
+    current_statement__ = 9;
+    return integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
+  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
+  pstream__)[
+        (1 - 1)][(1 - 1)];
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -539,13 +531,10 @@ ode_integrate(const Eigen::Matrix<T0__, -1, 1>& vd, const T1__& rd,
 }
 
 struct ode_integrate_functor__ {
-template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<T0__, T1__,
-T2__>
-operator()(const Eigen::Matrix<T0__, -1, 1>& vd, const T1__& rd,
-           const std::vector<T2__>& rad, std::ostream* pstream__)  const 
+double
+operator()(std::ostream* pstream__)  const 
 {
-return ode_integrate(vd, rd, rad, pstream__);
+return ode_integrate(pstream__);
 }
 };
 }
@@ -558,6 +547,7 @@ auto integrand(const Eigen::Matrix<double, -1, 1>& x,
 }
 
 
+<<<<<<< HEAD
 
 auto f(const double& t, const Eigen::Matrix<double, -1, 1>& z,
        const double& a, const Eigen::Matrix<double, -1, 1>& b,
@@ -573,6 +563,24 @@ auto ode_integrate(const Eigen::Matrix<double, -1, 1>& vd, const double& rd,
                    std::ostream* pstream__ = nullptr)  
 {
  return integrate_model_namespace::ode_integrate(vd, rd, rad, pstream__);
+=======
+// [[Rcpp::export]]
+auto integrand_ode(const double& r, const std::vector<double>& f,
+                   const std::vector<double>& theta,
+                   const std::vector<double>& x_r,
+                   const std::vector<int>& x_i,
+                   std::ostream* pstream__ = nullptr)  
+{
+return integrate_model_namespace::integrand_ode(r, f, theta, x_r, x_i,
+                                    pstream__);
+}
+
+
+// [[Rcpp::export]]
+auto ode_integrate(std::ostream* pstream__ = nullptr)  
+{
+return integrate_model_namespace::ode_integrate(pstream__);
+>>>>>>> parent of 5263f903... update integrate model to new interface
 }
 
 
