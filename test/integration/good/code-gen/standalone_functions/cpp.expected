@@ -353,14 +353,14 @@ return test_lpdf<propto__>(a, b, pstream__);
 
 }
 
-
+// [[stan::function]]
 auto my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr)  
 {
  return basic_model_namespace::my_log1p_exp(x, pstream__);
 }
 
 
-
+// [[stan::function]]
 auto array_fun(const std::vector<double>& a,
                std::ostream* pstream__ = nullptr)  
 {
@@ -368,7 +368,7 @@ auto array_fun(const std::vector<double>& a,
 }
 
 
-
+// [[stan::function]]
 auto int_array_fun(const std::vector<int>& a,
                    std::ostream* pstream__ = nullptr)  
 {
@@ -376,7 +376,7 @@ auto int_array_fun(const std::vector<int>& a,
 }
 
 
-
+// [[stan::function]]
 auto my_vector_mul_by_5(const Eigen::Matrix<double, -1, 1>& x,
                         std::ostream* pstream__ = nullptr)  
 {
@@ -384,7 +384,7 @@ auto my_vector_mul_by_5(const Eigen::Matrix<double, -1, 1>& x,
 }
 
 
-
+// [[stan::function]]
 auto int_only_multiplication(const int& a, const int& b,
                              std::ostream* pstream__ = nullptr)  
 {
@@ -392,14 +392,14 @@ auto int_only_multiplication(const int& a, const int& b,
 }
 
 
-
+// [[stan::function]]
 auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr)  
 {
  return basic_model_namespace::test_lgamma(x, pstream__);
 }
 
 
-
+// [[stan::function]]
 void test_lp(const double& a, double& lp__,
              stan::math::accumulator<double>& lp_accum__,
              std::ostream* pstream__ = nullptr)  
@@ -408,7 +408,7 @@ void test_lp(const double& a, double& lp__,
 }
 
 
-
+// [[stan::function]]
 auto test_rng(const double& a, boost::ecuyer1988& base_rng__,
               std::ostream* pstream__ = nullptr)  
 {
@@ -416,7 +416,7 @@ auto test_rng(const double& a, boost::ecuyer1988& base_rng__,
 }
 
 
-
+// [[stan::function]]
 auto test_lpdf(const double& a, const double& b,
                std::ostream* pstream__ = nullptr)  
 {
@@ -609,7 +609,7 @@ return ode_integrate(pstream__);
 
 }
 
-
+// [[stan::function]]
 auto integrand(const Eigen::Matrix<double, -1, 1>& x,
                std::ostream* pstream__ = nullptr)  
 {
@@ -617,7 +617,7 @@ auto integrand(const Eigen::Matrix<double, -1, 1>& x,
 }
 
 
-
+// [[stan::function]]
 auto integrand_ode(const double& r, const std::vector<double>& f,
                    const std::vector<double>& theta,
                    const std::vector<double>& x_r,
@@ -629,7 +629,7 @@ auto integrand_ode(const double& r, const std::vector<double>& f,
 }
 
 
-
+// [[stan::function]]
 auto ode_integrate(std::ostream* pstream__ = nullptr)  
 {
  return integrate_model_namespace::ode_integrate(pstream__);
