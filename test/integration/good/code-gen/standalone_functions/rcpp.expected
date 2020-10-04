@@ -377,7 +377,10 @@ return basic_model_namespace::test_lgamma(x, pstream__);
 // [[Rcpp::export]]
 auto test_lp(const double& a, double& lp__, std::ostream* pstream__ = nullptr)  
 {
-return basic_model_namespace::test_lp<false>(a, lp__, pstream__);
+
+stan::math::accumulator<double> lp_accum__;
+return basic_model_namespace::
+test_lp<false>(a, lp__, pstream__);
 }
 
 

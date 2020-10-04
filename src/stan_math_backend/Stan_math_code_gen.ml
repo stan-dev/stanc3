@@ -304,11 +304,21 @@ let pp_standalone_fun_def ppf Program.({fdname; fdargs; fdbody; _})
       "// [[Rcpp::export]]"
     else ""
   in
+  let rcpp_accum = 
+    if !rcpp_friendly then 
+      if is_user_lp fdname then
+      {|
+stan::math::accumulator<double> lp_accum__;
+|}
+      else
+      ""
+    else ""
+  in
   match fdbody with
   | None -> pf ppf ";@ "
   | Some _ ->
-      pf ppf "@,%s@,auto %s%a @,{@,return %s::%a;@,}@," rcpp_comment fdname
-        pp_sig_standalone "" namespace_fun pp_call_str
+      pf ppf "@,%s@,auto %s%a @,{@,%sreturn %s::%a;@,}@," rcpp_comment fdname
+        pp_sig_standalone "" rcpp_accum namespace_fun pp_call_str
         ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
           else fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
