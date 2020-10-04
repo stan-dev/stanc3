@@ -865,9 +865,8 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
 
 (** Print the full C++ for the stan program. *)
 let pp_prog ppf (p : Program.Typed.t) =
-  let p, s = Locations.prepare_prog p in
   (* First, do some transformations on the MIR itself before we begin printing it.*)
-  (* let p, s = Locations.prepare_prog p in *)
+  let p, s = Locations.prepare_prog p in
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     pp_fun_def ppf fblock
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
