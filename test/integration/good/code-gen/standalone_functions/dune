@@ -8,3 +8,14 @@
 (alias
  (name runtest)
  (action (diff cpp.expected cpp.output)))
+
+(rule
+ (targets rcpp.output)
+ (deps (package stanc) (:stanfiles (glob_files *.stan)))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --standalone-functions --rcpp --print-cpp" %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff rcpp.expected rcpp.output)))
