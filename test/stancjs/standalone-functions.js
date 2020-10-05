@@ -52,17 +52,3 @@ var ind = basic.result.search("auto int_only_multiplication");
 if (ind == -1) {
     console.log("ERROR: standalone-functions!")
 }
-
-let basic_no_rcpp = stanc.stanc("basic_stanfuncs", basic_stanfuncs, ["standalone-functions"]);
-utils.print_error(basic_no_rcpp)
-var ind = basic_no_rcpp.result.search("[[Rcpp::export]]");
-if (ind > -1) {
-    console.log("ERROR: Rcpp code found without rcpp flag!")
-}
-
-let basic_rcpp = stanc.stanc("basic_stanfuncs", basic_stanfuncs, ["standalone-functions", "rcpp"]);
-utils.print_error(basic_rcpp)
-var ind = basic_rcpp.result.search("[[Rcpp::export]]");
-if (ind == -1) {
-    console.log("ERROR: standalone-functions wtih rcpp!")
-}
