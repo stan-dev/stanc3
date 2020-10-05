@@ -291,7 +291,7 @@ let pp_standalone_fun_def namespace_fun ppf
     let arg_strs =
       args
       @ mk_extra_args extra_templates extra
-      @ ["std::ostream* pstream__ = " ^ "nullptr"]
+      @ ["std::ostream* pstream__ = nullptr"]
     in
     pf ppf "(@[<hov>%a@]) " (list ~sep:comma string) arg_strs
   in
