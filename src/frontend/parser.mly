@@ -5,6 +5,7 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
+open Errors
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -289,7 +290,6 @@ decl(type_rule, rhs):
    *)
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
-  (* | dims_opt=ioption(arr_dims) ty=type_rule *)
   | dims_opt=ioption(lhs) ty=type_rule
       id_rhs=id_and_optional_assignment(rhs) SEMICOLON
     { (fun ~is_global ->
@@ -304,14 +304,19 @@ decl(type_rule, rhs):
           (List.map ~f:int_ix
              (List.rev ixs))
       in
-      let error () = raise (Failure "fail") in
+      let error message =
+        pp_syntax_error
+          Fmt.stderr
+          (Parsing (message, Location_span.of_positions_exn $startpos $endpos));
+        exit 1
+      in
       let dims = match dims_opt with
         | Some ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
            (match int_ixs ixs with
             | Some sizes -> sizes
-            | None -> error ())
+            | None -> error "Dimensions should be expressions; they shouldn't can't contain indices.")
         | None -> []
-        | _ -> error ()
+        | _ -> error "Found a declaration following an expression."
       in
       let (id, rhs_opt) = id_rhs in
           { stmt=

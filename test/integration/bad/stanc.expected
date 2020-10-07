@@ -1,3 +1,39 @@
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
+
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 24, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    array[1:2,2,:] real x;
+                                 ^
+     3:  }
+   -------------------------------------------------
+
+Dimensions should be expressions; they shouldn't can't contain indices.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
+
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 23, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    blahblah[1,2] real x;
+                                ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
+
+Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 14, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    asdf real x;
+                       ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
@@ -605,15 +641,16 @@ Ill-formed phrase. Found L-value. This can be completed in many ways.
 
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 
-Syntax error in 'err-decl-double.stan', line 1, column 5 to column 6, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
-               ^
      2:    double y;
+                 ^
      3:  }
+     4:  model {
    -------------------------------------------------
 
-Expected top-level variable declaration or "}".
+Invalid type in declaration.
 
 
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
