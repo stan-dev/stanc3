@@ -298,7 +298,11 @@ decl(type_rule, rhs):
         | _ -> None
       in
       let int_ixs ixs =
-        List.fold_left ~init:(Some []) (List.map ~f:int_ix ixs) ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
+        List.fold_left
+          ~init:(Some [])
+          ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
+          (List.map ~f:int_ix
+             (List.rev ixs))
       in
       let error () = raise (Failure "fail") in
       let dims = match dims_opt with
