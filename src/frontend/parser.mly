@@ -14,6 +14,12 @@ let reducearray (sbt, l) =
 let build_id id startpos endpos =
   grammar_logger ("identifier " ^ id);
   {name=id; id_loc=Location_span.of_positions_exn startpos endpos}
+
+let rec iterate_n f x = function
+  | 0 -> x
+  | n -> iterate_n f (f x) (n - 1)
+let nest_unsized_array basic_type n =
+  iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -129,6 +135,7 @@ identifier:
   | MULTIPLIER { build_id "multiplier" $startpos $endpos}
   | LOWER { build_id "lower" $startpos $endpos}
   | UPPER { build_id "upper" $startpos $endpos}
+  | ARRAY { build_id "array" $startpos $endpos}
 
 decl_identifier:
   | id=identifier { id }
@@ -164,7 +171,6 @@ decl_identifier:
   | CHOLESKYFACTORCOV UNREACHABLE
   | CORRMATRIX UNREACHABLE
   | COVMATRIX UNREACHABLE
-  | ARRAY UNREACHABLE
   | PRINT UNREACHABLE
   | REJECT UNREACHABLE
   | TARGET UNREACHABLE
@@ -201,15 +207,10 @@ always(x):
     { Some(x) }
 
 unsized_type:
-  | ARRAY ud=always(unsized_dims) bt=basic_type
-  | bt=basic_type ud=option(unsized_dims)
-    {  grammar_logger "unsized_type" ;
-       let rec reparray n x =
-           if n <= 0 then x else reparray (n-1) (UnsizedType.UArray x) in
-       let size =
-         match ud with Some d -> 1 + d | None -> 0
-       in
-       reparray size bt
+  | ARRAY n_opt=always(unsized_dims) bt=basic_type
+  | bt=basic_type n_opt=option(unsized_dims)
+    {  grammar_logger "unsized_type";
+       nest_unsized_array bt (Option.value n_opt ~default:0)
     }
 
 basic_type:
@@ -226,7 +227,7 @@ basic_type:
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
-    { grammar_logger "unsized_dims" ; List.length(cs) }
+    { grammar_logger "unsized_dims" ; List.length(cs) + 1 }
 
 (* Never accept this rule, but return the same type as expression *)
 no_assign:
@@ -288,10 +289,26 @@ decl(type_rule, rhs):
    *)
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
-  | dims_opt=ioption(arr_dims) ty=type_rule
+  (* | dims_opt=ioption(arr_dims) ty=type_rule *)
+  | dims_opt=ioption(lhs) ty=type_rule
       id_rhs=id_and_optional_assignment(rhs) SEMICOLON
     { (fun ~is_global ->
-      let dims = Option.value dims_opt ~default:[] in
+      let int_ix ix = match ix with
+        | Single e -> Some e
+        | _ -> None
+      in
+      let int_ixs ixs =
+        List.fold_left ~init:(Some []) (List.map ~f:int_ix ixs) ~f:(Option.map2 ~f:(fun ixs ix -> ix::ixs))
+      in
+      let error () = raise (Failure "fail") in
+      let dims = match dims_opt with
+        | Some ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
+           (match int_ixs ixs with
+            | Some sizes -> sizes
+            | None -> error ())
+        | None -> []
+        | _ -> error ()
+      in
       let (id, rhs_opt) = id_rhs in
           { stmt=
               VarDecl {
@@ -425,9 +442,9 @@ offset_mult:
   | MULTIPLIER ASSIGN e=constr_expression
     { grammar_logger "multiplier" ; Multiplier e }
 
-arr_dims:
-  | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
-               { grammar_logger "array dims" ; l  }
+(* arr_dims:
+ *   | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
+ *                { grammar_logger "array dims" ; l  } *)
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
