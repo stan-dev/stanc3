@@ -137,7 +137,11 @@ let options =
     ; ( "--standalone-functions"
       , Arg.Set Stan_math_code_gen.standalone_functions
       , " If set, the generated C++ will be the standalone functions C++ code."
-      ) ]
+      )
+    ; ( "--filename-in-msg"
+      , Arg.Set_string Location.filename_for_msg
+      , " Sets the filename used in compiler errors. Uses actual filename by \
+         default." ) ]
 
 let print_deprecated_arg_warning =
   (* is_prefix is used to also cover the --include-paths=... *)

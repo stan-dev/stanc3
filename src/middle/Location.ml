@@ -41,13 +41,9 @@ let pp_with_message_exn ppf (message, loc) =
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-let rec set_base_filename t ~filename =
-  if t = empty then t
-  else
-    match t.included_from with
-    | None -> {t with filename}
-    | Some t' -> set_base_filename t' ~filename
-
+(* If printed_filename is passed, it will replace the filename printed for
+   this Location.t and all recursively included ones.
+*)
 let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
     loc =
   let open Format in
