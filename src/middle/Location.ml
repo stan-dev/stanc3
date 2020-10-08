@@ -40,10 +40,15 @@ let pp_with_message_exn ppf (message, loc) =
   Fmt.pf ppf "%a\n%s\n\n" pp_context_exn loc message
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+let filename_for_msg = ref ""
 
 let rec to_string ?(print_file = true) ?(print_line = true) loc =
   let open Format in
-  let file = if print_file then sprintf "'%s', " loc.filename else "" in
+  let filename =
+    if String.is_empty !filename_for_msg then loc.filename
+    else !filename_for_msg
+  in
+  let file = if print_file then sprintf "'%s', " filename else "" in
   let line = if print_line then sprintf "line %d, " loc.line_num else "" in
   let incl =
     match loc.included_from with
