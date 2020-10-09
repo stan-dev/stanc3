@@ -40,6 +40,4 @@ ocamlPackages.buildDunePackage rec {
     license = stdenv.lib.licenses.bsd3;
     maintainers = with stdenv.lib.maintainers; [ rybern ];
   };
-
-  inherit pkgs;
 }
