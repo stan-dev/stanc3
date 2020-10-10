@@ -46,6 +46,8 @@ Warning at 'string', line 7, column 17 to column 22:
   consider rescaling with a multiplier (see manual section 22.12).
 Warning at 'string', line 4, column 9 to column 11:
   The variable tt may not have been assigned a value before its use.
+$ node standalone-functions.js
+
 $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%

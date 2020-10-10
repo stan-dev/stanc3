@@ -450,8 +450,7 @@ let%expect_test "Dist bounds warning" =
         support, but a was not constrained to be strictly positive.
       Warning at 'string', line 11, column 10 to column 11:
         Parameter c is given a lognormal distribution, which has strictly positive
-        support, but c was not constrained to be strictly positive.
-    |}]
+        support, but c was not constrained to be strictly positive. |}]
 
 let dist_examples =
   {|

@@ -582,9 +582,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         then Fun_kind.UserDefined
         else StanLib
       in
-      let name =
-        distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
-      in
+      let name = distribution.name ^ Utils.unnormalized_suffix suffix in
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
           Expr.
