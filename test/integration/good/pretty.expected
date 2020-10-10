@@ -4997,7 +4997,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpdf.stan
 functions {
   real foo_lpdf(real y1, real y2, vector vy1, vector vy2, matrix my1,
-                matrix my2, real[] ay1) {
+                matrix my2, array[] real ay1) {
     real r;
     r += beta_lupdf(y1| y2, y2);
     r += beta_proportion_lupdf(y1| y2, y2);
@@ -5042,7 +5042,7 @@ functions {
     return r;
   }
   void goo_lp(real y1, real y2, vector vy1, vector vy2, matrix my1,
-              matrix my2, real[] ay1) {
+              matrix my2, array[] real ay1) {
     target += beta_lupdf(y1| y2, y2);
     target += beta_proportion_lupdf(y1| y2, y2);
     target += cauchy_lupdf(y1| y2, y2);
@@ -5088,7 +5088,7 @@ functions {
 parameters {
   real y1;
   real y2;
-  real ay1[5];
+  array[5] real ay1;
   vector[5] vy1;
   vector[5] vy2;
   matrix[5, 5] my1;
@@ -5142,7 +5142,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpmf.stan
 functions {
-  real foo_lpmf(int i1, real r1, matrix m1, vector v1, int[] ai1,
+  real foo_lpmf(int i1, real r1, matrix m1, vector v1, array[] int ai1,
                 row_vector rv1) {
     real r;
     r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
@@ -5168,7 +5168,7 @@ functions {
     r += poisson_lupmf(i1| r1);
     return r;
   }
-  void goo_lp(int i1, real r1, matrix m1, vector v1, int[] ai1,
+  void goo_lp(int i1, real r1, matrix m1, vector v1, array[] int ai1,
               row_vector rv1) {
     target += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
     target += bernoulli_logit_lupmf(i1| r1);
@@ -5195,7 +5195,7 @@ functions {
 }
 data {
   int i1;
-  int ai1[5];
+  array[5] int ai1;
 }
 parameters {
   real r1;
