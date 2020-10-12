@@ -8,9 +8,9 @@ type t = {begin_loc: Location.t; end_loc: Location.t}
 let empty = {begin_loc= Location.empty; end_loc= Location.empty}
 let merge left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
-let set_filenames {begin_loc; end_loc} ~filename =
-  let set = Location.set_filename ~filename in
-  {begin_loc=set begin_loc; end_loc=set end_loc }
+let set_base_filenames {begin_loc; end_loc} ~filename =
+  let set = Location.set_base_filename ~filename in
+  {begin_loc= set begin_loc; end_loc= set end_loc}
 
 (** Render a location_span as a string *)
 let to_string {begin_loc; end_loc} =

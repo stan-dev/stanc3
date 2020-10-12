@@ -7,8 +7,8 @@ let filename_for_msg = ref ""
 let no_span_num = 0
 
 let replace_filenames_in_stmts (mir : Program.Typed.t) : Program.Typed.t =
-  let stmt_fn filename Stmt.Fixed.{pattern; meta} =
-    Stmt.Fixed.{pattern; meta= Location_span.set_filenames ~filename meta}
+  let stmt_fn filename Stmt.Fixed.({pattern; meta}) =
+    Stmt.Fixed.{pattern; meta= Location_span.set_base_filenames ~filename meta}
   in
   match !filename_for_msg with
   | "" -> mir

@@ -6,10 +6,10 @@ type t =
   {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash, compare]
 
-let rec set_filename t ~filename =
+let rec set_base_filename t ~filename =
   match t.included_from with
   | None -> {t with filename}
-  | Some t' -> set_filename t' ~filename
+  | Some t' -> set_base_filename t' ~filename
 
 let pp_context_exn ppf {filename; line_num; col_num; _} =
   let open In_channel in
