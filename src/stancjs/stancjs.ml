@@ -30,9 +30,9 @@ let stan2cpp model_name model_string flags =
       let prefix = flag ^ "=" in
       match
         Array.find_map flags ~f:(fun x ->
-            if String.is_prefix ~prefix:prefix x then Some x else None )
+            if String.is_prefix ~prefix x then Some x else None )
       with
-      | Some x -> String.chop_prefix_exn ~prefix:prefix x
+      | Some x -> String.chop_prefix_exn ~prefix x
       | None -> ""
     in
     match flags with Some flags -> find_and_return_val flags | None -> ""
