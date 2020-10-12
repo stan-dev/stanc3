@@ -139,7 +139,7 @@ let options =
       , " If set, the generated C++ will be the standalone functions C++ code."
       )
     ; ( "--filename-in-msg"
-      , Arg.Set_string Location.filename_for_msg
+      , Arg.Set_string Locations.filename_for_msg
       , " Sets the filename used in compiler errors. Uses actual filename by \
          default." ) ]
 

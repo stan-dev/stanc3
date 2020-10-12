@@ -3,9 +3,19 @@ open Middle
 
 type state_t = Location_span.t list
 
+let filename_for_msg = ref ""
 let no_span_num = 0
 
+let replace_filenames_in_stmts (mir : Program.Typed.t) : Program.Typed.t =
+  let stmt_fn filename Stmt.Fixed.{pattern; meta} =
+    Stmt.Fixed.{pattern; meta= Location_span.set_filenames ~filename meta}
+  in
+  match !filename_for_msg with
+  | "" -> mir
+  | fname -> Program.map Fn.id (stmt_fn fname) mir
+
 let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
+  let mir = replace_filenames_in_stmts mir in
   let label_to_location = Int.Table.create () in
   let location_to_label = Hashtbl.create (module Location_span) in
   Hashtbl.set label_to_location ~key:no_span_num ~data:Location_span.empty ;
