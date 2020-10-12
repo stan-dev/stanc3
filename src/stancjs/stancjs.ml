@@ -25,11 +25,24 @@ let stan2cpp model_name model_string flags =
     | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
     | None -> fun _ -> false
   in
+  let flag_val flag =
+    let find_and_return_val flags =
+      let prefix = flag ^ "=" in
+      match
+        Array.find_map flags ~f:(fun x ->
+            if String.is_prefix ~prefix:prefix x then Some x else None )
+      with
+      | Some x -> String.chop_prefix_exn ~prefix:prefix x
+      | None -> ""
+    in
+    match flags with Some flags -> find_and_return_val flags | None -> ""
+  in
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
+  Location.filename_for_msg := flag_val "filename-in-msg" ;
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)

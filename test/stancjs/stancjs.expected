@@ -31,6 +31,19 @@ model {
   y ~ normal(0, 1);
 }
 
+$ node filename.js
+
+Semantic error in 'foo', line 6, column 4 to column 5:
+
+Identifier 'z' not in scope.
+
+
+
+Semantic error in 'string', line 6, column 4 to column 5:
+
+Identifier 'z' not in scope.
+
+
 $ node optimization.js
 
 Semantic error in 'string', line 3, column 4 to column 20:
