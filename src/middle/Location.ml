@@ -6,7 +6,10 @@ type t =
   {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash, compare]
 
+let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+
 let rec set_base_filename t ~filename =
+  if t = empty then t else
   match t.included_from with
   | None -> {t with filename}
   | Some t' -> set_base_filename t' ~filename
@@ -43,8 +46,6 @@ let context_to_string file =
     and print a message *)
 let pp_with_message_exn ppf (message, loc) =
   Fmt.pf ppf "%a\n%s\n\n" pp_context_exn loc message
-
-let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
 let rec to_string ?(print_file = true) ?(print_line = true) loc =
   let open Format in
