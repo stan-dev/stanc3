@@ -42,10 +42,15 @@ let stan2cpp model_name model_string flags =
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
-  Location.filename_for_msg := flag_val "filename-in-msg" ;
+  let filename = flag_val "filename-in-msg" in
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
+  in
+  let ast =
+    if filename = "" then ast
+    else
+      Result.map ast ~f:(Frontend_utils.replace_filenames_in_stmts ~filename)
   in
   let semantic_err_to_string = function
     | Result.Error (error :: _) ->
