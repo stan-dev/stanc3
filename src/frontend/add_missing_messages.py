@@ -1,22 +1,25 @@
 #!/usr/bin/python3
 # Run this from src/frontend with dune on the path
 
-import os.path
 import re
 import subprocess
+import sys
 parse = re.compile('File "(.*)", line (\d+).*\nError: this sentence.*\nNo sentence that leads to this state exists in "(.*)".')
 
-p = subprocess.run("dune runtest .", shell=True, capture_output=True)
-# TODO: We can read the build dir from the first line of the stderr of dune runtest
+parser = sys.argv[1]
+new_messages = sys.argv[2]
+old_messages = sys.argv[3]
 
-build_dir = "../../_build/default/src/frontend/"
+p = subprocess.run("menhir {} --compare-errors {} --compare-errors {}".format(
+    parser, new_messages, old_messages), shell=True, capture_output=True)
+
 
 updates = parse.findall(p.stderr.decode("utf-8"))
 
 for new_file, line_no, file_to_update in updates:
     line_no = int(line_no)
     new_lines = ["\n", "\n"]
-    with open(os.path.join(build_dir, new_file)) as new:
+    with open(new_file) as new:
         for line in new:
             line_no-=1
             if line_no == 0:
