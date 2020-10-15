@@ -34,7 +34,7 @@
    (with-stdout-to %{targets} (run menhir --list-errors %{dep:parser.mly}))))
 
 (alias
- (name update_messages)
+ (name runtest)
  (action
   (progn
    (run python3 %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
