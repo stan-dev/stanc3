@@ -38,14 +38,12 @@
 (rule
  (targets parser_comparison.output)
  (action
-  (with-stdout-to %{targets}
+  (with-stderr-to %{targets}
    (run menhir parser.mly --compare-errors %{dep:parser_new.messages} --compare-errors %{dep:parser.messages}))))
 
 (alias
  (name runtest)
  (deps parser_comparison.expected parser_comparison.output)
  (action
-  ; (run file parser_comparison.output)
-  ; (run cat parser_comparison.output)
   (diff parser_comparison.expected parser_comparison.output)
 ))
