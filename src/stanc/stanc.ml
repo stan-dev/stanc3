@@ -15,6 +15,7 @@ let name = "%%NAME%%"
 let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
+let filename_for_msg = ref ""
 let pretty_print_program = ref false
 let canonicalize_program = ref false
 let print_model_cpp = ref false
@@ -139,7 +140,7 @@ let options =
       , " If set, the generated C++ will be the standalone functions C++ code."
       )
     ; ( "--filename-in-msg"
-      , Arg.Set_string Locations.filename_for_msg
+      , Arg.Set_string filename_for_msg
       , " Sets the filename used in compiler errors. Uses actual filename by \
          default." ) ]
 
@@ -162,11 +163,15 @@ let add_file filename =
 
 (** ad directives from the given file. *)
 let use_file filename =
+  let ast filename =
+    let ast = Frontend_utils.get_ast_or_exit filename in
+    if !filename_for_msg = "" then ast
+    else Frontend_utils.replace_filenames_in_stmts ast ~filename
+  in
   let ast =
     if !canonicalize_program then
-      Canonicalize.repair_syntax
-        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
-    else Frontend_utils.get_ast_or_exit filename
+      Canonicalize.repair_syntax (Errors.without_warnings ast filename)
+    else ast filename
   in
   Debugging.ast_logger ast ;
   if !pretty_print_program then

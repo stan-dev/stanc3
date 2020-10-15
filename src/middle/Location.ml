@@ -9,10 +9,11 @@ type t =
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
 let rec set_base_filename t ~filename =
-  if t = empty then t else
-  match t.included_from with
-  | None -> {t with filename}
-  | Some t' -> set_base_filename t' ~filename
+  if t = empty then t
+  else
+    match t.included_from with
+    | None -> {t with filename}
+    | Some t' -> set_base_filename t' ~filename
 
 let pp_context_exn ppf {filename; line_num; col_num; _} =
   let open In_channel in

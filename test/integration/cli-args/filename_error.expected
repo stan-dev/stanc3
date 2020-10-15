@@ -1,6 +1,6 @@
   $ ../../../../install/default/bin/stanc --filename-in-msg=foo.stan  filename_error.stan
 
-Semantic error in 'foo.stan', line 3, column 17 to column 18:
+Semantic error in 'filename_error.stan', line 3, column 17 to column 18:
    -------------------------------------------------
      1:  transformed data {
      2:      real p;

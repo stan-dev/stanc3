@@ -36,3 +36,10 @@ let type_ast_or_exit ast =
   with Errors.SemanticError err ->
     Errors.pp_semantic_error Fmt.stderr err ;
     exit 1
+
+let replace_filenames_in_stmts (prog : Ast.untyped_program) ~filename =
+  let stmt_fn (Ast.({smeta= {loc}; stmt}) : Ast.untyped_statement) =
+    let loc = Middle.Location_span.set_base_filenames ~filename loc in
+    Ast.mk_untyped_statement ~stmt ~loc
+  in
+  Ast.map_program stmt_fn prog

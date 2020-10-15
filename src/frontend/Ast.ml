@@ -44,6 +44,8 @@ type ('e, 'f) expression =
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
+(* TODO(seantalts): Does this need a wrapping record?*)
+
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
