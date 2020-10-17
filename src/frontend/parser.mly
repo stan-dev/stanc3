@@ -428,7 +428,7 @@ common_expression:
          && ( String.is_suffix ~suffix:"_lpdf" id.name
               || String.is_suffix ~suffix:"_lupdf" id.name
               || String.is_suffix ~suffix:"_lpmf" id.name
-              || String.is_suffix ~suffix:"_lupf" id.name )
+              || String.is_suffix ~suffix:"_lupmf" id.name )
        then CondDistApp ((), id, args)
        else FunApp ((), id, args) }
   | TARGET LPAREN RPAREN

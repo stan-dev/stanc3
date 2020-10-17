@@ -20,5 +20,7 @@ model {
     target += foo_lpdf(x);
     target += foo_lpdf(x|);
     target += goo_lpmf(y);
+    target += goo_lpmf(y|);
+    target += goo_lupmf(y);
     target += goo_lupmf(y|);
 }
