@@ -372,7 +372,7 @@ module ExpressionError = struct
            _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
-          "Probabilty functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
+          "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
            _lcdf and _lccdf, require a vertical bar (|) between the first two \
            arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
