@@ -392,7 +392,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format lkj_cov_lpdf.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format lkj_cov_log.stan
 data {
   int d_int;
   real d_real;
@@ -402,8 +402,8 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_real);
-  transformed_data_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_int);
+  transformed_data_real = lkj_cov_log(d_matrix, d_vector, d_vector, d_real);
+  transformed_data_real = lkj_cov_log(d_matrix, d_vector, d_vector, d_int);
 }
 parameters {
   matrix[d_int, d_int] p_matrix;
@@ -414,47 +414,34 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, p_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, p_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, d_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, d_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, p_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, p_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, d_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, d_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, p_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, p_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, d_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, d_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, p_vector, d_real);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, p_vector, p_real);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| d_vector, p_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, d_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(d_matrix| p_vector, p_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, d_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| d_vector, p_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, d_vector, d_int);
-  transformed_param_real = lkj_cov_lpdf(p_matrix| p_vector, p_vector, d_int);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, d_vector, d_real);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, d_vector, p_real);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, p_vector, d_real);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, p_vector, p_real);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, d_vector, d_real);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, d_vector, p_real);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, p_vector, d_real);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, p_vector, p_real);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, d_vector, d_real);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, d_vector, p_real);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, p_vector, d_real);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, p_vector, p_real);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, d_vector, d_real);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, d_vector, p_real);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, p_vector, d_real);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, p_vector, p_real);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, d_vector, d_int);
+  transformed_param_real = lkj_cov_log(d_matrix, d_vector, p_vector, d_int);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, d_vector, d_int);
+  transformed_param_real = lkj_cov_log(d_matrix, p_vector, p_vector, d_int);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, d_vector, d_int);
+  transformed_param_real = lkj_cov_log(p_matrix, d_vector, p_vector, d_int);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, d_vector, d_int);
+  transformed_param_real = lkj_cov_log(p_matrix, p_vector, p_vector, d_int);
 }
 model {
   y_p ~ normal(0, 1);
 }
-
-
-Semantic error in 'lkj_cov_lpdf.stan', line 11, column 26 to column 76:
-   -------------------------------------------------
-     9:    real transformed_data_real;
-    10:  
-    11:    transformed_data_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_real);
-                                   ^
-    12:    transformed_data_real = lkj_cov_lpdf(d_matrix| d_vector, d_vector, d_int);
-    13:  }
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier 'lkj_cov_lpdf' was supplied.
 
   $ ../../../../../../../../install/default/bin/stanc --auto-format multi_gp_cholesky_lpdf.stan
 data {
