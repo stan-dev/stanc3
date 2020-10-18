@@ -1,4 +1,4 @@
-data { 
+data {
   int d_int;
   int d_int_array[d_int];
   real d_real;
@@ -8,7 +8,6 @@ data {
 }
 transformed data {
   real transformed_data_real;
-
   transformed_data_real = std_normal_cdf(d_int);
   transformed_data_real = std_normal_cdf(d_real);
   transformed_data_real = std_normal_cdf(d_real_array);
@@ -20,12 +19,10 @@ parameters {
   real p_real_array[d_int];
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
-
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
-
   transformed_param_real = std_normal_cdf(d_int);
   transformed_param_real = std_normal_cdf(d_real);
   transformed_param_real = std_normal_cdf(d_real_array);
@@ -36,6 +33,7 @@ transformed parameters {
   transformed_param_real = std_normal_cdf(p_vector);
   transformed_param_real = std_normal_cdf(p_row_vector);
 }
-model {  
-  y_p ~ normal(0,1); // in case anyone tries to run it
+model {
+  y_p ~ normal(0, 1);
 }
+
