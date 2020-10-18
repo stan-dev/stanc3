@@ -341,7 +341,8 @@ decl(type_rule, rhs):
 
                 So when dims_opt is empty, it uses the preview token as its startpos,
                 but that makes the whole declaration think it starts at the previous
-                token
+                token. Sadly, $sloc and $symbolstartpos generates code using !=, which
+                Core_kernel considers to be an error.
                  *)
                 let startpos = match dims_opt with
                   | None -> $startpos(ty)

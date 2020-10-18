@@ -1,22 +1,22 @@
   $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
 
-Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 24, parsing error:
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[1:2,2,:] real x;
-                                 ^
+                         ^
      3:  }
    -------------------------------------------------
 
-Dimensions should be expressions; they shouldn't can't contain indices.
+Dimensions should be expressions, not multiple or range indexing.
 
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
 
-Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 23, parsing error:
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
    -------------------------------------------------
      1:  data {
      2:    blahblah[1,2] real x;
-                                ^
+                        ^
      3:  }
    -------------------------------------------------
 
@@ -24,11 +24,11 @@ Found a declaration following an expression.
 
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 
-Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 14, parsing error:
+Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    asdf real x;
-                       ^
+               ^
      3:  }
    -------------------------------------------------
 
