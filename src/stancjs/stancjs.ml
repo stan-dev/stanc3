@@ -26,31 +26,27 @@ let stan2cpp model_name model_string flags =
     | None -> fun _ -> false
   in
   let flag_val flag =
-    let find_and_return_val flags =
-      let prefix = flag ^ "=" in
-      match
-        Array.find_map flags ~f:(fun x ->
-            if String.is_prefix ~prefix x then Some x else None )
-      with
-      | Some x -> String.chop_prefix_exn ~prefix x
-      | None -> ""
-    in
-    match flags with Some flags -> find_and_return_val flags | None -> ""
+    let prefix = flag ^ "=" in
+    Option.(
+      flags
+      >>= fun flags ->
+      Array.find flags ~f:(String.is_prefix ~prefix)
+      >>= String.chop_prefix ~prefix)
   in
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
-  let filename = flag_val "filename-in-msg" in
   let ast =
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
   in
   let ast =
-    if filename = "" then ast
-    else
-      Result.map ast ~f:(Frontend_utils.replace_filenames_in_stmts ~filename)
+    match flag_val "filename-in-msg" with
+    | Some filename ->
+        Result.map ast ~f:(Frontend_utils.replace_filenames ~filename)
+    | None -> ast
   in
   let semantic_err_to_string = function
     | Result.Error (error :: _) ->

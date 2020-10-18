@@ -166,7 +166,7 @@ let use_file filename =
   let ast filename =
     let ast = Frontend_utils.get_ast_or_exit filename in
     if !filename_for_msg = "" then ast
-    else Frontend_utils.replace_filenames_in_stmts ast ~filename
+    else Frontend_utils.replace_filenames ast ~filename
   in
   let ast =
     if !canonicalize_program then
