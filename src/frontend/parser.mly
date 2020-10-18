@@ -12,9 +12,9 @@ open Errors
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
 
-let build_id id startpos endpos =
+let build_id id loc =
   grammar_logger ("identifier " ^ id);
-  {name=id; id_loc=Location_span.of_positions_exn startpos endpos}
+  {name=id; id_loc=Location_span.of_positions_exn loc}
 
 let rec iterate_n f x = function
   | 0 -> x
@@ -130,13 +130,13 @@ generated_quantities_block:
 
 (* function definitions *)
 identifier:
-  | id=IDENTIFIER { build_id id $startpos $endpos }
-  | TRUNCATE { build_id "T" $startpos $endpos}
-  | OFFSET { build_id "offset" $startpos $endpos}
-  | MULTIPLIER { build_id "multiplier" $startpos $endpos}
-  | LOWER { build_id "lower" $startpos $endpos}
-  | UPPER { build_id "upper" $startpos $endpos}
-  | ARRAY { build_id "array" $startpos $endpos}
+  | id=IDENTIFIER { build_id id $loc }
+  | TRUNCATE { build_id "T" $loc}
+  | OFFSET { build_id "offset" $loc}
+  | MULTIPLIER { build_id "multiplier" $loc}
+  | LOWER { build_id "lower" $loc}
+  | UPPER { build_id "upper" $loc}
+  | ARRAY { build_id "array" $loc}
 
 decl_identifier:
   | id=identifier { id }
@@ -188,7 +188,7 @@ function_def:
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       smeta={loc=Location_span.of_positions_exn $startpos $endpos}
+       smeta={loc=Location_span.of_positions_exn $loc}
       }
     }
 
@@ -281,7 +281,7 @@ decl(type_rule, rhs):
             ; is_global
             }
       ; smeta= {
-          loc= Location_span.of_positions_exn $startpos $endpos
+          loc= Location_span.of_positions_exn $loc
         }
     })
     }
@@ -307,14 +307,14 @@ decl(type_rule, rhs):
       let error message =
         pp_syntax_error
           Fmt.stderr
-          (Parsing (message, Location_span.of_positions_exn $startpos $endpos));
+          (Parsing (message, Location_span.of_positions_exn $loc(dims_opt) ));
         exit 1
       in
       let dims = match dims_opt with
         | Some ({expr= Indexed ({expr= Variable {name="array"; _}; _}, ixs); _}) ->
            (match int_ixs ixs with
             | Some sizes -> sizes
-            | None -> error "Dimensions should be expressions; they shouldn't can't contain indices.")
+            | None -> error "Dimensions should be expressions, not multiple or range indexing.")
         | None -> []
         | _ -> error "Found a declaration following an expression."
       in
@@ -347,7 +347,7 @@ decl(type_rule, rhs):
                   | None -> $startpos(ty)
                   | Some _ -> $startpos
                 in
-                Location_span.of_positions_exn startpos $endpos
+                Location_span.of_positions_exn (startpos, $endpos)
             }
           }
     )}
@@ -469,7 +469,7 @@ dims:
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
       {expr=e;
-       emeta={loc= Location_span.of_positions_exn $startpos $endpos}}}
+       emeta={loc= Location_span.of_positions_exn $loc}}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -483,8 +483,7 @@ non_lhs:
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr=ue;
-                 emeta={loc= Location_span.of_positions_exn $startpos(ue)
-                                             $endpos(ue)}}, i)}
+                 emeta={loc= Location_span.of_positions_exn $loc(ue)}}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -494,38 +493,38 @@ constr_expression:
     {
       grammar_logger "constr_expression_arithmetic" ;
       {expr=BinOp (e1, op, e2);
-       emeta={loc=Location_span.of_positions_exn $startpos $endpos}
+       emeta={loc=Location_span.of_positions_exn $loc}
       }
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
       {expr=PrefixOp (op, e);
-       emeta={loc=Location_span.of_positions_exn $startpos $endpos}}
+       emeta={loc=Location_span.of_positions_exn $loc}}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
       {expr=PostfixOp (e, op);
-       emeta={loc=Location_span.of_positions_exn $startpos $endpos}}
+       emeta={loc=Location_span.of_positions_exn $loc}}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
       {expr=Indexed (e, i);
-       emeta={loc=Location_span.of_positions_exn $startpos $endpos}}
+       emeta={loc=Location_span.of_positions_exn $loc}}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
       {expr=e;
-       emeta={loc= Location_span.of_positions_exn $startpos $endpos}}
+       emeta={loc= Location_span.of_positions_exn $loc}}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
       {expr=Variable id;
-       emeta={loc=Location_span.of_positions_exn $startpos $endpos}}
+       emeta={loc=Location_span.of_positions_exn $loc}}
     }
 
 common_expression:
@@ -645,24 +644,24 @@ lhs:
   | id=identifier
     {  grammar_logger "lhs_identifier" ;
        {expr=Variable id
-       ;emeta = { loc=Location_span.of_positions_exn $startpos $endpos}}
+       ;emeta = { loc=Location_span.of_positions_exn $loc}}
     }
   | l=lhs LBRACK indices=indexes RBRACK
     {  grammar_logger "lhs_index" ;
       {expr=Indexed (l, indices)
-      ;emeta = { loc=Location_span.of_positions_exn $startpos $endpos}}}
+      ;emeta = { loc=Location_span.of_positions_exn $loc}}}
 
 (* statements *)
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $startpos $endpos} }
+        smeta= { loc=Location_span.of_positions_exn $loc} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $startpos $endpos} }
+        smeta={loc = Location_span.of_positions_exn $loc} }
     }
 
 atomic_statement:
