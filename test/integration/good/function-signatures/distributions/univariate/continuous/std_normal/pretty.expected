@@ -1,43 +1,3 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_ccdf_log.stan
-data {
-  int d_int;
-  int d_int_array[d_int];
-  real d_real;
-  real d_real_array[d_int];
-  vector[d_int] d_vector;
-  row_vector[d_int] d_row_vector;
-}
-transformed data {
-  real transformed_data_real;
-  transformed_data_real = std_normal_ccdf_log(d_int);
-  transformed_data_real = std_normal_ccdf_log(d_real);
-  transformed_data_real = std_normal_ccdf_log(d_real_array);
-  transformed_data_real = std_normal_ccdf_log(d_vector);
-  transformed_data_real = std_normal_ccdf_log(d_row_vector);
-}
-parameters {
-  real p_real;
-  real p_real_array[d_int];
-  vector[d_int] p_vector;
-  row_vector[d_int] p_row_vector;
-  real y_p;
-}
-transformed parameters {
-  real transformed_param_real;
-  transformed_param_real = std_normal_ccdf_log(d_int);
-  transformed_param_real = std_normal_ccdf_log(d_real);
-  transformed_param_real = std_normal_ccdf_log(d_real_array);
-  transformed_param_real = std_normal_ccdf_log(d_vector);
-  transformed_param_real = std_normal_ccdf_log(d_row_vector);
-  transformed_param_real = std_normal_ccdf_log(p_real);
-  transformed_param_real = std_normal_ccdf_log(p_real_array);
-  transformed_param_real = std_normal_ccdf_log(p_vector);
-  transformed_param_real = std_normal_ccdf_log(p_row_vector);
-}
-model {
-  y_p ~ normal(0, 1);
-}
-
   $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_cdf.stan
 data {
   int d_int;
@@ -78,7 +38,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_lccdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -89,11 +49,11 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = std_normal_cdf(d_int);
-  transformed_data_real = std_normal_cdf(d_real);
-  transformed_data_real = std_normal_cdf(d_real_array);
-  transformed_data_real = std_normal_cdf(d_vector);
-  transformed_data_real = std_normal_cdf(d_row_vector);
+  transformed_data_real = std_normal_lccdf(d_int);
+  transformed_data_real = std_normal_lccdf(d_real);
+  transformed_data_real = std_normal_lccdf(d_real_array);
+  transformed_data_real = std_normal_lccdf(d_vector);
+  transformed_data_real = std_normal_lccdf(d_row_vector);
 }
 parameters {
   real p_real;
@@ -104,21 +64,34 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = std_normal_cdf(d_int);
-  transformed_param_real = std_normal_cdf(d_real);
-  transformed_param_real = std_normal_cdf(d_real_array);
-  transformed_param_real = std_normal_cdf(d_vector);
-  transformed_param_real = std_normal_cdf(d_row_vector);
-  transformed_param_real = std_normal_cdf(p_real);
-  transformed_param_real = std_normal_cdf(p_real_array);
-  transformed_param_real = std_normal_cdf(p_vector);
-  transformed_param_real = std_normal_cdf(p_row_vector);
+  transformed_param_real = std_normal_lccdf(d_int);
+  transformed_param_real = std_normal_lccdf(d_real);
+  transformed_param_real = std_normal_lccdf(d_real_array);
+  transformed_param_real = std_normal_lccdf(d_vector);
+  transformed_param_real = std_normal_lccdf(d_row_vector);
+  transformed_param_real = std_normal_lccdf(p_real);
+  transformed_param_real = std_normal_lccdf(p_real_array);
+  transformed_param_real = std_normal_lccdf(p_vector);
+  transformed_param_real = std_normal_lccdf(p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_log.stan
+
+Semantic error in 'std_normal_lccdf.stan', line 12, column 26 to column 49:
+   -------------------------------------------------
+    10:    real transformed_data_real;
+    11:  
+    12:    transformed_data_real = std_normal_lccdf(d_int);
+                                   ^
+    13:    transformed_data_real = std_normal_lccdf(d_real);
+    14:    transformed_data_real = std_normal_lccdf(d_real_array);
+   -------------------------------------------------
+
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_lcdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -129,11 +102,11 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = std_normal_log(d_int);
-  transformed_data_real = std_normal_log(d_real);
-  transformed_data_real = std_normal_log(d_real_array);
-  transformed_data_real = std_normal_log(d_vector);
-  transformed_data_real = std_normal_log(d_row_vector);
+  transformed_data_real = std_normal_lcdf(d_int);
+  transformed_data_real = std_normal_lcdf(d_real);
+  transformed_data_real = std_normal_lcdf(d_real_array);
+  transformed_data_real = std_normal_lcdf(d_vector);
+  transformed_data_real = std_normal_lcdf(d_row_vector);
 }
 parameters {
   real p_real;
@@ -144,15 +117,68 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = std_normal_log(d_int);
-  transformed_param_real = std_normal_log(d_real);
-  transformed_param_real = std_normal_log(d_real_array);
-  transformed_param_real = std_normal_log(d_vector);
-  transformed_param_real = std_normal_log(d_row_vector);
-  transformed_param_real = std_normal_log(p_real);
-  transformed_param_real = std_normal_log(p_real_array);
-  transformed_param_real = std_normal_log(p_vector);
-  transformed_param_real = std_normal_log(p_row_vector);
+  transformed_param_real = std_normal_lcdf(d_int);
+  transformed_param_real = std_normal_lcdf(d_real);
+  transformed_param_real = std_normal_lcdf(d_real_array);
+  transformed_param_real = std_normal_lcdf(d_vector);
+  transformed_param_real = std_normal_lcdf(d_row_vector);
+  transformed_param_real = std_normal_lcdf(p_real);
+  transformed_param_real = std_normal_lcdf(p_real_array);
+  transformed_param_real = std_normal_lcdf(p_vector);
+  transformed_param_real = std_normal_lcdf(p_row_vector);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+
+Semantic error in 'std_normal_lcdf.stan', line 12, column 26 to column 48:
+   -------------------------------------------------
+    10:    real transformed_data_real;
+    11:  
+    12:    transformed_data_real = std_normal_lcdf(d_int);
+                                   ^
+    13:    transformed_data_real = std_normal_lcdf(d_real);
+    14:    transformed_data_real = std_normal_lcdf(d_real_array);
+   -------------------------------------------------
+
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_lpdf.stan
+data {
+  int d_int;
+  int d_int_array[d_int];
+  real d_real;
+  real d_real_array[d_int];
+  vector[d_int] d_vector;
+  row_vector[d_int] d_row_vector;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = std_normal_lpdf(d_int| );
+  transformed_data_real = std_normal_lpdf(d_real| );
+  transformed_data_real = std_normal_lpdf(d_real_array| );
+  transformed_data_real = std_normal_lpdf(d_vector| );
+  transformed_data_real = std_normal_lpdf(d_row_vector| );
+}
+parameters {
+  real p_real;
+  real p_real_array[d_int];
+  vector[d_int] p_vector;
+  row_vector[d_int] p_row_vector;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = std_normal_lpdf(d_int| );
+  transformed_param_real = std_normal_lpdf(d_real| );
+  transformed_param_real = std_normal_lpdf(d_real_array| );
+  transformed_param_real = std_normal_lpdf(d_vector| );
+  transformed_param_real = std_normal_lpdf(d_row_vector| );
+  transformed_param_real = std_normal_lpdf(p_real| );
+  transformed_param_real = std_normal_lpdf(p_real_array| );
+  transformed_param_real = std_normal_lpdf(p_vector| );
+  transformed_param_real = std_normal_lpdf(p_row_vector| );
 }
 model {
   y_p ~ normal(0, 1);
