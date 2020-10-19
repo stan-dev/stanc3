@@ -59,8 +59,8 @@ using stan::math::pow;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'filename_good.stan', line 2, column 4 to column 11)",
-                                                      " (in 'filename_good.stan', line 3, column 4 to column 19)"};
+                                                      " (in 'foo.stan', line 2, column 4 to column 11)",
+                                                      " (in 'foo.stan', line 3, column 4 to column 19)"};
 
 
 
