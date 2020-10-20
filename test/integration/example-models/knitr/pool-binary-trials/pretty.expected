@@ -426,6 +426,9 @@ Warning: deprecated language construct used in 'hier-logit.stan', line 96, colum
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'hier-logit.stan', line 63, column 29 to column 71:
+binomial_log is deprecated, use binomial_lpmf instead
   $ ../../../../../../install/default/bin/stanc --auto-format hier.stan
 data {
   int<lower=0> N;
@@ -803,6 +806,9 @@ Warning: deprecated language construct used in 'hier.stan', line 92, column 8:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'hier.stan', line 57, column 29 to column 71:
+binomial_log is deprecated, use binomial_lpmf instead
   $ ../../../../../../install/default/bin/stanc --auto-format no-pool.stan
 data {
   int<lower=0> N;
@@ -1159,6 +1165,9 @@ Warning: deprecated language construct used in 'no-pool.stan', line 83, column 8
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'no-pool.stan', line 52, column 29 to column 71:
+binomial_log is deprecated, use binomial_lpmf instead
   $ ../../../../../../install/default/bin/stanc --auto-format pool.stan
 data {
   int<lower=0> N;
@@ -1481,3 +1490,6 @@ Warning: deprecated language construct used in 'pool.stan', line 75, column 8:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'pool.stan', line 53, column 29 to column 71:
+binomial_log is deprecated, use binomial_lpmf instead

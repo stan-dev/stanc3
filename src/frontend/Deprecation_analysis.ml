@@ -64,16 +64,11 @@ let without_suffix user_dists name =
   then String.drop_suffix name 4
   else name
 
-let pp_warning ppf (loc, msg) =
-  let loc_str =
-    if loc = Location_span.empty then ""
-    else " at " ^ Location_span.to_string loc
-  in
-  Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
-
-let warn_deprecated (warning : Location_span.t * string) =
-  let str = Fmt.strf "%a" pp_warning warning in
-  Out_channel.output_string Out_channel.stderr str
+let warn_deprecated (loc_span, message) =
+  Fmt.pf Fmt.stderr
+    "@[<v>@,Warning: deprecated language construct used in %s:@,%s@]@."
+    (Location_span.to_string loc_span)
+    message
 
 let replace_suffix = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}

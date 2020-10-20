@@ -53,6 +53,39 @@ generated quantities {
   real y_hat[3, 2] = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i);
 }
 
+
+Warning: deprecated language construct used in 'deprecated.stan', line 55, column 20 to column 69:
+integrate_ode is deprecated, use integrate_ode_rk45 instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 28, column 11 to column 46:
+The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: deprecated language construct used in 'deprecated.stan', line 28, column 24 to column 42:
+multiply_log is deprecated, use lmultiply instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 29, column 12 to column 44:
+binomial_coefficient_log is deprecated, use lchoose instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 43, column 23 to column 40:
+Use of the _log suffix in user defined function foo_cdf_log is deprecated, use foo_lcdf instead.
+
+Warning: deprecated language construct used in 'deprecated.stan', line 38, column 14 to column 35:
+Use of the _log suffix in user defined function normal_log_log is deprecated, use normal_log_lpdf instead.
+
+Warning: deprecated language construct used in 'deprecated.stan', line 48, column 6 to column 30:
+normal_ccdf_log is deprecated, use normal_lccdf instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 47, column 6 to column 29:
+normal_cdf_log is deprecated, use normal_lcdf instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 46, column 12 to column 31:
+normal_log is deprecated, use normal_lpdf instead
+
+Warning: deprecated language construct used in 'deprecated.stan', line 50, column 20 to column 28:
+The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+
+Warning: deprecated language construct used in 'deprecated.stan', line 19, column 11 to column 17:
+Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
 transformed data {
   int N = 12;
@@ -72,3 +105,6 @@ model {
     x + 4 ~ normal(0, 1 + 1) T[0, 8];
 }
 
+
+Warning: deprecated language construct used in 'parenthesize.stan', line 6, column 13 to column 37:
+The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

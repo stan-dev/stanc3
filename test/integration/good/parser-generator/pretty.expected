@@ -329,6 +329,9 @@ generated quantities {
   }
 }
 
+
+Warning: deprecated language construct used in 'ode.stan', line 28, column 10 to column 58:
+integrate_ode is deprecated, use integrate_ode_rk45 instead
   $ ../../../../../install/default/bin/stanc --auto-format ode_control.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {

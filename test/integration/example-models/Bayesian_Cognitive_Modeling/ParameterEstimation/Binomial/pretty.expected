@@ -263,3 +263,6 @@ Warning: deprecated language construct used in 'Survey.stan', line 44, column 5:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'Survey.stan', line 32, column 39 to column 64:
+binomial_log is deprecated, use binomial_lpmf instead

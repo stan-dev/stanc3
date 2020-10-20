@@ -167,3 +167,6 @@ Warning: deprecated language construct used in 'leuk.stan', line 54, column 18:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: deprecated language construct used in 'leuk.stan', line 39, column 27 to column 85:
+poisson_log is deprecated, use poisson_lpmf instead
