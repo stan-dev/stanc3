@@ -28,3 +28,20 @@
 (alias
  (name update_messages)
   (action (diff parser.messages parser_updated.messages)))
+
+(rule
+ (targets parser_new.messages)
+ (deps parser.mly)
+ (action
+   (with-stdout-to %{targets} (run menhir --list-errors %{deps}))))
+
+(rule
+ (targets parser_comparison.output)
+ (deps parser_new.messages)
+ (action
+  (with-stdout-to %{targets}
+   (run menhir parser.mly --compare-errors %{deps} --compare-errors parser.messages))))
+
+(alias
+ (name runtest)
+ (action (diff parser_comparison.expected parser_comparison.output)))

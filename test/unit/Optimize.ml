@@ -267,35 +267,35 @@ let%expect_test "list collapsing" =
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
-         ((pattern
-           (Block
-            (((pattern
-               (NRFunApp CompilerInternal FnPrint__
-                (((pattern (Var x))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (meta <opaque>))
-             ((pattern
-               (NRFunApp CompilerInternal FnPrint__
-                (((pattern (Var y))
-                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-              (meta <opaque>)))))
-          (meta <opaque>)))
+         (((pattern
+            (Block
+             (((pattern
+                (NRFunApp CompilerInternal FnPrint__
+                 (((pattern (Var x))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp CompilerInternal FnPrint__
+                 (((pattern (Var y))
+                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
         (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
-         ((pattern
-           (Block
-            (((pattern
-               (Return
-                (((pattern
-                   (FunApp StanLib Pow__
-                    (((pattern (Var z))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 2))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-              (meta <opaque>)))))
-          (meta <opaque>)))
+         (((pattern
+            (Block
+             (((pattern
+                (Return
+                 (((pattern
+                    (FunApp StanLib Pow__
+                     (((pattern (Var z))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 2))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
         (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
