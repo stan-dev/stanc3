@@ -248,16 +248,13 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
         match fdargs with
         | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
             let pp_template_propto ppf name =
-              if is_user_dist name then
-              pf ppf "template <bool propto__>@ "
-              else
-              pf ppf ""
+              if is_user_dist name then pf ppf "template <bool propto__>@ "
+              else pf ppf ""
             in
             pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
               (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
-              pp_template_propto fdname
-              fdname reduce_sum_functor_suffix pp_sig_rs "operator()"
-              pp_call_str
+              pp_template_propto fdname fdname reduce_sum_functor_suffix
+              pp_sig_rs "operator()" pp_call_str
               ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
               , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
                 :: List.map ~f:(fun (_, name, _) -> name) rest
@@ -854,11 +851,11 @@ let pp_prog ppf (p : Program.Typed.t) =
   in
   let reduce_sum_struct_decls =
     String.Set.map
-      ~f:(fun x -> 
-        if Utils.is_distribution_name x then 
-          "template <bool propto__>\nstruct " ^ x ^ reduce_sum_functor_suffix ^ ";"
-        else
-          "struct " ^ x ^ reduce_sum_functor_suffix ^ ";")
+      ~f:(fun x ->
+        if Utils.is_distribution_name x then
+          "template <bool propto__>\nstruct " ^ x ^ reduce_sum_functor_suffix
+          ^ ";"
+        else "struct " ^ x ^ reduce_sum_functor_suffix ^ ";" )
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
     |> Set.elements |> String.concat ~sep:"\n"
   in
