@@ -505,7 +505,7 @@ let semantic_check_postfixop loc op e =
 (* -- Variables ------------------------------------------------------------- *)
 let semantic_check_variable cf loc id =
   Validate.(
-    match Symbol_table.look vm id.name with
+    match Symbol_table.look vm (Utils.stdlib_distribution_name id.name) with
     | None when not (Stan_math_signatures.is_stan_math_function_name id.name)
       ->
         Semantic_error.ident_not_in_scope loc id.name |> error
