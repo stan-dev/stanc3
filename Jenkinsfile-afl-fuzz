@@ -28,7 +28,7 @@ def checkoutRepository(repositoryBranch, repositoryUrl = "https://github.com/sta
 pipeline {
     agent { label 'linux-ec2' }
     parameters {
-        string(defaultValue: 'master', name: 'branch', description: "Branch")
+        string(defaultValue: 'master', name: 'branch', description: "Git branch")
     }
     options { 
         skipDefaultCheckout() 
@@ -59,6 +59,7 @@ pipeline {
 
                 /* Stash everything inside ./afl-out */
                 stash name:'afl-out', includes:'afl-out'
+            }
         }
     }
 }
