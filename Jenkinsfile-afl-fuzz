@@ -1,0 +1,64 @@
+/* Functions that runs a sh command and returns the stdout */
+def runShell(String command){
+    def output = sh (returnStdout: true, script: "${command}").trim()
+    return "${output}"
+}
+
+/* Checks out a repository and */
+def checkoutRepository(repositoryBranch, repositoryUrl = "https://github.com/stan-dev/stanc3"){
+    checkout([$class: 'GitSCM',
+        branches: [[name: "*/${repositoryBranch}"]],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [[
+            $class: 'SubmoduleOption',
+            disableSubmodules: false,
+            parentCredentials: false,
+            recursiveSubmodules: true,
+            reference: '',
+            trackingSubmodules: false
+        ]],
+        submoduleCfg: [],
+        userRemoteConfigs: [[
+            credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', 
+            url: repositoryUrl
+        ]]
+    ])
+}
+
+pipeline {
+    agent { label 'linux-ec2' }
+    parameters {
+        string(defaultValue: 'master', name: 'branch', description: "Branch")
+    }
+    options { 
+        skipDefaultCheckout() 
+    }
+    stages {
+        stage("Build stanc3 and run afl-fuzz") {
+            agent {
+                checkoutRepository(params.branch)
+                dockerfile {
+                    filename 'docker/afl-fuzz/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+
+                runShell("""
+                
+                    cp ./test/integration/good/code-gen/*.stan ./
+                    eval \$(opam config env)
+
+                    # Build stanc3.exe
+                    dune build src/stanc/stanc.exe
+                    
+                    # Run afl-fuzz
+                    afl-fuzz -i ./ -o ./afl-out -- _build/default/src/stanc/stanc.exe --debug-parse @@
+                """)
+
+                /* Stash everything inside ./afl-out */
+                stash name:'afl-out', includes:'afl-out'
+        }
+    }
+}
