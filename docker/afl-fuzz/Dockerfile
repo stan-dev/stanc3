@@ -8,10 +8,13 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   gcc wget gawk afl
 
 # Install ocaml, initialize it without sandboxing and create 4.07.0+afl switch
-RUN sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
-RUN opam init --disable-sandboxing -y
-RUN opam switch create 4.07.0+afl
-RUN opam switch 4.07.0+afl
+RUN <<EOR
+    #!/bin/bash
+    sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
+    opam init --disable-sandboxing -y
+    opam switch create 4.07.0+afl
+    opam switch 4.07.0+afl
+EOR
 
 # Install build dependencies
 COPY ./scripts/install_build_deps.sh ./

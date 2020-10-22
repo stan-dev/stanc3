@@ -4,7 +4,7 @@ def runShell(String command){
     return "${output}"
 }
 
-/* Checks out a repository and */
+/* Checks out a branch from a repository */
 def checkoutRepository(repositoryBranch, repositoryUrl = "https://github.com/stan-dev/stanc3"){
     checkout([$class: 'GitSCM',
         branches: [[name: "*/${repositoryBranch}"]],
@@ -30,9 +30,6 @@ pipeline {
     parameters {
         string(defaultValue: 'master', name: 'branch', description: "Git branch")
     }
-    options { 
-        skipDefaultCheckout() 
-    }
     stages {
         stage("Build stanc3 and run afl-fuzz") {
             agent {
@@ -44,8 +41,8 @@ pipeline {
             }
             steps {
                 checkoutRepository(params.branch)
-                
-                runShell("""
+
+                runShell("""#!/bin/bash
                 
                     cp ./test/integration/good/code-gen/*.stan ./
                     eval \$(opam config env)
