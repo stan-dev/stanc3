@@ -19904,6 +19904,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m1.stan', line 32, column 2 to column 33)",
                                                       " (in 'reduce_sum_m1.stan', line 33, column 2 to column 37)",
                                                       " (in 'reduce_sum_m1.stan', line 34, column 2 to column 40)",
+                                                      " (in 'reduce_sum_m1.stan', line 35, column 2 to column 41)",
                                                       " (in 'reduce_sum_m1.stan', line 22, column 2 to column 14)",
                                                       " (in 'reduce_sum_m1.stan', line 26, column 10 to column 11)",
                                                       " (in 'reduce_sum_m1.stan', line 27, column 10 to column 11)",
@@ -19923,9 +19924,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'reduce_sum_m1.stan', line 17, column 4 to column 38)",
                                                       " (in 'reduce_sum_m1.stan', line 16, column 52 to line 18, column 3)"};
 
-struct foo_lpdf_rsfunctor__;
 struct g_rsfunctor__;
 struct h_rsfunctor__;
+template <bool propto__>
+struct foo_lpdf_rsfunctor__;
 template <typename T0__>
 stan::promote_args_t<T0__>
 g(const std::vector<T0__>& y_slice, const int& start, const int& end,
@@ -19937,12 +19939,12 @@ g(const std::vector<T0__>& y_slice, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 15;
+    current_statement__ = 16;
     if (logical_gt(size(y_slice), 1)) {
-      current_statement__ = 13;
+      current_statement__ = 14;
       return reduce_sum<g_rsfunctor__>(y_slice, 1, pstream__);
     } else {
-      current_statement__ = 11;
+      current_statement__ = 12;
       return normal_lpdf<false>(y_slice, 0, 1);
     }
   } catch (const std::exception& e) {
@@ -19986,14 +19988,14 @@ h(const std::vector<T0__>& y_slice, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 21;
+    current_statement__ = 22;
     if (logical_gt(size(a), 1)) {
-      current_statement__ = 19;
+      current_statement__ = 20;
       return reduce_sum<h_rsfunctor__>(y_slice, 1, pstream__,
                rvalue(a,
                  cons_list(index_min_max(start, end), nil_index_list()), "a"));
     } else {
-      current_statement__ = 17;
+      current_statement__ = 18;
       return normal_lpdf<false>(a, 0, 1);
     }
   } catch (const std::exception& e) {
@@ -20038,7 +20040,7 @@ foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 23;
+    current_statement__ = 24;
     return normal_lpdf<false>(y_slice, 0, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -20059,13 +20061,14 @@ return foo_lpdf<propto__>(y_slice, start, end, pstream__);
 };
 
 
+template <bool propto__>
 struct foo_lpdf_rsfunctor__ {
 template <typename T0__>
 stan::promote_args_t<T0__>
 operator()(const std::vector<T0__>& y_slice, const int& start,
            const int& end, std::ostream* pstream__)  const 
 {
-return foo_lpdf<false>(y_slice, start + 1, end + 1, pstream__);
+return foo_lpdf<propto__>(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
@@ -20104,16 +20107,16 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 7;
+      current_statement__ = 8;
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 7;
-      N = 100;
       current_statement__ = 8;
-      validate_non_negative_index("y1", "N", N);
+      N = 100;
       current_statement__ = 9;
-      validate_non_negative_index("y2", "N", N);
+      validate_non_negative_index("y1", "N", N);
       current_statement__ = 10;
+      validate_non_negative_index("y2", "N", N);
+      current_statement__ = 11;
       validate_non_negative_index("y3", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -20178,7 +20181,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
         current_statement__ = 5;
         lp_accum__.add(reduce_sum<h_rsfunctor__>(y2, 1, pstream__, y2));
         current_statement__ = 6;
-        lp_accum__.add(reduce_sum<foo_lpdf_rsfunctor__>(y3, 1, pstream__));
+        lp_accum__.add(
+          reduce_sum<foo_lpdf_rsfunctor__<false>>(y3, 1, pstream__));
+        current_statement__ = 7;
+        lp_accum__.add(
+          reduce_sum<foo_lpdf_rsfunctor__<propto__>>(y3, 1, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
