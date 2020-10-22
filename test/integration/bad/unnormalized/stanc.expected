@@ -1,3 +1,16 @@
+  $ ../../../../../install/default/bin/stanc lupdf_ident.stan
+
+Semantic error in 'lupdf_ident.stan', line 2, column 9 to column 16:
+   -------------------------------------------------
+     1:  parameters {
+     2:      real y_lupdf;
+                  ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Identifier 'y_lupdf' has a _lupdf/_lupmf suffix, which is only allowed for functions.
+
   $ ../../../../../install/default/bin/stanc lupdf_in_functions.stan
 
 Semantic error in 'lupdf_in_functions.stan', line 3, column 15 to column 34:
@@ -25,6 +38,19 @@ Semantic error in 'lupdf_in_gq.stan', line 8, column 13 to column 34:
 
 Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
 
+  $ ../../../../../install/default/bin/stanc lupdf_in_gq_rs.stan
+
+Semantic error in 'lupdf_in_gq_rs.stan', line 14, column 24 to column 33:
+   -------------------------------------------------
+    12:  }
+    13:  generated quantities {
+    14:      real x = reduce_sum(foo_lupdf,ya,1);
+                                 ^
+    15:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
   $ ../../../../../install/default/bin/stanc lupdf_in_trans_data.stan
 
 Semantic error in 'lupdf_in_trans_data.stan', line 3, column 13 to column 34:
@@ -47,6 +73,19 @@ Semantic error in 'lupdf_in_trans_params.stan', line 3, column 13 to column 34:
      3:      real y = normal_lupdf(p| 0, 1);
                       ^
      4:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_trans_params_rs.stan
+
+Semantic error in 'lupdf_in_trans_params_rs.stan', line 9, column 24 to column 33:
+   -------------------------------------------------
+     7:      real p;
+     8:      real ya[5];
+     9:      real y = reduce_sum(foo_lupdf,ya,1);
+                                 ^
+    10:  }
    -------------------------------------------------
 
 Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
