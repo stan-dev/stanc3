@@ -26,7 +26,7 @@ def checkoutRepository(repositoryBranch, repositoryUrl = "https://github.com/sta
 }
 
 pipeline {
-    agent { label 'linux-ec2' }
+    agent none
     parameters {
         string(defaultValue: 'master', name: 'branch', description: "Git branch")
     }
@@ -36,7 +36,6 @@ pipeline {
     stages {
         stage("Build stanc3 and run afl-fuzz") {
             agent {
-                checkoutRepository(params.branch)
                 dockerfile {
                     filename 'docker/afl-fuzz/Dockerfile'
                     //Forces image to ignore entrypoint
@@ -44,7 +43,8 @@ pipeline {
                 }
             }
             steps {
-
+                checkoutRepository(params.branch)
+                
                 runShell("""
                 
                     cp ./test/integration/good/code-gen/*.stan ./
