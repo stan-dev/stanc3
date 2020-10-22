@@ -5,12 +5,10 @@ FROM ubuntu:bionic
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   curl ca-certificates rsync git build-essential \
   m4 unzip pkg-config libpcre3-dev mingw-w64 \
-  gcc wget gawk afl
+  gcc wget gawk afl opam
 
 # Install ocaml, initialize it without sandboxing and create 4.07.0+afl switch
 RUN <<EOR
-    #!/bin/bash
-    sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
     opam init --disable-sandboxing -y
     opam switch create 4.07.0+afl
     opam switch 4.07.0+afl
