@@ -521,11 +521,12 @@ let semantic_check_variable cf loc id =
         |> ok
     | Some ((Param | TParam | GQuant), _) when cf.in_toplevel_decl ->
         Semantic_error.non_data_variable_size_decl loc |> error
-    | Some _ when Utils.is_unnormalized_distribution id.name
-      && not
-           ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
-           || cf.current_block = Model )
-    -> Semantic_error.invalid_unnormalized_fn loc |> error
+    | Some _
+      when Utils.is_unnormalized_distribution id.name
+           && not
+                ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+                || cf.current_block = Model ) ->
+        Semantic_error.invalid_unnormalized_fn loc |> error
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
