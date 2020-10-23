@@ -42,20 +42,21 @@ pipeline {
             steps {
                 checkoutRepository(params.branch)
 
-                runShell("""#!/bin/bash
-                
-                    cp ./test/integration/good/code-gen/*.stan ./
-                    eval \$(opam config env)
-
-                    # Build stanc3.exe
+                runShell("mkdir -p afl-out")
+                runShell("cp ./test/integration/good/code-gen/*.stan ./")
+                runShell("""
+                    eval \$(opam env)
                     dune build src/stanc/stanc.exe
-                    
-                    # Run afl-fuzz
-                    afl-fuzz -i ./ -o ./afl-out -- _build/default/src/stanc/stanc.exe --debug-parse @@
                 """)
+                runShell("afl-fuzz -m 30000 -i ./ -o ./afl-out -- _build/default/src/stanc/stanc.exe --debug-parse @@")
 
                 /* Stash everything inside ./afl-out */
                 stash name:'afl-out', includes:'afl-out'
+            }
+            post {
+                always {
+                    script { runShell("sudo rm -rf ./*") }
+                }
             }
         }
     }

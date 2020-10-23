@@ -13,6 +13,7 @@ ENV TEMP_PATH=tmp
 # Install ocaml
 RUN curl https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh --output $TEMP_PATH/install.sh
 RUN chmod +x $TEMP_PATH/install.sh
+# Taking advantage of the implicit newline that echo generates as we need to approve binary location on: Where should it be installed ? [/usr/local/bin]
 RUN echo | $TEMP_PATH/install.sh
 RUN rm $TEMP_PATH/install.sh
 
@@ -24,6 +25,8 @@ RUN opam switch 4.07.0+afl
 # Install build dependencies
 COPY ./scripts/install_build_deps.sh ./
 RUN opam update; bash -x install_build_deps.sh
+
+# echo core >/proc/sys/kernel/core_pattern
 
 # Set our work directory
 #WORKDIR /stanc3
