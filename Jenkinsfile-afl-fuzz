@@ -29,34 +29,55 @@ pipeline {
     agent none
     parameters {
         string(defaultValue: 'master', name: 'branch', description: "Git branch")
+        string(defaultValue: '60', name: 'run_time', description: "afl-fuzz runtime")
+        string(defaultValue: '30000', name: 'allocated_mb_afl', description: "Allocated MB for afl-fuzz '-m' argument.")
+    }
+    environment {
+        BUILD_AGENT = "linux-ec2"
     }
     stages {
         stage("Build stanc3 and run afl-fuzz") {
             agent {
                 dockerfile {
+                    label env.BUILD_AGENT
                     filename 'docker/afl-fuzz/Dockerfile'
-                    //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
-                checkoutRepository(params.branch)
+                script {
+                    env.BUILD_AGENT = env.NODE_NAME
+                    checkoutRepository(params.branch)
+                }
 
                 runShell("mkdir -p afl-out")
-                runShell("cp ./test/integration/good/code-gen/*.stan ./")
+                runShell("mkdir -p afl-in")
+
+                runShell("cp ./test/integration/good/code-gen/*.stan ./afl-in")
+
                 runShell("""
                     eval \$(opam env)
                     dune build src/stanc/stanc.exe
                 """)
-                runShell("afl-fuzz -m 30000 -i ./ -o ./afl-out -- _build/default/src/stanc/stanc.exe --debug-parse @@")
 
-                /* Stash everything inside ./afl-out */
-                stash name:'afl-out', includes:'afl-out'
-            }
-            post {
-                always {
-                    script { runShell("sudo rm -rf ./*") }
+                script {
+                    try {
+                        runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -o ./afl-out _build/default/src/stanc/stanc.exe @@")
+                    }
+                    catch (err) {
+                        emailExtraMsg = "Build Failure: "+ err.getMessage()
+                        echo emailExtraMsg
+                    }
                 }
+
+                runShell("tar -czvf afl-out.tar.gz afl-out/*")
+                archiveArtifacts artifacts: '*.tar.gz' 
+            }
+        }
+        stage("Clean workdir") {
+            agent { label "${env.BUILD_AGENT}" }
+            steps {
+                runShell("sudo rm -rf ${env.WORKSPACE}/*")
             }
         }
     }
