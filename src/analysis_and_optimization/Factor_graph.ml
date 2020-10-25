@@ -115,7 +115,7 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
     Set.Poly.map
       ~f:(fun v -> VVar v)
       (Set.Poly.union data_vars
-         (parameter_names_set ~include_transformed:true prog))
+         (parameter_names_set ~include_transformed:false prog))
   in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->

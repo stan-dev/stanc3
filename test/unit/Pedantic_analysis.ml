@@ -255,9 +255,7 @@ let%expect_test "Unused param warning" =
       Warning:
         The parameter d was declared but was not used in the density calculation.
       Warning:
-        The parameter e was declared but was not used in the density calculation.
-      Warning:
-        The parameter f was declared but was not used in the density calculation. |}]
+        The parameter e was declared but was not used in the density calculation. |}]
 
 let param_dependant_cf_example =
   {|
@@ -1019,7 +1017,7 @@ let%expect_test "Missing priors schools warning" =
   [%expect
     {|
       Warning:
-        The parameter mu was declared but was not used in the density calculation.
+        The parameter mu has no priors.
       Warning:
-        The parameter tau was declared but was not used in the density calculation.
+        The parameter tau has no priors.
     |}]
