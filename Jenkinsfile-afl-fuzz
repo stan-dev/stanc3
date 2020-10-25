@@ -31,6 +31,7 @@ pipeline {
         string(defaultValue: 'master', name: 'branch', description: "Git branch")
         string(defaultValue: '60', name: 'run_time', description: "afl-fuzz runtime")
         string(defaultValue: '30000', name: 'allocated_mb_afl', description: "Allocated MB for afl-fuzz '-m' argument.")
+        string(defaultValue: '30', name: 'cores', description: "Parallelization across multiple cores.")
     }
     environment {
         BUILD_AGENT = "linux-ec2"
@@ -62,16 +63,23 @@ pipeline {
 
                 script {
                     try {
-                        runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -o ./afl-out _build/default/src/stanc/stanc.exe @@")
+                        runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -M fuzzer0 -o ./afl-out _build/default/src/stanc/stanc.exe @@ &")
+                        
+                        for (i = 1; i <params.cores.toInteger(); i++) {
+                            runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -S fuzzer${i} -o ./afl-out _build/default/src/stanc/stanc.exe @@ &")
+                        }
+
+                        sleep(params.run_time.toInteger() + ( params.run_time.toInteger() / 10 * 2))
                     }
                     catch (err) {
                         emailExtraMsg = "Build Failure: "+ err.getMessage()
                         echo emailExtraMsg
                     }
+                    finally {
+                        runShell("tar -czvf afl-out.tar.gz afl-out/*")
+                        archiveArtifacts artifacts: '*.tar.gz' 
+                    }
                 }
-
-                runShell("tar -czvf afl-out.tar.gz afl-out/*")
-                archiveArtifacts artifacts: '*.tar.gz' 
             }
         }
         stage("Clean workdir") {
