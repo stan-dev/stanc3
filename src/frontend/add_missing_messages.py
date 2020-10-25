@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Run this from src/frontend with dune on the path
+
 
 import re
 import subprocess
@@ -11,7 +11,8 @@ new_messages = sys.argv[2]
 old_messages = sys.argv[3]
 
 p = subprocess.run("menhir {} --compare-errors {} --compare-errors {}".format(
-    parser, new_messages, old_messages), shell=True, capture_output=True)
+    parser, new_messages, old_messages),
+                   shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
 
 updates = parse.findall(p.stderr.decode("utf-8"))
