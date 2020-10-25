@@ -992,3 +992,34 @@ let%expect_test "Function body parameter-dependent control flow" =
         'string', line 19, column 21 to column 26, the value of b depends on
         parameter(s): sigma.
     |}]
+
+let schools_example =
+  {|
+    data {
+      int<lower=0> J;         // number of schools
+      real y[J];              // estimated treatment effects
+      real<lower=0> sigma[J]; // standard error of effect estimates
+    }
+    parameters {
+      real mu;                // population treatment effect
+      real<lower=0> tau;      // standard deviation in treatment effects
+      vector[J] eta;          // unscaled deviation from mu by school
+    }
+    transformed parameters {
+      vector[J] theta = mu + tau * eta;        // school treatment effects
+    }
+    model {
+      target += normal_lpdf(eta | 0, 1);       // prior log-density
+      target += normal_lpdf(y | theta, sigma); // log-likelihood
+    }
+  |}
+
+let%expect_test "Missing priors schools warning" =
+  print_warn_pedantic (build_program schools_example) ;
+  [%expect
+    {|
+      Warning:
+        The parameter mu was declared but was not used in the density calculation.
+      Warning:
+        The parameter tau was declared but was not used in the density calculation.
+    |}]
