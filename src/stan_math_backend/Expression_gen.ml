@@ -312,7 +312,22 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
         when Stan_math_signatures.is_reduce_sum_fn x ->
-          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+          let chop_functor_suffix =
+            String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix
+          in
+          let propto_template =
+            if Utils.is_distribution_name (chop_functor_suffix f) then
+              if Utils.is_unnormalized_distribution (chop_functor_suffix f)
+              then "<propto__>"
+              else "<false>"
+            else ""
+          in
+          let normalized_dist_functor =
+            Utils.stdlib_distribution_name (chop_functor_suffix f)
+            ^ reduce_sum_functor_suffix
+          in
+          ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
+          , grainsize :: container :: msgs :: tl )
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname

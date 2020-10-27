@@ -110,13 +110,14 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
+(* 
+Checks that a variable/function name: 
+ - if UDF that it does not match a Stan Math function
+ - a function/identifier does not have the _lupdf/_lupmf suffix
+ - is not already in use
+*)
 let check_fresh_variable_basic id is_udf =
   Validate.(
-    (* No shadowing! *)
-    (* For some strange reason, Stan allows user declared identifiers that are
-       not of nullary function types to clash with nullary library functions.
-       No other name clashes are tolerated. Here's the logic to
-       achieve that. *)
     if
       is_udf
       && ( Stan_math_signatures.is_stan_math_function_name id.name
@@ -124,8 +125,11 @@ let check_fresh_variable_basic id is_udf =
          || Stan_math_signatures.is_reduce_sum_fn id.name
          || Stan_math_signatures.is_variadic_ode_fn id.name )
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
-    else if is_udf && Utils.is_unnormalized_distribution id.name then
-      Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
+    else if Utils.is_unnormalized_distribution id.name then
+      if is_udf then
+        Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
+      else
+        Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
       | Some _ -> Semantic_error.ident_in_use id.id_loc id.name |> error
@@ -505,7 +509,7 @@ let semantic_check_postfixop loc op e =
 (* -- Variables ------------------------------------------------------------- *)
 let semantic_check_variable cf loc id =
   Validate.(
-    match Symbol_table.look vm id.name with
+    match Symbol_table.look vm (Utils.stdlib_distribution_name id.name) with
     | None when not (Stan_math_signatures.is_stan_math_function_name id.name)
       ->
         Semantic_error.ident_not_in_scope loc id.name |> error
@@ -517,6 +521,12 @@ let semantic_check_variable cf loc id =
         |> ok
     | Some ((Param | TParam | GQuant), _) when cf.in_toplevel_decl ->
         Semantic_error.non_data_variable_size_decl loc |> error
+    | Some _
+      when Utils.is_unnormalized_distribution id.name
+           && not
+                ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+                || cf.current_block = Model ) ->
+        Semantic_error.invalid_unnormalized_fn loc |> error
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)

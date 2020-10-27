@@ -16,7 +16,7 @@ open Pedantic_dist_warnings
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     string Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
-  let params = parameter_names_set ~include_transformed:true mir in
+  let params = parameter_names_set ~include_transformed:false mir in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
