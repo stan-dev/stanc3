@@ -14,9 +14,9 @@ val userdef_distributions :
      , ((located_meta, unit) expr_with, located_meta) lval_with
      , unit )
      statement_with
-     sexp_list
-     sexp_option
-  -> string sexp_list
+     list
+     option
+  -> string list
 
 val emit_warnings :
      ( (typed_expr_meta, fun_kind) expr_with
