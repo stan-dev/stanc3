@@ -54,23 +54,23 @@ generated quantities {
 }
 
 
-Warning: in 'deprecated.stan', line 55, column 20 to column 69: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'deprecated.stan', line 55, column 20 to column 69: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
 
 Warning: in 'deprecated.stan', line 28, column 11 to column 46: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 
-Warning: in 'deprecated.stan', line 28, column 24 to column 42: multiply_log is deprecated and will be removed in the future. Use lmultiply instead
+Warning: in 'deprecated.stan', line 28, column 24 to column 42: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 
-Warning: in 'deprecated.stan', line 29, column 12 to column 44: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead
+Warning: in 'deprecated.stan', line 29, column 12 to column 44: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 
 Warning: in 'deprecated.stan', line 43, column 23 to column 40: Use of the _log suffix in user defined function foo_cdf_log is deprecated, use foo_lcdf instead.
 
 Warning: in 'deprecated.stan', line 38, column 14 to column 35: Use of the _log suffix in user defined function normal_log_log is deprecated, use normal_log_lpdf instead.
 
-Warning: in 'deprecated.stan', line 48, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead
+Warning: in 'deprecated.stan', line 48, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
 
-Warning: in 'deprecated.stan', line 47, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead
+Warning: in 'deprecated.stan', line 47, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
 
-Warning: in 'deprecated.stan', line 46, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'deprecated.stan', line 46, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 
 Warning: in 'deprecated.stan', line 50, column 20 to column 28: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 

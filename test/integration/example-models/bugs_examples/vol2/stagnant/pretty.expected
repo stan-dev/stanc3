@@ -77,7 +77,7 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 
 Warning: in 'stagnant.stan', line 38, column 23 to column 56: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 
-Warning: in 'stagnant.stan', line 39, column 36 to column 60: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'stagnant.stan', line 39, column 36 to column 60: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format stagnant2.stan
 data {
   int<lower=0> N;

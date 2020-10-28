@@ -2306,11 +2306,11 @@ model {
 }
 
 
-Warning: in 'deprecate-old-prob-funs.stan', line 7, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 7, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
 
-Warning: in 'deprecate-old-prob-funs.stan', line 6, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 6, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
 
-Warning: in 'deprecate-old-prob-funs.stan', line 5, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 5, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
 model {
   real foo;
@@ -2353,15 +2353,15 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
 Warning: in 'duplicate-warns.stan', line 5, column 8 to column 16: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: in 'duplicate-warns.stan', line 6, column 8 to column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead
+Warning: in 'duplicate-warns.stan', line 6, column 8 to column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 
-Warning: in 'duplicate-warns.stan', line 7, column 8 to column 38: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead
+Warning: in 'duplicate-warns.stan', line 7, column 8 to column 38: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 
-Warning: in 'duplicate-warns.stan', line 9, column 8 to column 29: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'duplicate-warns.stan', line 9, column 8 to column 29: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 
-Warning: in 'duplicate-warns.stan', line 10, column 8 to column 33: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead
+Warning: in 'duplicate-warns.stan', line 10, column 8 to column 33: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
 
-Warning: in 'duplicate-warns.stan', line 11, column 8 to column 34: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead
+Warning: in 'duplicate-warns.stan', line 11, column 8 to column 34: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
   $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
@@ -2956,7 +2956,7 @@ Warning: deprecated language construct used in 'funs1.stan', line 3, column 21:
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: in 'funs1.stan', line 3, column 23 to column 40: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'funs1.stan', line 3, column 23 to column 40: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -2988,7 +2988,7 @@ model {
 }
 
 
-Warning: in 'funs3.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'funs3.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
   real unit_normal_log(real y) {
@@ -3017,7 +3017,7 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 
 Warning: in 'funs4.stan', line 10, column 21 to column 39: Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
 
-Warning: in 'funs4.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
+Warning: in 'funs4.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -3851,33 +3851,33 @@ generated quantities {
 }
 
 
-Warning: in 'integrate_ode_adams.stan', line 38, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 38, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 39, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 39, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 40, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 40, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 41, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 41, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 43, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 43, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 44, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 44, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 45, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 45, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 46, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 46, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 28, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 28, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 29, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 29, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 30, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 30, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 32, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 32, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 33, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 33, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'integrate_ode_adams.stan', line 34, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'integrate_ode_adams.stan', line 34, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -3932,37 +3932,37 @@ generated quantities {
 }
 
 
-Warning: in 'integrate_ode_bdf.stan', line 40, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 40, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 41, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 41, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 42, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 42, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 43, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 43, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 45, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 45, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 46, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 46, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 47, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 47, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 48, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 48, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 28, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 28, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 29, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 29, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 30, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 30, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 31, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 31, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 33, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 33, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 34, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 34, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 35, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 35, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'integrate_ode_bdf.stan', line 36, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'integrate_ode_bdf.stan', line 36, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -3996,7 +3996,7 @@ generated quantities {
 }
 
 
-Warning: in 'integrate_ode_deprecation.stan', line 28, column 10 to column 58: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_deprecation.stan', line 28, column 10 to column 58: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -4035,21 +4035,21 @@ generated quantities {
 }
 
 
-Warning: in 'integrate_ode_rk45.stan', line 35, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 35, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 36, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 36, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 37, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 37, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 38, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 38, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 28, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 28, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 29, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 29, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 30, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 30, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'integrate_ode_rk45.stan', line 31, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'integrate_ode_rk45.stan', line 31, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
   $ ../../../../install/default/bin/stanc --auto-format io_example.stan
 transformed data {
   vector[2] y;
@@ -4620,7 +4620,7 @@ model {
 }
 
 
-Warning: in 'ode-int-segments.stan', line 25, column 12 to column 74: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'ode-int-segments.stan', line 25, column 12 to column 74: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
 functions {
   real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
@@ -4638,7 +4638,7 @@ model {
 }
 
 
-Warning: in 'ode-nested-quotes.stan', line 17, column 6 to line 23, column 36: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'ode-nested-quotes.stan', line 17, column 6 to line 23, column 36: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -4679,19 +4679,19 @@ model {
 }
 
 
-Warning: in 'ode_good.stan', line 27, column 10 to line 33, column 31: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'ode_good.stan', line 27, column 10 to line 33, column 31: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'ode_good.stan', line 34, column 10 to line 40, column 36: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'ode_good.stan', line 34, column 10 to line 40, column 36: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'ode_good.stan', line 41, column 10 to line 47, column 35: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'ode_good.stan', line 41, column 10 to line 47, column 35: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'ode_good.stan', line 48, column 10 to line 54, column 37: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'ode_good.stan', line 48, column 10 to line 54, column 37: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
 
-Warning: in 'ode_good.stan', line 55, column 10 to line 61, column 52: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'ode_good.stan', line 55, column 10 to line 61, column 52: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead.
 
-Warning: in 'ode_good.stan', line 62, column 10 to line 68, column 51: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+Warning: in 'ode_good.stan', line 62, column 10 to line 68, column 51: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead.
 
-Warning: in 'ode_good.stan', line 69, column 10 to line 75, column 53: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+Warning: in 'ode_good.stan', line 69, column 10 to line 75, column 53: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead.
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {
   real x;
@@ -4708,9 +4708,9 @@ model {
 }
 
 
-Warning: in 'old-log-funs.stan', line 3, column 6 to column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead
+Warning: in 'old-log-funs.stan', line 3, column 6 to column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 
-Warning: in 'old-log-funs.stan', line 4, column 6 to column 36: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead
+Warning: in 'old-log-funs.stan', line 4, column 6 to column 36: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;

@@ -265,7 +265,7 @@ Warning: deprecated language construct used in 'soil_incubation.stan', line 129,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: in 'soil_incubation.stan', line 93, column 13 to line 94, column 57: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'soil_incubation.stan', line 93, column 13 to line 94, column 57: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
   real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
@@ -535,4 +535,4 @@ Warning: deprecated language construct used in 'soil_incubation_measurement_err.
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: in 'soil_incubation_measurement_err.stan', line 43, column 13 to line 44, column 57: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+Warning: in 'soil_incubation_measurement_err.stan', line 43, column 13 to line 44, column 57: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.

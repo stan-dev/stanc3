@@ -122,12 +122,12 @@ let rec warn_deprecated_expr
           warn_deprecated
             ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
-              ^ rename_distribution name ^ " instead" )
+              ^ rename_distribution name ^ " instead." )
         else if Option.is_some (String.Map.find deprecated_functions name) then
           warn_deprecated
             ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
-              ^ rename_function name ^ " instead" ) ;
+              ^ rename_function name ^ " instead." ) ;
         FunApp (StanLib, {name; id_loc}, List.map ~f:warn_deprecated_expr l)
     | FunApp (UserDefined, {name; id_loc}, l) ->
         let newname = String.Table.find deprecated_userdefined name in
