@@ -32,36 +32,37 @@ let rename_function name =
   Option.value ~default:name (String.Map.find deprecated_functions name)
 
 let distribution_suffix name =
-  String.is_suffix ~suffix:"_lpdf" name
-  || String.is_suffix ~suffix:"_lpmf" name
-  || String.is_suffix ~suffix:"_lcdf" name
-  || String.is_suffix ~suffix:"_lccdf" name
+  let open String in
+  is_suffix ~suffix:"_lpdf" name
+  || is_suffix ~suffix:"_lpmf" name
+  || is_suffix ~suffix:"_lcdf" name
+  || is_suffix ~suffix:"_lccdf" name
 
 let userdef_distributions stmts =
+  let open String in
   List.filter_map
     ~f:(function
       | {stmt= FunDef {funname= {name; _}; _}; _} ->
           if
-            String.is_suffix ~suffix:"_log_lpdf" name
-            || String.is_suffix ~suffix:"_log_lpmf" name
-          then Some (String.drop_suffix name 5)
-          else if String.is_suffix ~suffix:"_log_log" name then
-            Some (String.drop_suffix name 4)
+            is_suffix ~suffix:"_log_lpdf" name
+            || is_suffix ~suffix:"_log_lpmf" name
+          then Some (drop_suffix name 5)
+          else if is_suffix ~suffix:"_log_log" name then
+            Some (drop_suffix name 4)
           else None
       | _ -> None)
     (Option.value ~default:[] stmts)
 
 let without_suffix user_dists name =
-  if
-    String.is_suffix ~suffix:"_lpdf" name
-    || String.is_suffix ~suffix:"_lpmf" name
-  then String.drop_suffix name 5
+  let open String in
+  if is_suffix ~suffix:"_lpdf" name || is_suffix ~suffix:"_lpmf" name then
+    drop_suffix name 5
   else if
-    String.is_suffix ~suffix:"_log" name
+    is_suffix ~suffix:"_log" name
     && not
          ( is_distribution (name ^ "_log")
          || List.exists ~f:(( = ) name) user_dists )
-  then String.drop_suffix name 4
+  then drop_suffix name 4
   else name
 
 let warn_deprecated (loc_span, message) =
@@ -74,16 +75,16 @@ let replace_suffix = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
     ; smeta= _ }
     when String.is_suffix ~suffix:"_log" name ->
+      let open String in
       let newname =
-        if String.is_suffix ~suffix:"_cdf_log" name then
-          String.drop_suffix name 8 ^ "_lcdf"
-        else if String.is_suffix ~suffix:"_ccdf_log" name then
-          String.drop_suffix name 9 ^ "_lccdf"
+        if is_suffix ~suffix:"_cdf_log" name then drop_suffix name 8 ^ "_lcdf"
+        else if is_suffix ~suffix:"_ccdf_log" name then
+          drop_suffix name 9 ^ "_lccdf"
         else if Middle.UnsizedType.is_real_type type_ then
-          String.drop_suffix name 4 ^ "_lpdf"
-        else String.drop_suffix name 4 ^ "_lpmf"
+          drop_suffix name 4 ^ "_lpdf"
+        else drop_suffix name 4 ^ "_lpmf"
       in
-      String.Table.add deprecated_userdefined ~key:name ~data:newname
+      Table.add deprecated_userdefined ~key:name ~data:newname
       |> (ignore : [`Ok | `Duplicate] -> unit)
   | _ -> ()
 
