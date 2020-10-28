@@ -69,8 +69,7 @@ let without_suffix user_dists name =
   else name
 
 let warn_deprecated (loc_span, message) =
-  Fmt.pf Fmt.stderr
-    "@[<v>@,Warning: deprecated language construct used in %s:@,%s@]@."
+  Fmt.pf Fmt.stderr "@[<v>@,Warning: in %s: %s@]@."
     (Location_span.to_string loc_span)
     message
 
@@ -122,13 +121,13 @@ let rec warn_deprecated_expr
         if Option.is_some (String.Map.find deprecated_distributions name) then
           warn_deprecated
             ( emeta.loc
-            , name ^ " is deprecated, use " ^ rename_distribution name
-              ^ " instead" )
+            , name ^ " is deprecated and will be removed in the future. Use "
+              ^ rename_distribution name ^ " instead" )
         else if Option.is_some (String.Map.find deprecated_functions name) then
           warn_deprecated
             ( emeta.loc
-            , name ^ " is deprecated, use " ^ rename_function name ^ " instead"
-            ) ;
+            , name ^ " is deprecated and will be removed in the future. Use "
+              ^ rename_function name ^ " instead" ) ;
         FunApp (StanLib, {name; id_loc}, List.map ~f:warn_deprecated_expr l)
     | FunApp (UserDefined, {name; id_loc}, l) ->
         let newname = String.Table.find deprecated_userdefined name in
