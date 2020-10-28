@@ -123,8 +123,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in 'gen_gp_data.stan', line 16, column 25 to column 52:
-cov_exp_quad is deprecated, use gp_cov_exp_quad instead
+Warning: in 'gen_gp_data.stan', line 16, column 25 to column 52: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead
   $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
@@ -153,8 +152,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'gp_pois_regr.stan', line 16, column 25 to column 52:
-cov_exp_quad is deprecated, use gp_cov_exp_quad instead
+Warning: in 'gp_pois_regr.stan', line 16, column 25 to column 52: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead
   $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
@@ -177,8 +175,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'gp_regr.stan', line 14, column 23 to column 50:
-cov_exp_quad is deprecated, use gp_cov_exp_quad instead
+Warning: in 'gp_regr.stan', line 14, column 23 to column 50: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead
   $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
 data {
   int<lower=0> I;
@@ -335,6 +332,8 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
+
+Warning: in 'one_comp_mm_elim_abs.stan', line 55, column 8 to column 79: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
   real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
@@ -383,6 +382,8 @@ generated quantities {
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
+
+Warning: in 'sim_one_comp_mm_elim_abs.stan', line 58, column 6 to column 77: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 functions {
   real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
@@ -431,3 +432,5 @@ model {
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 
+
+Warning: in 'sir.stan', line 55, column 8 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead

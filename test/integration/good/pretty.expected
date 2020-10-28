@@ -11,8 +11,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'abs-deprecate.stan', line 3, column 7 to column 16:
-Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning: in 'abs-deprecate.stan', line 3, column 7 to column 16: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
 functions {
   real algebra_solverfake(real x) {
@@ -2307,14 +2306,11 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'deprecate-old-prob-funs.stan', line 7, column 6 to column 30:
-normal_ccdf_log is deprecated, use normal_lccdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 7, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead
 
-Warning: deprecated language construct used in 'deprecate-old-prob-funs.stan', line 6, column 6 to column 29:
-normal_cdf_log is deprecated, use normal_lcdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 6, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead
 
-Warning: deprecated language construct used in 'deprecate-old-prob-funs.stan', line 5, column 12 to column 31:
-normal_log is deprecated, use normal_lpdf instead
+Warning: in 'deprecate-old-prob-funs.stan', line 5, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
 model {
   real foo;
@@ -2355,23 +2351,17 @@ Warning: deprecated language construct used in 'duplicate-warns.stan', line 5, c
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 5, column 8 to column 16:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'duplicate-warns.stan', line 5, column 8 to column 16: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 6, column 8 to column 26:
-multiply_log is deprecated, use lmultiply instead
+Warning: in 'duplicate-warns.stan', line 6, column 8 to column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 7, column 8 to column 38:
-binomial_coefficient_log is deprecated, use lchoose instead
+Warning: in 'duplicate-warns.stan', line 7, column 8 to column 38: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 9, column 8 to column 29:
-normal_log is deprecated, use normal_lpdf instead
+Warning: in 'duplicate-warns.stan', line 9, column 8 to column 29: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 10, column 8 to column 33:
-normal_cdf_log is deprecated, use normal_lcdf instead
+Warning: in 'duplicate-warns.stan', line 10, column 8 to column 33: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead
 
-Warning: deprecated language construct used in 'duplicate-warns.stan', line 11, column 8 to column 34:
-normal_ccdf_log is deprecated, use normal_lccdf instead
+Warning: in 'duplicate-warns.stan', line 11, column 8 to column 34: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead
   $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
@@ -2588,8 +2578,7 @@ Warning: deprecated language construct used in 'fun_log_forward_decl.stan', line
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in 'fun_log_forward_decl.stan', line 17, column 21 to column 30:
-Use of the _log suffix in user defined function n_log is deprecated, use n_lpdf instead.
+Warning: in 'fun_log_forward_decl.stan', line 17, column 21 to column 30: Use of the _log suffix in user defined function n_log is deprecated, use n_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -2806,122 +2795,83 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 221, column 6 to column 17:
-Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
+Warning: in 'functions-good1.stan', line 221, column 6 to column 17: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 222, column 6 to column 17:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 222, column 6 to column 17: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 223, column 6 to column 17:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 223, column 6 to column 17: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 224, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 224, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 225, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 225, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 226, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 226, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 227, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 227, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 186, column 9 to column 20:
-Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
+Warning: in 'functions-good1.stan', line 186, column 9 to column 20: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 187, column 9 to column 20:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 187, column 9 to column 20: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 188, column 9 to column 22:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 188, column 9 to column 22: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 189, column 9 to column 23:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 189, column 9 to column 23: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 191, column 9 to column 26:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 191, column 9 to column 26: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 192, column 9 to column 24:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 192, column 9 to column 24: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 193, column 9 to column 24:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 193, column 9 to column 24: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 194, column 9 to column 22:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 194, column 9 to column 22: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 196, column 9 to column 27:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 196, column 9 to column 27: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 197, column 9 to column 25:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 197, column 9 to column 25: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 199, column 9 to column 27:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 199, column 9 to column 27: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 200, column 9 to column 25:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 200, column 9 to column 25: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 202, column 9 to column 28:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 202, column 9 to column 28: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 124, column 9 to column 20:
-Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
+Warning: in 'functions-good1.stan', line 124, column 9 to column 20: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 126, column 9 to column 20:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 126, column 9 to column 20: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 127, column 9 to column 22:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 127, column 9 to column 22: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 128, column 9 to column 23:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 128, column 9 to column 23: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 130, column 9 to column 26:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 130, column 9 to column 26: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 131, column 9 to column 24:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 131, column 9 to column 24: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 132, column 9 to column 24:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 132, column 9 to column 24: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 133, column 9 to column 22:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 133, column 9 to column 22: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 135, column 9 to column 27:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 135, column 9 to column 27: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 136, column 9 to column 25:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 136, column 9 to column 25: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 138, column 9 to column 27:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 138, column 9 to column 27: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 139, column 9 to column 25:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 139, column 9 to column 25: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 141, column 9 to column 28:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 141, column 9 to column 28: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 63, column 6 to column 17:
-Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
+Warning: in 'functions-good1.stan', line 63, column 6 to column 17: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 64, column 6 to column 20:
-Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
+Warning: in 'functions-good1.stan', line 64, column 6 to column 20: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 65, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 65, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 66, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 66, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 67, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 67, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
 
-Warning: deprecated language construct used in 'functions-good1.stan', line 68, column 6 to column 19:
-Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
+Warning: in 'functions-good1.stan', line 68, column 6 to column 19: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
 functions {
   real foo_bar0() {
@@ -3006,8 +2956,7 @@ Warning: deprecated language construct used in 'funs1.stan', line 3, column 21:
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in 'funs1.stan', line 3, column 23 to column 40:
-normal_log is deprecated, use normal_lpdf instead
+Warning: in 'funs1.stan', line 3, column 23 to column 40: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
   real unit_normal_rng() {
@@ -3039,8 +2988,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'funs3.stan', line 3, column 11 to column 28:
-normal_log is deprecated, use normal_lpdf instead
+Warning: in 'funs3.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
   real unit_normal_log(real y) {
@@ -3067,11 +3015,9 @@ Warning: deprecated language construct used in 'funs4.stan', line 10, column 19:
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in 'funs4.stan', line 10, column 21 to column 39:
-Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
+Warning: in 'funs4.stan', line 10, column 21 to column 39: Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
 
-Warning: deprecated language construct used in 'funs4.stan', line 3, column 11 to column 28:
-normal_log is deprecated, use normal_lpdf instead
+Warning: in 'funs4.stan', line 3, column 11 to column 28: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
 functions {
   void foo(real x) {
@@ -3153,8 +3099,7 @@ Warning: deprecated language construct used in 'get-lp-deprecate.stan', line 5, 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used in 'get-lp-deprecate.stan', line 5, column 19 to column 27:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get-lp-deprecate.stan', line 5, column 19 to column 27: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
 parameters {
   real<lower=0> y;
@@ -3196,11 +3141,9 @@ Warning: deprecated language construct used in 'get-lp-target.stan', line 10, co
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used in 'get-lp-target.stan', line 10, column 21 to column 29:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get-lp-target.stan', line 10, column 21 to column 29: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: deprecated language construct used in 'get-lp-target.stan', line 6, column 21 to column 29:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get-lp-target.stan', line 6, column 21 to column 29: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
 functions {
   real foo_lp(real x) {
@@ -3260,14 +3203,11 @@ Warning: deprecated language construct used in 'get_lp_good.stan', line 22, colu
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used in 'get_lp_good.stan', line 22, column 6 to column 14:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get_lp_good.stan', line 22, column 6 to column 14: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: deprecated language construct used in 'get_lp_good.stan', line 18, column 6 to column 14:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get_lp_good.stan', line 18, column 6 to column 14: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: deprecated language construct used in 'get_lp_good.stan', line 10, column 15 to column 23:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'get_lp_good.stan', line 10, column 15 to column 23: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
@@ -3910,6 +3850,34 @@ generated quantities {
                               1e-10, 1e8);
 }
 
+
+Warning: in 'integrate_ode_adams.stan', line 38, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 39, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 40, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 41, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 43, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 44, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 45, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 46, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 28, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 29, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 30, column 10 to column 67: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 32, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 33, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'integrate_ode_adams.stan', line 34, column 10 to column 86: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -3963,6 +3931,38 @@ generated quantities {
                             1e-10, 1e8);
 }
 
+
+Warning: in 'integrate_ode_bdf.stan', line 40, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 41, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 42, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 43, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 45, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 46, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 47, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 48, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 28, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 29, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 30, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 31, column 10 to column 65: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 33, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 34, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 35, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'integrate_ode_bdf.stan', line 36, column 10 to column 84: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -3996,8 +3996,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in 'integrate_ode_deprecation.stan', line 28, column 10 to column 58:
-integrate_ode is deprecated, use integrate_ode_rk45 instead
+Warning: in 'integrate_ode_deprecation.stan', line 28, column 10 to column 58: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -4035,6 +4034,22 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
+
+Warning: in 'integrate_ode_rk45.stan', line 35, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 36, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 37, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 38, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 28, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 29, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 30, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'integrate_ode_rk45.stan', line 31, column 10 to column 66: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
   $ ../../../../install/default/bin/stanc --auto-format io_example.stan
 transformed data {
   vector[2] y;
@@ -4266,8 +4281,7 @@ Warning: deprecated language construct used in 'lp_in_fun.stan', line 3, column 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used in 'lp_in_fun.stan', line 3, column 21 to column 29:
-The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning: in 'lp_in_fun.stan', line 3, column 21 to column 29: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
   vector foo(vector shared_params, vector job_params, real[] data_r,
@@ -4606,8 +4620,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'ode-int-segments.stan', line 25, column 12 to column 74:
-integrate_ode is deprecated, use integrate_ode_rk45 instead
+Warning: in 'ode-int-segments.stan', line 25, column 12 to column 74: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
 functions {
   real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
@@ -4625,8 +4638,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'ode-nested-quotes.stan', line 17, column 6 to line 23, column 36:
-integrate_ode is deprecated, use integrate_ode_rk45 instead
+Warning: in 'ode-nested-quotes.stan', line 17, column 6 to line 23, column 36: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
@@ -4667,8 +4679,19 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'ode_good.stan', line 27, column 10 to line 33, column 31:
-integrate_ode is deprecated, use integrate_ode_rk45 instead
+Warning: in 'ode_good.stan', line 27, column 10 to line 33, column 31: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'ode_good.stan', line 34, column 10 to line 40, column 36: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'ode_good.stan', line 41, column 10 to line 47, column 35: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'ode_good.stan', line 48, column 10 to line 54, column 37: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
+
+Warning: in 'ode_good.stan', line 55, column 10 to line 61, column 52: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead
+
+Warning: in 'ode_good.stan', line 62, column 10 to line 68, column 51: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead
+
+Warning: in 'ode_good.stan', line 69, column 10 to line 75, column 53: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {
   real x;
@@ -4685,11 +4708,9 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'old-log-funs.stan', line 3, column 6 to column 24:
-multiply_log is deprecated, use lmultiply instead
+Warning: in 'old-log-funs.stan', line 3, column 6 to column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead
 
-Warning: deprecated language construct used in 'old-log-funs.stan', line 4, column 6 to column 36:
-binomial_coefficient_log is deprecated, use lchoose instead
+Warning: in 'old-log-funs.stan', line 4, column 6 to column 36: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5468,14 +5489,11 @@ model {
 }
 
 
-Warning: deprecated language construct used in 'validate_bounds_comparison.stan', line 2, column 13 to column 33:
-The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning: in 'validate_bounds_comparison.stan', line 2, column 13 to column 33: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 
-Warning: deprecated language construct used in 'validate_bounds_comparison.stan', line 3, column 13 to column 33:
-The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning: in 'validate_bounds_comparison.stan', line 3, column 13 to column 33: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 
-Warning: deprecated language construct used in 'validate_bounds_comparison.stan', line 4, column 29 to column 49:
-The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning: in 'validate_bounds_comparison.stan', line 4, column 29 to column 49: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
