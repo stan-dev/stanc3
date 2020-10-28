@@ -7,16 +7,7 @@ val without_suffix : string sexp_list -> string -> string
 val is_distribution : string -> bool
 val rename_distribution : string -> string
 val rename_function : string -> string
-
-val userdef_distributions :
-     ( (located_meta, unit) expr_with
-     , located_meta
-     , ((located_meta, unit) expr_with, located_meta) lval_with
-     , unit )
-     statement_with
-     list
-     option
-  -> string list
+val userdef_distributions : untyped_statement list option -> string list
 
 val emit_warnings :
      ( (typed_expr_meta, fun_kind) expr_with
