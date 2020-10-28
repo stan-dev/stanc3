@@ -17,23 +17,6 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
           map_statement ident (repair_syntax_stmt user_dists) ident ident stmt
       ; smeta }
 
-let replace_suffix = function
-  | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
-    ; smeta= _ }
-    when String.is_suffix ~suffix:"_log" name ->
-      let newname =
-        if String.is_suffix ~suffix:"_cdf_log" name then
-          String.drop_suffix name 8 ^ "_lcdf"
-        else if String.is_suffix ~suffix:"_ccdf_log" name then
-          String.drop_suffix name 9 ^ "_lccdf"
-        else if Middle.UnsizedType.is_real_type type_ then
-          String.drop_suffix name 4 ^ "_lpdf"
-        else String.drop_suffix name 4 ^ "_lpmf"
-      in
-      String.Table.add deprecated_userdefined ~key:name ~data:newname
-      |> (ignore : [`Ok | `Duplicate] -> unit)
-  | _ -> ()
-
 let rec replace_deprecated_expr {expr; emeta} =
   let expr =
     match expr with

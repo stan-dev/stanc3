@@ -8,6 +8,7 @@ val is_distribution : string -> bool
 val rename_distribution : string -> string
 val rename_function : string -> string
 val userdef_distributions : untyped_statement list option -> string list
+val replace_suffix : typed_statement -> unit
 
 val emit_warnings :
      ( (typed_expr_meta, fun_kind) expr_with
