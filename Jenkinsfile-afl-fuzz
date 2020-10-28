@@ -54,7 +54,11 @@ pipeline {
                 runShell("mkdir -p afl-out")
                 runShell("mkdir -p afl-in")
 
-                runShell("cp ./test/integration/good/code-gen/*.stan ./afl-in")
+                // Copy all the tests under 1KB size
+                runShell("""
+                    cd test/integration/good/code-gen
+                    find *.stan -type f -size -1024c -print0 | xargs -I{} -0 cp -v {} ../../../../afl-in
+                """)
 
                 runShell("""
                     eval \$(opam env)
@@ -63,13 +67,13 @@ pipeline {
 
                 script {
                     try {
-                        runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -M fuzzer0 -o ./afl-out _build/default/src/stanc/stanc.exe @@ &")
+                        runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -M fuzzer0 -o ./afl-out _build/default/src/stanc/stanc.exe @@ > ./afl-out/fuzzer0.log &")
                         
                         for (i = 1; i <params.cores.toInteger(); i++) {
-                            runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -S fuzzer${i} -o ./afl-out _build/default/src/stanc/stanc.exe @@ &")
+                            runShell("timeout ${params.run_time}s afl-fuzz -m ${params.allocated_mb_afl} -i ./afl-in -S fuzzer${i} -o ./afl-out _build/default/src/stanc/stanc.exe @@ > afl-out/fuzzer${i}.log &")
                         }
 
-                        sleep(params.run_time.toInteger() + ( params.run_time.toInteger() / 10 * 2))
+                        sleep(params.run_time.toInteger() + 30)
                     }
                     catch (err) {
                         emailExtraMsg = "Build Failure: "+ err.getMessage()
